@@ -73,6 +73,11 @@ El puntaje de cada respuesta se calcula en función del tiempo de respuesta, la 
 El docente crea una sesión definiendo: materia, período de disponibilidad (fecha/hora de apertura y cierre), cantidad de preguntas, y cantidad de intentos permitidos (por defecto: 1).  
 - **Criterios de aceptación:** La sesión solo es accesible para los estudiantes dentro del período definido.
 
+**RF-11b — Modificación del período de disponibilidad**  
+El docente puede modificar la fecha/hora de cierre de una sesión de período abierto ya creada, incluso mientras está activa. Esto permite extender el plazo en caso de contingencias (caída del sistema, problemas técnicos, etc.).  
+- **Criterios de aceptación:** El cambio de fecha/hora de cierre tiene efecto inmediato. Los estudiantes que ya iniciaron la sesión pueden seguir respondiendo hasta el nuevo límite.  
+- **Casos límite:** No se puede acortar el período si hay estudiantes con sesiones activas en ese momento.
+
 **RF-12 — Set aleatorio por estudiante**  
 Al ingresar a la sesión, el sistema genera un set aleatorio de preguntas del banco, filtrado por materia, de la cantidad definida por el docente. Cada estudiante recibe un set diferente.  
 - **Criterios de aceptación:** Dos estudiantes que inician la misma sesión reciben preguntas distintas (salvo colisión aleatoria aceptable).
