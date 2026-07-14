@@ -97,8 +97,12 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 9. Frontend
 
-- [ ] `npm install` en `frontend/` una vez creado el scaffold (React 19 + Vite + TypeScript + Tailwind + shadcn/ui)
-- [ ] Configurar ESLint
+- [x] `npm install` en `frontend/` — React 19 + Vite + TypeScript
+- [x] Tailwind CSS v4 instalado con plugin `@tailwindcss/vite`
+- [x] shadcn/ui inicializado (preset nova, Base library)
+- [x] Path aliases configurados (`@/*` → `./src/*`) en tsconfig.app.json y vite.config.ts
+- [x] Linter: oxlint (reemplaza ESLint en el template de Vite — más rápido, mismo objetivo)
+- [x] Build verificado: `npm run build` exitoso
 
 ---
 
