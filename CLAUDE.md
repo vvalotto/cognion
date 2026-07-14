@@ -40,7 +40,7 @@ Documentos de definición (no se modifican retroactivamente):
 | Containerización | Docker multi-stage |
 | Hosting | Fly.io (testing/staging); producción pendiente |
 | CI/CD | GitHub Actions |
-| Auth | JWT — python-jose |
+| Auth | JWT — PyJWT + cryptography |
 | Gestión de paquetes | uv (backend), npm (frontend) |
 
 ---
