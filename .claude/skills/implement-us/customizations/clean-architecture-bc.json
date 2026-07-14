@@ -1,0 +1,95 @@
+{
+  "_comment_profile": "Perfil para Cognion: Clean Architecture BC-first con FastAPI",
+
+  "profile_metadata": {
+    "name": "clean-architecture-bc",
+    "display_name": "Clean Architecture BC-First (Cognion)",
+    "description": "Monolito modular con Clean Architecture: entities → use_cases → interface_adapters → frameworks, organizado por Bounded Context.",
+    "extends": "config.json",
+    "version": "1.0.0",
+    "author": "Víctor Valotto",
+    "created": "2026-07-14",
+    "target_stack": "FastAPI + SQLAlchemy async + PostgreSQL + Python 3.12",
+    "architecture": "Clean Architecture BC-First (entities → use_cases → interface_adapters → frameworks)"
+  },
+
+  "variables": {
+    "architecture_pattern": {
+      "default": "clean-architecture",
+      "description": "Clean Architecture BC-first: entities → use_cases → interface_adapters → frameworks",
+      "available": ["clean-architecture"],
+      "layers": {
+        "entities": "Reglas de negocio puras — Aggregates, Entities, ValueObjects, DomainEvents, puertos (interfaces). Sin dependencias externas.",
+        "use_cases": "Orquestación de la aplicación — Use Cases, Commands, Queries. Solo importa entities/.",
+        "interface_adapters": "Controllers (FastAPI routers), Presenters, Gateways. Solo importa use_cases/.",
+        "frameworks": "Implementaciones concretas — SQLAlchemy repos, WebSockets, email adapters. Implementa puertos definidos en entities/."
+      },
+      "golden_rule": "Las capas internas nunca importan capas externas. Entre BCs: solo por puertos en entities/ports/. shared/entities/ es la única excepción transversal."
+    },
+    "component_type": {
+      "default": "Entity",
+      "description": "Tipo de componente de Clean Architecture a implementar",
+      "available": [
+        "Entity",
+        "ValueObject",
+        "DomainEvent",
+        "Port",
+        "UseCase",
+        "Controller",
+        "Gateway",
+        "Repository",
+        "Router"
+      ]
+    },
+    "component_path": {
+      "default": "src/{bc}/entities/",
+      "description": "Ruta base según tipo de componente y BC",
+      "by_component": {
+        "Entity":       "src/{bc}/entities/",
+        "ValueObject":  "src/{bc}/entities/value_objects/",
+        "DomainEvent":  "src/{bc}/entities/events/",
+        "Port":         "src/{bc}/entities/ports/",
+        "UseCase":      "src/{bc}/use_cases/",
+        "Controller":   "src/{bc}/interface_adapters/controllers/",
+        "Gateway":      "src/{bc}/interface_adapters/gateways/",
+        "Repository":   "src/{bc}/frameworks/repositories/",
+        "Router":       "src/{bc}/frameworks/routers/"
+      }
+    },
+    "test_framework": {
+      "default": "pytest + httpx",
+      "plugins": ["pytest-asyncio", "httpx", "pytest-cov", "pytest-bdd"]
+    },
+    "base_class": {
+      "default": "dataclass",
+      "description": "Clase base según capa",
+      "by_component": {
+        "Entity":      "dataclass o class pura (sin ORM)",
+        "ValueObject": "frozen dataclass",
+        "DomainEvent": "dataclass",
+        "UseCase":     "class con método execute()",
+        "Controller":  "class o función FastAPI router",
+        "Repository":  "class que implementa el Port correspondiente"
+      }
+    },
+    "bounded_contexts": {
+      "available": ["sesiones", "banco_preguntas", "identidad", "notificaciones", "analytics"],
+      "core_domain": "sesiones",
+      "description": "BC de Cognion según ARQ_v1.md"
+    }
+  },
+
+  "conventions": {
+    "naming": {
+      "entities": "PascalCase — Sesion, PreguntaPlantilla, Usuario",
+      "use_cases": "PascalCase con sufijo UseCase — RegistrarRespuestaUseCase",
+      "controllers": "PascalCase con sufijo Controller — SesionController",
+      "repositories": "PascalCase con prefijo SQLAlchemy — SQLAlchemySesionRepository",
+      "ports": "PascalCase con sufijo Repository o Service — SesionRepository (interface)",
+      "events": "PascalCase past-tense — RespuestaRegistrada, SesionCerrada"
+    },
+    "test_structure": "tests/{unit,integration,features,uat}/incN/",
+    "commit_format": "tipo(capa): descripción [US-N.M.K]",
+    "commit_scopes": "entities | use_cases | interface_adapters | frameworks | frontend | cm | tests | design"
+    }
+}

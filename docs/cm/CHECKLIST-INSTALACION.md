@@ -52,14 +52,13 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 5. Claude Dev Kit
 
-- [ ] Instalar desde `vvalotto/claude-dev-kit`: `python installer.py --profile fastapi-rest --yes`
-      (evaluar si conviene un perfil de customización propio, análogo a `hexagonal-ddd-bc.json`
-      de AtaraxiaDive, dado que Cognion usa Clean Architecture y no un layered genérico)
-- [ ] Verificar que quedaron instalados:
+- [x] Instalar desde `~/PycharmProjects/claude-dev-kitc/install/installer.py --profile fastapi-rest --yes --force`
+- [x] Verificar que quedaron instalados:
   - `.claude/skills/implement-us/` (skill.md, config.json, phases/, customizations/)
-  - `.claude/commands/implement-us.md`
   - `.claude/tracking/tracker_cli.py` + `time_tracker.py`
-- [ ] Confirmar perfil de customización aplicado en `.claude/config.json`
+- [x] Perfil propio creado: `.claude/skills/implement-us/customizations/clean-architecture-bc.json`
+      (capas: entities/use_cases/interface_adapters/frameworks — no el layered genérico de fastapi-rest)
+- [x] `config.json` actualizado con `architecture_pattern: clean-architecture` y componentes de CA
 
 ---
 
