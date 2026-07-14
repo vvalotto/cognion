@@ -77,37 +77,39 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 7. GitHub — gestión administrativa
 
-- [ ] Confirmar que el repo `cognion` tiene Issues habilitado
-- [ ] Crear Milestone del primer Incremento (Incremento 0 — Walking Skeleton)
-- [ ] Definir Labels: `us-iedd`, `incremento-0`, `incremento-1`, ..., `blocked`, `in-progress`, `done`
-- [ ] Confirmar branch `develop` creado desde `main` para integración continua
+- [x] Issues habilitado en el repo
+- [x] Milestone creado: "Incremento 0 — Walking Skeleton" (#1)
+- [x] Labels creados: us-iedd, incremento-0..6, blocked, in-progress, done
+- [x] Branch `develop` creado y pusheado desde `main`
 
 ---
 
 ## 8. CI/CD (ver `PLAN-CM.md` §11 — pipeline automático real, no deploy manual)
 
-- [ ] Crear workflow de GitHub Actions para push/PR a `develop`: lint (ruff/mypy/eslint) +
-      tests (pytest + tests frontend) + `designreviewer --config pyproject.toml`
-- [ ] Crear workflow separado (o job condicional) para merge/tag a `main`: build de imagen
-      Docker multi-stage + deploy automático + verificación de healthcheck post-deploy
-- [ ] Crear `Dockerfile` multi-stage (frontend build → backend runtime) — convención en `PLAN-CM.md` §11
-- [ ] Confirmar despliegue automático a la infraestructura elegida (Fly.io — ver ítem abierto
-      de infraestructura definitiva en `docs/rf/ARQ_v1.md`)
-- [ ] Configurar `alembic upgrade head` como paso del pipeline de deploy, no del build de la imagen
+- [x] `.github/workflows/ci.yml`: lint (ruff, mypy, eslint) + pytest + DesignReviewer en push/PR a develop
+- [x] `.github/workflows/cd.yml`: build Docker en push/tag a main — deploy y healthcheck comentados hasta definir infraestructura
+- [x] `Dockerfile` multi-stage (node:22 frontend build → python:3.12-slim runtime)
+- [x] `.dockerignore` creado
+- [ ] Deploy automático a Fly.io — pendiente de decisión de infraestructura (ítem abierto ARQ_v1.md)
+- [x] `alembic upgrade head` documentado como paso del pipeline de deploy (comentado en cd.yml hasta tener DB)
 
 ---
 
 ## 9. Frontend
 
-- [ ] `npm install` en `frontend/` una vez creado el scaffold (React 19 + Vite + TypeScript + Tailwind + shadcn/ui)
-- [ ] Configurar ESLint
+- [x] `npm install` en `frontend/` — React 19 + Vite + TypeScript
+- [x] Tailwind CSS v4 instalado con plugin `@tailwindcss/vite`
+- [x] shadcn/ui inicializado (preset nova, Base library)
+- [x] Path aliases configurados (`@/*` → `./src/*`) en tsconfig.app.json y vite.config.ts
+- [x] Linter: oxlint (reemplaza ESLint en el template de Vite — más rápido, mismo objetivo)
+- [x] Build verificado: `npm run build` exitoso
 
 ---
 
 ## 10. Verificación final antes del Incremento 0
 
-- [ ] `uv run pytest` corre sin errores (aunque no haya tests aún, el comando debe resolver)
-- [ ] `codeguard src/` corre sin errores de configuración
-- [ ] `designreviewer src/ --config pyproject.toml` corre sin errores de configuración
-- [ ] Push de prueba a una branch de prueba confirma que el pre-push hook se activa
-- [ ] `gh issue list` y `gh pr list` responden correctamente contra el repo `cognion`
+- [x] `uv run pytest` corre sin errores (0 tests collected — correcto en esta etapa)
+- [x] `codeguard src/` — 0 errores, 0 advertencias, 87 informativos
+- [x] `designreviewer src/ --config pyproject.toml` — 0 violaciones detectadas
+- [x] Push a `develop` confirma que el pre-push hook se activa (DesignReviewer corrió antes del push)
+- [x] `gh issue list` y `gh pr list` responden correctamente contra el repo `cognion`

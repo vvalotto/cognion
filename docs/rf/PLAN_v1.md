@@ -31,6 +31,17 @@ link vencido) y esas decisiones se destraban mejor viendo el sistema andar, no e
 **Las decisiones pendientes se resuelven con spikes dentro del incremento que las necesita**,
 no bloquean el plan completo.
 
+**Modelado de dominio antes de construir, por BC.** La experiencia previa (AtaraxiaDive) mostró
+que diseñar la UX después de construir el backend contamina la revisión de specs: el código
+termina especificado mirando el código existente en vez del diseño aprobado (anti-patrón
+"spec-validatoria"). La misma lógica aplica al dominio — escribir specs de US sin haber resuelto
+antes el modelo de agregados, eventos e invariantes del BC produce el mismo problema del lado
+del backend. Por eso cada Incremento que introduce un BC nuevo, o lo extiende de forma
+significativa, abre con una **Iteración 0 — Modelado**: event storming del BC (agregados,
+eventos de dominio, comandos, invariantes) más — si el BC expone pantallas nuevas — el prototipo
+UX correspondiente. Ambos artefactos se aprueban explícitamente con Víctor antes de escribir la
+primera US-IEDD del incremento. Procedimiento operativo en `docs/cm/WORKFLOW-DESARROLLO.md` §3.
+
 ---
 
 ## Incremento 0 — Walking Skeleton
@@ -44,12 +55,16 @@ no bloquean el plan completo.
 autentican con su rol correcto, y un push a `main` despliega automáticamente. El pipeline
 completo funciona de punta a punta con la funcionalidad mínima posible.
 
+*(Este incremento no lleva Iteración 0 — Modelado: es deliberadamente un slice técnico sin
+lógica de negocio, no hay dominio que modelar todavía.)*
+
 ---
 
 ## Incremento 1 — Banco de preguntas
 
 | Iteración | Contenido |
 |---|---|
+| 0 | **Modelado:** event storming BC Banco de Preguntas (agregados Pregunta/Banco, invariantes de metadatos) + wireframes de carga y filtrado (`docs/design/domain/BC-banco-preguntas-modelo.md`, `docs/design/ux/`) |
 | 1 | RF-04, RF-05, RF-06: carga, tipos (opción múltiple / V-F), metadatos y filtrado |
 | 2 | RF-03: gestión de cuentas por administrador |
 
@@ -66,6 +81,7 @@ decidido).*
 
 | Iteración | Contenido |
 |---|---|
+| 0 | **Modelado:** event storming completo BC Sesiones (agregado Sesion, eventos SesionCreada/RespuestaRegistrada/SesionCerrada, invariantes de persistencia atómica — Core Domain con Event Sourcing + CQRS, ADR-002) + wireframes del flujo de período abierto (`docs/design/domain/BC-sesiones-modelo.md`, `docs/design/ux/`) |
 | 1 | RF-11, RF-12: creación de sesión y set aleatorio por estudiante |
 | 2 | Persistencia respuesta a respuesta (confiabilidad — escenario RNF), RF-13: revisión al finalizar |
 | 3 | RF-11b: modificación del período de disponibilidad en caliente |
@@ -80,6 +96,7 @@ el plazo de una sesión activa. Es el primer flujo con valor real para ambos act
 
 | Iteración | Contenido |
 |---|---|
+| 0 | **Modelado (liviano):** diseño de read models de Analytics sobre el event store del BC Sesiones ya modelado en el Incremento 2 + wireframes del portal del estudiante (`docs/design/domain/BC-analytics-modelo.md`, `docs/design/ux/`) |
 | 1 | RF-15: vista de desempeño individual del estudiante |
 | 2 | RF-16, RF-17: seguimiento por alumno y por curso/tema (primeros read models de Analytics sobre el event store) |
 
@@ -92,6 +109,7 @@ reales ya corridas en el incremento anterior.
 
 | Iteración | Contenido |
 |---|---|
+| 0 | **Modelado (liviano):** contrato de eventos consumidos por BC Notificaciones desde BC Sesiones (integración directa, ADR-006) — no requiere prototipo UX nuevo (`docs/design/domain/BC-notificaciones-modelo.md`) |
 | 1 | RF-14: email de apertura/cierre de sesión de período abierto |
 
 **Hito:** El ciclo de la sesión de período abierto queda completo, incluida la comunicación
@@ -107,9 +125,9 @@ agregando funcionalidad.)*
 
 | Iteración | Contenido |
 |---|---|
-| 1 | **Spike:** cerrar el algoritmo de puntaje (ítem pendiente en RF) con ejemplos numéricos concretos junto al docente |
-| 2 | RF-08: creación de sesión en vivo + infraestructura WebSockets |
-| 3 | RF-09, RF-10: dinámica en tiempo real, ranking, cálculo de puntaje con el algoritmo cerrado en la iteración 1 |
+| 0 | **Modelado:** extensión del agregado Sesion existente (nuevos eventos de tiempo real, invariantes de ranking) + wireframes de pantalla en vivo/proyección. El spike del algoritmo de puntaje (RF-10, ítem pendiente) se resuelve dentro de esta iteración, junto al docente, antes de tocar código (`docs/design/domain/BC-sesiones-modelo.md` actualizado, `docs/design/ux/`) |
+| 1 | RF-08: creación de sesión en vivo + infraestructura WebSockets |
+| 2 | RF-09, RF-10: dinámica en tiempo real, ranking, cálculo de puntaje con el algoritmo cerrado en la iteración 0 |
 
 **Hito:** El docente conduce una sesión en vivo completa en el aula, con ranking actualizado en
 tiempo real dentro del umbral de ≤100ms server-side acordado en RNF.
@@ -138,6 +156,10 @@ preguntas del docente migrado.
   primer flujo de valor sin tiempo real (período abierto) → observabilidad de ese flujo
   (analytics/notificaciones) → el flujo más exigente técnicamente (en vivo) → cierre de ítems
   diferidos.
+- Cada incremento que introduce o extiende significativamente un BC abre con una **Iteración 0
+  — Modelado** (event storming + UX si corresponde), aprobada por Víctor antes de escribir la
+  primera US-IEDD. El Incremento 0 (walking skeleton) es la única excepción deliberada, por no
+  tener dominio que modelar.
 - Las **decisiones pendientes del RF** (algoritmo de puntaje, mecanismo PDF, comportamiento de
   link vencido) se resuelven como spikes al inicio del incremento que las necesita, con el
   docente presente — no se posponen indefinidamente ni se inventan.

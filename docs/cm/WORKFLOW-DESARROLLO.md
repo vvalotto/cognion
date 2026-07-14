@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: procedimiento operativo de branching, PRs, gestión de Issues/Milestones y ciclo de trabajo por US/Incremento
-> Última actualización: 2026-07-13
+> Última actualización: 2026-07-14
 > Fuente normativa relacionada: `docs/cm/PLAN-CM.md` (política) — este documento es el procedimiento que la ejecuta
 
 ---
@@ -18,6 +18,12 @@ Incremento (PLAN_v1.md, 0–6)  → Baseline (BL-NNN) + tag git (v0.N.0) + Miles
 No existe un nivel "Subproyecto" separado del Incremento — ver `PLAN-CM.md` §7 y §13. La
 Iteración cubre lo que en otros proyectos IEDD podría llamarse "Sprint", pero aquí es
 simplemente la subdivisión que ya trae `PLAN_v1.md` dentro de cada Incremento.
+
+**Iteración 0 — Modelado.** Cuando el incremento introduce un BC nuevo o lo extiende de forma
+significativa (ver `PLAN_v1.md`, tabla de cada incremento), la primera iteración no produce
+US-IEDD sino dos artefactos de diseño: el modelo de dominio del BC (event storming) y, si el BC
+expone pantallas nuevas, el prototipo UX correspondiente. Ambos se aprueban con Víctor antes de
+pasar a la Iteración 1. Procedimiento en §3.
 
 ---
 
@@ -65,8 +71,24 @@ Como <rol>, quiero <acción> para <valor>.
 ## 3. Ciclo de Elaboración de US por Incremento
 
 ```
+0. [CONDICIONAL — si el Incremento tiene Iteración 0 — Modelado, ver PLAN_v1.md]:
+   ejecutar la Iteración 0 ANTES de elaborar candidatas:
+   a. Event storming del BC: agregados, eventos de dominio, comandos, invariantes
+      → docs/design/domain/BC-<bc>-modelo.md
+   b. Si el BC expone pantallas nuevas: prototipo UX (docs/design/ux/prototipos/) +
+      spec de wireframes (docs/design/ux/wireframes-*.md) — mismo gate del §5 de PLAN-CM.md
+   c. Aprobación explícita de Víctor de AMBOS artefactos (modelo de dominio, y UX si
+      corresponde) antes de continuar al paso 1
+   d. No especificar comportamiento nuevo sobre un modelo de dominio que todavía no existe
+      o que difiere del aprobado — mismo anti-patrón "spec-validatoria" que en UX (PLAN-CM.md
+      §5), aplicado ahora al backend
+   e. Actualizar docs/traceability/matrix.md §4: los escenarios RNF que este incremento aborda
+      pasan de Planificado a Especificado — el mecanismo concreto que los garantiza ya quedó
+      definido en el modelo de dominio/UX aprobado, aunque todavía no esté codeado
 1. Elaborar el archivo de US candidatas: docs/plans/incN/incN-candidatas.md
    → Lista todas las US del incremento con descripción, criterios y estimación
+   → Las US candidatas referencian el modelo de dominio aprobado en la Iteración 0, no lo
+     redescubren
 2. Víctor revisa y aprueba (con ajustes si corresponde)
 3. Por cada US aprobada:
    a. Crear GitHub Issue con template US-IEDD → asignar Milestone + Labels
@@ -79,6 +101,8 @@ Como <rol>, quiero <acción> para <valor>.
       → La spec DEBE incluir el campo `## Fuente de verdad UX` con referencias a los
         artefactos consultados. Una spec de frontend sin ese campo no está completa.
    c. Crear docs/specs/incN/US-N.M.K.md con la especificación US-IEDD completa
+   d. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
+      Planificado a Especificado, completando la columna US-IEDD con su ID
 4. Las US quedan en estado "backlog" hasta iniciar su Incremento
 ```
 
@@ -156,6 +180,10 @@ chore(cm): registrar BL-002 cierre Incremento 2
 8. Abrir PR hacia develop con /pr → DesignReviewer corre en pre-push (bloquea si CRITICAL)
    → Usar siempre gh pr create --base develop (el default de gh es main)
 9. Merge del PR — Issue se cierra automáticamente
+9b. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
+    Especificado a Implementado.
+    → Si el código mergeado es el mecanismo concreto de un escenario RNF (ver la columna ADR
+      de la matriz §4 para identificar cuál), esa fila RNF pasa también a Implementado.
 ```
 
 ---
@@ -166,6 +194,10 @@ Un Incremento cierra cuando todas sus US-IEDD están mergeadas a `develop` y el 
 integración (definido en `PLAN_v1.md` para cada incremento) es verificable de punta a punta.
 
 ### Preparación al inicio del incremento
+
+Si el incremento tiene Iteración 0 — Modelado (ver `PLAN_v1.md`), debe estar cerrada — modelo
+de dominio y, si corresponde, UX ya aprobados por Víctor — antes de abrir la primera branch
+`feature/US-*` del incremento (§3, paso 0).
 
 Antes de la primera US, estimar el crecimiento total del aggregate principal y ajustar
 umbrales en `pyproject.toml` para el incremento completo (no US por US) — ver `PLAN-CM.md`
@@ -247,6 +279,10 @@ anterior), pero su DoD se verifica contra el entorno de destino, no contra `src/
    d. Ejecutar: Capa 1 pytest (flujo de dominio) + Capa 2 HTTP/WS (endpoints/canales observables)
    e. Guardar evidencia en quality/reports/uat/incN/
    f. UAT aprobado (sin hallazgos 🔴 Bloqueantes) → PR mergeado a develop antes de continuar
+   g. Actualizar docs/traceability/matrix.md: todas las filas RF y RNF cubiertas por este
+      Incremento pasan de Implementado a Validado, referenciando BL-NNN (ya registrada en el
+      paso 3) como evidencia. Un escenario RNF con ⚠️ ítem abierto sin resolver NO pasa a
+      Validado aunque el Incremento cierre — queda en su estado anterior con la nota vigente.
 5. Merge develop → main
    → El merge/tag a main dispara el pipeline de CI/CD: build de imagen Docker + deploy
      automático + verificación de healthcheck (PLAN-CM.md §11) — no se dispara desde develop
@@ -303,3 +339,14 @@ terminología `incN` en vez de `spX`/SP (no hay nivel Subproyecto separado en Co
 PLAN-CM.md §14), capas Clean Architecture (`entities/use_cases/interface_adapters/frameworks`)
 en vez de hexagonal DDD BC-first, y gate de UX + registro de aprendizajes incorporados desde
 el inicio en vez de descubiertos sobre la marcha.*
+
+*v1.1 — 2026-07-14. Se incorpora la Iteración 0 — Modelado (§1, §3, §6): event storming del BC
+más UX si corresponde, aprobados por Víctor antes de elaborar candidatas de US. Extiende a
+dominio/backend la misma lección de AtaraxiaDive que ya motivaba el gate de UX — ver
+`PLAN_v1.md`, sección "Modelado de dominio antes de construir, por BC".*
+
+*v1.2 — 2026-07-14. Se agregan los ganchos explícitos de actualización de
+`docs/traceability/matrix.md` (§3 pasos 0e y 3d, §5 paso 9b, §7 paso 4g): sin ellos, la matriz
+solo se corregía en el barrido de un SP-ADJ (`PLAN-CM.md` §12) — es decir, después de que ya
+divergió del código. Ahora RF y RNF avanzan de estado en el mismo commit/paso donde ocurre el
+hecho que lo justifica.*
