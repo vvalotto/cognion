@@ -108,8 +108,8 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 10. Verificación final antes del Incremento 0
 
-- [ ] `uv run pytest` corre sin errores (aunque no haya tests aún, el comando debe resolver)
-- [ ] `codeguard src/` corre sin errores de configuración
-- [ ] `designreviewer src/ --config pyproject.toml` corre sin errores de configuración
-- [ ] Push de prueba a una branch de prueba confirma que el pre-push hook se activa
-- [ ] `gh issue list` y `gh pr list` responden correctamente contra el repo `cognion`
+- [x] `uv run pytest` corre sin errores (0 tests collected — correcto en esta etapa)
+- [x] `codeguard src/` — 0 errores, 0 advertencias, 87 informativos
+- [x] `designreviewer src/ --config pyproject.toml` — 0 violaciones detectadas
+- [x] Push a `develop` confirma que el pre-push hook se activa (DesignReviewer corrió antes del push)
+- [x] `gh issue list` y `gh pr list` responden correctamente contra el repo `cognion`
