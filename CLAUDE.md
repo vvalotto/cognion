@@ -3,6 +3,7 @@
 > Estado operativo actual del proyecto. Resume y enlaza evidencia — no duplica los documentos fuente.
 > Actualizar al cierre de cada Incremento (SP-ADJ incluido).
 > Jerarquía: Código y tests > Baselines > ADRs > Matriz de trazabilidad > **este archivo** > README.md
+> Mapa documental y autoridad por tema, completo: `docs/inventario/DOCUMENTATION-MAP.md`.
 
 ---
 

@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: procedimiento operativo de branching, PRs, gestión de Issues/Milestones y ciclo de trabajo por US/Incremento
-> Última actualización: 2026-07-13
+> Última actualización: 2026-07-14
 > Fuente normativa relacionada: `docs/cm/PLAN-CM.md` (política) — este documento es el procedimiento que la ejecuta
 
 ---
@@ -18,6 +18,12 @@ Incremento (PLAN_v1.md, 0–6)  → Baseline (BL-NNN) + tag git (v0.N.0) + Miles
 No existe un nivel "Subproyecto" separado del Incremento — ver `PLAN-CM.md` §7 y §13. La
 Iteración cubre lo que en otros proyectos IEDD podría llamarse "Sprint", pero aquí es
 simplemente la subdivisión que ya trae `PLAN_v1.md` dentro de cada Incremento.
+
+**Iteración 0 — Modelado.** Cuando el incremento introduce un BC nuevo o lo extiende de forma
+significativa (ver `PLAN_v1.md`, tabla de cada incremento), la primera iteración no produce
+US-IEDD sino dos artefactos de diseño: el modelo de dominio del BC (event storming) y, si el BC
+expone pantallas nuevas, el prototipo UX correspondiente. Ambos se aprueban con Víctor antes de
+pasar a la Iteración 1. Procedimiento en §3.
 
 ---
 
@@ -65,8 +71,21 @@ Como <rol>, quiero <acción> para <valor>.
 ## 3. Ciclo de Elaboración de US por Incremento
 
 ```
+0. [CONDICIONAL — si el Incremento tiene Iteración 0 — Modelado, ver PLAN_v1.md]:
+   ejecutar la Iteración 0 ANTES de elaborar candidatas:
+   a. Event storming del BC: agregados, eventos de dominio, comandos, invariantes
+      → docs/design/domain/BC-<bc>-modelo.md
+   b. Si el BC expone pantallas nuevas: prototipo UX (docs/design/ux/prototipos/) +
+      spec de wireframes (docs/design/ux/wireframes-*.md) — mismo gate del §5 de PLAN-CM.md
+   c. Aprobación explícita de Víctor de AMBOS artefactos (modelo de dominio, y UX si
+      corresponde) antes de continuar al paso 1
+   d. No especificar comportamiento nuevo sobre un modelo de dominio que todavía no existe
+      o que difiere del aprobado — mismo anti-patrón "spec-validatoria" que en UX (PLAN-CM.md
+      §5), aplicado ahora al backend
 1. Elaborar el archivo de US candidatas: docs/plans/incN/incN-candidatas.md
    → Lista todas las US del incremento con descripción, criterios y estimación
+   → Las US candidatas referencian el modelo de dominio aprobado en la Iteración 0, no lo
+     redescubren
 2. Víctor revisa y aprueba (con ajustes si corresponde)
 3. Por cada US aprobada:
    a. Crear GitHub Issue con template US-IEDD → asignar Milestone + Labels
@@ -166,6 +185,10 @@ Un Incremento cierra cuando todas sus US-IEDD están mergeadas a `develop` y el 
 integración (definido en `PLAN_v1.md` para cada incremento) es verificable de punta a punta.
 
 ### Preparación al inicio del incremento
+
+Si el incremento tiene Iteración 0 — Modelado (ver `PLAN_v1.md`), debe estar cerrada — modelo
+de dominio y, si corresponde, UX ya aprobados por Víctor — antes de abrir la primera branch
+`feature/US-*` del incremento (§3, paso 0).
 
 Antes de la primera US, estimar el crecimiento total del aggregate principal y ajustar
 umbrales en `pyproject.toml` para el incremento completo (no US por US) — ver `PLAN-CM.md`
@@ -303,3 +326,8 @@ terminología `incN` en vez de `spX`/SP (no hay nivel Subproyecto separado en Co
 PLAN-CM.md §14), capas Clean Architecture (`entities/use_cases/interface_adapters/frameworks`)
 en vez de hexagonal DDD BC-first, y gate de UX + registro de aprendizajes incorporados desde
 el inicio en vez de descubiertos sobre la marcha.*
+
+*v1.1 — 2026-07-14. Se incorpora la Iteración 0 — Modelado (§1, §3, §6): event storming del BC
+más UX si corresponde, aprobados por Víctor antes de elaborar candidatas de US. Extiende a
+dominio/backend la misma lección de AtaraxiaDive que ya motivaba el gate de UX — ver
+`PLAN_v1.md`, sección "Modelado de dominio antes de construir, por BC".*
