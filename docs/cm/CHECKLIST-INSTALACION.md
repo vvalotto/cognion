@@ -77,10 +77,10 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 7. GitHub — gestión administrativa
 
-- [ ] Confirmar que el repo `cognion` tiene Issues habilitado
-- [ ] Crear Milestone del primer Incremento (Incremento 0 — Walking Skeleton)
-- [ ] Definir Labels: `us-iedd`, `incremento-0`, `incremento-1`, ..., `blocked`, `in-progress`, `done`
-- [ ] Confirmar branch `develop` creado desde `main` para integración continua
+- [x] Issues habilitado en el repo
+- [x] Milestone creado: "Incremento 0 — Walking Skeleton" (#1)
+- [x] Labels creados: us-iedd, incremento-0..6, blocked, in-progress, done
+- [x] Branch `develop` creado y pusheado desde `main`
 
 ---
 

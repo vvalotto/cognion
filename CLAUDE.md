@@ -23,7 +23,7 @@ Documentos de definición (no se modifican retroactivamente):
 **Fase:** Definición completada. Entorno de desarrollo no configurado aún.
 **Próximo paso:** Ejecutar `docs/cm/CHECKLIST-INSTALACION.md` y arrancar el Incremento 0 (Walking Skeleton) según `docs/cm/WORKFLOW-DESARROLLO.md` §6.
 **Baseline abierta:** ninguna (BL-000 se abre al iniciar el Incremento 0).
-**Branch activo:** `main` (sin `develop` creado todavía).
+**Branch activo:** `develop` (creado desde `main`).
 
 ---
 
