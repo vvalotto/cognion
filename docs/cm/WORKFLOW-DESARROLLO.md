@@ -82,6 +82,9 @@ Como <rol>, quiero <acción> para <valor>.
    d. No especificar comportamiento nuevo sobre un modelo de dominio que todavía no existe
       o que difiere del aprobado — mismo anti-patrón "spec-validatoria" que en UX (PLAN-CM.md
       §5), aplicado ahora al backend
+   e. Actualizar docs/traceability/matrix.md §4: los escenarios RNF que este incremento aborda
+      pasan de Planificado a Especificado — el mecanismo concreto que los garantiza ya quedó
+      definido en el modelo de dominio/UX aprobado, aunque todavía no esté codeado
 1. Elaborar el archivo de US candidatas: docs/plans/incN/incN-candidatas.md
    → Lista todas las US del incremento con descripción, criterios y estimación
    → Las US candidatas referencian el modelo de dominio aprobado en la Iteración 0, no lo
@@ -98,6 +101,8 @@ Como <rol>, quiero <acción> para <valor>.
       → La spec DEBE incluir el campo `## Fuente de verdad UX` con referencias a los
         artefactos consultados. Una spec de frontend sin ese campo no está completa.
    c. Crear docs/specs/incN/US-N.M.K.md con la especificación US-IEDD completa
+   d. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
+      Planificado a Especificado, completando la columna US-IEDD con su ID
 4. Las US quedan en estado "backlog" hasta iniciar su Incremento
 ```
 
@@ -175,6 +180,10 @@ chore(cm): registrar BL-002 cierre Incremento 2
 8. Abrir PR hacia develop con /pr → DesignReviewer corre en pre-push (bloquea si CRITICAL)
    → Usar siempre gh pr create --base develop (el default de gh es main)
 9. Merge del PR — Issue se cierra automáticamente
+9b. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
+    Especificado a Implementado.
+    → Si el código mergeado es el mecanismo concreto de un escenario RNF (ver la columna ADR
+      de la matriz §4 para identificar cuál), esa fila RNF pasa también a Implementado.
 ```
 
 ---
@@ -270,6 +279,10 @@ anterior), pero su DoD se verifica contra el entorno de destino, no contra `src/
    d. Ejecutar: Capa 1 pytest (flujo de dominio) + Capa 2 HTTP/WS (endpoints/canales observables)
    e. Guardar evidencia en quality/reports/uat/incN/
    f. UAT aprobado (sin hallazgos 🔴 Bloqueantes) → PR mergeado a develop antes de continuar
+   g. Actualizar docs/traceability/matrix.md: todas las filas RF y RNF cubiertas por este
+      Incremento pasan de Implementado a Validado, referenciando BL-NNN (ya registrada en el
+      paso 3) como evidencia. Un escenario RNF con ⚠️ ítem abierto sin resolver NO pasa a
+      Validado aunque el Incremento cierre — queda en su estado anterior con la nota vigente.
 5. Merge develop → main
    → El merge/tag a main dispara el pipeline de CI/CD: build de imagen Docker + deploy
      automático + verificación de healthcheck (PLAN-CM.md §11) — no se dispara desde develop
@@ -331,3 +344,9 @@ el inicio en vez de descubiertos sobre la marcha.*
 más UX si corresponde, aprobados por Víctor antes de elaborar candidatas de US. Extiende a
 dominio/backend la misma lección de AtaraxiaDive que ya motivaba el gate de UX — ver
 `PLAN_v1.md`, sección "Modelado de dominio antes de construir, por BC".*
+
+*v1.2 — 2026-07-14. Se agregan los ganchos explícitos de actualización de
+`docs/traceability/matrix.md` (§3 pasos 0e y 3d, §5 paso 9b, §7 paso 4g): sin ellos, la matriz
+solo se corregía en el barrido de un SP-ADJ (`PLAN-CM.md` §12) — es decir, después de que ya
+divergió del código. Ahora RF y RNF avanzan de estado en el mismo commit/paso donde ocurre el
+hecho que lo justifica.*
