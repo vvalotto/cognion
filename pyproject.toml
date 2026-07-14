@@ -1,0 +1,114 @@
+[project]
+name = "cognion"
+version = "0.1.0"
+description = "Plataforma de cuestionarios para facultades de ingeniería"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "alembic>=1.14.0",
+    "asyncpg>=0.30.0",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "websockets>=13.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=24.0.0",
+    "isort>=5.13.0",
+    "ruff>=0.8.0",
+    "mypy>=1.0.0",
+    "pylint>=3.0.0",
+    "pre-commit>=4.0.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-bdd>=7.0.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+    "quality-agents",
+]
+
+[tool.uv.sources]
+quality-agents = { git = "https://github.com/vvalotto/software_limpio" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# ---------------------------------------------------------------------------
+# Formatters / Linters
+# ---------------------------------------------------------------------------
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "src/*/frameworks/*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
+
+# ---------------------------------------------------------------------------
+# Quality agents (software_limpio)
+# Umbrales calibrados para Clean Architecture — no usar defaults del sistema
+# (CBO=5/WMC=20 genéricos producen falsos positivos en Use Cases que orquestan
+# múltiples Entities). Recalibrar al inicio de cada Incremento si el aggregate
+# principal crece significativamente.
+# ---------------------------------------------------------------------------
+
+[tool.codeguard]
+min_pylint_score = 8.0
+check_complexity = true
+max_cyclomatic_complexity = 10
+
+[tool.designreviewer]
+max_cbo = 10
+max_wmc = 25
+max_god_object_lines = 300
+max_god_object_methods = 15
+paths = ["src"]
+
+[tool.architectanalyst]
+paths = ["src"]
+history_db = "quality/reports/architectanalyst/history.db"
+
+[tool.architectanalyst.layers]
+entities = ["src/*/entities"]
+use_cases = ["src/*/use_cases"]
+interface_adapters = ["src/*/interface_adapters"]
+frameworks = ["src/*/frameworks"]

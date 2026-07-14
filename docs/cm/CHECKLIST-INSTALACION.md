@@ -20,11 +20,11 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 2. Runtime y gestores
 
-- [ ] **Python 3.11+**
-- [ ] **uv** (gestor de paquetes/venv) — `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- [ ] **Node.js + npm** (frontend React + Vite)
-- [ ] **gh CLI** — `brew install gh` seguido de `gh auth login`
-- [ ] **jq** — requerido por los hooks de gestión de sesión — `brew install jq`
+- [x] **Python 3.11+** — 3.12.0
+- [x] **uv** (gestor de paquetes/venv) — 0.9.18
+- [x] **Node.js + npm** (frontend React + Vite) — Node 22.17.0 / npm 10.9.2
+- [x] **gh CLI** — 2.96.0
+- [x] **jq** — 1.7.1
 
 ---
 

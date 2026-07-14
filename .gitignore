@@ -39,3 +39,9 @@ logs/
 # DB
 *.sqlite
 *.db
+
+# Quality reports (generados — no versionados)
+quality/reports/architectanalyst/history.db
+
+# uv
+.uv-cache/
