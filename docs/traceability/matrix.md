@@ -1,8 +1,9 @@
 # Traceability Matrix — Cognion
 
 > Estado documental: vigente
-> Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado
-> Última actualización: 2026-07-13
+> Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
+> calidad (RNF) → BC/alcance → Incremento → estado
+> Última actualización: 2026-07-14
 > Jerarquía de autoridad: `docs/cm/PLAN-CM.md` §6
 
 ---
@@ -12,6 +13,12 @@
 Esta matriz conecta cada Requerimiento Funcional (RF, ver `docs/rf/RF_v1.md`) con el
 Bounded Context responsable, el Incremento de `docs/rf/PLAN_v1.md` donde se implementa, y la
 US-IEDD que lo especifica.
+
+También rastrea los escenarios de calidad de `docs/rf/RNF_v1.md` (§4) — un RF puede estar
+"Validado" y aun así el escenario de calidad asociado (ej. rendimiento del ranking en vivo)
+seguir "Planificado" hasta el incremento donde ese atributo se verifica bajo carga real. Sin
+esta sección, un RNF podía quedar sin dueño explícito de incremento — el mismo problema que la
+matriz ya resuelve para los RF.
 
 ## 2. Estados normalizados (obligatorios — ver `docs/cm/PLAN-CM.md` §6)
 
@@ -50,3 +57,33 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 > La columna US-IEDD se completa a medida que se elaboran las US candidatas de cada
 > Incremento (`docs/plans/incN/incN-candidatas.md`) — ver `docs/cm/WORKFLOW-DESARROLLO.md` §3.
+
+## 4. Escenarios de calidad (RNF)
+
+IDs propios (`RNF-<atributo>-N`) porque `docs/rf/RNF_v1.md` no numera los escenarios de forma
+única entre atributos. Mismos cuatro estados de la sección 2 — para un escenario de calidad,
+"Validado" exige evidencia específica del atributo (medición de performance, UAT bajo carga,
+revisión de API, etc.), no solo tests unitarios.
+
+**Regla:** todo escenario debe vincularse a un ADR — ver `docs/cm/PLAN-CM.md`. La única
+excepción válida es que el escenario dependa de una decisión puramente de **comportamiento de
+dominio** (se vincula al RF, no a un ADR inventado) o de un **ítem abierto** sin decisión
+tomada todavía (se marca "Sin ADR — pendiente", nunca se deja vacío sin explicación).
+
+| RNF | Atributo | ADR | RNF_v1.md § | BC / Alcance | Incremento | Estado | Verificación esperada |
+|---|---|---|---|---|---|---|---|
+| RNF-REND-1 | Rendimiento | ADR-005 | Rendimiento, Escenario 1 | Sesiones | 5 | Planificado | Medición server-side ≤100ms con hasta 60 clientes conectados |
+| RNF-DISP-1 | Disponibilidad | ADR-010 | Disponibilidad, Escenario 1 | Sesiones / Infraestructura | 0 (healthcheck) → 5 (cancelación a los 5 min) | Planificado | Healthcheck expuesto (Inc 0) + comportamiento de cancelación verificado en UAT de Inc 5 |
+| RNF-DISP-2 | Disponibilidad | N/A — decisión de dominio (RF-11b), no arquitectónica | Disponibilidad, Escenario 2 | Sesiones | 2 | Planificado | RF-11b (modificación de cierre en caliente) cubre el escenario |
+| RNF-CONF-1 | Confiabilidad | ADR-009, ADR-004 | Confiabilidad | Sesiones | 2 | Planificado | Test de reconexión sin pérdida de respuestas confirmadas |
+| RNF-SEG-1 | Seguridad | ADR-007 | Seguridad | Identidad (transversal a todos los BC) | 0 | Planificado | Revisión de API — RBAC + JWT validado en cada endpoint |
+| RNF-USA-1 | Usabilidad | ADR-011 | Usabilidad, Escenario 1 | Frontend (transversal) | Todos los incrementos con frontend | Planificado | Gate UX de cada incremento — verificación de prototipo aprobado |
+| RNF-USA-2 | Usabilidad | ADR-011 | Usabilidad, Escenario 2 | Frontend / Sesiones en vivo | 5 | Planificado — ⚠️ ítem abierto, criterio a definir en diseño UX antes del Incremento 5 (ver `CLAUDE.md`) | Validación humana en dispositivo real (proyección en aula) |
+| RNF-MANT-1 | Mantenibilidad | ADR-001 | Mantenibilidad | Banco de preguntas | 1 | Planificado — ⚠️ depende del modelo polimórfico de tipos de pregunta, a resolver en la Iteración 0 — Modelado | Spike de incorporación de un tipo nuevo en ≤ 1 jornada |
+| RNF-OBS-1 | Observabilidad | ADR-002, ADR-010 | Observabilidad | Sesiones | 2 | Planificado | Reconstrucción de una sesión desde el event store, verificada en UAT |
+| RNF-ADM-1 | Administrabilidad | ADR-008 | Administrabilidad, Escenario 1 | Infraestructura | 0 | Implementado | Pipeline de GitHub Actions ya integrado en `develop` (CI/CD + Docker) |
+| RNF-ADM-2 | Administrabilidad | Sin ADR — pendiente, no hay decisión de infraestructura de producción todavía | Administrabilidad, Escenario 2 | Infraestructura | Sin asignar | Planificado — ⚠️ ítem abierto, depende de la decisión de infraestructura de producción (ver `CLAUDE.md`) | Backup mensual verificado una vez resuelta la infraestructura definitiva |
+
+> Los escenarios marcados con ⚠️ dependen de un ítem abierto listado en `CLAUDE.md` — no
+> deberían pasar de "Planificado" hasta que ese ítem se resuelva. Cuando esa decisión de
+> infraestructura se tome, RNF-ADM-2 debe ganar su propio ADR antes de avanzar de estado.
