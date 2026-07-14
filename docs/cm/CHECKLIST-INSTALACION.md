@@ -64,28 +64,14 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 6. Gestión de sesión (hooks + commands propios, no son de terceros)
 
-- [ ] Crear `.claude/hooks/check-session-start.sh` — hook `SessionStart`, verifica si existe
-      `session-needs-summary.flag` y obliga a resumir la sesión anterior antes de continuar
-- [ ] Crear `.claude/hooks/save-session.sh` — hook `SessionEnd`, captura git status/branch y
-      commits desde la última sesión, actualiza `session-current.md` y `session-metadata.json`
-- [ ] Registrar ambos hooks en `.claude/settings.json`:
-  ```json
-  {
-    "hooks": {
-      "SessionStart": [{"hooks": [{"type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-session-start.sh"}]}],
-      "SessionEnd": [{"hooks": [{"type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/save-session.sh"}]}]
-    }
-  }
-  ```
-- [ ] Crear `.claude/commands/checkpoint.md` — slash command para checkpoints proactivos de sesión
-- [ ] Crear `.claude/commands/resume.md` — slash command para restaurar contexto al iniciar sesión
-- [ ] Crear carpeta de memoria de sesión (ruta análoga a la de AtaraxiaDive, ajustada al path de Cognion):
-  ```
-  ~/.claude/projects/-Users-victor-PycharmProjects-cognion/memory/
-  ├── session-metadata.json
-  ├── session-current.md
-  └── session-history.md
-  ```
+- [x] Crear `.claude/hooks/check-session-start.sh` — avisa si hay sesión sin resumir
+- [x] Crear `.claude/hooks/save-session.sh` — captura git state y activa flag al cerrar
+- [x] Registrar ambos hooks en `.claude/settings.json` (SessionStart / SessionEnd)
+- [x] Crear `.claude/commands/checkpoint.md` — slash command /checkpoint
+- [x] Crear `.claude/commands/resume.md` — slash command /resume
+- [x] Crear archivos de memoria de sesión en:
+      `~/.claude/projects/-Users-victor-PycharmProjects-cognion/memory/`
+      (session-metadata.json, session-current.md, session-history.md)
 
 ---
 
