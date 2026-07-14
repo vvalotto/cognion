@@ -1,0 +1,4 @@
+#!/bin/bash
+# Corre black, isort, ruff y CodeGuard sobre archivos staged.
+# Advierte pero no bloquea el commit.
+uv run pre-commit run --files $(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' | tr '\n' ' ') 2>/dev/null || true

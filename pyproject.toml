@@ -35,6 +35,9 @@ dev = [
 [tool.uv.sources]
 quality-agents = { git = "https://github.com/vvalotto/software_limpio" }
 
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

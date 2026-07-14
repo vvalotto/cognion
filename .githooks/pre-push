@@ -1,0 +1,5 @@
+#!/bin/bash
+# Bloquea el push si DesignReviewer detecta violaciones CRITICAL.
+# IMPORTANTE: siempre pasar --config pyproject.toml — sin él se usan umbrales genéricos.
+set -e
+uv run designreviewer src/ --config pyproject.toml

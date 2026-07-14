@@ -30,29 +30,22 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 3. Quality agents (`software_limpio`)
 
-- [ ] Agregar a `pyproject.toml`:
-  ```toml
-  [tool.uv.sources]
-  quality-agents = { git = "https://github.com/vvalotto/software_limpio" }
-  ```
-- [ ] Instalar como dependencia de desarrollo: `uv add --dev quality-agents`
-- [ ] Configurar `[tool.codeguard]` — `min_pylint_score`, `check_complexity`, `max_cyclomatic_complexity`
-- [ ] Configurar `[tool.designreviewer]` — umbrales `max_cbo`, `max_wmc`, `max_god_object_lines`,
-      `max_god_object_methods`, calibrados a Clean Architecture (no al perfil layered por defecto)
-- [ ] Configurar `[tool.architectanalyst]` — `paths = ["src"]`, `history_db`, y
-      `[tool.architectanalyst.layers]` con los nombres reales de Cognion:
-      `entities`, `use_cases`, `interface_adapters`, `frameworks` (ver `PLAN-CM.md` §3)
-- [ ] Crear `.githooks/pre-push` con: `designreviewer src/ --config pyproject.toml`
-- [ ] Crear `.pre-commit-config.yaml` con hooks: black, isort, ruff, codeguard
-- [ ] `git config core.hooksPath .githooks` — **no se activa solo al clonar, ejecutar manualmente**
+- [x] Agregar a `pyproject.toml` — `[tool.uv.sources]` con git source
+- [x] Instalar como dependencia de desarrollo — `uv sync --all-groups`
+- [x] Configurar `[tool.codeguard]` — min_pylint_score=8.0, max_cyclomatic_complexity=10
+- [x] Configurar `[tool.designreviewer]` — calibrado para Clean Architecture (max_cbo=10, max_wmc=25)
+- [x] Configurar `[tool.architectanalyst]` — layers: entities/use_cases/interface_adapters/frameworks
+- [x] Crear `.githooks/pre-push` con: `designreviewer src/ --config pyproject.toml`
+- [x] Crear `.pre-commit-config.yaml` con hooks: black, isort, ruff, codeguard
+- [x] `git config core.hooksPath .githooks` — ejecutado manualmente
 
 ---
 
 ## 4. Herramientas estándar de calidad Python (PyPI)
 
-- [ ] `uv add --dev black isort ruff mypy pylint pre-commit`
-- [ ] `uv add --dev pytest pytest-asyncio pytest-bdd pytest-cov`
-- [ ] Configurar secciones `[tool.black]`, `[tool.isort]`, `[tool.ruff]`, `[tool.mypy]`,
+- [x] black, isort, ruff, mypy, pylint, pre-commit — incluidos en `[dependency-groups] dev`
+- [x] pytest, pytest-asyncio, pytest-bdd, pytest-cov — incluidos en `[dependency-groups] dev`
+- [x] Configurar secciones `[tool.black]`, `[tool.isort]`, `[tool.ruff]`, `[tool.mypy]`,
       `[tool.pytest.ini_options]`, `[tool.coverage.run]` en `pyproject.toml`
 
 ---
