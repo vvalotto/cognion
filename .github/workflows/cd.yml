@@ -1,0 +1,47 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-and-deploy:
+    name: Build, deploy y healthcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node (frontend build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build Docker image
+        run: docker build -t cognion:${{ github.sha }} .
+
+      # Migraciones de base de datos — alembic upgrade head corre ANTES del deploy,
+      # no dentro del build de la imagen (ver PLAN-CM.md §11).
+      # Requiere DATABASE_URL disponible como secret.
+      # - name: Run migrations
+      #   run: docker run --rm -e DATABASE_URL=${{ secrets.DATABASE_URL }} cognion:${{ github.sha }} uv run alembic upgrade head
+
+      # Deploy a Fly.io — infraestructura de producción pendiente de decisión (ARQ_v1.md).
+      # Descomentar cuando esté definida y configurado FLY_API_TOKEN en los secrets del repo.
+      # - name: Deploy a Fly.io
+      #   uses: superfly/flyctl-actions/setup-flyctl@master
+      # - run: flyctl deploy --remote-only
+      #   env:
+      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      # Healthcheck post-deploy
+      # - name: Healthcheck
+      #   run: |
+      #     sleep 10
+      #     curl --fail https://<app>.fly.dev/health
+
+      - name: Confirmar build exitoso
+        run: echo "Imagen cognion:${{ github.sha }} construida. Deploy pendiente de configuración de infraestructura."

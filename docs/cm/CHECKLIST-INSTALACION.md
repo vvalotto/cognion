@@ -86,14 +86,12 @@ Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obliga
 
 ## 8. CI/CD (ver `PLAN-CM.md` §11 — pipeline automático real, no deploy manual)
 
-- [ ] Crear workflow de GitHub Actions para push/PR a `develop`: lint (ruff/mypy/eslint) +
-      tests (pytest + tests frontend) + `designreviewer --config pyproject.toml`
-- [ ] Crear workflow separado (o job condicional) para merge/tag a `main`: build de imagen
-      Docker multi-stage + deploy automático + verificación de healthcheck post-deploy
-- [ ] Crear `Dockerfile` multi-stage (frontend build → backend runtime) — convención en `PLAN-CM.md` §11
-- [ ] Confirmar despliegue automático a la infraestructura elegida (Fly.io — ver ítem abierto
-      de infraestructura definitiva en `docs/rf/ARQ_v1.md`)
-- [ ] Configurar `alembic upgrade head` como paso del pipeline de deploy, no del build de la imagen
+- [x] `.github/workflows/ci.yml`: lint (ruff, mypy, eslint) + pytest + DesignReviewer en push/PR a develop
+- [x] `.github/workflows/cd.yml`: build Docker en push/tag a main — deploy y healthcheck comentados hasta definir infraestructura
+- [x] `Dockerfile` multi-stage (node:22 frontend build → python:3.12-slim runtime)
+- [x] `.dockerignore` creado
+- [ ] Deploy automático a Fly.io — pendiente de decisión de infraestructura (ítem abierto ARQ_v1.md)
+- [x] `alembic upgrade head` documentado como paso del pipeline de deploy (comentado en cd.yml hasta tener DB)
 
 ---
 
