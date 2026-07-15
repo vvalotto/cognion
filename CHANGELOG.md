@@ -11,5 +11,5 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ### Added
 - Fundación documental: RF_v1, RNF_v1, ARQ_v1, PLAN_v1
-- Plan de Gestión de Configuración (`docs/cm/PLAN-CM.md`), checklist de instalación y
+- Plan de Gestión de Configuración (`docs/plans/PLAN-CM.md`), checklist de instalación y
   workflow de desarrollo

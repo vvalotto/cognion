@@ -21,9 +21,15 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** Definición completada. Entorno de desarrollo no configurado aún.
-**Próximo paso:** Ejecutar `docs/cm/CHECKLIST-INSTALACION.md` y arrancar el Incremento 0 (Walking Skeleton) según `docs/cm/WORKFLOW-DESARROLLO.md` §6.
-**Baseline abierta:** ninguna (BL-000 se abre al iniciar el Incremento 0).
+**Fase:** Checklist de instalación resuelto (`docs/plans/CHECKLIST-INSTALACION.md`). Plan
+reestructurado el 2026-07-15: Incremento 0 (Fundación Técnica) ahora es infraestructura pura,
+sin BC Identidad — ver `docs/rf/PLAN_v1.md` (nota de revisión al inicio) y
+`docs/plans/inc0/inc0-candidatas.md`. Deploy real a un entorno (Fly.io u otro) queda diferido
+a un incremento posterior, pendiente de la decisión de infraestructura aún abierta.
+**Próximo paso:** Completar la única iteración del Incremento 0 (PostgreSQL local vía Docker
+Compose + Alembic inicializado en el repo). Luego arrancar el Incremento 1 (BC Identidad:
+RF-01, RF-02, JWT, healthcheck) con su propia Iteración 0 — Modelado.
+**Baseline abierta:** ninguna (BL-000 se abre al cerrar el Incremento 0).
 **Branch activo:** `develop` (creado desde `main`).
 
 ---
@@ -62,11 +68,11 @@ cognion/
 │   ├── architecture/                ← vista de arquitectura vigente (deriva de ARQ + ADRs)
 │   ├── design/ux/                   ← wireframes-*.md + prototipos/*.html — gate obligatorio pre-frontend
 │   ├── specs/incN/                  ← US-N.M.K.md — input de /implement-us
-│   ├── plans/incN/                  ← incN-candidatas.md — US candidatas por incremento
+│   ├── plans/                       ← PLAN-CM.md, WORKFLOW-DESARROLLO.md, PROCEDIMIENTO-UAT.md,
+│   │                                    CHECKLIST-INSTALACION.md + incN/incN-candidatas.md por incremento
 │   ├── reports/                     ← reportes de cierre de /implement-us
 │   ├── traceability/matrix.md       ← RF → BC → Incremento → US → estado
-│   ├── aprendizajes/                ← HITO-N.md — hallazgos del ensayo IEDD
-│   └── cm/                          ← PLAN-CM.md, WORKFLOW-DESARROLLO.md, PROCEDIMIENTO-UAT.md, CHECKLIST-INSTALACION.md
+│   └── aprendizajes/                ← HITO-N.md — hallazgos del ensayo IEDD
 ├── src/<bc>/                        ← backend BC-first con Clean Architecture interna
 ├── frontend/                        ← React + TypeScript + Tailwind + shadcn/ui
 ├── quality/reports/                 ← evidencia de codeguard/, designreviewer/, architectanalyst/
@@ -93,7 +99,7 @@ src/<bc>/
 
 ## Workflow de desarrollo — resumen operativo
 
-Referencia completa: `docs/cm/WORKFLOW-DESARROLLO.md`. Referencia de política: `docs/cm/PLAN-CM.md`.
+Referencia completa: `docs/plans/WORKFLOW-DESARROLLO.md`. Referencia de política: `docs/plans/PLAN-CM.md`.
 
 ### Jerarquía de trabajo
 
@@ -201,17 +207,17 @@ Decidir el track **antes de codear**:
 | HITO | `HITO-N-SLUG.md` | `HITO-1-WALKING-SKELETON-FRICCION.md` |
 | CI backend | `CI-C##` | `CI-C08` |
 | CI frontend | `CI-F##` | `CI-F03` |
-| Milestone GitHub | `Incremento N — <nombre>` | `Incremento 0 — Walking Skeleton` |
+| Milestone GitHub | `Incremento N — <nombre>` | `Incremento 0 — Fundación Técnica` |
 | Labels GitHub | `us-iedd`, `incremento-N`, `blocked`, `in-progress`, `done` | — |
 
 ---
 
 ## Ítems abiertos que requieren decisión
 
-- **Algoritmo de puntaje en modo en vivo** (RF-10): combina tiempo, corrección, dificultad e importancia. Se cierra como spike en Incremento 5, Iteración 1.
-- **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 6.
+- **Algoritmo de puntaje en modo en vivo** (RF-10): combina tiempo, corrección, dificultad e importancia. Se cierra como spike en Incremento 6, Iteración 0.
+- **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
 - **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción pendiente de decisión institucional (nube vs. servidor FIUNER).
-- **Criterios de legibilidad en proyección** (RNF_v1.md): tamaño de fuente mínimo y contraste. Se define en etapa de diseño UX antes de Incremento 5.
+- **Criterios de legibilidad en proyección** (RNF_v1.md): tamaño de fuente mínimo y contraste. Se define en etapa de diseño UX antes de Incremento 6.
 
 ---
 

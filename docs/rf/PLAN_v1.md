@@ -4,16 +4,24 @@
 > Fecha: 2026-07-08
 > Estado: borrador verificado
 > Basado en: RF_v1.md · RNF_v1.md · ARQ_v1.md
+> Revisión 2026-07-15: se separó la fundación técnica (Incremento 0) del primer BC de dominio
+> (Identidad, ahora Incremento 1) — ningún incremento estaba aún en ejecución (sin BL-000
+> abierta), por lo que esta revisión no reescribe historia, corrige el plan antes de arrancar.
 
 ---
 
 ## Estrategia general
 
-**Walking skeleton primero.** Antes de construir funcionalidad, un incremento 0 atraviesa las
-cuatro capas de Clean Architecture (Entities → Use Cases → Adapters → Frameworks) con el flujo
-más simple posible: registro + auth + deployment automático. Esto valida que el pipeline
-completo (CI/CD, Docker, PostgreSQL, Fly.io) funciona antes de invertir en dominio complejo —
-reduce el riesgo de integración que es típico en Clean Architecture cuando se posterga.
+**Fundación técnica primero, sin lógica de negocio.** Antes de construir cualquier BC, el
+Incremento 0 deja operativo el entorno de desarrollo completo: repo, CI/CD, Docker, esqueleto
+de las cuatro capas de Clean Architecture (Entities → Use Cases → Adapters → Frameworks),
+PostgreSQL local vía Docker Compose y Alembic. Esto valida que el pipeline técnico funciona
+antes de invertir en dominio — reduce el riesgo de integración típico en Clean Architecture
+cuando se posterga. El despliegue a un entorno real (Fly.io u otro) queda deliberadamente fuera
+de este incremento: depende de una decisión de infraestructura todavía pendiente (`ARQ_v1.md`)
+y no debe bloquear el arranque del dominio. Recién en el **Incremento 1 (BC Identidad)** aparece
+la primera lógica de negocio real — registro por invitación y roles — con su propia
+Iteración 0 — Modelado, igual que cualquier otro BC.
 
 **Orden por riesgo y dependencia, no por importancia percibida.** La sesión de período abierto
 va antes que la sesión en vivo, aunque ambas sean "core": el período abierto no requiere
@@ -44,23 +52,46 @@ primera US-IEDD del incremento. Procedimiento operativo en `docs/cm/WORKFLOW-DES
 
 ---
 
-## Incremento 0 — Walking Skeleton
+## Incremento 0 — Fundación Técnica
 
 | Iteración | Contenido |
 |---|---|
-| 1 | Repo, CI/CD (GitHub Actions), Docker, esqueleto Clean Architecture, PostgreSQL en Fly.io |
-| 2 | BC Identidad: RF-01 (registro por invitación), RF-02 (roles), JWT, healthcheck |
+| 1 | Repo, CI/CD (GitHub Actions), Docker, esqueleto Clean Architecture, PostgreSQL local vía Docker Compose, Alembic |
 
-**Hito:** Un estudiante se registra vía link de invitación, un docente y un administrador se
-autentican con su rol correcto, y un push a `main` despliega automáticamente. El pipeline
-completo funciona de punta a punta con la funcionalidad mínima posible.
+**Hito:** No es instalar herramientas — eso ya lo resolvió `docs/plans/CHECKLIST-INSTALACION.md`.
+Es **verificar con evidencia que las piezas instaladas funcionan integradas como un pipeline de
+construcción real**, de punta a punta, en el entorno local: push a `develop` dispara CI y
+termina en verde (lint + tests + DesignReviewer); push a `main` construye la imagen Docker sin
+errores; PostgreSQL local vía Docker Compose recibe una migración de Alembic aplicada con
+éxito; `docker run` de esa imagen expone `GET /health` → 200. Cada ítem con su evidencia
+registrada (log de CI, salida de `alembic upgrade head`, respuesta de `curl`), no solo "quedó
+configurado". El despliegue a un entorno real (testing o producción, vía Fly.io u otro) queda
+pendiente de la decisión de infraestructura (`ARQ_v1.md`, ítem abierto) y se resuelve en un
+incremento posterior, no acá.
 
-*(Este incremento no lleva Iteración 0 — Modelado: es deliberadamente un slice técnico sin
-lógica de negocio, no hay dominio que modelar todavía.)*
+*(Este incremento es deliberadamente un slice técnico sin lógica de negocio — no hay dominio
+que modelar todavía, por eso no lleva Iteración 0 — Modelado. BC Identidad, que sí tiene
+dominio real (Usuario, Rol, Invitación), se mueve al Incremento 1.)*
 
 ---
 
-## Incremento 1 — Banco de preguntas
+## Incremento 1 — BC Identidad
+
+| Iteración | Contenido |
+|---|---|
+| 0 | **Modelado:** event storming BC Identidad (Usuario, Rol, Invitación — invariantes de asignación automática a comisión) + wireframes de registro y login (`docs/design/domain/BC-identidad-modelo.md`, `docs/design/ux/`) |
+| 1 | RF-01, RF-02: registro por invitación, roles, JWT, healthcheck |
+
+**Hito:** Un estudiante se registra vía link de invitación y queda asignado automáticamente a
+su comisión; un docente y un administrador se autentican y reciben un JWT con su rol correcto.
+Corre en el entorno local sobre la fundación técnica del Incremento 0.
+
+*(Primer BC con lógica de negocio real — sigue la misma regla de modelado que todos los que
+siguen, sin excepción.)*
+
+---
+
+## Incremento 2 — Banco de preguntas
 
 | Iteración | Contenido |
 |---|---|
@@ -77,7 +108,7 @@ decidido).*
 
 ---
 
-## Incremento 2 — Sesión de período abierto (primer flujo de valor real)
+## Incremento 3 — Sesión de período abierto (primer flujo de valor real)
 
 | Iteración | Contenido |
 |---|---|
@@ -90,13 +121,16 @@ decidido).*
 una desconexión simulada para validar cero pérdida de respuestas — y el docente puede extender
 el plazo de una sesión activa. Es el primer flujo con valor real para ambos actores.
 
+*(Primer incremento con datos reales de estudiantes en juego — los ítems abiertos de
+infraestructura de producción y backup de `ARQ_v1.md` deben resolverse antes de arrancarlo.)*
+
 ---
 
-## Incremento 3 — Portal del estudiante y Analytics
+## Incremento 4 — Portal del estudiante y Analytics
 
 | Iteración | Contenido |
 |---|---|
-| 0 | **Modelado (liviano):** diseño de read models de Analytics sobre el event store del BC Sesiones ya modelado en el Incremento 2 + wireframes del portal del estudiante (`docs/design/domain/BC-analytics-modelo.md`, `docs/design/ux/`) |
+| 0 | **Modelado (liviano):** diseño de read models de Analytics sobre el event store del BC Sesiones ya modelado en el Incremento 3 + wireframes del portal del estudiante (`docs/design/domain/BC-analytics-modelo.md`, `docs/design/ux/`) |
 | 1 | RF-15: vista de desempeño individual del estudiante |
 | 2 | RF-16, RF-17: seguimiento por alumno y por curso/tema (primeros read models de Analytics sobre el event store) |
 
@@ -105,7 +139,7 @@ reales ya corridas en el incremento anterior.
 
 ---
 
-## Incremento 4 — Notificaciones
+## Incremento 5 — Notificaciones
 
 | Iteración | Contenido |
 |---|---|
@@ -121,7 +155,7 @@ agregando funcionalidad.)*
 
 ---
 
-## Incremento 5 — Sesión en vivo (Kahoot!-style)
+## Incremento 6 — Sesión en vivo (Kahoot!-style)
 
 | Iteración | Contenido |
 |---|---|
@@ -137,7 +171,7 @@ ya validada en producción.)*
 
 ---
 
-## Incremento 6 — Cierre de alcance v1
+## Incremento 7 — Cierre de alcance v1
 
 | Iteración | Contenido |
 |---|---|
@@ -151,17 +185,18 @@ preguntas del docente migrado.
 
 ## Resumen de la estrategia
 
-- **7 incrementos**, cada uno termina en un hito demostrable y desplegado (no una demo local).
-- El **orden sigue el riesgo real**: fundaciones → dominio estable (banco de preguntas) →
-  primer flujo de valor sin tiempo real (período abierto) → observabilidad de ese flujo
-  (analytics/notificaciones) → el flujo más exigente técnicamente (en vivo) → cierre de ítems
-  diferidos.
-- Cada incremento que introduce o extiende significativamente un BC abre con una **Iteración 0
-  — Modelado** (event storming + UX si corresponde), aprobada por Víctor antes de escribir la
-  primera US-IEDD. El Incremento 0 (walking skeleton) es la única excepción deliberada, por no
-  tener dominio que modelar.
+- **8 incrementos**, cada uno termina en un hito demostrable (desplegado, una vez resuelta la
+  decisión de infraestructura — ver Incremento 0).
+- El **orden sigue el riesgo real**: fundación técnica sin dominio → primer BC de dominio
+  (identidad) → dominio estable (banco de preguntas) → primer flujo de valor sin tiempo real
+  (período abierto) → observabilidad de ese flujo (analytics/notificaciones) → el flujo más
+  exigente técnicamente (en vivo) → cierre de ítems diferidos.
+- **Todo incremento que introduce o extiende un BC abre con una Iteración 0 — Modelado**
+  (event storming + UX si corresponde), aprobada por Víctor antes de escribir la primera
+  US-IEDD — sin excepciones. El Incremento 0 (fundación técnica) es el único que no aplica esta
+  regla, precisamente porque no introduce ningún BC.
 - Las **decisiones pendientes del RF** (algoritmo de puntaje, mecanismo PDF, comportamiento de
   link vencido) se resuelven como spikes al inicio del incremento que las necesita, con el
   docente presente — no se posponen indefinidamente ni se inventan.
 - Los **ítems abiertos del ARQ** (infraestructura de producción, backup) se resuelven antes del
-  incremento 2, porque ya hay datos reales de estudiantes en juego a partir de ahí.
+  Incremento 3, porque ya hay datos reales de estudiantes en juego a partir de ahí.

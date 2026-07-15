@@ -203,7 +203,7 @@ Código y tests  >  Baselines (.cm/)  >  ADRs  >  Matriz de trazabilidad  >  CLA
 | Diseño UX aprobado | `docs/design/ux/` | Fuente de verdad de la implementación de `frontend/` — ver §5 |
 | Trazabilidad | `docs/traceability/matrix.md` | RF → BC → Incremento → US → estado |
 | Especificaciones US-IEDD | `docs/specs/` | Input directo de `/implement-us` |
-| Workflow de desarrollo | `docs/cm/WORKFLOW-DESARROLLO.md` | Si difiere de CLAUDE.md, manda el workflow |
+| Workflow de desarrollo | `docs/plans/WORKFLOW-DESARROLLO.md` | Si difiere de CLAUDE.md, manda el workflow |
 | Requerimientos funcionales elicitados | `docs/rf/RF_v1.md` | Catálogo base — histórico una vez que hay ADRs/specs que lo detallan |
 | Atributos de calidad | `docs/rf/RNF_v1.md` | Fuente de escenarios de calidad |
 | Arquitectura de referencia inicial | `docs/rf/ARQ_v1.md` | Punto de partida — pasa a histórico cuando `docs/architecture/` diverge y se reconcilia vía ADR |
@@ -620,7 +620,7 @@ Esta jerarquía formaliza lo que `PLAN_v1.md` ya definió (Incremento → Iterac
 con el mecanismo de baseline y con US-IEDD, que todavía no existían como unidad de trabajo en
 ese documento. El detalle operativo completo (branching, PRs, template de Issue, ciclo por
 US/Incremento, gate de consulta UX antes de specs de frontend) se define en
-`docs/cm/WORKFLOW-DESARROLLO.md` al iniciar el Incremento 0 — este documento es el plan
+`docs/plans/WORKFLOW-DESARROLLO.md` al iniciar el Incremento 0 — este documento es el plan
 de CM; el workflow es el procedimiento operativo que lo ejecuta.
 
 ---
@@ -657,7 +657,7 @@ patrón, no una unidad de baseline) — no implica que Cognion tenga un nivel de
 ## 15. Herramientas requeridas
 
 El detalle completo de instalación (uv, gh, quality-agents, Claude Dev Kit, hooks y
-commands de gestión de sesión) vive en `docs/cm/CHECKLIST-INSTALACION.md` — no se
+commands de gestión de sesión) vive en `docs/plans/CHECKLIST-INSTALACION.md` — no se
 duplica aquí.
 
 ---
@@ -665,6 +665,6 @@ duplica aquí.
 ## 16. Próximo paso
 
 Con el plan de CM, el checklist de instalación y el workflow de desarrollo ya definidos
-(`docs/cm/PLAN-CM.md`, `docs/cm/CHECKLIST-INSTALACION.md`, `docs/cm/WORKFLOW-DESARROLLO.md`),
+(`docs/plans/PLAN-CM.md`, `docs/plans/CHECKLIST-INSTALACION.md`, `docs/plans/WORKFLOW-DESARROLLO.md`),
 el siguiente paso es ejecutar el checklist de instalación y arrancar el Incremento 0
 (Walking Skeleton) de `PLAN_v1.md` siguiendo el ciclo definido en `WORKFLOW-DESARROLLO.md` §6.
