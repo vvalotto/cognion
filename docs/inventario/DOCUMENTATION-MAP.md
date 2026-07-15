@@ -47,7 +47,7 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 | Presentación breve | `README.md` | Entrada rápida, sin detalle completo. |
 | Estado operativo actual | `CLAUDE.md` | Memoria operativa para desarrollo asistido por IA. |
 | Visión del producto | `docs/requirements/vision.md` | Problema, usuarios, alcance, criterios de éxito. |
-| Workflow de desarrollo | `docs/cm/WORKFLOW-DESARROLLO.md` | Procedimiento vigente para US, incrementos, Iteración 0 — Modelado. |
+| Workflow de desarrollo | `docs/plans/WORKFLOW-DESARROLLO.md` | Procedimiento vigente para US, incrementos, Iteración 0 — Modelado. |
 | Plan de incrementos | `docs/rf/PLAN_v1.md` | Los 7 incrementos y su orden por riesgo. |
 | Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
 | Diseño UX aprobado | `docs/design/ux/` | Gate obligatorio antes de código en `frontend/`. |

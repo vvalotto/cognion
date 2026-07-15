@@ -3,7 +3,7 @@
 > Estado documental: vigente
 > Fuente de verdad para: estrategia y procedimiento de pruebas de aceptación
 > Última actualización: 2026-07-13
-> Fuente normativa relacionada: `docs/cm/PLAN-CM.md` §10 (Quality Gates), §11 (Versionado, Entregas y Builds)
+> Fuente normativa relacionada: `docs/plans/PLAN-CM.md` §10 (Quality Gates), §11 (Versionado, Entregas y Builds)
 
 ---
 
@@ -145,7 +145,7 @@ precisamente el caso que el entorno propio no puede validar con realismo.
 
 ## 9. Gate de cierre
 
-Un Incremento **no cierra su baseline** (`docs/cm/WORKFLOW-DESARROLLO.md` §7) hasta que su
+Un Incremento **no cierra su baseline** (`docs/plans/WORKFLOW-DESARROLLO.md` §7) hasta que su
 UAT esté aprobado — Capa 1 + Capa 2 con el criterio de aceptación de `design.md` cumplido, y
 sin hallazgos 🔴 Bloqueantes sin resolver.
 

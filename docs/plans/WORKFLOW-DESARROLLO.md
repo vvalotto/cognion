@@ -3,7 +3,7 @@
 > Estado documental: vigente
 > Fuente de verdad para: procedimiento operativo de branching, PRs, gestión de Issues/Milestones y ciclo de trabajo por US/Incremento
 > Última actualización: 2026-07-14
-> Fuente normativa relacionada: `docs/cm/PLAN-CM.md` (política) — este documento es el procedimiento que la ejecuta
+> Fuente normativa relacionada: `docs/plans/PLAN-CM.md` (política) — este documento es el procedimiento que la ejecuta
 
 ---
 

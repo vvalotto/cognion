@@ -2,7 +2,7 @@
 
 > Estado documental: operativo
 > Uso principal: guía de arranque del entorno de desarrollo antes de iniciar el Incremento 0
-> Fuente normativa relacionada: `docs/cm/PLAN-CM.md`
+> Fuente normativa relacionada: `docs/plans/PLAN-CM.md`
 > Última actualización: 2026-07-13
 
 ---
@@ -12,7 +12,7 @@
 Checklist de herramientas y artefactos que deben instalarse/configurarse en Cognion antes
 de arrancar el Incremento 0 (Walking Skeleton) de `docs/rf/PLAN_v1.md`. Es la lista de
 arranque — el "por qué" de cada herramienta y su rol en el ciclo de desarrollo está en
-`docs/cm/PLAN-CM.md` y en `docs/cm/WORKFLOW-DESARROLLO.md` (a crear).
+`docs/plans/PLAN-CM.md` y en `docs/plans/WORKFLOW-DESARROLLO.md` (a crear).
 
 Marcar cada ítem al completarlo. No se avanza al Incremento 0 con ítems obligatorios sin marcar.
 

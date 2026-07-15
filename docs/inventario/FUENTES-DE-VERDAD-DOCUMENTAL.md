@@ -35,8 +35,8 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Propósito del ensayo IEDD | `docs/iedd/04-Hipotesis_Ensayo_IA_Ingenieria_Human_In_The_Loop.md` | `CLAUDE.md`, `docs/aprendizajes/HITO-*.md` | La explicación completa vive en `iedd/`, no en el README. |
 | Estado operativo actual | `CLAUDE.md` | `README.md`, `docs/traceability/matrix.md`, `.cm/baselines/` | `CLAUDE.md` resume y enlaza evidencia — no la reproduce. |
 | Estado validado por baseline | `.cm/baselines/` | `CLAUDE.md`, `README.md` | Las baselines mandan sobre cierres formales de incremento. |
-| Workflow vigente de desarrollo | `docs/cm/WORKFLOW-DESARROLLO.md` | `CLAUDE.md`, `docs/cm/PLAN-CM.md` | Si hay diferencia entre `CLAUDE.md` y el workflow, manda el workflow. |
-| Política de gestión de configuración | `docs/cm/PLAN-CM.md` | `docs/cm/WORKFLOW-DESARROLLO.md` | El workflow ejecuta la política; no la redefine. |
+| Workflow vigente de desarrollo | `docs/plans/WORKFLOW-DESARROLLO.md` | `CLAUDE.md`, `docs/plans/PLAN-CM.md` | Si hay diferencia entre `CLAUDE.md` y el workflow, manda el workflow. |
+| Política de gestión de configuración | `docs/plans/PLAN-CM.md` | `docs/plans/WORKFLOW-DESARROLLO.md` | El workflow ejecuta la política; no la redefine. |
 | Plan de incrementos | `docs/rf/PLAN_v1.md` | `docs/traceability/matrix.md` | Documento histórico de elicitación — no se reescribe retroactivamente; los ajustes de proceso viven en `WORKFLOW-DESARROLLO.md`. |
 | Requerimientos funcionales | `docs/rf/RF_v1.md` | `docs/traceability/matrix.md` | Catálogo base — histórico, no se modifica retroactivamente. |
 | Atributos de calidad / RNF | `docs/rf/RNF_v1.md` | `docs/rf/ARQ_v1.md`, quality reports | Fuente de escenarios de calidad y medidas acordadas. |
@@ -51,7 +51,7 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Aprendizajes metodológicos | `docs/aprendizajes/HITO-*.md` | baselines, `docs/iedd/` | Evidencia del ensayo IEDD; no se reescriben salvo corrección editorial. |
 | Reportes de cierre de US | `docs/reports/` | `docs/traceability/matrix.md` | Evidencia de cierre de `/implement-us`. |
 | Reportes de calidad (CodeGuard, DesignReviewer, ArchitectAnalyst) | `quality/reports/` | `CLAUDE.md`, `.cm/baselines/` | Evidencia técnica; no se edita a mano. |
-| Gestión de configuración (baselines, tags) | `.cm/baselines/` | `docs/cm/PLAN-CM.md` | Fuente de registros de cierre de incremento. |
+| Gestión de configuración (baselines, tags) | `.cm/baselines/` | `docs/plans/PLAN-CM.md` | Fuente de registros de cierre de incremento. |
 | Marco metodológico IEDD | `docs/iedd/` | `CLAUDE.md` | Vigente y estable — no cambia por incremento. |
 
 ---
