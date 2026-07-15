@@ -21,15 +21,19 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** Checklist de instalación resuelto (`docs/plans/CHECKLIST-INSTALACION.md`). Plan
-reestructurado el 2026-07-15: Incremento 0 (Fundación Técnica) ahora es infraestructura pura,
-sin BC Identidad — ver `docs/rf/PLAN_v1.md` (nota de revisión al inicio) y
-`docs/plans/inc0/inc0-candidatas.md`. Deploy real a un entorno (Fly.io u otro) queda diferido
-a un incremento posterior, pendiente de la decisión de infraestructura aún abierta.
-**Próximo paso:** Completar la única iteración del Incremento 0 (PostgreSQL local vía Docker
-Compose + Alembic inicializado en el repo). Luego arrancar el Incremento 1 (BC Identidad:
-RF-01, RF-02, JWT, healthcheck) con su propia Iteración 0 — Modelado.
-**Baseline abierta:** ninguna (BL-000 se abre al cerrar el Incremento 0).
+**Fase:** BL-000 (Fundación Documental) cerrada el 2026-07-15 — tag `v0.1.0`
+(`.cm/baselines/BL-000-fundacion-documental.md`). Plan de incrementos reestructurado:
+Incremento 0 (Fundación Técnica) es ahora infraestructura pura, sin BC Identidad — ver
+`docs/rf/PLAN_v1.md` (nota de revisión al inicio). Deploy real a un entorno (Fly.io u otro)
+queda diferido a un incremento posterior, pendiente de la decisión de infraestructura aún
+abierta.
+**Próximo paso:** Armar `docs/plans/inc0/inc0-candidatas.md` sobre el Incremento 0 ya
+corregido (PostgreSQL local vía Docker Compose + Alembic inicializado en el repo, con
+evidencia de pipeline integrado). Luego arrancar el Incremento 1 (BC Identidad: RF-01, RF-02,
+JWT, healthcheck) con su propia Iteración 0 — Modelado.
+**Baseline abierta:** BL-001 se abre al iniciar la ejecución del Incremento 0 y se cierra
+cuando su Hito quede verificado con evidencia (ver `docs/plans/PLAN-CM.md` §7 para la
+numeración de baselines).
 **Branch activo:** `develop` (creado desde `main`).
 
 ---
