@@ -29,11 +29,12 @@ queda diferido a un incremento posterior, pendiente de la decisión de infraestr
 abierta.
 **Próximo paso:** Ejecutar el Incremento 0 siguiendo el ciclo de "incrementos técnicos sin US"
 (`docs/plans/WORKFLOW-DESARROLLO.md` §6): branch `feature/inc-0-fundacion-tecnica` desde
-`develop`, commits por tarea (Docker Compose + PostgreSQL local, Alembic inicializado,
-evidencia de pipeline CI/CD integrado de punta a punta), PR con `/pr`, merge, y registrar
-BL-001 al cerrar. No requiere `docs/plans/inc0/inc0-candidatas.md` — ese artefacto es para
-incrementos con US-IEDD (ver `HITO-3`). Luego arrancar el Incremento 1 (BC Identidad: RF-01,
-RF-02, JWT, healthcheck) con su propia Iteración 0 — Modelado.
+`develop` (ya creado), commits por tarea (PostgreSQL local vía Homebrew — Docker diferido, ver
+`docs/rf/PLAN_v1.md` revisión 2026-07-16 —, Alembic inicializado, evidencia de pipeline CI/CD
+integrado de punta a punta), PR con `/pr`, merge, y registrar BL-001 al cerrar. No requiere
+`docs/plans/inc0/inc0-candidatas.md` — ese artefacto es para incrementos con US-IEDD (ver
+`HITO-3`). Luego arrancar el Incremento 1 (BC Identidad: RF-01, RF-02, JWT, healthcheck) con
+su propia Iteración 0 — Modelado.
 **Baseline abierta:** BL-001 se abre al iniciar la ejecución del Incremento 0 y se cierra
 cuando su Hito quede verificado con evidencia (ver `docs/plans/PLAN-CM.md` §7 para la
 numeración de baselines).
@@ -224,6 +225,10 @@ Decidir el track **antes de codear**:
 - **Algoritmo de puntaje en modo en vivo** (RF-10): combina tiempo, corrección, dificultad e importancia. Se cierra como spike en Incremento 6, Iteración 0.
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
 - **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción pendiente de decisión institucional (nube vs. servidor FIUNER).
+- **Docker en el entorno de desarrollo local**: no instalado a la fecha (2026-07-16). Se
+  usará más adelante en el proyecto — hasta entonces, PostgreSQL local corre vía Homebrew
+  (ver `docs/rf/PLAN_v1.md` revisión 2026-07-16). El build de imagen Docker en CI/CD no se
+  ve afectado — corre en GitHub Actions, no localmente.
 - **Criterios de legibilidad en proyección** (RNF_v1.md): tamaño de fuente mínimo y contraste. Se define en etapa de diseño UX antes de Incremento 6.
 
 ---
