@@ -7,15 +7,22 @@
 > Revisión 2026-07-15: se separó la fundación técnica (Incremento 0) del primer BC de dominio
 > (Identidad, ahora Incremento 1) — ningún incremento estaba aún en ejecución (sin BL-000
 > abierta), por lo que esta revisión no reescribe historia, corrige el plan antes de arrancar.
+> Revisión 2026-07-16: Docker no está disponible en el entorno de desarrollo actual — se decide
+> usarlo más adelante en el proyecto (queda como ítem abierto, ver `CLAUDE.md`). PostgreSQL
+> local para el Incremento 0 se instala vía Homebrew en lugar de Docker Compose; Alembic corre
+> igual, sin cambios, contra esa instancia. Cuando se adopte Docker, se migra la infraestructura
+> local a Docker Compose sin tocar Alembic ni el dominio. Tampoco reescribe historia — el
+> Incremento 0 sigue sin ejecutarse (sin BL-001 abierta).
 
 ---
 
 ## Estrategia general
 
 **Fundación técnica primero, sin lógica de negocio.** Antes de construir cualquier BC, el
-Incremento 0 deja operativo el entorno de desarrollo completo: repo, CI/CD, Docker, esqueleto
+Incremento 0 deja operativo el entorno de desarrollo completo: repo, CI/CD, esqueleto
 de las cuatro capas de Clean Architecture (Entities → Use Cases → Adapters → Frameworks),
-PostgreSQL local vía Docker Compose y Alembic. Esto valida que el pipeline técnico funciona
+PostgreSQL local (vía Homebrew — Docker Compose diferido, ver revisión 2026-07-16) y Alembic.
+Esto valida que el pipeline técnico funciona
 antes de invertir en dominio — reduce el riesgo de integración típico en Clean Architecture
 cuando se posterga. El despliegue a un entorno real (Fly.io u otro) queda deliberadamente fuera
 de este incremento: depende de una decisión de infraestructura todavía pendiente (`ARQ_v1.md`)
@@ -56,14 +63,16 @@ primera US-IEDD del incremento. Procedimiento operativo en `docs/cm/WORKFLOW-DES
 
 | Iteración | Contenido |
 |---|---|
-| 1 | Repo, CI/CD (GitHub Actions), Docker, esqueleto Clean Architecture, PostgreSQL local vía Docker Compose, Alembic |
+| 1 | Repo, CI/CD (GitHub Actions), esqueleto Clean Architecture, PostgreSQL local (Homebrew — Docker diferido), Alembic |
 
 **Hito:** No es instalar herramientas — eso ya lo resolvió `docs/plans/CHECKLIST-INSTALACION.md`.
 Es **verificar con evidencia que las piezas instaladas funcionan integradas como un pipeline de
 construcción real**, de punta a punta, en el entorno local: push a `develop` dispara CI y
 termina en verde (lint + tests + DesignReviewer); push a `main` construye la imagen Docker sin
-errores; PostgreSQL local vía Docker Compose recibe una migración de Alembic aplicada con
-éxito; `docker run` de esa imagen expone `GET /health` → 200. Cada ítem con su evidencia
+errores (el runtime de contenedores en sí queda diferido para uso local, ver revisión
+2026-07-16 — el build de imagen en CI no lo requiere); PostgreSQL local (Homebrew) recibe una
+migración de Alembic aplicada con éxito; la app corre localmente y expone `GET /health` → 200.
+Cada ítem con su evidencia
 registrada (log de CI, salida de `alembic upgrade head`, respuesta de `curl`), no solo "quedó
 configurado". El despliegue a un entorno real (testing o producción, vía Fly.io u otro) queda
 pendiente de la decisión de infraestructura (`ARQ_v1.md`, ítem abierto) y se resuelve en un

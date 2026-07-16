@@ -69,16 +69,7 @@ jobs:
         run: uv sync --all-groups --frozen
 
       - name: pytest
-        run: |
-          set +e
-          uv run pytest --cov=src --cov-report=term-missing
-          code=$?
-          set -e
-          if [ $code -eq 5 ]; then
-            echo "::notice::Sin tests todavía (exit 5) — tolerado hasta que el Incremento 0 agregue tests reales."
-            exit 0
-          fi
-          exit $code
+        run: uv run pytest --cov=src --cov-report=term-missing
 
   design-review:
     name: DesignReviewer

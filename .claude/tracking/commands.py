@@ -4,14 +4,15 @@ Comandos de tracking para control manual del usuario.
 Estos comandos permiten al usuario controlar pausas y consultar el estado
 del tracking durante la implementación de una Historia de Usuario.
 """
-from pathlib import Path
-from typing import Optional, Dict, Any
+
 import json
-from datetime import datetime, timezone
 import sys
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
 
 
-def _find_active_tracking() -> Optional[Path]:
+def _find_active_tracking() -> Path | None:
     """Busca un archivo de tracking activo (sin completed_at).
 
     Returns:
@@ -24,7 +25,7 @@ def _find_active_tracking() -> Optional[Path]:
     # Buscar archivos JSON en el directorio
     for json_file in tracking_dir.glob("US-*-tracking.json"):
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
+            with open(json_file, encoding="utf-8") as f:
                 data = json.load(f)
                 # Si no tiene completed_at, está activo
                 if data.get("timeline", {}).get("completed_at") is None:
@@ -48,7 +49,7 @@ def _load_tracker_from_file(file_path: Path):
     sys.path.insert(0, str(Path(__file__).parent.parent))
     from tracking.time_tracker import TimeTracker
 
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding="utf-8") as f:
         data = json.load(f)
 
     # Crear tracker a partir de metadata
@@ -57,7 +58,7 @@ def _load_tracker_from_file(file_path: Path):
         us_id=metadata["us_id"],
         us_title=metadata["us_title"],
         us_points=metadata["us_points"],
-        producto=metadata["producto"]
+        producto=metadata["producto"],
     )
 
     # Cargar el estado completo desde el archivo JSON
@@ -67,7 +68,7 @@ def _load_tracker_from_file(file_path: Path):
     return tracker
 
 
-def track_pause(reason: str = "") -> Dict[str, Any]:
+def track_pause(reason: str = "") -> dict[str, Any]:
     """Pausa el tracking actual.
 
     Args:
@@ -81,7 +82,7 @@ def track_pause(reason: str = "") -> Dict[str, Any]:
     if not tracking_file:
         return {
             "success": False,
-            "message": "No hay tracking activo. Inicia una implementación con /implement-us primero."
+            "message": "No hay tracking activo. Inicia una implementación con /implement-us primero.",
         }
 
     try:
@@ -96,16 +97,13 @@ def track_pause(reason: str = "") -> Dict[str, Any]:
         return {
             "success": True,
             "message": f"⏸️  Tracking pausado\n   Duración actual: {elapsed_mins}min {elapsed_secs}s",
-            "status": status
+            "status": status,
         }
     except ValueError as e:
-        return {
-            "success": False,
-            "message": f"Error: {str(e)}"
-        }
+        return {"success": False, "message": f"Error: {str(e)}"}
 
 
-def track_resume() -> Dict[str, Any]:
+def track_resume() -> dict[str, Any]:
     """Reanuda el tracking pausado.
 
     Returns:
@@ -116,7 +114,7 @@ def track_resume() -> Dict[str, Any]:
     if not tracking_file:
         return {
             "success": False,
-            "message": "No hay tracking activo. Inicia una implementación con /implement-us primero."
+            "message": "No hay tracking activo. Inicia una implementación con /implement-us primero.",
         }
 
     try:
@@ -124,7 +122,7 @@ def track_resume() -> Dict[str, Any]:
 
         # Obtener duración de la pausa antes de resumir
         if tracker.current_pause:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             pause_seconds = int((now - tracker.current_pause.started_at).total_seconds())
             pause_mins = pause_seconds // 60
 
@@ -133,21 +131,15 @@ def track_resume() -> Dict[str, Any]:
             return {
                 "success": True,
                 "message": f"▶️  Tracking reanudado\n   Pausa: {pause_mins}min",
-                "pause_duration_minutes": pause_mins
+                "pause_duration_minutes": pause_mins,
             }
         else:
-            return {
-                "success": False,
-                "message": "No hay pausa activa para resumir"
-            }
+            return {"success": False, "message": "No hay pausa activa para resumir"}
     except ValueError as e:
-        return {
-            "success": False,
-            "message": f"Error: {str(e)}"
-        }
+        return {"success": False, "message": f"Error: {str(e)}"}
 
 
-def track_status() -> Dict[str, Any]:
+def track_status() -> dict[str, Any]:
     """Muestra el estado actual del tracking.
 
     Returns:
@@ -158,7 +150,7 @@ def track_status() -> Dict[str, Any]:
     if not tracking_file:
         return {
             "success": False,
-            "message": "No hay tracking activo. Inicia una implementación con /implement-us primero."
+            "message": "No hay tracking activo. Inicia una implementación con /implement-us primero.",
         }
 
     try:
@@ -194,19 +186,12 @@ def track_status() -> Dict[str, Any]:
 
 ✅ Completadas: {status['completed_tasks']}/{status['total_tasks']} tareas"""
 
-        return {
-            "success": True,
-            "message": message,
-            "status": status
-        }
+        return {"success": True, "message": message, "status": status}
     except Exception as e:
-        return {
-            "success": False,
-            "message": f"Error al obtener estado: {str(e)}"
-        }
+        return {"success": False, "message": f"Error al obtener estado: {str(e)}"}
 
 
-def track_report(us_id: Optional[str] = None) -> Dict[str, Any]:
+def track_report(us_id: str | None = None) -> dict[str, Any]:
     """Genera reporte inmediato de una US.
 
     Args:
@@ -219,20 +204,17 @@ def track_report(us_id: Optional[str] = None) -> Dict[str, Any]:
     if us_id:
         tracking_file = Path(f".claude/tracking/{us_id}-tracking.json")
         if not tracking_file.exists():
-            return {
-                "success": False,
-                "message": f"No existe tracking para {us_id}"
-            }
+            return {"success": False, "message": f"No existe tracking para {us_id}"}
     else:
         tracking_file = _find_active_tracking()
         if not tracking_file:
             return {
                 "success": False,
-                "message": "No hay tracking activo. Especifica un US-ID o inicia /implement-us"
+                "message": "No hay tracking activo. Especifica un US-ID o inicia /implement-us",
             }
 
     try:
-        with open(tracking_file, 'r', encoding='utf-8') as f:
+        with open(tracking_file, encoding="utf-8") as f:
             data = json.load(f)
 
         # Generar reporte simple
@@ -247,8 +229,8 @@ def track_report(us_id: Optional[str] = None) -> Dict[str, Any]:
             status_text = "✅ COMPLETADO"
         else:
             # Calcular duración hasta ahora
-            started = datetime.fromisoformat(timeline["started_at"].replace('Z', '+00:00'))
-            now = datetime.now(timezone.utc)
+            started = datetime.fromisoformat(timeline["started_at"].replace("Z", "+00:00"))
+            now = datetime.now(UTC)
             total_seconds = int((now - started).total_seconds())
             status_text = "🔄 EN PROGRESO"
 
@@ -288,24 +270,15 @@ def track_report(us_id: Optional[str] = None) -> Dict[str, Any]:
 • Reporte:  docs/reports/{metadata['us_id']}-tracking-report.md (generado al finalizar)
 """
 
-        return {
-            "success": True,
-            "message": report,
-            "data": data
-        }
+        return {"success": True, "message": report, "data": data}
 
     except Exception as e:
-        return {
-            "success": False,
-            "message": f"Error al generar reporte: {str(e)}"
-        }
+        return {"success": False, "message": f"Error al generar reporte: {str(e)}"}
 
 
 def track_history(
-    last: Optional[int] = None,
-    producto: Optional[str] = None,
-    desde: Optional[str] = None
-) -> Dict[str, Any]:
+    last: int | None = None, producto: str | None = None, desde: str | None = None
+) -> dict[str, Any]:
     """Muestra historial de USs trackeadas.
 
     Args:
@@ -318,16 +291,13 @@ def track_history(
     """
     tracking_dir = Path(".claude/tracking")
     if not tracking_dir.exists():
-        return {
-            "success": False,
-            "message": "No hay trackings registrados aún"
-        }
+        return {"success": False, "message": "No hay trackings registrados aún"}
 
     # Recolectar todos los trackings
     trackings = []
     for json_file in tracking_dir.glob("US-*-tracking.json"):
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
+            with open(json_file, encoding="utf-8") as f:
                 data = json.load(f)
 
             metadata = data["metadata"]
@@ -339,33 +309,35 @@ def track_history(
                 continue
 
             if desde:
-                started = datetime.fromisoformat(timeline["started_at"].replace('Z', '+00:00'))
+                started = datetime.fromisoformat(timeline["started_at"].replace("Z", "+00:00"))
                 desde_dt = datetime.fromisoformat(f"{desde}T00:00:00+00:00")
                 if started < desde_dt:
                     continue
 
             # Calcular duración
             if timeline.get("completed_at"):
-                completed = datetime.fromisoformat(timeline["completed_at"].replace('Z', '+00:00'))
+                completed = datetime.fromisoformat(timeline["completed_at"].replace("Z", "+00:00"))
                 duration_seconds = timeline["total_elapsed_seconds"]
                 status = "✅"
             else:
                 completed = None
-                started = datetime.fromisoformat(timeline["started_at"].replace('Z', '+00:00'))
-                duration_seconds = int((datetime.now(timezone.utc) - started).total_seconds())
+                started = datetime.fromisoformat(timeline["started_at"].replace("Z", "+00:00"))
+                duration_seconds = int((datetime.now(UTC) - started).total_seconds())
                 status = "🔄"
 
-            trackings.append({
-                "us_id": metadata["us_id"],
-                "us_title": metadata["us_title"],
-                "us_points": metadata["us_points"],
-                "producto": metadata["producto"],
-                "started_at": timeline["started_at"],
-                "completed_at": completed,
-                "duration_seconds": duration_seconds,
-                "variance_percent": summary.get("variance_percent", 0),
-                "status": status
-            })
+            trackings.append(
+                {
+                    "us_id": metadata["us_id"],
+                    "us_title": metadata["us_title"],
+                    "us_points": metadata["us_points"],
+                    "producto": metadata["producto"],
+                    "started_at": timeline["started_at"],
+                    "completed_at": completed,
+                    "duration_seconds": duration_seconds,
+                    "variance_percent": summary.get("variance_percent", 0),
+                    "status": status,
+                }
+            )
 
         except (json.JSONDecodeError, FileNotFoundError, KeyError):
             continue
@@ -373,7 +345,7 @@ def track_history(
     if not trackings:
         return {
             "success": False,
-            "message": "No se encontraron trackings con los filtros especificados"
+            "message": "No se encontraron trackings con los filtros especificados",
         }
 
     # Ordenar por fecha de inicio (más reciente primero)
@@ -410,7 +382,7 @@ def track_history(
     avg_variance = sum(variances) / len(variances) if variances else 0
     avg_hours_per_point = (total_duration / 3600) / total_points if total_points > 0 else 0
 
-    footer = f"\n\n📈 Promedios:\n"
+    footer = "\n\n📈 Promedios:\n"
     footer += f"   • Tiempo por punto: {avg_hours_per_point:.1f}h\n"
     footer += f"   • Varianza promedio: {avg_variance:+.0f}%\n"
     footer += f"   • Total USs: {len(trackings)}\n"
@@ -418,11 +390,7 @@ def track_history(
 
     message = header + "\n".join(lines) + footer
 
-    return {
-        "success": True,
-        "message": message,
-        "trackings": trackings
-    }
+    return {"success": True, "message": message, "trackings": trackings}
 
 
 # Funciones de ayuda para formateo

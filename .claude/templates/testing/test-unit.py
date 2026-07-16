@@ -8,6 +8,7 @@ Tests unitarios para {COMPONENT_NAME}.
 """
 
 import pytest
+
 {SNIPPET:test_imports}
 
 from {MODULE_PATH} import {CLASS_NAME}

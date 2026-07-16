@@ -14,9 +14,10 @@ Uso:
     python .claude/tracking/tracker_cli.py status
     python .claude/tracking/tracker_cli.py end [us_id]
 """
-import sys
-import json
+
 import argparse
+import json
+import sys
 from glob import glob
 from pathlib import Path
 
@@ -25,10 +26,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tracking.time_tracker import TimeTracker
 
-
 # =============================================================================
 # Lookup del tracker activo
 # =============================================================================
+
 
 def _find_active_us_id() -> str:
     """Busca el us_id del tracker activo (completed_at == null).
@@ -67,6 +68,7 @@ def _find_active_us_id() -> str:
 # =============================================================================
 # Subcomandos
 # =============================================================================
+
 
 def cmd_init(args: argparse.Namespace) -> None:
     """Inicializa un nuevo tracker para una US."""
@@ -161,6 +163,7 @@ def cmd_end(args: argparse.Namespace) -> None:
 # Parser principal
 # =============================================================================
 
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="tracker_cli.py",
@@ -202,7 +205,9 @@ def build_parser() -> argparse.ArgumentParser:
     # end-task
     p_et = sub.add_parser("end-task", help="Cerrar una tarea")
     p_et.add_argument("task_id", help="ID de la tarea")
-    p_et.add_argument("file_created", nargs="?", default=None, help="Archivo principal creado (opcional)")
+    p_et.add_argument(
+        "file_created", nargs="?", default=None, help="Archivo principal creado (opcional)"
+    )
     p_et.add_argument("--us-id", dest="us_id", default=None, help="us_id explícito (opcional)")
     p_et.set_defaults(func=cmd_end_task)
 

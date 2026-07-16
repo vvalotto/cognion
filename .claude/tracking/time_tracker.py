@@ -4,11 +4,12 @@ TimeTracker - Sistema de tracking de tiempo para implementación de USs.
 Este módulo implementa el tracking automático de tiempo durante la ejecución
 del skill /implement-us.
 """
-from dataclasses import dataclass, field, asdict
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Optional, List, Dict, Any
+
 import json
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -26,14 +27,15 @@ class Task:
         file_created: Path del archivo creado (opcional)
         status: Estado actual (pending, in_progress, completed)
     """
+
     task_id: str
     task_name: str
     task_type: str
     estimated_minutes: float
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
     elapsed_seconds: int = 0
-    file_created: Optional[str] = None
+    file_created: str | None = None
     status: str = "pending"
 
     @property
@@ -69,13 +71,14 @@ class Phase:
         auto_approved: Si la fase se completó sin aprobación manual
         user_approval_time_seconds: Tiempo esperando aprobación del usuario
     """
+
     phase_number: int
     phase_name: str
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
     elapsed_seconds: int = 0
     status: str = "pending"
-    tasks: List[Task] = field(default_factory=list)
+    tasks: list[Task] = field(default_factory=list)
     auto_approved: bool = True
     user_approval_time_seconds: int = 0
 
@@ -96,9 +99,10 @@ class Pause:
         duration_seconds: Duración de la pausa en segundos
         reason: Motivo de la pausa (opcional)
     """
+
     pause_id: str
     started_at: datetime
-    resumed_at: Optional[datetime] = None
+    resumed_at: datetime | None = None
     duration_seconds: int = 0
     reason: str = ""
 
@@ -141,13 +145,7 @@ class TimeTracker:
         >>> tracker.end_tracking()
     """
 
-    def __init__(
-        self,
-        us_id: str,
-        us_title: str,
-        us_points: int,
-        producto: str
-    ):
+    def __init__(self, us_id: str, us_title: str, us_points: int, producto: str):
         """Inicializa el tracker.
 
         Args:
@@ -161,15 +159,15 @@ class TimeTracker:
         self.us_points = us_points
         self.producto = producto
 
-        self.started_at: Optional[datetime] = None
-        self.completed_at: Optional[datetime] = None
+        self.started_at: datetime | None = None
+        self.completed_at: datetime | None = None
 
-        self.phases: List[Phase] = []
-        self.pauses: List[Pause] = []
+        self.phases: list[Phase] = []
+        self.pauses: list[Pause] = []
 
-        self.current_phase: Optional[Phase] = None
-        self.current_task: Optional[Task] = None
-        self.current_pause: Optional[Pause] = None
+        self.current_phase: Phase | None = None
+        self.current_task: Task | None = None
+        self.current_pause: Pause | None = None
 
         # Path de almacenamiento
         self.storage_path = Path(f".claude/tracking/{us_id}-tracking.json")
@@ -180,7 +178,7 @@ class TimeTracker:
 
         Registra el timestamp de inicio y guarda el estado.
         """
-        self.started_at = datetime.now(timezone.utc)
+        self.started_at = datetime.now(UTC)
         self._save()
 
     def start_phase(self, phase_number: int, phase_name: str) -> None:
@@ -193,18 +191,14 @@ class TimeTracker:
         phase = Phase(
             phase_number=phase_number,
             phase_name=phase_name,
-            started_at=datetime.now(timezone.utc),
-            status="in_progress"
+            started_at=datetime.now(UTC),
+            status="in_progress",
         )
         self.phases.append(phase)
         self.current_phase = phase
         self._save()
 
-    def end_phase(
-        self,
-        phase_number: int,
-        auto_approved: bool = True
-    ) -> None:
+    def end_phase(self, phase_number: int, auto_approved: bool = True) -> None:
         """Finaliza una fase.
 
         Args:
@@ -213,21 +207,15 @@ class TimeTracker:
         """
         phase = self._get_phase(phase_number)
         if phase:
-            phase.completed_at = datetime.now(timezone.utc)
-            phase.elapsed_seconds = int(
-                (phase.completed_at - phase.started_at).total_seconds()
-            )
+            phase.completed_at = datetime.now(UTC)
+            phase.elapsed_seconds = int((phase.completed_at - phase.started_at).total_seconds())
             phase.status = "completed"
             phase.auto_approved = auto_approved
             self.current_phase = None
             self._save()
 
     def start_task(
-        self,
-        task_id: str,
-        task_name: str,
-        task_type: str,
-        estimated_minutes: float
+        self, task_id: str, task_name: str, task_type: str, estimated_minutes: float
     ) -> None:
         """Inicia una nueva tarea dentro de la fase actual.
 
@@ -248,18 +236,14 @@ class TimeTracker:
             task_name=task_name,
             task_type=task_type,
             estimated_minutes=estimated_minutes,
-            started_at=datetime.now(timezone.utc),
-            status="in_progress"
+            started_at=datetime.now(UTC),
+            status="in_progress",
         )
         self.current_phase.tasks.append(task)
         self.current_task = task
         self._save()
 
-    def end_task(
-        self,
-        task_id: str,
-        file_created: Optional[str] = None
-    ) -> None:
+    def end_task(self, task_id: str, file_created: str | None = None) -> None:
         """Finaliza una tarea.
 
         Args:
@@ -274,10 +258,8 @@ class TimeTracker:
 
         task = self._get_task(task_id)
         if task:
-            task.completed_at = datetime.now(timezone.utc)
-            task.elapsed_seconds = int(
-                (task.completed_at - task.started_at).total_seconds()
-            )
+            task.completed_at = datetime.now(UTC)
+            task.elapsed_seconds = int((task.completed_at - task.started_at).total_seconds())
             task.status = "completed"
             task.file_created = file_created
             self.current_task = None
@@ -297,8 +279,8 @@ class TimeTracker:
 
         pause = Pause(
             pause_id=f"pause_{len(self.pauses) + 1:03d}",
-            started_at=datetime.now(timezone.utc),
-            reason=reason
+            started_at=datetime.now(UTC),
+            reason=reason,
         )
         self.pauses.append(pause)
         self.current_pause = pause
@@ -313,7 +295,7 @@ class TimeTracker:
         if not self.current_pause:
             raise ValueError("No hay pausa activa")
 
-        self.current_pause.resumed_at = datetime.now(timezone.utc)
+        self.current_pause.resumed_at = datetime.now(UTC)
         self.current_pause.duration_seconds = int(
             (self.current_pause.resumed_at - self.current_pause.started_at).total_seconds()
         )
@@ -325,11 +307,11 @@ class TimeTracker:
 
         Registra el timestamp de finalización y genera reportes.
         """
-        self.completed_at = datetime.now(timezone.utc)
+        self.completed_at = datetime.now(UTC)
         self._save()
         # Los reportes se generarán en una fase posterior
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Retorna estado actual para /track-status.
 
         Returns:
@@ -338,7 +320,7 @@ class TimeTracker:
         if not self.started_at:
             return {"status": "not_started"}
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         elapsed = int((now - self.started_at).total_seconds())
 
         # Calcular tiempo pausado
@@ -350,8 +332,7 @@ class TimeTracker:
 
         # Contar tareas completadas
         completed_tasks = sum(
-            len([t for t in p.tasks if t.status == "completed"])
-            for p in self.phases
+            len([t for t in p.tasks if t.status == "completed"]) for p in self.phases
         )
         total_tasks = sum(len(p.tasks) for p in self.phases)
 
@@ -364,10 +345,10 @@ class TimeTracker:
             "current_phase": self.current_phase.phase_name if self.current_phase else None,
             "current_task": self.current_task.task_name if self.current_task else None,
             "completed_tasks": completed_tasks,
-            "total_tasks": total_tasks
+            "total_tasks": total_tasks,
         }
 
-    def _get_phase(self, phase_number: int) -> Optional[Phase]:
+    def _get_phase(self, phase_number: int) -> Phase | None:
         """Obtiene una fase por número.
 
         Args:
@@ -376,12 +357,9 @@ class TimeTracker:
         Returns:
             La fase correspondiente o None si no existe
         """
-        return next(
-            (p for p in self.phases if p.phase_number == phase_number),
-            None
-        )
+        return next((p for p in self.phases if p.phase_number == phase_number), None)
 
-    def _get_task(self, task_id: str) -> Optional[Task]:
+    def _get_task(self, task_id: str) -> Task | None:
         """Obtiene una tarea por ID.
 
         Args:
@@ -392,13 +370,10 @@ class TimeTracker:
         """
         if not self.current_phase:
             return None
-        return next(
-            (t for t in self.current_phase.tasks if t.task_id == task_id),
-            None
-        )
+        return next((t for t in self.current_phase.tasks if t.task_id == task_id), None)
 
     @classmethod
-    def load(cls, us_id: str) -> 'TimeTracker':
+    def load(cls, us_id: str) -> "TimeTracker":
         """Carga un TimeTracker desde su us_id, buscando en .claude/tracking/.
 
         Args:
@@ -419,7 +394,7 @@ class TimeTracker:
         return cls.from_json(path)
 
     @classmethod
-    def from_json(cls, file_path: Path) -> 'TimeTracker':
+    def from_json(cls, file_path: Path) -> "TimeTracker":
         """Carga un TimeTracker desde un archivo JSON existente.
 
         Args:
@@ -428,7 +403,7 @@ class TimeTracker:
         Returns:
             Instancia de TimeTracker con el estado restaurado
         """
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding="utf-8") as f:
             data = json.load(f)
 
         metadata = data["metadata"]
@@ -436,14 +411,14 @@ class TimeTracker:
             us_id=metadata["us_id"],
             us_title=metadata["us_title"],
             us_points=metadata["us_points"],
-            producto=metadata["producto"]
+            producto=metadata["producto"],
         )
         tracker.storage_path = file_path
 
-        def _parse_dt(value: Optional[str]) -> Optional[datetime]:
+        def _parse_dt(value: str | None) -> datetime | None:
             if not value:
                 return None
-            return datetime.fromisoformat(value.replace('Z', '+00:00'))
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
         timeline = data["timeline"]
         tracker.started_at = _parse_dt(timeline.get("started_at"))
@@ -496,20 +471,21 @@ class TimeTracker:
     def _save(self) -> None:
         """Guarda estado actual a JSON."""
         data = self._to_dict()
-        with open(self.storage_path, 'w', encoding='utf-8') as f:
+        with open(self.storage_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-    def _to_dict(self) -> Dict[str, Any]:
+    def _to_dict(self) -> dict[str, Any]:
         """Convierte el tracker a diccionario JSON-serializable.
 
         Returns:
             Dict con toda la información del tracking
         """
-        def serialize_datetime(dt: Optional[datetime]) -> Optional[str]:
+
+        def serialize_datetime(dt: datetime | None) -> str | None:
             """Serializa datetime a ISO 8601."""
             return dt.isoformat() if dt else None
 
-        def serialize_task(task: Task) -> Dict[str, Any]:
+        def serialize_task(task: Task) -> dict[str, Any]:
             """Serializa una Task a dict."""
             return {
                 "task_id": task.task_id,
@@ -522,10 +498,10 @@ class TimeTracker:
                 "actual_minutes": round(task.actual_minutes, 2),
                 "variance_minutes": round(task.variance_minutes, 2),
                 "file_created": task.file_created,
-                "status": task.status
+                "status": task.status,
             }
 
-        def serialize_phase(phase: Phase) -> Dict[str, Any]:
+        def serialize_phase(phase: Phase) -> dict[str, Any]:
             """Serializa una Phase a dict."""
             return {
                 "phase_number": phase.phase_number,
@@ -536,17 +512,17 @@ class TimeTracker:
                 "status": phase.status,
                 "tasks": [serialize_task(t) for t in phase.tasks],
                 "auto_approved": phase.auto_approved,
-                "user_approval_time_seconds": phase.user_approval_time_seconds
+                "user_approval_time_seconds": phase.user_approval_time_seconds,
             }
 
-        def serialize_pause(pause: Pause) -> Dict[str, Any]:
+        def serialize_pause(pause: Pause) -> dict[str, Any]:
             """Serializa una Pause a dict."""
             return {
                 "pause_id": pause.pause_id,
                 "started_at": serialize_datetime(pause.started_at),
                 "resumed_at": serialize_datetime(pause.resumed_at),
                 "duration_seconds": pause.duration_seconds,
-                "reason": pause.reason
+                "reason": pause.reason,
             }
 
         # Calcular totales
@@ -556,30 +532,23 @@ class TimeTracker:
         if self.started_at and self.completed_at:
             total_elapsed = int((self.completed_at - self.started_at).total_seconds())
         elif self.started_at:
-            total_elapsed = int((datetime.now(timezone.utc) - self.started_at).total_seconds())
+            total_elapsed = int((datetime.now(UTC) - self.started_at).total_seconds())
 
         # Si hay pausa activa, incluirla en el total pausado
         if self.current_pause:
-            total_paused += int(
-                (datetime.now(timezone.utc) - self.current_pause.started_at).total_seconds()
-            )
+            total_paused += int((datetime.now(UTC) - self.current_pause.started_at).total_seconds())
 
         total_effective = total_elapsed - total_paused
 
         # Calcular summary
         completed_tasks = sum(
-            len([t for t in p.tasks if t.status == "completed"])
-            for p in self.phases
+            len([t for t in p.tasks if t.status == "completed"]) for p in self.phases
         )
         total_tasks = sum(len(p.tasks) for p in self.phases)
 
-        estimated_total = sum(
-            sum(t.estimated_minutes for t in p.tasks)
-            for p in self.phases
-        )
+        estimated_total = sum(sum(t.estimated_minutes for t in p.tasks) for p in self.phases)
         actual_total = sum(
-            sum(t.actual_minutes for t in p.tasks if t.status == "completed")
-            for p in self.phases
+            sum(t.actual_minutes for t in p.tasks if t.status == "completed") for p in self.phases
         )
 
         # Construir diccionario completo
@@ -589,14 +558,14 @@ class TimeTracker:
                 "us_title": self.us_title,
                 "us_points": self.us_points,
                 "producto": self.producto,
-                "tracking_version": "1.0"
+                "tracking_version": "1.0",
             },
             "timeline": {
                 "started_at": serialize_datetime(self.started_at),
                 "completed_at": serialize_datetime(self.completed_at),
                 "total_elapsed_seconds": total_elapsed,
                 "effective_seconds": total_effective,
-                "paused_seconds": total_paused
+                "paused_seconds": total_paused,
             },
             "phases": [serialize_phase(p) for p in self.phases],
             "pauses": [serialize_pause(p) for p in self.pauses],
@@ -608,9 +577,12 @@ class TimeTracker:
                 "actual_total_minutes": round(actual_total, 2),
                 "variance_minutes": round(actual_total - estimated_total, 2),
                 "variance_percent": round(
-                    ((actual_total - estimated_total) / estimated_total * 100)
-                    if estimated_total > 0 else 0.0,
-                    2
-                )
-            }
+                    (
+                        ((actual_total - estimated_total) / estimated_total * 100)
+                        if estimated_total > 0
+                        else 0.0
+                    ),
+                    2,
+                ),
+            },
         }

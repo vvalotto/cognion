@@ -19,7 +19,10 @@ Usarlo antes de un corte largo o al terminar una tarea significativa.
 ## Instrucciones para Claude
 
 Al ejecutar /checkpoint:
-1. Escribir un resumen de 3-5 puntos de lo trabajado en la sesión actual
-2. Correr `.claude/hooks/save-session.sh` para actualizar los archivos de memoria
-3. Borrar `~/.claude/projects/-Users-victor-PycharmProjects-cognion/memory/session-needs-summary.flag` si existe
-4. Confirmar al usuario que el checkpoint quedó guardado
+1. Si se crearon, movieron o renombraron archivos bajo `docs/` en esta sesión, correr
+   `/docs-audit` primero y resolver (o al menos reportar) los huérfanos detectados antes
+   de continuar
+2. Escribir un resumen de 3-5 puntos de lo trabajado en la sesión actual
+3. Correr `.claude/hooks/save-session.sh` para actualizar los archivos de memoria
+4. Borrar `~/.claude/projects/-Users-victor-PycharmProjects-cognion/memory/session-needs-summary.flag` si existe
+5. Confirmar al usuario que el checkpoint quedó guardado

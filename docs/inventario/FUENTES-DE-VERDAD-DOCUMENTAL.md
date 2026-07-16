@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: jerarquía documental y autoridad por tema
-> Última actualización: 2026-07-14
+> Última actualización: 2026-07-16 (rev. /docs-audit)
 
 ## 1. Propósito
 
@@ -40,6 +40,7 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Plan de incrementos | `docs/rf/PLAN_v1.md` | `docs/traceability/matrix.md` | Documento histórico de elicitación — no se reescribe retroactivamente; los ajustes de proceso viven en `WORKFLOW-DESARROLLO.md`. |
 | Requerimientos funcionales | `docs/rf/RF_v1.md` | `docs/traceability/matrix.md` | Catálogo base — histórico, no se modifica retroactivamente. |
 | Atributos de calidad / RNF | `docs/rf/RNF_v1.md` | `docs/rf/ARQ_v1.md`, quality reports | Fuente de escenarios de calidad y medidas acordadas. |
+| Borradores de elicitación RNF | `docs/rf/RNF_v1.md` | `docs/rf/escenarios-calidad-draft.md`, `docs/rf/sesion-rnf.md` | Documentos de trabajo previos al RNF ratificado — no se usan como fuente vigente, se conservan como evidencia del proceso de elicitación. |
 | Arquitectura de referencia (decisión inicial) | `docs/rf/ARQ_v1.md` | `docs/architecture/`, `docs/adr/` | Histórico — arquitectura *vigente* vive en `docs/architecture/` una vez creada; hasta entonces, ARQ_v1 manda. |
 | Arquitectura vigente | `docs/architecture/` | `docs/adr/`, `docs/rf/ARQ_v1.md` (histórico una vez que `architecture/` tenga contenido) | Vista técnica principal, se actualiza por incremento. |
 | Decisiones arquitectónicas | `docs/adr/` | `docs/architecture/`, `docs/rf/ARQ_v1.md` | Los ADRs registran decisión y trade-offs; no se reescriben, se supersedan con un nuevo ADR. |
@@ -53,6 +54,8 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Reportes de calidad (CodeGuard, DesignReviewer, ArchitectAnalyst) | `quality/reports/` | `CLAUDE.md`, `.cm/baselines/` | Evidencia técnica; no se edita a mano. |
 | Gestión de configuración (baselines, tags) | `.cm/baselines/` | `docs/plans/PLAN-CM.md` | Fuente de registros de cierre de incremento. |
 | Marco metodológico IEDD | `docs/iedd/` | `CLAUDE.md` | Vigente y estable — no cambia por incremento. |
+| Procedimiento de UAT | `docs/plans/PROCEDIMIENTO-UAT.md` | `CLAUDE.md` | Gate obligatorio antes de merge a main — ver tabla de quality gates. |
+| Checklist de instalación/entorno | `docs/plans/CHECKLIST-INSTALACION.md` | `docs/plans/WORKFLOW-DESARROLLO.md` | Pasos de setup del entorno local — se referencia, no se duplica. |
 
 ---
 
