@@ -9,6 +9,22 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-16
+
+### Added
+- PostgreSQL local (vía Homebrew) y Alembic inicializado (`alembic.ini`, `migrations/`)
+- `src/settings.py` — configuración desde `.env` con pydantic-settings
+- Primer test real del proyecto (`tests/unit/inc0/test_health.py`)
+- `.claude/commands/docs-audit.md` — skill de auditoría de trazabilidad documental
+- HITO-2 y HITO-3 (`docs/aprendizajes/`)
+- BL-001 — cierre del Incremento 0 (`.cm/baselines/BL-001-fundacion-tecnica.md`)
+
+### Changed
+- CI ya no tolera "0 tests" — retirado tras agregar el primer test real
+- `docs/rf/PLAN_v1.md`: Docker local diferido a un incremento posterior; PostgreSQL local
+  corre vía Homebrew mientras tanto
+- `CLAUDE.md`: corregido el "próximo paso" — el Incremento 0 no usa `incN-candidatas.md`
+
 ## [0.1.0] - 2026-07-15
 
 ### Added

@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "sprint_id": "BL-001",
+    "total_files": 30,
+    "metrics_executed": 9,
+    "elapsed_seconds": 0.06,
+    "timestamp": "2026-07-16T09:50:28.420117",
+    "total_results": 3,
+    "critical_violations": 1,
+    "warnings": 1,
+    "infos": 1,
+    "trend_available": true,
+    "should_block": false
+  },
+  "results": [
+    {
+      "analyzer": "AbstractnessAnalyzer",
+      "metric": "A",
+      "severity": "info",
+      "message": "Abstracción A=0.00 (0 abstractas / 1 clases totales)",
+      "module": "settings",
+      "value": 0.0,
+      "threshold": null,
+      "trend": "stable",
+      "trend_symbol": "="
+    },
+    {
+      "analyzer": "DistanceAnalyzer",
+      "metric": "D",
+      "severity": "critical",
+      "message": "Distancia D=1.00 > 0.3 (A=0.00, I=0.00, Ca=0, Ce=0). Zone of Pain: módulo estable pero concreto (muy rígido).",
+      "module": "settings",
+      "value": 1.0,
+      "threshold": 0.3,
+      "trend": "stable",
+      "trend_symbol": "="
+    },
+    {
+      "analyzer": "CoverageAnalyzer",
+      "metric": "coverage",
+      "severity": "warning",
+      "message": "No se encontró el archivo de cobertura 'coverage.json'. Generalo con: pytest --cov --cov-report=json",
+      "module": ".",
+      "value": 0.0,
+      "threshold": 80.0,
+      "trend": "stable",
+      "trend_symbol": "="
+    }
+  ],
+  "by_severity": {
+    "critical": [
+      {
+        "analyzer": "DistanceAnalyzer",
+        "metric": "D",
+        "severity": "critical",
+        "message": "Distancia D=1.00 > 0.3 (A=0.00, I=0.00, Ca=0, Ce=0). Zone of Pain: módulo estable pero concreto (muy rígido).",
+        "module": "settings",
+        "value": 1.0,
+        "threshold": 0.3,
+        "trend": "stable",
+        "trend_symbol": "="
+      }
+    ],
+    "warning": [
+      {
+        "analyzer": "CoverageAnalyzer",
+        "metric": "coverage",
+        "severity": "warning",
+        "message": "No se encontró el archivo de cobertura 'coverage.json'. Generalo con: pytest --cov --cov-report=json",
+        "module": ".",
+        "value": 0.0,
+        "threshold": 80.0,
+        "trend": "stable",
+        "trend_symbol": "="
+      }
+    ],
+    "info": [
+      {
+        "analyzer": "AbstractnessAnalyzer",
+        "metric": "A",
+        "severity": "info",
+        "message": "Abstracción A=0.00 (0 abstractas / 1 clases totales)",
+        "module": "settings",
+        "value": 0.0,
+        "threshold": null,
+        "trend": "stable",
+        "trend_symbol": "="
+      }
+    ]
+  }
+}
