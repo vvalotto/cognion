@@ -27,10 +27,13 @@ Incremento 0 (Fundación Técnica) es ahora infraestructura pura, sin BC Identid
 `docs/rf/PLAN_v1.md` (nota de revisión al inicio). Deploy real a un entorno (Fly.io u otro)
 queda diferido a un incremento posterior, pendiente de la decisión de infraestructura aún
 abierta.
-**Próximo paso:** Armar `docs/plans/inc0/inc0-candidatas.md` sobre el Incremento 0 ya
-corregido (PostgreSQL local vía Docker Compose + Alembic inicializado en el repo, con
-evidencia de pipeline integrado). Luego arrancar el Incremento 1 (BC Identidad: RF-01, RF-02,
-JWT, healthcheck) con su propia Iteración 0 — Modelado.
+**Próximo paso:** Ejecutar el Incremento 0 siguiendo el ciclo de "incrementos técnicos sin US"
+(`docs/plans/WORKFLOW-DESARROLLO.md` §6): branch `feature/inc-0-fundacion-tecnica` desde
+`develop`, commits por tarea (Docker Compose + PostgreSQL local, Alembic inicializado,
+evidencia de pipeline CI/CD integrado de punta a punta), PR con `/pr`, merge, y registrar
+BL-001 al cerrar. No requiere `docs/plans/inc0/inc0-candidatas.md` — ese artefacto es para
+incrementos con US-IEDD (ver `HITO-3`). Luego arrancar el Incremento 1 (BC Identidad: RF-01,
+RF-02, JWT, healthcheck) con su propia Iteración 0 — Modelado.
 **Baseline abierta:** BL-001 se abre al iniciar la ejecución del Incremento 0 y se cierra
 cuando su Hito quede verificado con evidencia (ver `docs/plans/PLAN-CM.md` §7 para la
 numeración de baselines).
