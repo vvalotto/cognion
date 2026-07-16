@@ -232,3 +232,8 @@ Decidir el track **antes de codear**:
 3. Si hay una baseline abierta: leer `.cm/baselines/BL-NNN.md` en curso.
 4. Si hay trackers activos: verificar con `.venv/bin/python .claude/tracking/tracker_cli.py status` antes de arrancar.
 5. No preguntar por el stack ni por la arquitectura — están decididos en `docs/rf/ARQ_v1.md`.
+
+## Al cerrar una sesión
+
+1. Ejecutar `/checkpoint` — si hubo cambios en `docs/` durante la sesión, dispara
+   `/docs-audit` automáticamente antes de guardar (ver `.claude/commands/checkpoint.md`).
