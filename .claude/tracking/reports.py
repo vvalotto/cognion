@@ -5,10 +5,10 @@ Este módulo proporciona funciones para formatear reportes de tracking
 en formato markdown para visualización en Claude Code.
 """
 
-from pathlib import Path
-from typing import Dict, Any, List, Optional
 import json
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 
 def format_duration(seconds: int) -> str:
@@ -35,7 +35,7 @@ def format_duration(seconds: int) -> str:
     return " ".join(parts)
 
 
-def format_timestamp(iso_timestamp: Optional[str]) -> str:
+def format_timestamp(iso_timestamp: str | None) -> str:
     """Formatea timestamp ISO a formato legible.
 
     Args:
@@ -48,13 +48,13 @@ def format_timestamp(iso_timestamp: Optional[str]) -> str:
         return "-"
 
     try:
-        dt = datetime.fromisoformat(iso_timestamp.replace('Z', '+00:00'))
+        dt = datetime.fromisoformat(iso_timestamp.replace("Z", "+00:00"))
         return dt.strftime("%Y-%m-%d %H:%M:%S UTC")
     except Exception:
         return iso_timestamp
 
 
-def generate_full_report(tracking_data: Dict[str, Any]) -> str:
+def generate_full_report(tracking_data: dict[str, Any]) -> str:
     """Genera reporte completo de tracking.
 
     Args:
@@ -76,10 +76,10 @@ def generate_full_report(tracking_data: Dict[str, Any]) -> str:
     report += f"**Puntos:** {metadata['us_points']} puntos\n"
 
     # Estado
-    if timeline['completed_at']:
-        report += f"**Estado:** ✅ Completado\n"
+    if timeline["completed_at"]:
+        report += "**Estado:** ✅ Completado\n"
     else:
-        report += f"**Estado:** ▶️ En progreso\n"
+        report += "**Estado:** ▶️ En progreso\n"
 
     report += "\n---\n\n"
 
@@ -101,10 +101,12 @@ def generate_full_report(tracking_data: Dict[str, Any]) -> str:
     report += "|------|--------|----------|--------|--------|\n"
 
     for phase in phases:
-        status_emoji = "✅" if phase['status'] == "completed" else "▶️"
-        duration = format_duration(phase['elapsed_seconds'])
+        status_emoji = "✅" if phase["status"] == "completed" else "▶️"
+        duration = format_duration(phase["elapsed_seconds"])
         report += f"| {phase['phase_number']} | {phase['phase_name']} | "
-        report += f"{duration} | {len(phase['tasks'])} | {status_emoji} {phase['status'].title()} |\n"
+        report += (
+            f"{duration} | {len(phase['tasks'])} | {status_emoji} {phase['status'].title()} |\n"
+        )
 
     report += f"\n**Total:** {len(phases)} fases | "
     report += f"{format_duration(timeline['effective_seconds'])} | "
@@ -129,30 +131,32 @@ def generate_full_report(tracking_data: Dict[str, Any]) -> str:
     report += "| Métrica | Estimado | Real | Varianza |\n"
     report += "|---------|----------|------|----------|\n"
 
-    est_total = summary['estimated_total_minutes']
-    act_total = summary['actual_total_minutes']
-    var_total = summary['variance_minutes']
-    var_pct = summary['variance_percent']
+    est_total = summary["estimated_total_minutes"]
+    act_total = summary["actual_total_minutes"]
+    var_total = summary["variance_minutes"]
+    var_pct = summary["variance_percent"]
 
     report += f"| **Tiempo total** | {est_total}m ({est_total/60:.1f}h) | "
     report += f"{act_total}m ({act_total/60:.1f}h) | "
     variance_sign = "+" if var_total >= 0 else ""
     report += f"{variance_sign}{var_total}m ({variance_sign}{var_pct:.1f}%) |\n"
 
-    if metadata['us_points'] > 0:
-        est_per_point = est_total / metadata['us_points']
-        act_per_point = act_total / metadata['us_points']
+    if metadata["us_points"] > 0:
+        est_per_point = est_total / metadata["us_points"]
+        act_per_point = act_total / metadata["us_points"]
         var_per_point = act_per_point - est_per_point
         report += f"| **Por punto** | {est_per_point:.1f}m/punto | "
         report += f"{act_per_point:.1f}m/punto | "
         variance_sign = "+" if var_per_point >= 0 else ""
         report += f"{variance_sign}{var_per_point:.1f}m/punto |\n"
 
-    report += f"| **Tareas totales** | {summary['total_tasks']} | {summary['completed_tasks']} | - |\n"
+    report += (
+        f"| **Tareas totales** | {summary['total_tasks']} | {summary['completed_tasks']} | - |\n"
+    )
 
     # Insights
     report += "\n---\n\n## 💡 Insights\n\n"
-    if timeline['completed_at']:
+    if timeline["completed_at"]:
         report += "- ✅ Implementación completada exitosamente\n"
     if var_pct > 25:
         report += f"- ⚠️ Varianza de +{var_pct:.1f}% sobre estimado (considerar para futuras USs de {metadata['us_points']} puntos)\n"
@@ -162,7 +166,7 @@ def generate_full_report(tracking_data: Dict[str, Any]) -> str:
     return report
 
 
-def generate_history_table(tracking_dir: Path, last_n: Optional[int] = None) -> str:
+def generate_history_table(tracking_dir: Path, last_n: int | None = None) -> str:
     """Genera tabla de historial de tracking.
 
     Args:
@@ -176,7 +180,7 @@ def generate_history_table(tracking_dir: Path, last_n: Optional[int] = None) -> 
     tracking_files = sorted(
         tracking_dir.glob("*.json"),
         key=lambda p: p.stat().st_mtime,
-        reverse=True  # Más recientes primero
+        reverse=True,  # Más recientes primero
     )
 
     if last_n:
@@ -196,14 +200,18 @@ def generate_history_table(tracking_dir: Path, last_n: Optional[int] = None) -> 
     total_time = 0
 
     for file_path in tracking_files:
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             data = json.load(f)
 
         metadata = data["metadata"]
         timeline = data["timeline"]
 
         us_id = metadata["us_id"]
-        title = metadata["us_title"][:40] + "..." if len(metadata["us_title"]) > 40 else metadata["us_title"]
+        title = (
+            metadata["us_title"][:40] + "..."
+            if len(metadata["us_title"]) > 40
+            else metadata["us_title"]
+        )
         points = metadata["us_points"]
         date = format_timestamp(timeline["started_at"]).split()[0]
         duration = format_duration(timeline["effective_seconds"])

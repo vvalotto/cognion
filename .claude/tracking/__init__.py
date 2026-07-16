@@ -32,11 +32,6 @@ Persistencia:
 
 __version__ = "1.0.0"
 
-from .time_tracker import TimeTracker, Task, Phase, Pause
+from .time_tracker import Pause, Phase, Task, TimeTracker
 
-__all__ = [
-    "TimeTracker",
-    "Task",
-    "Phase",
-    "Pause"
-]
+__all__ = ["TimeTracker", "Task", "Phase", "Pause"]

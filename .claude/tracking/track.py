@@ -9,6 +9,7 @@ Uso:
     python .claude/tracking/track.py end-task "<nombre>" [--us <US_ID>]
     python .claude/tracking/track.py end-tracking [--us <US_ID>]
 """
+
 import argparse
 import json
 import sys
@@ -27,7 +28,7 @@ def _find_active_tracking() -> Path | None:
         return None
     for json_file in sorted(tracking_dir.glob("*-tracking.json")):
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
+            with open(json_file, encoding="utf-8") as f:
                 data = json.load(f)
             if data.get("timeline", {}).get("completed_at") is None:
                 return json_file
@@ -59,7 +60,7 @@ def cmd_start_phase(args: argparse.Namespace) -> None:
     if tracker is None:
         if phase_num != 0:
             print(
-                f"ERROR: No hay tracking activo. Usá --us <US_ID> para especificar la US.",
+                "ERROR: No hay tracking activo. Usá --us <US_ID> para especificar la US.",
                 file=sys.stderr,
             )
             sys.exit(1)
