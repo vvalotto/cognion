@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: jerarquía documental y autoridad por tema
-> Última actualización: 2026-07-14
+> Última actualización: 2026-07-16
 
 ## 1. Propósito
 
@@ -53,6 +53,8 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Reportes de calidad (CodeGuard, DesignReviewer, ArchitectAnalyst) | `quality/reports/` | `CLAUDE.md`, `.cm/baselines/` | Evidencia técnica; no se edita a mano. |
 | Gestión de configuración (baselines, tags) | `.cm/baselines/` | `docs/plans/PLAN-CM.md` | Fuente de registros de cierre de incremento. |
 | Marco metodológico IEDD | `docs/iedd/` | `CLAUDE.md` | Vigente y estable — no cambia por incremento. |
+| Procedimiento de UAT | `docs/plans/PROCEDIMIENTO-UAT.md` | `CLAUDE.md` | Gate obligatorio antes de merge a main — ver tabla de quality gates. |
+| Checklist de instalación/entorno | `docs/plans/CHECKLIST-INSTALACION.md` | `docs/plans/WORKFLOW-DESARROLLO.md` | Pasos de setup del entorno local — se referencia, no se duplica. |
 
 ---
 
