@@ -128,9 +128,9 @@ Ver `PLAN-CM.md` §13 para el patrón exacto de cada nombre. Reglas:
 ### Commits (Conventional Commits)
 
 ```
-feat(entities): agregar aggregate Sesion [US-2.1.1]
+feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]
 fix(interface_adapters): corregir endpoint ranking provisional
-test(entities): tests unitarios Sesion.cerrar_periodo
+test(entities): tests unitarios ActividadEvaluativa.cerrar_periodo
 docs(adr): ADR-003 decisión SQLite vs PostgreSQL
 chore(cm): registrar BL-002 cierre Incremento 2
 
@@ -323,13 +323,13 @@ El skill `/implement-us US-N.M.K` lee `docs/specs/incN/US-N.M.K.md` como input y
 `/pr` y se mergea directo a `develop`.
 
 ```
-# Ejemplo Incremento 2 — varias US individuales
+# Ejemplo Incremento 3 — varias US individuales (BC Actividad Evaluativa, antes "Sesiones")
 
-feature/US-2.1.1-crear-sesion-abierta   → /implement-us → /pr → merge develop
-feature/US-2.1.2-set-aleatorio          → /implement-us → /pr → merge develop
-feature/US-2.2.1-persistir-respuesta    → /implement-us → /pr → merge develop
+feature/US-3.1.1-crear-actividad-abierta  → /implement-us → /pr → merge develop
+feature/US-3.1.2-set-aleatorio            → /implement-us → /pr → merge develop
+feature/US-3.2.1-persistir-respuesta      → /implement-us → /pr → merge develop
 ...
-(última US mergeada) → designreviewer src/ manual → verificar DoD Incremento 2 → mini-retro
+(última US mergeada) → designreviewer src/ manual → verificar DoD Incremento 3 → mini-retro
 ```
 
 ---

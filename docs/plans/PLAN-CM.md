@@ -62,8 +62,8 @@ una decisión ratificada.
 
 ## 3. Estructura de `src/` — BC-first con Clean Architecture interna
 
-Cognion usa Clean Architecture (ARQ_v1.md) sobre Bounded Contexts: Sesiones (Core),
-Banco de preguntas, Identidad, Notificaciones, Analytics.
+Cognion usa Clean Architecture (ARQ_v1.md) sobre Bounded Contexts: Actividad Evaluativa (Core,
+antes "Sesiones" — ver `ADR-015`), Banco de preguntas, Identidad, Notificaciones, Analytics.
 
 ```
 src/<bc>/
@@ -641,13 +641,13 @@ Incremento (ver §7).
 | Spec de US | `docs/specs/incN/US-N.M.K.md` | `docs/specs/inc2/US-2.3.1.md` | — |
 | Branch de US | `feature/US-N.M.K-descripcion-corta` | `feature/US-2.3.1-registrar-respuesta` | kebab-case, máx. 4 palabras, español |
 | Branch incremento técnico | `feature/inc-N-descripcion-corta` | `feature/inc-0-fundacion-tecnica` | sin US-IEDD asociada |
-| Branch de fix | `fix/descripcion-corta` | `fix/invariante-sesion-nula` | — |
+| Branch de fix | `fix/descripcion-corta` | `fix/invariante-actividad-evaluativa-nula` | — |
 | SP-ADJ | `SP-ADJ-NN` | `SP-ADJ-01` | `docs/plans/sp-adj-NN/` |
 | Wireframe UX | `wireframes-<pantalla-o-rol>.md` | `wireframes-docente-banco.md` | `docs/design/ux/` |
 | Prototipo UX | `prototipo-<pantalla-o-rol>.html` | `prototipo-docente-banco.html` | `docs/design/ux/prototipos/` |
 | Label GitHub | `us-iedd`, `incremento-N`, `blocked`, `in-progress`, `done` | `incremento-2` | Issues |
-| Milestone GitHub | `Incremento N — <nombre de PLAN_v1.md>` | `Incremento 2 — Sesión de período abierto` | Milestones |
-| Commit (Conventional Commits) | `tipo(scope): descripción [US-N.M.K]` | `feat(entities): agregar aggregate Sesion [US-2.1.1]` | — |
+| Milestone GitHub | `Incremento N — <nombre de PLAN_v1.md>` | `Incremento 3 — Sesión de período abierto` (Actividad Evaluativa, ver `ADR-015`) | Milestones |
+| Commit (Conventional Commits) | `tipo(scope): descripción [US-N.M.K]` | `feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]` | — |
 
 **Nota sobre `SP-ADJ`:** el prefijo conserva "SP" por convención heredada (identifica el
 patrón, no una unidad de baseline) — no implica que Cognion tenga un nivel de Subproyecto.

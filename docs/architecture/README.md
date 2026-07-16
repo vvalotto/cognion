@@ -53,9 +53,9 @@ docs/architecture/
   README.md                          ← este documento
   01-system-context.md               ← creado
   02-container-view.md               ← creado
-  03-bounded-contexts.md             ← pendiente (Iteración 0, Incremento 1)
+  03-bounded-contexts.md             ← creado (catálogo de los 5 BC, Iteración 0 Incremento 1)
   1X-bc-<nombre>.md                  ← pendiente, uno por BC modelado
-  20-context-map-integrations.md     ← pendiente
+  20-context-map-integrations.md     ← creado — v0, solo relaciones ya decididas por ADR
   30-runtime-interactions.md         ← pendiente
   40-cross-cutting-concerns.md       ← pendiente
   60-deployment-view.md              ← pendiente

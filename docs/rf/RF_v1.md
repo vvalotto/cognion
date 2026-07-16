@@ -3,6 +3,9 @@
 > Versión: RF_v1  
 > Fecha: 2026-06-24  
 > Estado: borrador verificado
+> Revisión 2026-07-16: el BC "Sesiones" se renombró a "Actividad Evaluativa" (`ADR-015`) —
+> este documento no se reescribe, "sesión/sesiones" en el texto original se lee con ese
+> significado.
 
 ## Descripción del sistema
 

@@ -21,24 +21,21 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** BL-000 (Fundación Documental) cerrada el 2026-07-15 — tag `v0.1.0`
-(`.cm/baselines/BL-000-fundacion-documental.md`). Plan de incrementos reestructurado:
-Incremento 0 (Fundación Técnica) es ahora infraestructura pura, sin BC Identidad — ver
-`docs/rf/PLAN_v1.md` (nota de revisión al inicio). Deploy real a un entorno (Fly.io u otro)
-queda diferido a un incremento posterior, pendiente de la decisión de infraestructura aún
-abierta.
-**Próximo paso:** Ejecutar el Incremento 0 siguiendo el ciclo de "incrementos técnicos sin US"
-(`docs/plans/WORKFLOW-DESARROLLO.md` §6): branch `feature/inc-0-fundacion-tecnica` desde
-`develop` (ya creado), commits por tarea (PostgreSQL local vía Homebrew — Docker diferido, ver
-`docs/rf/PLAN_v1.md` revisión 2026-07-16 —, Alembic inicializado, evidencia de pipeline CI/CD
-integrado de punta a punta), PR con `/pr`, merge, y registrar BL-001 al cerrar. No requiere
-`docs/plans/inc0/inc0-candidatas.md` — ese artefacto es para incrementos con US-IEDD (ver
-`HITO-3`). Luego arrancar el Incremento 1 (BC Identidad: RF-01, RF-02, JWT, healthcheck) con
-su propia Iteración 0 — Modelado.
-**Baseline abierta:** BL-001 se abre al iniciar la ejecución del Incremento 0 y se cierra
-cuando su Hito quede verificado con evidencia (ver `docs/plans/PLAN-CM.md` §7 para la
-numeración de baselines).
-**Branch activo:** `develop` (creado desde `main`).
+**Fase:** BL-001 (Incremento 0 — Fundación Técnica) cerrada el 2026-07-16 — tag `v0.2.0`
+(`.cm/baselines/BL-001-fundacion-tecnica.md`). Pipeline técnico funcionando de punta a punta en
+el entorno local: CI en verde (lint + tests + DesignReviewer), PostgreSQL local (Homebrew) con
+migración de Alembic aplicada, `GET /health` → 200, build Docker en CI/CD. Deploy real a un
+entorno queda diferido, pendiente de la decisión de infraestructura aún abierta.
+**Decisiones resueltas el 2026-07-16 (previas al Incremento 1):** invitación con expiración de
+7 días, rechazo sin recuperación automática ante link vencido/inválido, entrega por email vía
+adaptador SMTP propio de BC Identidad (`ADR-012`); JWT con expiración de 60 minutos, sin
+refresh ni blacklist (`ADR-013`); hashing de contraseñas con bcrypt (`ADR-014`).
+**Próximo paso:** Arrancar el Incremento 1 (BC Identidad: RF-01, RF-02, JWT, healthcheck) con su
+propia Iteración 0 — Modelado (event storming Usuario/Rol/Invitación + wireframes de registro y
+login, ver `docs/rf/PLAN_v1.md` §Incremento 1 y `ADR-012/013/014`).
+**Baseline abierta:** ninguna. BL-002 se abre al iniciar la ejecución del Incremento 1 (ver
+`docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
+**Branch activo:** `develop`.
 
 ---
 
@@ -91,7 +88,7 @@ cognion/
 
 ## Arquitectura interna — reglas no negociables
 
-Monolito modular con **Clean Architecture** interna. Bounded Contexts: Sesiones (Core), Banco de Preguntas, Identidad, Notificaciones, Analytics.
+Monolito modular con **Clean Architecture** interna. Bounded Contexts: Actividad Evaluativa (Core, antes "Sesiones" — ver `ADR-015`), Banco de Preguntas, Identidad, Notificaciones, Analytics.
 
 ```
 src/<bc>/
@@ -133,9 +130,9 @@ main          ← baselines (v0.N.0) — deploy automático al mergear
 ### Conventional Commits
 
 ```
-feat(entities): agregar aggregate Sesion [US-2.1.1]
+feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]
 fix(interface_adapters): corregir endpoint ranking
-test(entities): tests unitarios Sesion.cerrar_periodo
+test(entities): tests unitarios ActividadEvaluativa.cerrar_periodo
 docs(adr): ADR-003 SQLite vs PostgreSQL
 chore(cm): registrar BL-002 cierre Incremento 2
 ```
