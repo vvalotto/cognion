@@ -6,6 +6,13 @@
 > Revisión 2026-07-16: el BC "Sesiones" se renombró a "Actividad Evaluativa" (`ADR-015`) —
 > este documento no se reescribe, "sesión/sesiones" en el texto original se lee con ese
 > significado.
+> Revisión 2026-07-17: se agrega RF-19 (cambio de contraseña por el propio usuario),
+> descubierto durante el event storming del BC Identidad (Incremento 1). RF-19 extiende el
+> alcance original de dos RF ya existentes, que no se reescriben: RF-01 y la alta directa de
+> usuario ganan una regla de longitud mínima de contraseña (8 caracteres) que antes no existía
+> en ningún lado; RF-03 gana un mecanismo de bloqueo *automático* por intentos fallidos
+> (antes solo contemplaba bloqueos como acción del administrador). Sesión de elicitación en
+> `docs/design/domain/BC-identidad-modelo.md` §9.
 
 ## Descripción del sistema
 
@@ -35,6 +42,11 @@ El sistema distingue tres roles: administrador, docente y estudiante. Cada rol a
 **RF-03 — Gestión de cuentas por administrador**  
 El administrador puede intervenir en cuentas de usuarios para resolver problemas (bloqueos, recuperación, etc.).  
 - **Criterios de aceptación:** El administrador puede ver, modificar el estado y gestionar las cuentas sin necesidad de intervención del docente.
+
+**RF-19 — Cambio de contraseña por el propio usuario**  
+Cualquier usuario autenticado (administrador, docente o estudiante) puede cambiar su propia contraseña, ingresando la contraseña actual y la nueva.  
+- **Criterios de aceptación:** El cambio requiere que la contraseña actual ingresada sea correcta. La contraseña nueva tiene un mínimo de 8 caracteres, sin otro requisito de complejidad por ahora — esta misma regla de longitud mínima aplica también a toda contraseña que se fija por primera vez (RF-01, alta directa de usuario por el administrador). Cambiar la contraseña no invalida la sesión (JWT) activa, que sigue vigente hasta su expiración natural.  
+- **Casos límite:** Si la contraseña actual ingresada es incorrecta 3 veces consecutivas, la cuenta queda bloqueada — el contador se resetea a cero en cada acierto. El mismo mecanismo de bloqueo por 3 intentos fallidos consecutivos aplica al login (autenticación con contraseña incorrecta), con un contador independiente del de cambio de contraseña. Una cuenta bloqueada solo la desbloquea el administrador (RF-03), y desbloquear es la misma operación que resetear la contraseña — no existe un paso de "desbloquear" separado de fijar una contraseña nueva.
 
 ### Banco de preguntas
 
@@ -129,6 +141,8 @@ El sistema mantiene un historial de KPIs por sesión y por cursada que el docent
 - Analytics del docente: por alumno, por curso, por tema
 - Notificaciones por email en apertura y cierre de sesiones abiertas
 - Migración inicial desde PDFs
+- Cambio de contraseña self-service, con bloqueo automático de cuenta a los 3 intentos
+  fallidos consecutivos (login o cambio de contraseña) — RF-19
 
 ### Fuera de alcance
 - Múltiples docentes — *Razón:* el sistema es de uso personal del docente por ahora; se extiende después.

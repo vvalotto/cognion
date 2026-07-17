@@ -3,7 +3,8 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-16 — BC "Sesiones" renombrado a "Actividad Evaluativa" (`ADR-015`)
+> Última actualización: 2026-07-17 — agregado RF-19 (cambio de contraseña por el propio
+> usuario, elicitado durante el modelado del BC Identidad)
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -54,6 +55,10 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-16 | Analytics | 4 | — | Planificado |
 | RF-17 | Analytics | 4 | — | Planificado |
 | RF-18 | Analytics | 7 | — | Planificado |
+| RF-19 | Identidad | 2 | — | Planificado |
+
+> RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
+> y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
 
 > La columna US-IEDD se completa a medida que se elaboran las US candidatas de cada
 > Incremento (`docs/plans/incN/incN-candidatas.md`) — ver `docs/plans/WORKFLOW-DESARROLLO.md` §3.
