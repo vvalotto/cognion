@@ -52,10 +52,29 @@ cerradas antes de pasar a la Iteración 1. Procedimiento en §3.
 ### Estructura en GitHub
 
 - **Milestones** = uno por Incremento (`Incremento 0 — Walking Skeleton`, `Incremento 1 — Banco de preguntas`, etc.)
-- **Labels** = `us-iedd`, `incremento-0`, `incremento-1`, ..., `blocked`, `in-progress`, `done`
+- **Labels** = `us-iedd`, `incremento-0`, `incremento-1`, ...
 - **Labels de tipo** = `tipo:feature`, `tipo:spike`, `tipo:poc`, `tipo:modelado` — permiten
   filtrar en GitHub sin tocar el esquema de la spec (ver "US-IEDD como esquema único" en §1)
+- **Labels de estado** = `backlog`, `in-progress`, `blocked` — ver "Estado del Issue" abajo
 - **Sin Project board** — Milestones + Labels alcanzan para desarrollo en solitario
+
+### Estado del Issue
+
+El estado de una unidad de trabajo combina el estado nativo del Issue (`open`/`closed`) con
+un label de estado mientras está abierto. No existe label `done`: **cerrar el Issue es la
+señal de "terminado"** — tenerla duplicada en un label aparte permite que las dos se
+desincronicen (issue cerrado sin el label, o viceversa).
+
+| Estado | Cómo se marca | Significado |
+|---|---|---|
+| Backlog | Issue abierto + label `backlog` | Creado, especificado, trabajo todavía no arrancó |
+| En curso | Issue abierto + label `in-progress` (reemplaza a `backlog`) | Trabajo activo — branch `feature/` o `fix/` abierta |
+| Bloqueado | Issue abierto + label `blocked` (reemplaza a `backlog`/`in-progress`) | Depende de una decisión o Issue externo — anotar en un comentario cuál |
+| Terminado | Issue **cerrado** (sin label de estado) | DoD cumplido — ver tabla "DoD por Tipo" en §2 |
+
+Un Issue siempre tiene exactamente un label de estado mientras está abierto (nunca dos a la
+vez, nunca ninguno) — al cerrarlo se quita el label de estado, el propio cierre ya lo dice
+todo.
 
 ### Template de Issue (US-IEDD)
 
@@ -392,6 +411,12 @@ Tipo (qué cuenta como Postcondición y su evidencia de cierre según el tipo), 
 a trackearse con GitHub Issues tipo `Modelado`, igual que cualquier otra unidad de trabajo —
 el cierre del Issue con la aprobación de Víctor es la comprobación del DoD. Se aclara en §9
 que el pipeline de 10 fases de `/implement-us` aplica solo a tipo `Feature`.*
+
+*v1.4 — 2026-07-17. Se define el modelo de estado del Issue (§2, "Estado del Issue"): labels
+`backlog` / `in-progress` / `blocked` mientras el Issue está abierto, uno solo a la vez; se
+elimina el label `done` por redundante con el estado nativo `closed` — cerrar el Issue ya es
+la señal de "terminado" (consistente con "cerrar el Issue es la comprobación del DoD",
+v1.3).*
 
 *v1.1 — 2026-07-14. Se incorpora la Iteración 0 — Modelado (§1, §3, §6): event storming del BC
 más UX si corresponde, aprobados por Víctor antes de elaborar candidatas de US. Extiende a

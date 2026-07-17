@@ -645,7 +645,7 @@ Incremento (ver §7).
 | SP-ADJ | `SP-ADJ-NN` | `SP-ADJ-01` | `docs/plans/sp-adj-NN/` |
 | Wireframe UX | `wireframes-<pantalla-o-rol>.md` | `wireframes-docente-banco.md` | `docs/design/ux/` |
 | Prototipo UX | `prototipo-<pantalla-o-rol>.html` | `prototipo-docente-banco.html` | `docs/design/ux/prototipos/` |
-| Label GitHub | `us-iedd`, `incremento-N`, `blocked`, `in-progress`, `done` | `incremento-2` | Issues |
+| Label GitHub | `us-iedd`, `incremento-N`, `tipo:{feature\|spike\|poc\|modelado}`, `{backlog\|in-progress\|blocked}` | `incremento-2` | Issues |
 | Milestone GitHub | `Incremento N — <nombre de PLAN_v1.md>` | `Incremento 3 — Sesión de período abierto` (Actividad Evaluativa, ver `ADR-015`) | Milestones |
 | Commit (Conventional Commits) | `tipo(scope): descripción [US-N.M.K]` | `feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]` | — |
 
