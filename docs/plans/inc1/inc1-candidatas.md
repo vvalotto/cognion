@@ -1,12 +1,11 @@
 # Incremento 1 — BC Identidad — US candidatas
 
-> Estado documental: **borrador previo a Iteración 0 — Modelado.**
-> No usar como input de `/implement-us` todavía. Las US aquí listadas son candidatas
-> preliminares para orientar el event storming — se confirman, ajustan o descartan recién
-> con el modelo de dominio aprobado (`docs/design/domain/BC-identidad-modelo.md`), por
-> WORKFLOW-DESARROLLO.md §3, paso 0. Escribir la spec formal de una US sobre un modelo que
-> todavía no existe es el mismo anti-patrón "spec-validatoria" que el gate de UX prohíbe del
-> lado del backend (`PLAN_v1.md`, "Modelado de dominio antes de construir, por BC").
+> Estado documental: **Iteración 0 — Modelado cerrada (2026-07-18).** US-1.0.1 (modelo de
+> dominio, Issue #2) y US-1.0.2 (wireframes de registro/login/alta de Docente, Issue #4)
+> aprobadas por Víctor. Esta tabla ya puede usarse como base para elaborar las US-IEDD formales
+> de la Iteración 1 (WORKFLOW-DESARROLLO.md §3, paso 1) — revisarla contra el modelo aprobado
+> antes de crear los Issues y specs, por si el event storming o los wireframes ajustaron algún
+> comando/evento respecto de lo anticipado acá.
 >
 > Fuente: `docs/rf/PLAN_v1.md` §Incremento 1, `docs/rf/RF_v1.md` (RF-01, RF-02),
 > `ADR-012` (invitación), `ADR-013` (JWT), `ADR-014` (bcrypt).
@@ -76,10 +75,11 @@ según `PROCEDIMIENTO-UAT.md` — no basta con que cada US individual pase sus p
 
 ## Próximos pasos
 
-1. Ejecutar Iteración 0 — Modelado (event storming + wireframes) y obtener aprobación
-   explícita de Víctor.
-2. Con el modelo aprobado, revisar esta tabla de candidatas — ajustar comandos/eventos si el
-   event storming revela agregados o invariantes distintos a los anticipados acá.
+1. ~~Ejecutar Iteración 0 — Modelado (event storming + wireframes) y obtener aprobación
+   explícita de Víctor.~~ Cerrada 2026-07-18 (US-1.0.1, Issue #2; US-1.0.2, Issue #4).
+2. Con el modelo y los wireframes aprobados, revisar esta tabla de candidatas — ajustar
+   comandos/eventos si el event storming o el prototipo UX revelan agregados, invariantes o
+   pantallas distintas a las anticipadas acá.
 3. Crear GitHub Issues (Milestone `Incremento 1 — BC Identidad`, labels `us-iedd`,
    `incremento-1`) y `docs/specs/inc1/US-1.1.K.md` por cada US aprobada.
 4. Actualizar `docs/traceability/matrix.md`: RF-01 y RF-02 pasan de *Planificado* a

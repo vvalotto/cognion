@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Registro y Login (US-1.0.2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Paleta y tipografía tomadas del sitio institucional de referencia
+    (Facultad de Ingeniería, UNER — https://www.ingenieria.uner.edu.ar/):
+    azul institucional #1D75B5 (barra superior, marca), verde #53AA74 (links,
+    íconos de acción), texto gris #707070, tipografía Roboto. No se reproduce
+    el isotipo de la UNER — se usa una marca propia de Cognión con la misma
+    lógica cromática y tipográfica.
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Barra institucional superior — referencia directa al top bar de ingenieria.uner.edu.ar */
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  /* --- Nav del prototipo (no forma parte del producto, es guía de navegación del artefacto) --- */
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  .center-wrap {
+    min-height: calc(100vh - 74px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+  }
+
+  .brand {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .brand .mark {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .brand .mark svg { width: 100%; height: 100%; }
+  .brand .name { font-size: 19px; font-weight: 700; color: var(--primary); letter-spacing: 0.01em; }
+  .brand .sub { font-size: 13px; color: var(--muted-foreground); margin-top: 2px; }
+
+  h1.title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  p.subtitle {
+    font-size: 14px;
+    color: var(--muted-foreground);
+    text-align: center;
+    margin: 0 0 24px;
+  }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .field input:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+  }
+  .field .hint {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    margin-top: 4px;
+  }
+  .field.error input { border-color: var(--destructive); }
+  .field.error .error-msg {
+    font-size: 12px;
+    color: var(--destructive);
+    margin-top: 4px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    margin-top: 4px;
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.secondary {
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+  }
+
+  .alert {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    border: 1px solid;
+  }
+  .alert.destructive {
+    background: var(--destructive-bg);
+    border-color: var(--destructive-border);
+    color: #7f1d1d;
+  }
+  .alert.success {
+    background: var(--success-bg);
+    border-color: var(--success-border);
+    color: #14532d;
+  }
+  .alert .icon { flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .alert .body strong { display: block; margin-bottom: 2px; }
+
+  .footer-link {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted-foreground);
+    margin-top: 20px;
+  }
+  .footer-link a { color: var(--accent); font-weight: 500; text-decoration: none; }
+  .footer-link a:hover { text-decoration: underline; }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    margin-bottom: 12px;
+  }
+
+  .center-icon {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+
+  .comision-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  .comision-tag .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 24px 20px; border-radius: 0; border-left: none; border-right: none; }
+    .center-wrap { padding: 0; }
+  }
+
+  /* --- Pantallas internas (Administrador autenticado) --- */
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .app-body { padding: 28px 16px 60px; max-width: 640px; margin: 0 auto; }
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    margin-bottom: 6px;
+  }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--muted-foreground);
+    margin: 0 0 24px;
+  }
+
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .form-card .role-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eaf2f8;
+    color: var(--primary-dark);
+    border: 1px solid #cfe2f0;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .form-actions .btn { margin-top: 0; }
+  .btn.outline {
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+  }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+    max-width: 480px;
+    margin: 40px auto 0;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>US-1.0.2 — Prototipo:</strong>
+  <button data-target="login" class="active">1. Login</button>
+  <button data-target="login-error">1b. Login — error</button>
+  <button data-target="registro">2. Registro (link válido)</button>
+  <button data-target="registro-error">2b. Registro — link vencido/inválido</button>
+  <button data-target="registro-exito">2c. Registro — éxito</button>
+  <button data-target="alta-docente">3. Admin — alta de Docente</button>
+  <button data-target="alta-docente-exito">3b. Admin — Docente creado</button>
+</nav>
+
+<!-- 1. LOGIN -->
+<section class="screen active" id="login">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+            <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+            <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Cognión</div>
+        <div class="sub">Evaluación universitaria</div>
+      </div>
+      <h1 class="title">Iniciar sesión</h1>
+      <p class="subtitle">Ingresá con tu email y contraseña</p>
+
+      <div class="field">
+        <label for="li-email">Email</label>
+        <input type="email" id="li-email" placeholder="nombre@fiuner.edu.ar" />
+      </div>
+      <div class="field">
+        <label for="li-pass">Contraseña</label>
+        <input type="password" id="li-pass" placeholder="••••••••" />
+      </div>
+      <button class="btn" onclick="go('login-error')">Ingresar</button>
+    </div>
+  </div>
+</section>
+
+<!-- 1b. LOGIN - error credenciales -->
+<section class="screen" id="login-error">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+            <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+            <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Cognión</div>
+        <div class="sub">Evaluación universitaria</div>
+      </div>
+      <h1 class="title">Iniciar sesión</h1>
+      <p class="subtitle">Ingresá con tu email y contraseña</p>
+
+      <div class="alert destructive">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Email o contraseña incorrectos</strong>
+          Verificá tus datos e intentá de nuevo.
+        </div>
+      </div>
+
+      <div class="field error">
+        <label for="li2-email">Email</label>
+        <input type="email" id="li2-email" value="estudiante@fiuner.edu.ar" />
+      </div>
+      <div class="field error">
+        <label for="li2-pass">Contraseña</label>
+        <input type="password" id="li2-pass" value="xxxxxxxx" />
+      </div>
+      <button class="btn" onclick="go('login')">Ingresar</button>
+    </div>
+  </div>
+</section>
+
+<!-- 2. REGISTRO - link válido -->
+<section class="screen" id="registro">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+            <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+            <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Cognión</div>
+        <div class="sub">Evaluación universitaria</div>
+      </div>
+      <h1 class="title">Crear tu cuenta</h1>
+      <p class="subtitle">Completá tus datos para unirte a la comisión</p>
+
+      <div class="comision-tag">
+        <span class="dot"></span>
+        Te vas a unir a <strong>&nbsp;Ingeniería de Software — Comisión A</strong>
+      </div>
+
+      <div class="field">
+        <label for="re-nombre">Nombre completo</label>
+        <input type="text" id="re-nombre" placeholder="Nombre y apellido" />
+      </div>
+      <div class="field">
+        <label for="re-email">Email</label>
+        <input type="email" id="re-email" placeholder="nombre@fiuner.edu.ar" />
+      </div>
+      <div class="field">
+        <label for="re-pass">Contraseña</label>
+        <input type="password" id="re-pass" placeholder="Mínimo 8 caracteres" />
+      </div>
+      <div class="field">
+        <label for="re-pass2">Confirmar contraseña</label>
+        <input type="password" id="re-pass2" placeholder="Repetí la contraseña" />
+      </div>
+      <button class="btn" onclick="go('registro-exito')">Crear cuenta</button>
+
+      <div class="footer-link">¿Ya tenés cuenta? <a href="#" onclick="go('login'); return false;">Iniciar sesión</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2b. REGISTRO - link vencido/inválido -->
+<section class="screen" id="registro-error">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+            <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+            <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Cognión</div>
+        <div class="sub">Evaluación universitaria</div>
+      </div>
+      <div class="center-icon">⏱</div>
+      <h1 class="title">Este link ya no es válido</h1>
+      <p class="subtitle">El link de invitación venció o no es correcto. No se puede recuperar automáticamente.</p>
+
+      <div class="alert destructive">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Invitación vencida o inválida</strong>
+          Pedile a tu docente que te genere un nuevo link de invitación para la comisión.
+        </div>
+      </div>
+
+      <button class="btn secondary" onclick="go('login')">Ir a iniciar sesión</button>
+    </div>
+  </div>
+</section>
+
+<!-- 2c. REGISTRO - éxito -->
+<section class="screen" id="registro-exito">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+            <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+            <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Cognión</div>
+        <div class="sub">Evaluación universitaria</div>
+      </div>
+      <div class="center-icon" style="color: var(--success);">✓</div>
+      <h1 class="title">Cuenta creada</h1>
+      <p class="subtitle">Ya quedaste asignado a tu comisión. Iniciá sesión para continuar.</p>
+
+      <div class="alert success">
+        <span class="icon">✓</span>
+        <div class="body">
+          <strong>Ingeniería de Software — Comisión A</strong>
+          Tu cuenta quedó vinculada automáticamente a esta comisión.
+        </div>
+      </div>
+
+      <button class="btn" onclick="go('login')">Iniciar sesión</button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. ADMIN - alta de Docente (CrearUsuario, US-1.1.0) -->
+<section class="screen" id="alta-docente">
+  <div class="app-header">
+    <div class="brand-mini">
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+        <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+        <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Cognión
+    </div>
+    <div class="who">
+      <span class="avatar">VV</span>
+      Víctor Valotto · Administrador
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Cuentas &nbsp;›&nbsp; <span class="current">Nuevo Docente</span></div>
+    <h1 class="page-title">Dar de alta un Docente</h1>
+    <p class="page-subtitle">Creá la cuenta con una contraseña temporal. El docente podrá usarla para generar invitaciones a sus comisiones.</p>
+
+    <div class="form-card">
+      <div class="role-tag">👤 Perfil: Docente</div>
+
+      <div class="field">
+        <label for="ad-nombre">Nombre completo</label>
+        <input type="text" id="ad-nombre" placeholder="Nombre y apellido" />
+      </div>
+      <div class="field">
+        <label for="ad-email">Email</label>
+        <input type="email" id="ad-email" placeholder="docente@fiuner.edu.ar" />
+      </div>
+      <div class="field">
+        <label for="ad-pass">Contraseña temporal</label>
+        <input type="password" id="ad-pass" placeholder="Mínimo 8 caracteres" />
+      </div>
+      <div class="field">
+        <label for="ad-pass2">Confirmar contraseña</label>
+        <input type="password" id="ad-pass2" placeholder="Repetí la contraseña" />
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" style="width:auto; padding-left:20px; padding-right:20px;" onclick="go('alta-docente-exito')">Crear cuenta de Docente</button>
+        <button class="btn outline" style="width:auto; padding-left:20px; padding-right:20px;" onclick="go('login')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3b. ADMIN - Docente creado -->
+<section class="screen" id="alta-docente-exito">
+  <div class="app-header">
+    <div class="brand-mini">
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+        <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+        <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Cognión
+    </div>
+    <div class="who">
+      <span class="avatar">VV</span>
+      Víctor Valotto · Administrador
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="result-card">
+      <div class="center-icon" style="color: var(--success);">✓</div>
+      <h1 class="title">Docente creado</h1>
+      <p class="subtitle">La cuenta ya existe. Todavía no está asignado a ninguna comisión.</p>
+
+      <div class="alert success" style="text-align:left;">
+        <span class="icon">✓</span>
+        <div class="body">
+          <strong>Ana Gómez — Docente</strong>
+          ana.gomez@fiuner.edu.ar
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" onclick="go('alta-docente')">Dar de alta otro Docente</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+</script>
+
+</body>
+</html>

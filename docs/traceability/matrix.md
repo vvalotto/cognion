@@ -3,8 +3,8 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-17 — agregado RF-19 (cambio de contraseña por el propio
-> usuario, elicitado durante el modelado del BC Identidad)
+> Última actualización: 2026-07-18 — RNF-SEG-1 a Especificado y gate de RNF-USA-1 cumplido
+> para Incremento 1, al cerrar la Iteración 0 — Modelado (US-1.0.1, US-1.0.2)
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -81,8 +81,8 @@ tomada todavía (se marca "Sin ADR — pendiente", nunca se deja vacío sin expl
 | RNF-DISP-1 | Disponibilidad | ADR-010 | Disponibilidad, Escenario 1 | Actividad Evaluativa / Infraestructura | 0 (healthcheck) → 6 (cancelación a los 5 min) | Planificado | Healthcheck expuesto (Inc 0) + comportamiento de cancelación verificado en UAT de Inc 6 |
 | RNF-DISP-2 | Disponibilidad | N/A — decisión de dominio (RF-11b), no arquitectónica | Disponibilidad, Escenario 2 | Actividad Evaluativa | 3 | Planificado | RF-11b (modificación de cierre en caliente) cubre el escenario |
 | RNF-CONF-1 | Confiabilidad | ADR-009, ADR-004 | Confiabilidad | Actividad Evaluativa | 3 | Planificado | Test de reconexión sin pérdida de respuestas confirmadas |
-| RNF-SEG-1 | Seguridad | ADR-007 | Seguridad | Identidad (transversal a todos los BC) | 1 | Planificado | Revisión de API — RBAC + JWT validado en cada endpoint |
-| RNF-USA-1 | Usabilidad | ADR-011 | Usabilidad, Escenario 1 | Frontend (transversal) | Todos los incrementos con frontend | Planificado | Gate UX de cada incremento — verificación de prototipo aprobado |
+| RNF-SEG-1 | Seguridad | ADR-007 | Seguridad | Identidad (transversal a todos los BC) | 1 | Especificado | Revisión de API — RBAC + JWT validado en cada endpoint. Mecanismo concreto (roles derivados de `perfil`, JWT sin refresh/blacklist) definido en `docs/design/domain/BC-identidad-modelo.md` (US-1.0.1, aprobado 2026-07-17) |
+| RNF-USA-1 | Usabilidad | ADR-011 | Usabilidad, Escenario 1 | Frontend (transversal) | Todos los incrementos con frontend | Planificado — gate cumplido para Incremento 1 | Gate UX de cada incremento — verificación de prototipo aprobado. Incremento 1: `docs/design/ux/wireframes-identidad.md` + prototipo aprobados (US-1.0.2, 2026-07-18). Estado global se mantiene "Planificado" hasta que cada incremento con frontend repita el gate |
 | RNF-USA-2 | Usabilidad | ADR-011 | Usabilidad, Escenario 2 | Frontend / Actividad Evaluativa en vivo | 6 | Planificado — ⚠️ ítem abierto, criterio a definir en diseño UX antes del Incremento 6 (ver `CLAUDE.md`) | Validación humana en dispositivo real (proyección en aula) |
 | RNF-MANT-1 | Mantenibilidad | ADR-001 | Mantenibilidad | Banco de preguntas | 2 | Planificado — ⚠️ depende del modelo polimórfico de tipos de pregunta, a resolver en la Iteración 0 — Modelado | Spike de incorporación de un tipo nuevo en ≤ 1 jornada |
 | RNF-OBS-1 | Observabilidad | ADR-002, ADR-010 | Observabilidad | Actividad Evaluativa | 3 | Planificado | Reconstrucción de una actividad evaluativa desde el event store, verificada en UAT |
