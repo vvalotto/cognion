@@ -1,8 +1,8 @@
 # BC Identidad — Wireframes: Registro, Login y Alta de Docente
 
-> Estado documental: **borrador — pendiente de aprobación de Víctor (US-1.0.2, Issue #4).**
-> No usar como input de specs US-IEDD de la Iteración 1 hasta que este documento y su prototipo
-> queden aprobados.
+> Estado documental: **vigente — aprobado por Víctor (US-1.0.2, Issue #4, cerrado 2026-07-18).**
+> Usado como input de las specs US-IEDD de la Iteración 1 (`docs/specs/inc1/US-1.1.0`,
+> `US-1.1.2`, `US-1.1.3`, `US-1.1.4`).
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-01, RF-02), `docs/design/domain/BC-identidad-modelo.md`
 > (comandos `RegistrarEstudiante`, `IniciarSesion`, `CrearUsuario`), `ADR-012` (invitación).

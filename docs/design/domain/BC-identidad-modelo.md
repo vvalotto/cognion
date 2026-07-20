@@ -1,8 +1,8 @@
 # BC Identidad — Modelo de Dominio (Event Storming)
 
-> Estado documental: **borrador — pendiente de aprobación de Víctor (US-1.0.1, Issue #2).**
-> No usar como input de specs US-IEDD de la Iteración 1 hasta que este documento quede
-> aprobado y los hot spots de la sección final estén resueltos.
+> Estado documental: **vigente — aprobado por Víctor (US-1.0.1, Issue #2, cerrado 2026-07-18).**
+> Usado como input de las specs US-IEDD de la Iteración 1 (`docs/specs/inc1/US-1.1.0` a
+> `US-1.1.5`).
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-01, RF-02), `ADR-007` (JWT+RBAC), `ADR-012` (invitación),
 > `ADR-013` (expiración JWT), `ADR-014` (bcrypt).

@@ -2,8 +2,11 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: procedimiento operativo de branching, PRs, gestión de Issues/Milestones y ciclo de trabajo por US/Incremento
-> Última actualización: 2026-07-14
+> Última actualización: 2026-07-20
 > Fuente normativa relacionada: `docs/plans/PLAN-CM.md` (política) — este documento es el procedimiento que la ejecuta
+> Fuente conceptual: `docs/iedd/05-Fases-y-Gates.md` — este documento instancia, para Cognión,
+> el ciclo Dominio → Arquitectura → Modelo → Especificación → Implementación y sus gates
+> (`docs/iedd/03-Diagrama_Conceptual.md`); no redefine el modelo conceptual, lo ejecuta
 
 ---
 
@@ -36,7 +39,8 @@ artefactos de diseño — el modelo de dominio del BC (event storming) y, si el 
 pantallas nuevas, el prototipo UX correspondiente — como una o más US-IEDD **tipo `Modelado`**,
 cada una con su GitHub Issue. Cierran recién cuando Víctor aprueba explícitamente el artefacto
 (la aprobación es el comentario que cierra el Issue, no un paso informal aparte). Deben estar
-cerradas antes de pasar a la Iteración 1. Procedimiento en §3.
+cerradas antes de pasar a la Iteración 1. Procedimiento en §3. Es la instancia operativa del
+**gate de modelado** (`docs/iedd/05-Fases-y-Gates.md` §3.2).
 
 ---
 
@@ -126,6 +130,14 @@ en el comentario de cierre, no solo el merge de un PR.
 ---
 
 ## 3. Ciclo de Elaboración de US por Incremento
+
+Este ciclo es la instancia operativa del **gate de especificación**
+(`docs/iedd/05-Fases-y-Gates.md` §3.3, la "Definición de Listo para Especificar"): antes de
+escribir cualquier `US-N.M.K.md`, el paso 0 (si aplica) y el paso 3b verifican que el modelo de
+dominio y el diseño UX que la spec necesita ya estén aprobados — no se especifica sobre un
+artefacto que todavía no existe o que diverge del aprobado (anti-patrón "spec-validatoria",
+también tratado como regla general de reingreso en `docs/iedd/03-Diagrama_Conceptual.md` §"La
+regla de reingreso").
 
 ```
 0. [CONDICIONAL — si el Incremento tiene Iteración 0 — Modelado, ver PLAN_v1.md]:
@@ -323,6 +335,8 @@ anterior), pero su DoD se verifica contra el entorno de destino, no contra `src/
 
 ## 7. Ciclo por Baseline (cierre de Incremento)
 
+Instancia operativa del **gate de cierre** (`docs/iedd/05-Fases-y-Gates.md` §3.5).
+
 ```
 1. Todo el Incremento cerrado en develop — Milestone al 100%
 2. Correr ArchitectAnalyst manualmente:
@@ -360,6 +374,7 @@ antes de cerrar el Baseline, no en la automatización (PLAN-CM.md §10).
 
 ## 8. Quality Gates por Nivel
 
+Instancia operativa del **gate de implementación** (`docs/iedd/05-Fases-y-Gates.md` §3.4).
 Ver tabla completa en `PLAN-CM.md` §10. Resumen operativo:
 
 | Nivel | Herramienta | Cuándo | Acción |
@@ -397,6 +412,14 @@ feature/US-3.2.1-persistir-respuesta      → /implement-us → /pr → merge de
 ```
 
 ---
+
+*v1.5 — 2026-07-20. Se referencia explícitamente `docs/iedd/05-Fases-y-Gates.md` como fuente
+conceptual: cada ciclo operativo de este documento (Iteración 0 — Modelado en §1, elaboración
+de US en §3, quality gates en §8, cierre de Baseline en §7) queda marcado como instancia de un
+gate del modelo conceptual (modelado, especificación, implementación, cierre), en vez de
+quedar como práctica sin nombre formal. Motivado por la formalización del "gate de
+especificación" (Definición de Listo para Especificar) durante la Iteración 1 del Incremento 1
+(`US-1.1.0` a `US-1.1.5`).*
 
 *v1.0 — 2026-07-13. Primera versión, adaptada del workflow validado en AtaraxiaDive:
 terminología `incN` en vez de `spX`/SP (no hay nivel Subproyecto separado en Cognion — ver

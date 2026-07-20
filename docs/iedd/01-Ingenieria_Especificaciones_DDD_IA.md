@@ -33,25 +33,29 @@ La aparición de la IA generativa hace visible esta realidad: la implementación
 
 ## 2. La tesis central
 
-La ingeniería de software puede reinterpretarse como una disciplina compuesta por cinco capas:
+La ingeniería de software puede reinterpretarse como una disciplina compuesta por cinco capas,
+recorridas como un **ciclo de refinamiento**, no como una cadena que se atraviesa una sola vez:
 
 ```
-Dominio
-  ↓
-Modelo
-  ↓
-Especificación
-  ↓
-Arquitectura
-  ↓
-Implementación
+Dominio → Arquitectura → Modelo → Especificación → Implementación
 ```
+
+El orden de arriba es el **primer descenso** — el recorrido por defecto la primera vez que se
+aborda un dominio nuevo. La Arquitectura precede al Modelo, no lo sigue: el estilo
+arquitectónico y el stack son condición de posibilidad del modelado, no una consecuencia de la
+especificación — no se puede construir un modelo de dominio riguroso sin saber, por ejemplo, si
+el sistema sostiene sus eventos como Event Sourcing o los trata como señales efímeras. Cualquier
+capa posterior puede, sin embargo, revelar la necesidad de volver a una capa anterior — el
+tratamiento completo de esos retornos y la regla que los gobierna está en
+`docs/iedd/03-Diagrama_Conceptual.md` y `docs/iedd/05-Fases-y-Gates.md`.
 
 En este marco:
 
-- Domain-Driven Design proporciona la construcción del modelo del dominio
+- Domain-Driven Design proporciona la construcción del modelo del dominio, sobre una
+  arquitectura fundacional ya decidida
 - la ingeniería de especificaciones formaliza el comportamiento esperado
-- la arquitectura organiza el sistema para implementar la especificación
+- la arquitectura organiza el sistema, primero para habilitar el modelado y luego para
+  implementar la especificación
 - la IA actúa como traductor entre especificación e implementación
 
 ---
@@ -107,7 +111,7 @@ Esta descripción define comportamiento sin referirse a ninguna tecnología.
 
 Los modelos de lenguaje permiten transformar descripciones de alto nivel en implementaciones.
 
-Flujo conceptual:
+Flujo conceptual (tramo final del ciclo, sobre una arquitectura y un modelo ya aprobados):
 
 ```
 modelo del dominio
@@ -153,19 +157,24 @@ Orden tradicional:
 lenguajes → programación → diseño
 ```
 
-Orden propuesto:
+Orden propuesto para el primer descenso:
 
 ```
-dominio → modelo → especificación → arquitectura → implementación
+dominio → arquitectura → modelo → especificación → implementación
 ```
+
+— con la aclaración de que, en un proyecto real, no se recorre una sola vez: los estudiantes
+también deben entrenarse en reconocer cuándo un hallazgo en una capa posterior exige volver a
+una capa anterior, y en no saltear la aprobación explícita al hacerlo (`docs/iedd/03-...md`,
+`docs/iedd/05-...md`).
 
 Los estudiantes deben entrenarse primero en:
 
-- modelado conceptual
-- lenguaje ubicuo
+- comprensión del dominio
+- decisiones de arquitectura fundacional
+- modelado conceptual y lenguaje ubicuo
 - especificación de comportamiento
-- decisiones de arquitectura
-- identificación de ambigüedades
+- identificación de ambigüedades y de retornos legítimos del ciclo
 
 antes de centrarse en lenguajes específicos.
 
@@ -186,16 +195,21 @@ Los lenguajes de programación pasan a ser medios de materialización.
 ```
 Dominio real
   ↓
+Arquitectura (fundacional)
+  ↓
 Modelo (DDD)
   ↓
 Especificación
-  ↓
-Arquitectura
   ↓
 IA como traductor
   ↓
 Sistema ejecutable
 ```
+
+Este es el primer descenso. El ciclo completo — con los retornos legítimos desde cualquier
+capa hacia una anterior, y la regla que exige reingresar por el mismo gate de aprobación —
+está desarrollado en `docs/iedd/03-Diagrama_Conceptual.md` (diagrama) y
+`docs/iedd/05-Fases-y-Gates.md` (gobierno de los gates).
 
 ---
 
