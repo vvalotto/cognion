@@ -252,7 +252,13 @@ chore(cm): registrar BL-002 cierre Incremento 2
 7. Commits atómicos con referencia: feat(entities): ... [US-N.M.K]
 8. Abrir PR hacia develop con /pr → DesignReviewer corre en pre-push (bloquea si CRITICAL)
    → Usar siempre gh pr create --base develop (el default de gh es main)
-9. Merge del PR — Issue se cierra automáticamente
+   → El body del PR DEBE incluir "Closes #N" con el número de Issue de GitHub (no alcanza
+     con [US-N.M.K] en los commits) — sin esa keyword el paso 9 no ocurre solo, GitHub no
+     cierra el Issue al mergear
+   → Antes de crear el PR, mostrar a Víctor qué va a incluir (commits + Closes #N) y esperar
+     su aprobación explícita — el checkpoint de aprobación de esta fase es el PR, no cada
+     commit local
+9. Merge del PR — Issue se cierra automáticamente (por el "Closes #N" del paso 8)
 9b. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
     Especificado a Implementado.
     → Si el código mergeado es el mecanismo concreto de un escenario RNF (ver la columna ADR
@@ -412,6 +418,13 @@ feature/US-3.2.1-persistir-respuesta      → /implement-us → /pr → merge de
 ```
 
 ---
+
+*v1.6 — 2026-07-20. Se corrige un gap real en §5 paso 8–9: el pipeline daba por hecho que "el
+Issue se cierra automáticamente" al mergear el PR, pero nada garantizaba eso — el commit con
+`[US-N.M.K]` no es una keyword de cierre de GitHub. Se agrega la instrucción explícita de
+incluir `Closes #N` (número de Issue) en el body del PR, y se fija el checkpoint de aprobación
+de Víctor en la apertura del PR (no en cada commit local). Detectado al preparar la ejecución
+de `US-1.1.0` a `US-1.1.5`.*
 
 *v1.5 — 2026-07-20. Se referencia explícitamente `docs/iedd/05-Fases-y-Gates.md` como fuente
 conceptual: cada ciclo operativo de este documento (Iteración 0 — Modelado en §1, elaboración
