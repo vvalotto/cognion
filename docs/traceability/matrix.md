@@ -3,8 +3,8 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-18 — RNF-SEG-1 a Especificado y gate de RNF-USA-1 cumplido
-> para Incremento 1, al cerrar la Iteración 0 — Modelado (US-1.0.1, US-1.0.2)
+> Última actualización: 2026-07-20 — RF-01 y RF-02 a Especificado al cerrar las specs de la
+> Iteración 1 (US-1.1.0 a US-1.1.5, `docs/specs/inc1/`)
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -36,8 +36,8 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
-| RF-01 | Identidad | 1 | — | Planificado |
-| RF-02 | Identidad | 1 | — | Planificado |
+| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 | Especificado |
+| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 | Especificado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
 | RF-05 | Banco de preguntas | 2 | — | Planificado |
@@ -62,6 +62,11 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 > La columna US-IEDD se completa a medida que se elaboran las US candidatas de cada
 > Incremento (`docs/plans/incN/incN-candidatas.md`) — ver `docs/plans/WORKFLOW-DESARROLLO.md` §3.
+
+> `US-1.1.0` (alta de usuarios, comisión y asignación de docentes) no tiene RF propio — surgió
+> como necesidad derivada del event storming (`BC-identidad-modelo.md` §6, §9) y es
+> precondición técnica de RF-01/RF-02, por eso no aparece en la columna US-IEDD de ninguna
+> fila. Detalle en `docs/plans/inc1/inc1-candidatas.md`.
 
 ## 4. Escenarios de calidad (RNF)
 
