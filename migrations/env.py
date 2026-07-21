@@ -23,8 +23,10 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Cada BC agrega su Base.metadata acá cuando tenga modelos ORM propios.
-# Incremento 0 no introduce dominio — sin metadata todavía.
-target_metadata = None
+from src.shared.frameworks.db import Base
+from src.identidad.frameworks.db import models as identidad_models  # noqa: F401,E402
+
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
