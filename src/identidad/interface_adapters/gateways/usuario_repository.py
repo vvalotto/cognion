@@ -27,7 +27,7 @@ _MODEL_POR_PERFIL = {
     TipoPerfil.ESTUDIANTE: EstudianteModel,
 }
 
-_ENTITY_POR_PERFIL = {
+_ENTITY_POR_PERFIL: dict[TipoPerfil, type[Perfil]] = {
     TipoPerfil.ADMINISTRADOR: Administrador,
     TipoPerfil.DOCENTE: Docente,
     TipoPerfil.ESTUDIANTE: Estudiante,
