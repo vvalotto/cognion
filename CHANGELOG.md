@@ -9,6 +9,29 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-1.1.0] Administrador da de alta cuentas de usuario, crea una comisión y asigna docentes
+  — BC Identidad, precondición del resto de la Iteración 1
+  - `Usuario` (aggregate) + entities subordinadas `Docente`/`Administrador`/`Estudiante`,
+    `Comisión` (aggregate), eventos `UsuarioCreado`/`ComisionCreada`/`DocenteAsignado`
+  - `CrearUsuarioUseCase`, `CrearComisionUseCase`, `AsignarDocenteAComisionUseCase`
+  - Endpoints `POST /usuarios`, `POST /comisiones`, `POST /comisiones/{id}/docentes` (sin
+    guard de rol todavía — se agrega en `US-1.1.5`)
+  - `scripts/seed_admin.py` — bootstrap del primer Administrador (`ADR-016`)
+  - Migración Alembic: tablas `usuario`, `docente`, `administrador`, `estudiante`, `comision`,
+    `comision_docentes`
+  - 37 tests (20 unitarios + 9 integración + 5 BDD via `step_defs`), coverage 100% en
+    entities/use_cases/interface_adapters
+  - `ADR-016` (bootstrap admin), `ADR-017` (DB session compartida `shared/frameworks/db.py`),
+    `ADR-018` (`NullPool` en el engine SQLAlchemy)
+
+### Fixed
+- `passlib` incompatible con `bcrypt>=4.1` — reemplazado por `bcrypt` directo
+- Orden de inserción `Usuario`/perfil sin `relationship()` ORM causaba violación de FK —
+  corregido con flush intermedio en `SQLAlchemyUsuarioRepository`
+- `pytest-asyncio` sin `loop_scope` explícito rompía el engine compartido entre tests con
+  distintos event loops — fijado a `session` scope
+
 ## [0.2.0] - 2026-07-16
 
 ### Added

@@ -31,7 +31,7 @@ de cómo colaboran en runtime (eso vive en `20-context-map-integrations.md`).
 
 | BC | Tipo DDD | Estado de modelado | Incremento |
 |----|----------|---------------------|------------|
-| **Identidad** | Generic | En curso — Iteración 0 (event storming Usuario/Rol/Invitación) | Incremento 1 |
+| **Identidad** | Generic | En curso — Iteración 1 (US-1.1.0 implementada: alta de Usuario/Comisión) | Incremento 1 |
 | **Banco de Preguntas** | Supporting | Pendiente | Incremento 2 |
 | **Actividad Evaluativa** | Core Domain | Pendiente (antes "Sesiones", ver `ADR-015`) | Incremento 3 |
 | **Analytics** | Supporting | Pendiente | Incremento 4 |
@@ -107,8 +107,10 @@ consciente a revisar cuando Notificaciones se modele (Incremento 5).
 Ningún BC importa código de otro directamente. Toda comunicación cruza por puertos definidos en
 `entities/ports/` de cada BC, salvo las excepciones ya documentadas por ADR (Actividad
 Evaluativa → Notificaciones, `ADR-006`; Analytics leyendo el event store compartido de Actividad
-Evaluativa, `ADR-002`). `shared/entities/` es la única excepción transversal — tipos y
-utilidades sin lógica de negocio de un BC específico (`CLAUDE.md`).
+Evaluativa, `ADR-002`). `shared/entities/` es la excepción transversal para tipos y utilidades
+sin lógica de negocio de un BC específico (`CLAUDE.md`); `shared/frameworks/` (desde `US-1.1.0`,
+`ADR-017`) es la excepción análoga para infraestructura técnica pura — engine y sesión async de
+SQLAlchemy compartidos por todos los BC contra la misma instancia de PostgreSQL (`ADR-004`).
 
 ## Siguiente paso
 
