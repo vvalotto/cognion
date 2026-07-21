@@ -13,7 +13,7 @@ class Comision:
     docentes_asignados: list[UUID] = field(default_factory=list)
 
     @staticmethod
-    def crear(materia: str, horario: str, administrador_id: UUID) -> "Comision":
+    def crear(materia: str, horario: str, administrador_id: UUID) -> Comision:
         return Comision(
             id=uuid4(),
             materia=materia,

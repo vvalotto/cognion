@@ -46,7 +46,7 @@ class Usuario:
         return TipoPerfil.ESTUDIANTE
 
     @staticmethod
-    def crear(nombre: str, email: str, password_hash: str, tipo_perfil: TipoPerfil) -> "Usuario":
+    def crear(nombre: str, email: str, password_hash: str, tipo_perfil: TipoPerfil) -> Usuario:
         usuario_id = uuid4()
         perfil: Perfil
         if tipo_perfil is TipoPerfil.ADMINISTRADOR:
