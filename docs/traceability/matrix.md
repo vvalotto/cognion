@@ -3,8 +3,10 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-20 — RF-01 y RF-02 a Especificado al cerrar las specs de la
-> Iteración 1 (US-1.1.0 a US-1.1.5, `docs/specs/inc1/`)
+> Última actualización: 2026-07-21 — `US-1.1.0` mergeada a `develop` (PR #11, Issue #5
+> cerrado); RF-01 y RF-02 permanecen en Especificado — dependen de `US-1.1.1`-`US-1.1.3` y
+> `US-1.1.4`-`US-1.1.5` respectivamente, todavía no implementadas. `US-1.1.0` no tiene RF
+> propio (ver nota en §3), por eso su implementación no mueve ninguna fila de esta tabla.
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -66,7 +68,10 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > `US-1.1.0` (alta de usuarios, comisión y asignación de docentes) no tiene RF propio — surgió
 > como necesidad derivada del event storming (`BC-identidad-modelo.md` §6, §9) y es
 > precondición técnica de RF-01/RF-02, por eso no aparece en la columna US-IEDD de ninguna
-> fila. Detalle en `docs/plans/inc1/inc1-candidatas.md`.
+> fila. Detalle en `docs/plans/inc1/inc1-candidatas.md`. **Estado: Implementado** — mergeada a
+> `develop` el 2026-07-21 (PR #11, `docs/reports/inc1/US-1.1.0-report.md`), 37/37 tests,
+> quality gates APROBADO. Con la precondición resuelta, `US-1.1.1` (Docente genera invitación)
+> queda desbloqueada como siguiente paso de la Iteración 1.
 
 ## 4. Escenarios de calidad (RNF)
 
