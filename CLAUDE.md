@@ -30,10 +30,18 @@ entorno queda diferido, pendiente de la decisión de infraestructura aún abiert
 7 días, rechazo sin recuperación automática ante link vencido/inválido, entrega por email vía
 adaptador SMTP propio de BC Identidad (`ADR-012`); JWT con expiración de 60 minutos, sin
 refresh ni blacklist (`ADR-013`); hashing de contraseñas con bcrypt (`ADR-014`).
-**Próximo paso:** Arrancar el Incremento 1 (BC Identidad: RF-01, RF-02, JWT, healthcheck) con su
-propia Iteración 0 — Modelado (event storming Usuario/Rol/Invitación + wireframes de registro y
-login, ver `docs/rf/PLAN_v1.md` §Incremento 1 y `ADR-012/013/014`).
-**Baseline abierta:** ninguna. BL-002 se abre al iniciar la ejecución del Incremento 1 (ver
+**Incremento 1 (BC Identidad) en curso.** Iteración 0 — Modelado cerrada el 2026-07-18:
+US-1.0.1 (event storming, Issue #2) y US-1.0.2 (wireframes de registro/login, Issue #4)
+aprobados por Víctor (`docs/design/domain/BC-identidad-modelo.md`,
+`docs/design/ux/wireframes-identidad.md`). Iteración 1 en curso: US-1.1.0 (alta de
+usuarios/comisión/asignación de docentes, sin RF propio) implementada y mergeada a `develop`
+el 2026-07-21 (PR #11, `docs/reports/inc1/US-1.1.0-report.md`, 37/37 tests). Issues #6–#10
+abiertos para US-1.1.1 a US-1.1.5 (`docs/plans/inc1/inc1-candidatas.md` §Iteración 1),
+ninguna con branch/PR activo todavía.
+**Próximo paso:** Arrancar US-1.1.1 (Docente genera link de invitación para una comisión,
+Issue #6) — `git checkout -b feature/US-1.1.1-...` desde `develop`, `tracker init`, luego
+`/implement-us US-1.1.1`.
+**Baseline abierta:** ninguna. BL-002 se abre al cierre del Incremento 1 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
 
