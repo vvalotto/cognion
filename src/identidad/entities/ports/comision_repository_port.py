@@ -13,7 +13,7 @@ class ComisionRepositoryPort(ABC):
 
     @abstractmethod
     async def guardar(self, comision: Comision) -> None:
-        """Persiste una comisión nueva."""
+        """Guarda una comisión nueva."""
         ...
 
     @abstractmethod
@@ -23,5 +23,5 @@ class ComisionRepositoryPort(ABC):
 
     @abstractmethod
     async def actualizar(self, comision: Comision) -> None:
-        """Persiste cambios sobre una comisión existente."""
+        """Guarda cambios sobre una comisión existente."""
         ...

@@ -20,7 +20,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         self._session = session
 
     async def guardar(self, comision: Comision) -> None:
-        """Persiste una comisión nueva."""
+        """Guarda una comisión nueva."""
         self._session.add(
             ComisionModel(
                 id=comision.id,
@@ -47,7 +47,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         )
 
     async def actualizar(self, comision: Comision) -> None:
-        """Persiste los docentes nuevos asignados a una comisión existente."""
+        """Guarda los docentes nuevos asignados a una comisión existente."""
         modelo = await self._session.get(
             ComisionModel, comision.id, options=[selectinload(ComisionModel.docentes)]
         )

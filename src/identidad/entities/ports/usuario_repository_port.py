@@ -18,7 +18,7 @@ class UsuarioRepositoryPort(ABC):
 
     @abstractmethod
     async def guardar(self, usuario: Usuario) -> None:
-        """Persiste un usuario nuevo."""
+        """Guarda un usuario nuevo."""
         ...
 
     @abstractmethod

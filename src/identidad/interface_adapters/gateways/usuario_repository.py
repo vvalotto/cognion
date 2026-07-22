@@ -51,7 +51,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         return resultado.scalar_one_or_none() is not None
 
     async def guardar(self, usuario: Usuario) -> None:
-        """Persiste el usuario y su modelo de perfil correspondiente."""
+        """Guarda el usuario y su modelo de perfil correspondiente."""
         self._session.add(
             UsuarioModel(
                 id=usuario.id,
