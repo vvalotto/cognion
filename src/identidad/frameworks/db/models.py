@@ -1,3 +1,5 @@
+"""Modelos ORM (SQLAlchemy) del BC Identidad."""
+
 from __future__ import annotations
 
 import uuid
@@ -17,6 +19,8 @@ comision_docentes = Table(
 
 
 class UsuarioModel(Base):
+    """Fila de la tabla `usuario`."""
+
     __tablename__ = "usuario"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -28,6 +32,8 @@ class UsuarioModel(Base):
 
 
 class AdministradorModel(Base):
+    """Fila de la tabla `administrador`, marca de perfil sobre `usuario`."""
+
     __tablename__ = "administrador"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -36,6 +42,8 @@ class AdministradorModel(Base):
 
 
 class DocenteModel(Base):
+    """Fila de la tabla `docente`, marca de perfil sobre `usuario`."""
+
     __tablename__ = "docente"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -44,6 +52,8 @@ class DocenteModel(Base):
 
 
 class EstudianteModel(Base):
+    """Fila de la tabla `estudiante`, marca de perfil sobre `usuario`."""
+
     __tablename__ = "estudiante"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -52,6 +62,8 @@ class EstudianteModel(Base):
 
 
 class ComisionModel(Base):
+    """Fila de la tabla `comision`, con sus docentes asignados vía `comision_docentes`."""
+
     __tablename__ = "comision"
 
     id: Mapped[uuid.UUID] = mapped_column(

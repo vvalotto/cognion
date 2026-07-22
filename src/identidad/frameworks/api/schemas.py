@@ -1,3 +1,5 @@
+"""Schemas Pydantic de request/response de la API del BC Identidad."""
+
 from __future__ import annotations
 
 from uuid import UUID
@@ -8,6 +10,8 @@ from src.identidad.entities.usuario import TipoPerfil
 
 
 class CrearUsuarioRequest(BaseModel):
+    """Body de la request de alta de usuario."""
+
     nombre: str = Field(..., min_length=1, max_length=200)
     email: str = Field(..., min_length=3, max_length=255)
     password: str = Field(..., min_length=8)
@@ -15,6 +19,8 @@ class CrearUsuarioRequest(BaseModel):
 
 
 class UsuarioResponse(BaseModel):
+    """Representación de un usuario devuelta por la API."""
+
     id: UUID
     nombre: str
     email: str
@@ -22,12 +28,16 @@ class UsuarioResponse(BaseModel):
 
 
 class CrearComisionRequest(BaseModel):
+    """Body de la request de alta de comisión."""
+
     materia: str = Field(..., min_length=1, max_length=200)
     horario: str = Field(..., min_length=1, max_length=200)
     administrador_id: UUID
 
 
 class ComisionResponse(BaseModel):
+    """Representación de una comisión devuelta por la API."""
+
     id: UUID
     materia: str
     horario: str
@@ -36,4 +46,6 @@ class ComisionResponse(BaseModel):
 
 
 class AsignarDocenteRequest(BaseModel):
+    """Body de la request de asignación de un docente a una comisión."""
+
     docente_id: UUID

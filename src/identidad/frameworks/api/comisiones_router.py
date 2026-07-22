@@ -1,3 +1,5 @@
+"""Router FastAPI de operaciones sobre comisiones."""
+
 from __future__ import annotations
 
 from uuid import UUID
@@ -21,6 +23,7 @@ async def crear_comision(
     body: CrearComisionRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
 ) -> ComisionResponse:
+    """Crea una comisión nueva a nombre del administrador indicado."""
     comision, _evento = await controller.crear_comision(
         body.materia, body.horario, body.administrador_id
     )
@@ -41,6 +44,7 @@ async def asignar_docente(
     body: AsignarDocenteRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
 ) -> ComisionResponse:
+    """Asigna un docente a la comisión; responde 422/404 según el error de dominio."""
     try:
         comision, _evento = await controller.asignar_docente(comision_id, body.docente_id)
     except UsuarioNoEsDocente as exc:
