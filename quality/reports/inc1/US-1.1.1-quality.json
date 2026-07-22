@@ -1,0 +1,23 @@
+{
+  "us_id": "US-1.1.1",
+  "fecha": "2026-07-22T15:10:00-03:00",
+  "componente": "src/identidad (entities, use_cases, interface_adapters, frameworks) — invitación",
+  "metricas": {
+    "pylint": 9.58,
+    "cc_max_por_funcion": 3,
+    "mi_min": 55.58,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage medido sobre entities/use_cases/interface_adapters de esta US (100%, 116/116 statements) — frameworks/ excluido del gate de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit).",
+    "Hallazgos R0903 (too-few-public-methods) en Use Cases, Ports, Gateway y modelos ORM son falsos positivos esperados para Clean Architecture — mismo criterio documentado en el reporte de US-1.1.0.",
+    "Se corrigieron 2 hallazgos W2301 (unnecessary-ellipsis) en los Ports nuevos: los métodos abstractos de este proyecto usan solo un docstring como cuerpo, sin '...' adicional — inconsistencia introducida al escribir los Ports nuevos, corregida antes de este reporte."
+  ]
+}
