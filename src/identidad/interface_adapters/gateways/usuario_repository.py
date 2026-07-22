@@ -1,3 +1,5 @@
+"""Gateway SQLAlchemy que implementa `UsuarioRepositoryPort`."""
+
 from __future__ import annotations
 
 from uuid import UUID
@@ -35,16 +37,21 @@ _ENTITY_POR_PERFIL: dict[TipoPerfil, type[Perfil]] = {
 
 
 class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
+    """Persiste y recupera usuarios usando SQLAlchemy async."""
+
     def __init__(self, session: AsyncSession) -> None:
+        """Recibe la sesión async a usar en las operaciones."""
         self._session = session
 
     async def existe_email(self, email: str) -> bool:
+        """Indica si ya hay un usuario registrado con ese email."""
         resultado = await self._session.execute(
             select(UsuarioModel.id).where(UsuarioModel.email == email)
         )
         return resultado.scalar_one_or_none() is not None
 
     async def guardar(self, usuario: Usuario) -> None:
+        """Guarda el usuario y su modelo de perfil correspondiente."""
         self._session.add(
             UsuarioModel(
                 id=usuario.id,
@@ -63,6 +70,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         await self._session.commit()
 
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
+        """Busca un usuario por id junto con su perfil, o `None` si no existe."""
         usuario_model = await self._session.get(UsuarioModel, usuario_id)
         if usuario_model is None:
             return None
@@ -80,6 +88,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         )
 
     async def _resolver_perfil(self, usuario_id: UUID) -> Perfil | None:
+        """Busca en qué tabla de perfil está el usuario y arma la entidad correspondiente."""
         for tipo_perfil, model_cls in _MODEL_POR_PERFIL.items():
             perfil_model = await self._session.get(model_cls, usuario_id)
             if perfil_model is not None:

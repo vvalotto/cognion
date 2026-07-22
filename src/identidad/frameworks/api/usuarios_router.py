@@ -1,3 +1,5 @@
+"""Router FastAPI de operaciones sobre usuarios."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -15,6 +17,7 @@ async def crear_usuario(
     body: CrearUsuarioRequest,
     controller: UsuariosController = Depends(get_usuarios_controller),
 ) -> UsuarioResponse:
+    """Crea un usuario nuevo; responde 409 si el email ya está registrado."""
     try:
         usuario, _evento = await controller.crear_usuario(
             body.nombre, body.email, body.password, body.perfil

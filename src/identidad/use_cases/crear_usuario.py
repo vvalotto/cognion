@@ -1,3 +1,5 @@
+"""Caso de uso: alta de un usuario nuevo."""
+
 from __future__ import annotations
 
 from src.identidad.entities.errors import EmailYaRegistrado
@@ -8,13 +10,20 @@ from src.identidad.entities.usuario import TipoPerfil, Usuario
 
 
 class CrearUsuarioUseCase:
+    """Registra un usuario nuevo validando que el email no esté en uso."""
+
     def __init__(self, repositorio: UsuarioRepositoryPort, hasher: PasswordHasherPort) -> None:
+        """Recibe el repositorio de usuarios y el hasher de contraseñas a usar."""
         self._repositorio = repositorio
         self._hasher = hasher
 
     async def execute(
         self, nombre: str, email: str, password: str, tipo_perfil: TipoPerfil
     ) -> tuple[Usuario, UsuarioCreado]:
+        """Crea y persiste el usuario, y devuelve el usuario junto al evento emitido.
+
+        Lanza `EmailYaRegistrado` si el email ya está en uso.
+        """
         if await self._repositorio.existe_email(email):
             raise EmailYaRegistrado(email)
 

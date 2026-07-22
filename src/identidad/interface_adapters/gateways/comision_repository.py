@@ -1,3 +1,5 @@
+"""Gateway SQLAlchemy que implementa `ComisionRepositoryPort`."""
+
 from __future__ import annotations
 
 from uuid import UUID
@@ -11,10 +13,14 @@ from src.identidad.frameworks.db.models import ComisionModel, DocenteModel
 
 
 class SQLAlchemyComisionRepository(ComisionRepositoryPort):
+    """Persiste y recupera comisiones usando SQLAlchemy async."""
+
     def __init__(self, session: AsyncSession) -> None:
+        """Recibe la sesión async a usar en las operaciones."""
         self._session = session
 
     async def guardar(self, comision: Comision) -> None:
+        """Guarda una comisión nueva."""
         self._session.add(
             ComisionModel(
                 id=comision.id,
@@ -26,6 +32,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         await self._session.commit()
 
     async def obtener_por_id(self, comision_id: UUID) -> Comision | None:
+        """Busca una comisión por id junto con sus docentes, o `None` si no existe."""
         modelo = await self._session.get(
             ComisionModel, comision_id, options=[selectinload(ComisionModel.docentes)]
         )
@@ -40,6 +47,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         )
 
     async def actualizar(self, comision: Comision) -> None:
+        """Guarda los docentes nuevos asignados a una comisión existente."""
         modelo = await self._session.get(
             ComisionModel, comision.id, options=[selectinload(ComisionModel.docentes)]
         )

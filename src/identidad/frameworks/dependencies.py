@@ -1,3 +1,5 @@
+"""Proveedores de dependencias FastAPI (DI) del BC Identidad."""
+
 from __future__ import annotations
 
 from typing import Annotated
@@ -22,16 +24,19 @@ SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 def get_password_hasher() -> PasswordHasherPort:
+    """Provee la implementación de hasher de contraseñas a usar."""
     return BcryptPasswordHasher()
 
 
 def get_usuarios_controller(session: SessionDep) -> UsuariosController:
+    """Arma el `UsuariosController` con sus dependencias concretas."""
     repo = SQLAlchemyUsuarioRepository(session)
     hasher = get_password_hasher()
     return UsuariosController(CrearUsuarioUseCase(repo, hasher))
 
 
 def get_comisiones_controller(session: SessionDep) -> ComisionesController:
+    """Arma el `ComisionesController` con sus dependencias concretas."""
     comision_repo = SQLAlchemyComisionRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     return ComisionesController(
