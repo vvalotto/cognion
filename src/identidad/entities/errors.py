@@ -30,3 +30,15 @@ class ComisionNoExiste(Exception):
         """Guarda el id de la comisión en conflicto y arma el mensaje de la excepción."""
         self.comision_id = comision_id
         super().__init__(f"La comisión '{comision_id}' no existe.")
+
+
+class DocenteNoAsignadoAComision(Exception):
+    """Se intentó generar una invitación con un docente que no está asignado a la comisión."""
+
+    def __init__(self, docente_id: UUID, comision_id: UUID) -> None:
+        """Guarda los ids en conflicto y arma el mensaje de la excepción."""
+        self.docente_id = docente_id
+        self.comision_id = comision_id
+        super().__init__(
+            f"El docente '{docente_id}' no está asignado a la comisión '{comision_id}'."
+        )
