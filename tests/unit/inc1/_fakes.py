@@ -3,7 +3,10 @@ from __future__ import annotations
 from uuid import UUID
 
 from src.identidad.entities.comision import Comision
+from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
+from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
+from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.usuario import Usuario
@@ -43,3 +46,19 @@ class FakePasswordHasher(PasswordHasherPort):
 
     def verificar(self, password: str, password_hash: str) -> bool:
         return password_hash == f"hashed:{password}"
+
+
+class FakeInvitacionRepository(InvitacionRepositoryPort):
+    def __init__(self) -> None:
+        self.invitaciones: dict[UUID, Invitacion] = {}
+
+    async def guardar(self, invitacion: Invitacion) -> None:
+        self.invitaciones[invitacion.id] = invitacion
+
+
+class FakeNotificador(NotificadorPort):
+    def __init__(self) -> None:
+        self.enviados: list[tuple[str, str]] = []
+
+    async def enviar_invitacion(self, email_destinatario: str, token: str) -> None:
+        self.enviados.append((email_destinatario, token))
