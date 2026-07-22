@@ -1,3 +1,5 @@
+"""Motor y sesiones de SQLAlchemy async, compartidos entre BCs."""
+
 from __future__ import annotations
 
 from collections.abc import AsyncIterator
@@ -10,7 +12,7 @@ from src.settings import settings
 
 
 class Base(DeclarativeBase):
-    pass
+    """Clase base declarativa de la que heredan todos los modelos ORM."""
 
 
 # NullPool: sin conexiones asyncpg persistentes entre requests (ADR-018). Evita que una
@@ -23,5 +25,6 @@ SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 
 async def get_session() -> AsyncIterator[AsyncSession]:
+    """Provee una sesión async por request, cerrándola al finalizar."""
     async with SessionLocal() as session:
         yield session
