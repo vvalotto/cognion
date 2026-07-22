@@ -7,17 +7,26 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
+from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
+from src.identidad.interface_adapters.controllers.invitaciones_controller import (
+    InvitacionesController,
+)
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
+)
+from src.identidad.interface_adapters.gateways.invitacion_repository import (
+    SQLAlchemyInvitacionRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
+from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.shared.frameworks.db import get_session
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
@@ -42,4 +51,19 @@ def get_comisiones_controller(session: SessionDep) -> ComisionesController:
     return ComisionesController(
         CrearComisionUseCase(comision_repo),
         AsignarDocenteAComisionUseCase(comision_repo, usuario_repo),
+    )
+
+
+def get_notificador() -> NotificadorPort:
+    """Provee la implementación de notificador de email a usar."""
+    return SmtpNotificador()
+
+
+def get_invitaciones_controller(session: SessionDep) -> InvitacionesController:
+    """Arma el `InvitacionesController` con sus dependencias concretas."""
+    comision_repo = SQLAlchemyComisionRepository(session)
+    invitacion_repo = SQLAlchemyInvitacionRepository(session)
+    notificador = get_notificador()
+    return InvitacionesController(
+        GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
     )

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import uuid
 
-from sqlalchemy import Column, ForeignKey, String, Table
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, String, Table
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -75,3 +77,23 @@ class ComisionModel(Base):
         PGUUID(as_uuid=True), ForeignKey("administrador.id"), nullable=False
     )
     docentes: Mapped[list[DocenteModel]] = relationship(secondary=comision_docentes)
+
+
+class InvitacionModel(Base):
+    """Fila de la tabla `invitacion`, emitida por un Docente para una Comisión."""
+
+    __tablename__ = "invitacion"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    comision_id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), ForeignKey("comision.id"), nullable=False
+    )
+    docente_id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), ForeignKey("docente.id"), nullable=False
+    )
+    token: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+    generada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expira_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    usada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
