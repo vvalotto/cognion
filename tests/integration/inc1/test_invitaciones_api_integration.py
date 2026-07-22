@@ -81,7 +81,9 @@ class TestInvitacionesAPIIntegration:
             )
             comision_id = comision_resp.json()["id"]
 
-            await client.post(f"/comisiones/{comision_id}/docentes", json={"docente_id": docente_id})
+            await client.post(
+                f"/comisiones/{comision_id}/docentes", json={"docente_id": docente_id}
+            )
 
             response = await client.post(
                 f"/comisiones/{comision_id}/invitaciones",

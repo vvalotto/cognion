@@ -153,15 +153,11 @@ def docente_presente_en_comision(context, nombre):
         )
     )
     comision_id = comision_resp.json()["id"]
-    run_async(
-        _post(f"/comisiones/{comision_id}/docentes", {"docente_id": context["docente_id"]})
-    )
+    run_async(_post(f"/comisiones/{comision_id}/docentes", {"docente_id": context["docente_id"]}))
     context["comision_id"] = comision_id
 
 
-@given(
-    parsers.parse('el Docente NO está presente en docentes_asignados de la Comisión "{nombre}"')
-)
+@given(parsers.parse('el Docente NO está presente en docentes_asignados de la Comisión "{nombre}"'))
 def docente_no_presente_en_comision(context, nombre):
     admin = run_async(_crear_usuario("admin.bdd111b@fiuner.edu.ar", "administrador"))
     comision_resp = run_async(
@@ -178,7 +174,10 @@ def ejecuta_generar_invitacion(context):
     context["response"] = run_async(
         _post(
             f"/comisiones/{context['comision_id']}/invitaciones",
-            {"docente_id": context["docente_id"], "email_destinatario": "estudiante.bdd@fiuner.edu.ar"},
+            {
+                "docente_id": context["docente_id"],
+                "email_destinatario": "estudiante.bdd@fiuner.edu.ar",
+            },
         )
     )
 
@@ -188,7 +187,10 @@ def intenta_generar_invitacion(context):
     context["response"] = run_async(
         _post(
             f"/comisiones/{context['comision_id']}/invitaciones",
-            {"docente_id": context["docente_id"], "email_destinatario": "estudiante.bdd@fiuner.edu.ar"},
+            {
+                "docente_id": context["docente_id"],
+                "email_destinatario": "estudiante.bdd@fiuner.edu.ar",
+            },
         )
     )
 
