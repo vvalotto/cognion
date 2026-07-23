@@ -25,3 +25,8 @@ class UsuarioRepositoryPort(ABC):
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
         """Busca un usuario por id, o `None` si no existe."""
         ...
+
+    @abstractmethod
+    async def obtener_por_email(self, email: str) -> Usuario | None:
+        """Busca un usuario por email, o `None` si no existe."""
+        ...

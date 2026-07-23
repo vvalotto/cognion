@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID
 
+from src.identidad.entities.usuario import TipoPerfil
+
 
 def _ahora() -> datetime:
     """Devuelve el instante actual en UTC."""
@@ -68,4 +70,13 @@ class UsuarioRegistrado:
     usuario_id: UUID
     email: str
     comision_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class SesionIniciada:
+    """Un Usuario se autenticó exitosamente y recibió un JWT con su rol (RF-02)."""
+
+    usuario_id: UUID
+    rol: TipoPerfil
     ocurrido_en: datetime = field(default_factory=_ahora)
