@@ -162,8 +162,16 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 3. tracker init US-N.M.K → start_phase(0)  ← ANTES de cualquier artefacto
 4. /implement-us US-N.M.K  (lee docs/specs/incN/US-N.M.K.md)
 5. Commits atómicos con referencia [US-N.M.K]
-6. /pr → merge a develop
+6. /pr → push + gh pr create --base develop
+7. Al mergear el PR (gh pr merge): sincronizar develop local (checkout + pull --ff-only,
+   borrar branch feature local/remoto), y cerrar el Issue de la US asociado — comentario con
+   los SHAs de los commits de la US + `gh issue close` — sin pedir confirmación previa, salvo
+   que algo resulte ambiguo (no se encuentra el Issue, hay más de un candidato, etc.)
 ```
+
+**Por qué el paso 7 es manual y no vía `Closes #N` en el commit/PR:** el repo mergea PRs a
+`develop`, no a `main` (rama default) — GitHub solo autocierra Issues por `Closes #N` cuando
+el merge es a la rama default.
 
 **Política de tracking:** operaciones sobre `tracker_cli.py` estrictamente secuenciales, nunca en paralelo sobre el mismo JSON. Usar `.venv/bin/python .claude/tracking/tracker_cli.py`, no `uv run`.
 

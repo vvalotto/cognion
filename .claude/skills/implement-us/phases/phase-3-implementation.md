@@ -1,6 +1,10 @@
 # Fase 3: Implementación Guiada por Tareas
 
-**Objetivo:** Implementar cada componente del plan de forma incremental, con revisión y aprobación del usuario en cada paso.
+**Objetivo:** Implementar cada componente del plan de forma incremental y autónoma, sin
+pausar por aprobación tarea a tarea. Los únicos checkpoints de aprobación del skill son los
+definidos en `config.json` (`approval_required: true`): Fase 1 (BDD), Fase 2 (plan) y Fase 8
+(documentación). Fase 3 avanza sola mientras el código compile/importe correctamente; solo se
+detiene ante errores reales o ambigüedad genuina sobre el plan aprobado.
 
 
 ---
@@ -66,11 +70,11 @@ No implementar un componente si su dependencia no está lista y testeada.
 
 ## Acción
 
-Por cada tarea del plan de implementación, guiar al usuario a través de:
-1. Contexto de lo que se va a implementar
-2. Código propuesto basado en patrones del proyecto
-3. Aprobación antes de escribir
-4. Ejecución de tests básicos (si aplica)
+Por cada tarea del plan de implementación:
+1. Generar el código basado en patrones del proyecto
+2. Escribir el archivo directamente (sin aprobación previa)
+3. Verificar sintaxis e imports
+4. Actualizar el plan y el tracking, y continuar con la siguiente tarea
 
 ---
 
@@ -106,14 +110,10 @@ Presentar al usuario:
 📐 Patrón: {COMPONENT_TYPE} ({ARCHITECTURE_PATTERN})
 
 💡 Referencia: [Ver sección de ejemplos abajo según stack]
-
-✏️  Código propuesto:
-───────────────────────────────────────────
-[Código generado aquí]
-───────────────────────────────────────────
-
-❓ ¿Aprobar e implementar? (yes/no/edit)
 ```
+
+Escribir el archivo directamente con el código generado — no mostrar el código para
+aprobación ni esperar respuesta del usuario. Este mensaje es informativo, no un checkpoint.
 
 ---
 
@@ -659,19 +659,7 @@ class {COMPONENT_NAME}:
 
 ---
 
-### 5. Presentar código para revisión
-
-Mostrar el código completo generado y esperar respuesta del usuario:
-- **yes**: Proceder a escribir el archivo
-- **no**: Cancelar y pasar a siguiente tarea
-- **edit**: Solicitar cambios al usuario respondiendo: *"¿Qué cambios querés hacer? Podés describir las modificaciones o pegar el código corregido directamente."*
-  - Si el usuario describe cambios verbalmente → aplicar las modificaciones y volver a presentar el código para aprobación
-  - Si el usuario pega código → usarlo tal cual y volver a presentar para confirmación final
-  - Repetir el ciclo hasta obtener `yes` o `no`
-
----
-
-### 6. Escribir archivo si usuario aprueba
+### 5. Escribir archivo
 
 Usá el tool `Write` para crear el archivo en `{COMPONENT_PATH}/{filename}.{ext}` con el código generado y confirmá al usuario:
 
@@ -681,7 +669,7 @@ Usá el tool `Write` para crear el archivo en `{COMPONENT_PATH}/{filename}.{ext}
 
 ---
 
-### 7. Verificar sintaxis e imports
+### 6. Verificar sintaxis e imports
 
 Después de crear el archivo, verificá que el código es sintácticamente válido e importable:
 
@@ -711,7 +699,7 @@ python -m py_compile {COMPONENT_PATH}/{filename}.py
 
 ---
 
-### 8. 🔴 Acción Requerida — Finalizar tracking de tarea
+### 7. 🔴 Acción Requerida — Finalizar tracking de tarea
 
 Ejecutá inmediatamente después de completar la tarea:
 
@@ -721,7 +709,7 @@ python .claude/tracking/tracker_cli.py end-task "{TASK_ID}" "{FILE_CREATED}"
 
 ---
 
-### 9. 🔴 Acción Requerida — Actualizar plan después de cada tarea
+### 8. 🔴 Acción Requerida — Actualizar plan después de cada tarea
 
 Inmediatamente después de completar la tarea, editá `docs/plans/{US_ID}-plan.md` y marcá el checkbox:
 
@@ -747,13 +735,13 @@ Tareas completadas: 3/12 (25%)
 
 ---
 
-### 10. Continuar con siguiente tarea
+### 9. Continuar con siguiente tarea
 
-Repetir los pasos 1-9 para la siguiente tarea no completada hasta finalizar todas las tareas del plan.
+Repetir los pasos 1-8 para la siguiente tarea no completada hasta finalizar todas las tareas del plan, sin pausar entre tareas.
 
 ---
 
-### 11. 🔴 Acción Requerida — Revisión de código obsoleto
+### 10. 🔴 Acción Requerida — Revisión de código obsoleto
 
 Una vez implementadas **todas** las tareas del plan, revisá si la nueva implementación dejó código obsoleto:
 
@@ -777,13 +765,14 @@ Una vez implementadas **todas** las tareas del plan, revisá si la nueva impleme
 
 ## Punto de Aprobación
 
-**Usuario debe aprobar cada tarea individualmente antes de proceder.**
+**Fase 3 no tiene checkpoint de aprobación por tarea.** Los únicos puntos de aprobación del
+skill son los de `config.json` (Fase 1, Fase 2, Fase 8). Fase 3 implementa todas las tareas
+del plan ya aprobado de forma continua, sin pausar entre ellas.
 
-Esto permite:
-- ✅ Revisión del código propuesto
-- ✅ Ajustes antes de escribir archivos
-- ✅ Control fino sobre lo que se implementa
-- ✅ Aprendizaje incremental de los patrones del proyecto
+Si durante la implementación aparece una ambigüedad genuina que el plan aprobado no cubre
+(no un simple detalle de código, sino una decisión de alcance o diseño no contemplada),
+**detenete y consultá al usuario** antes de continuar — eso no es un checkpoint de tarea, es
+una excepción real.
 
 ---
 
@@ -795,19 +784,12 @@ Esto permite:
    - Leer mensaje de error completo
    - Identificar causa (import faltante, typo, estructura incorrecta)
 
-2. **Corregir**
-   - Ajustar el código
-   - Re-presentar al usuario para aprobación
+2. **Corregir el código y reescribir el archivo** — sin presentar el fix para aprobación,
+   salvo que el error revele una ambigüedad de diseño no cubierta por el plan (ver arriba).
 
-3. **Re-ejecutar tests básicos**
+3. **Re-ejecutar la verificación de sintaxis/imports del paso 6**
 
 4. **NO avanzar** hasta que la tarea esté funcionando
-
-### Si el usuario rechaza una tarea (responde "no"):
-
-1. **Preguntar razón**
-2. **Ajustar approach** según feedback
-3. **Re-presentar** o **saltar tarea** según instrucciones
 
 ---
 

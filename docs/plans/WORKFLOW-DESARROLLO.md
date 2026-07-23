@@ -244,21 +244,25 @@ chore(cm): registrar BL-002 cierre Incremento 2
 ```
 5. Ejecutar /implement-us US-N.M.K  (10 fases, input: docs/specs/incN/US-N.M.K.md)
    → Cada fase tiene un artefacto físico de output — crearlo con Write, no solo mostrarlo en el chat
-   → Fase 2 (plan): esperar aprobación explícita antes de continuar
-   → Fase 8 (documentación): ídem
+   → Único checkpoint de aprobación por fase (config.json): Fase 1 (BDD), Fase 2 (plan) y
+     Fase 8 (documentación). Fase 3 (implementación) NO pausa tarea por tarea — ejecuta todo
+     el plan aprobado de forma continua, y solo se detiene ante errores reales o ambigüedad
+     de diseño no cubierta por el plan.
    → Fases 8 y 9 deben ejecutarse ANTES del commit final, no después
    → El skill no está completo hasta que docs/reports/{US_ID}-report.md exista en disco
 6. [AUTO] CodeGuard corre en cada commit (pre-commit hook, advierte, no bloquea)
 7. Commits atómicos con referencia: feat(entities): ... [US-N.M.K]
 8. Abrir PR hacia develop con /pr → DesignReviewer corre en pre-push (bloquea si CRITICAL)
    → Usar siempre gh pr create --base develop (el default de gh es main)
-   → El body del PR DEBE incluir "Closes #N" con el número de Issue de GitHub (no alcanza
-     con [US-N.M.K] en los commits) — sin esa keyword el paso 9 no ocurre solo, GitHub no
-     cierra el Issue al mergear
-   → Antes de crear el PR, mostrar a Víctor qué va a incluir (commits + Closes #N) y esperar
-     su aprobación explícita — el checkpoint de aprobación de esta fase es el PR, no cada
-     commit local
-9. Merge del PR — Issue se cierra automáticamente (por el "Closes #N" del paso 8)
+   → El body del PR NO necesita "Closes #N": el repo mergea a develop, no a main (rama
+     default), y GitHub solo autocierra Issues por esa keyword al mergear contra la rama
+     default — no funciona en este workflow.
+9. Merge del PR con gh pr merge --merge --delete-branch, luego sincronizar el repo local
+   (checkout develop, pull --ff-only, borrar branch feature local, fetch --prune).
+9a. Cerrar el Issue de la US asociado: comentar con los SHAs de los commits de la US
+    (`gh issue comment N --body ...`) y cerrarlo (`gh issue close N --reason completed`) —
+    sin pedir confirmación previa, salvo ambigüedad real (Issue no encontrado, más de un
+    candidato).
 9b. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
     Especificado a Implementado.
     → Si el código mergeado es el mecanismo concreto de un escenario RNF (ver la columna ADR
@@ -418,6 +422,15 @@ feature/US-3.2.1-persistir-respuesta      → /implement-us → /pr → merge de
 ```
 
 ---
+
+*v1.7 — 2026-07-23. Corrige el gap señalado por v1.6: `Closes #N` **no** cierra el Issue en
+este repo porque los PRs mergean a `develop`, no a `main` (rama default) — GitHub solo honra
+esa keyword contra la rama default. Se reemplaza por el cierre manual explícito como paso 9a
+(comentario con SHAs + `gh issue close`), detectado al cerrar `US-1.1.0` (Issue #5 quedó
+abierto tras el merge) y confirmado como paso estándar del ciclo al cerrar `US-1.1.2`
+(Issue #7, PR #15). También se documenta que Fase 3 de `/implement-us` no tiene checkpoint de
+aprobación por tarea — solo Fases 1, 2 y 8 pausan — decisión tomada explícitamente para
+reducir fricción en la ejecución de US ya planificadas y aprobadas.*
 
 *v1.6 — 2026-07-20. Se corrige un gap real en §5 paso 8–9: el pipeline daba por hecho que "el
 Issue se cierra automáticamente" al mergear el PR, pero nada garantizaba eso — el commit con
