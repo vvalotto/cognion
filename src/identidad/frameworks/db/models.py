@@ -53,12 +53,15 @@ class DocenteModel(Base):
 
 
 class EstudianteModel(Base):
-    """Fila de la tabla `estudiante`, marca de perfil sobre `usuario`."""
+    """Fila de la tabla `estudiante`, marca de perfil sobre `usuario`, con su comisión (INV-ID-05)."""
 
     __tablename__ = "estudiante"
 
     id: Mapped[uuid.UUID] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("usuario.id"), primary_key=True
+    )
+    comision_id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), ForeignKey("comision.id"), nullable=False
     )
 
 

@@ -15,6 +15,7 @@ from src.identidad.interface_adapters.controllers.comisiones_controller import C
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
+from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
@@ -27,6 +28,7 @@ from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteACo
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
+from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.shared.frameworks.db import get_session
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
@@ -67,3 +69,11 @@ def get_invitaciones_controller(session: SessionDep) -> InvitacionesController:
     return InvitacionesController(
         GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
     )
+
+
+def get_registro_controller(session: SessionDep) -> RegistroController:
+    """Arma el `RegistroController` con sus dependencias concretas."""
+    invitacion_repo = SQLAlchemyInvitacionRepository(session)
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    hasher = get_password_hasher()
+    return RegistroController(RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher))
