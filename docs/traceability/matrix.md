@@ -3,10 +3,11 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-21 — `US-1.1.0` mergeada a `develop` (PR #11, Issue #5
-> cerrado); RF-01 y RF-02 permanecen en Especificado — dependen de `US-1.1.1`-`US-1.1.3` y
-> `US-1.1.4`-`US-1.1.5` respectivamente, todavía no implementadas. `US-1.1.0` no tiene RF
-> propio (ver nota en §3), por eso su implementación no mueve ninguna fila de esta tabla.
+> Última actualización: 2026-07-23 — `US-1.1.2` implementada (backend); RF-01 permanece en
+> Especificado — depende de `US-1.1.3` (rechazo por link vencido/inválido), todavía no
+> implementada. RF-02 permanece en Especificado — depende de `US-1.1.4`-`US-1.1.5`,
+> todavía no implementadas. `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su
+> implementación no mueve ninguna fila de esta tabla.
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -74,10 +75,13 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > queda desbloqueada como siguiente paso de la Iteración 1.
 
 > `US-1.1.1` (Docente genera invitación) — implementada (`docs/plans/inc1/US-1.1.1-plan.md`),
-> 53/53 tests, quality gates APROBADO. **RF-01 permanece en Especificado** — la fila no pasa a
-> Implementado hasta que también estén implementadas `US-1.1.2` (registro por invitación
-> válida) y `US-1.1.3` (rechazo por link vencido/inválido), las otras dos US-IEDD que RF-01
-> requiere.
+> 53/53 tests, quality gates APROBADO.
+
+> `US-1.1.2` (Estudiante se registra con invitación válida) — implementada en backend
+> (`docs/plans/inc1/US-1.1.2-plan.md`), 77/77 tests, quality gates APROBADO. Frontend
+> diferido a una US-IEDD separada (ver nota de alcance en el plan). **RF-01 permanece en
+> Especificado** — la fila no pasa a Implementado hasta que también esté implementada
+> `US-1.1.3` (rechazo por link vencido/inválido), la última US-IEDD que RF-01 requiere.
 
 ## 4. Escenarios de calidad (RNF)
 
