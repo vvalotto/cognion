@@ -10,6 +10,19 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.1] Docente genera link de invitación para una comisión — BC Identidad
+  - `Invitación` (aggregate) con token único (`secrets.token_urlsafe`) y expiración a 7 días
+    (`ADR-012`), evento `InvitacionGenerada`
+  - `GenerarInvitacionUseCase` — valida INV-ID-08 (docente asignado a la comisión), genera
+    token, persiste, envía email, emite evento
+  - Endpoint `POST /comisiones/{id}/invitaciones` (sin guard de rol todavía, mismo criterio
+    que US-1.1.0 — se agrega en `US-1.1.5`); `docente_id` y `email_destinatario` explícitos
+    en el body (ajuste de alcance sobre la spec original, ver `docs/plans/inc1/US-1.1.1-plan.md`)
+  - `SmtpNotificador` — adaptador SMTP propio de Identidad (`ADR-012`), `smtplib` en
+    `asyncio.to_thread`; variables `SMTP_*` nuevas en `.env.example`
+  - Migración Alembic: tabla `invitacion`
+  - 16 tests nuevos (9 unitarios + 4 integración + 2 BDD via `step_defs` + 1 gateway),
+    coverage 100% en entities/use_cases/interface_adapters; suite total del proyecto 53/53
 - [US-1.1.0] Administrador da de alta cuentas de usuario, crea una comisión y asigna docentes
   — BC Identidad, precondición del resto de la Iteración 1
   - `Usuario` (aggregate) + entities subordinadas `Docente`/`Administrador`/`Estudiante`,

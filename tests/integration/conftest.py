@@ -8,6 +8,7 @@ from src.shared.frameworks.db import SessionLocal
 
 async def _limpiar_tablas_identidad() -> None:
     async with SessionLocal() as session:
+        await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))

@@ -91,9 +91,11 @@ markers = [
     "happy-path: escenario BDD de flujo exitoso",
     "error: escenario BDD de rechazo/error",
     "US-1.1.0: escenarios BDD de la US-1.1.0",
+    "US-1.1.1: escenarios BDD de la US-1.1.1",
     "alta-usuario: escenario BDD de alta de Usuario",
     "alta-comision: escenario BDD de alta de Comisión",
     "asignacion-docente: escenario BDD de asignación de Docente a Comisión",
+    "generar-invitacion: escenario BDD de generación de invitación",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

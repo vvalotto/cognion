@@ -38,3 +38,14 @@ class DocenteAsignado:
     comision_id: UUID
     docente_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class InvitacionGenerada:
+    """Un Docente generó una invitación para su Comisión."""
+
+    invitacion_id: UUID
+    comision_id: UUID
+    docente_id: UUID
+    token: str
+    ocurrido_en: datetime = field(default_factory=_ahora)

@@ -73,6 +73,12 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > quality gates APROBADO. Con la precondición resuelta, `US-1.1.1` (Docente genera invitación)
 > queda desbloqueada como siguiente paso de la Iteración 1.
 
+> `US-1.1.1` (Docente genera invitación) — implementada (`docs/plans/inc1/US-1.1.1-plan.md`),
+> 53/53 tests, quality gates APROBADO. **RF-01 permanece en Especificado** — la fila no pasa a
+> Implementado hasta que también estén implementadas `US-1.1.2` (registro por invitación
+> válida) y `US-1.1.3` (rechazo por link vencido/inválido), las otras dos US-IEDD que RF-01
+> requiere.
+
 ## 4. Escenarios de calidad (RNF)
 
 IDs propios (`RNF-<atributo>-N`) porque `docs/rf/RNF_v1.md` no numera los escenarios de forma

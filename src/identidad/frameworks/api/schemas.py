@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -49,3 +50,19 @@ class AsignarDocenteRequest(BaseModel):
     """Body de la request de asignación de un docente a una comisión."""
 
     docente_id: UUID
+
+
+class GenerarInvitacionRequest(BaseModel):
+    """Body de la request de generación de una invitación."""
+
+    docente_id: UUID
+    email_destinatario: str = Field(..., min_length=3, max_length=255)
+
+
+class InvitacionResponse(BaseModel):
+    """Representación de una invitación devuelta por la API."""
+
+    id: UUID
+    comision_id: UUID
+    docente_id: UUID
+    expira_en: datetime

@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "us_id": "US-1.1.1",
+    "us_title": "Docente genera link de invitación para una comisión",
+    "us_points": 3,
+    "producto": "Cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-07-22T14:28:32.536554+00:00",
+    "completed_at": "2026-07-22T15:24:08.700438+00:00",
+    "total_elapsed_seconds": 3336,
+    "effective_seconds": 3336,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-07-22T14:28:48.455652+00:00",
+      "completed_at": "2026-07-22T14:33:17.596888+00:00",
+      "elapsed_seconds": 269,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-07-22T14:33:25.671600+00:00",
+      "completed_at": "2026-07-22T14:35:28.154934+00:00",
+      "elapsed_seconds": 122,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-07-22T14:35:35.648185+00:00",
+      "completed_at": "2026-07-22T14:38:59.499111+00:00",
+      "elapsed_seconds": 203,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-07-22T14:39:07.368419+00:00",
+      "completed_at": "2026-07-22T14:47:47.814759+00:00",
+      "elapsed_seconds": 520,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-07-22T14:51:47.233108+00:00",
+      "completed_at": "2026-07-22T14:53:55.882693+00:00",
+      "elapsed_seconds": 128,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-07-22T14:59:00.190825+00:00",
+      "completed_at": "2026-07-22T15:07:21.413499+00:00",
+      "elapsed_seconds": 501,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-07-22T15:09:29.195888+00:00",
+      "completed_at": "2026-07-22T15:16:36.020260+00:00",
+      "elapsed_seconds": 426,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-07-22T15:17:04.188789+00:00",
+      "completed_at": "2026-07-22T15:23:16.230715+00:00",
+      "elapsed_seconds": 372,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-07-22T15:23:25.848071+00:00",
+      "completed_at": "2026-07-22T15:24:08.597668+00:00",
+      "elapsed_seconds": 42,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 9,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
