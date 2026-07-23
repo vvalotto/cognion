@@ -42,3 +42,17 @@ class DocenteNoAsignadoAComision(Exception):
         super().__init__(
             f"El docente '{docente_id}' no está asignado a la comisión '{comision_id}'."
         )
+
+
+class InvitacionNoValida(Exception):
+    """Se intentó aceptar una invitación inexistente, vencida o ya usada.
+
+    Guard genérico de `US-1.1.2` (INV-ID-01, INV-ID-03). `US-1.1.3` refina el rechazo en
+    `InvitacionInvalida`, `InvitacionVencida` e `InvitacionYaUsada` según el caso — fuera
+    de alcance de esta excepción.
+    """
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"La invitación con token '{token}' no es válida.")

@@ -30,7 +30,7 @@ class TestAsignarDocenteAComisionUseCase:
     async def test_rechaza_usuario_que_no_es_docente(self):
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
-        estudiante = Usuario.crear("Est", "est@fiuner.edu.ar", "hash", TipoPerfil.ESTUDIANTE)
+        estudiante = Usuario.crear_estudiante("Est", "est@fiuner.edu.ar", "hash", uuid.uuid4())
         await usuario_repo.guardar(estudiante)
         comision = Comision.crear("IS", "lu 10-12", uuid.uuid4())
         await comision_repo.guardar(comision)

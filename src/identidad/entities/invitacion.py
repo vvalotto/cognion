@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
+from src.identidad.entities.errors import InvitacionNoValida
+
 EXPIRACION_DIAS = 7
 
 
@@ -34,3 +36,16 @@ class Invitacion:
             generada_en=generada_en,
             expira_en=generada_en + timedelta(days=EXPIRACION_DIAS),
         )
+
+    def es_vigente(self, ahora: datetime) -> bool:
+        """Indica si la invitación puede aceptarse: no vencida y no usada (INV-ID-01, INV-ID-03)."""
+        return self.usada_en is None and ahora < self.expira_en
+
+    def aceptar(self, ahora: datetime) -> None:
+        """Marca la invitación como usada.
+
+        Lanza `InvitacionNoValida` si ya no está vigente (INV-ID-01, INV-ID-03).
+        """
+        if not self.es_vigente(ahora):
+            raise InvitacionNoValida(self.token)
+        self.usada_en = ahora

@@ -49,3 +49,23 @@ class InvitacionGenerada:
     docente_id: UUID
     token: str
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class InvitacionAceptada:
+    """Un Estudiante aceptó una invitación y quedó asignado a la comisión."""
+
+    invitacion_id: UUID
+    comision_id: UUID
+    usuario_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class UsuarioRegistrado:
+    """Un Estudiante completó su registro vía invitación (RF-01)."""
+
+    usuario_id: UUID
+    email: str
+    comision_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)

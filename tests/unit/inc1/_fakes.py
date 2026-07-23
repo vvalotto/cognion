@@ -55,6 +55,12 @@ class FakeInvitacionRepository(InvitacionRepositoryPort):
     async def guardar(self, invitacion: Invitacion) -> None:
         self.invitaciones[invitacion.id] = invitacion
 
+    async def obtener_por_token(self, token: str) -> Invitacion | None:
+        return next((i for i in self.invitaciones.values() if i.token == token), None)
+
+    async def actualizar(self, invitacion: Invitacion) -> None:
+        self.invitaciones[invitacion.id] = invitacion
+
 
 class FakeNotificador(NotificadorPort):
     def __init__(self) -> None:

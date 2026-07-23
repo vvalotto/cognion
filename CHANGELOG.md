@@ -10,6 +10,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.2] Estudiante se registra con un link de invitación válido — BC Identidad
+  - `Estudiante` gana `comision_id` (INV-ID-05: nunca existe sin comisión); nueva factory
+    `Usuario.crear_estudiante` — único camino de construcción de un `Estudiante`.
+    `Usuario.crear()` genérico ya no admite `TipoPerfil.ESTUDIANTE`
+  - `Invitacion.es_vigente`/`Invitacion.aceptar` (INV-ID-01, INV-ID-03); error
+    `InvitacionNoValida` (guard genérico de esta US — `US-1.1.3` lo refina en las tres
+    excepciones específicas de su propio alcance); eventos `InvitacionAceptada`,
+    `UsuarioRegistrado`
+  - `RegistrarEstudianteUseCase` — valida invitación vigente, valida email libre, crea
+    Usuario+Estudiante y consume la invitación en la misma operación
+  - Endpoint público `POST /identidad/registro` (sin guard JWT, mismo criterio que
+    `US-1.1.1` — el Estudiante todavía no tiene sesión al registrarse)
+  - Migración Alembic: columna `comision_id` en `estudiante`
+  - Alcance: solo backend — el frontend de registro (`Registro.tsx`, `RegistroExito.tsx`)
+    queda diferido a una US-IEDD separada, dado que `frontend/src` no tenía routing ni
+    cliente API todavía (ver `docs/plans/inc1/US-1.1.2-context.md`)
+  - 15 tests nuevos (10 unitarios + 3 integración + 2 BDD), coverage 100% en
+    entities/use_cases/interface_adapters; suite total del proyecto 77/77
 - [US-1.1.1] Docente genera link de invitación para una comisión — BC Identidad
   - `Invitación` (aggregate) con token único (`secrets.token_urlsafe`) y expiración a 7 días
     (`ADR-012`), evento `InvitacionGenerada`
