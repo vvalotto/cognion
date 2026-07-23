@@ -10,6 +10,27 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.4] Docente, administrador y estudiante se autentican y reciben un JWT con su rol — BC Identidad
+  - `IniciarSesionUseCase` — verifica email/password contra el hash bcrypt guardado; emite un
+    JWT vía `JWTIssuerPort` con claim `rol` derivado de `Usuario.tipo_perfil` (`TipoPerfil`,
+    ya existente — no se creó un VO `Rol` adicional por ser una envoltura redundante sobre
+    `TipoPerfil`, decisión aprobada antes de implementar, ver `docs/plans/US-1.1.4-plan.md`)
+  - VO `JWT` (`token`, `rol`, `expira_en`) y puerto `JWTIssuerPort`; `PyJWTIssuer` — adaptador
+    PyJWT (`ADR-007`), firma con `settings.secret_key`/`algorithm`, `exp` a 60 minutos desde
+    la emisión (`ADR-013`)
+  - `CredencialesInvalidas` — mismo error genérico tanto si el email no existe como si la
+    contraseña no verifica, para no filtrar existencia de cuentas; evento `SesionIniciada`
+  - `UsuarioRepositoryPort.obtener_por_email` nuevo (puerto y gateway SQLAlchemy)
+  - Endpoint público `POST /identidad/login` — 200 con `access_token`/`rol`/`expira_en`, 401
+    genérico ante credenciales inválidas
+  - Corrección de configuración: `ACCESS_TOKEN_EXPIRE_MINUTES` estaba en 30 desde el walking
+    skeleton, desalineado con `ADR-013` (60 min) — alineado en `settings.py`, `.env` y
+    `.env.example`
+  - Alcance: solo backend — `Login.tsx`/`LoginError.tsx`/`frontend/src/lib/auth.ts` quedan
+    diferidos a la misma US-IEDD de frontend que ya diferían las US anteriores de Identidad
+    (`frontend/src` sigue sin routing ni cliente API), ver `docs/plans/US-1.1.4-context.md`
+  - 10 tests unitarios nuevos + 7 de integración + 5 escenarios BDD; suite total del proyecto
+    107/107, coverage 100% en entities/use_cases/interface_adapters, 99% total del proyecto
 - [US-1.1.3] Estudiante intenta registrarse con link vencido o inválido — BC Identidad
   - `InvitacionNoValida` (guard genérico de `US-1.1.2`) refinada en tres excepciones
     específicas: `InvitacionInvalida` (token inexistente), `InvitacionVencida`

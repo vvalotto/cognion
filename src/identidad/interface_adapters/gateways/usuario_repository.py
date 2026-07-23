@@ -81,8 +81,21 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         usuario_model = await self._session.get(UsuarioModel, usuario_id)
         if usuario_model is None:
             return None
+        return await self._armar_usuario(usuario_model)
 
-        perfil = await self._resolver_perfil(usuario_id)
+    async def obtener_por_email(self, email: str) -> Usuario | None:
+        """Busca un usuario por email junto con su perfil, o `None` si no existe."""
+        resultado = await self._session.execute(
+            select(UsuarioModel).where(UsuarioModel.email == email)
+        )
+        usuario_model = resultado.scalar_one_or_none()
+        if usuario_model is None:
+            return None
+        return await self._armar_usuario(usuario_model)
+
+    async def _armar_usuario(self, usuario_model: UsuarioModel) -> Usuario | None:
+        """Resuelve el perfil del modelo y arma la entidad `Usuario`, o `None` si no hay perfil."""
+        perfil = await self._resolver_perfil(usuario_model.id)
         if perfil is None:
             return None
 

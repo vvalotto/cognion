@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 
+from src.identidad.frameworks.api.auth_router import router as auth_router
 from src.identidad.frameworks.api.comisiones_router import router as comisiones_router
 from src.identidad.frameworks.api.invitaciones_router import router as invitaciones_router
 from src.identidad.frameworks.api.registro_router import router as registro_router
@@ -13,6 +14,7 @@ app.include_router(usuarios_router)
 app.include_router(comisiones_router)
 app.include_router(invitaciones_router)
 app.include_router(registro_router)
+app.include_router(auth_router)
 
 
 @app.get("/health", tags=["infra"])

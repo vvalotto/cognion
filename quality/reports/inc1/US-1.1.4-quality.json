@@ -1,0 +1,38 @@
+{
+  "us_id": "US-1.1.4",
+  "fecha": "2026-07-23T21:30:00-03:00",
+  "componente": "src/identidad (entities/jwt.py, entities/eventos.py, entities/errors.py, entities/ports/jwt_issuer_port.py, entities/ports/usuario_repository_port.py, use_cases/iniciar_sesion.py, interface_adapters/controllers/auth_controller.py, interface_adapters/gateways/usuario_repository.py, frameworks/security/jwt_pyjwt.py, frameworks/api/schemas.py, frameworks/api/auth_router.py, frameworks/dependencies.py, app.py, settings.py)",
+  "metricas": {
+    "pylint": 10.0,
+    "cc_promedio": 1.58,
+    "cc_maximo_por_funcion": 3,
+    "mi_promedio": 91.9,
+    "coverage": 99.0,
+    "coverage_componentes_nuevos": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "gate_real_del_proyecto": {
+    "descripcion": "CLAUDE.md define el gate real como ruff (con pydocstyle pep257) + mypy strict + CodeGuard advisory, no pylint — pylint se corre aquí solo para completar el reporte del skill.",
+    "ruff": "PASS (0 issues sobre src/ completo)",
+    "black": "PASS (sin cambios)",
+    "isort": "PASS (sin cambios)",
+    "mypy_strict": "PASS (0 issues sobre src/ completo, 76 archivos)"
+  },
+  "tests": {
+    "unitarios": "58 passed",
+    "integracion": "32 passed",
+    "bdd": "17 passed (5 nuevos de US-1.1.4)",
+    "total_suite_completa": "107 passed, 0 failed"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage total del proyecto 99% (552 stmts, 1 miss preexistente en invitacion_repository.py:41, no introducido por esta US).",
+    "Todos los archivos nuevos/tocados de entities, use_cases, interface_adapters/controllers e interface_adapters/gateways quedaron al 100% de cobertura.",
+    "frameworks/security/jwt_pyjwt.py queda fuera del scope de coverage por convención del proyecto (omit = src/*/frameworks/* en pyproject.toml), igual que password_hasher.py; se valida indirectamente via tests unitarios propios (test_jwt_pyjwt.py) e integración end-to-end (test_auth_api_integration.py)."
+  ]
+}

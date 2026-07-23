@@ -69,3 +69,15 @@ class InvitacionYaUsada(Exception):
         """Guarda el token en conflicto y arma el mensaje de la excepción."""
         self.token = token
         super().__init__(f"La invitación con token '{token}' ya fue utilizada.")
+
+
+class CredencialesInvalidas(Exception):
+    """El email no existe o la contraseña no verifica contra el hash guardado.
+
+    El mensaje no distingue entre ambos casos para no filtrar si una cuenta existe
+    (`US-1.1.4`).
+    """
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción, sin datos del intento fallido."""
+        super().__init__("Email o contraseña inválidos.")
