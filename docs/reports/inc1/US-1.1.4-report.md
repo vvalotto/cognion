@@ -51,7 +51,7 @@ existe como si la contraseña no verifica, para no filtrar existencia de cuentas
 ### Desviación de alcance respecto de la spec
 - **VO `Rol` no creado** — `Usuario.tipo_perfil` (`TipoPerfil`, `StrEnum` ya existente) cumple
   exactamente la misma función; un VO adicional sería una envoltura sin comportamiento propio.
-  Decisión documentada y aprobada en Fase 2 (`docs/plans/US-1.1.4-plan.md`).
+  Decisión documentada y aprobada en Fase 2 (`docs/plans/inc1/US-1.1.4-plan.md`).
 
 ---
 
@@ -137,7 +137,7 @@ base (routing, cliente API, almacenamiento del JWT en el cliente).
 `tests/features/inc1/US-1.1.4-autenticacion-jwt.feature`,
 `tests/step_defs/inc1/test_us_1_1_4_steps.py` (nuevos) — ~430 líneas.
 
-**Documentación:** `docs/plans/US-1.1.4-{context,plan}.md`,
+**Documentación:** `docs/plans/inc1/US-1.1.4-{context,plan}.md`,
 `docs/reports/inc1/US-1.1.4-report.md` (este archivo),
 `quality/reports/inc1/US-1.1.4-{quality,coverage}.json`, `docs/traceability/matrix.md`
 (editado), `CHANGELOG.md` (editado).

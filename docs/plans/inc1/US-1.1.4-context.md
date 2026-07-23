@@ -39,8 +39,8 @@
   - cobertura ≥ 95%
 
 ## Rutas de Artefactos
-- Contexto: `docs/plans/US-1.1.4-context.md`
+- Contexto: `docs/plans/inc1/US-1.1.4-context.md`
 - BDD feature: `tests/features/inc1/US-1.1.4-autenticacion-jwt.feature`
-- Plan: `docs/plans/US-1.1.4-plan.md`
+- Plan: `docs/plans/inc1/US-1.1.4-plan.md`
 - Reporte: `docs/reports/inc1/US-1.1.4-report.md`
-- Quality report: `quality/reports/US-1.1.4-quality.json`
+- Quality report: `quality/reports/inc1/US-1.1.4-quality.json`

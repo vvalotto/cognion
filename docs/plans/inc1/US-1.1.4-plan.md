@@ -2,7 +2,7 @@
 
 **Patrón:** Clean Architecture BC-first (entities → use_cases → interface_adapters → frameworks)
 **Producto:** backend (BC Identidad)
-**Alcance:** solo backend — frontend diferido (ver `docs/plans/US-1.1.4-context.md`)
+**Alcance:** solo backend — frontend diferido (ver `docs/plans/inc1/US-1.1.4-context.md`)
 **Estado:** ✅ COMPLETADO
 **Fecha completado:** 2026-07-23
 

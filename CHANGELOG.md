@@ -14,7 +14,7 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   - `IniciarSesionUseCase` — verifica email/password contra el hash bcrypt guardado; emite un
     JWT vía `JWTIssuerPort` con claim `rol` derivado de `Usuario.tipo_perfil` (`TipoPerfil`,
     ya existente — no se creó un VO `Rol` adicional por ser una envoltura redundante sobre
-    `TipoPerfil`, decisión aprobada antes de implementar, ver `docs/plans/US-1.1.4-plan.md`)
+    `TipoPerfil`, decisión aprobada antes de implementar, ver `docs/plans/inc1/US-1.1.4-plan.md`)
   - VO `JWT` (`token`, `rol`, `expira_en`) y puerto `JWTIssuerPort`; `PyJWTIssuer` — adaptador
     PyJWT (`ADR-007`), firma con `settings.secret_key`/`algorithm`, `exp` a 60 minutos desde
     la emisión (`ADR-013`)
@@ -28,7 +28,7 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     `.env.example`
   - Alcance: solo backend — `Login.tsx`/`LoginError.tsx`/`frontend/src/lib/auth.ts` quedan
     diferidos a la misma US-IEDD de frontend que ya diferían las US anteriores de Identidad
-    (`frontend/src` sigue sin routing ni cliente API), ver `docs/plans/US-1.1.4-context.md`
+    (`frontend/src` sigue sin routing ni cliente API), ver `docs/plans/inc1/US-1.1.4-context.md`
   - 10 tests unitarios nuevos + 7 de integración + 5 escenarios BDD; suite total del proyecto
     107/107, coverage 100% en entities/use_cases/interface_adapters, 99% total del proyecto
 - [US-1.1.3] Estudiante intenta registrarse con link vencido o inválido — BC Identidad
