@@ -6,7 +6,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 from httpx import ASGITransport, AsyncClient
-from pytest_bdd import given, parsers, scenarios, then, when
+from pytest_bdd import given, parsers, scenario, then, when
 from sqlalchemy import text
 
 from src.app import app
@@ -14,7 +14,27 @@ from src.identidad.frameworks.db.models import InvitacionModel
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
 
-scenarios("../../features/inc1/US-1.1.3-registro-link-invalido.feature")
+FEATURE = "../../features/inc1/US-1.1.3-registro-link-invalido.feature"
+
+
+@scenario(FEATURE, "Token inexistente")
+def test_token_inexistente():
+    pass
+
+
+@scenario(FEATURE, "Invitación vencida")
+def test_invitacion_vencida():
+    pass
+
+
+@scenario(FEATURE, "Invitación ya usada")
+def test_invitacion_ya_usada():
+    pass
+
+
+# El Scenario Outline "La UI no distingue el motivo del rechazo" (tag @ux) no se registra
+# aquí a propósito: requiere el frontend de identidad, todavía diferido (ver
+# docs/plans/inc1/US-1.1.3-context.md). Queda documentado en el .feature para cuando exista.
 
 
 def run_async(coro):
