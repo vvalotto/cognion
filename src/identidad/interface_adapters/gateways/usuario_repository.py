@@ -65,9 +65,15 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         # de la FK — sin este flush, ambos inserts pueden viajar en el mismo batch y violar
         # la constraint si el perfil se ejecuta antes que el usuario.
         await self._session.flush()
-        perfil_model_cls = _MODEL_POR_PERFIL[usuario.tipo_perfil]
-        self._session.add(perfil_model_cls(id=usuario.id))
+        self._session.add(self._perfil_model(usuario))
         await self._session.commit()
+
+    @staticmethod
+    def _perfil_model(usuario: Usuario) -> AdministradorModel | DocenteModel | EstudianteModel:
+        """Construye el modelo de perfil correspondiente al usuario."""
+        if isinstance(usuario.perfil, Estudiante):
+            return EstudianteModel(id=usuario.id, comision_id=usuario.perfil.comision_id)
+        return _MODEL_POR_PERFIL[usuario.tipo_perfil](id=usuario.id)
 
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
         """Busca un usuario por id junto con su perfil, o `None` si no existe."""
@@ -91,6 +97,9 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         """Busca en qué tabla de perfil está el usuario y arma la entidad correspondiente."""
         for tipo_perfil, model_cls in _MODEL_POR_PERFIL.items():
             perfil_model = await self._session.get(model_cls, usuario_id)
-            if perfil_model is not None:
-                return _ENTITY_POR_PERFIL[tipo_perfil](id=usuario_id)
+            if perfil_model is None:
+                continue
+            if isinstance(perfil_model, EstudianteModel):
+                return Estudiante(id=usuario_id, comision_id=perfil_model.comision_id)
+            return _ENTITY_POR_PERFIL[tipo_perfil](id=usuario_id)
         return None
