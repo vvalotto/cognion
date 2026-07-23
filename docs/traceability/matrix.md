@@ -3,10 +3,11 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-23 — `US-1.1.3` implementada (backend); RF-01 pasa a
-> Implementado — las tres US-IEDD que requería (`US-1.1.1`, `US-1.1.2`, `US-1.1.3`) están
-> implementadas en backend. RF-02 permanece en Especificado — depende de `US-1.1.4`-`US-1.1.5`,
-> todavía no implementadas. `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su
+> Última actualización: 2026-07-23 — `US-1.1.4` implementada (backend, autenticación con JWT
+> por rol). RF-02 permanece en Especificado — depende también de `US-1.1.5` (autorización por
+> rol), todavía no implementada; el mismo criterio usado para RF-01, que recién pasó a
+> Implementado cuando las tres US-IEDD que requería (`US-1.1.1`, `US-1.1.2`, `US-1.1.3`)
+> quedaron todas implementadas. `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su
 > implementación no mueve ninguna fila de esta tabla.
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
