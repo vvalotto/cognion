@@ -44,15 +44,28 @@ class DocenteNoAsignadoAComision(Exception):
         )
 
 
-class InvitacionNoValida(Exception):
-    """Se intentó aceptar una invitación inexistente, vencida o ya usada.
-
-    Guard genérico de `US-1.1.2` (INV-ID-01, INV-ID-03). `US-1.1.3` refina el rechazo en
-    `InvitacionInvalida`, `InvitacionVencida` e `InvitacionYaUsada` según el caso — fuera
-    de alcance de esta excepción.
-    """
+class InvitacionInvalida(Exception):
+    """Se intentó aceptar una invitación cuyo token no corresponde a ninguna existente."""
 
     def __init__(self, token: str) -> None:
         """Guarda el token en conflicto y arma el mensaje de la excepción."""
         self.token = token
-        super().__init__(f"La invitación con token '{token}' no es válida.")
+        super().__init__(f"La invitación con token '{token}' no existe.")
+
+
+class InvitacionVencida(Exception):
+    """Se intentó aceptar una invitación cuyo `expira_en` ya pasó (INV-ID-03)."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"La invitación con token '{token}' ya venció.")
+
+
+class InvitacionYaUsada(Exception):
+    """Se intentó aceptar una invitación con `usada_en` no null (INV-ID-01)."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"La invitación con token '{token}' ya fue utilizada.")

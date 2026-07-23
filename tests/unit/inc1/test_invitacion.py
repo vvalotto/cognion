@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from src.identidad.entities.errors import InvitacionNoValida
+from src.identidad.entities.errors import InvitacionVencida, InvitacionYaUsada
 from src.identidad.entities.invitacion import Invitacion
 
 
@@ -65,12 +65,40 @@ class TestInvitacionAceptar:
     def test_rechaza_aceptar_invitacion_vencida(self):
         invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
 
-        with pytest.raises(InvitacionNoValida):
+        with pytest.raises(InvitacionVencida):
             invitacion.aceptar(invitacion.expira_en + timedelta(seconds=1))
 
     def test_rechaza_aceptar_invitacion_ya_usada(self):
         invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
         invitacion.aceptar(datetime.now(UTC))
 
-        with pytest.raises(InvitacionNoValida):
+        with pytest.raises(InvitacionYaUsada):
             invitacion.aceptar(datetime.now(UTC))
+
+
+class TestInvitacionVerificarVigente:
+    def test_no_lanza_si_es_vigente(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+
+        invitacion.verificar_vigente(datetime.now(UTC))
+
+    def test_lanza_invitacion_vencida_si_expiro(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+
+        with pytest.raises(InvitacionVencida):
+            invitacion.verificar_vigente(invitacion.expira_en + timedelta(seconds=1))
+
+    def test_lanza_invitacion_ya_usada_si_usada_en_no_es_null(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+        invitacion.aceptar(datetime.now(UTC))
+
+        with pytest.raises(InvitacionYaUsada):
+            invitacion.verificar_vigente(datetime.now(UTC))
+
+    def test_prioriza_ya_usada_sobre_vencida(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+        invitacion.aceptar(datetime.now(UTC))
+        invitacion.expira_en = datetime.now(UTC) - timedelta(days=1)
+
+        with pytest.raises(InvitacionYaUsada):
+            invitacion.verificar_vigente(datetime.now(UTC))

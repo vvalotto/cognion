@@ -96,6 +96,10 @@ markers = [
     "alta-comision: escenario BDD de alta de Comisión",
     "asignacion-docente: escenario BDD de asignación de Docente a Comisión",
     "generar-invitacion: escenario BDD de generación de invitación",
+    "registro-estudiante: escenario BDD de registro de Estudiante vía invitación",
+    "US-1.1.2: escenarios BDD de la US-1.1.2",
+    "US-1.1.3: escenarios BDD de la US-1.1.3",
+    "ux: escenario BDD de UI — pendiente hasta que exista infraestructura de frontend (routing/cliente API)",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

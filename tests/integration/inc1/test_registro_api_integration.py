@@ -105,6 +105,26 @@ class TestRegistroAPIIntegration:
 
         assert response.status_code == 422
 
+    async def test_registro_rechaza_invitacion_ya_usada(self, session):
+        invitacion = await _crear_invitacion_vigente(session)
+        modelo = await session.get(InvitacionModel, invitacion.id)
+        modelo.usada_en = datetime.now(UTC)
+        await session.commit()
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/identidad/registro",
+                json={
+                    "token": invitacion.token,
+                    "nombre": "Nico Estudiante",
+                    "email": "yausada.reg@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                },
+            )
+
+        assert response.status_code == 422
+
     async def test_registro_rechaza_token_inexistente(self, session):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
