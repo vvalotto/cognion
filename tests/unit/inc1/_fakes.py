@@ -2,14 +2,18 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from datetime import UTC, datetime, timedelta
+
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
+from src.identidad.entities.jwt import JWT
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
+from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
-from src.identidad.entities.usuario import Usuario
+from src.identidad.entities.usuario import TipoPerfil, Usuario
 
 
 class FakeUsuarioRepository(UsuarioRepositoryPort):
@@ -24,6 +28,9 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
 
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
         return self.usuarios.get(usuario_id)
+
+    async def obtener_por_email(self, email: str) -> Usuario | None:
+        return next((u for u in self.usuarios.values() if u.email == email), None)
 
 
 class FakeComisionRepository(ComisionRepositoryPort):
@@ -68,3 +75,16 @@ class FakeNotificador(NotificadorPort):
 
     async def enviar_invitacion(self, email_destinatario: str, token: str) -> None:
         self.enviados.append((email_destinatario, token))
+
+
+class FakeJWTIssuer(JWTIssuerPort):
+    def __init__(self) -> None:
+        self.emitidos: list[tuple[UUID, TipoPerfil]] = []
+
+    def emitir(self, usuario_id: UUID, rol: TipoPerfil) -> JWT:
+        self.emitidos.append((usuario_id, rol))
+        return JWT(
+            token=f"fake-token:{usuario_id}:{rol.value}",
+            rol=rol,
+            expira_en=datetime.now(UTC) + timedelta(minutes=60),
+        )

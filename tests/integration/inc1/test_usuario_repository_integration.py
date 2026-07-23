@@ -51,6 +51,22 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
 
         assert await repo.obtener_por_id(usuario_id) is None
 
+    async def test_obtener_por_email(self, session):
+        repo = SQLAlchemyUsuarioRepository(session)
+        usuario = Usuario.crear("Ana", "ana3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await repo.guardar(usuario)
+
+        recuperado = await repo.obtener_por_email("ana3@fiuner.edu.ar")
+
+        assert recuperado is not None
+        assert recuperado.id == usuario.id
+        assert recuperado.tipo_perfil == TipoPerfil.DOCENTE
+
+    async def test_obtener_por_email_inexistente_retorna_none(self, session):
+        repo = SQLAlchemyUsuarioRepository(session)
+
+        assert await repo.obtener_por_email("no-existe@fiuner.edu.ar") is None
+
     async def test_guardar_y_obtener_estudiante_con_comision(self, session):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
