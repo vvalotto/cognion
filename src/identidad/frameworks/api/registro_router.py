@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.identidad.entities.errors import EmailYaRegistrado, InvitacionNoValida
+from src.identidad.entities.errors import (
+    EmailYaRegistrado,
+    InvitacionInvalida,
+    InvitacionVencida,
+    InvitacionYaUsada,
+)
 from src.identidad.frameworks.api.schemas import RegistrarEstudianteRequest, RegistroResponse
 from src.identidad.frameworks.dependencies import get_registro_controller
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
@@ -19,7 +24,8 @@ async def registrar_estudiante(
 ) -> RegistroResponse:
     """Registra un Estudiante vía invitación; endpoint público, sin JWT (aún no autenticado).
 
-    Responde 409 si el email ya está registrado, 422 si la invitación no es válida.
+    Responde 409 si el email ya está registrado, 422 si la invitación no es válida
+    (inexistente, vencida o ya usada — mismo status y mensaje para los tres casos, `US-1.1.3`).
     """
     try:
         usuario, _evento_invitacion, _evento_usuario = await controller.registrar_estudiante(
@@ -27,7 +33,7 @@ async def registrar_estudiante(
         )
     except EmailYaRegistrado as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
-    except InvitacionNoValida as exc:
+    except (InvitacionInvalida, InvitacionVencida, InvitacionYaUsada) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

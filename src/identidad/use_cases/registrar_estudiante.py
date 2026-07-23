@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from src.identidad.entities.errors import EmailYaRegistrado, InvitacionNoValida
+from src.identidad.entities.errors import EmailYaRegistrado, InvitacionInvalida
 from src.identidad.entities.eventos import InvitacionAceptada, UsuarioRegistrado
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
@@ -32,9 +32,10 @@ class RegistrarEstudianteUseCase:
     ) -> tuple[Usuario, InvitacionAceptada, UsuarioRegistrado]:
         """Crea el Usuario con perfil Estudiante y consume la invitación en la misma operación.
 
-        Lanza `InvitacionNoValida` si el token no corresponde a ninguna invitación o ya no
-        está vigente (INV-ID-01, INV-ID-03), y `EmailYaRegistrado` si el email ya está en uso
-        (INV-ID-04). Ninguna invitación se marca como usada si el registro se rechaza.
+        Lanza `InvitacionInvalida` si el token no corresponde a ninguna invitación,
+        `InvitacionVencida` o `InvitacionYaUsada` si ya no está vigente (INV-ID-01, INV-ID-03),
+        y `EmailYaRegistrado` si el email ya está en uso (INV-ID-04). Ninguna invitación se
+        marca como usada si el registro se rechaza.
         """
         invitacion = await self._buscar_invitacion_vigente(token)
 
@@ -57,8 +58,13 @@ class RegistrarEstudianteUseCase:
         return usuario, evento_invitacion, evento_usuario
 
     async def _buscar_invitacion_vigente(self, token: str) -> Invitacion:
-        """Busca la invitación por token y valida su vigencia sin consumirla."""
+        """Busca la invitación por token y valida su vigencia sin consumirla.
+
+        Lanza `InvitacionInvalida` si el token no corresponde a ninguna invitación existente;
+        delega en `Invitacion.verificar_vigente` la distinción entre vencida y ya usada.
+        """
         invitacion = await self._invitacion_repositorio.obtener_por_token(token)
-        if invitacion is None or not invitacion.es_vigente(datetime.now(UTC)):
-            raise InvitacionNoValida(token)
+        if invitacion is None:
+            raise InvitacionInvalida(token)
+        invitacion.verificar_vigente(datetime.now(UTC))
         return invitacion
