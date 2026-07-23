@@ -3,9 +3,9 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-23 — `US-1.1.2` implementada (backend); RF-01 permanece en
-> Especificado — depende de `US-1.1.3` (rechazo por link vencido/inválido), todavía no
-> implementada. RF-02 permanece en Especificado — depende de `US-1.1.4`-`US-1.1.5`,
+> Última actualización: 2026-07-23 — `US-1.1.3` implementada (backend); RF-01 pasa a
+> Implementado — las tres US-IEDD que requería (`US-1.1.1`, `US-1.1.2`, `US-1.1.3`) están
+> implementadas en backend. RF-02 permanece en Especificado — depende de `US-1.1.4`-`US-1.1.5`,
 > todavía no implementadas. `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su
 > implementación no mueve ninguna fila de esta tabla.
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
@@ -39,7 +39,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
-| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 | Especificado |
+| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 | Implementado |
 | RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 | Especificado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
@@ -79,9 +79,15 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 > `US-1.1.2` (Estudiante se registra con invitación válida) — implementada en backend
 > (`docs/plans/inc1/US-1.1.2-plan.md`), 77/77 tests, quality gates APROBADO. Frontend
-> diferido a una US-IEDD separada (ver nota de alcance en el plan). **RF-01 permanece en
-> Especificado** — la fila no pasa a Implementado hasta que también esté implementada
-> `US-1.1.3` (rechazo por link vencido/inválido), la última US-IEDD que RF-01 requiere.
+> diferido a una US-IEDD separada (ver nota de alcance en el plan).
+
+> `US-1.1.3` (Estudiante intenta registrarse con link vencido o inválido) — implementada en
+> backend (`docs/plans/inc1/US-1.1.3-plan.md`), 85/85 tests (excluyendo el escenario de UI
+> diferido), quality gates APROBADO. Refina `InvitacionNoValida` (guard genérico de
+> `US-1.1.2`) en `InvitacionInvalida`, `InvitacionVencida`, `InvitacionYaUsada`. Frontend
+> (`RegistroError.tsx`) diferido a la misma US-IEDD de frontend que ya difería
+> `Registro.tsx`/`RegistroExito.tsx`. **RF-01 pasa a Implementado** — las tres US-IEDD que
+> requería están cerradas en backend.
 
 ## 4. Escenarios de calidad (RNF)
 

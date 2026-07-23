@@ -10,6 +10,22 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.3] Estudiante intenta registrarse con link vencido o inválido — BC Identidad
+  - `InvitacionNoValida` (guard genérico de `US-1.1.2`) refinada en tres excepciones
+    específicas: `InvitacionInvalida` (token inexistente), `InvitacionVencida`
+    (`expira_en` pasado), `InvitacionYaUsada` (`usada_en` no null)
+  - `Invitacion.verificar_vigente(ahora)` — nuevo método que distingue el motivo del
+    rechazo (INV-ID-01, INV-ID-03); `Invitacion.aceptar()` lo reutiliza
+  - `RegistrarEstudianteUseCase._buscar_invitacion_vigente` distingue token inexistente de
+    invitación vencida/ya usada
+  - `POST /identidad/registro` sigue devolviendo 422 para los tres casos (mismo mensaje al
+    Estudiante; el backend distingue internamente solo para logging/debug, según wireframe)
+  - Alcance: solo backend — la pantalla `RegistroError.tsx` (`#registro-error`) queda
+    diferida a la misma US-IEDD de frontend que ya difería `Registro.tsx`/`RegistroExito.tsx`
+    desde `US-1.1.2` (ver `docs/plans/inc1/US-1.1.3-context.md`)
+  - 3 tests unitarios nuevos + 1 de integración + 3 escenarios BDD backend; suite total del
+    proyecto 85/85 (excluyendo el escenario de UI diferido), coverage 100% en los archivos
+    modificados
 - [US-1.1.2] Estudiante se registra con un link de invitación válido — BC Identidad
   - `Estudiante` gana `comision_id` (INV-ID-05: nunca existe sin comisión); nueva factory
     `Usuario.crear_estudiante` — único camino de construcción de un `Estudiante`.
