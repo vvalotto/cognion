@@ -31,8 +31,14 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
         return None if modelo is None else self._a_entidad(modelo)
 
     async def actualizar(self, invitacion: Invitacion) -> None:
-        """Guarda cambios sobre una invitación existente."""
+        """Guarda cambios sobre una invitación existente.
+
+        Solo se invoca sobre invitaciones ya persistidas (ver `obtener_por_token`); si el
+        registro no está, es un error del llamador, no un caso a manejar en silencio.
+        """
         modelo = await self._session.get(InvitacionModel, invitacion.id)
+        if modelo is None:
+            raise ValueError(f"Invitación '{invitacion.id}' no existe para actualizar.")
         modelo.usada_en = invitacion.usada_en
         await self._session.commit()
 

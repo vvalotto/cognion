@@ -23,16 +23,17 @@ from src.identidad.frameworks.db.models import (
     UsuarioModel,
 )
 
-_MODEL_POR_PERFIL = {
+_MODEL_POR_PERFIL: dict[TipoPerfil, type[AdministradorModel | DocenteModel | EstudianteModel]] = {
     TipoPerfil.ADMINISTRADOR: AdministradorModel,
     TipoPerfil.DOCENTE: DocenteModel,
     TipoPerfil.ESTUDIANTE: EstudianteModel,
 }
 
-_ENTITY_POR_PERFIL: dict[TipoPerfil, type[Perfil]] = {
+# Estudiante queda fuera: su constructor exige `comision_id`, que este dict no tiene forma de
+# proveer — el caso Estudiante se resuelve aparte en `_resolver_perfil` (ver isinstance abajo).
+_ENTITY_POR_PERFIL: dict[TipoPerfil, type[Administrador | Docente]] = {
     TipoPerfil.ADMINISTRADOR: Administrador,
     TipoPerfil.DOCENTE: Docente,
-    TipoPerfil.ESTUDIANTE: Estudiante,
 }
 
 

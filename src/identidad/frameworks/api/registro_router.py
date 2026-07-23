@@ -10,6 +10,7 @@ from src.identidad.entities.errors import (
     InvitacionVencida,
     InvitacionYaUsada,
 )
+from src.identidad.entities.usuario import Estudiante
 from src.identidad.frameworks.api.schemas import RegistrarEstudianteRequest, RegistroResponse
 from src.identidad.frameworks.dependencies import get_registro_controller
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
@@ -38,6 +39,10 @@ async def registrar_estudiante(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
+    # RegistrarEstudianteUseCase siempre crea un Usuario con perfil Estudiante — el isinstance
+    # es la forma en que mypy puede probarlo, no una validación de negocio (Perfil también
+    # admite Administrador/Docente, sin comision_id).
+    assert isinstance(usuario.perfil, Estudiante)
     return RegistroResponse(
         id=usuario.id,
         nombre=usuario.nombre,
