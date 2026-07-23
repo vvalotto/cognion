@@ -21,6 +21,15 @@ repos:
 
   - repo: local
     hooks:
+      - id: mypy
+        name: mypy (src/ completo)
+        entry: uv run mypy
+        language: system
+        types: [python]
+        files: ^src/
+        pass_filenames: false
+        args: ["src/"]
+
       - id: codeguard
         name: CodeGuard
         entry: uv run codeguard
