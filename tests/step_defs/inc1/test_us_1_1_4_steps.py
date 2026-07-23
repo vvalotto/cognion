@@ -96,13 +96,17 @@ async def _crear_estudiante_directo(email: str, password: str) -> None:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(
-            "Admin BDD", f"admin.bdd114.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"),
+            "Admin BDD",
+            f"admin.bdd114.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("x"),
             TipoPerfil.ADMINISTRADOR,
         )
         await usuario_repo.guardar(admin)
         comision = Comision.crear("IS-2026-BDD114", "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
-        estudiante = Usuario.crear_estudiante("Estudiante BDD", email, hasher.hash(password), comision.id)
+        estudiante = Usuario.crear_estudiante(
+            "Estudiante BDD", email, hasher.hash(password), comision.id
+        )
         await usuario_repo.guardar(estudiante)
 
 
@@ -129,7 +133,9 @@ def ningun_usuario_registrado(context):
 @when(parsers.parse('ejecuta IniciarSesion(email, "{password}")'))
 def ejecuta_iniciar_sesion_con_password_literal(context, password):
     context["antes_de_login"] = datetime.now(UTC)
-    context["response"] = run_async(_post("/identidad/login", {"email": context["email"], "password": password}))
+    context["response"] = run_async(
+        _post("/identidad/login", {"email": context["email"], "password": password})
+    )
 
 
 @when("ejecuta IniciarSesion(email, password correcta)")

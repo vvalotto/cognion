@@ -15,9 +15,7 @@ class TestAuthAPIIntegration:
         hasher = BcryptPasswordHasher()
         repo = SQLAlchemyUsuarioRepository(session)
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
-        usuario = Usuario.crear(
-            "Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE
-        )
+        usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
 
         transport = ASGITransport(app=app)
@@ -41,9 +39,7 @@ class TestAuthAPIIntegration:
         hasher = BcryptPasswordHasher()
         repo = SQLAlchemyUsuarioRepository(session)
         email = f"admin.{uuid.uuid4()}@fiuner.edu.ar"
-        usuario = Usuario.crear(
-            "Admin", email, hasher.hash("Admin#2026"), TipoPerfil.ADMINISTRADOR
-        )
+        usuario = Usuario.crear("Admin", email, hasher.hash("Admin#2026"), TipoPerfil.ADMINISTRADOR)
         await repo.guardar(usuario)
 
         transport = ASGITransport(app=app)

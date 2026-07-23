@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from uuid import UUID
-
 from datetime import UTC, datetime, timedelta
+from uuid import UUID
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
