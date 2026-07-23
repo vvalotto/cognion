@@ -31,9 +31,10 @@ class Docente:
 
 @dataclass(frozen=True)
 class Estudiante:
-    """Perfil que rinde evaluaciones."""
+    """Perfil que rinde evaluaciones, asignado a una comisión desde su creación (INV-ID-05)."""
 
     id: UUID
+    comision_id: UUID
 
 
 Perfil = Administrador | Docente | Estudiante
@@ -60,19 +61,37 @@ class Usuario:
 
     @staticmethod
     def crear(nombre: str, email: str, password_hash: str, tipo_perfil: TipoPerfil) -> Usuario:
-        """Crea un `Usuario` nuevo asignándole un id y el perfil correspondiente al tipo dado."""
+        """Crea un `Usuario` nuevo con perfil `Administrador` o `Docente`.
+
+        `Estudiante` no se crea por esta vía porque requiere `comision_id` — usar
+        `Usuario.crear_estudiante` (INV-ID-05, único camino: registro vía invitación).
+        """
+        if tipo_perfil is TipoPerfil.ESTUDIANTE:
+            raise ValueError(
+                "Estudiante no se crea con Usuario.crear() — usar Usuario.crear_estudiante()."
+            )
         usuario_id = uuid4()
-        perfil: Perfil
-        if tipo_perfil is TipoPerfil.ADMINISTRADOR:
-            perfil = Administrador(id=usuario_id)
-        elif tipo_perfil is TipoPerfil.DOCENTE:
-            perfil = Docente(id=usuario_id)
-        else:
-            perfil = Estudiante(id=usuario_id)
+        perfil: Perfil = (
+            Administrador(id=usuario_id)
+            if tipo_perfil is TipoPerfil.ADMINISTRADOR
+            else Docente(id=usuario_id)
+        )
         return Usuario(
             id=usuario_id,
             nombre=nombre,
             email=email,
             password_hash=password_hash,
             perfil=perfil,
+        )
+
+    @staticmethod
+    def crear_estudiante(nombre: str, email: str, password_hash: str, comision_id: UUID) -> Usuario:
+        """Crea un `Usuario` nuevo con perfil `Estudiante` asignado a `comision_id` (INV-ID-05)."""
+        usuario_id = uuid4()
+        return Usuario(
+            id=usuario_id,
+            nombre=nombre,
+            email=email,
+            password_hash=password_hash,
+            perfil=Estudiante(id=usuario_id, comision_id=comision_id),
         )

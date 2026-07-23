@@ -13,3 +13,11 @@ class InvitacionRepositoryPort(ABC):
     @abstractmethod
     async def guardar(self, invitacion: Invitacion) -> None:
         """Guarda una invitación nueva."""
+
+    @abstractmethod
+    async def obtener_por_token(self, token: str) -> Invitacion | None:
+        """Busca una invitación por token, o `None` si no existe."""
+
+    @abstractmethod
+    async def actualizar(self, invitacion: Invitacion) -> None:
+        """Guarda cambios sobre una invitación existente."""
