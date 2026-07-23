@@ -80,7 +80,7 @@ cognion/
 ├── CHANGELOG.md                     ← Keep a Changelog, actualizado en cada tag de baseline
 ├── .cm/baselines/                   ← BL-NNN.md + reportes de calidad
 ├── .githooks/pre-push               ← DesignReviewer — bloquea si CRITICAL
-├── .pre-commit-config.yaml          ← black, isort, ruff, CodeGuard (advierte, no bloquea)
+├── .pre-commit-config.yaml          ← black, isort, ruff, mypy (bloquea), CodeGuard (advierte)
 ├── .github/workflows/               ← CI/CD: lint+test en develop, build+deploy en main
 ├── docs/
 │   ├── rf/                          ← documentos de elicitación (RF, RNF, ARQ, PLAN) — históricos
@@ -181,6 +181,7 @@ el merge es a la rama default.
 
 | Nivel | Herramienta | Modo | Bloquea |
 |-------|-------------|------|---------|
+| Commit backend | mypy (`src/` completo) | Pre-commit automático | Sí |
 | Commit backend | CodeGuard | Pre-commit automático | No — solo advierte |
 | Push backend | DesignReviewer | Pre-push automático | Sí, si CRITICAL |
 | Push/PR a develop | lint + tests + DesignReviewer | GitHub Actions CI | Sí |
@@ -193,6 +194,12 @@ el merge es a la rama default.
 - `designreviewer` **siempre** con `--config pyproject.toml` — sin el flag usa defaults genéricos que no reflejan el proyecto.
 - El hook `.githooks/pre-push` **no se activa solo al clonar** — requiere `git config core.hooksPath .githooks` una vez por clon.
 - Umbrales de `[tool.designreviewer]` se calibran **al inicio de cada Incremento completo**, no US por US.
+- El check de tipos integrado en CodeGuard (`software_limpio`) invoca mypy sin `--cache-dir`
+  y con timeout de 10s — en corridas en frío puede superar ese tiempo y el check queda mudo
+  (ni aprueba ni reporta error real), dejando pasar errores de tipo reales sin aviso. Bug
+  reportado: `vvalotto/software_limpio#70`. Mientras se corrige ahí, el hook `mypy` dedicado
+  (arriba, sobre `src/` completo, mismo comando que CI) es la fuente de verdad local para
+  tipos — bloquea el commit si hay errores reales.
 
 ---
 
