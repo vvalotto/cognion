@@ -124,15 +124,17 @@ async def _post(path: str, json: dict):
 
 
 async def _crear_usuario(email: str, perfil: str) -> dict:
-    return (await _post(
-        "/usuarios",
-        {
-            "nombre": "Usuario Test",
-            "email": email,
-            "password": "claveSegura1",
-            "perfil": perfil,
-        },
-    )).json()
+    return (
+        await _post(
+            "/usuarios",
+            {
+                "nombre": "Usuario Test",
+                "email": email,
+                "password": "claveSegura1",
+                "perfil": perfil,
+            },
+        )
+    ).json()
 
 
 async def _crear_invitacion_vigente() -> str:
