@@ -3,7 +3,12 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from src.identidad.entities.errors import EmailYaRegistrado, InvitacionNoValida
+from src.identidad.entities.errors import (
+    EmailYaRegistrado,
+    InvitacionInvalida,
+    InvitacionVencida,
+    InvitacionYaUsada,
+)
 from src.identidad.entities.eventos import InvitacionAceptada, UsuarioRegistrado
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.usuario import Estudiante, Usuario
@@ -75,7 +80,7 @@ class TestRegistrarEstudianteUseCase:
 
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
-        with pytest.raises(InvitacionNoValida):
+        with pytest.raises(InvitacionInvalida):
             await use_case.execute("token-inexistente", "Nico", "nico@fiuner.edu.ar", "password123")
 
         assert usuario_repo.usuarios == {}
@@ -90,7 +95,7 @@ class TestRegistrarEstudianteUseCase:
 
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
-        with pytest.raises(InvitacionNoValida):
+        with pytest.raises(InvitacionVencida):
             await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
 
         assert usuario_repo.usuarios == {}
@@ -105,7 +110,7 @@ class TestRegistrarEstudianteUseCase:
 
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
-        with pytest.raises(InvitacionNoValida):
+        with pytest.raises(InvitacionYaUsada):
             await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
 
         assert usuario_repo.usuarios == {}
