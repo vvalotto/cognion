@@ -84,3 +84,19 @@ class RegistroResponse(BaseModel):
     nombre: str
     email: str
     comision_id: UUID
+
+
+class LoginRequest(BaseModel):
+    """Body de la request de autenticación."""
+
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=1)
+
+
+class LoginResponse(BaseModel):
+    """JWT emitido tras una autenticación exitosa (RF-02)."""
+
+    access_token: str
+    token_type: str = "bearer"
+    rol: TipoPerfil
+    expira_en: datetime

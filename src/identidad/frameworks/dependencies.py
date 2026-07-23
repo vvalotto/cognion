@@ -7,10 +7,13 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
+from src.identidad.interface_adapters.controllers.auth_controller import AuthController
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
@@ -28,6 +31,7 @@ from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteACo
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
+from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.shared.frameworks.db import get_session
 
@@ -77,3 +81,16 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     hasher = get_password_hasher()
     return RegistroController(RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher))
+
+
+def get_jwt_issuer() -> JWTIssuerPort:
+    """Provee la implementación de emisor de JWT a usar."""
+    return PyJWTIssuer()
+
+
+def get_auth_controller(session: SessionDep) -> AuthController:
+    """Arma el `AuthController` con sus dependencias concretas."""
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    hasher = get_password_hasher()
+    jwt_issuer = get_jwt_issuer()
+    return AuthController(IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer))
