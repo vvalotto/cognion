@@ -1,6 +1,9 @@
 import uuid
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 
+import pytest
+
+from src.identidad.entities.errors import InvitacionNoValida
 from src.identidad.entities.invitacion import Invitacion
 
 
@@ -30,3 +33,44 @@ class TestInvitacionCrear:
 
         assert primera.token != segunda.token
         assert primera.id != segunda.id
+
+
+class TestInvitacionEsVigente:
+    def test_vigente_si_no_vencida_y_no_usada(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+
+        assert invitacion.es_vigente(datetime.now(UTC)) is True
+
+    def test_no_vigente_si_vencida(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+
+        assert invitacion.es_vigente(invitacion.expira_en + timedelta(seconds=1)) is False
+
+    def test_no_vigente_si_ya_usada(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+        invitacion.aceptar(datetime.now(UTC))
+
+        assert invitacion.es_vigente(datetime.now(UTC)) is False
+
+
+class TestInvitacionAceptar:
+    def test_marca_usada_en_al_instante_dado(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+        ahora = datetime.now(UTC)
+
+        invitacion.aceptar(ahora)
+
+        assert invitacion.usada_en == ahora
+
+    def test_rechaza_aceptar_invitacion_vencida(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+
+        with pytest.raises(InvitacionNoValida):
+            invitacion.aceptar(invitacion.expira_en + timedelta(seconds=1))
+
+    def test_rechaza_aceptar_invitacion_ya_usada(self):
+        invitacion = Invitacion.crear(uuid.uuid4(), uuid.uuid4())
+        invitacion.aceptar(datetime.now(UTC))
+
+        with pytest.raises(InvitacionNoValida):
+            invitacion.aceptar(datetime.now(UTC))

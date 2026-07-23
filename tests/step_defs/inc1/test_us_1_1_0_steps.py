@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import uuid
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -8,6 +9,8 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
+from src.identidad.entities.usuario import Usuario
+from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.frameworks.db import SessionLocal
 
 scenarios("../../features/inc1/US-1.1.0-alta-usuarios-comision-docentes.feature")
@@ -21,10 +24,10 @@ def run_async(coro):
 async def _limpiar_tablas_identidad() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
-        await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM usuario"))
         await session.commit()
 
@@ -95,10 +98,29 @@ def usuario_con_perfil_docente(context):
     context["docente_id"] = docente["id"]
 
 
+async def _crear_estudiante_fixture() -> str:
+    """Crea un Estudiante directo por repositorio — `Usuario.crear()` genérico ya no admite
+    `TipoPerfil.ESTUDIANTE` desde `US-1.1.2` (solo se crea vía invitación, con `comision_id`).
+    Este fixture solo necesita "un usuario que no es Docente" para el escenario de rechazo."""
+    admin = await _crear_usuario("admin.bdd-est@fiuner.edu.ar", "administrador")
+    comision_resp = await _post(
+        "/comisiones",
+        {"materia": "Comisión Fixture", "horario": "lu 10-12", "administrador_id": admin["id"]},
+    )
+    comision_id = comision_resp.json()["id"]
+
+    async with SessionLocal() as session:
+        repo = SQLAlchemyUsuarioRepository(session)
+        estudiante = Usuario.crear_estudiante(
+            "Estudiante Test", "estudiante.bdd@fiuner.edu.ar", "hash", uuid.UUID(comision_id)
+        )
+        await repo.guardar(estudiante)
+        return str(estudiante.id)
+
+
 @given("un Usuario existente con perfil Estudiante")
 def usuario_con_perfil_estudiante(context):
-    estudiante = run_async(_crear_usuario("estudiante.bdd@fiuner.edu.ar", "estudiante"))
-    context["estudiante_id"] = estudiante["id"]
+    context["estudiante_id"] = run_async(_crear_estudiante_fixture())
 
 
 @when("ejecuta CrearUsuario con nombre, email, password y perfil Docente")

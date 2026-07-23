@@ -1,7 +1,11 @@
 import uuid
 
-from src.identidad.entities.usuario import TipoPerfil, Usuario
+from src.identidad.entities.comision import Comision
+from src.identidad.entities.usuario import Estudiante, TipoPerfil, Usuario
 from src.identidad.frameworks.db.models import UsuarioModel
+from src.identidad.interface_adapters.gateways.comision_repository import (
+    SQLAlchemyComisionRepository,
+)
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 
 
@@ -46,3 +50,20 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
         await session.commit()
 
         assert await repo.obtener_por_id(usuario_id) is None
+
+    async def test_guardar_y_obtener_estudiante_con_comision(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear("Vic", "vic.est@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        await usuario_repo.guardar(admin)
+        comision = Comision.crear("IS", "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        estudiante = Usuario.crear_estudiante("Nico", "nico.est@fiuner.edu.ar", "hash", comision.id)
+        await usuario_repo.guardar(estudiante)
+        recuperado = await usuario_repo.obtener_por_id(estudiante.id)
+
+        assert recuperado is not None
+        assert isinstance(recuperado.perfil, Estudiante)
+        assert recuperado.perfil.comision_id == comision.id
+        assert recuperado.tipo_perfil == TipoPerfil.ESTUDIANTE
