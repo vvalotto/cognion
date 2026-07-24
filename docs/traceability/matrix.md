@@ -3,12 +3,11 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-23 — `US-1.1.4` implementada (backend, autenticación con JWT
-> por rol). RF-02 permanece en Especificado — depende también de `US-1.1.5` (autorización por
-> rol), todavía no implementada; el mismo criterio usado para RF-01, que recién pasó a
-> Implementado cuando las tres US-IEDD que requería (`US-1.1.1`, `US-1.1.2`, `US-1.1.3`)
-> quedaron todas implementadas. `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su
-> implementación no mueve ninguna fila de esta tabla.
+> Última actualización: 2026-07-24 — `US-1.1.5` implementada (backend, autorización RBAC por
+> rol). RF-02 pasa a Implementado — las dos US-IEDD que requería (`US-1.1.4`, `US-1.1.5`)
+> quedaron ambas implementadas, mismo criterio usado para RF-01 (`US-1.1.1`, `US-1.1.2`,
+> `US-1.1.3`). `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su implementación no
+> mueve ninguna fila de esta tabla.
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -41,7 +40,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
 | RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 | Implementado |
-| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 | Especificado |
+| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 | Implementado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
 | RF-05 | Banco de preguntas | 2 | — | Planificado |
@@ -90,6 +89,19 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > `Registro.tsx`/`RegistroExito.tsx`. **RF-01 pasa a Implementado** — las tres US-IEDD que
 > requería están cerradas en backend.
 
+> `US-1.1.4` (Docente, administrador y estudiante se autentican y reciben un JWT con su rol)
+> — implementada en backend (`docs/plans/inc1/US-1.1.4-plan.md`), 107/107 tests, quality
+> gates APROBADO. Frontend diferido (mismo criterio que US-1.1.2/US-1.1.3).
+
+> `US-1.1.5` (El sistema restringe el acceso según el rol del usuario autenticado) —
+> implementada en backend (`docs/plans/inc1/US-1.1.5-plan.md`), 132/132 tests (suite
+> completa del proyecto), quality gates APROBADO. `get_current_user`/`require_rol` aplicados
+> a los endpoints de `US-1.1.0` (`administrador`) y `US-1.1.1` (`docente`); `/identidad/login`
+> y `/identidad/registro` permanecen públicos. **RF-02 pasa a Implementado** — las dos US-IEDD
+> que requería (`US-1.1.4`, `US-1.1.5`) están cerradas en backend. Con esto, la Iteración 1
+> del Incremento 1 queda completa (todas las US de `docs/plans/inc1/inc1-candidatas.md`
+> §Iteración 1 implementadas).
+
 ## 4. Escenarios de calidad (RNF)
 
 IDs propios (`RNF-<atributo>-N`) porque `docs/rf/RNF_v1.md` no numera los escenarios de forma
@@ -108,7 +120,7 @@ tomada todavía (se marca "Sin ADR — pendiente", nunca se deja vacío sin expl
 | RNF-DISP-1 | Disponibilidad | ADR-010 | Disponibilidad, Escenario 1 | Actividad Evaluativa / Infraestructura | 0 (healthcheck) → 6 (cancelación a los 5 min) | Planificado | Healthcheck expuesto (Inc 0) + comportamiento de cancelación verificado en UAT de Inc 6 |
 | RNF-DISP-2 | Disponibilidad | N/A — decisión de dominio (RF-11b), no arquitectónica | Disponibilidad, Escenario 2 | Actividad Evaluativa | 3 | Planificado | RF-11b (modificación de cierre en caliente) cubre el escenario |
 | RNF-CONF-1 | Confiabilidad | ADR-009, ADR-004 | Confiabilidad | Actividad Evaluativa | 3 | Planificado | Test de reconexión sin pérdida de respuestas confirmadas |
-| RNF-SEG-1 | Seguridad | ADR-007 | Seguridad | Identidad (transversal a todos los BC) | 1 | Especificado | Revisión de API — RBAC + JWT validado en cada endpoint. Mecanismo concreto (roles derivados de `perfil`, JWT sin refresh/blacklist) definido en `docs/design/domain/BC-identidad-modelo.md` (US-1.0.1, aprobado 2026-07-17) |
+| RNF-SEG-1 | Seguridad | ADR-007 | Seguridad | Identidad (transversal a todos los BC) | 1 | Implementado | Revisión de API — RBAC + JWT validado en cada endpoint. Mecanismo concreto (roles derivados de `perfil`, JWT sin refresh/blacklist) definido en `docs/design/domain/BC-identidad-modelo.md` (US-1.0.1, aprobado 2026-07-17). `get_current_user`/`require_rol` (`US-1.1.5`) aplicados a los endpoints de `US-1.1.0`/`US-1.1.1`; revisión formal de API queda para el cierre de Incremento |
 | RNF-USA-1 | Usabilidad | ADR-011 | Usabilidad, Escenario 1 | Frontend (transversal) | Todos los incrementos con frontend | Planificado — gate cumplido para Incremento 1 | Gate UX de cada incremento — verificación de prototipo aprobado. Incremento 1: `docs/design/ux/wireframes-identidad.md` + prototipo aprobados (US-1.0.2, 2026-07-18). Estado global se mantiene "Planificado" hasta que cada incremento con frontend repita el gate |
 | RNF-USA-2 | Usabilidad | ADR-011 | Usabilidad, Escenario 2 | Frontend / Actividad Evaluativa en vivo | 6 | Planificado — ⚠️ ítem abierto, criterio a definir en diseño UX antes del Incremento 6 (ver `CLAUDE.md`) | Validación humana en dispositivo real (proyección en aula) |
 | RNF-MANT-1 | Mantenibilidad | ADR-001 | Mantenibilidad | Banco de preguntas | 2 | Planificado — ⚠️ depende del modelo polimórfico de tipos de pregunta, a resolver en la Iteración 0 — Modelado | Spike de incorporación de un tipo nuevo en ≤ 1 jornada |

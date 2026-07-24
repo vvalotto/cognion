@@ -1,0 +1,37 @@
+{
+  "us_id": "US-1.1.5",
+  "fecha": "2026-07-24T09:15:00-03:00",
+  "componente": "src/identidad/{entities,interface_adapters,frameworks}",
+  "archivos_analizados": [
+    "src/identidad/entities/jwt.py",
+    "src/identidad/entities/errors.py",
+    "src/identidad/entities/ports/jwt_issuer_port.py",
+    "src/identidad/frameworks/security/jwt_pyjwt.py",
+    "src/identidad/interface_adapters/security/get_current_user.py",
+    "src/identidad/interface_adapters/security/require_rol.py",
+    "src/identidad/frameworks/dependencies.py",
+    "src/identidad/frameworks/api/usuarios_router.py",
+    "src/identidad/frameworks/api/comisiones_router.py",
+    "src/identidad/frameworks/api/invitaciones_router.py"
+  ],
+  "metricas": {
+    "pylint": 9.96,
+    "cc_max_por_funcion": 4,
+    "mi_minimo": 61.62,
+    "coverage_componentes_entities_interface_adapters": 100.0,
+    "mypy": "0 errores (src/ completo, 79 archivos)"
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "frameworks/ omitido de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit) — cubierto igual con tests unitarios reales en test_jwt_pyjwt.py.",
+    "codeguard reportó mypy timeout (>10s) en 2 archivos — bug conocido (vvalotto/software_limpio#70). Se usó el hook mypy dedicado (src/ completo) como fuente de verdad: 0 errores.",
+    "R0801 duplicate-code entre comisiones_router.py y invitaciones_router.py (mismo patrón try/except -> HTTPException) — convención ya establecida en el proyecto, no introducida por esta US.",
+    "Suite completa (unit + integration + BDD): 132/132 tests pasan."
+  ]
+}
