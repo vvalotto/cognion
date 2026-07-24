@@ -42,11 +42,14 @@ US-1.1.5 (autorización por rol / RBAC, PR #20, 132/132 tests, `docs/reports/inc
 mergeadas a `develop`. RF-01 y RF-02 pasan a "Implementado" en `docs/traceability/matrix.md`.
 Frontend de todas estas US queda diferido a una US-IEDD separada (routing + cliente API
 todavía no montados en `frontend/src`). Issues #6–#10 cerrados.
-**Próximo paso:** Sin próxima US-IEDD definida todavía. Opciones abiertas: (a) cerrar el
-Incremento 1 como Baseline BL-002 (backend-only, con el frontend de Identidad diferido —
-evaluar con Víctor si corresponde cerrar así o esperar al frontend), o (b) arrancar la
-US-IEDD de infraestructura frontend (router + cliente API + pantallas diferidas desde
-US-1.1.2). Definir con Víctor antes de continuar.
+**Decisión 2026-07-24 (criterio de cierre de BL-002):** la Baseline no cierra backend-only —
+cierra cuando backend y frontend de Identidad estén ambos implementados (`docs/plans/PLAN-CM.md`
+§7). El wireframe ya está aprobado y fresco (`docs/design/ux/wireframes-identidad.md`) y el
+contrato de backend ya está estable (132/132 tests); diferir más el frontend solo suma deuda.
+**Próximo paso:** Arrancar la US-IEDD de infraestructura frontend (routing + cliente API,
+todavía no montados en `frontend/src`) y las 5 pantallas diferidas desde US-1.1.2
+(`Registro.tsx`, `RegistroExito.tsx`, `RegistroError.tsx`, `Login.tsx`, `LoginError.tsx`).
+Recién con eso integrado se abre BL-002.
 **Baseline abierta:** ninguna. BL-002 se abre al cierre del Incremento 1 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
