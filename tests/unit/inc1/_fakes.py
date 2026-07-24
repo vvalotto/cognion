@@ -4,8 +4,9 @@ from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from src.identidad.entities.comision import Comision
+from src.identidad.entities.errors import JWTInvalido
 from src.identidad.entities.invitacion import Invitacion
-from src.identidad.entities.jwt import JWT
+from src.identidad.entities.jwt import JWT, JWTPayload
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
 from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
@@ -79,6 +80,8 @@ class FakeNotificador(NotificadorPort):
 class FakeJWTIssuer(JWTIssuerPort):
     def __init__(self) -> None:
         self.emitidos: list[tuple[UUID, TipoPerfil]] = []
+        self.payload_a_devolver: JWTPayload | None = None
+        self.excepcion_a_levantar: Exception | None = None
 
     def emitir(self, usuario_id: UUID, rol: TipoPerfil) -> JWT:
         self.emitidos.append((usuario_id, rol))
@@ -87,3 +90,10 @@ class FakeJWTIssuer(JWTIssuerPort):
             rol=rol,
             expira_en=datetime.now(UTC) + timedelta(minutes=60),
         )
+
+    def verificar(self, token: str) -> JWTPayload:
+        if self.excepcion_a_levantar is not None:
+            raise self.excepcion_a_levantar
+        if self.payload_a_devolver is not None:
+            return self.payload_a_devolver
+        raise JWTInvalido()

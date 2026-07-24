@@ -12,6 +12,7 @@ from sqlalchemy import text
 from src.app import app
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
+from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc1/US-1.1.1-generar-invitacion.feature")
 
@@ -127,14 +128,15 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
                 "password": "claveSegura1",
                 "perfil": perfil,
             },
+            headers=admin_headers(),
         )
         return response.json()
 
 
-async def _post(path: str, json: dict):
+async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(path, json=json)
+        return await client.post(path, json=json, headers=headers or admin_headers())
 
 
 @given("un Docente autenticado")
@@ -178,6 +180,7 @@ def ejecuta_generar_invitacion(context):
                 "docente_id": context["docente_id"],
                 "email_destinatario": "estudiante.bdd@fiuner.edu.ar",
             },
+            headers=docente_headers(),
         )
     )
 
@@ -191,6 +194,7 @@ def intenta_generar_invitacion(context):
                 "docente_id": context["docente_id"],
                 "email_destinatario": "estudiante.bdd@fiuner.edu.ar",
             },
+            headers=docente_headers(),
         )
     )
 

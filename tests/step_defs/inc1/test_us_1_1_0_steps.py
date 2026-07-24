@@ -12,6 +12,7 @@ from src.app import app
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.frameworks.db import SessionLocal
+from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/inc1/US-1.1.0-alta-usuarios-comision-docentes.feature")
 
@@ -55,14 +56,15 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
                 "password": "claveSegura1",
                 "perfil": perfil,
             },
+            headers=admin_headers(),
         )
         return response.json()
 
 
-async def _post(path: str, json: dict):
+async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(path, json=json)
+        return await client.post(path, json=json, headers=headers or admin_headers())
 
 
 @given("un Administrador autenticado con JWT válido")

@@ -1,8 +1,10 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 import jwt as pyjwt
+import pytest
 
+from src.identidad.entities.errors import JWTExpirado, JWTInvalido
 from src.identidad.entities.usuario import TipoPerfil
 from src.identidad.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.settings import settings
@@ -38,3 +40,56 @@ class TestPyJWTIssuer:
                 jwt_vo.token, settings.secret_key, algorithms=[settings.algorithm]
             )
             assert payload["rol"] == tipo_perfil.value
+
+
+class TestPyJWTIssuerVerificar:
+    def test_verifica_token_valido_y_resuelve_payload(self):
+        issuer = PyJWTIssuer()
+        usuario_id = uuid4()
+        jwt_vo = issuer.emitir(usuario_id, TipoPerfil.ADMINISTRADOR)
+
+        payload = issuer.verificar(jwt_vo.token)
+
+        assert payload.usuario_id == usuario_id
+        assert payload.rol == TipoPerfil.ADMINISTRADOR
+
+    def test_token_expirado_levanta_jwtexpirado(self):
+        issuer = PyJWTIssuer()
+        payload = {
+            "sub": str(uuid4()),
+            "rol": TipoPerfil.DOCENTE.value,
+            "exp": datetime.now(UTC) - timedelta(minutes=1),
+        }
+        token = pyjwt.encode(payload, settings.secret_key, algorithm=settings.algorithm)
+
+        with pytest.raises(JWTExpirado):
+            issuer.verificar(token)
+
+    def test_token_con_firma_invalida_levanta_jwtinvalido(self):
+        issuer = PyJWTIssuer()
+        payload = {
+            "sub": str(uuid4()),
+            "rol": TipoPerfil.DOCENTE.value,
+            "exp": datetime.now(UTC) + timedelta(minutes=60),
+        }
+        token = pyjwt.encode(payload, "otra-clave-distinta", algorithm=settings.algorithm)
+
+        with pytest.raises(JWTInvalido):
+            issuer.verificar(token)
+
+    def test_token_malformado_levanta_jwtinvalido(self):
+        issuer = PyJWTIssuer()
+
+        with pytest.raises(JWTInvalido):
+            issuer.verificar("esto-no-es-un-jwt")
+
+    def test_token_sin_claim_rol_levanta_jwtinvalido(self):
+        issuer = PyJWTIssuer()
+        payload = {
+            "sub": str(uuid4()),
+            "exp": datetime.now(UTC) + timedelta(minutes=60),
+        }
+        token = pyjwt.encode(payload, settings.secret_key, algorithm=settings.algorithm)
+
+        with pytest.raises(JWTInvalido):
+            issuer.verificar(token)
