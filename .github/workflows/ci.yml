@@ -51,6 +51,14 @@ jobs:
         run: npm run lint
         working-directory: frontend
 
+      - name: Type-check
+        run: npx tsc --noEmit
+        working-directory: frontend
+
+      - name: Vitest
+        run: npm run test
+        working-directory: frontend
+
   test:
     name: Tests
     runs-on: ubuntu-latest

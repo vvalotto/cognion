@@ -10,6 +10,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.6] Infraestructura de frontend — routing, cliente API y manejo de sesión — BC Identidad
+  - `frontend/src/lib/session.ts` — guardar/leer/limpiar `{token, rol}` en `localStorage`
+    (trade-off XSS documentado, suficiente para un JWT sin refresh/blacklist, `ADR-013`)
+  - `frontend/src/lib/api-client.ts` — `apiFetch<T>()` adjunta `Authorization: Bearer` si hay
+    sesión; 401 limpia la sesión y navega a `/login`; 403 propaga el mensaje genérico que ya
+    devuelve el backend (`US-1.1.5`) sin agregar detalle del recurso
+  - `frontend/src/router.tsx` — React Router v7 (modo data, `createBrowserRouter`), rutas
+    placeholder `/login` y `/registro` (pantallas reales en `US-1.1.7`/`US-1.1.8`)
+  - `frontend/src/layouts/{AuthLayout,AppLayout}.tsx` — tarjeta centrada para auth, header de
+    aplicación para pantallas post-login (`wireframes-identidad.md` §3)
+  - Decisión tomada con Víctor en Fase 0: se agrega **Vitest + React Testing Library** al
+    proyecto — no existía ninguna estrategia de testing de frontend (`package.json` sin test
+    runner, CI solo corría ESLint). Gate de cobertura de referencia 80%, alcanzado con 100%
+    líneas/statements/funcs, 87.5% branches
+    (`quality/reports/inc1/US-1.1.6-quality.json`)
+  - `npm run test` (`tsc --noEmit` + `vitest run`) agregado al job `lint-frontend` de CI —
+    mismo nombre de job para no romper el required status check de branch protection
+  - Limpieza: 5 archivos del scaffold demo de Vite sin referencias (`App.css`, `react.svg`,
+    `vite.svg`, `hero.png`, `public/icons.svg`)
+  - 16 tests (10 unitarios + 6 de integración), suite frontend completa en verde
 - [US-1.1.5] El sistema restringe el acceso a funcionalidades según el rol del usuario autenticado — BC Identidad
   - `JWTPayload` (VO) — `usuario_id` + `rol` resueltos al decodificar un JWT válido, sin
     volver a consultar la base (ADR-013, sin refresh/blacklist)
