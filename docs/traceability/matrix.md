@@ -114,6 +114,13 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > `CrearComision`/`AsignarDocenteAComision`, deferida sin fecha (el wireframe la deja
 > explícitamente sin resolver).
 
+> `US-1.1.6` (Infraestructura de frontend) — implementada
+> (`docs/plans/inc1/US-1.1.6-plan.md`), 16/16 tests frontend, quality gates APROBADO
+> (`quality/reports/inc1/US-1.1.6-quality.json`). Agrega Vitest + React Testing Library al
+> proyecto (decisión tomada en Fase 0 — no existía estrategia de testing de frontend). Sin
+> RF propio, igual que `US-1.1.0` — es precondición técnica de `US-1.1.7`/`US-1.1.8`/`US-1.1.9`,
+> por eso no mueve ninguna fila de la matriz. Próxima: `US-1.1.7` (login).
+
 ## 4. Escenarios de calidad (RNF)
 
 IDs propios (`RNF-<atributo>-N`) porque `docs/rf/RNF_v1.md` no numera los escenarios de forma

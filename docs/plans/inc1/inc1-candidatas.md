@@ -85,6 +85,10 @@ la misma operación (`ResetearPassword`, actor Administrador).
 1.1.8/1.1.9 — valida la infraestructura con el flujo más simple del wireframe antes de encarar
 los flujos con más estados (registro: 3 pantallas; alta de docente: ruta protegida + rol).
 
+> ~~US-1.1.6 (Infraestructura de frontend)~~ Cerrada 2026-07-24 —
+> `docs/reports/inc1/US-1.1.6-report.md`, 16/16 tests, quality gates APROBADO. Desbloquea
+> US-1.1.7.
+
 ---
 
 ## DoD del Incremento (hito, `PLAN_v1.md`)
