@@ -4,7 +4,7 @@ from src.app import app
 
 
 class TestComisionesAPIIntegration:
-    async def test_flujo_completo_crear_comision_y_asignar_docente(self):
+    async def test_flujo_completo_crear_comision_y_asignar_docente(self, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             docente_resp = await client.post(
@@ -15,6 +15,7 @@ class TestComisionesAPIIntegration:
                     "password": "claveSegura1",
                     "perfil": "docente",
                 },
+                headers=admin_headers,
             )
             docente_id = docente_resp.json()["id"]
 
@@ -26,24 +27,28 @@ class TestComisionesAPIIntegration:
                     "password": "claveSegura1",
                     "perfil": "administrador",
                 },
+                headers=admin_headers,
             )
             admin_id = admin_resp.json()["id"]
 
             comision_resp = await client.post(
                 "/comisiones",
                 json={"materia": "IS", "horario": "lu 10-12", "administrador_id": admin_id},
+                headers=admin_headers,
             )
             comision_id = comision_resp.json()["id"]
 
             asignar_resp = await client.post(
-                f"/comisiones/{comision_id}/docentes", json={"docente_id": docente_id}
+                f"/comisiones/{comision_id}/docentes",
+                json={"docente_id": docente_id},
+                headers=admin_headers,
             )
 
         assert comision_resp.status_code == 201
         assert asignar_resp.status_code == 200
         assert docente_id in asignar_resp.json()["docentes_asignados"]
 
-    async def test_asignar_no_docente_devuelve_422(self):
+    async def test_asignar_no_docente_devuelve_422(self, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             admin_resp = await client.post(
@@ -54,17 +59,21 @@ class TestComisionesAPIIntegration:
                     "password": "claveSegura1",
                     "perfil": "administrador",
                 },
+                headers=admin_headers,
             )
             admin_id = admin_resp.json()["id"]
 
             comision_resp = await client.post(
                 "/comisiones",
                 json={"materia": "IS", "horario": "lu 10-12", "administrador_id": admin_id},
+                headers=admin_headers,
             )
             comision_id = comision_resp.json()["id"]
 
             response = await client.post(
-                f"/comisiones/{comision_id}/docentes", json={"docente_id": admin_id}
+                f"/comisiones/{comision_id}/docentes",
+                json={"docente_id": admin_id},
+                headers=admin_headers,
             )
 
         assert response.status_code == 422

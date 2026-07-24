@@ -10,6 +10,31 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.5] El sistema restringe el acceso a funcionalidades según el rol del usuario autenticado — BC Identidad
+  - `JWTPayload` (VO) — `usuario_id` + `rol` resueltos al decodificar un JWT válido, sin
+    volver a consultar la base (ADR-013, sin refresh/blacklist)
+  - `JWTIssuerPort.verificar(token)` — nuevo método sobre el puerto existente (`US-1.1.4`);
+    `PyJWTIssuer.verificar()` decodifica con PyJWT, `JWTExpirado`/`JWTInvalido` según el caso
+  - `get_current_user` (`interface_adapters/security/get_current_user.py`) — dependency FastAPI
+    que extrae y valida el JWT del header `Authorization: Bearer`; 401 si falta o no es válido
+  - `require_rol(roles_permitidos, get_current_user)` (`interface_adapters/security/require_rol.py`)
+    — dependency que compone sobre `get_current_user` y exige el rol; 403 si no está permitido.
+    Ambos builders reciben la abstracción como parámetro (no importan `frameworks/`) — el wiring
+    con `PyJWTIssuer` ocurre en el composition root (`frameworks/dependencies.py`)
+  - Endpoints protegidos: `POST /usuarios` y `POST /comisiones`, `POST /comisiones/{id}/docentes`
+    con `require_administrador` (`US-1.1.0`); `POST /comisiones/{id}/invitaciones` con
+    `require_docente` (`US-1.1.1`). `POST /identidad/login` y `POST /identidad/registro`
+    permanecen públicos (precondición de tener un JWT)
+  - RF-02 pasa a Implementado — las dos US-IEDD que requería (`US-1.1.4`, `US-1.1.5`) están
+    cerradas en backend
+  - 12 tests unitarios nuevos + 6 de integración + 6 escenarios BDD; se actualizaron los
+    `step_defs` y tests de integración de `US-1.1.0` a `US-1.1.4` para autenticarse contra los
+    endpoints ahora protegidos (helper compartido `tests/step_defs/inc1/_auth_headers.py` y
+    fixtures `admin_headers`/`docente_headers` en `tests/integration/conftest.py`) — el primer
+    Administrador se emite directo con `PyJWTIssuer`, sin pasar por la API (huevo-y-gallina,
+    igual que en un despliegue real)
+  - Suite total del proyecto: 132/132 tests, cobertura 100% en los componentes nuevos
+    (`entities/`, `interface_adapters/security/`)
 - [US-1.1.4] Docente, administrador y estudiante se autentican y reciben un JWT con su rol — BC Identidad
   - `IniciarSesionUseCase` — verifica email/password contra el hash bcrypt guardado; emite un
     JWT vía `JWTIssuerPort` con claim `rol` derivado de `Usuario.tipo_perfil` (`TipoPerfil`,

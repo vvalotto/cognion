@@ -12,6 +12,7 @@ from src.app import app
 from src.identidad.entities.usuario import TipoPerfil
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.shared.frameworks.db import SessionLocal
+from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/inc1/US-1.1.4-autenticacion-jwt.feature")
 
@@ -45,10 +46,10 @@ def context():
     return {}
 
 
-async def _post(path: str, json: dict):
+async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(path, json=json)
+        return await client.post(path, json=json, headers=headers)
 
 
 async def _crear_usuario(email: str, perfil: str, password: str) -> dict:
@@ -56,6 +57,7 @@ async def _crear_usuario(email: str, perfil: str, password: str) -> dict:
         await _post(
             "/usuarios",
             {"nombre": "Usuario Test", "email": email, "password": password, "perfil": perfil},
+            headers=admin_headers(),
         )
     ).json()
 

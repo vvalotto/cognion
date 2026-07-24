@@ -81,3 +81,19 @@ class CredencialesInvalidas(Exception):
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos del intento fallido."""
         super().__init__("Email o contraseña inválidos.")
+
+
+class JWTInvalido(Exception):
+    """El token recibido está ausente, malformado o tiene una firma inválida (`US-1.1.5`)."""
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción."""
+        super().__init__("Token inválido.")
+
+
+class JWTExpirado(Exception):
+    """El token recibido es válido pero su `exp` ya pasó (ADR-013, `US-1.1.5`)."""
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción."""
+        super().__init__("Token expirado.")

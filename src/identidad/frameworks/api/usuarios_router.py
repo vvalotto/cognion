@@ -6,13 +6,18 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.identidad.entities.errors import EmailYaRegistrado
 from src.identidad.frameworks.api.schemas import CrearUsuarioRequest, UsuarioResponse
-from src.identidad.frameworks.dependencies import get_usuarios_controller
+from src.identidad.frameworks.dependencies import get_usuarios_controller, require_administrador
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 
 router = APIRouter(prefix="/usuarios", tags=["identidad"])
 
 
-@router.post("", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=UsuarioResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_administrador)],
+)
 async def crear_usuario(
     body: CrearUsuarioRequest,
     controller: UsuariosController = Depends(get_usuarios_controller),

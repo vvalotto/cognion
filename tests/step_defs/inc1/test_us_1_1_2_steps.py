@@ -12,6 +12,7 @@ from src.app import app
 from src.identidad.frameworks.db.models import InvitacionModel
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
+from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc1/US-1.1.2-registro-estudiante.feature")
 
@@ -127,14 +128,15 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
                 "password": "claveSegura1",
                 "perfil": perfil,
             },
+            headers=admin_headers(),
         )
         return response.json()
 
 
-async def _post(path: str, json: dict):
+async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(path, json=json)
+        return await client.post(path, json=json, headers=headers)
 
 
 async def _crear_invitacion_vigente(materia: str) -> dict:
@@ -143,12 +145,18 @@ async def _crear_invitacion_vigente(materia: str) -> dict:
     comision_resp = await _post(
         "/comisiones",
         {"materia": materia, "horario": "lu 10-12", "administrador_id": admin["id"]},
+        headers=admin_headers(),
     )
     comision_id = comision_resp.json()["id"]
-    await _post(f"/comisiones/{comision_id}/docentes", {"docente_id": docente["id"]})
+    await _post(
+        f"/comisiones/{comision_id}/docentes",
+        {"docente_id": docente["id"]},
+        headers=admin_headers(),
+    )
     invitacion_resp = await _post(
         f"/comisiones/{comision_id}/invitaciones",
         {"docente_id": docente["id"], "email_destinatario": "estudiante.bdd112@fiuner.edu.ar"},
+        headers=docente_headers(),
     )
     return {"comision_id": comision_id, **invitacion_resp.json()}
 
