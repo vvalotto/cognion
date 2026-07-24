@@ -62,6 +62,31 @@ la misma operación (`ResetearPassword`, actor Administrador).
 
 ---
 
+## Iteración 2 — Frontend de Identidad (cierra la Iteración 1 de cara al Hito del Incremento)
+
+> Decisión 2026-07-24 (`docs/plans/PLAN-CM.md` §7): una Baseline con gate UX aprobado no
+> cierra backend-only — BL-002 espera a que este frontend también esté implementado. No
+> requiere una nueva Iteración 0 — Modelado: el wireframe ya está aprobado
+> (`docs/design/ux/wireframes-identidad.md`, US-1.0.2/Issue #4) y el backend que cada pantalla
+> consume ya está implementado y probado (US-1.1.0, US-1.1.2 a US-1.1.5).
+>
+> **Fuera de alcance de esta iteración:** UI de `CrearComision`/`AsignarDocenteAComision` — el
+> wireframe las deja explícitamente sin resolver (§4) y el Hito del Incremento no las requiere
+> como flujo demostrable. Se retoma si una iteración futura lo necesita.
+
+| US | Descripción | Pantallas (`wireframes-identidad.md`) | Backend consumido | Depende de |
+|---|---|---|---|---|
+| **US-1.1.6** | Infraestructura de frontend: routing, cliente API con manejo de JWT/401/403, layout auth vs. layout app | Sin pantalla propia — soporte técnico | — | — |
+| **US-1.1.7** | Docente/Administrador/Estudiante inicia sesión desde la UI | §2.1 `#login`, §2.2 `#login-error` | `POST /identidad/login` (US-1.1.4) | US-1.1.6 |
+| **US-1.1.8** | Estudiante se registra desde la UI con un link de invitación | §2.3 `#registro`, §2.4 `#registro-error`, §2.5 `#registro-exito` | `POST /identidad/registro` (US-1.1.2, US-1.1.3) | US-1.1.6 |
+| **US-1.1.9** | Administrador da de alta un Docente desde la UI | §2.6 `#alta-docente`, §2.7 `#alta-docente-exito` | `POST /usuarios` con `perfil=docente`, protegido por `require_administrador` (US-1.1.0, US-1.1.5) | US-1.1.6 |
+
+**Orden de implementación:** US-1.1.6 primero (bloquea a las otras tres). US-1.1.7 antes que
+1.1.8/1.1.9 — valida la infraestructura con el flujo más simple del wireframe antes de encarar
+los flujos con más estados (registro: 3 pantallas; alta de docente: ruta protegida + rol).
+
+---
+
 ## DoD del Incremento (hito, `PLAN_v1.md`)
 
 > Un estudiante se registra vía link de invitación y queda asignado automáticamente a su
@@ -84,3 +109,8 @@ según `PROCEDIMIENTO-UAT.md` — no basta con que cada US individual pase sus p
    `incremento-1`) y `docs/specs/inc1/US-1.1.K.md` por cada US aprobada.
 4. Actualizar `docs/traceability/matrix.md`: RF-01 y RF-02 pasan de *Planificado* a
    *Especificado*, completando la columna US-IEDD.
+5. ~~Iteración 1 (RF-01, RF-02): backend completo.~~ Cerrada 2026-07-24 (US-1.1.0 a US-1.1.5,
+   132/132 tests). RF-01 y RF-02 pasan a *Implementado* en la matriz.
+6. Iteración 2 — Frontend de Identidad aprobada por Víctor 2026-07-24 (tabla arriba). Crear
+   Issues (Milestone `Incremento 1 — BC Identidad`) y `docs/specs/inc1/US-1.1.{6,7,8,9}.md`.
+   Recién con esto integrado se abre BL-002 (`docs/plans/PLAN-CM.md` §7).
