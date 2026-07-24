@@ -3,11 +3,15 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-24 — `US-1.1.5` implementada (backend, autorización RBAC por
-> rol). RF-02 pasa a Implementado — las dos US-IEDD que requería (`US-1.1.4`, `US-1.1.5`)
-> quedaron ambas implementadas, mismo criterio usado para RF-01 (`US-1.1.1`, `US-1.1.2`,
-> `US-1.1.3`). `US-1.1.0` no tiene RF propio (ver nota en §3), por eso su implementación no
-> mueve ninguna fila de esta tabla.
+> Última actualización: 2026-07-24 — Iteración 2 (frontend de Identidad, `US-1.1.6` a
+> `US-1.1.9`) especificada y aprobada por Víctor. RF-01/RF-02 quedan "Implementado" — ese
+> estado certifica el backend (código integrado en `develop`, ver §2), que ya está completo y
+> probado. El frontend correspondiente todavía está en "Especificado" (specs recién creadas,
+> sin código todavío) y se rastrea en la misma columna US-IEDD de cada fila. Ninguna de las
+> dos filas puede pasar a "Validado" hasta que también el frontend esté implementado —
+> criterio de cierre de baseline en `docs/plans/PLAN-CM.md` §7 (decisión 2026-07-24). `US-1.1.0`
+> no tiene RF propio (ver nota en §3), por eso su implementación no mueve ninguna fila de esta
+> tabla.
 > Jerarquía de autoridad: `docs/plans/PLAN-CM.md` §6
 
 ---
@@ -39,8 +43,8 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
-| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 | Implementado |
-| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 | Implementado |
+| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Implementado (backend) — frontend Especificado |
+| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Implementado (backend) — frontend Especificado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
 | RF-05 | Banco de preguntas | 2 | — | Planificado |
@@ -101,6 +105,14 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > que requería (`US-1.1.4`, `US-1.1.5`) están cerradas en backend. Con esto, la Iteración 1
 > del Incremento 1 queda completa (todas las US de `docs/plans/inc1/inc1-candidatas.md`
 > §Iteración 1 implementadas).
+
+> **Iteración 2 — Frontend de Identidad** (`US-1.1.6` a `US-1.1.9`) especificada y aprobada
+> por Víctor el 2026-07-24 (`docs/plans/inc1/inc1-candidatas.md` §Iteración 2, Issues #23–#26).
+> Decisión de cierre de baseline: BL-002 no abre hasta que estas cuatro US también estén
+> implementadas (`docs/plans/PLAN-CM.md` §7) — RF-01 y RF-02 permanecen "Implementado (backend)"
+> hasta entonces, no pasan a "Validado". Fuera de alcance de esta iteración: UI de
+> `CrearComision`/`AsignarDocenteAComision`, deferida sin fecha (el wireframe la deja
+> explícitamente sin resolver).
 
 ## 4. Escenarios de calidad (RNF)
 
