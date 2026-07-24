@@ -33,21 +33,20 @@ refresh ni blacklist (`ADR-013`); hashing de contraseñas con bcrypt (`ADR-014`)
 **Incremento 1 (BC Identidad) en curso.** Iteración 0 — Modelado cerrada el 2026-07-18:
 US-1.0.1 (event storming, Issue #2) y US-1.0.2 (wireframes de registro/login, Issue #4)
 aprobados por Víctor (`docs/design/domain/BC-identidad-modelo.md`,
-`docs/design/ux/wireframes-identidad.md`). Iteración 1 en curso: US-1.1.0 (alta de
-usuarios/comisión/asignación de docentes, sin RF propio) implementada y mergeada a `develop`
-el 2026-07-21 (PR #11, `docs/reports/inc1/US-1.1.0-report.md`, 37/37 tests). US-1.1.1 (Docente
-genera link de invitación, Issue #6) mergeada a `develop` el 2026-07-22 (PR #14). US-1.1.2
-(Estudiante se registra con link de invitación válido, Issue #7) mergeada a `develop` el
-2026-07-23 (PR #15, `e776a42`, `docs/reports/inc1/US-1.1.2-report.md`, 77/77 tests) —
-backend completo (`POST /identidad/registro`), frontend diferido a una US-IEDD separada
-(sin infraestructura de routing/cliente API todavía). RF-01 permanece "Especificado" en
-`docs/traceability/matrix.md` hasta cerrar también US-1.1.3. Issues #8–#10 abiertos para
-US-1.1.3 a US-1.1.5 (`docs/plans/inc1/inc1-candidatas.md` §Iteración 1), ninguna con
-branch/PR activo todavía.
-**Próximo paso:** Arrancar US-1.1.3 (Estudiante intenta registrarse con link vencido o
-inválido, Issue #8, refina `InvitacionNoValida` en excepciones específicas) —
-`git checkout -b feature/US-1.1.3-...` desde `develop`, `tracker init`, luego
-`/implement-us US-1.1.3`.
+`docs/design/ux/wireframes-identidad.md`). **Iteración 1 (RF-01, RF-02) completa en backend**
+el 2026-07-24: US-1.1.0 (alta de usuarios/comisión/asignación de docentes, sin RF propio,
+PR #11, 37/37 tests), US-1.1.1 (Docente genera invitación, PR #14), US-1.1.2 (Estudiante se
+registra con invitación válida, PR #15, 77/77 tests), US-1.1.3 (registro con link vencido o
+inválido, PR #16, 85/85 tests), US-1.1.4 (login con JWT por rol, PR #18, 107/107 tests) y
+US-1.1.5 (autorización por rol / RBAC, PR #20, 132/132 tests, `docs/reports/inc1/US-1.1.5-report.md`)
+mergeadas a `develop`. RF-01 y RF-02 pasan a "Implementado" en `docs/traceability/matrix.md`.
+Frontend de todas estas US queda diferido a una US-IEDD separada (routing + cliente API
+todavía no montados en `frontend/src`). Issues #6–#10 cerrados.
+**Próximo paso:** Sin próxima US-IEDD definida todavía. Opciones abiertas: (a) cerrar el
+Incremento 1 como Baseline BL-002 (backend-only, con el frontend de Identidad diferido —
+evaluar con Víctor si corresponde cerrar así o esperar al frontend), o (b) arrancar la
+US-IEDD de infraestructura frontend (router + cliente API + pantallas diferidas desde
+US-1.1.2). Definir con Víctor antes de continuar.
 **Baseline abierta:** ninguna. BL-002 se abre al cierre del Incremento 1 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
