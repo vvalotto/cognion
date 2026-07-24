@@ -293,6 +293,18 @@ separado de "Incremento"), en Cognion el **Incremento es la única unidad de bas
 | Fase 0 — fundación documental (este momento) | BL-000 | `v0.0.0` → `v0.1.0` al cerrar Fase 0 |
 | Cierre de cada Incremento de `PLAN_v1.md` (0 a 6) | BL-001, BL-002, ... | `v0.N.0` |
 
+**Criterio de cierre — backend y frontend juntos.** Si el Incremento tiene un gate UX
+aprobado (`docs/design/ux/wireframes-*.md`), la Baseline no cierra hasta que el frontend
+correspondiente también esté implementado e integrado — no alcanza con que el backend pase
+sus tests. Razón: `PLAN_v1.md` no separa frontend como iteración propia (el Hito de cada
+Incremento se redacta en términos de comportamiento observable — "un estudiante se
+registra", no "el endpoint responde 201") y el principio de iteraciones cortas del propio
+plan exige un hito demostrable al docente real, no solo verificable por `pytest`/`curl`.
+Diferir pantallas US por US dentro de una iteración es aceptable como decisión de alcance
+puntual (ver `docs/plans/WORKFLOW-DESARROLLO.md`), pero esa deuda debe saldarse antes de
+abrir la Baseline — no arrastrarse al Incremento siguiente. Decisión registrada 2026-07-24
+al cierre de la Iteración 1 del Incremento 1 (BC Identidad, 5 US con frontend diferido).
+
 Ver §13 para la jerarquía completa de trabajo.
 
 ### Estructura del archivo de Baseline
