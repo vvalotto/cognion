@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.identidad.entities.errors import ComisionNoExiste, DocenteNoAsignadoAComision
 from src.identidad.frameworks.api.schemas import GenerarInvitacionRequest, InvitacionResponse
-from src.identidad.frameworks.dependencies import get_invitaciones_controller
+from src.identidad.frameworks.dependencies import get_invitaciones_controller, require_docente
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
@@ -20,6 +20,7 @@ router = APIRouter(prefix="/comisiones", tags=["identidad"])
     "/{comision_id}/invitaciones",
     response_model=InvitacionResponse,
     status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_docente)],
 )
 async def generar_invitacion(
     comision_id: UUID,

@@ -12,13 +12,18 @@ from src.identidad.frameworks.api.schemas import (
     ComisionResponse,
     CrearComisionRequest,
 )
-from src.identidad.frameworks.dependencies import get_comisiones_controller
+from src.identidad.frameworks.dependencies import get_comisiones_controller, require_administrador
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
 
 router = APIRouter(prefix="/comisiones", tags=["identidad"])
 
 
-@router.post("", response_model=ComisionResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=ComisionResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_administrador)],
+)
 async def crear_comision(
     body: CrearComisionRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
@@ -37,7 +42,10 @@ async def crear_comision(
 
 
 @router.post(
-    "/{comision_id}/docentes", response_model=ComisionResponse, status_code=status.HTTP_200_OK
+    "/{comision_id}/docentes",
+    response_model=ComisionResponse,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(require_administrador)],
 )
 async def asignar_docente(
     comision_id: UUID,

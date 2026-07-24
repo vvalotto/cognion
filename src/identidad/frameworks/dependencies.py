@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.entities.usuario import TipoPerfil
 from src.identidad.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
@@ -27,6 +28,8 @@ from src.identidad.interface_adapters.gateways.invitacion_repository import (
     SQLAlchemyInvitacionRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.identidad.interface_adapters.security.get_current_user import build_get_current_user
+from src.identidad.interface_adapters.security.require_rol import require_rol
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
@@ -94,3 +97,13 @@ def get_auth_controller(session: SessionDep) -> AuthController:
     hasher = get_password_hasher()
     jwt_issuer = get_jwt_issuer()
     return AuthController(IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer))
+
+
+get_current_user = build_get_current_user(get_jwt_issuer())
+"""Dependency FastAPI que resuelve el `Usuario` autenticado a partir del JWT recibido."""
+
+require_administrador = require_rol([TipoPerfil.ADMINISTRADOR], get_current_user)
+"""Dependency que exige rol `administrador` — endpoints de administración de cuentas (RF-02)."""
+
+require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
+"""Dependency que exige rol `docente` — endpoints de gestión de invitaciones (RF-02)."""
