@@ -89,6 +89,10 @@ los flujos con más estados (registro: 3 pantallas; alta de docente: ruta proteg
 > `docs/reports/inc1/US-1.1.6-report.md`, 16/16 tests, quality gates APROBADO. Desbloquea
 > US-1.1.7.
 
+> ~~US-1.1.7 (Docente/Administrador/Estudiante inicia sesión desde la UI)~~ Cerrada 2026-07-27 —
+> `docs/reports/inc1/US-1.1.7-report.md`, 21/21 tests, quality gates APROBADO. Próxima:
+> US-1.1.8.
+
 ---
 
 ## DoD del Incremento (hito, `PLAN_v1.md`)

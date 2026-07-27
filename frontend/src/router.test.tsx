@@ -13,7 +13,7 @@ describe("router (integración)", () => {
     await router.navigate("/login")
     render(<RouterProvider router={router} />)
 
-    expect(await screen.findByText(/Login — pendiente/)).toBeInTheDocument()
+    expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
   })
 
   it("la ruta /registro renderiza dentro del layout de auth", async () => {
