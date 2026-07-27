@@ -2,7 +2,8 @@ import { createBrowserRouter } from "react-router"
 
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
-import { LoginPlaceholder, RegistroPlaceholder } from "@/pages/_placeholders"
+import { InicioPlaceholder, RegistroPlaceholder } from "@/pages/_placeholders"
+import { Login } from "@/pages/Login"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -15,12 +16,12 @@ export const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [
-      { path: "/login", element: <LoginPlaceholder /> },
+      { path: "/login", element: <Login /> },
       { path: "/registro", element: <RegistroPlaceholder /> },
     ],
   },
   {
     element: <AppLayout />,
-    children: [],
+    children: [{ index: true, element: <InicioPlaceholder /> }],
   },
 ])
