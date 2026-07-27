@@ -10,6 +10,22 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.7] Docente/Administrador/Estudiante inicia sesión desde la UI — BC Identidad
+  - `frontend/src/pages/Login.tsx` — formulario controlado (email/contraseña, shadcn
+    `Input`/`Label`), consume `POST /identidad/login` (`US-1.1.4`) vía `apiFetch`; éxito guarda
+    la sesión y redirige por rol (`administrador` → `/docentes/nuevo`, cubierta por
+    `US-1.1.9`; `docente`/`estudiante` → placeholder post-login)
+  - `frontend/src/pages/LoginError.tsx` — alerta inline con el mensaje genérico que no
+    distingue email inexistente de contraseña incorrecta (mismo criterio del backend,
+    `US-1.1.4`) — no es una ruta separada, es el mismo `/login` con un estado de error
+  - `frontend/src/components/ui/{input,label}.tsx` — agregados vía `npx shadcn add`, primeros
+    campos de formulario del proyecto (antes solo existía `Button`)
+  - `frontend/src/router.tsx` — `/login` deja de ser placeholder; ruta `index` bajo
+    `AppLayout` para el destino post-login de docente/estudiante
+  - 5 tests nuevos (`Login.test.tsx`, `LoginError.test.tsx`) + `router.test.tsx` actualizado;
+    21/21 tests frontend, cobertura 96.9% (umbral de referencia 80%,
+    `quality/reports/inc1/US-1.1.7-quality.json`)
+  - **RF-02 pasa a Implementado** (backend + frontend) — `docs/traceability/matrix.md`
 - [US-1.1.6] Infraestructura de frontend — routing, cliente API y manejo de sesión — BC Identidad
   - `frontend/src/lib/session.ts` — guardar/leer/limpiar `{token, rol}` en `localStorage`
     (trade-off XSS documentado, suficiente para un JWT sin refresh/blacklist, `ADR-013`)

@@ -44,7 +44,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
 | RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Implementado (backend) — frontend Especificado |
-| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Implementado (backend) — frontend Especificado |
+| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Implementado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
 | RF-05 | Banco de preguntas | 2 | — | Planificado |
@@ -119,7 +119,18 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > (`quality/reports/inc1/US-1.1.6-quality.json`). Agrega Vitest + React Testing Library al
 > proyecto (decisión tomada en Fase 0 — no existía estrategia de testing de frontend). Sin
 > RF propio, igual que `US-1.1.0` — es precondición técnica de `US-1.1.7`/`US-1.1.8`/`US-1.1.9`,
-> por eso no mueve ninguna fila de la matriz. Próxima: `US-1.1.7` (login).
+> por eso no mueve ninguna fila de la matriz.
+
+> `US-1.1.7` (Docente/Administrador/Estudiante inicia sesión desde la UI) — implementada
+> (`docs/plans/inc1/US-1.1.7-plan.md`), 21/21 tests frontend (suite completa), quality gates
+> APROBADO (`quality/reports/inc1/US-1.1.7-quality.json`). `Login.tsx` consume
+> `POST /identidad/login` (`US-1.1.4`), guarda la sesión y redirige por rol; `LoginError.tsx`
+> es un componente inline (mismo `/login`, no ruta separada) con el mensaje genérico que no
+> distingue email inexistente de contraseña incorrecta. **RF-02 pasa a Implementado** (backend
+> + frontend) — las dos US-IEDD de frontend que requería (`US-1.1.6`, `US-1.1.7`) están
+> cerradas. RF-01 sigue "Implementado (backend) — frontend Especificado" hasta que se
+> implemente `US-1.1.8`. BL-002 sigue sin abrir — falta también `US-1.1.9`
+> (`docs/plans/PLAN-CM.md` §7). Próxima: `US-1.1.8` (registro con invitación).
 
 ## 4. Escenarios de calidad (RNF)
 
