@@ -43,7 +43,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
-| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Implementado (backend) — frontend Especificado |
+| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Implementado |
 | RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Implementado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
@@ -131,6 +131,21 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > cerradas. RF-01 sigue "Implementado (backend) — frontend Especificado" hasta que se
 > implemente `US-1.1.8`. BL-002 sigue sin abrir — falta también `US-1.1.9`
 > (`docs/plans/PLAN-CM.md` §7). Próxima: `US-1.1.8` (registro con invitación).
+
+> `US-1.1.8` (Estudiante se registra desde la UI con un link de invitación) — implementada
+> (`docs/plans/inc1/US-1.1.8-plan.md`), 30/30 tests frontend (suite completa) + 71/71
+> unitarios y 38/38 integración de backend, quality gates APROBADO
+> (`quality/reports/inc1/US-1.1.8-quality.json`). `Registro.tsx` consume
+> `POST /identidad/registro` (`US-1.1.2`/`US-1.1.3`); `RegistroError.tsx`/`RegistroExito.tsx`
+> son pantallas completas (no inline, a diferencia de `LoginError.tsx`), coherente con el
+> wireframe (§2.4/§2.5). Ampliación de backend acordada con Víctor durante la Fase 2 (fuera
+> del alcance original "sin cambios de backend" de la spec, documentada como adenda en
+> `docs/specs/inc1/US-1.1.8.md`): `RegistroResponse.materia`, para poder mostrar el nombre de
+> la comisión en la pantalla de éxito — el wireframe lo requiere y antes solo se exponía
+> `comision_id` (UUID). **RF-01 pasa a Implementado** (backend + frontend) — las dos US-IEDD
+> de frontend que requería (`US-1.1.6`, `US-1.1.8`) están cerradas. BL-002 sigue sin abrir —
+> falta `US-1.1.9` (`docs/plans/PLAN-CM.md` §7). Próxima: `US-1.1.9` (alta de Docente desde la
+> UI, Administrador).
 
 ## 4. Escenarios de calidad (RNF)
 
