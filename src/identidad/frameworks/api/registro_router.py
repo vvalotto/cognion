@@ -29,8 +29,10 @@ async def registrar_estudiante(
     (inexistente, vencida o ya usada — mismo status y mensaje para los tres casos, `US-1.1.3`).
     """
     try:
-        usuario, _evento_invitacion, _evento_usuario = await controller.registrar_estudiante(
-            body.token, body.nombre, body.email, body.password
+        usuario, materia, _evento_invitacion, _evento_usuario = (
+            await controller.registrar_estudiante(
+                body.token, body.nombre, body.email, body.password
+            )
         )
     except EmailYaRegistrado as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
@@ -48,4 +50,5 @@ async def registrar_estudiante(
         nombre=usuario.nombre,
         email=usuario.email,
         comision_id=usuario.perfil.comision_id,
+        materia=materia,
     )

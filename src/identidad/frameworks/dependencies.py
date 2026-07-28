@@ -82,8 +82,11 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
     """Arma el `RegistroController` con sus dependencias concretas."""
     invitacion_repo = SQLAlchemyInvitacionRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
+    comision_repo = SQLAlchemyComisionRepository(session)
     hasher = get_password_hasher()
-    return RegistroController(RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher))
+    return RegistroController(
+        RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+    )
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

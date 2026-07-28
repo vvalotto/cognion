@@ -84,6 +84,7 @@ class RegistroResponse(BaseModel):
     nombre: str
     email: str
     comision_id: UUID
+    materia: str
 
 
 class LoginRequest(BaseModel):
