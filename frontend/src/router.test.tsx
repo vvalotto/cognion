@@ -20,6 +20,6 @@ describe("router (integración)", () => {
     await router.navigate("/registro")
     render(<RouterProvider router={router} />)
 
-    expect(await screen.findByText(/Registro — pendiente/)).toBeInTheDocument()
+    expect(await screen.findByRole("heading", { name: "Crear cuenta" })).toBeInTheDocument()
   })
 })
