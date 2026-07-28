@@ -16,6 +16,6 @@ class RegistroController:
 
     async def registrar_estudiante(
         self, token: str, nombre: str, email: str, password: str
-    ) -> tuple[Usuario, InvitacionAceptada, UsuarioRegistrado]:
+    ) -> tuple[Usuario, str, InvitacionAceptada, UsuarioRegistrado]:
         """Delega el registro del estudiante en el caso de uso correspondiente."""
         return await self._registrar_estudiante.execute(token, nombre, email, password)
