@@ -21,49 +21,34 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** BL-001 (Incremento 0 — Fundación Técnica) cerrada el 2026-07-16 — tag `v0.2.0`
-(`.cm/baselines/BL-001-fundacion-tecnica.md`). Pipeline técnico funcionando de punta a punta en
-el entorno local: CI en verde (lint + tests + DesignReviewer), PostgreSQL local (Homebrew) con
-migración de Alembic aplicada, `GET /health` → 200, build Docker en CI/CD. Deploy real a un
-entorno queda diferido, pendiente de la decisión de infraestructura aún abierta.
-**Decisiones resueltas el 2026-07-16 (previas al Incremento 1):** invitación con expiración de
-7 días, rechazo sin recuperación automática ante link vencido/inválido, entrega por email vía
-adaptador SMTP propio de BC Identidad (`ADR-012`); JWT con expiración de 60 minutos, sin
-refresh ni blacklist (`ADR-013`); hashing de contraseñas con bcrypt (`ADR-014`).
-**Incremento 1 (BC Identidad) en curso.** Iteración 0 — Modelado cerrada el 2026-07-18:
-US-1.0.1 (event storming, Issue #2) y US-1.0.2 (wireframes de registro/login, Issue #4)
-aprobados por Víctor (`docs/design/domain/BC-identidad-modelo.md`,
-`docs/design/ux/wireframes-identidad.md`). **Iteración 1 (RF-01, RF-02) completa en backend**
-el 2026-07-24: US-1.1.0 (alta de usuarios/comisión/asignación de docentes, sin RF propio,
-PR #11, 37/37 tests), US-1.1.1 (Docente genera invitación, PR #14), US-1.1.2 (Estudiante se
-registra con invitación válida, PR #15, 77/77 tests), US-1.1.3 (registro con link vencido o
-inválido, PR #16, 85/85 tests), US-1.1.4 (login con JWT por rol, PR #18, 107/107 tests) y
-US-1.1.5 (autorización por rol / RBAC, PR #20, 132/132 tests, `docs/reports/inc1/US-1.1.5-report.md`)
-mergeadas a `develop`. RF-01 y RF-02 pasan a "Implementado" en `docs/traceability/matrix.md`.
-Issues #6–#10 cerrados.
-**Decisión 2026-07-24 (criterio de cierre de BL-002):** la Baseline no cierra backend-only —
-cierra cuando backend y frontend de Identidad estén ambos implementados (`docs/plans/PLAN-CM.md`
-§7). El wireframe ya está aprobado y fresco (`docs/design/ux/wireframes-identidad.md`) y el
-contrato de backend ya está estable (132/132 tests); diferir más el frontend solo suma deuda.
-**Iteración 2 (Frontend de Identidad) en curso**, aprobada por Víctor 2026-07-24
-(`docs/plans/inc1/inc1-candidatas.md`): US-1.1.6 (infraestructura de frontend — routing,
-cliente API con manejo de JWT/401/403, layout auth vs. app; sin pantalla propia) cerrada
-2026-07-24, PR #28, `docs/reports/inc1/US-1.1.6-report.md`, 16/16 tests. US-1.1.7 (Docente/
-Administrador/Estudiante inicia sesión desde la UI) cerrada 2026-07-27, PR #30,
-`docs/reports/inc1/US-1.1.7-report.md`, 21/21 tests. **US-1.1.8 (Estudiante se registra desde
-la UI con un link de invitación) cerrada 2026-07-28**, PR #31 mergeado 2026-07-29,
-`docs/reports/inc1/US-1.1.8-report.md`: pantallas `Registro.tsx`, `RegistroError.tsx`,
-`RegistroExito.tsx` + rutas `/registro`, `/registro/error`, `/registro/exito`; 30/30 tests
-frontend, 71/71 unitarios y 38/38 integración de backend, quality gates APROBADO. Incluye
-ampliación de backend acordada con Víctor en Fase 2 (`RegistroResponse.materia`, resuelto vía
-`ComisionRepositoryPort.obtener_por_id` ya existente) — fuera del alcance original de la spec,
-documentada como adenda en `docs/specs/inc1/US-1.1.8.md`. Cierra RF-01 también en frontend.
-Fuera de alcance de esta iteración: UI de `CrearComision`/`AsignarDocenteAComision` (wireframe
-§4 las deja sin resolver).
-**Próximo paso:** US-1.1.9 (Administrador da de alta un Docente desde la UI, §2.6/§2.7 del
-wireframe, protegido por `require_administrador`) — última US-IEDD pendiente de la Iteración 2.
-Recién al cerrarla se abre BL-002 (`docs/plans/PLAN-CM.md` §7).
-**Baseline abierta:** ninguna. BL-002 se abre al cierre del Incremento 1 (ver
+**Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 — tag `v0.3.0`
+(`.cm/baselines/BL-002-bc-identidad.md`). BC Identidad completo: RF-01 (registro por
+invitación) y RF-02 (autenticación y RBAC por rol) implementados de punta a punta, backend
+(Iteración 1: `US-1.1.0` a `US-1.1.5`) y frontend (Iteración 2: `US-1.1.6` a `US-1.1.9`)
+integrados juntos, cumpliendo el criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7
+(decisión 2026-07-24 — la Baseline no cierra backend-only). Decisiones previas al incremento:
+invitación con expiración de 7 días, rechazo sin recuperación automática (`ADR-012`); JWT de
+60 minutos sin refresh ni blacklist (`ADR-013`); hashing bcrypt (`ADR-014`).
+**US-1.1.9 (Administrador da de alta un Docente desde la UI) cerrada 2026-07-29**, PR #35
+mergeado a `develop`, `docs/reports/inc1/US-1.1.9-report.md`: pantallas `AltaDocente.tsx`/
+`AltaDocenteExito.tsx` + guard de ruta `RequireRole` (ampliación de scope detectada en Fase 2:
+el `.feature` asumía ruta protegida, pero no había guard client-side desde `US-1.1.6`).
+**UAT manual de Víctor en navegador real** detectó y corrigió dos gaps preexistentes desde
+`US-1.1.6`/`1.1.7`, invisibles a Vitest: falta de `CORSMiddleware` en el backend (bloqueaba
+cualquier llamada real del frontend) y un bug de cascada CSS (regla heredada sin `@layer`
+pisando las utilities de Tailwind) + paleta/tipografía no institucionales — corregidos dentro
+de `US-1.1.9` a pedido de Víctor. 46/46 tests frontend, quality gates APROBADO
+(`quality/reports/inc1/US-1.1.9-quality.json`). Esta US cierra la Iteración 2 y el Incremento 1.
+**Quality gates de cierre ejecutados:** DesignReviewer del último PR — 0 CRITICAL, 27
+advertencias; ArchitectAnalyst (`quality/reports/architectanalyst/BL-002-arquitectura.json`) —
+3 críticos "Zone of Pain" a nivel de paquete raíz (`identidad`, `settings`, `shared`), leídos y
+aceptados, `should_block: false` (nunca bloquea, solo informa tendencias — ver retrospectiva
+de `BL-002` para el detalle y el ajuste propuesto para el próximo incremento).
+**Próximo paso:** Incremento 2 — Banco de Preguntas (`docs/rf/PLAN_v1.md`). Arranca por
+Iteración 0 — Modelado: event storming del BC Banco de Preguntas (agregados `Pregunta`/`Banco`,
+invariantes de metadatos) + wireframes de carga y filtrado. Sin US-IEDD ni Issues creados
+todavía.
+**Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
 
