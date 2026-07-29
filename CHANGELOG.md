@@ -9,6 +9,8 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-29
+
 ### Added
 - [US-1.1.9] Administrador da de alta un Docente desde la UI — BC Identidad
   - `frontend/src/components/RequireRole.tsx` — guard de ruta por rol (componente nuevo,
