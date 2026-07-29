@@ -6,8 +6,8 @@
 | Fecha apertura | 2026-07-16 |
 | Fecha cierre | 2026-07-29 |
 | Git tag inicial | `v0.2.0` |
-| Git tag cierre | `v0.3.0` |
-| Estado | ✅ Completado |
+| Git tag cierre | Pendiente — `merge develop → main` y tag `v0.3.0` diferidos (sin decisión de infraestructura/Docker en el entorno de desarrollo, mismo ítem abierto que el deploy de `BL-001`); se ejecuta cuando esa decisión se resuelva |
+| Estado | ✅ Completado (desarrollo local) — merge a `main` diferido |
 | DoD | Un estudiante se registra vía link de invitación y queda asignado automáticamente a su comisión; un docente y un administrador se autentican y reciben un JWT con su rol correcto. Corre en el entorno local sobre la fundación técnica del Incremento 0 (`docs/plans/inc1/inc1-candidatas.md` §DoD del Incremento). Backend y frontend implementados e integrados juntos — criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7 (decisión 2026-07-24). |
 
 ---
@@ -66,7 +66,13 @@ sin detectarse antes por depender de una verificación visual real, no solo de t
 
 **Diseño:**
 - `designreviewer src/ --config pyproject.toml` (CI del último PR, #35): 0 CRITICAL, 27 advertencias
-- `architectanalyst src/ --sprint-id BL-002`: 3 críticos (Zone of Pain: `identidad`, `settings`, `shared` — leídos y aceptados, ver Decisiones), 3 warnings, `should_block: false` (`quality/reports/architectanalyst/BL-002-arquitectura.json`)
+- `architectanalyst src/ --sprint-id BL-002`: 3 críticos (Zone of Pain: `identidad`, `settings`, `shared` — leídos y aceptados, ver Decisiones), 3 warnings, `should_block: false` (`.cm/baselines/BL-002-arquitectura.json`, copia de `quality/reports/architectanalyst/BL-002-arquitectura.json`)
+
+**UAT (`PROCEDIMIENTO-UAT.md`):**
+- Diseño y evidencia completos en `quality/reports/uat/inc1/design.md` y `evidencia.md`
+- Capa 1 (132 tests backend + 46 frontend) y Capa 2 (`smoke.sh` + UAT manual en navegador
+  real) aprobadas, sin hallazgos 🔴 Bloqueantes sin resolver
+- RF-01 y RF-02 pasan de Implementado a **Validado** en `docs/traceability/matrix.md`
 
 ---
 
