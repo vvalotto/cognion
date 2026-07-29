@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from src.identidad.entities.errors import EmailYaRegistrado, InvitacionInvalida
 from src.identidad.entities.eventos import InvitacionAceptada, UsuarioRegistrado
 from src.identidad.entities.invitacion import Invitacion
+from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
@@ -20,16 +21,18 @@ class RegistrarEstudianteUseCase:
         self,
         invitacion_repositorio: InvitacionRepositoryPort,
         usuario_repositorio: UsuarioRepositoryPort,
+        comision_repositorio: ComisionRepositoryPort,
         hasher: PasswordHasherPort,
     ) -> None:
-        """Recibe los repositorios de invitaciones y usuarios, y el hasher a usar."""
+        """Recibe los repositorios de invitaciones, usuarios y comisiones, y el hasher a usar."""
         self._invitacion_repositorio = invitacion_repositorio
         self._usuario_repositorio = usuario_repositorio
+        self._comision_repositorio = comision_repositorio
         self._hasher = hasher
 
     async def execute(
         self, token: str, nombre: str, email: str, password: str
-    ) -> tuple[Usuario, InvitacionAceptada, UsuarioRegistrado]:
+    ) -> tuple[Usuario, str, InvitacionAceptada, UsuarioRegistrado]:
         """Crea el Usuario con perfil Estudiante y consume la invitación en la misma operación.
 
         Lanza `InvitacionInvalida` si el token no corresponde a ninguna invitación,
@@ -49,13 +52,18 @@ class RegistrarEstudianteUseCase:
         invitacion.aceptar(datetime.now(UTC))
         await self._invitacion_repositorio.actualizar(invitacion)
 
+        # La comisión existe siempre en este punto: la invitación no se genera sin una
+        # comisión válida (US-1.1.1), y no se borran comisiones en el sistema.
+        comision = await self._comision_repositorio.obtener_por_id(invitacion.comision_id)
+        assert comision is not None
+
         evento_invitacion = InvitacionAceptada(
             invitacion_id=invitacion.id, comision_id=invitacion.comision_id, usuario_id=usuario.id
         )
         evento_usuario = UsuarioRegistrado(
             usuario_id=usuario.id, email=usuario.email, comision_id=invitacion.comision_id
         )
-        return usuario, evento_invitacion, evento_usuario
+        return usuario, comision.materia, evento_invitacion, evento_usuario
 
     async def _buscar_invitacion_vigente(self, token: str) -> Invitacion:
         """Busca la invitación por token y valida su vigencia sin consumirla.

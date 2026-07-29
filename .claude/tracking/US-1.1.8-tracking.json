@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "us_id": "US-1.1.8",
+    "us_title": "Estudiante se registra desde la UI con link de invitación",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-07-28T21:10:16.827824+00:00",
+    "completed_at": "2026-07-28T21:39:59.178943+00:00",
+    "total_elapsed_seconds": 1782,
+    "effective_seconds": 1782,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-07-28T21:10:40.477523+00:00",
+      "completed_at": "2026-07-28T21:11:03.609264+00:00",
+      "elapsed_seconds": 23,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-07-28T21:11:09.097941+00:00",
+      "completed_at": "2026-07-28T21:12:48.141234+00:00",
+      "elapsed_seconds": 99,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-07-28T21:12:56.150343+00:00",
+      "completed_at": "2026-07-28T21:16:40.468862+00:00",
+      "elapsed_seconds": 224,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-07-28T21:16:47.760710+00:00",
+      "completed_at": "2026-07-28T21:24:07.306562+00:00",
+      "elapsed_seconds": 439,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "RegistroResponse.materia",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-28T21:16:47.914742+00:00",
+          "completed_at": "2026-07-28T21:17:12.953728+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -4.58,
+          "file_created": "src/identidad/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "RegistrarEstudianteUseCase - lookup comision",
+          "task_type": "backend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-28T21:17:17.273280+00:00",
+          "completed_at": "2026-07-28T21:17:47.136825+00:00",
+          "elapsed_seconds": 29,
+          "actual_minutes": 0.48,
+          "variance_minutes": -9.52,
+          "file_created": "src/identidad/use_cases/registrar_estudiante.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "RegistroController - propagar materia",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-28T21:17:58.808573+00:00",
+          "completed_at": "2026-07-28T21:18:20.146274+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -4.65,
+          "file_created": "src/identidad/interface_adapters/controllers/registro_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "registro_router - mapear materia",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-28T21:18:20.277116+00:00",
+          "completed_at": "2026-07-28T21:19:33.176083+00:00",
+          "elapsed_seconds": 72,
+          "actual_minutes": 1.2,
+          "variance_minutes": -3.8,
+          "file_created": "src/identidad/frameworks/api/registro_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "dependencies - inyectar ComisionRepositoryPort",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-28T21:19:33.413254+00:00",
+          "completed_at": "2026-07-28T21:19:53.367001+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -4.68,
+          "file_created": "src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Registro.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-07-28T21:20:19.577382+00:00",
+          "completed_at": "2026-07-28T21:20:52.643623+00:00",
+          "elapsed_seconds": 33,
+          "actual_minutes": 0.55,
+          "variance_minutes": -19.45,
+          "file_created": "frontend/src/pages/Registro.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "RegistroError.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-07-28T21:20:52.793384+00:00",
+          "completed_at": "2026-07-28T21:21:57.974766+00:00",
+          "elapsed_seconds": 65,
+          "actual_minutes": 1.08,
+          "variance_minutes": -6.92,
+          "file_created": "frontend/src/pages/RegistroError.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "RegistroExito.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-07-28T21:21:58.380539+00:00",
+          "completed_at": "2026-07-28T21:22:12.305279+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -7.78,
+          "file_created": "frontend/src/pages/RegistroExito.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "router.tsx - rutas de registro",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-28T21:22:12.487760+00:00",
+          "completed_at": "2026-07-28T21:23:38.728229+00:00",
+          "elapsed_seconds": 86,
+          "actual_minutes": 1.43,
+          "variance_minutes": -3.57,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-07-28T21:24:22.986983+00:00",
+      "completed_at": "2026-07-28T21:29:55.883438+00:00",
+      "elapsed_seconds": 332,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T10",
+          "task_name": "Actualizar tests unitarios rotos por cambio de firma",
+          "task_type": "backend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-07-28T21:24:39.468928+00:00",
+          "completed_at": "2026-07-28T21:25:33.265816+00:00",
+          "elapsed_seconds": 53,
+          "actual_minutes": 0.88,
+          "variance_minutes": -14.12,
+          "file_created": "tests/unit/inc1/test_registrar_estudiante_use_case.py, tests/unit/inc1/test_registro_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T11",
+          "task_name": "Tests Vitest - Registro/RegistroError/RegistroExito",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-07-28T21:25:51.488574+00:00",
+          "completed_at": "2026-07-28T21:29:55.685981+00:00",
+          "elapsed_seconds": 244,
+          "actual_minutes": 4.07,
+          "variance_minutes": -25.93,
+          "file_created": "frontend/src/pages/Registro.test.tsx, RegistroError.test.tsx, RegistroExito.test.tsx, router.test.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-07-28T21:30:08.562792+00:00",
+      "completed_at": "2026-07-28T21:31:38.246331+00:00",
+      "elapsed_seconds": 89,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T12",
+          "task_name": "Integración backend - materia en respuesta",
+          "task_type": "backend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-28T21:30:26.652731+00:00",
+          "completed_at": "2026-07-28T21:31:37.993836+00:00",
+          "elapsed_seconds": 71,
+          "actual_minutes": 1.18,
+          "variance_minutes": -8.82,
+          "file_created": "tests/integration/inc1/test_registro_api_integration.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-07-28T21:31:50.361783+00:00",
+      "completed_at": "2026-07-28T21:32:20.796885+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-07-28T21:32:30.281864+00:00",
+      "completed_at": "2026-07-28T21:36:14.117567+00:00",
+      "elapsed_seconds": 223,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-07-28T21:36:22.345374+00:00",
+      "completed_at": "2026-07-28T21:38:55.008440+00:00",
+      "elapsed_seconds": 152,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-07-28T21:39:03.549120+00:00",
+      "completed_at": "2026-07-28T21:39:59.030190+00:00",
+      "elapsed_seconds": 55,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 12,
+    "completed_tasks": 12,
+    "total_phases": 10,
+    "estimated_total_minutes": 126.0,
+    "actual_total_minutes": 12.18,
+    "variance_minutes": -113.82,
+    "variance_percent": -90.33
+  }
+}

@@ -93,6 +93,12 @@ los flujos con más estados (registro: 3 pantallas; alta de docente: ruta proteg
 > `docs/reports/inc1/US-1.1.7-report.md`, 21/21 tests, quality gates APROBADO. Próxima:
 > US-1.1.8.
 
+> ~~US-1.1.8 (Estudiante se registra desde la UI con un link de invitación)~~ Cerrada
+> 2026-07-28 — `docs/reports/inc1/US-1.1.8-report.md`, 30/30 tests frontend + 71/71 unitarios
+> y 38/38 integración de backend, quality gates APROBADO. Incluye ampliación de backend
+> acordada con Víctor (`RegistroResponse.materia`), fuera del alcance original de la spec.
+> Próxima: US-1.1.9.
+
 ---
 
 ## DoD del Incremento (hito, `PLAN_v1.md`)

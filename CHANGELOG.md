@@ -10,6 +10,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.8] Estudiante se registra desde la UI con un link de invitación — BC Identidad
+  - `frontend/src/pages/Registro.tsx` — formulario controlado (nombre/email/contraseña/
+    confirmar contraseña), lee `token` de query param, consume `POST /identidad/registro`
+    (`US-1.1.2`/`US-1.1.3`) vía `apiFetch`; 201 → `/registro/exito`; 422 (invitación
+    inválida/vencida/ya usada, sin distinguir motivo) → `/registro/error`; 409 (email ya
+    registrado) → error inline en el propio formulario
+  - `frontend/src/pages/RegistroError.tsx` / `RegistroExito.tsx` — pantallas completas
+    (§2.4/§2.5 `wireframes-identidad.md`); éxito muestra el nombre de la comisión asignada,
+    sin autenticar automáticamente (sin login automático post-registro en v1)
+  - **Ampliación de backend acordada con Víctor** (fuera del alcance original "sin cambios de
+    backend" de la spec, documentada como adenda): `RegistroResponse.materia` — nuevo campo,
+    poblado con un lookup a `ComisionRepositoryPort.obtener_por_id` (puerto ya existente)
+    dentro de `RegistrarEstudianteUseCase`, para poder mostrar el nombre de la comisión en la
+    pantalla de éxito (el wireframe lo requiere; antes solo se exponía `comision_id`, un UUID)
+  - `frontend/src/router.tsx` — `/registro` deja de ser placeholder; rutas nuevas
+    `/registro/error`, `/registro/exito`
+  - 9 tests nuevos (`Registro.test.tsx`, `RegistroError.test.tsx`, `RegistroExito.test.tsx`) +
+    `router.test.tsx` actualizado; 30/30 tests frontend, cobertura 91.66% sobre las pantallas
+    nuevas (umbral de referencia 80%); backend 71/71 unitarios + 38/38 integración, mypy y
+    codeguard sin errores (`quality/reports/inc1/US-1.1.8-quality.json`)
 - [US-1.1.7] Docente/Administrador/Estudiante inicia sesión desde la UI — BC Identidad
   - `frontend/src/pages/Login.tsx` — formulario controlado (email/contraseña, shadcn
     `Input`/`Label`), consume `POST /identidad/login` (`US-1.1.4`) vía `apiFetch`; éxito guarda

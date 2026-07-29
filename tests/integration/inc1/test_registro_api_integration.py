@@ -55,6 +55,7 @@ class TestRegistroAPIIntegration:
         data = response.json()
         assert data["email"] == "nico.reg@fiuner.edu.ar"
         assert data["comision_id"] == str(invitacion.comision_id)
+        assert data["materia"] == "IS-2026-C1"
 
     async def test_registro_rechaza_email_ya_registrado(self, session):
         invitacion = await _crear_invitacion_vigente(session)

@@ -2,9 +2,21 @@
 
 **Estado**: `Especificada`
 **Iteracion / Sprint**: `INC-1.2`
-**Tipo**: `feat frontend`
-**Agregado principal afectado**: — (consume `POST /identidad/registro`, sin lógica de dominio propia en el frontend)
+**Tipo**: `feat frontend + ampliación mínima de backend`
+**Agregado principal afectado**: `RegistrarEstudianteUseCase` (agrega lookup de `Comision` para exponer `materia` en la respuesta — sin nueva lógica de negocio)
 **Bounded Context**: Identidad
+
+> **Adenda 2026-07-28 (antes de implementar):** el wireframe (§2.3, §2.5) pide mostrar el
+> nombre de la comisión/materia antes de enviar el formulario y en la pantalla de éxito, pero
+> `RegistroResponse` solo devolvía `comision_id` (UUID). No hay endpoint público que resuelva
+> materia a partir del token. Decisión de Víctor: extender el backend en vez de degradar el
+> wireframe — se agrega `materia: str` a `RegistroResponse`, poblado con un lookup a
+> `ComisionRepositoryPort.obtener_por_id` (puerto ya existente) dentro de
+> `RegistrarEstudianteUseCase`. Es una ampliación de scope de esta misma US (no amerita una
+> US-IEDD separada por su tamaño), sin decisión arquitectónica nueva — reutiliza un puerto
+> existente. El tag de comisión *antes* de enviar el formulario (dato tomado del token, no de
+> la respuesta) sigue sin ser viable sin un endpoint de preview de invitación — queda fuera de
+> esta US; solo se resuelve el nombre de comisión en la pantalla de éxito, después del submit.
 
 ---
 
@@ -102,11 +114,13 @@ Feature: Registro desde la UI (US-1.1.8)
 ## Impacto arquitectonico
 
 **¿Esta US requiere una decision arquitectonica?**
-- [x] No — consume un endpoint ya implementado (`ADR-012`), sin decisiones nuevas.
+- [x] No — consume un endpoint ya implementado (`ADR-012`); la ampliación de backend (ver
+  adenda arriba) reutiliza un puerto existente, sin decisiones nuevas.
 
 **Capa(s) afectadas:**
 - [x] Frontend — `frontend/src/pages/Registro.tsx`, `RegistroError.tsx`, `RegistroExito.tsx`
-- [ ] Backend — sin cambios
+- [x] Backend — `RegistroResponse.materia` (schema), `RegistrarEstudianteUseCase` (lookup de
+  `Comision`), `RegistroController`/`registro_router.py` (paso de dato) — ver adenda
 
 ---
 
@@ -123,8 +137,13 @@ Feature: Registro desde la UI (US-1.1.8)
 |---|---|
 | `frontend/src/pages/Registro.tsx` | Formulario de registro — lee `token` de query param |
 | `frontend/src/pages/RegistroError.tsx` | Pantalla de error genérico de token inválido/vencido/usado |
-| `frontend/src/pages/RegistroExito.tsx` | Confirmación de registro exitoso |
+| `frontend/src/pages/RegistroExito.tsx` | Confirmación de registro exitoso, con nombre de la comisión |
 | `frontend/src/router.tsx` | Reemplazar el placeholder de `/registro` por las pantallas reales |
+| `src/identidad/frameworks/api/schemas.py` | `RegistroResponse` — agregar campo `materia: str` |
+| `src/identidad/use_cases/registrar_estudiante.py` | `RegistrarEstudianteUseCase` — inyectar `ComisionRepositoryPort`, lookup de `Comision` por `comision_id` |
+| `src/identidad/interface_adapters/controllers/registro_controller.py` | Propagar la `Comision` (o su materia) hasta el router |
+| `src/identidad/frameworks/api/registro_router.py` | Mapear `materia` a `RegistroResponse` |
+| `src/identidad/frameworks/dependencies.py` | Inyectar `ComisionRepositoryPort` en `RegistrarEstudianteUseCase` |
 
 ---
 
