@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router"
 
+import { RequireRole } from "@/components/RequireRole"
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
+import { AltaDocente } from "@/pages/AltaDocente"
+import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Login } from "@/pages/Login"
 import { Registro } from "@/pages/Registro"
@@ -27,6 +30,24 @@ export const router = createBrowserRouter([
   },
   {
     element: <AppLayout />,
-    children: [{ index: true, element: <InicioPlaceholder /> }],
+    children: [
+      { index: true, element: <InicioPlaceholder /> },
+      {
+        path: "/docentes/nuevo",
+        element: (
+          <RequireRole rol="administrador">
+            <AltaDocente />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/docentes/nuevo/exito",
+        element: (
+          <RequireRole rol="administrador">
+            <AltaDocenteExito />
+          </RequireRole>
+        ),
+      },
+    ],
   },
 ])
