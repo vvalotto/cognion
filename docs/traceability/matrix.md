@@ -43,8 +43,8 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 | RF | BC | Incremento | US-IEDD | Estado |
 |---|---|---|---|---|
-| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Implementado |
-| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Implementado |
+| RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Validado |
+| RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Validado |
 | RF-03 | Identidad | 2 | — | Planificado |
 | RF-04 | Banco de preguntas | 2 | — | Planificado |
 | RF-05 | Banco de preguntas | 2 | — | Planificado |
@@ -156,6 +156,15 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > de la spec, documentado como adenda en `docs/specs/inc1/US-1.1.9.md`. **Cierra la
 > Iteración 2 (Frontend de Identidad) — última US-IEDD pendiente. Se abre BL-002**
 > (`docs/plans/PLAN-CM.md` §7).
+>
+> **2026-07-29 — BL-002 cerrada, RF-01 y RF-02 pasan a Validado.** UAT del Incremento 1
+> aprobado sin hallazgos 🔴 Bloqueantes sin resolver — Capa 1 (132 tests backend + 46
+> frontend) y Capa 2 (`smoke.sh` + UAT manual en navegador real) según
+> `quality/reports/uat/inc1/design.md` y `evidencia.md`. Los dos hallazgos del UAT manual
+> (CORS sin configurar, estilo no institucional) se resolvieron dentro de `US-1.1.9` antes
+> de cerrar la baseline. Evidencia completa: `.cm/baselines/BL-002-bc-identidad.md`. Merge
+> `develop → main` y tag `v0.3.0` diferidos — pendiente de la decisión de infraestructura
+> (mismo ítem abierto que `BL-001`).
 
 ## 4. Escenarios de calidad (RNF)
 

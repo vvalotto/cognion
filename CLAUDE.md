@@ -21,8 +21,10 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 — tag `v0.3.0`
-(`.cm/baselines/BL-002-bc-identidad.md`). BC Identidad completo: RF-01 (registro por
+**Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 en desarrollo local
+(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` diferidos —
+mismo ítem abierto de infraestructura/Docker que el deploy de `BL-001`; se ejecutan cuando esa
+decisión se resuelva. BC Identidad completo: RF-01 (registro por
 invitación) y RF-02 (autenticación y RBAC por rol) implementados de punta a punta, backend
 (Iteración 1: `US-1.1.0` a `US-1.1.5`) y frontend (Iteración 2: `US-1.1.6` a `US-1.1.9`)
 integrados juntos, cumpliendo el criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7
