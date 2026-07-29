@@ -6,6 +6,17 @@
 **Agregado principal afectado**: — (consume `POST /usuarios`, sin lógica de dominio propia en el frontend)
 **Bounded Context**: Identidad
 
+> **Adenda 2026-07-29 (antes de implementar):** los escenarios "acceso sin sesión" / "acceso
+> con rol insuficiente" (más abajo) asumen que la ruta ya está protegida por rol, pero
+> `router.tsx`/`AppLayout.tsx` (`US-1.1.6`) no tenían ningún guard client-side — el manejo de
+> 401/403 de `US-1.1.6` es reactivo (se dispara al recibir esos códigos de una respuesta HTTP
+> de `apiFetch`, no al navegar a una pantalla). Decisión de Víctor: agregar un componente
+> `RequireRole` reutilizable (no un chequeo inline en `AltaDocente.tsx`), pensando en las
+> próximas rutas protegidas por rol de incrementos futuros (banco de preguntas, analytics). Es
+> una ampliación de scope de esta misma US (no amerita una US-IEDD separada por su tamaño),
+> sin decisión arquitectónica nueva — reutiliza el mismo patrón de sesión (`lib/session.ts`) y
+> navegación imperativa ya usado en `api-client.ts`.
+
 ---
 
 ## Descripcion (lenguaje de negocio)
@@ -101,8 +112,9 @@ Feature: Alta de Docente desde la UI (US-1.1.9)
 - [x] No — consume un endpoint ya implementado y protegido (`ADR-007`), sin decisiones nuevas.
 
 **Capa(s) afectadas:**
-- [x] Frontend — `frontend/src/pages/AltaDocente.tsx`, `AltaDocenteExito.tsx`, ruta protegida
-  en `frontend/src/router.tsx`
+- [x] Frontend — `frontend/src/pages/AltaDocente.tsx`, `AltaDocenteExito.tsx`,
+  `frontend/src/components/RequireRole.tsx` (guard de ruta, ver adenda), ruta protegida en
+  `frontend/src/router.tsx`
 - [ ] Backend — sin cambios
 
 ---
@@ -121,7 +133,8 @@ Prototipo navegable: `docs/design/ux/prototipos/`.
 |---|---|
 | `frontend/src/pages/AltaDocente.tsx` | Formulario de alta — perfil fijo en Docente |
 | `frontend/src/pages/AltaDocenteExito.tsx` | Confirmación con aclaración de comisión pendiente |
-| `frontend/src/router.tsx` | Ruta protegida `/docentes/nuevo`, requiere rol `administrador` |
+| `frontend/src/components/RequireRole.tsx` | Guard de ruta por rol — nuevo, ver adenda |
+| `frontend/src/router.tsx` | Rutas `/docentes/nuevo` y `/docentes/nuevo/exito` envueltas en `RequireRole rol="administrador"` |
 
 ---
 

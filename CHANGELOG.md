@@ -10,6 +10,38 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-1.1.9] Administrador da de alta un Docente desde la UI — BC Identidad
+  - `frontend/src/components/RequireRole.tsx` — guard de ruta por rol (componente nuevo,
+    reutilizable): sin sesión → redirige a `/login`; sesión con rol distinto del requerido →
+    mensaje inline "Acceso denegado"; rol correcto → renderiza. Gap detectado en Fase 2 —
+    `router.tsx`/`AppLayout.tsx` (`US-1.1.6`) no tenían guard client-side, solo el manejo
+    reactivo de 401/403 de `apiFetch`; decisión de Víctor: componente reutilizable en vez de
+    chequeo inline, pensando en próximas rutas protegidas por rol
+  - `frontend/src/pages/AltaDocente.tsx` — formulario controlado (nombre/email/contraseña/
+    confirmar contraseña), perfil fijo en "Docente" sin selector (§2.6
+    `wireframes-identidad.md`), consume `POST /usuarios` (`US-1.1.0`, protegido por
+    `US-1.1.5`) vía `apiFetch`; 201 → `/docentes/nuevo/exito`; 409 (email ya registrado) →
+    error inline en el propio formulario
+  - `frontend/src/pages/AltaDocenteExito.tsx` — confirmación con nombre/email del Docente
+    creado y aclaración explícita de que todavía no está asignado a ninguna comisión (§2.7);
+    acción "Dar de alta otro Docente" vuelve al formulario (flujo de altas en lote)
+  - `frontend/src/router.tsx` — rutas nuevas `/docentes/nuevo` y `/docentes/nuevo/exito` bajo
+    `AppLayout`, protegidas con `RequireRole rol="administrador"`
+  - **Corrección de UAT acordada con Víctor** (hallazgo de un smoke test manual en navegador
+    real, fuera del alcance original de la spec): el estilo de la app no respetaba el
+    prototipo aprobado (`US-1.0.2`) desde `US-1.1.6` — una regla CSS heredada sin `@layer` en
+    `frontend/src/index.css` pisaba las utilities de Tailwind (afectaba tamaño/alineación de
+    todos los `<h1>` y angostaba la app a 1126px centrada), y la paleta/tipografía eran las de
+    shadcn por defecto en vez de las institucionales (azul `#1D75B5`, verde `#53AA74`, Roboto).
+    Se reescribió `index.css`, se agregaron `Logo.tsx`/`TopStrip.tsx` (marca + barra
+    institucional) y se actualizaron `AuthLayout.tsx`/`AppLayout.tsx` — afecta a todas las
+    pantallas de Identidad, no solo a esta US
+  - Cierra la Iteración 2 (Frontend de Identidad) del Incremento 1 — habilita la apertura de
+    BL-002
+  - 16 tests nuevos (`RequireRole.test.tsx`, `AltaDocente.test.tsx`, `AltaDocenteExito.test.tsx`,
+    `AuthLayout.test.tsx`) + `router.test.tsx`/`AppLayout.test.tsx` actualizados; 46/46 tests
+    frontend, cobertura ≥85% sobre los 3 archivos nuevos de esta US (umbral de referencia 80%)
+    (`quality/reports/inc1/US-1.1.9-quality.json`)
 - [US-1.1.8] Estudiante se registra desde la UI con un link de invitación — BC Identidad
   - `frontend/src/pages/Registro.tsx` — formulario controlado (nombre/email/contraseña/
     confirmar contraseña), lee `token` de query param, consume `POST /identidad/registro`

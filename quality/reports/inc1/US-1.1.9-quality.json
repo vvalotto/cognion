@@ -1,0 +1,37 @@
+{
+  "us_id": "US-1.1.9",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc1/US-1.1.9-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 1, "detalle": "warning preexistente en button.tsx, no introducido por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 13,
+        "tests": 46,
+        "passed": 46,
+        "failed": 0
+      },
+      "coverage_alta_docente_pages": {
+        "RequireRole.tsx_statements_pct": 100.0,
+        "AltaDocente.tsx_statements_pct": 85.2,
+        "AltaDocenteExito.tsx_statements_pct": 100.0,
+        "global_statements_pct": 93.61,
+        "global_branches_pct": 88.05,
+        "umbral_referencia_pct": 80
+      },
+      "correccion_uat_estilo_institucional": {
+        "detalle": "Hallazgo de UAT manual (Víctor, smoke test en navegador real): estilo no coincidía con el prototipo aprobado US-1.0.2. Causas: regla CSS sin @layer pisando utilities de Tailwind (afectaba a h1/h2 y el ancho/alineación de #root), y paleta/tipografía por defecto de shadcn en vez de la institucional (azul #1D75B5, verde #53AA74, Roboto). Corregido dentro de esta US a pedido de Víctor.",
+        "archivos": [
+          "frontend/src/index.css",
+          "frontend/src/components/Logo.tsx",
+          "frontend/src/components/TopStrip.tsx",
+          "frontend/src/layouts/AuthLayout.tsx",
+          "frontend/src/layouts/AppLayout.tsx"
+        ]
+      }
+    }
+  },
+  "estado": "APROBADO"
+}
