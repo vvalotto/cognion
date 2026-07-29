@@ -46,4 +46,19 @@ describe("AppLayout (integración)", () => {
 
     expect(screen.getByText("contenido")).toBeInTheDocument()
   })
+
+  it("muestra la marca institucional y la barra superior", () => {
+    renderAppLayout()
+
+    expect(screen.getByText("Cognión")).toBeInTheDocument()
+    expect(screen.getByText("FACULTAD DE INGENIERÍA · UNER")).toBeInTheDocument()
+  })
+
+  it("muestra las iniciales del rol en el avatar", () => {
+    setSession({ token: "t", rol: "administrador" })
+
+    renderAppLayout()
+
+    expect(screen.getByText("AD")).toBeInTheDocument()
+  })
 })

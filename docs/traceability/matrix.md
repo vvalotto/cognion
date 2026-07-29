@@ -146,6 +146,16 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 > de frontend que requería (`US-1.1.6`, `US-1.1.8`) están cerradas. BL-002 sigue sin abrir —
 > falta `US-1.1.9` (`docs/plans/PLAN-CM.md` §7). Próxima: `US-1.1.9` (alta de Docente desde la
 > UI, Administrador).
+>
+> **2026-07-29 — `US-1.1.9` (Administrador da de alta un Docente desde la UI) cerrada**
+> (`docs/reports/inc1/US-1.1.9-report.md`, 42/42 tests frontend, quality gates APROBADO). Sin
+> RF propio, igual que `US-1.1.0` (precondición operativa — sin esta pantalla, Víctor no puede
+> dar de alta un Docente desde la aplicación). Gap detectado en Fase 2: el `.feature` asumía
+> ruta protegida por rol, pero `router.tsx`/`AppLayout.tsx` (`US-1.1.6`) no tenían guard
+> client-side — se agregó `RequireRole` (componente reutilizable), fuera del alcance original
+> de la spec, documentado como adenda en `docs/specs/inc1/US-1.1.9.md`. **Cierra la
+> Iteración 2 (Frontend de Identidad) — última US-IEDD pendiente. Se abre BL-002**
+> (`docs/plans/PLAN-CM.md` §7).
 
 ## 4. Escenarios de calidad (RNF)
 

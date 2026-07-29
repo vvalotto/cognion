@@ -99,6 +99,13 @@ los flujos con más estados (registro: 3 pantallas; alta de docente: ruta proteg
 > acordada con Víctor (`RegistroResponse.materia`), fuera del alcance original de la spec.
 > Próxima: US-1.1.9.
 
+> ~~US-1.1.9 (Administrador da de alta un Docente desde la UI)~~ Cerrada 2026-07-29 —
+> `docs/reports/inc1/US-1.1.9-report.md`, 42/42 tests frontend, quality gates APROBADO.
+> Incluye un componente nuevo (`RequireRole`, guard de ruta por rol) fuera del alcance
+> original de la spec — gap detectado en Fase 2 entre el `.feature` (asumía ruta protegida) y
+> el código real (`router.tsx`/`AppLayout.tsx` sin guard client-side). **Cierra la
+> Iteración 2 (Frontend de Identidad) — habilita la apertura de BL-002.**
+
 ---
 
 ## DoD del Incremento (hito, `PLAN_v1.md`)
