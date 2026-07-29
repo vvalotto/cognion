@@ -40,16 +40,29 @@ registra con invitación válida, PR #15, 77/77 tests), US-1.1.3 (registro con l
 inválido, PR #16, 85/85 tests), US-1.1.4 (login con JWT por rol, PR #18, 107/107 tests) y
 US-1.1.5 (autorización por rol / RBAC, PR #20, 132/132 tests, `docs/reports/inc1/US-1.1.5-report.md`)
 mergeadas a `develop`. RF-01 y RF-02 pasan a "Implementado" en `docs/traceability/matrix.md`.
-Frontend de todas estas US queda diferido a una US-IEDD separada (routing + cliente API
-todavía no montados en `frontend/src`). Issues #6–#10 cerrados.
+Issues #6–#10 cerrados.
 **Decisión 2026-07-24 (criterio de cierre de BL-002):** la Baseline no cierra backend-only —
 cierra cuando backend y frontend de Identidad estén ambos implementados (`docs/plans/PLAN-CM.md`
 §7). El wireframe ya está aprobado y fresco (`docs/design/ux/wireframes-identidad.md`) y el
 contrato de backend ya está estable (132/132 tests); diferir más el frontend solo suma deuda.
-**Próximo paso:** Arrancar la US-IEDD de infraestructura frontend (routing + cliente API,
-todavía no montados en `frontend/src`) y las 5 pantallas diferidas desde US-1.1.2
-(`Registro.tsx`, `RegistroExito.tsx`, `RegistroError.tsx`, `Login.tsx`, `LoginError.tsx`).
-Recién con eso integrado se abre BL-002.
+**Iteración 2 (Frontend de Identidad) en curso**, aprobada por Víctor 2026-07-24
+(`docs/plans/inc1/inc1-candidatas.md`): US-1.1.6 (infraestructura de frontend — routing,
+cliente API con manejo de JWT/401/403, layout auth vs. app; sin pantalla propia) cerrada
+2026-07-24, PR #28, `docs/reports/inc1/US-1.1.6-report.md`, 16/16 tests. US-1.1.7 (Docente/
+Administrador/Estudiante inicia sesión desde la UI) cerrada 2026-07-27, PR #30,
+`docs/reports/inc1/US-1.1.7-report.md`, 21/21 tests. **US-1.1.8 (Estudiante se registra desde
+la UI con un link de invitación) cerrada 2026-07-28**, PR #31 mergeado 2026-07-29,
+`docs/reports/inc1/US-1.1.8-report.md`: pantallas `Registro.tsx`, `RegistroError.tsx`,
+`RegistroExito.tsx` + rutas `/registro`, `/registro/error`, `/registro/exito`; 30/30 tests
+frontend, 71/71 unitarios y 38/38 integración de backend, quality gates APROBADO. Incluye
+ampliación de backend acordada con Víctor en Fase 2 (`RegistroResponse.materia`, resuelto vía
+`ComisionRepositoryPort.obtener_por_id` ya existente) — fuera del alcance original de la spec,
+documentada como adenda en `docs/specs/inc1/US-1.1.8.md`. Cierra RF-01 también en frontend.
+Fuera de alcance de esta iteración: UI de `CrearComision`/`AsignarDocenteAComision` (wireframe
+§4 las deja sin resolver).
+**Próximo paso:** US-1.1.9 (Administrador da de alta un Docente desde la UI, §2.6/§2.7 del
+wireframe, protegido por `require_administrador`) — última US-IEDD pendiente de la Iteración 2.
+Recién al cerrarla se abre BL-002 (`docs/plans/PLAN-CM.md` §7).
 **Baseline abierta:** ninguna. BL-002 se abre al cierre del Incremento 1 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
