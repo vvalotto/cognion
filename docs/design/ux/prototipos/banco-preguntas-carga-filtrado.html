@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Banco de Preguntas — Carga y Filtrado (Incremento 2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Mismos tokens que docs/design/ux/prototipos/identidad-registro-login.html
+    (paleta institucional UNER, tipografía Roboto) — continuidad visual entre BCs.
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --warning: #b5791d;
+    --warning-bg: #fdf5e8;
+    --warning-border: #f0ddb3;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  /* --- Nav del prototipo (no forma parte del producto) --- */
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  /* --- Header de app autenticada (mismo patrón que identidad-registro-login.html) --- */
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .app-body { padding: 28px 16px 60px; max-width: 900px; margin: 0 auto; }
+  .app-body.narrow { max-width: 560px; }
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    margin-bottom: 6px;
+  }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--muted-foreground);
+    margin: 0 0 24px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.outline {
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+  }
+  .btn.destructive {
+    background: var(--destructive);
+    color: #fff;
+  }
+  .btn.full { width: 100%; }
+  .btn.sm { padding: 6px 12px; font-size: 12px; }
+
+  .form-card, .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .result-card { max-width: 480px; margin: 40px auto 0; text-align: center; }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+  }
+  .field .hint {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    margin-top: 4px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .center-icon {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+
+  .alert {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    text-align: left;
+  }
+  .alert.destructive { background: var(--destructive-bg); border-color: var(--destructive-border); color: #7f1d1d; }
+  .alert.success { background: var(--success-bg); border-color: var(--success-border); color: #14532d; }
+  .alert.warning { background: var(--warning-bg); border-color: var(--warning-border); color: #7a5210; }
+  .alert .icon { flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .alert .body strong { display: block; margin-bottom: 2px; }
+
+  /* --- Materias --- */
+  .materia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .materia-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .materia-card:hover { border-color: var(--primary); }
+  .materia-card .icon { font-size: 22px; margin-bottom: 8px; }
+  .materia-card .nombre { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .materia-card .meta { font-size: 12px; color: var(--muted-foreground); }
+  .materia-card.new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-style: dashed;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* --- Filtros --- */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  .filter-bar .field { margin-bottom: 0; min-width: 150px; flex: 1; }
+  .filter-bar .field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted-foreground); }
+
+  /* --- Tabla de preguntas --- */
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  table.preguntas { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.preguntas th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted-foreground);
+    background: var(--muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.preguntas td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.preguntas tr:last-child td { border-bottom: none; }
+  table.preguntas .texto-pregunta { max-width: 280px; }
+  table.preguntas .acciones { display: flex; gap: 6px; white-space: nowrap; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .tag.tipo-om { background: #eaf2f8; color: var(--primary-dark); }
+  .tag.tipo-vf { background: #f1ecf9; color: #5b3aa8; }
+  .tag.dif-alto, .tag.imp-alto { background: var(--destructive-bg); color: #7f1d1d; }
+  .tag.dif-medio, .tag.imp-medio { background: var(--warning-bg); color: #7a5210; }
+  .tag.dif-bajo, .tag.imp-bajo { background: var(--success-bg); color: #14532d; }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* --- Selector de tipo de pregunta --- */
+  .tipo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .tipo-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .tipo-card:hover { border-color: var(--primary); }
+  .tipo-card .icon { font-size: 30px; margin-bottom: 10px; }
+  .tipo-card .nombre { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .tipo-card .desc { font-size: 12px; color: var(--muted-foreground); }
+
+  /* --- Opciones dinámicas (Opción Múltiple) --- */
+  .opciones-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+  .opcion-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .opcion-row input[type="radio"] { flex-shrink: 0; width: 16px; height: 16px; accent-color: var(--accent); }
+  .opcion-row input[type="text"] { flex: 1; border: none; padding: 4px; font-size: 14px; }
+  .opcion-row input[type="text"]:focus { outline: none; }
+  .opcion-row .remove { flex-shrink: 0; background: none; border: none; color: var(--muted-foreground); cursor: pointer; font-size: 14px; }
+  .opcion-row.correcta { border-color: var(--success); background: var(--success-bg); }
+  .add-opcion {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    width: 100%;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* --- Verdadero / Falso --- */
+  .vf-choice { display: flex; gap: 12px; }
+  .vf-choice label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .vf-choice input { accent-color: var(--accent); }
+  .vf-choice label.selected { border-color: var(--success); background: var(--success-bg); }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  @media (max-width: 560px) {
+    .field-row { grid-template-columns: 1fr; }
+    table.preguntas { display: block; overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>Inc.2 It.0 — Prototipo:</strong>
+  <button data-target="materias" class="active">1. Materias</button>
+  <button data-target="nueva-materia">2. Nueva materia</button>
+  <button data-target="banco">3. Banco — listado/filtro</button>
+  <button data-target="nueva-pregunta-tipo">4. Nueva pregunta — tipo</button>
+  <button data-target="nueva-pregunta-om">5. Nueva — Opción Múltiple</button>
+  <button data-target="nueva-pregunta-vf">6. Nueva — V/F</button>
+  <button data-target="editar-pregunta">7. Editar pregunta</button>
+  <button data-target="eliminar-pregunta">8. Eliminar — confirmación</button>
+</nav>
+
+<!-- Header reutilizable -->
+<template id="app-header-tpl">
+  <div class="app-header">
+    <div class="brand-mini">
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+        <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+        <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Cognión
+    </div>
+    <div class="who">
+      <span class="avatar">VV</span>
+      Víctor Valotto · Docente
+    </div>
+  </div>
+</template>
+
+<!-- 1. MATERIAS -->
+<section class="screen active" id="materias">
+  <div class="app-header">
+    <div class="brand-mini">
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      Cognión
+    </div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; <span class="current">Materias</span></div>
+    <h1 class="page-title">Materias</h1>
+    <p class="page-subtitle">Elegí una materia para ver y cargar su banco de preguntas.</p>
+
+    <div class="materia-grid">
+      <div class="materia-card" onclick="go('banco')">
+        <div class="icon">📘</div>
+        <div class="nombre">Ingeniería de Software</div>
+        <div class="meta">18 preguntas activas</div>
+      </div>
+      <div class="materia-card" onclick="go('banco')">
+        <div class="icon">📗</div>
+        <div class="nombre">Gestión de Proyectos</div>
+        <div class="meta">11 preguntas activas</div>
+      </div>
+      <div class="materia-card new" onclick="go('nueva-materia')">
+        <div class="icon">+</div>
+        Nueva materia
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. NUEVA MATERIA -->
+<section class="screen" id="nueva-materia">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; Materias &nbsp;›&nbsp; <span class="current">Nueva materia</span></div>
+    <h1 class="page-title">Nueva materia</h1>
+    <p class="page-subtitle">Se crea la materia y su banco de preguntas vacío, listo para cargar.</p>
+
+    <div class="form-card">
+      <div class="field">
+        <label for="nm-nombre">Nombre de la materia</label>
+        <input type="text" id="nm-nombre" placeholder="ej. Ingeniería de Software" />
+        <div class="hint">Debe ser único — no puede repetirse el nombre de una materia existente.</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn" onclick="go('materias')">Crear materia</button>
+        <button class="btn outline" onclick="go('materias')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. BANCO - listado + filtro -->
+<section class="screen" id="banco">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; Materias &nbsp;›&nbsp; <span class="current">Ingeniería de Software</span></div>
+    <div class="toolbar">
+      <div>
+        <h1 class="page-title" style="margin-bottom:2px;">Ingeniería de Software</h1>
+        <p class="page-subtitle" style="margin-bottom:0;">18 preguntas activas en el banco</p>
+      </div>
+      <button class="btn" onclick="go('nueva-pregunta-tipo')">+ Nueva pregunta</button>
+    </div>
+
+    <div class="filter-bar">
+      <div class="field">
+        <label>Unidad temática</label>
+        <select><option>Todas</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option><option>Unidad 3 — Arquitectura</option></select>
+      </div>
+      <div class="field">
+        <label>Tema</label>
+        <select><option>Todos</option><option>Clean Architecture</option><option>DDD</option><option>Testing</option></select>
+      </div>
+      <div class="field">
+        <label>Dificultad</label>
+        <select><option>Todas</option><option>Alto</option><option>Medio</option><option>Bajo</option></select>
+      </div>
+      <div class="field">
+        <label>Importancia</label>
+        <select><option>Todas</option><option>Alto</option><option>Medio</option><option>Bajo</option></select>
+      </div>
+      <button class="btn outline sm">Limpiar filtros</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="preguntas">
+        <thead>
+          <tr>
+            <th>Pregunta</th>
+            <th>Tipo</th>
+            <th>Unidad / Tema</th>
+            <th>Dificultad</th>
+            <th>Importancia</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="texto-pregunta">¿Qué principio de Clean Architecture prohíbe que una capa interna importe una externa?</td>
+            <td><span class="tag tipo-om">Opción múltiple</span></td>
+            <td>Unidad 3 · Arquitectura</td>
+            <td><span class="tag dif-alto">Alto</span></td>
+            <td><span class="tag imp-alto">Alto</span></td>
+            <td class="acciones">
+              <button class="btn outline sm" onclick="go('editar-pregunta')">Editar</button>
+              <button class="btn destructive sm" onclick="go('eliminar-pregunta')">Eliminar</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="texto-pregunta">Un Aggregate Root puede referenciar a otro Aggregate Root solo por su identidad, nunca por objeto completo.</td>
+            <td><span class="tag tipo-vf">Verdadero/Falso</span></td>
+            <td>Unidad 2 · DDD</td>
+            <td><span class="tag dif-medio">Medio</span></td>
+            <td><span class="tag imp-alto">Alto</span></td>
+            <td class="acciones">
+              <button class="btn outline sm" onclick="go('editar-pregunta')">Editar</button>
+              <button class="btn destructive sm" onclick="go('eliminar-pregunta')">Eliminar</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="texto-pregunta">¿Cuál de las siguientes NO es una técnica de testing de caja negra?</td>
+            <td><span class="tag tipo-om">Opción múltiple</span></td>
+            <td>Unidad 1 · Testing</td>
+            <td><span class="tag dif-bajo">Bajo</span></td>
+            <td><span class="tag imp-medio">Medio</span></td>
+            <td class="acciones">
+              <button class="btn outline sm" onclick="go('editar-pregunta')">Editar</button>
+              <button class="btn destructive sm" onclick="go('eliminar-pregunta')">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 4. NUEVA PREGUNTA - elegir tipo -->
+<section class="screen" id="nueva-pregunta-tipo">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Nueva pregunta</span></div>
+    <h1 class="page-title">¿Qué tipo de pregunta querés cargar?</h1>
+    <p class="page-subtitle">El tipo no se puede cambiar después de creada la pregunta.</p>
+
+    <div class="tipo-grid">
+      <div class="tipo-card" onclick="go('nueva-pregunta-om')">
+        <div class="icon">☰</div>
+        <div class="nombre">Opción múltiple</div>
+        <div class="desc">Varias opciones, una única respuesta correcta</div>
+      </div>
+      <div class="tipo-card" onclick="go('nueva-pregunta-vf')">
+        <div class="icon">⇄</div>
+        <div class="nombre">Verdadero / Falso</div>
+        <div class="desc">Dos opciones fijas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. NUEVA PREGUNTA - Opción Múltiple -->
+<section class="screen" id="nueva-pregunta-om">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Nueva — Opción múltiple</span></div>
+    <h1 class="page-title">Nueva pregunta — Opción múltiple</h1>
+
+    <div class="form-card">
+      <div class="field">
+        <label for="om-texto">Texto de la pregunta</label>
+        <textarea id="om-texto" rows="3" placeholder="Escribí el enunciado..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Opciones — marcá cuál es la correcta</label>
+        <div class="opciones-list">
+          <div class="opcion-row correcta">
+            <input type="radio" name="om-correcta" checked />
+            <input type="text" value="Las capas internas nunca importan capas externas" />
+            <button class="remove" title="Quitar opción">✕</button>
+          </div>
+          <div class="opcion-row">
+            <input type="radio" name="om-correcta" />
+            <input type="text" value="Las capas externas nunca importan capas internas" />
+            <button class="remove" title="Quitar opción">✕</button>
+          </div>
+          <div class="opcion-row">
+            <input type="radio" name="om-correcta" />
+            <input type="text" value="Todas las capas pueden importarse libremente" />
+            <button class="remove" title="Quitar opción">✕</button>
+          </div>
+        </div>
+        <button class="add-opcion">+ Agregar opción</button>
+        <div class="hint">Mínimo 2 opciones. Exactamente una debe estar marcada como correcta.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="om-unidad">Unidad temática</label>
+          <select id="om-unidad"><option>Unidad 3 — Arquitectura</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option></select>
+        </div>
+        <div class="field">
+          <label for="om-tema">Tema</label>
+          <input type="text" id="om-tema" placeholder="ej. Clean Architecture" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="om-dif">Dificultad</label>
+          <select id="om-dif"><option>Alto</option><option>Medio</option><option>Bajo</option></select>
+        </div>
+        <div class="field">
+          <label for="om-imp">Importancia</label>
+          <select id="om-imp"><option>Alto</option><option>Medio</option><option>Bajo</option></select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" onclick="go('banco')">Guardar pregunta</button>
+        <button class="btn outline" onclick="go('banco')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. NUEVA PREGUNTA - Verdadero/Falso -->
+<section class="screen" id="nueva-pregunta-vf">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Nueva — Verdadero/Falso</span></div>
+    <h1 class="page-title">Nueva pregunta — Verdadero/Falso</h1>
+
+    <div class="form-card">
+      <div class="field">
+        <label for="vf-texto">Texto de la pregunta</label>
+        <textarea id="vf-texto" rows="3" placeholder="Escribí el enunciado..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Respuesta correcta</label>
+        <div class="vf-choice">
+          <label class="selected"><input type="radio" name="vf" checked /> Verdadero</label>
+          <label><input type="radio" name="vf" /> Falso</label>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="vf-unidad">Unidad temática</label>
+          <select id="vf-unidad"><option>Unidad 2 — Diseño</option><option>Unidad 1 — Fundamentos</option><option>Unidad 3 — Arquitectura</option></select>
+        </div>
+        <div class="field">
+          <label for="vf-tema">Tema</label>
+          <input type="text" id="vf-tema" placeholder="ej. DDD" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="vf-dif">Dificultad</label>
+          <select id="vf-dif"><option>Medio</option><option>Alto</option><option>Bajo</option></select>
+        </div>
+        <div class="field">
+          <label for="vf-imp">Importancia</label>
+          <select id="vf-imp"><option>Alto</option><option>Medio</option><option>Bajo</option></select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" onclick="go('banco')">Guardar pregunta</button>
+        <button class="btn outline" onclick="go('banco')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. EDITAR PREGUNTA -->
+<section class="screen" id="editar-pregunta">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Banco de preguntas &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Editar pregunta</span></div>
+    <h1 class="page-title">Editar pregunta</h1>
+    <p class="page-subtitle">Mismo formulario que la carga, según el tipo de la pregunta — el tipo no se puede cambiar.</p>
+
+    <div class="form-card">
+      <div class="field">
+        <label for="ep-texto">Texto de la pregunta</label>
+        <textarea id="ep-texto" rows="3">¿Qué principio de Clean Architecture prohíbe que una capa interna importe una externa?</textarea>
+      </div>
+
+      <div class="field">
+        <label>Opciones — marcá cuál es la correcta</label>
+        <div class="opciones-list">
+          <div class="opcion-row correcta">
+            <input type="radio" name="ep-correcta" checked />
+            <input type="text" value="Regla de dependencias (Dependency Rule)" />
+            <button class="remove" title="Quitar opción">✕</button>
+          </div>
+          <div class="opcion-row">
+            <input type="radio" name="ep-correcta" />
+            <input type="text" value="Principio de sustitución de Liskov" />
+            <button class="remove" title="Quitar opción">✕</button>
+          </div>
+          <div class="opcion-row">
+            <input type="radio" name="ep-correcta" />
+            <input type="text" value="Principio de responsabilidad única" />
+            <button class="remove" title="Quitar opción">✕</button>
+          </div>
+        </div>
+        <button class="add-opcion">+ Agregar opción</button>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="ep-unidad">Unidad temática</label>
+          <select id="ep-unidad"><option selected>Unidad 3 — Arquitectura</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option></select>
+        </div>
+        <div class="field">
+          <label for="ep-tema">Tema</label>
+          <input type="text" id="ep-tema" value="Clean Architecture" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="ep-dif">Dificultad</label>
+          <select id="ep-dif"><option selected>Alto</option><option>Medio</option><option>Bajo</option></select>
+        </div>
+        <div class="field">
+          <label for="ep-imp">Importancia</label>
+          <select id="ep-imp"><option selected>Alto</option><option>Medio</option><option>Bajo</option></select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" onclick="go('banco')">Guardar cambios</button>
+        <button class="btn outline" onclick="go('banco')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. ELIMINAR PREGUNTA - confirmación -->
+<section class="screen" id="eliminar-pregunta">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card" style="text-align:left; margin-top:60px;">
+      <div class="center-icon" style="color: var(--destructive);">⚠</div>
+      <h1 class="title" style="text-align:center; font-size:20px; margin-bottom:16px;">¿Eliminar esta pregunta?</h1>
+
+      <div class="alert warning">
+        <span class="icon">ℹ</span>
+        <div class="body">
+          <strong>La pregunta deja de estar disponible</strong>
+          No vuelve a aparecer en el banco ni puede usarse en nuevas sesiones. Si ya fue usada en una sesión anterior, esa sesión conserva su registro sin cambios.
+        </div>
+      </div>
+
+      <p style="font-size:13px; color: var(--muted-foreground); margin-bottom:20px;">
+        "¿Qué principio de Clean Architecture prohíbe que una capa interna importe una externa?"
+      </p>
+
+      <div class="form-actions">
+        <button class="btn destructive" onclick="go('banco')">Sí, eliminar</button>
+        <button class="btn outline" onclick="go('banco')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+</script>
+
+</body>
+</html>
