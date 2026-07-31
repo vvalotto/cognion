@@ -3,7 +3,13 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-07-24 — Iteración 2 (frontend de Identidad, `US-1.1.6` a
+> Última actualización: 2026-07-31 — Iteración 1 del Incremento 2 (BC Banco de Preguntas,
+> `US-2.1.1` a `US-2.1.13`, backend y frontend) especificada y aprobada por Víctor. RF-04,
+> RF-05 y RF-06 pasan de "Planificado" a "Especificado" — specs recién creadas, sin código
+> todavía. `US-2.1.2` (refactor técnico de `Comisión.materia`, BC Identidad) no tiene RF propio
+> — no mueve ninguna fila de esta tabla, igual que `US-1.1.0` en su momento.
+>
+> 2026-07-24 — Iteración 2 (frontend de Identidad, `US-1.1.6` a
 > `US-1.1.9`) especificada y aprobada por Víctor. RF-01/RF-02 quedan "Implementado" — ese
 > estado certifica el backend (código integrado en `develop`, ver §2), que ya está completo y
 > probado. El frontend correspondiente todavía está en "Especificado" (specs recién creadas,
@@ -46,9 +52,9 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Validado |
 | RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Validado |
 | RF-03 | Identidad | 2 | — | Planificado |
-| RF-04 | Banco de preguntas | 2 | — | Planificado |
-| RF-05 | Banco de preguntas | 2 | — | Planificado |
-| RF-06 | Banco de preguntas | 2 | — | Planificado |
+| RF-04 | Banco de preguntas | 2 | US-2.1.1, US-2.1.3, US-2.1.4 (backend); US-2.1.8, US-2.1.9, US-2.1.11 (frontend) | Especificado |
+| RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Especificado |
+| RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Especificado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
 | RF-08 | Actividad Evaluativa | 6 | — | Planificado |
 | RF-09 | Actividad Evaluativa | 6 | — | Planificado |
