@@ -3,9 +3,9 @@ from uuid import uuid4
 import pytest
 from fastapi import HTTPException
 
-from src.identidad.entities.jwt import JWTPayload
-from src.identidad.entities.usuario import TipoPerfil
-from src.identidad.interface_adapters.security.require_rol import require_rol
+from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.interface_adapters.security.require_rol import require_rol
 
 
 async def _dummy_get_current_user() -> JWTPayload:

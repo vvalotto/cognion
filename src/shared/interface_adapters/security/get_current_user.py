@@ -1,4 +1,4 @@
-"""Dependency FastAPI que resuelve el `Usuario` autenticado a partir del JWT recibido."""
+"""Dependency FastAPI que resuelve el usuario autenticado a partir del JWT recibido."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ from collections.abc import Awaitable, Callable
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.identidad.entities.errors import JWTExpirado, JWTInvalido
-from src.identidad.entities.jwt import JWTPayload
-from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
+from src.shared.entities.errors import JWTExpirado, JWTInvalido
+from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 
 _bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -21,7 +21,7 @@ def build_get_current_user(
 
     `jwt_issuer` se recibe como parámetro (la abstracción, no `PyJWTIssuer`) para que este
     módulo de `interface_adapters` no importe `frameworks` — el wiring con la implementación
-    concreta ocurre en el composition root (`frameworks/dependencies.py`).
+    concreta ocurre en el composition root de cada BC (`frameworks/dependencies.py`).
     """
 
     async def get_current_user(

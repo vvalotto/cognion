@@ -1,7 +1,8 @@
 from src.identidad.entities.eventos import SesionIniciada
-from src.identidad.entities.usuario import TipoPerfil, Usuario
+from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
+from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc1._fakes import FakeJWTIssuer, FakePasswordHasher, FakeUsuarioRepository
 
 

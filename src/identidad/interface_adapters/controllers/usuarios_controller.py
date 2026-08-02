@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from src.identidad.entities.eventos import UsuarioCreado
-from src.identidad.entities.usuario import TipoPerfil, Usuario
+from src.identidad.entities.usuario import Usuario
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class UsuariosController:

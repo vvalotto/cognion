@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID
 
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 def _ahora() -> datetime:

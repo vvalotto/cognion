@@ -6,8 +6,8 @@ from collections.abc import Awaitable, Callable
 
 from fastapi import Depends, HTTPException, status
 
-from src.identidad.entities.jwt import JWTPayload
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 def require_rol(
@@ -16,14 +16,14 @@ def require_rol(
 ) -> Callable[[JWTPayload], Awaitable[JWTPayload]]:
     """Arma una dependency que exige `usuario.rol` dentro de `roles_permitidos`.
 
-    Compone sobre `get_current_user` (recibido como parámetro, no importado) — un `Usuario`
+    Compone sobre `get_current_user` (recibido como parámetro, no importado) — un usuario
     sin JWT válido nunca llega a la verificación de rol: `get_current_user` ya respondió 401.
     """
 
     async def _verificar_rol(
         usuario: JWTPayload = Depends(get_current_user),
     ) -> JWTPayload:
-        """Verifica el rol del `Usuario` autenticado; responde 403 si no está permitido."""
+        """Verifica el rol del usuario autenticado; responde 403 si no está permitido."""
         if usuario.rol not in roles_permitidos:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

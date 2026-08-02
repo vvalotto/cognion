@@ -6,12 +6,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 @dataclass(frozen=True)
 class JWT:
-    """Token de sesión con el rol del `Usuario` autenticado y su expiración (ADR-013)."""
+    """Token de sesión con el rol del usuario autenticado y su expiración (ADR-013)."""
 
     token: str
     rol: TipoPerfil

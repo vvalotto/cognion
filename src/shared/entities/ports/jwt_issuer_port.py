@@ -5,8 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from src.identidad.entities.jwt import JWT, JWTPayload
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.jwt import JWT, JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class JWTIssuerPort(ABC):

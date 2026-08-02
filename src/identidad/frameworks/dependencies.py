@@ -7,11 +7,8 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
-from src.identidad.entities.usuario import TipoPerfil
-from src.identidad.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
@@ -28,15 +25,18 @@ from src.identidad.interface_adapters.gateways.invitacion_repository import (
     SQLAlchemyInvitacionRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
-from src.identidad.interface_adapters.security.get_current_user import build_get_current_user
-from src.identidad.interface_adapters.security.require_rol import require_rol
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
+from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from src.shared.interface_adapters.security.get_current_user import build_get_current_user
+from src.shared.interface_adapters.security.require_rol import require_rol
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 

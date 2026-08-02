@@ -4,10 +4,11 @@ import jwt as pyjwt
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
-from src.identidad.entities.usuario import TipoPerfil, Usuario
+from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class TestAuthAPIIntegration:

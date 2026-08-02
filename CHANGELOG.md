@@ -9,6 +9,27 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-2.1.1] Docente da de alta una materia y su banco de preguntas — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/materia.py`, `banco.py` — aggregates `Materia` (`nombre`
+    único, INV-BP-00) y `Banco` (1:1 con `Materia`, INV-BP-01)
+  - `src/banco_preguntas/use_cases/crear_materia.py` — `CrearMateriaUseCase` crea `Materia` +
+    `Banco` en la misma operación
+  - `POST /materias` (`src/banco_preguntas/frameworks/api/materias_router.py`) — requiere rol
+    `docente`, 201 con `MateriaResponse`, 409 si `MateriaYaExiste`, 422 si `nombre` vacío
+  - Migración Alembic `099d86aa5d0d_materia_banco.py` — tablas `materia`, `banco`
+  - 16 tests nuevos (5 unitarios, 8 integración, 3 BDD) — 100% cobertura en
+    entities/use_cases/interface_adapters
+
+### Changed
+- **Refactor (`ADR-019`):** `TipoPerfil`, `JWT`/`JWTPayload`, `JWTIssuerPort`, `PyJWTIssuer`,
+  `get_current_user`, `require_rol` movidos de `src/identidad` a `src/shared` — necesario para
+  que `banco_preguntas` pudiera exigir rol `docente` en su endpoint sin importar directo de
+  `identidad` (regla de `CLAUDE.md`: nunca imports entre BCs). `identidad` sigue exponiendo
+  `require_administrador`/`require_docente` con la misma API pública; `banco_preguntas` arma su
+  propio `require_docente` componiendo las mismas piezas de `shared`. 148/148 tests del
+  proyecto verificados en verde tras el refactor.
+
 ## [0.3.0] - 2026-07-29
 
 ### Added

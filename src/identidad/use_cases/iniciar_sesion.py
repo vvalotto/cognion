@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from src.identidad.entities.errors import CredencialesInvalidas
 from src.identidad.entities.eventos import SesionIniciada
-from src.identidad.entities.jwt import JWT
-from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
+from src.shared.entities.jwt import JWT
+from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 
 
 class IniciarSesionUseCase:

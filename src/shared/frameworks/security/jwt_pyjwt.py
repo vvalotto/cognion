@@ -7,11 +7,11 @@ from uuid import UUID
 
 import jwt
 
-from src.identidad.entities.errors import JWTExpirado, JWTInvalido
-from src.identidad.entities.jwt import JWT, JWTPayload
-from src.identidad.entities.ports.jwt_issuer_port import JWTIssuerPort
-from src.identidad.entities.usuario import TipoPerfil
 from src.settings import settings
+from src.shared.entities.errors import JWTExpirado, JWTInvalido
+from src.shared.entities.jwt import JWT, JWTPayload
+from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class PyJWTIssuer(JWTIssuerPort):

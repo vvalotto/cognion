@@ -2,7 +2,8 @@ import uuid
 
 import pytest
 
-from src.identidad.entities.usuario import Administrador, Docente, Estudiante, TipoPerfil, Usuario
+from src.identidad.entities.usuario import Administrador, Docente, Estudiante, Usuario
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class TestUsuarioCrear:
