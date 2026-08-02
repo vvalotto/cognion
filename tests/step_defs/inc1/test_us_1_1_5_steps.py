@@ -11,8 +11,8 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.identidad.entities.usuario import TipoPerfil
-from src.identidad.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
 

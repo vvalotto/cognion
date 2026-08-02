@@ -1,7 +1,8 @@
 import uuid
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.usuario import Estudiante, TipoPerfil, Usuario
+from src.identidad.entities.usuario import Estudiante, Usuario
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.frameworks.db.models import UsuarioModel
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,

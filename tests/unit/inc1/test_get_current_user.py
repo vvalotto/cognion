@@ -4,10 +4,10 @@ import pytest
 from fastapi import HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 
-from src.identidad.entities.errors import JWTExpirado, JWTInvalido
-from src.identidad.entities.jwt import JWTPayload
-from src.identidad.entities.usuario import TipoPerfil
-from src.identidad.interface_adapters.security.get_current_user import build_get_current_user
+from src.shared.entities.errors import JWTExpirado, JWTInvalido
+from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.interface_adapters.security.get_current_user import build_get_current_user
 from tests.unit.inc1._fakes import FakeJWTIssuer
 
 

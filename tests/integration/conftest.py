@@ -5,8 +5,8 @@ import uuid
 import pytest
 from sqlalchemy import text
 
-from src.identidad.entities.usuario import TipoPerfil
-from src.identidad.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.shared.frameworks.db import SessionLocal
 
 

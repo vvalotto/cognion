@@ -9,7 +9,7 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.shared.frameworks.db import SessionLocal
 from tests.step_defs.inc1._auth_headers import admin_headers

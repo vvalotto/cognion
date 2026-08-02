@@ -1,7 +1,8 @@
 import uuid
 
 from src.identidad.entities.eventos import ComisionCreada, DocenteAsignado
-from src.identidad.entities.usuario import TipoPerfil, Usuario
+from src.identidad.entities.usuario import Usuario
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.interface_adapters.controllers.comisiones_controller import (
     ComisionesController,
 )

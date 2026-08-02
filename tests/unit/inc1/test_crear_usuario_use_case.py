@@ -2,7 +2,7 @@ import pytest
 
 from src.identidad.entities.errors import EmailYaRegistrado
 from src.identidad.entities.eventos import UsuarioCreado
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from tests.unit.inc1._fakes import FakePasswordHasher, FakeUsuarioRepository
 
