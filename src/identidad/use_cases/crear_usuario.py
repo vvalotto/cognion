@@ -6,7 +6,8 @@ from src.identidad.entities.errors import EmailYaRegistrado
 from src.identidad.entities.eventos import UsuarioCreado
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
-from src.identidad.entities.usuario import TipoPerfil, Usuario
+from src.identidad.entities.usuario import Usuario
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class CrearUsuarioUseCase:

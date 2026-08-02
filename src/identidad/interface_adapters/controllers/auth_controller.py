@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from src.identidad.entities.eventos import SesionIniciada
-from src.identidad.entities.jwt import JWT
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
+from src.shared.entities.jwt import JWT
 
 
 class AuthController:

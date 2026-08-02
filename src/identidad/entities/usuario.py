@@ -3,16 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
 from uuid import UUID, uuid4
 
-
-class TipoPerfil(StrEnum):
-    """Rol de un usuario dentro de la plataforma."""
-
-    ADMINISTRADOR = "administrador"
-    DOCENTE = "docente"
-    ESTUDIANTE = "estudiante"
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 @dataclass(frozen=True)

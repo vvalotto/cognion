@@ -7,7 +7,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from src.identidad.entities.usuario import TipoPerfil
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class CrearUsuarioRequest(BaseModel):

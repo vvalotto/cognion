@@ -13,7 +13,6 @@ from src.identidad.entities.usuario import (
     Docente,
     Estudiante,
     Perfil,
-    TipoPerfil,
     Usuario,
 )
 from src.identidad.frameworks.db.models import (
@@ -22,6 +21,7 @@ from src.identidad.frameworks.db.models import (
     EstudianteModel,
     UsuarioModel,
 )
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 _MODEL_POR_PERFIL: dict[TipoPerfil, type[AdministradorModel | DocenteModel | EstudianteModel]] = {
     TipoPerfil.ADMINISTRADOR: AdministradorModel,
