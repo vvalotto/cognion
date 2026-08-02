@@ -22,9 +22,7 @@ class CrearMateriaUseCase:
         self._materia_repositorio = materia_repositorio
         self._banco_repositorio = banco_repositorio
 
-    async def execute(
-        self, nombre: str
-    ) -> tuple[Materia, Banco, MateriaCreada, BancoCreado]:
+    async def execute(self, nombre: str) -> tuple[Materia, Banco, MateriaCreada, BancoCreado]:
         """Crea y persiste `Materia` + `Banco`; levanta `MateriaYaExiste` si el nombre existe."""
         existente = await self._materia_repositorio.obtener_por_nombre(nombre)
         if existente is not None:
