@@ -11,10 +11,10 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 scenarios("../../features/inc1/US-1.1.5-autorizacion-rbac.feature")
 

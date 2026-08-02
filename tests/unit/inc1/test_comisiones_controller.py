@@ -2,12 +2,12 @@ import uuid
 
 from src.identidad.entities.eventos import ComisionCreada, DocenteAsignado
 from src.identidad.entities.usuario import Usuario
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.interface_adapters.controllers.comisiones_controller import (
     ComisionesController,
 )
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
+from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc1._fakes import FakeComisionRepository, FakeUsuarioRepository
 
 

@@ -4,11 +4,11 @@ import pytest
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class TestSQLAlchemyComisionRepositoryIntegration:

@@ -4,10 +4,10 @@ from uuid import uuid4
 import jwt as pyjwt
 import pytest
 
+from src.settings import settings
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
-from src.settings import settings
 
 
 class TestPyJWTIssuer:

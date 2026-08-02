@@ -5,8 +5,8 @@ import pytest
 from src.identidad.entities.errors import CredencialesInvalidas
 from src.identidad.entities.eventos import SesionIniciada
 from src.identidad.entities.usuario import Usuario
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
+from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc1._fakes import FakeJWTIssuer, FakePasswordHasher, FakeUsuarioRepository
 
 

@@ -6,8 +6,8 @@ import pytest
 from sqlalchemy import text
 
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 
 async def _limpiar_tablas_identidad() -> None:

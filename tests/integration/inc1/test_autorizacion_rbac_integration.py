@@ -5,9 +5,9 @@ import jwt as pyjwt
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
+from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
-from src.settings import settings
 
 
 def _headers(rol: TipoPerfil) -> dict[str, str]:
