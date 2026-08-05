@@ -48,7 +48,11 @@ class TestComisionesAPIIntegration:
 
             comision_resp = await client.post(
                 "/comisiones",
-                json={"materia_id": materia_id, "horario": "lu 10-12", "administrador_id": admin_id},
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
                 headers=admin_headers,
             )
             comision_id = comision_resp.json()["id"]
@@ -112,7 +116,11 @@ class TestComisionesAPIIntegration:
 
             comision_resp = await client.post(
                 "/comisiones",
-                json={"materia_id": materia_id, "horario": "lu 10-12", "administrador_id": admin_id},
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
                 headers=admin_headers,
             )
             comision_id = comision_resp.json()["id"]

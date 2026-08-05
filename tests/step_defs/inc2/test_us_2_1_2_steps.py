@@ -88,9 +88,7 @@ async def _simular_migracion_de_datos(nombre_materia: str) -> tuple[uuid.UUID, u
 
         comision_id = uuid.uuid4()
         await session.execute(
-            text(
-                "ALTER TABLE comision ADD COLUMN IF NOT EXISTS materia_legado VARCHAR(200)"
-            )
+            text("ALTER TABLE comision ADD COLUMN IF NOT EXISTS materia_legado VARCHAR(200)")
         )
         await session.execute(
             text(
