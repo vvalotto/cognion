@@ -29,7 +29,7 @@ class ComisionCreada:
     """Se creó una nueva comisión."""
 
     comision_id: UUID
-    materia: str
+    materia_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
 
 

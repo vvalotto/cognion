@@ -23,10 +23,10 @@ class ComisionesController:
         self._asignar_docente = asignar_docente
 
     async def crear_comision(
-        self, materia: str, horario: str, administrador_id: UUID
+        self, materia_id: UUID, horario: str, administrador_id: UUID
     ) -> tuple[Comision, ComisionCreada]:
         """Delega la creación de la comisión en el caso de uso correspondiente."""
-        return await self._crear_comision.execute(materia, horario, administrador_id)
+        return await self._crear_comision.execute(materia_id, horario, administrador_id)
 
     async def asignar_docente(
         self, comision_id: UUID, docente_id: UUID

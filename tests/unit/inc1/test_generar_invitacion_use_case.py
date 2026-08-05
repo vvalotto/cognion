@@ -19,7 +19,7 @@ class TestGenerarInvitacionUseCase:
         invitacion_repo = FakeInvitacionRepository()
         notificador = FakeNotificador()
         docente_id = uuid.uuid4()
-        comision = Comision.crear("IS", "lu 10-12", uuid.uuid4())
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
         comision.asignar_docente(docente_id)
         await comision_repo.guardar(comision)
 
@@ -39,7 +39,7 @@ class TestGenerarInvitacionUseCase:
         invitacion_repo = FakeInvitacionRepository()
         notificador = FakeNotificador()
         docente_id = uuid.uuid4()
-        comision = Comision.crear("IS", "lu 10-12", uuid.uuid4())
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
         comision.asignar_docente(docente_id)
         await comision_repo.guardar(comision)
 
@@ -54,7 +54,7 @@ class TestGenerarInvitacionUseCase:
         comision_repo = FakeComisionRepository()
         invitacion_repo = FakeInvitacionRepository()
         notificador = FakeNotificador()
-        comision = Comision.crear("IS", "lu 10-12", uuid.uuid4())
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
         await comision_repo.guardar(comision)
         docente_no_asignado = uuid.uuid4()
 

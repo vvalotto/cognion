@@ -12,7 +12,7 @@ from src.app import app
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc1._auth_headers import admin_headers
+from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc1/US-1.1.0-alta-usuarios-comision-docentes.feature")
 
@@ -30,6 +30,8 @@ async def _limpiar_tablas_identidad() -> None:
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
         await session.execute(text("DELETE FROM usuario"))
+        await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
 
@@ -67,6 +69,14 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
         return await client.post(path, json=json, headers=headers or admin_headers())
 
 
+async def _crear_materia_id() -> str:
+    """Crea una Materia única en BC Banco de Preguntas y devuelve su id."""
+    respuesta = await _post(
+        "/materias", {"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=docente_headers()
+    )
+    return respuesta.json()["id"]
+
+
 @given("un Administrador autenticado con JWT válido")
 def administrador_autenticado(context):
     admin = run_async(_crear_usuario("admin.bdd@fiuner.edu.ar", "administrador"))
@@ -81,11 +91,12 @@ def usuario_existente_con_email(context, email):
 
 @given("una Comisión existente")
 def comision_existente(context):
+    materia_id = run_async(_crear_materia_id())
     response = run_async(
         _post(
             "/comisiones",
             {
-                "materia": "Ingeniería de Software",
+                "materia_id": materia_id,
                 "horario": "lu 10-12",
                 "administrador_id": context["administrador_id"],
             },
@@ -105,9 +116,10 @@ async def _crear_estudiante_fixture() -> str:
     `TipoPerfil.ESTUDIANTE` desde `US-1.1.2` (solo se crea vía invitación, con `comision_id`).
     Este fixture solo necesita "un usuario que no es Docente" para el escenario de rechazo."""
     admin = await _crear_usuario("admin.bdd-est@fiuner.edu.ar", "administrador")
+    materia_id = await _crear_materia_id()
     comision_resp = await _post(
         "/comisiones",
-        {"materia": "Comisión Fixture", "horario": "lu 10-12", "administrador_id": admin["id"]},
+        {"materia_id": materia_id, "horario": "lu 10-12", "administrador_id": admin["id"]},
     )
     comision_id = comision_resp.json()["id"]
 
@@ -157,11 +169,12 @@ def ejecuta_crear_usuario_email_duplicado(context):
 
 @when('ejecuta CrearComision con materia "Ingeniería de Software" y horario')
 def ejecuta_crear_comision(context):
+    materia_id = run_async(_crear_materia_id())
     context["response"] = run_async(
         _post(
             "/comisiones",
             {
-                "materia": "Ingeniería de Software",
+                "materia_id": materia_id,
                 "horario": "lu 10-12",
                 "administrador_id": context["administrador_id"],
             },

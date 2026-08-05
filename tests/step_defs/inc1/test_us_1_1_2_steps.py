@@ -102,6 +102,8 @@ async def _limpiar_tablas_identidad() -> None:
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
         await session.execute(text("DELETE FROM usuario"))
+        await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
 
@@ -139,12 +141,18 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
         return await client.post(path, json=json, headers=headers)
 
 
+async def _crear_materia(nombre: str) -> str:
+    respuesta = await _post("/materias", {"nombre": nombre}, headers=docente_headers())
+    return respuesta.json()["id"]
+
+
 async def _crear_invitacion_vigente(materia: str) -> dict:
     admin = await _crear_usuario("admin.bdd112@fiuner.edu.ar", "administrador")
     docente = await _crear_usuario("docente.bdd112@fiuner.edu.ar", "docente")
+    materia_id = await _crear_materia(materia)
     comision_resp = await _post(
         "/comisiones",
-        {"materia": materia, "horario": "lu 10-12", "administrador_id": admin["id"]},
+        {"materia_id": materia_id, "horario": "lu 10-12", "administrador_id": admin["id"]},
         headers=admin_headers(),
     )
     comision_id = comision_resp.json()["id"]

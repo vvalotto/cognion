@@ -1,10 +1,20 @@
 import asyncio
+import uuid
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
 from src.settings import settings
+
+
+async def _crear_materia(client, docente_headers, nombre: str) -> str:
+    response = await client.post(
+        "/materias",
+        json={"nombre": nombre},
+        headers=docente_headers,
+    )
+    return response.json()["id"]
 
 
 async def _handle_fake_smtp(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -55,6 +65,8 @@ class TestInvitacionesAPIIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+
             admin_resp = await client.post(
                 "/usuarios",
                 json={
@@ -81,7 +93,11 @@ class TestInvitacionesAPIIntegration:
 
             comision_resp = await client.post(
                 "/comisiones",
-                json={"materia": "IS", "horario": "lu 10-12", "administrador_id": admin_id},
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
                 headers=admin_headers,
             )
             comision_id = comision_resp.json()["id"]
@@ -109,6 +125,8 @@ class TestInvitacionesAPIIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+
             admin_resp = await client.post(
                 "/usuarios",
                 json={
@@ -135,7 +153,11 @@ class TestInvitacionesAPIIntegration:
 
             comision_resp = await client.post(
                 "/comisiones",
-                json={"materia": "IS", "horario": "lu 10-12", "administrador_id": admin_id},
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
                 headers=admin_headers,
             )
             comision_id = comision_resp.json()["id"]

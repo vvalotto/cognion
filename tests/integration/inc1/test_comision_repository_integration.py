@@ -17,13 +17,14 @@ class TestSQLAlchemyComisionRepositoryIntegration:
         repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear("Vic", "vic.repo@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
-        comision = Comision.crear("Ingeniería de Software", "lu 10-12", admin.id)
+        materia_id = uuid.uuid4()
+        comision = Comision.crear(materia_id, "lu 10-12", admin.id)
 
         await repo.guardar(comision)
         recuperada = await repo.obtener_por_id(comision.id)
 
         assert recuperada is not None
-        assert recuperada.materia == "Ingeniería de Software"
+        assert recuperada.materia_id == materia_id
         assert recuperada.docentes_asignados == []
 
     async def test_actualizar_agrega_docente_asignado(self, session):
@@ -35,7 +36,7 @@ class TestSQLAlchemyComisionRepositoryIntegration:
         admin = Usuario.crear("Vic", "vic.repo2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
 
-        comision = Comision.crear("IS", "lu 10-12", admin.id)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
 
         comision.asignar_docente(docente.id)
@@ -51,7 +52,7 @@ class TestSQLAlchemyComisionRepositoryIntegration:
 
     async def test_actualizar_comision_inexistente_lanza_value_error(self, session):
         repo = SQLAlchemyComisionRepository(session)
-        comision = Comision.crear("IS", "lu 10-12", uuid.uuid4())
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
 
         with pytest.raises(ValueError):
             await repo.actualizar(comision)

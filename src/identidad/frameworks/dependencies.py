@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.frameworks.adapters.materia_port_in_process import MateriaPortInProcess
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
@@ -57,8 +58,9 @@ def get_comisiones_controller(session: SessionDep) -> ComisionesController:
     """Arma el `ComisionesController` con sus dependencias concretas."""
     comision_repo = SQLAlchemyComisionRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
+    materia_port = MateriaPortInProcess(session)
     return ComisionesController(
-        CrearComisionUseCase(comision_repo),
+        CrearComisionUseCase(comision_repo, materia_port),
         AsignarDocenteAComisionUseCase(comision_repo, usuario_repo),
     )
 
@@ -84,8 +86,11 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     comision_repo = SQLAlchemyComisionRepository(session)
     hasher = get_password_hasher()
+    materia_port = MateriaPortInProcess(session)
     return RegistroController(
-        RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
+        comision_repo,
+        materia_port,
     )
 
 
