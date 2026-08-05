@@ -46,10 +46,24 @@ advertencias; ArchitectAnalyst (`quality/reports/architectanalyst/BL-002-arquite
 3 críticos "Zone of Pain" a nivel de paquete raíz (`identidad`, `settings`, `shared`), leídos y
 aceptados, `should_block: false` (nunca bloquea, solo informa tendencias — ver retrospectiva
 de `BL-002` para el detalle y el ajuste propuesto para el próximo incremento).
-**Próximo paso:** Incremento 2 — Banco de Preguntas (`docs/rf/PLAN_v1.md`). Arranca por
-Iteración 0 — Modelado: event storming del BC Banco de Preguntas (agregados `Pregunta`/`Banco`,
-invariantes de metadatos) + wireframes de carga y filtrado. Sin US-IEDD ni Issues creados
-todavía.
+Incremento 2 — Banco de Preguntas en curso, Iteración 1 (`docs/plans/inc2/inc2-candidatas.md`).
+Iteración 0 — Modelado cerrada 2026-07-31 (US-2.0.1 event storming, Issue #38; US-2.0.2
+wireframes, Issue #39). **US-2.1.1 (Docente da de alta una Materia; banco vacío en el mismo
+flujo) cerrada 2026-07-31**, PR #56 mergeado a `develop`,
+`docs/reports/inc2/US-2.1.1-report.md`. **US-2.1.2 (Comisión referencia Materia por puerto,
+refactor técnico de BC Identidad) cerrada 2026-08-05**, PR #62 mergeado a `develop` (merge
+`8294a82`), Issue #43 cerrado, `docs/reports/inc2/US-2.1.2-report.md`: `Comisión.materia_id`
+resuelto contra `MateriaPort` sin imports directos entre BCs, migración con backfill
+verificada por round-trip real. El pre-push gate (`DesignReviewer`, `CBOAnalyzer`) detectó un
+CRITICAL (CBO=11/10 en `RegistrarEstudianteUseCase` al inyectar `MateriaPort`) recién en la
+fase de PR — no cubierto por los Quality Gates de Fase 7, que miden pylint/CC/MI/coverage pero
+no acoplamiento; se corrigió moviendo la resolución del nombre de materia a
+`RegistroController` (detalle de presentación, no de la regla de negocio de registro). 158/158
+tests, DesignReviewer 0 CRITICAL tras el fix.
+**Próximo paso:** `US-2.1.3` — Docente carga una pregunta de opción múltiple en un banco
+(`CargarPreguntaOpcionMultiple`, INV-BP-02/03). Sin spec ni Issue creados todavía — ver
+`docs/plans/inc2/inc2-candidatas.md` §Iteración 1 para el detalle y el orden de implementación
+(2.1.3/2.1.4 antes que 2.1.5/2.1.6, 2.1.7 al final).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
