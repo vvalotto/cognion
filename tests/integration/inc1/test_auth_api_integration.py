@@ -65,7 +65,7 @@ class TestAuthAPIIntegration:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
-        comision = Comision.crear("IS-2026-C1", "lu 10-12", admin.id)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
 
         email = f"estudiante.{uuid.uuid4()}@fiuner.edu.ar"

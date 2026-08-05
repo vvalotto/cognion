@@ -17,18 +17,28 @@ from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseC
 from tests.unit.inc1._fakes import (
     FakeComisionRepository,
     FakeInvitacionRepository,
+    FakeMateriaPort,
     FakePasswordHasher,
     FakeUsuarioRepository,
 )
 
+_NOMBRE_MATERIA = "Ingeniería de Software"
+
 
 async def _con_comision_guardada(
-    comision_repo: FakeComisionRepository, comision_id: uuid.UUID
+    comision_repo: FakeComisionRepository, comision_id: uuid.UUID, materia_id: uuid.UUID
 ) -> Comision:
-    comision = Comision.crear("Ingeniería de Software", "Lu-Mi 18-20", uuid.uuid4())
+    comision = Comision.crear(materia_id, "Lu-Mi 18-20", uuid.uuid4())
     comision.id = comision_id
     await comision_repo.guardar(comision)
     return comision
+
+
+def _con_materia_port() -> tuple[FakeMateriaPort, uuid.UUID]:
+    materia_port = FakeMateriaPort()
+    materia_id = uuid.uuid4()
+    materia_port.agregar(materia_id, _NOMBRE_MATERIA)
+    return materia_port, materia_id
 
 
 class TestRegistrarEstudianteUseCase:
@@ -37,12 +47,15 @@ class TestRegistrarEstudianteUseCase:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port, materia_id = _con_materia_port()
         comision_id = uuid.uuid4()
-        comision = await _con_comision_guardada(comision_repo, comision_id)
+        await _con_comision_guardada(comision_repo, comision_id, materia_id)
         invitacion = Invitacion.crear(comision_id, uuid.uuid4())
         await invitacion_repo.guardar(invitacion)
 
-        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        use_case = RegistrarEstudianteUseCase(
+            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+        )
         usuario, materia, evento_invitacion, evento_usuario = await use_case.execute(
             invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123"
         )
@@ -51,7 +64,7 @@ class TestRegistrarEstudianteUseCase:
         assert usuario.perfil.comision_id == comision_id
         assert usuario.password_hash == hasher.hash("password123")
         assert usuario.id in usuario_repo.usuarios
-        assert materia == comision.materia
+        assert materia == _NOMBRE_MATERIA
 
         assert isinstance(evento_invitacion, InvitacionAceptada)
         assert evento_invitacion.usuario_id == usuario.id
@@ -65,12 +78,15 @@ class TestRegistrarEstudianteUseCase:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port, materia_id = _con_materia_port()
         comision_id = uuid.uuid4()
-        await _con_comision_guardada(comision_repo, comision_id)
+        await _con_comision_guardada(comision_repo, comision_id, materia_id)
         invitacion = Invitacion.crear(comision_id, uuid.uuid4())
         await invitacion_repo.guardar(invitacion)
 
-        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        use_case = RegistrarEstudianteUseCase(
+            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+        )
         await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
 
         assert invitacion_repo.invitaciones[invitacion.id].usada_en is not None
@@ -80,13 +96,16 @@ class TestRegistrarEstudianteUseCase:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port, materia_id = _con_materia_port()
         comision_id = uuid.uuid4()
-        await _con_comision_guardada(comision_repo, comision_id)
+        await _con_comision_guardada(comision_repo, comision_id, materia_id)
         invitacion = Invitacion.crear(comision_id, uuid.uuid4())
         await invitacion_repo.guardar(invitacion)
         usuario_repo.usuarios[uuid.uuid4()] = _usuario_con_email("nico@fiuner.edu.ar")
 
-        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        use_case = RegistrarEstudianteUseCase(
+            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+        )
 
         with pytest.raises(EmailYaRegistrado):
             await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
@@ -98,8 +117,11 @@ class TestRegistrarEstudianteUseCase:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port, _materia_id = _con_materia_port()
 
-        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        use_case = RegistrarEstudianteUseCase(
+            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+        )
 
         with pytest.raises(InvitacionInvalida):
             await use_case.execute("token-inexistente", "Nico", "nico@fiuner.edu.ar", "password123")
@@ -111,13 +133,16 @@ class TestRegistrarEstudianteUseCase:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port, materia_id = _con_materia_port()
         comision_id = uuid.uuid4()
-        await _con_comision_guardada(comision_repo, comision_id)
+        await _con_comision_guardada(comision_repo, comision_id, materia_id)
         invitacion = Invitacion.crear(comision_id, uuid.uuid4())
         invitacion.expira_en = datetime.now(UTC) - timedelta(days=1)
         await invitacion_repo.guardar(invitacion)
 
-        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        use_case = RegistrarEstudianteUseCase(
+            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+        )
 
         with pytest.raises(InvitacionVencida):
             await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
@@ -129,13 +154,16 @@ class TestRegistrarEstudianteUseCase:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port, materia_id = _con_materia_port()
         comision_id = uuid.uuid4()
-        await _con_comision_guardada(comision_repo, comision_id)
+        await _con_comision_guardada(comision_repo, comision_id, materia_id)
         invitacion = Invitacion.crear(comision_id, uuid.uuid4())
         invitacion.aceptar(datetime.now(UTC))
         await invitacion_repo.guardar(invitacion)
 
-        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+        use_case = RegistrarEstudianteUseCase(
+            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+        )
 
         with pytest.raises(InvitacionYaUsada):
             await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")

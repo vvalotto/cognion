@@ -28,6 +28,10 @@ class FakeMateriaRepository(MateriaRepositoryPort):
                 return materia
         return None
 
+    async def obtener_por_id(self, materia_id: UUID) -> Materia | None:
+        """Busca una materia por id, o `None` si no existe."""
+        return self.materias.get(materia_id)
+
 
 class FakeBancoRepository(BancoRepositoryPort):
     """Repositorio de bancos en memoria."""

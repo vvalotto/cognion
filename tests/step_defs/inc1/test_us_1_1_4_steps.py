@@ -104,7 +104,7 @@ async def _crear_estudiante_directo(email: str, password: str) -> None:
             TipoPerfil.ADMINISTRADOR,
         )
         await usuario_repo.guardar(admin)
-        comision = Comision.crear("IS-2026-BDD114", "lu 10-12", admin.id)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
         estudiante = Usuario.crear_estudiante(
             "Estudiante BDD", email, hasher.hash(password), comision.id

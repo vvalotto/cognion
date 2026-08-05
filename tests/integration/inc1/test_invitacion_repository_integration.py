@@ -27,7 +27,7 @@ async def _crear_invitacion(session) -> tuple[Invitacion, Comision]:
     await usuario_repo.guardar(admin)
     docente = Usuario.crear("Ana", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
     await usuario_repo.guardar(docente)
-    comision = Comision.crear("IS", "lu 10-12", admin.id)
+    comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
 
     invitacion = Invitacion.crear(comision.id, docente.id)

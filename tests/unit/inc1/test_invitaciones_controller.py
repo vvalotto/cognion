@@ -19,7 +19,7 @@ class TestInvitacionesController:
         invitacion_repo = FakeInvitacionRepository()
         notificador = FakeNotificador()
         docente_id = uuid.uuid4()
-        comision = Comision.crear("IS", "lu 10-12", uuid.uuid4())
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
         comision.asignar_docente(docente_id)
         await comision_repo.guardar(comision)
 

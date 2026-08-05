@@ -8,6 +8,7 @@ from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseC
 from tests.unit.inc1._fakes import (
     FakeComisionRepository,
     FakeInvitacionRepository,
+    FakeMateriaPort,
     FakePasswordHasher,
     FakeUsuarioRepository,
 )
@@ -19,15 +20,20 @@ class TestRegistroController:
         usuario_repo = FakeUsuarioRepository()
         comision_repo = FakeComisionRepository()
         hasher = FakePasswordHasher()
+        materia_port = FakeMateriaPort()
+        materia_id = uuid.uuid4()
+        materia_port.agregar(materia_id, "Ingeniería de Software")
         comision_id = uuid.uuid4()
-        comision = Comision.crear("Ingeniería de Software", "Lu-Mi 18-20", uuid.uuid4())
+        comision = Comision.crear(materia_id, "Lu-Mi 18-20", uuid.uuid4())
         comision.id = comision_id
         await comision_repo.guardar(comision)
         invitacion = Invitacion.crear(comision_id, uuid.uuid4())
         await invitacion_repo.guardar(invitacion)
 
         controller = RegistroController(
-            RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, comision_repo, hasher)
+            RegistrarEstudianteUseCase(
+                invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
+            )
         )
 
         usuario, materia, evento_invitacion, evento_usuario = await controller.registrar_estudiante(

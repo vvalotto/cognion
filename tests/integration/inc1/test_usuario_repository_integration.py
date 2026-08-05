@@ -73,7 +73,7 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear("Vic", "vic.est@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
-        comision = Comision.crear("IS", "lu 10-12", admin.id)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
 
         estudiante = Usuario.crear_estudiante("Nico", "nico.est@fiuner.edu.ar", "hash", comision.id)

@@ -31,6 +31,8 @@ async def _limpiar_tablas_identidad() -> None:
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
         await session.execute(text("DELETE FROM usuario"))
+        await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
 
@@ -139,6 +141,11 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
         return await client.post(path, json=json, headers=headers or admin_headers())
 
 
+async def _crear_materia_id(nombre: str) -> str:
+    respuesta = await _post("/materias", {"nombre": nombre}, headers=docente_headers())
+    return respuesta.json()["id"]
+
+
 @given("un Docente autenticado")
 def docente_autenticado(context):
     docente = run_async(_crear_usuario("docente.bdd111@fiuner.edu.ar", "docente"))
@@ -148,10 +155,11 @@ def docente_autenticado(context):
 @given(parsers.parse('el Docente está presente en docentes_asignados de la Comisión "{nombre}"'))
 def docente_presente_en_comision(context, nombre):
     admin = run_async(_crear_usuario("admin.bdd111a@fiuner.edu.ar", "administrador"))
+    materia_id = run_async(_crear_materia_id(nombre))
     comision_resp = run_async(
         _post(
             "/comisiones",
-            {"materia": nombre, "horario": "lu 10-12", "administrador_id": admin["id"]},
+            {"materia_id": materia_id, "horario": "lu 10-12", "administrador_id": admin["id"]},
         )
     )
     comision_id = comision_resp.json()["id"]
@@ -162,10 +170,11 @@ def docente_presente_en_comision(context, nombre):
 @given(parsers.parse('el Docente NO está presente en docentes_asignados de la Comisión "{nombre}"'))
 def docente_no_presente_en_comision(context, nombre):
     admin = run_async(_crear_usuario("admin.bdd111b@fiuner.edu.ar", "administrador"))
+    materia_id = run_async(_crear_materia_id(nombre))
     comision_resp = run_async(
         _post(
             "/comisiones",
-            {"materia": nombre, "horario": "lu 10-12", "administrador_id": admin["id"]},
+            {"materia_id": materia_id, "horario": "lu 10-12", "administrador_id": admin["id"]},
         )
     )
     context["comision_id"] = comision_resp.json()["id"]
