@@ -40,14 +40,20 @@ directos entre BCs. Amplió su alcance en Fase 2 más allá de lo descripto en l
 ### Identidad — use_cases
 - ✅ `src/identidad/use_cases/crear_comision.py` (editado) — valida `materia_id` contra
   `MateriaPort`, `MateriaNoExiste` si no resuelve
-- ✅ `src/identidad/use_cases/registrar_estudiante.py` (editado) — resuelve el nombre de la
-  materia vía `MateriaPort` para mantener `RegistroResponse.materia` sin cambios de contrato
+- ✅ `src/identidad/use_cases/registrar_estudiante.py` (editado) — ya no depende de
+  `MateriaPort` ni de `ComisionRepositoryPort`; devuelve `(Usuario, InvitacionAceptada,
+  UsuarioRegistrado)`. La resolución del nombre de materia para `RegistroResponse.materia`
+  se movió a `RegistroController` (ver "Fix de CBOAnalyzer post quality-gate" más abajo)
 
 ### Identidad — interface_adapters
 - ✅ `src/identidad/interface_adapters/gateways/comision_repository.py` (editado) — mapea
   `materia_id`
 - ✅ `src/identidad/interface_adapters/controllers/comisiones_controller.py` (editado) —
   `crear_comision(materia_id, ...)`
+- ✅ `src/identidad/interface_adapters/controllers/registro_controller.py` (editado) — recibe
+  `ComisionRepositoryPort` y `MateriaPort`; tras invocar `RegistrarEstudianteUseCase`, resuelve
+  comisión → `materia_id` → nombre para `RegistroResponse.materia` (movido acá desde el use
+  case, ver "Fix de CBOAnalyzer post quality-gate")
 
 ### Identidad — frameworks
 - ✅ `src/identidad/frameworks/db/models.py` (editado) — `ComisionModel.materia_id: UUID`
@@ -155,6 +161,33 @@ también ahí, resolviendo el nombre en vez de romper el contrato existente. Doc
 
 ---
 
+## Fix de CBOAnalyzer post Quality Gates (detectado en `/pr`, antes del merge)
+
+El plan de Fase 2 no corrió `DesignReviewer` explícitamente (los Quality Gates de Fase 7 cubren
+pylint/CC/MI/coverage, no acoplamiento — ver tabla de métricas). Al ejecutar `git push` en la
+Fase de PR, el hook `.githooks/pre-push` bloqueó con 1 CRITICAL: inyectar `MateriaPort` en
+`RegistrarEstudianteUseCase` (para resolver `comision.materia_id` → nombre, decisión de la
+sección anterior) llevó su `CBOAnalyzer` a CBO=11 (umbral `max_cbo=10` de `pyproject.toml`) —
+la clase ya estaba exactamente en el umbral antes de esta US.
+
+**Fix aplicado:** la resolución de nombre de materia es un detalle de presentación de
+`RegistroResponse`, no de la regla de negocio "registrar un Estudiante que acepta una
+invitación". Se movió esa responsabilidad a `RegistroController`:
+- `RegistrarEstudianteUseCase.execute` deja de depender de `ComisionRepositoryPort` y
+  `MateriaPort` — su firma de retorno pasa de `tuple[Usuario, str, InvitacionAceptada,
+  UsuarioRegistrado]` a `tuple[Usuario, InvitacionAceptada, UsuarioRegistrado]` (sin campo de
+  materia). CBO vuelve a 10, dentro del umbral.
+- `RegistroController` ahora recibe `ComisionRepositoryPort` y `MateriaPort` además del use
+  case; tras invocar `execute`, resuelve `comision_id` (del evento `InvitacionAceptada`) →
+  `materia_id` → nombre, y arma la tupla de 4 elementos que espera `registro_router.py` (sin
+  cambios en el endpoint ni en `RegistroResponse`).
+
+Verificado con mypy (sin issues), suite completa (158/158) y `DesignReviewer --config
+pyproject.toml` (0 CRITICAL, 28 advertencias — deuda técnica preexistente no introducida por
+esta US) antes de pushear. Documentado también en la descripción del PR #62.
+
+---
+
 ## Archivos Creados/Modificados
 
 **Producción (nuevo):** `src/banco_preguntas/use_cases/obtener_materia.py`,
@@ -167,7 +200,8 @@ también ahí, resolviendo el nombre en vez de romper el contrato existente. Doc
 `interface_adapters/gateways/materia_repository.py`, `src/identidad/entities/comision.py`,
 `errors.py`, `eventos.py`, `use_cases/crear_comision.py`, `registrar_estudiante.py`,
 `interface_adapters/gateways/comision_repository.py`,
-`interface_adapters/controllers/comisiones_controller.py`, `frameworks/db/models.py`,
+`interface_adapters/controllers/comisiones_controller.py`,
+`interface_adapters/controllers/registro_controller.py`, `frameworks/db/models.py`,
 `frameworks/api/schemas.py`, `frameworks/api/comisiones_router.py`, `frameworks/dependencies.py`.
 
 **Tests (nuevos):** `tests/unit/inc2/test_obtener_materia_use_case.py`,
@@ -239,6 +273,12 @@ de Preguntas), `docs/design/domain/BC-banco-preguntas-modelo.md` (editado — ho
   la columna, detectó temprano que el backfill SQL era sintácticamente correcto.
 - 💡 Reutilizar `alembic revision --autogenerate` para el diff de esquema (igual que en
   `US-2.1.1`) y completar a mano solo el backfill de datos evitó errores de transcripción.
+- ⚠️ El plan de Fase 2 no anticipó el impacto en acoplamiento (CBO) de inyectar un puerto
+  nuevo en una clase ya cercana al umbral — los Quality Gates de Fase 7 miden pylint/CC/MI/
+  coverage pero no corren `DesignReviewer` explícitamente; recién el hook de `pre-push` lo
+  detectó, ya en la fase de PR. Toda US que agregue una dependencia a un use case debería
+  correr `DesignReviewer --config pyproject.toml` en la Fase de Quality Gates, no solo confiar
+  en el pre-push como red de seguridad tardía.
 
 ---
 
