@@ -88,9 +88,9 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
     hasher = get_password_hasher()
     materia_port = MateriaPortInProcess(session)
     return RegistroController(
-        RegistrarEstudianteUseCase(
-            invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
-        )
+        RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
+        comision_repo,
+        materia_port,
     )
 
 

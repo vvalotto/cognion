@@ -31,9 +31,9 @@ class TestRegistroController:
         await invitacion_repo.guardar(invitacion)
 
         controller = RegistroController(
-            RegistrarEstudianteUseCase(
-                invitacion_repo, usuario_repo, comision_repo, hasher, materia_port
-            )
+            RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
+            comision_repo,
+            materia_port,
         )
 
         usuario, materia, evento_invitacion, evento_usuario = await controller.registrar_estudiante(
