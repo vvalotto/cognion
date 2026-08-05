@@ -71,6 +71,15 @@ class InvitacionYaUsada(Exception):
         super().__init__(f"La invitación con token '{token}' ya fue utilizada.")
 
 
+class MateriaNoExiste(Exception):
+    """Se referenció una materia que no existe en BC Banco de Preguntas."""
+
+    def __init__(self, materia_id: UUID) -> None:
+        """Guarda el id de la materia en conflicto y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"La materia '{materia_id}' no existe.")
+
+
 class CredencialesInvalidas(Exception):
     """El email no existe o la contraseña no verifica contra el hash guardado.
 
