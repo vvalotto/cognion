@@ -10,6 +10,8 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.2] `ObtenerMateriaUseCase` de solo lectura (`src/banco_preguntas/use_cases/`) y
+  `MateriaRepositoryPort.obtener_por_id` — soportan la consulta de `Materia` desde otros BCs.
 - [US-2.1.1] Docente da de alta una materia y su banco de preguntas — BC Banco de Preguntas
   - `src/banco_preguntas/entities/materia.py`, `banco.py` — aggregates `Materia` (`nombre`
     único, INV-BP-00) y `Banco` (1:1 con `Materia`, INV-BP-01)
@@ -22,6 +24,25 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     entities/use_cases/interface_adapters
 
 ### Changed
+- [US-2.1.2] `Comisión` referencia `Materia` por puerto en vez de un `string` libre — BC
+  Identidad
+  - `Comision.materia: str` → `Comision.materia_id: UUID` (`src/identidad/entities/comision.py`)
+  - `MateriaPort`/`MateriaDTO` nuevos (`src/identidad/entities/ports/materia_port.py`) —
+    Identidad consulta `Materia` sin importar `src/banco_preguntas` directamente
+  - `MateriaPortInProcess` (`src/identidad/frameworks/adapters/`) — adaptador in-process, mismo
+    criterio que `ADR-006`; único punto de Identidad que importa `src.banco_preguntas`
+  - `CrearComisionUseCase` valida `materia_id` contra el puerto (`MateriaNoExiste` si no
+    existe); `RegistrarEstudianteUseCase` resuelve el nombre para `RegistroResponse.materia`
+    (contrato existente sin cambios para el Estudiante)
+  - `POST /comisiones` ahora recibe `materia_id: UUID` en vez de `materia: str`; responde 422
+    con `MateriaNoExiste`
+  - Migración `295bc74948c3_comision_materia_id.py` — backfill de `comision.materia` (string)
+    a `materia_id` (UUID) por nombre, verificada con round-trip real contra Postgres local
+  - Documentado en `docs/architecture/20-context-map-integrations.md`: nueva relación
+    Identidad → Banco de Preguntas (`Materia`), patrón Customer-Supplier
+  - 25 tests nuevos/actualizados (6 unitarios, 8 integración, 4 BDD nuevos + 7 preexistentes de
+    Identidad ajustados) — 100% cobertura en entities/use_cases/interface_adapters, 158/158
+    tests del proyecto en verde
 - **Refactor (`ADR-019`):** `TipoPerfil`, `JWT`/`JWTPayload`, `JWTIssuerPort`, `PyJWTIssuer`,
   `get_current_user`, `require_rol` movidos de `src/identidad` a `src/shared` — necesario para
   que `banco_preguntas` pudiera exigir rol `docente` en su endpoint sin importar directo de

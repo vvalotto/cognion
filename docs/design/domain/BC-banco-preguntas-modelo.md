@@ -92,15 +92,13 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
 primer Administrador en BC Identidad (`BC-identidad-modelo.md` §9.4). Hoy se conocen dos
 materias fijas, pero el alta queda como operación normal del producto.
 
-**Nota de alcance — cruce con BC Identidad:** `Comisión` (BC Identidad,
-`src/identidad/entities/comision.py`) ya tiene `materia: str` implementado y shippeado en
-BL-002 (Incremento 1). Con `Materia` ahora como Entity dueña de este BC, `Comisión.materia`
-debe pasar a referenciar esta misma `Materia` por puerto (`entities/ports/` de BC Identidad,
-regla de `CLAUDE.md` — nunca imports directos entre BCs). **Esto requiere una US técnica de
-refactor de `Comisión.materia`, a resolver antes o junto con RF-04 en la Iteración 1 de este
-incremento** — no se implementa en esta Iteración 0. El mecanismo concreto del puerto (llamada
-directa in-process, mismo criterio que `ADR-006` para Sesiones→Notificaciones, u otro) queda
-como hot spot abierto, a resolver en esa US técnica, no bloqueante para cerrar este modelo.
+**Nota de alcance — cruce con BC Identidad:** Resuelto en `US-2.1.2`. `Comisión` (BC Identidad,
+`src/identidad/entities/comision.py`) tenía `materia: str` shippeado en BL-002 (Incremento 1);
+ahora referencia esta `Materia` por `materia_id: UUID` a través de `MateriaPort`
+(`src/identidad/entities/ports/materia_port.py`), implementado por `MateriaPortInProcess`
+(`src/identidad/frameworks/adapters/`) — llamada directa in-process, mismo criterio que
+`ADR-006` para Sesiones→Notificaciones. Ver `docs/architecture/20-context-map-integrations.md`
+para la relación documentada.
 
 ### `Banco` (Aggregate Root)
 
@@ -174,8 +172,7 @@ sesiones, pero se preserva para no romper el historial de sesiones pasadas que y
 1. **¿Qué es "el Banco"?** Resuelto — `Banco` es un aggregate con lifecycle propio, 1:1 con
    `Materia`, creado explícitamente por `CrearBanco` antes de poder cargar preguntas (§4).
 2. **¿Quién es dueño de `Materia`?** Resuelto — BC Banco de Preguntas. `Comisión` (BC
-   Identidad) la referencia por puerto — implica una US técnica de refactor (§4, nota de
-   alcance).
+   Identidad) la referencia por puerto (§4, nota de alcance) — implementado en `US-2.1.2`.
 3. **¿`PreguntaPlantilla` aggregate propio o Entity subordinada de `Banco`?** Resuelto —
    aggregate propio (`banco_id` como referencia), para no cargar todo el banco al tocar una
    sola pregunta.
