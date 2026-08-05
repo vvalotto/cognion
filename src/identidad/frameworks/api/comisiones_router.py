@@ -6,7 +6,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.identidad.entities.errors import ComisionNoExiste, UsuarioNoEsDocente
+from src.identidad.entities.errors import ComisionNoExiste, MateriaNoExiste, UsuarioNoEsDocente
 from src.identidad.frameworks.api.schemas import (
     AsignarDocenteRequest,
     ComisionResponse,
@@ -28,13 +28,19 @@ async def crear_comision(
     body: CrearComisionRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
 ) -> ComisionResponse:
-    """Crea una comisión nueva a nombre del administrador indicado."""
-    comision, _evento = await controller.crear_comision(
-        body.materia, body.horario, body.administrador_id
-    )
+    """Crea una comisión nueva a nombre del administrador indicado; 422 si la materia no existe."""
+    try:
+        comision, _evento = await controller.crear_comision(
+            body.materia_id, body.horario, body.administrador_id
+        )
+    except MateriaNoExiste as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
     return ComisionResponse(
         id=comision.id,
-        materia=comision.materia,
+        materia_id=comision.materia_id,
         horario=comision.horario,
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,
@@ -64,7 +70,7 @@ async def asignar_docente(
 
     return ComisionResponse(
         id=comision.id,
-        materia=comision.materia,
+        materia_id=comision.materia_id,
         horario=comision.horario,
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,

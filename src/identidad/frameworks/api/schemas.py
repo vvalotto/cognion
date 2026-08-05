@@ -31,7 +31,7 @@ class UsuarioResponse(BaseModel):
 class CrearComisionRequest(BaseModel):
     """Body de la request de alta de comisión."""
 
-    materia: str = Field(..., min_length=1, max_length=200)
+    materia_id: UUID
     horario: str = Field(..., min_length=1, max_length=200)
     administrador_id: UUID
 
@@ -40,7 +40,7 @@ class ComisionResponse(BaseModel):
     """Representación de una comisión devuelta por la API."""
 
     id: UUID
-    materia: str
+    materia_id: UUID
     horario: str
     administrador_id: UUID
     docentes_asignados: list[UUID]

@@ -73,7 +73,7 @@ class ComisionModel(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         PGUUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    materia: Mapped[str] = mapped_column(String(200), nullable=False)
+    materia_id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
     horario: Mapped[str] = mapped_column(String(200), nullable=False)
     administrador_id: Mapped[uuid.UUID] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("administrador.id"), nullable=False
