@@ -24,7 +24,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         self._session.add(
             ComisionModel(
                 id=comision.id,
-                materia=comision.materia,
+                materia_id=comision.materia_id,
                 horario=comision.horario,
                 administrador_id=comision.administrador_id,
             )
@@ -40,7 +40,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
             return None
         return Comision(
             id=modelo.id,
-            materia=modelo.materia,
+            materia_id=modelo.materia_id,
             horario=modelo.horario,
             administrador_id=modelo.administrador_id,
             docentes_asignados=[docente.id for docente in modelo.docentes],

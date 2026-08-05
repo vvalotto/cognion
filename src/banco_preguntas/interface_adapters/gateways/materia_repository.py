@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,6 +30,13 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
             select(MateriaModel).where(MateriaModel.nombre == nombre)
         )
         modelo = resultado.scalar_one_or_none()
+        if modelo is None:
+            return None
+        return Materia(id=modelo.id, nombre=modelo.nombre)
+
+    async def obtener_por_id(self, materia_id: UUID) -> Materia | None:
+        """Busca una materia por id, o `None` si no existe."""
+        modelo = await self._session.get(MateriaModel, materia_id)
         if modelo is None:
             return None
         return Materia(id=modelo.id, nombre=modelo.nombre)
