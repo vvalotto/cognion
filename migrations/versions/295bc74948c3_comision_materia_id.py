@@ -31,9 +31,7 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Downgrade schema: revierte `materia_id` a `materia` (string) por nombre."""
-    op.add_column(
-        "comision", sa.Column("materia", sa.VARCHAR(length=200), nullable=True)
-    )
+    op.add_column("comision", sa.Column("materia", sa.VARCHAR(length=200), nullable=True))
     op.execute(
         "UPDATE comision SET materia = materia.nombre "
         "FROM materia WHERE comision.materia_id = materia.id"
