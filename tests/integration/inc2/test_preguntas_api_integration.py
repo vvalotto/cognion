@@ -115,9 +115,7 @@ class TestPreguntasAPIIntegration:
         banco = await _banco_persistido(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.post(
-                "/preguntas/opcion-multiple", json=_body_valido(banco.id)
-            )
+            response = await client.post("/preguntas/opcion-multiple", json=_body_valido(banco.id))
 
         assert response.status_code == 401
 
