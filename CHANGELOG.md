@@ -10,6 +10,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.3] Docente carga una pregunta de opción múltiple en un banco — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — aggregate `PreguntaPlantillaOpcionMultiple`,
+    factory `crear()` valida INV-BP-02 (exactamente una opción correcta) e INV-BP-03 (mínimo 2
+    opciones), levanta `OpcionesInvalidas`
+  - `src/banco_preguntas/entities/opcion.py`, `dificultad.py`, `importancia.py` — value objects
+    `Opcion` y enums `Dificultad`/`Importancia` (Alto/Medio/Bajo)
+  - `src/banco_preguntas/use_cases/cargar_pregunta_opcion_multiple.py` —
+    `CargarPreguntaOpcionMultipleUseCase`, valida precondición de `Banco` existente
+    (`BancoNoExiste`)
+  - `POST /preguntas/opcion-multiple`
+    (`src/banco_preguntas/frameworks/api/preguntas_router.py`) — requiere rol `docente`, 201
+    con `PreguntaOpcionMultipleResponse`, 404 si `BancoNoExiste`, 422 si `OpcionesInvalidas`
+  - `BancoRepositoryPort.obtener_por_id` — agregado al puerto existente para soportar la
+    validación de precondición
+  - Migración Alembic `b0e03a73f699_pregunta_plantilla.py` — tabla `pregunta_plantilla`
+    (`opciones` como `JSONB`, columna discriminadora `tipo` para `US-2.1.4`)
+  - 22 tests nuevos (11 unitarios, 11 integración incluyendo 4 escenarios BDD) — 100%
+    cobertura en entities/use_cases/interface_adapters del código nuevo
 - [US-2.1.2] `ObtenerMateriaUseCase` de solo lectura (`src/banco_preguntas/use_cases/`) y
   `MateriaRepositoryPort.obtener_por_id` — soportan la consulta de `Materia` desde otros BCs.
 - [US-2.1.1] Docente da de alta una materia y su banco de preguntas — BC Banco de Preguntas
