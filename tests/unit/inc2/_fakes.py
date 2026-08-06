@@ -8,6 +8,8 @@ from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
 from src.banco_preguntas.entities.ports.materia_repository_port import MateriaRepositoryPort
+from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
+from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 
 
 class FakeMateriaRepository(MateriaRepositoryPort):
@@ -43,3 +45,19 @@ class FakeBancoRepository(BancoRepositoryPort):
     async def guardar(self, banco: Banco) -> None:
         """Guarda un banco nuevo."""
         self.bancos[banco.id] = banco
+
+    async def obtener_por_id(self, banco_id: UUID) -> Banco | None:
+        """Busca un banco por id, o `None` si no existe."""
+        return self.bancos.get(banco_id)
+
+
+class FakePreguntaRepository(PreguntaRepositoryPort):
+    """Repositorio de preguntas en memoria."""
+
+    def __init__(self) -> None:
+        """Inicializa el almacenamiento en memoria."""
+        self.preguntas: dict[UUID, PreguntaPlantillaOpcionMultiple] = {}
+
+    async def guardar(self, pregunta: PreguntaPlantillaOpcionMultiple) -> None:
+        """Guarda una pregunta nueva."""
+        self.preguntas[pregunta.id] = pregunta

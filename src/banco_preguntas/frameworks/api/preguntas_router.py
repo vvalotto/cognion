@@ -53,9 +53,7 @@ async def cargar_pregunta_opcion_multiple(
         id=pregunta.id,
         banco_id=pregunta.banco_id,
         texto=pregunta.texto,
-        opciones=[
-            {"texto": o.texto, "es_correcta": o.es_correcta} for o in pregunta.opciones
-        ],
+        opciones=[{"texto": o.texto, "es_correcta": o.es_correcta} for o in pregunta.opciones],
         unidad_tematica=pregunta.unidad_tematica,
         tema=pregunta.tema,
         dificultad=pregunta.dificultad,
