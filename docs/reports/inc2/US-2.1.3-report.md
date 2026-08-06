@@ -171,7 +171,7 @@ modelo de dominio.
 
 **Tests (editados):** `tests/unit/inc2/_fakes.py`, `tests/integration/inc2/conftest.py`.
 
-**Documentación:** `docs/plans/US-2.1.3-{context,plan}.md`,
+**Documentación:** `docs/plans/inc2/US-2.1.3-{context,plan}.md`,
 `docs/reports/inc2/US-2.1.3-report.md` (este archivo),
 `quality/reports/inc2/US-2.1.3-{quality,pylint,cc,mi,coverage}.json`, `CHANGELOG.md` (editado).
 
