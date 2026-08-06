@@ -51,18 +51,18 @@ cat .claude/skills/implement-us/config.json | jq '.variables.architecture_patter
 cat .claude/skills/implement-us/customizations/{perfil}.json | jq '.component_structure'
 ```
 
-#### Si el perfil activo es `hexagonal-ddd-bc` — Orden de implementación obligatorio
+#### Si el perfil activo es `clean-architecture-bc` — Orden de implementación obligatorio
 
-En arquitectura hexagonal DDD, los componentes tienen dependencias directas entre sí. Implementar siempre en este orden dentro de cada BC:
+En Clean Architecture BC-first, los componentes tienen dependencias directas entre sí. Implementar siempre en este orden dentro de cada BC:
 
 1. **ValueObjects** — sin dependencias
 2. **DomainEvents** — usan ValueObjects
-3. **AggregateRoot** — usa VOs y emite Events
-4. **Ports** — interfaces ABC que el Aggregate necesita
-5. **CommandHandlers** — usan Aggregate + Ports
-6. **QueryHandlers** — usan Ports o read models
-7. **Repositories** — implementan Ports
-8. **ApiRouter** — importa solo application/
+3. **Entities** — usa VOs y emite Events
+4. **Ports** (`entities/ports/`) — interfaces ABC que la Entity necesita
+5. **UseCases** — usan Entities + Ports
+6. **Controllers / Presenters** (`interface_adapters/`) — usan UseCases
+7. **Repositories / Gateways** (`frameworks/`) — implementan Ports
+8. **Router** (`frameworks/`) — importa solo interface_adapters/
 
 No implementar un componente si su dependencia no está lista y testeada.
 

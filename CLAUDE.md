@@ -86,6 +86,12 @@ tests, DesignReviewer 0 CRITICAL tras el fix.
 | Auth | JWT — PyJWT + cryptography |
 | Gestión de paquetes | uv (backend), npm (frontend) |
 
+**Perfil `implement-us` activo:** `clean-architecture-bc`
+(`.claude/skills/implement-us/customizations/clean-architecture-bc.json`) — no
+`hexagonal-ddd-bc` (perfil genérico de claude-dev-kit, no usado en este proyecto). Cualquier
+doc de fase de `implement-us` que condicione comportamiento por nombre de perfil debe
+referenciar `clean-architecture-bc`.
+
 ---
 
 ## Estructura del repositorio

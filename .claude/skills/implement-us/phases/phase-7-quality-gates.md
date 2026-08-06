@@ -35,12 +35,28 @@ Ejecutar herramientas de análisis estático y validar que todas las métricas d
 
 ## Métricas de Calidad
 
-> **Si el perfil activo es `hexagonal-ddd-bc`:** No usar `radon` directamente.
-> Usar `codeguard` que orquesta pylint + radon + designreviewer en una sola pasada.
+> **Si el perfil activo es `clean-architecture-bc`:** No usar `radon` directamente.
+> Usar `codeguard` que orquesta pylint + radon (Complexity/Maintainability) + otros checks
+> estáticos (Security, PEP8, DeadCode, Spelling, Types, UnusedImports) en una sola pasada.
+> `designreviewer` **no** es uno de esos checks — es una herramienta separada
+> (config propia `[tool.designreviewer]` en `pyproject.toml`) que corre en el pre-push hook,
+> no dentro de Fase 7.
+>
+> `codeguard` acepta uno o más archivos o directorios como `PATHS`. Para no repetir el
+> procesamiento de código preexistente no tocado por esta US, acotar la corrida a los
+> `.py` de `src/` modificados/agregados respecto a `develop`:
 >
 > ```bash
-> codeguard src/{bc}/ --format json > quality/reports/codeguard/{US_ID}-codeguard.json
+> git diff --name-only --diff-filter=ACMR $(git merge-base develop HEAD) -- '*.py' | grep '^src/' > /tmp/archivos_modificados.txt
+> codeguard $(cat /tmp/archivos_modificados.txt) --format json > quality/reports/codeguard/{US_ID}-codeguard.json
 > ```
+>
+> El gate de **coverage** (`pytest --cov={COMPONENT_PATH}`, más abajo) no se acota — sigue
+> midiendo sobre el componente completo del BC, no solo los archivos modificados.
+>
+> Consecuencia esperada: deuda preexistente en archivos no tocados por la US (CC/MI/pylint)
+> deja de aparecer en el reporte de Fase 7. Sigue visible en DesignReviewer/ArchitectAnalyst
+> al cierre de Incremento, que sí barren el árbol completo.
 >
 > `designreviewer` se ejecuta **al cierre del Incremento** (no por US), vía pre-push hook
 > o manualmente. Si reporta CRITICAL, bloquea el merge.

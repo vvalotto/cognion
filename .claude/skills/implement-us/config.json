@@ -10,11 +10,14 @@
     "last_updated": "2026-02-27"
   },
 
+  "_comment_active_profile": "Perfil de customización efectivamente en uso en este proyecto — fuente de verdad para Fase 0 y para cualquier condicional en los docs de fase.",
+  "active_profile": "clean-architecture-bc",
+
   "_comment_variables": "Variables globales del skill - Pueden ser sobrescritas por perfiles de customización",
 
   "variables": {
     "architecture_pattern": {
-      "default": "generic",
+      "default": "clean-architecture",
       "description": "Patrón arquitectónico del proyecto",
       "available": ["mvc", "mvt", "layered", "clean-architecture", "generic"],
       "examples": {
