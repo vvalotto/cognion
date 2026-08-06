@@ -26,7 +26,7 @@
   - cobertura ≥ 95%
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-2.1.3-context.md
+- Contexto: docs/plans/inc2/US-2.1.3-context.md
 - BDD feature: tests/features/inc2/US-2.1.3-cargar-pregunta-opcion-multiple.feature
 - Plan: docs/plans/inc2/US-2.1.3-plan.md
 - Reporte: docs/reports/inc2/US-2.1.3-report.md
