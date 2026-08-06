@@ -59,11 +59,19 @@ CRITICAL (CBO=11/10 en `RegistrarEstudianteUseCase` al inyectar `MateriaPort`) r
 fase de PR — no cubierto por los Quality Gates de Fase 7, que miden pylint/CC/MI/coverage pero
 no acoplamiento; se corrigió moviendo la resolución del nombre de materia a
 `RegistroController` (detalle de presentación, no de la regla de negocio de registro). 158/158
-tests, DesignReviewer 0 CRITICAL tras el fix.
-**Próximo paso:** `US-2.1.3` — Docente carga una pregunta de opción múltiple en un banco
-(`CargarPreguntaOpcionMultiple`, INV-BP-02/03). Sin spec ni Issue creados todavía — ver
+tests, DesignReviewer 0 CRITICAL tras el fix. **US-2.1.3 (Docente carga una pregunta de
+opción múltiple en un banco) cerrada 2026-08-06**, PR #65 mergeado a `develop` (merge
+`80aca29`), Issue #44 cerrado, `docs/reports/inc2/US-2.1.3-report.md`: aggregate
+`PreguntaPlantillaOpcionMultiple` autovalidante (INV-BP-02 exactamente una opción correcta,
+INV-BP-03 mínimo 2 opciones), `CargarPreguntaOpcionMultipleUseCase`, endpoint
+`POST /preguntas/opcion-multiple` (rol `docente`). Primer tipo de pregunta implementado —
+establece el patrón que sigue `US-2.1.4` sin generalizar entre tipos. 180/180 tests, quality
+gates APROBADO (pylint 9.37/10, CC máx 6, MI mín 56.4, coverage 99%), pre-push gate 0
+CRITICAL.
+**Próximo paso:** `US-2.1.4` — Docente carga una pregunta verdadero/falso en un banco
+(`CargarPreguntaVerdaderoFalso`). Sin spec ni Issue creados todavía — ver
 `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 para el detalle y el orden de implementación
-(2.1.3/2.1.4 antes que 2.1.5/2.1.6, 2.1.7 al final).
+(2.1.5/2.1.6 después, 2.1.7 al final).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
