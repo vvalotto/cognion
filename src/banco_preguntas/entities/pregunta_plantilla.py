@@ -12,6 +12,43 @@ from src.banco_preguntas.entities.opcion import Opcion
 
 
 @dataclass
+class PreguntaPlantillaVerdaderoFalso:
+    """Pregunta de Verdadero/Falso — respuesta correcta fija, sin lista de opciones."""
+
+    id: UUID
+    banco_id: UUID
+    texto: str
+    respuesta_correcta: bool
+    unidad_tematica: str
+    tema: str
+    dificultad: Dificultad
+    importancia: Importancia
+    activa: bool = field(default=True)
+
+    @staticmethod
+    def crear(
+        banco_id: UUID,
+        texto: str,
+        respuesta_correcta: bool,
+        unidad_tematica: str,
+        tema: str,
+        dificultad: Dificultad,
+        importancia: Importancia,
+    ) -> PreguntaPlantillaVerdaderoFalso:
+        """Crea la pregunta — sin invariantes de negocio adicionales sobre `respuesta_correcta`."""
+        return PreguntaPlantillaVerdaderoFalso(
+            id=uuid4(),
+            banco_id=banco_id,
+            texto=texto,
+            respuesta_correcta=respuesta_correcta,
+            unidad_tematica=unidad_tematica,
+            tema=tema,
+            dificultad=dificultad,
+            importancia=importancia,
+        )
+
+
+@dataclass
 class PreguntaPlantillaOpcionMultiple:
     """Pregunta de opción múltiple — mínimo 2 opciones, exactamente una correcta."""
 

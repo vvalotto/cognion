@@ -6,7 +6,10 @@ from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import OpcionesInvalidas
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.opcion import Opcion
-from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
+from src.banco_preguntas.entities.pregunta_plantilla import (
+    PreguntaPlantillaOpcionMultiple,
+    PreguntaPlantillaVerdaderoFalso,
+)
 
 
 def _crear(opciones: list[Opcion]) -> PreguntaPlantillaOpcionMultiple:
@@ -59,3 +62,30 @@ class TestPreguntaPlantillaOpcionMultipleCrear:
 
         with pytest.raises(OpcionesInvalidas):
             _crear(opciones)
+
+
+def _crear_vf(respuesta_correcta: bool) -> PreguntaPlantillaVerdaderoFalso:
+    return PreguntaPlantillaVerdaderoFalso.crear(
+        banco_id=uuid.uuid4(),
+        texto="El sol es una estrella.",
+        respuesta_correcta=respuesta_correcta,
+        unidad_tematica="Unidad 1",
+        tema="Astronomía",
+        dificultad=Dificultad.MEDIO,
+        importancia=Importancia.ALTO,
+    )
+
+
+class TestPreguntaPlantillaVerdaderoFalsoCrear:
+    def test_crea_con_respuesta_verdadero(self):
+        pregunta = _crear_vf(True)
+
+        assert pregunta.id is not None
+        assert pregunta.respuesta_correcta is True
+        assert pregunta.activa is True
+
+    def test_crea_con_respuesta_falso(self):
+        pregunta = _crear_vf(False)
+
+        assert pregunta.respuesta_correcta is False
+        assert pregunta.activa is True

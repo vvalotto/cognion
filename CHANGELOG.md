@@ -10,6 +10,25 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.4] Docente carga una pregunta de Verdadero/Falso en un banco — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — aggregate `PreguntaPlantillaVerdaderoFalso`,
+    segundo tipo de pregunta, sin invariantes de negocio adicionales sobre `respuesta_correcta`
+    (garantizado por tipado)
+  - `src/banco_preguntas/use_cases/cargar_pregunta_verdadero_falso.py` —
+    `CargarPreguntaVerdaderoFalsoUseCase`, mismo flujo que `CargarPreguntaOpcionMultipleUseCase`
+  - `POST /preguntas/verdadero-falso`
+    (`src/banco_preguntas/frameworks/api/preguntas_router.py`) — requiere rol `docente`, 201
+    con `PreguntaVerdaderoFalsoResponse`, 404 si `BancoNoExiste`
+  - `PreguntaRepositoryPort.guardar()` y `SQLAlchemyPreguntaRepository` extendidos para
+    aceptar ambos tipos de pregunta (opción múltiple y verdadero/falso), sin generalizar entre
+    ellos (`BC-banco-preguntas-modelo.md` §4)
+  - Migración Alembic `6f523d16bf1c_pregunta_plantilla_respuesta_correcta.py` — columna
+    `respuesta_correcta` (nullable) en `pregunta_plantilla`
+  - RF-04 pasa a "Implementado (backend) — frontend Especificado" en la matriz de
+    trazabilidad — las tres US-IEDD de backend (`US-2.1.1`, `US-2.1.3`, `US-2.1.4`) ya están
+    implementadas
+  - 25 tests nuevos (13 unitarios, 10 integración, 2 escenarios BDD) — 100% cobertura en
+    entities/use_cases/interface_adapters del código nuevo
 - [US-2.1.3] Docente carga una pregunta de opción múltiple en un banco — BC Banco de Preguntas
   - `src/banco_preguntas/entities/pregunta_plantilla.py` — aggregate `PreguntaPlantillaOpcionMultiple`,
     factory `crear()` valida INV-BP-02 (exactamente una opción correcta) e INV-BP-03 (mínimo 2

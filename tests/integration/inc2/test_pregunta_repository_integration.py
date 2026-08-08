@@ -7,7 +7,10 @@ from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.opcion import Opcion
-from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
+from src.banco_preguntas.entities.pregunta_plantilla import (
+    PreguntaPlantillaOpcionMultiple,
+    PreguntaPlantillaVerdaderoFalso,
+)
 from src.banco_preguntas.frameworks.db.models import PreguntaPlantillaModel
 from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
     SQLAlchemyBancoRepository,
@@ -76,6 +79,34 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             {"texto": "Paraná", "es_correcta": True},
             {"texto": "Concordia", "es_correcta": False},
         ]
+        assert fila.respuesta_correcta is None
+        assert fila.dificultad == "medio"
+        assert fila.importancia == "alto"
+        assert fila.activa is True
+
+    async def test_guardar_pregunta_verdadero_falso(self, session):
+        banco = await _banco_persistido(session)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta = PreguntaPlantillaVerdaderoFalso.crear(
+            banco_id=banco.id,
+            texto="El sol es una estrella.",
+            respuesta_correcta=True,
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        )
+
+        await pregunta_repo.guardar(pregunta)
+
+        resultado = await session.execute(
+            select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
+        )
+        fila = resultado.scalar_one()
+        assert fila.banco_id == banco.id
+        assert fila.tipo == "verdadero_falso"
+        assert fila.opciones is None
+        assert fila.respuesta_correcta is True
         assert fila.dificultad == "medio"
         assert fila.importancia == "alto"
         assert fila.activa is True

@@ -25,6 +25,9 @@ from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import 
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
 )
+from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
+    CargarPreguntaVerdaderoFalsoUseCase,
+)
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -47,7 +50,10 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
     """Arma el `PreguntasController` con sus dependencias concretas."""
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
-    return PreguntasController(CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo))
+    return PreguntasController(
+        CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo),
+        CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo),
+    )
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

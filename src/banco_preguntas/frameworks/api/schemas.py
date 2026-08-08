@@ -55,3 +55,29 @@ class PreguntaOpcionMultipleResponse(BaseModel):
     dificultad: Dificultad
     importancia: Importancia
     activa: bool
+
+
+class CargarPreguntaVerdaderoFalsoRequest(BaseModel):
+    """Body de la request de carga de pregunta Verdadero/Falso."""
+
+    banco_id: UUID
+    texto: str = Field(..., min_length=1, max_length=2000)
+    respuesta_correcta: bool
+    unidad_tematica: str = Field(..., min_length=1, max_length=200)
+    tema: str = Field(..., min_length=1, max_length=200)
+    dificultad: Dificultad
+    importancia: Importancia
+
+
+class PreguntaVerdaderoFalsoResponse(BaseModel):
+    """Representación de una pregunta Verdadero/Falso devuelta por la API."""
+
+    id: UUID
+    banco_id: UUID
+    texto: str
+    respuesta_correcta: bool
+    unidad_tematica: str
+    tema: str
+    dificultad: Dificultad
+    importancia: Importancia
+    activa: bool
