@@ -130,3 +130,84 @@ class TestPreguntasAPIIntegration:
             )
 
         assert response.status_code == 403
+
+
+def _body_vf_valido(banco_id: uuid.UUID, respuesta_correcta: bool = True) -> dict:
+    return {
+        "banco_id": str(banco_id),
+        "texto": "El sol es una estrella.",
+        "respuesta_correcta": respuesta_correcta,
+        "unidad_tematica": "Unidad 1",
+        "tema": "Astronomía",
+        "dificultad": "medio",
+        "importancia": "alto",
+    }
+
+
+class TestPreguntasVerdaderoFalsoAPIIntegration:
+    """Escenarios de `tests/features/inc2/US-2.1.4-cargar-pregunta-verdadero-falso.feature`."""
+
+    async def test_docente_carga_pregunta_exitosa_respuesta_verdadero(
+        self, session, docente_headers
+    ):
+        banco = await _banco_persistido(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/preguntas/verdadero-falso",
+                json=_body_vf_valido(banco.id, respuesta_correcta=True),
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 201
+        data = response.json()
+        assert data["banco_id"] == str(banco.id)
+        assert data["respuesta_correcta"] is True
+        assert data["activa"] is True
+
+    async def test_docente_carga_pregunta_exitosa_respuesta_falso(self, session, docente_headers):
+        banco = await _banco_persistido(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/preguntas/verdadero-falso",
+                json=_body_vf_valido(banco.id, respuesta_correcta=False),
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 201
+        data = response.json()
+        assert data["respuesta_correcta"] is False
+
+    async def test_rechazo_por_banco_inexistente(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/preguntas/verdadero-falso",
+                json=_body_vf_valido(uuid.uuid4()),
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 404
+
+    async def test_rechazo_sin_autenticacion(self, session):
+        banco = await _banco_persistido(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/preguntas/verdadero-falso", json=_body_vf_valido(banco.id)
+            )
+
+        assert response.status_code == 401
+
+    async def test_rechazo_con_rol_insuficiente(self, session, admin_headers):
+        banco = await _banco_persistido(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/preguntas/verdadero-falso",
+                json=_body_vf_valido(banco.id),
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 403
