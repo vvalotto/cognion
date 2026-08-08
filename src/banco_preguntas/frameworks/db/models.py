@@ -40,8 +40,8 @@ class BancoModel(Base):
 class PreguntaPlantillaModel(Base):
     """Fila de la tabla `pregunta_plantilla`, con `tipo` como columna discriminadora.
 
-    `opciones` es `None` para preguntas verdadero/falso (`US-2.1.4`); esta US solo
-    persiste el tipo `opcion_multiple`.
+    `opciones` es `None` para preguntas verdadero/falso; `respuesta_correcta` es `None`
+    para preguntas de opción múltiple (`US-2.1.4`) — cada tipo usa solo su columna.
     """
 
     __tablename__ = "pregunta_plantilla"
@@ -55,6 +55,7 @@ class PreguntaPlantillaModel(Base):
     tipo: Mapped[str] = mapped_column(String(30), nullable=False)
     texto: Mapped[str] = mapped_column(String(2000), nullable=False)
     opciones: Mapped[list[dict[str, Any]] | None] = mapped_column(JSONB, nullable=True)
+    respuesta_correcta: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     unidad_tematica: Mapped[str] = mapped_column(String(200), nullable=False)
     tema: Mapped[str] = mapped_column(String(200), nullable=False)
     dificultad: Mapped[str] = mapped_column(String(10), nullable=False)
