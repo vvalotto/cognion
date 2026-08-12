@@ -384,3 +384,59 @@ class TestEditarPreguntaAPIIntegration:
             )
 
         assert response.status_code == 403
+
+
+class TestEliminarPreguntaAPIIntegration:
+    """Escenarios de `tests/features/inc2/US-2.1.6-eliminar-pregunta.feature`."""
+
+    async def test_eliminacion_exitosa(self, session, docente_headers):
+        banco = await _banco_persistido(session)
+        pregunta = await _pregunta_vf_persistida(session, banco.id)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.delete(f"/preguntas/{pregunta.id}", headers=docente_headers)
+
+        assert response.status_code == 204
+
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        recuperada = await pregunta_repo.obtener_por_id(pregunta.id)
+        assert recuperada is not None
+        assert recuperada.activa is False
+
+    async def test_rechazo_por_pregunta_inexistente(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.delete(f"/preguntas/{uuid.uuid4()}", headers=docente_headers)
+
+        assert response.status_code == 404
+
+    async def test_rechazo_por_pregunta_ya_eliminada(self, session, docente_headers):
+        banco = await _banco_persistido(session)
+        pregunta = await _pregunta_vf_persistida(session, banco.id)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta.activa = False
+        await pregunta_repo.actualizar(pregunta)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.delete(f"/preguntas/{pregunta.id}", headers=docente_headers)
+
+        assert response.status_code == 409
+
+    async def test_rechazo_sin_autenticacion(self, session):
+        banco = await _banco_persistido(session)
+        pregunta = await _pregunta_vf_persistida(session, banco.id)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.delete(f"/preguntas/{pregunta.id}")
+
+        assert response.status_code == 401
+
+    async def test_rechazo_con_rol_insuficiente(self, session, admin_headers):
+        banco = await _banco_persistido(session)
+        pregunta = await _pregunta_vf_persistida(session, banco.id)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.delete(f"/preguntas/{pregunta.id}", headers=admin_headers)
+
+        assert response.status_code == 403

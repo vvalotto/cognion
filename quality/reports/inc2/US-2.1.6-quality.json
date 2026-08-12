@@ -1,0 +1,25 @@
+{
+  "us_id": "US-2.1.6",
+  "fecha": "2026-08-12T19:17:41Z",
+  "componente": "src/banco_preguntas",
+  "metricas": {
+    "pylint": 9.18,
+    "cc_max": 8,
+    "mi_min": 49.62,
+    "mi_promedio": 89.95,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "CodeGuard acotado a los 7 archivos de src/ modificados/agregados por esta US (0 errores, 0 warnings tras corregir 2 líneas E501).",
+    "CC/MI/coverage medidos sobre src/banco_preguntas completo, según convención del proyecto.",
+    "pylint 9.18/10 incluye una advertencia duplicate-code esperada: el método eliminar() se repite igual en ambos aggregates de pregunta_plantilla.py, mismo patrón ya presente en editar() desde US-2.1.5 (no hay clase base común en el código actual).",
+    "Coverage 99% sobre src/banco_preguntas (frameworks/* excluido por [tool.coverage.run] omit, igual que en US anteriores); las 3 líneas sin cubrir son preexistentes en materia_repository.py, no tocadas por esta US."
+  ]
+}

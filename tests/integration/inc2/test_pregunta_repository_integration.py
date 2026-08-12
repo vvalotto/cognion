@@ -230,3 +230,26 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
         fila = resultado.scalar_one()
         assert fila.texto == "La luna es una estrella."
         assert fila.respuesta_correcta is False
+
+    async def test_actualizar_pregunta_eliminada_persiste_activa_false(self, session):
+        banco = await _banco_persistido(session)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta = PreguntaPlantillaVerdaderoFalso.crear(
+            banco_id=banco.id,
+            texto="El sol es una estrella.",
+            respuesta_correcta=True,
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        )
+        await pregunta_repo.guardar(pregunta)
+
+        pregunta.eliminar()
+        await pregunta_repo.actualizar(pregunta)
+
+        resultado = await session.execute(
+            select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
+        )
+        fila = resultado.scalar_one()
+        assert fila.activa is False

@@ -3,7 +3,11 @@ import uuid
 import pytest
 
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.errors import OpcionesInvalidas, PreguntaInactiva
+from src.banco_preguntas.entities.errors import (
+    OpcionesInvalidas,
+    PreguntaInactiva,
+    PreguntaYaEliminada,
+)
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -135,6 +139,32 @@ class TestPreguntaPlantillaOpcionMultipleEditar:
             )
 
 
+class TestPreguntaPlantillaOpcionMultipleEliminar:
+    def test_marca_activa_false(self):
+        pregunta = _crear(
+            [
+                Opcion(texto="Paraná", es_correcta=True),
+                Opcion(texto="Concordia", es_correcta=False),
+            ]
+        )
+
+        pregunta.eliminar()
+
+        assert pregunta.activa is False
+
+    def test_rechaza_eliminar_pregunta_ya_eliminada(self):
+        pregunta = _crear(
+            [
+                Opcion(texto="Paraná", es_correcta=True),
+                Opcion(texto="Concordia", es_correcta=False),
+            ]
+        )
+        pregunta.activa = False
+
+        with pytest.raises(PreguntaYaEliminada):
+            pregunta.eliminar()
+
+
 def _crear_vf(respuesta_correcta: bool) -> PreguntaPlantillaVerdaderoFalso:
     return PreguntaPlantillaVerdaderoFalso.crear(
         banco_id=uuid.uuid4(),
@@ -195,3 +225,19 @@ class TestPreguntaPlantillaVerdaderoFalsoEditar:
                 dificultad=pregunta.dificultad,
                 importancia=pregunta.importancia,
             )
+
+
+class TestPreguntaPlantillaVerdaderoFalsoEliminar:
+    def test_marca_activa_false(self):
+        pregunta = _crear_vf(True)
+
+        pregunta.eliminar()
+
+        assert pregunta.activa is False
+
+    def test_rechaza_eliminar_pregunta_ya_eliminada(self):
+        pregunta = _crear_vf(True)
+        pregunta.activa = False
+
+        with pytest.raises(PreguntaYaEliminada):
+            pregunta.eliminar()

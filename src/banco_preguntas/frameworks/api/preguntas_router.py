@@ -11,6 +11,7 @@ from src.banco_preguntas.entities.errors import (
     OpcionesInvalidas,
     PreguntaInactiva,
     PreguntaNoExiste,
+    PreguntaYaEliminada,
 )
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
@@ -178,3 +179,25 @@ async def editar_pregunta(
         importancia=pregunta.importancia,
         activa=pregunta.activa,
     )
+
+
+@router.delete(
+    "/{pregunta_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_docente)],
+)
+async def eliminar_pregunta(
+    pregunta_id: UUID,
+    controller: PreguntasController = Depends(get_preguntas_controller),
+) -> None:
+    """Elimina (baja lógica) una pregunta existente.
+
+    La fila persiste con `activa = false` — no se borra físicamente (INV-BP-04).
+    Responde 404 si la pregunta no existe, 409 si ya estaba eliminada.
+    """
+    try:
+        await controller.eliminar_pregunta(pregunta_id=pregunta_id)
+    except PreguntaNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except PreguntaYaEliminada as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
