@@ -95,6 +95,19 @@ en ambos aggregates, mismo patrón que `editar()` desde `US-2.1.5` (no hay clase
 
 ---
 
+## CRITICAL detectado en el pre-push gate
+
+El hook `.githooks/pre-push` (`DesignReviewer`, `CBOAnalyzer`) detectó un CRITICAL en el primer
+intento de push — no cubierto por los Quality Gates de Fase 7 (miden pylint/CC/MI/coverage, no
+acoplamiento): `PreguntasController` con CBO=11/10 al sumar `EliminarPreguntaUseCase` como
+cuarto use case inyectado. Mismo patrón que `US-2.1.2` y `US-2.1.5`. Se corrigió extendiendo a
+`cargar_pregunta_opcion_multiple` y `cargar_pregunta_verdadero_falso` el criterio ya usado en
+`editar_pregunta`/`eliminar_pregunta`: tipar el evento de retorno como `object` en el
+controller, eliminando el import de `PreguntaCargada`. CBO baja a 10/10, `DesignReviewer` 0
+CRITICAL tras el fix.
+
+---
+
 ## Archivos Creados/Modificados
 
 ### Código de producción
@@ -102,7 +115,8 @@ en ambos aggregates, mismo patrón que `editar()` desde `US-2.1.5` (no hay clase
 - `src/banco_preguntas/entities/eventos.py` (modificado)
 - `src/banco_preguntas/entities/pregunta_plantilla.py` (modificado)
 - `src/banco_preguntas/use_cases/eliminar_pregunta.py` (nuevo)
-- `src/banco_preguntas/interface_adapters/controllers/preguntas_controller.py` (modificado)
+- `src/banco_preguntas/interface_adapters/controllers/preguntas_controller.py` (modificado,
+  incluye el fix de CBO)
 - `src/banco_preguntas/frameworks/api/preguntas_router.py` (modificado)
 - `src/banco_preguntas/frameworks/dependencies.py` (modificado)
 
