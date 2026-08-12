@@ -10,6 +10,65 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.5] Docente edita una pregunta existente — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — método `editar()` en
+    `PreguntaPlantillaOpcionMultiple` y `PreguntaPlantillaVerdaderoFalso`, reaplica INV-BP-02/03
+    en el primero (validación extraída a `_validar_opciones()`, compartida con `crear()`); el
+    tipo de la pregunta no es editable
+  - `src/banco_preguntas/entities/errors.py` — `PreguntaNoExiste`, `PreguntaInactiva`
+  - `src/banco_preguntas/entities/eventos.py` — `PreguntaEditada`
+  - `src/banco_preguntas/use_cases/editar_pregunta.py` — `EditarPreguntaUseCase`, dispatch por
+    tipo concreto sin lógica de negocio propia
+  - `PUT /preguntas/{pregunta_id}` (`src/banco_preguntas/frameworks/api/preguntas_router.py`) —
+    requiere rol `docente`, 200 con la respuesta según el tipo real, 404 si `PreguntaNoExiste`,
+    409 si `PreguntaInactiva`, 422 si `OpcionesInvalidas`
+  - `PreguntaRepositoryPort` extendido con `obtener_por_id()` y `actualizar()` (separado de
+    `guardar()`, que es alta)
+  - RF-05 pasa a "Implementado (backend) — frontend Especificado" en la matriz de
+    trazabilidad — las tres US-IEDD de backend (`US-2.1.3`, `US-2.1.4`, `US-2.1.5`) ya están
+    implementadas
+  - 25 tests nuevos (10 unitarios, 12 integración, 3 escenarios BDD) — 100% cobertura en
+    entities/use_cases/interface_adapters del código nuevo
+  - Bug encontrado y corregido en Fase 5: `SQLAlchemyPreguntaRepository.actualizar()` no
+    persistía la columna `activa`, expuesto por el test de rechazo de edición sobre pregunta
+    inactiva
+- [US-2.1.4] Docente carga una pregunta de Verdadero/Falso en un banco — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — aggregate `PreguntaPlantillaVerdaderoFalso`,
+    segundo tipo de pregunta, sin invariantes de negocio adicionales sobre `respuesta_correcta`
+    (garantizado por tipado)
+  - `src/banco_preguntas/use_cases/cargar_pregunta_verdadero_falso.py` —
+    `CargarPreguntaVerdaderoFalsoUseCase`, mismo flujo que `CargarPreguntaOpcionMultipleUseCase`
+  - `POST /preguntas/verdadero-falso`
+    (`src/banco_preguntas/frameworks/api/preguntas_router.py`) — requiere rol `docente`, 201
+    con `PreguntaVerdaderoFalsoResponse`, 404 si `BancoNoExiste`
+  - `PreguntaRepositoryPort.guardar()` y `SQLAlchemyPreguntaRepository` extendidos para
+    aceptar ambos tipos de pregunta (opción múltiple y verdadero/falso), sin generalizar entre
+    ellos (`BC-banco-preguntas-modelo.md` §4)
+  - Migración Alembic `6f523d16bf1c_pregunta_plantilla_respuesta_correcta.py` — columna
+    `respuesta_correcta` (nullable) en `pregunta_plantilla`
+  - RF-04 pasa a "Implementado (backend) — frontend Especificado" en la matriz de
+    trazabilidad — las tres US-IEDD de backend (`US-2.1.1`, `US-2.1.3`, `US-2.1.4`) ya están
+    implementadas
+  - 25 tests nuevos (13 unitarios, 10 integración, 2 escenarios BDD) — 100% cobertura en
+    entities/use_cases/interface_adapters del código nuevo
+- [US-2.1.3] Docente carga una pregunta de opción múltiple en un banco — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — aggregate `PreguntaPlantillaOpcionMultiple`,
+    factory `crear()` valida INV-BP-02 (exactamente una opción correcta) e INV-BP-03 (mínimo 2
+    opciones), levanta `OpcionesInvalidas`
+  - `src/banco_preguntas/entities/opcion.py`, `dificultad.py`, `importancia.py` — value objects
+    `Opcion` y enums `Dificultad`/`Importancia` (Alto/Medio/Bajo)
+  - `src/banco_preguntas/use_cases/cargar_pregunta_opcion_multiple.py` —
+    `CargarPreguntaOpcionMultipleUseCase`, valida precondición de `Banco` existente
+    (`BancoNoExiste`)
+  - `POST /preguntas/opcion-multiple`
+    (`src/banco_preguntas/frameworks/api/preguntas_router.py`) — requiere rol `docente`, 201
+    con `PreguntaOpcionMultipleResponse`, 404 si `BancoNoExiste`, 422 si `OpcionesInvalidas`
+  - `BancoRepositoryPort.obtener_por_id` — agregado al puerto existente para soportar la
+    validación de precondición
+  - Migración Alembic `b0e03a73f699_pregunta_plantilla.py` — tabla `pregunta_plantilla`
+    (`opciones` como `JSONB`, columna discriminadora `tipo` para `US-2.1.4`)
+  - 22 tests nuevos (11 unitarios, 11 integración incluyendo 4 escenarios BDD) — 100%
+    cobertura en entities/use_cases/interface_adapters del código nuevo
 - [US-2.1.2] `ObtenerMateriaUseCase` de solo lectura (`src/banco_preguntas/use_cases/`) y
   `MateriaRepositoryPort.obtener_por_id` — soportan la consulta de `Materia` desde otros BCs.
 - [US-2.1.1] Docente da de alta una materia y su banco de preguntas — BC Banco de Preguntas

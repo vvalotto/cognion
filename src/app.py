@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.banco_preguntas.frameworks.api.materias_router import router as materias_router
+from src.banco_preguntas.frameworks.api.preguntas_router import router as preguntas_router
 from src.identidad.frameworks.api.auth_router import router as auth_router
 from src.identidad.frameworks.api.comisiones_router import router as comisiones_router
 from src.identidad.frameworks.api.invitaciones_router import router as invitaciones_router
@@ -26,6 +27,7 @@ app.include_router(invitaciones_router)
 app.include_router(registro_router)
 app.include_router(auth_router)
 app.include_router(materias_router)
+app.include_router(preguntas_router)
 
 
 @app.get("/health", tags=["infra"])
