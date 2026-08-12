@@ -1,0 +1,1914 @@
+[tool.codeguard] clave desconocida ignorada: 'check_complexity'
+{
+  "summary": {
+    "total_files": 10,
+    "checks_executed": 9,
+    "elapsed_seconds": 71.8,
+    "timestamp": "2026-07-24T09:04:31.503614",
+    "total_issues": 89,
+    "errors": 22,
+    "warnings": 9,
+    "infos": 58
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (101 > 100 characters)",
+      "file": "src/identidad/entities/jwt.py",
+      "line": 23
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.17/10 (>= 8.0)",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/jwt.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (108 > 100 characters)",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": 22
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.00/10 (< 8.0). Run 'pylint jwt_issuer_port.py' for details.",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 61.6 (grade A)",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.15/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 90.1 (grade A)",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 4.12/10 (< 8.0). Run 'pylint get_current_user.py' for details.",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/security/get_current_user.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 93.9 (grade A)",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 5.45/10 (< 8.0). Run 'pylint require_rol.py' for details.",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/security/require_rol.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (102 > 100 characters)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 103
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.06/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 6.15/10 (< 8.0). Run 'pylint usuarios_router.py' for details.",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/usuarios_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint comisiones_router.py' for details.",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 6.88/10 (< 8.0). Run 'pylint invitaciones_router.py' for details.",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": 23
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (108 > 100 characters)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": 22
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.00/10 (< 8.0). Run 'pylint jwt_issuer_port.py' for details.",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 4.12/10 (< 8.0). Run 'pylint get_current_user.py' for details.",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 5.45/10 (< 8.0). Run 'pylint require_rol.py' for details.",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (102 > 100 characters)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 103
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 6.15/10 (< 8.0). Run 'pylint usuarios_router.py' for details.",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint comisiones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 6.88/10 (< 8.0). Run 'pylint invitaciones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.17/10 (>= 8.0)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 61.6 (grade A)",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.15/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 90.1 (grade A)",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 93.9 (grade A)",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.06/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "api/comisiones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint comisiones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      }
+    ],
+    "api/invitaciones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 6.88/10 (< 8.0). Run 'pylint invitaciones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      }
+    ],
+    "api/usuarios_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 6.15/10 (< 8.0). Run 'pylint usuarios_router.py' for details.",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/usuarios_router.py",
+        "line": null
+      }
+    ],
+    "entities/errors.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      }
+    ],
+    "entities/jwt.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": 23
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.17/10 (>= 8.0)",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/jwt.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (102 > 100 characters)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 103
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.06/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "ports/jwt_issuer_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (108 > 100 characters)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": 22
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.00/10 (< 8.0). Run 'pylint jwt_issuer_port.py' for details.",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/jwt_issuer_port.py",
+        "line": null
+      }
+    ],
+    "security/get_current_user.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 90.1 (grade A)",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 4.12/10 (< 8.0). Run 'pylint get_current_user.py' for details.",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/security/get_current_user.py",
+        "line": null
+      }
+    ],
+    "security/jwt_pyjwt.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 61.6 (grade A)",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.15/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/security/jwt_pyjwt.py",
+        "line": null
+      }
+    ],
+    "security/require_rol.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 93.9 (grade A)",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 5.45/10 (< 8.0). Run 'pylint require_rol.py' for details.",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/security/require_rol.py",
+        "line": null
+      }
+    ]
+  }
+}

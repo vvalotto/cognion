@@ -1,0 +1,24 @@
+{
+  "us_id": "US-2.1.1",
+  "fecha": "2026-08-02T17:23:00-03:00",
+  "componente": "src/banco_preguntas (entities, use_cases, interface_adapters, frameworks) + refactor JWT/RBAC a src/shared",
+  "metricas": {
+    "pylint": 9.64,
+    "cc_max_por_funcion": 3,
+    "mi_min": 61.61,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage medido sobre entities/use_cases/interface_adapters de src/banco_preguntas (100%, 116/116 statements) — frameworks/ excluido del gate de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit).",
+    "Hallazgos R0903 (too-few-public-methods) en Use Cases, Ports, Controller, Gateway y modelos ORM son falsos positivos esperados para Clean Architecture — mismo criterio documentado en reportes previos (US-1.1.0, US-1.1.1).",
+    "Esta US incluyó un refactor previo (extracción de TipoPerfil/JWT/RBAC de src/identidad a src/shared, ver docs/plans/inc2/US-2.1.1-plan.md §0). Pylint sobre los archivos de identidad modificados por el refactor (dependencies.py, usuario.py, eventos.py, errors.py, schemas.py, controllers, use_cases) no introdujo hallazgos nuevos más allá del mismo R0903 preexistente. Los hallazgos W2301/C0103/R0903 restantes en src/identidad y src/shared/frameworks/db.py son preexistentes al refactor, no introducidos por esta US.",
+    "Suite completa del proyecto (tests/unit + tests/integration + tests/step_defs) verificada en verde tras el refactor: 148/148 passed."
+  ]
+}

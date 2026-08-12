@@ -1,0 +1,28 @@
+{
+  "us_id": "US-2.1.3",
+  "fecha": "2026-08-06T18:40:00-03:00",
+  "componente": "src/banco_preguntas (Opcion, Dificultad, Importancia, PreguntaPlantillaOpcionMultiple, CargarPreguntaOpcionMultipleUseCase, PreguntasController, SQLAlchemyPreguntaRepository, BancoRepositoryPort.obtener_por_id, preguntas_router)",
+  "metricas": {
+    "pylint": 9.37,
+    "cc_max_por_funcion": 6,
+    "mi_min": 56.40,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage medido sobre entities/use_cases/interface_adapters del BC banco_preguntas completo (250/250 statements relevantes); frameworks/ excluido del gate por convención del proyecto (pyproject.toml [tool.coverage.run] omit) — se valida vía tests de integración.",
+    "Las 3 líneas sin cubrir (materia_repository.py:40-42) son código preexistente de US-2.1.1, fuera del alcance de esta US; todo el código nuevo/modificado de US-2.1.3 tiene 100% de cobertura.",
+    "Hallazgos R0903 (too-few-public-methods) en Ports, Use Case, Controller, Gateway y Modelos SQLAlchemy son falsos positivos esperados para Clean Architecture — mismo criterio documentado en reportes previos (US-1.1.0, US-2.1.1, US-2.1.2).",
+    "R0913/R0917 (too-many-arguments, 7/5) en CargarPreguntaOpcionMultipleUseCase.execute, PreguntasController.__init__ y PreguntaPlantillaOpcionMultiple.crear: inherente a la firma del comando de dominio CargarPreguntaOpcionMultiple(banco_id, texto, opciones, unidad_tematica, tema, dificultad, importancia) definida en BC-banco-preguntas-modelo.md — no se dividió en un DTO/parameter object para mantener la firma explícita y trazable 1:1 con el comando de negocio.",
+    "R0801 (duplicate-code) entre PreguntaPlantillaOpcionMultiple.crear y CargarPreguntaOpcionMultipleUseCase.execute: ambos arman el mismo conjunto de 7 kwargs al invocar el aggregate — duplicación superficial de la firma, no de lógica.",
+    "CC máximo por función/método: 6 (PreguntaPlantillaOpcionMultiple, por las validaciones de INV-BP-02/03 en cascada) — muy por debajo del umbral de 10.",
+    "Suite completa del proyecto (tests/unit + tests/integration + tests/step_defs) verificada en verde: 180/180 passed.",
+    "Migración b0e03a73f699 (pregunta_plantilla) aplicada contra PostgreSQL local (alembic upgrade head) antes del cierre de esta fase."
+  ]
+}

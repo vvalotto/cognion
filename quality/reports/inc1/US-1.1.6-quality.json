@@ -1,0 +1,40 @@
+{
+  "us_id": "US-1.1.6",
+  "fecha": "2026-07-24T09:33:00-03:00",
+  "componente": "frontend/src/{lib,router.tsx,layouts,pages/_placeholders.tsx,App.tsx}",
+  "stack": "React 19 + TypeScript + Vite (sin perfil de quality gates dedicado en config.json — umbrales adaptados en Fase 0, ver docs/plans/inc1/US-1.1.6-context.md)",
+  "archivos_analizados": [
+    "frontend/src/lib/session.ts",
+    "frontend/src/lib/api-client.ts",
+    "frontend/src/router.tsx",
+    "frontend/src/layouts/AuthLayout.tsx",
+    "frontend/src/layouts/AppLayout.tsx",
+    "frontend/src/pages/_placeholders.tsx",
+    "frontend/src/App.tsx"
+  ],
+  "metricas": {
+    "eslint_oxlint_errores": 0,
+    "eslint_oxlint_warnings_nuevas": 0,
+    "eslint_oxlint_warnings_preexistentes": 1,
+    "tsc_noEmit_errores": 0,
+    "vitest_tests_totales": 16,
+    "vitest_tests_pasando": 16,
+    "coverage_statements_pct": 100,
+    "coverage_lines_pct": 100,
+    "coverage_functions_pct": 100,
+    "coverage_branches_pct": 87.5
+  },
+  "umbrales": {
+    "eslint_errores_max": 0,
+    "tsc_errores_max": 0,
+    "vitest_coverage_min_pct": 80
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Umbral de coverage (80%) es una convención adoptada en esta US (Fase 0) — el proyecto no tenía perfil de quality gates para frontend en config.json todavía.",
+    "1 warning de oxlint preexistente en components/ui/button.tsx (react/only-export-components) — no introducida por esta US, fuera de alcance.",
+    "2 warnings nuevas detectadas durante la implementación (router.tsx, vite.config.ts) fueron corregidas antes de cerrar esta fase: placeholders movidos a pages/_placeholders.tsx, triple-slash reference removida de vite.config.ts.",
+    "App.tsx no tiene test directo (solo wiring de RouterProvider, sin lógica) — no se incluye en el cálculo de coverage por defecto de v8 (solo mide archivos ejecutados durante los tests; App.tsx no es importado por ningún test).",
+    "Backend verificado sin regresiones: mypy src/ completo, 0 errores (79 archivos)."
+  ]
+}
