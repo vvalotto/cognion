@@ -1,0 +1,191 @@
+{
+  "metadata": {
+    "us_id": "US-1.1.3",
+    "us_title": "Estudiante intenta registrarse con link vencido o inválido",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-07-23T19:03:55.128465+00:00",
+    "completed_at": "2026-07-23T19:19:18.594518+00:00",
+    "total_elapsed_seconds": 923,
+    "effective_seconds": 923,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-07-23T19:04:07.845973+00:00",
+      "completed_at": "2026-07-23T19:05:23.091228+00:00",
+      "elapsed_seconds": 75,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-07-23T19:05:32.029837+00:00",
+      "completed_at": "2026-07-23T19:06:04.630277+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-07-23T19:06:53.076434+00:00",
+      "completed_at": "2026-07-23T19:08:34.151537+00:00",
+      "elapsed_seconds": 101,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-07-23T19:08:43.683640+00:00",
+      "completed_at": "2026-07-23T19:10:30.426376+00:00",
+      "elapsed_seconds": 106,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "1",
+          "task_name": "Excepciones especificas en errors.py",
+          "task_type": "feature",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-23T19:08:43.868624+00:00",
+          "completed_at": "2026-07-23T19:08:55.910314+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -9.8,
+          "file_created": "src/identidad/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "2",
+          "task_name": "verificar_vigente en Invitacion",
+          "task_type": "feature",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-23T19:09:01.858218+00:00",
+          "completed_at": "2026-07-23T19:09:15.177474+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -9.78,
+          "file_created": "src/identidad/entities/invitacion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "3",
+          "task_name": "InvitacionInvalida en RegistrarEstudianteUseCase",
+          "task_type": "feature",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-23T19:09:20.995282+00:00",
+          "completed_at": "2026-07-23T19:09:40.294074+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -9.68,
+          "file_created": "src/identidad/use_cases/registrar_estudiante.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "4",
+          "task_name": "Mapeo HTTP 422 en registro_router",
+          "task_type": "feature",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-23T19:09:46.554654+00:00",
+          "completed_at": "2026-07-23T19:10:05.621146+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -9.68,
+          "file_created": "src/identidad/frameworks/api/registro_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-07-23T19:10:44.584277+00:00",
+      "completed_at": "2026-07-23T19:11:42.306833+00:00",
+      "elapsed_seconds": 57,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-07-23T19:11:48.694748+00:00",
+      "completed_at": "2026-07-23T19:12:18.746483+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-07-23T19:12:26.231690+00:00",
+      "completed_at": "2026-07-23T19:15:02.812998+00:00",
+      "elapsed_seconds": 156,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-07-23T19:15:15.593400+00:00",
+      "completed_at": "2026-07-23T19:16:28.667956+00:00",
+      "elapsed_seconds": 73,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-07-23T19:16:37.099954+00:00",
+      "completed_at": "2026-07-23T19:18:27.517127+00:00",
+      "elapsed_seconds": 110,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-07-23T19:18:40.673147+00:00",
+      "completed_at": "2026-07-23T19:19:18.421634+00:00",
+      "elapsed_seconds": 37,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 4,
+    "completed_tasks": 4,
+    "total_phases": 10,
+    "estimated_total_minutes": 40.0,
+    "actual_total_minutes": 1.05,
+    "variance_minutes": -38.95,
+    "variance_percent": -97.38
+  }
+}
