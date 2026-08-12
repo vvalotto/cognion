@@ -1,0 +1,283 @@
+{
+  "metadata": {
+    "us_id": "US-1.1.5",
+    "us_title": "El sistema restringe el acceso a funcionalidades según el rol del usuario autenticado",
+    "us_points": 5,
+    "producto": "backend",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-07-24T11:37:04.862612+00:00",
+    "completed_at": "2026-07-24T12:12:26.470969+00:00",
+    "total_elapsed_seconds": 2121,
+    "effective_seconds": 2121,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-07-24T11:37:19.098864+00:00",
+      "completed_at": "2026-07-24T11:38:43.487747+00:00",
+      "elapsed_seconds": 84,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-07-24T11:38:53.205218+00:00",
+      "completed_at": "2026-07-24T11:40:05.164502+00:00",
+      "elapsed_seconds": 71,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-07-24T11:40:13.616598+00:00",
+      "completed_at": "2026-07-24T11:42:14.144781+00:00",
+      "elapsed_seconds": 120,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-07-24T11:42:20.340160+00:00",
+      "completed_at": "2026-07-24T11:49:13.291506+00:00",
+      "elapsed_seconds": 412,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "JWTPayload VO en entities/jwt.py",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-24T11:42:25.336630+00:00",
+          "completed_at": "2026-07-24T11:42:50.988568+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -4.58,
+          "file_created": "src/identidad/entities/jwt.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "JWTInvalido/JWTExpirado en entities/errors.py",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-24T11:42:53.681352+00:00",
+          "completed_at": "2026-07-24T11:43:20.841865+00:00",
+          "elapsed_seconds": 27,
+          "actual_minutes": 0.45,
+          "variance_minutes": -4.55,
+          "file_created": "src/identidad/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "método verificar() en JWTIssuerPort",
+          "task_type": "entities/ports",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-24T11:43:23.792652+00:00",
+          "completed_at": "2026-07-24T11:43:57.085043+00:00",
+          "elapsed_seconds": 33,
+          "actual_minutes": 0.55,
+          "variance_minutes": -4.45,
+          "file_created": "src/identidad/entities/ports/jwt_issuer_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "PyJWTIssuer.verificar()",
+          "task_type": "frameworks/security",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-24T11:44:00.589938+00:00",
+          "completed_at": "2026-07-24T11:44:38.027985+00:00",
+          "elapsed_seconds": 37,
+          "actual_minutes": 0.62,
+          "variance_minutes": -9.38,
+          "file_created": "src/identidad/frameworks/security/jwt_pyjwt.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "get_current_user.py builder",
+          "task_type": "interface_adapters/security",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-07-24T11:44:42.569154+00:00",
+          "completed_at": "2026-07-24T11:45:11.804672+00:00",
+          "elapsed_seconds": 29,
+          "actual_minutes": 0.48,
+          "variance_minutes": -14.52,
+          "file_created": "src/identidad/interface_adapters/security/get_current_user.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "require_rol.py builder",
+          "task_type": "interface_adapters/security",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-24T11:45:16.635880+00:00",
+          "completed_at": "2026-07-24T11:45:38.286081+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -9.65,
+          "file_created": "src/identidad/interface_adapters/security/require_rol.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "wiring en frameworks/dependencies.py",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-07-24T11:45:42.148864+00:00",
+          "completed_at": "2026-07-24T11:46:54.703528+00:00",
+          "elapsed_seconds": 72,
+          "actual_minutes": 1.2,
+          "variance_minutes": -8.8,
+          "file_created": "src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "require_administrador en usuarios_router.py",
+          "task_type": "frameworks/api",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-24T11:46:57.927207+00:00",
+          "completed_at": "2026-07-24T11:47:33.016216+00:00",
+          "elapsed_seconds": 35,
+          "actual_minutes": 0.58,
+          "variance_minutes": -4.42,
+          "file_created": "src/identidad/frameworks/api/usuarios_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "require_administrador en comisiones_router.py",
+          "task_type": "frameworks/api",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-24T11:47:36.210791+00:00",
+          "completed_at": "2026-07-24T11:48:12.357568+00:00",
+          "elapsed_seconds": 36,
+          "actual_minutes": 0.6,
+          "variance_minutes": -4.4,
+          "file_created": "src/identidad/frameworks/api/comisiones_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T10",
+          "task_name": "require_docente en invitaciones_router.py",
+          "task_type": "frameworks/api",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-07-24T11:48:15.235253+00:00",
+          "completed_at": "2026-07-24T11:48:56.109899+00:00",
+          "elapsed_seconds": 40,
+          "actual_minutes": 0.67,
+          "variance_minutes": -4.33,
+          "file_created": "src/identidad/frameworks/api/invitaciones_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-07-24T11:49:22.760461+00:00",
+      "completed_at": "2026-07-24T11:52:37.443322+00:00",
+      "elapsed_seconds": 194,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-07-24T11:52:46.886530+00:00",
+      "completed_at": "2026-07-24T11:56:31.148042+00:00",
+      "elapsed_seconds": 224,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T11",
+          "task_name": "tests de integración RBAC",
+          "task_type": "tests/integration",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-07-24T11:53:43.399649+00:00",
+          "completed_at": "2026-07-24T11:56:31.041334+00:00",
+          "elapsed_seconds": 167,
+          "actual_minutes": 2.78,
+          "variance_minutes": -22.22,
+          "file_created": "tests/integration/inc1/test_autorizacion_rbac_integration.py + fixtures conftest + actualización de tests existentes",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-07-24T11:56:41.011973+00:00",
+      "completed_at": "2026-07-24T12:01:53.884122+00:00",
+      "elapsed_seconds": 312,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-07-24T12:02:06.478905+00:00",
+      "completed_at": "2026-07-24T12:07:48.096468+00:00",
+      "elapsed_seconds": 341,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-07-24T12:07:58.568317+00:00",
+      "completed_at": "2026-07-24T12:11:24.154566+00:00",
+      "elapsed_seconds": 205,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-07-24T12:11:32.581333+00:00",
+      "completed_at": "2026-07-24T12:12:26.364293+00:00",
+      "elapsed_seconds": 53,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 11,
+    "completed_tasks": 11,
+    "total_phases": 10,
+    "estimated_total_minutes": 100.0,
+    "actual_total_minutes": 8.7,
+    "variance_minutes": -91.3,
+    "variance_percent": -91.3
+  }
+}

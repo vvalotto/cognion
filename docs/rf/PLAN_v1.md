@@ -13,6 +13,10 @@
 > igual, sin cambios, contra esa instancia. Cuando se adopte Docker, se migra la infraestructura
 > local a Docker Compose sin tocar Alembic ni el dominio. Tampoco reescribe historia — el
 > Incremento 0 sigue sin ejecutarse (sin BL-001 abierta).
+> Revisión 2026-07-16 (2): el BC "Sesiones" se renombró a "Actividad Evaluativa" (`ADR-015`) —
+> este documento no se reescribe, "Sesión/Sesiones" en el texto original (Incrementos 3 y 6) se
+> lee con ese significado. No reescribe historia — ninguno de los dos incrementos se ejecutó
+> todavía.
 
 ---
 

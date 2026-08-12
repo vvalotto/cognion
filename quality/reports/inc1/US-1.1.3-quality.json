@@ -1,0 +1,24 @@
+{
+  "us_id": "US-1.1.3",
+  "fecha": "2026-07-23T16:16:00-03:00",
+  "componente": "src/identidad (entities, use_cases, frameworks/api) — rechazo específico de registro con invitación no válida",
+  "metricas": {
+    "pylint": 9.91,
+    "cc_max_por_funcion": 3,
+    "mi_min": 73.54,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage 100% (93/93 statements) sobre los tres archivos modificados: entities/errors.py, entities/invitacion.py, use_cases/registrar_estudiante.py.",
+    "Hallazgo R0903 (too-few-public-methods) en RegistrarEstudianteUseCase es el mismo falso positivo esperado ya documentado en los reportes de US-1.1.0, US-1.1.1 y US-1.1.2 para Clean Architecture.",
+    "Suite completa del proyecto (unit + integration + step_defs, excluyendo el escenario @ux diferido) verde: 85/85 tests.",
+    "El escenario BDD de UI ('La UI no distingue el motivo del rechazo', tag @ux) queda deseleccionado (-m 'not ux') porque el frontend de esta US está diferido — ver docs/plans/inc1/US-1.1.3-context.md §Decisión de alcance — frontend."
+  ]
+}

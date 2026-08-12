@@ -1,0 +1,23 @@
+{
+  "us_id": "US-1.1.2",
+  "fecha": "2026-07-23T10:50:00-03:00",
+  "componente": "src/identidad (entities, use_cases, interface_adapters) — registro de Estudiante vía invitación",
+  "metricas": {
+    "pylint": 9.91,
+    "cc_max_por_funcion": 4,
+    "mi_min": 57.51,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage medido sobre entities/use_cases/interface_adapters de esta US (100%, 445/445 statements sobre todo el BC Identidad, incluye US anteriores) — frameworks/ excluido del gate de coverage por convención del proyecto.",
+    "Hallazgos R0903 (too-few-public-methods) en RegistrarEstudianteUseCase y RegistroController son falsos positivos esperados para Clean Architecture — mismo criterio documentado en los reportes de US-1.1.0 y US-1.1.1.",
+    "Suite completa del proyecto (unit + integration + step_defs) verde: 77/77 tests."
+  ]
+}

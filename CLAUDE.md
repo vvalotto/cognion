@@ -21,24 +21,67 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** BL-000 (Fundación Documental) cerrada el 2026-07-15 — tag `v0.1.0`
-(`.cm/baselines/BL-000-fundacion-documental.md`). Plan de incrementos reestructurado:
-Incremento 0 (Fundación Técnica) es ahora infraestructura pura, sin BC Identidad — ver
-`docs/rf/PLAN_v1.md` (nota de revisión al inicio). Deploy real a un entorno (Fly.io u otro)
-queda diferido a un incremento posterior, pendiente de la decisión de infraestructura aún
-abierta.
-**Próximo paso:** Ejecutar el Incremento 0 siguiendo el ciclo de "incrementos técnicos sin US"
-(`docs/plans/WORKFLOW-DESARROLLO.md` §6): branch `feature/inc-0-fundacion-tecnica` desde
-`develop` (ya creado), commits por tarea (PostgreSQL local vía Homebrew — Docker diferido, ver
-`docs/rf/PLAN_v1.md` revisión 2026-07-16 —, Alembic inicializado, evidencia de pipeline CI/CD
-integrado de punta a punta), PR con `/pr`, merge, y registrar BL-001 al cerrar. No requiere
-`docs/plans/inc0/inc0-candidatas.md` — ese artefacto es para incrementos con US-IEDD (ver
-`HITO-3`). Luego arrancar el Incremento 1 (BC Identidad: RF-01, RF-02, JWT, healthcheck) con
-su propia Iteración 0 — Modelado.
-**Baseline abierta:** BL-001 se abre al iniciar la ejecución del Incremento 0 y se cierra
-cuando su Hito quede verificado con evidencia (ver `docs/plans/PLAN-CM.md` §7 para la
-numeración de baselines).
-**Branch activo:** `develop` (creado desde `main`).
+**Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 en desarrollo local
+(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` diferidos —
+mismo ítem abierto de infraestructura/Docker que el deploy de `BL-001`; se ejecutan cuando esa
+decisión se resuelva. BC Identidad completo: RF-01 (registro por
+invitación) y RF-02 (autenticación y RBAC por rol) implementados de punta a punta, backend
+(Iteración 1: `US-1.1.0` a `US-1.1.5`) y frontend (Iteración 2: `US-1.1.6` a `US-1.1.9`)
+integrados juntos, cumpliendo el criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7
+(decisión 2026-07-24 — la Baseline no cierra backend-only). Decisiones previas al incremento:
+invitación con expiración de 7 días, rechazo sin recuperación automática (`ADR-012`); JWT de
+60 minutos sin refresh ni blacklist (`ADR-013`); hashing bcrypt (`ADR-014`).
+**US-1.1.9 (Administrador da de alta un Docente desde la UI) cerrada 2026-07-29**, PR #35
+mergeado a `develop`, `docs/reports/inc1/US-1.1.9-report.md`: pantallas `AltaDocente.tsx`/
+`AltaDocenteExito.tsx` + guard de ruta `RequireRole` (ampliación de scope detectada en Fase 2:
+el `.feature` asumía ruta protegida, pero no había guard client-side desde `US-1.1.6`).
+**UAT manual de Víctor en navegador real** detectó y corrigió dos gaps preexistentes desde
+`US-1.1.6`/`1.1.7`, invisibles a Vitest: falta de `CORSMiddleware` en el backend (bloqueaba
+cualquier llamada real del frontend) y un bug de cascada CSS (regla heredada sin `@layer`
+pisando las utilities de Tailwind) + paleta/tipografía no institucionales — corregidos dentro
+de `US-1.1.9` a pedido de Víctor. 46/46 tests frontend, quality gates APROBADO
+(`quality/reports/inc1/US-1.1.9-quality.json`). Esta US cierra la Iteración 2 y el Incremento 1.
+**Quality gates de cierre ejecutados:** DesignReviewer del último PR — 0 CRITICAL, 27
+advertencias; ArchitectAnalyst (`quality/reports/architectanalyst/BL-002-arquitectura.json`) —
+3 críticos "Zone of Pain" a nivel de paquete raíz (`identidad`, `settings`, `shared`), leídos y
+aceptados, `should_block: false` (nunca bloquea, solo informa tendencias — ver retrospectiva
+de `BL-002` para el detalle y el ajuste propuesto para el próximo incremento).
+Incremento 2 — Banco de Preguntas en curso, Iteración 1 (`docs/plans/inc2/inc2-candidatas.md`).
+Iteración 0 — Modelado cerrada 2026-07-31 (US-2.0.1 event storming, Issue #38; US-2.0.2
+wireframes, Issue #39). **US-2.1.1 (Docente da de alta una Materia; banco vacío en el mismo
+flujo) cerrada 2026-07-31**, PR #56 mergeado a `develop`,
+`docs/reports/inc2/US-2.1.1-report.md`. **US-2.1.2 (Comisión referencia Materia por puerto,
+refactor técnico de BC Identidad) cerrada 2026-08-05**, PR #62 mergeado a `develop` (merge
+`8294a82`), Issue #43 cerrado, `docs/reports/inc2/US-2.1.2-report.md`: `Comisión.materia_id`
+resuelto contra `MateriaPort` sin imports directos entre BCs, migración con backfill
+verificada por round-trip real. El pre-push gate (`DesignReviewer`, `CBOAnalyzer`) detectó un
+CRITICAL (CBO=11/10 en `RegistrarEstudianteUseCase` al inyectar `MateriaPort`) recién en la
+fase de PR — no cubierto por los Quality Gates de Fase 7, que miden pylint/CC/MI/coverage pero
+no acoplamiento; se corrigió moviendo la resolución del nombre de materia a
+`RegistroController` (detalle de presentación, no de la regla de negocio de registro). 158/158
+tests, DesignReviewer 0 CRITICAL tras el fix. **US-2.1.3 (Docente carga una pregunta de
+opción múltiple en un banco) cerrada 2026-08-06**, PR #65 mergeado a `develop` (merge
+`80aca29`), Issue #44 cerrado, `docs/reports/inc2/US-2.1.3-report.md`: aggregate
+`PreguntaPlantillaOpcionMultiple` autovalidante (INV-BP-02 exactamente una opción correcta,
+INV-BP-03 mínimo 2 opciones), `CargarPreguntaOpcionMultipleUseCase`, endpoint
+`POST /preguntas/opcion-multiple` (rol `docente`). Primer tipo de pregunta implementado —
+establece el patrón que sigue `US-2.1.4` sin generalizar entre tipos. 180/180 tests, quality
+gates APROBADO (pylint 9.37/10, CC máx 6, MI mín 56.4, coverage 99%), pre-push gate 0
+CRITICAL.
+**US-2.1.4 (Docente carga una pregunta de Verdadero/Falso en un banco) cerrada 2026-08-08**,
+PR #68 mergeado a `develop` (merge `40849c4`), Issue #45 cerrado,
+`docs/reports/inc2/US-2.1.4-report.md`: segundo aggregate de pregunta,
+`PreguntaPlantillaVerdaderoFalso` (sin invariantes adicionales sobre `respuesta_correcta`),
+`CargarPreguntaVerdaderoFalsoUseCase`, endpoint `POST /preguntas/verdadero-falso` (rol
+`docente`), migración `respuesta_correcta` nullable en `pregunta_plantilla`. Repitió el patrón
+de `US-2.1.3` sin generalizar entre tipos de pregunta, según lo previsto. 194/194 tests, quality
+gates APROBADO (pylint 9.27/10, CC máx 6, MI mín 51.47, coverage 99%).
+**Próximo paso:** `US-2.1.5` — ver `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 para el
+detalle y el orden de implementación (2.1.6 después, 2.1.7 al final). Sin spec ni Issue
+creados todavía.
+**Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
+`docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
+**Branch activo:** `develop`.
 
 ---
 
@@ -68,7 +111,7 @@ cognion/
 ├── CHANGELOG.md                     ← Keep a Changelog, actualizado en cada tag de baseline
 ├── .cm/baselines/                   ← BL-NNN.md + reportes de calidad
 ├── .githooks/pre-push               ← DesignReviewer — bloquea si CRITICAL
-├── .pre-commit-config.yaml          ← black, isort, ruff, CodeGuard (advierte, no bloquea)
+├── .pre-commit-config.yaml          ← black, isort, ruff, mypy (bloquea), CodeGuard (advierte)
 ├── .github/workflows/               ← CI/CD: lint+test en develop, build+deploy en main
 ├── docs/
 │   ├── rf/                          ← documentos de elicitación (RF, RNF, ARQ, PLAN) — históricos
@@ -91,7 +134,7 @@ cognion/
 
 ## Arquitectura interna — reglas no negociables
 
-Monolito modular con **Clean Architecture** interna. Bounded Contexts: Sesiones (Core), Banco de Preguntas, Identidad, Notificaciones, Analytics.
+Monolito modular con **Clean Architecture** interna. Bounded Contexts: Actividad Evaluativa (Core, antes "Sesiones" — ver `ADR-015`), Banco de Preguntas, Identidad, Notificaciones, Analytics.
 
 ```
 src/<bc>/
@@ -101,7 +144,7 @@ src/<bc>/
 └── frameworks/         → FastAPI, SQLAlchemy, WebSockets — implementa puertos
 ```
 
-**Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: solo por puertos definidos en `entities/ports/` — nunca imports directos entre BCs. `shared/entities/` es la única excepción transversal (tipos y utilidades sin lógica de negocio de un BC específico).
+**Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: solo por puertos definidos en `entities/ports/` — nunca imports directos entre BCs. `shared/` es la única excepción transversal: puede tener las 4 capas (`entities/`, `use_cases/`, `interface_adapters/`, `frameworks/`) cuando el contenido es genuinamente transversal — sin lógica de negocio de un BC específico — no solo `entities/` (`ADR-017` para `shared/frameworks/db.py`, `ADR-019` para JWT/RBAC en `shared/entities/`+`frameworks/security/`+`interface_adapters/security/`). Cada BC sigue armando su propio composition root en `frameworks/dependencies.py`, importando de `shared` — nunca de otro BC.
 
 ---
 
@@ -133,9 +176,9 @@ main          ← baselines (v0.N.0) — deploy automático al mergear
 ### Conventional Commits
 
 ```
-feat(entities): agregar aggregate Sesion [US-2.1.1]
+feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]
 fix(interface_adapters): corregir endpoint ranking
-test(entities): tests unitarios Sesion.cerrar_periodo
+test(entities): tests unitarios ActividadEvaluativa.cerrar_periodo
 docs(adr): ADR-003 SQLite vs PostgreSQL
 chore(cm): registrar BL-002 cierre Incremento 2
 ```
@@ -150,8 +193,16 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 3. tracker init US-N.M.K → start_phase(0)  ← ANTES de cualquier artefacto
 4. /implement-us US-N.M.K  (lee docs/specs/incN/US-N.M.K.md)
 5. Commits atómicos con referencia [US-N.M.K]
-6. /pr → merge a develop
+6. /pr → push + gh pr create --base develop
+7. Al mergear el PR (gh pr merge): sincronizar develop local (checkout + pull --ff-only,
+   borrar branch feature local/remoto), y cerrar el Issue de la US asociado — comentario con
+   los SHAs de los commits de la US + `gh issue close` — sin pedir confirmación previa, salvo
+   que algo resulte ambiguo (no se encuentra el Issue, hay más de un candidato, etc.)
 ```
+
+**Por qué el paso 7 es manual y no vía `Closes #N` en el commit/PR:** el repo mergea PRs a
+`develop`, no a `main` (rama default) — GitHub solo autocierra Issues por `Closes #N` cuando
+el merge es a la rama default.
 
 **Política de tracking:** operaciones sobre `tracker_cli.py` estrictamente secuenciales, nunca en paralelo sobre el mismo JSON. Usar `.venv/bin/python .claude/tracking/tracker_cli.py`, no `uv run`.
 
@@ -161,6 +212,7 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 
 | Nivel | Herramienta | Modo | Bloquea |
 |-------|-------------|------|---------|
+| Commit backend | mypy (`src/` completo) | Pre-commit automático | Sí |
 | Commit backend | CodeGuard | Pre-commit automático | No — solo advierte |
 | Push backend | DesignReviewer | Pre-push automático | Sí, si CRITICAL |
 | Push/PR a develop | lint + tests + DesignReviewer | GitHub Actions CI | Sí |
@@ -173,6 +225,12 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 - `designreviewer` **siempre** con `--config pyproject.toml` — sin el flag usa defaults genéricos que no reflejan el proyecto.
 - El hook `.githooks/pre-push` **no se activa solo al clonar** — requiere `git config core.hooksPath .githooks` una vez por clon.
 - Umbrales de `[tool.designreviewer]` se calibran **al inicio de cada Incremento completo**, no US por US.
+- El check de tipos integrado en CodeGuard (`software_limpio`) invoca mypy sin `--cache-dir`
+  y con timeout de 10s — en corridas en frío puede superar ese tiempo y el check queda mudo
+  (ni aprueba ni reporta error real), dejando pasar errores de tipo reales sin aviso. Bug
+  reportado: `vvalotto/software_limpio#70`. Mientras se corrige ahí, el hook `mypy` dedicado
+  (arriba, sobre `src/` completo, mismo comando que CI) es la fuente de verdad local para
+  tipos — bloquea el commit si hay errores reales.
 
 ---
 
