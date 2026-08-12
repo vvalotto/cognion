@@ -1,0 +1,256 @@
+{
+  "metadata": {
+    "us_id": "US-2.1.4",
+    "us_title": "Docente carga una pregunta de Verdadero/Falso",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-08T13:03:59.551321+00:00",
+    "completed_at": "2026-08-08T14:02:26.333129+00:00",
+    "total_elapsed_seconds": 3506,
+    "effective_seconds": 3506,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-08T13:05:18.136219+00:00",
+      "completed_at": "2026-08-08T13:10:47.795433+00:00",
+      "elapsed_seconds": 329,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-08T13:10:53.989151+00:00",
+      "completed_at": "2026-08-08T13:12:26.417710+00:00",
+      "elapsed_seconds": 92,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-08T13:12:43.285650+00:00",
+      "completed_at": "2026-08-08T13:20:27.236094+00:00",
+      "elapsed_seconds": 463,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-08T13:20:35.018771+00:00",
+      "completed_at": "2026-08-08T13:38:32.592627+00:00",
+      "elapsed_seconds": 1077,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "PreguntaPlantillaVerdaderoFalso aggregate",
+          "task_type": "entity",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-08T13:20:38.015401+00:00",
+          "completed_at": "2026-08-08T13:22:11.772944+00:00",
+          "elapsed_seconds": 93,
+          "actual_minutes": 1.55,
+          "variance_minutes": -13.45,
+          "file_created": "pregunta_plantilla.py,pregunta_repository_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "CargarPreguntaVerdaderoFalsoUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-08T13:22:25.287292+00:00",
+          "completed_at": "2026-08-08T13:22:45.300114+00:00",
+          "elapsed_seconds": 20,
+          "actual_minutes": 0.33,
+          "variance_minutes": -14.67,
+          "file_created": "cargar_pregunta_verdadero_falso.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Extender PreguntasController",
+          "task_type": "controller",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-08T13:23:03.788315+00:00",
+          "completed_at": "2026-08-08T13:23:54.983137+00:00",
+          "elapsed_seconds": 51,
+          "actual_minutes": 0.85,
+          "variance_minutes": -9.15,
+          "file_created": "preguntas_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Columna respuesta_correcta en PreguntaPlantillaModel",
+          "task_type": "model",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-08T13:24:13.483967+00:00",
+          "completed_at": "2026-08-08T13:25:00.667239+00:00",
+          "elapsed_seconds": 47,
+          "actual_minutes": 0.78,
+          "variance_minutes": -9.22,
+          "file_created": "models.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Migración Alembic respuesta_correcta",
+          "task_type": "migration",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-08T13:25:08.528451+00:00",
+          "completed_at": "2026-08-08T13:35:09.491901+00:00",
+          "elapsed_seconds": 600,
+          "actual_minutes": 10.0,
+          "variance_minutes": 0.0,
+          "file_created": "6f523d16bf1c_pregunta_plantilla_respuesta_correcta.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "SQLAlchemyPreguntaRepository.guardar por tipo",
+          "task_type": "gateway",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-08T13:35:12.835072+00:00",
+          "completed_at": "2026-08-08T13:35:31.276230+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -14.7,
+          "file_created": "pregunta_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "CargarPreguntaVerdaderoFalsoRequest/Response",
+          "task_type": "schema",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-08T13:35:34.276480+00:00",
+          "completed_at": "2026-08-08T13:35:51.193870+00:00",
+          "elapsed_seconds": 16,
+          "actual_minutes": 0.27,
+          "variance_minutes": -9.73,
+          "file_created": "schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "Endpoint POST preguntas/verdadero-falso",
+          "task_type": "router",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-08T13:35:54.621177+00:00",
+          "completed_at": "2026-08-08T13:37:02.352707+00:00",
+          "elapsed_seconds": 67,
+          "actual_minutes": 1.12,
+          "variance_minutes": -13.88,
+          "file_created": "preguntas_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "Wiring CargarPreguntaVerdaderoFalsoUseCase en dependencies.py",
+          "task_type": "dependency",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-08T13:37:07.813699+00:00",
+          "completed_at": "2026-08-08T13:38:03.310584+00:00",
+          "elapsed_seconds": 55,
+          "actual_minutes": 0.92,
+          "variance_minutes": -9.08,
+          "file_created": "dependencies.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-08T13:39:01.384922+00:00",
+      "completed_at": "2026-08-08T13:42:00.770621+00:00",
+      "elapsed_seconds": 179,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-08T13:42:25.416398+00:00",
+      "completed_at": "2026-08-08T13:44:43.782353+00:00",
+      "elapsed_seconds": 138,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-08T13:45:01.648186+00:00",
+      "completed_at": "2026-08-08T13:46:52.624358+00:00",
+      "elapsed_seconds": 110,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-08T13:47:12.371471+00:00",
+      "completed_at": "2026-08-08T13:55:27.623508+00:00",
+      "elapsed_seconds": 495,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-08T13:56:20.992761+00:00",
+      "completed_at": "2026-08-08T14:01:21.655364+00:00",
+      "elapsed_seconds": 300,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-08T14:01:30.733782+00:00",
+      "completed_at": "2026-08-08T14:02:25.922210+00:00",
+      "elapsed_seconds": 55,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 9,
+    "completed_tasks": 9,
+    "total_phases": 10,
+    "estimated_total_minutes": 110.0,
+    "actual_total_minutes": 16.12,
+    "variance_minutes": -93.88,
+    "variance_percent": -85.35
+  }
+}

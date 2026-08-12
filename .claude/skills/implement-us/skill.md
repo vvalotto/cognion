@@ -134,11 +134,10 @@ Este skill orquesta la implementación de una US a través de **9 fases secuenci
 **Objetivo:** Implementar la funcionalidad siguiendo el plan.
 
 **Acciones:**
-- Ejecutar tareas del plan secuencialmente
+- Ejecutar tareas del plan secuencialmente, sin pausar entre ellas
 - Tracking de tiempo por tarea
-- Checkpoints opcionales de aprobación
 
-**Aprobación:** Por tarea (configurable)
+**Aprobación:** Automática (sin checkpoint por tarea; se detiene solo ante errores o ambigüedad de diseño no cubierta por el plan)
 
 ---
 
@@ -232,11 +231,13 @@ Este skill orquesta la implementación de una US a través de **9 fases secuenci
 
 ### Puntos de Aprobación
 
-El skill tiene puntos de aprobación en:
+El skill tiene puntos de aprobación **solo** en:
 - **Fase 1:** Escenarios BDD (usuario debe revisar)
 - **Fase 2:** Plan de implementación (usuario debe revisar)
-- **Fase 3:** Opcionalmente por tarea (configurable)
 - **Fase 8:** Documentación (usuario debe revisar)
+
+Las demás fases (0, 3, 4, 5, 6, 7, 9) avanzan sin pedir aprobación. Fase 3 en particular
+implementa todas las tareas del plan de forma continua — no hay checkpoint por tarea.
 
 ### Fases Opcionales
 
