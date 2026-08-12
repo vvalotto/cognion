@@ -84,9 +84,7 @@ async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
 async def _put_editar_pregunta(pregunta_id: str, body: dict):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.put(
-            f"/preguntas/{pregunta_id}", json=body, headers=docente_headers()
-        )
+        return await client.put(f"/preguntas/{pregunta_id}", json=body, headers=docente_headers())
 
 
 async def _marcar_inactiva(pregunta_id: str) -> None:
@@ -217,8 +215,7 @@ def edita_pregunta_inactiva(context):
 def valida_cambios_persistidos(context):
     assert context["response"].status_code == 200
     assert (
-        context["response"].json()["texto"]
-        == "¿Cuál es la capital de la provincia de Entre Ríos?"
+        context["response"].json()["texto"] == "¿Cuál es la capital de la provincia de Entre Ríos?"
     )
 
 

@@ -368,9 +368,7 @@ class TestEditarPreguntaAPIIntegration:
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.put(
-                f"/preguntas/{pregunta.id}", json=_body_editar_vf()
-            )
+            response = await client.put(f"/preguntas/{pregunta.id}", json=_body_editar_vf())
 
         assert response.status_code == 401
 
