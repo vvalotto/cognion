@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.banco_preguntas.entities.dificultad import Dificultad
+from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
@@ -59,4 +64,64 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
             )
 
         self._session.add(modelo)
+        await self._session.commit()
+
+    async def obtener_por_id(
+        self, pregunta_id: UUID
+    ) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso | None:
+        """Busca una pregunta por id; devuelve `None` si no existe."""
+        modelo = await self._session.get(PreguntaPlantillaModel, pregunta_id)
+        if modelo is None:
+            return None
+
+        if modelo.tipo == TIPO_VERDADERO_FALSO:
+            return PreguntaPlantillaVerdaderoFalso(
+                id=modelo.id,
+                banco_id=modelo.banco_id,
+                texto=modelo.texto,
+                respuesta_correcta=bool(modelo.respuesta_correcta),
+                unidad_tematica=modelo.unidad_tematica,
+                tema=modelo.tema,
+                dificultad=Dificultad(modelo.dificultad),
+                importancia=Importancia(modelo.importancia),
+                activa=modelo.activa,
+            )
+
+        return PreguntaPlantillaOpcionMultiple(
+            id=modelo.id,
+            banco_id=modelo.banco_id,
+            texto=modelo.texto,
+            opciones=[
+                Opcion(texto=o["texto"], es_correcta=o["es_correcta"])
+                for o in (modelo.opciones or [])
+            ],
+            unidad_tematica=modelo.unidad_tematica,
+            tema=modelo.tema,
+            dificultad=Dificultad(modelo.dificultad),
+            importancia=Importancia(modelo.importancia),
+            activa=modelo.activa,
+        )
+
+    async def actualizar(
+        self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
+    ) -> None:
+        """Guarda los cambios de una pregunta ya existente (actualización, no alta)."""
+        modelo = await self._session.get(PreguntaPlantillaModel, pregunta.id)
+        assert modelo is not None
+
+        modelo.texto = pregunta.texto
+        modelo.unidad_tematica = pregunta.unidad_tematica
+        modelo.tema = pregunta.tema
+        modelo.dificultad = pregunta.dificultad.value
+        modelo.importancia = pregunta.importancia.value
+        modelo.activa = pregunta.activa
+
+        if isinstance(pregunta, PreguntaPlantillaVerdaderoFalso):
+            modelo.respuesta_correcta = pregunta.respuesta_correcta
+        else:
+            modelo.opciones = [
+                {"texto": opcion.texto, "es_correcta": opcion.es_correcta}
+                for opcion in pregunta.opciones
+            ]
+
         await self._session.commit()

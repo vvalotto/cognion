@@ -14,6 +14,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
 from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
+from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 from tests.unit.inc2._fakes import FakeBancoRepository, FakePreguntaRepository
 
 
@@ -21,6 +22,7 @@ def _controller(banco_repo: FakeBancoRepository, pregunta_repo: FakePreguntaRepo
     return PreguntasController(
         CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo),
         CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo),
+        EditarPreguntaUseCase(pregunta_repo),
     )
 
 

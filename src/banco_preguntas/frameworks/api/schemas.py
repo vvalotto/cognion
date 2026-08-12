@@ -69,6 +69,22 @@ class CargarPreguntaVerdaderoFalsoRequest(BaseModel):
     importancia: Importancia
 
 
+class EditarPreguntaRequest(BaseModel):
+    """Body de la request de edición de pregunta.
+
+    `opciones` aplica solo si la pregunta es de opción múltiple; `respuesta_correcta` solo si
+    es Verdadero/Falso — el tipo no es editable, se infiere de la pregunta ya persistida.
+    """
+
+    texto: str = Field(..., min_length=1, max_length=2000)
+    unidad_tematica: str = Field(..., min_length=1, max_length=200)
+    tema: str = Field(..., min_length=1, max_length=200)
+    dificultad: Dificultad
+    importancia: Importancia
+    opciones: list[OpcionSchema] | None = None
+    respuesta_correcta: bool | None = None
+
+
 class PreguntaVerdaderoFalsoResponse(BaseModel):
     """Representación de una pregunta Verdadero/Falso devuelta por la API."""
 
