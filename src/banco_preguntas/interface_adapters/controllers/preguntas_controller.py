@@ -19,6 +19,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
+from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
 
 
 class PreguntasController:
@@ -29,11 +30,13 @@ class PreguntasController:
         cargar_pregunta_opcion_multiple: CargarPreguntaOpcionMultipleUseCase,
         cargar_pregunta_verdadero_falso: CargarPreguntaVerdaderoFalsoUseCase,
         editar_pregunta: EditarPreguntaUseCase,
+        eliminar_pregunta: EliminarPreguntaUseCase,
     ) -> None:
-        """Recibe los casos de uso de carga (uno por tipo) y edición de pregunta."""
+        """Recibe los casos de uso de carga (uno por tipo), edición y eliminación de pregunta."""
         self._cargar_pregunta_opcion_multiple = cargar_pregunta_opcion_multiple
         self._cargar_pregunta_verdadero_falso = cargar_pregunta_verdadero_falso
         self._editar_pregunta = editar_pregunta
+        self._eliminar_pregunta = eliminar_pregunta
 
     async def cargar_pregunta_opcion_multiple(
         self,
@@ -105,3 +108,15 @@ class PreguntasController:
             opciones=opciones,
             respuesta_correcta=respuesta_correcta,
         )
+
+    async def eliminar_pregunta(
+        self, pregunta_id: UUID
+    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
+        """Delega la baja lógica de la pregunta en el caso de uso correspondiente.
+
+        El evento de dominio se tipa como `object` en esta capa, mismo criterio ya aplicado a
+        `editar_pregunta` (`US-2.1.5`): evita sumar `PreguntaEliminada` al CBO del controller,
+        que ya está en el límite del umbral por el número de use cases inyectados. El tipo
+        preciso sigue disponible en `EliminarPreguntaUseCase.execute`.
+        """
+        return await self._eliminar_pregunta.execute(pregunta_id)
