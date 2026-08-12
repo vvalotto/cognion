@@ -394,9 +394,7 @@ class TestEliminarPreguntaAPIIntegration:
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.delete(
-                f"/preguntas/{pregunta.id}", headers=docente_headers
-            )
+            response = await client.delete(f"/preguntas/{pregunta.id}", headers=docente_headers)
 
         assert response.status_code == 204
 
@@ -408,9 +406,7 @@ class TestEliminarPreguntaAPIIntegration:
     async def test_rechazo_por_pregunta_inexistente(self, docente_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.delete(
-                f"/preguntas/{uuid.uuid4()}", headers=docente_headers
-            )
+            response = await client.delete(f"/preguntas/{uuid.uuid4()}", headers=docente_headers)
 
         assert response.status_code == 404
 
@@ -423,9 +419,7 @@ class TestEliminarPreguntaAPIIntegration:
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.delete(
-                f"/preguntas/{pregunta.id}", headers=docente_headers
-            )
+            response = await client.delete(f"/preguntas/{pregunta.id}", headers=docente_headers)
 
         assert response.status_code == 409
 
@@ -443,8 +437,6 @@ class TestEliminarPreguntaAPIIntegration:
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.delete(
-                f"/preguntas/{pregunta.id}", headers=admin_headers
-            )
+            response = await client.delete(f"/preguntas/{pregunta.id}", headers=admin_headers)
 
         assert response.status_code == 403
