@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "us_id": "US-2.1.5",
+    "us_title": "Docente edita una pregunta existente",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-12T12:06:44.702999+00:00",
+    "completed_at": "2026-08-12T12:47:27.413820+00:00",
+    "total_elapsed_seconds": 2442,
+    "effective_seconds": 2442,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto y verificacion",
+      "started_at": "2026-08-12T12:06:51.263823+00:00",
+      "completed_at": "2026-08-12T12:07:32.975327+00:00",
+      "elapsed_seconds": 41,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-12T12:09:59.117279+00:00",
+      "completed_at": "2026-08-12T12:10:42.697718+00:00",
+      "elapsed_seconds": 43,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-12T12:10:50.331834+00:00",
+      "completed_at": "2026-08-12T12:16:53.871863+00:00",
+      "elapsed_seconds": 363,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-12T12:17:00.202477+00:00",
+      "completed_at": "2026-08-12T12:28:58.657896+00:00",
+      "elapsed_seconds": 718,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-12T12:29:08.464773+00:00",
+      "completed_at": "2026-08-12T12:31:05.053415+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-12T12:31:13.046574+00:00",
+      "completed_at": "2026-08-12T12:35:17.201499+00:00",
+      "elapsed_seconds": 244,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-12T12:35:26.895281+00:00",
+      "completed_at": "2026-08-12T12:37:05.939603+00:00",
+      "elapsed_seconds": 99,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-12T12:37:14.390672+00:00",
+      "completed_at": "2026-08-12T12:41:58.402366+00:00",
+      "elapsed_seconds": 284,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-12T12:42:09.081317+00:00",
+      "completed_at": "2026-08-12T12:46:26.711641+00:00",
+      "elapsed_seconds": 257,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-12T12:46:53.661809+00:00",
+      "completed_at": "2026-08-12T12:47:24.421787+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 10,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

@@ -29,6 +29,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
+from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -53,6 +54,7 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
     return PreguntasController(
         CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo),
         CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo),
+        EditarPreguntaUseCase(pregunta_repo),
     )
 
 

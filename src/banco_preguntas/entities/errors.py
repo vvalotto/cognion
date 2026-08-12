@@ -23,3 +23,21 @@ class BancoNoExiste(Exception):
 
 class OpcionesInvalidas(Exception):
     """Las opciones de una pregunta de opción múltiple violan INV-BP-02 o INV-BP-03."""
+
+
+class PreguntaNoExiste(Exception):
+    """Se referenció un `pregunta_id` que no corresponde a ninguna `PreguntaPlantilla` existente."""
+
+    def __init__(self, pregunta_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.pregunta_id = pregunta_id
+        super().__init__(f"La pregunta '{pregunta_id}' no existe.")
+
+
+class PreguntaInactiva(Exception):
+    """Se intentó editar una `PreguntaPlantilla` con `activa = false`."""
+
+    def __init__(self, pregunta_id: object) -> None:
+        """Guarda el id de la pregunta inactiva y arma el mensaje de la excepción."""
+        self.pregunta_id = pregunta_id
+        super().__init__(f"La pregunta '{pregunta_id}' está inactiva y no puede editarse.")

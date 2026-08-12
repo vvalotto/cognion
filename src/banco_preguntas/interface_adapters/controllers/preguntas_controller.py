@@ -18,6 +18,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
 from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
+from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 
 
 class PreguntasController:
@@ -27,10 +28,12 @@ class PreguntasController:
         self,
         cargar_pregunta_opcion_multiple: CargarPreguntaOpcionMultipleUseCase,
         cargar_pregunta_verdadero_falso: CargarPreguntaVerdaderoFalsoUseCase,
+        editar_pregunta: EditarPreguntaUseCase,
     ) -> None:
-        """Recibe los casos de uso de carga de pregunta, uno por tipo."""
+        """Recibe los casos de uso de carga (uno por tipo) y edición de pregunta."""
         self._cargar_pregunta_opcion_multiple = cargar_pregunta_opcion_multiple
         self._cargar_pregunta_verdadero_falso = cargar_pregunta_verdadero_falso
+        self._editar_pregunta = editar_pregunta
 
     async def cargar_pregunta_opcion_multiple(
         self,
@@ -72,4 +75,33 @@ class PreguntasController:
             tema=tema,
             dificultad=dificultad,
             importancia=importancia,
+        )
+
+    async def editar_pregunta(
+        self,
+        pregunta_id: UUID,
+        texto: str,
+        unidad_tematica: str,
+        tema: str,
+        dificultad: Dificultad,
+        importancia: Importancia,
+        opciones: list[Opcion] | None = None,
+        respuesta_correcta: bool | None = None,
+    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
+        """Delega la edición de la pregunta en el caso de uso correspondiente.
+
+        El evento de dominio se tipa como `object` en esta capa: ningún caller (router) usa su
+        forma concreta hoy, y así se evita sumar `PreguntaEditada` al CBO del controller
+        (ya en 11/10 antes de esta US) — el tipo preciso `PreguntaEditada` sigue disponible en
+        `EditarPreguntaUseCase.execute`, que es donde importa para publicarlo a futuro.
+        """
+        return await self._editar_pregunta.execute(
+            pregunta_id=pregunta_id,
+            texto=texto,
+            unidad_tematica=unidad_tematica,
+            tema=tema,
+            dificultad=dificultad,
+            importancia=importancia,
+            opciones=opciones,
+            respuesta_correcta=respuesta_correcta,
         )

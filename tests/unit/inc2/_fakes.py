@@ -68,3 +68,15 @@ class FakePreguntaRepository(PreguntaRepositoryPort):
     ) -> None:
         """Guarda una pregunta nueva."""
         self.preguntas[pregunta.id] = pregunta
+
+    async def obtener_por_id(
+        self, pregunta_id: UUID
+    ) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso | None:
+        """Busca una pregunta por id, o `None` si no existe."""
+        return self.preguntas.get(pregunta_id)
+
+    async def actualizar(
+        self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
+    ) -> None:
+        """Persiste los cambios de una pregunta ya existente."""
+        self.preguntas[pregunta.id] = pregunta

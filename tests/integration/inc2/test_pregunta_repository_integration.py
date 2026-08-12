@@ -110,3 +110,123 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
         assert fila.dificultad == "medio"
         assert fila.importancia == "alto"
         assert fila.activa is True
+
+    async def test_obtener_por_id_pregunta_opcion_multiple(self, session):
+        banco = await _banco_persistido(session)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta = PreguntaPlantillaOpcionMultiple.crear(
+            banco_id=banco.id,
+            texto="¿Cuál es la capital de Entre Ríos?",
+            opciones=[
+                Opcion(texto="Paraná", es_correcta=True),
+                Opcion(texto="Concordia", es_correcta=False),
+            ],
+            unidad_tematica="Unidad 1",
+            tema="Arquitectura",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        )
+        await pregunta_repo.guardar(pregunta)
+
+        recuperada = await pregunta_repo.obtener_por_id(pregunta.id)
+
+        assert isinstance(recuperada, PreguntaPlantillaOpcionMultiple)
+        assert recuperada.id == pregunta.id
+        assert recuperada.opciones == pregunta.opciones
+
+    async def test_obtener_por_id_pregunta_verdadero_falso(self, session):
+        banco = await _banco_persistido(session)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta = PreguntaPlantillaVerdaderoFalso.crear(
+            banco_id=banco.id,
+            texto="El sol es una estrella.",
+            respuesta_correcta=True,
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        )
+        await pregunta_repo.guardar(pregunta)
+
+        recuperada = await pregunta_repo.obtener_por_id(pregunta.id)
+
+        assert isinstance(recuperada, PreguntaPlantillaVerdaderoFalso)
+        assert recuperada.respuesta_correcta is True
+
+    async def test_obtener_por_id_inexistente_retorna_none(self, session):
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+
+        assert await pregunta_repo.obtener_por_id(uuid.uuid4()) is None
+
+    async def test_actualizar_pregunta_opcion_multiple(self, session):
+        banco = await _banco_persistido(session)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta = PreguntaPlantillaOpcionMultiple.crear(
+            banco_id=banco.id,
+            texto="¿Cuál es la capital de Entre Ríos?",
+            opciones=[
+                Opcion(texto="Paraná", es_correcta=True),
+                Opcion(texto="Concordia", es_correcta=False),
+            ],
+            unidad_tematica="Unidad 1",
+            tema="Arquitectura",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        )
+        await pregunta_repo.guardar(pregunta)
+
+        pregunta.editar(
+            texto="¿Cuál es la capital de la provincia de Entre Ríos?",
+            opciones=[
+                Opcion(texto="Paraná", es_correcta=False),
+                Opcion(texto="Concordia", es_correcta=True),
+            ],
+            unidad_tematica="Unidad 2",
+            tema="Geografía",
+            dificultad=Dificultad.BAJO,
+            importancia=Importancia.MEDIO,
+        )
+        await pregunta_repo.actualizar(pregunta)
+
+        resultado = await session.execute(
+            select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
+        )
+        fila = resultado.scalar_one()
+        assert fila.texto == "¿Cuál es la capital de la provincia de Entre Ríos?"
+        assert fila.opciones == [
+            {"texto": "Paraná", "es_correcta": False},
+            {"texto": "Concordia", "es_correcta": True},
+        ]
+        assert fila.dificultad == "bajo"
+        assert fila.importancia == "medio"
+
+    async def test_actualizar_pregunta_verdadero_falso(self, session):
+        banco = await _banco_persistido(session)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+        pregunta = PreguntaPlantillaVerdaderoFalso.crear(
+            banco_id=banco.id,
+            texto="El sol es una estrella.",
+            respuesta_correcta=True,
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        )
+        await pregunta_repo.guardar(pregunta)
+
+        pregunta.editar(
+            texto="La luna es una estrella.",
+            respuesta_correcta=False,
+            unidad_tematica="Unidad 2",
+            tema="Geografía",
+            dificultad=Dificultad.BAJO,
+            importancia=Importancia.MEDIO,
+        )
+        await pregunta_repo.actualizar(pregunta)
+
+        resultado = await session.execute(
+            select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
+        )
+        fila = resultado.scalar_one()
+        assert fila.texto == "La luna es una estrella."
+        assert fila.respuesta_correcta is False
