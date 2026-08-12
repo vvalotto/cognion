@@ -84,9 +84,20 @@ gates APROBADO (pylint 9.27/10, CC máx 6, MI mín 51.47, coverage 99%).
 `US-2.1.2` (`CBO=11/10` en `PreguntasController` al inyectar el tercer use case), corregido
 tipando el evento de retorno como `object` en el controller. 219/219 tests, quality gates
 APROBADO (pylint 9.27/10, CC máx 8, MI mín 49.62, coverage 99%).
-**Próximo paso:** `US-2.1.6` — Docente elimina (baja lógica) una pregunta, ver
-`docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (2.1.7 al final). Sin spec ni Issue creados
-todavía.
+**US-2.1.6 (Docente elimina —baja lógica— una pregunta) cerrada 2026-08-12**, PR #73 mergeado a
+`develop` (merge `bb5c317`), Issue #47 cerrado, `docs/reports/inc2/US-2.1.6-report.md`: método
+`eliminar()` en `PreguntaPlantillaOpcionMultiple`/`PreguntaPlantillaVerdaderoFalso` (INV-BP-04,
+baja lógica), `EliminarPreguntaUseCase`, endpoint `DELETE /preguntas/{pregunta_id}` (rol
+`docente`). Tercera vez que el pre-push gate detecta CRITICAL de CBO en `PreguntasController`
+(mismo patrón que `US-2.1.2`/`US-2.1.5`) — esta vez se corrigió extendiendo el criterio de
+tipar el evento como `object` también a los dos endpoints de carga (`US-2.1.3`/`US-2.1.4`),
+no solo a los nuevos. CBO baja de 11/10 a 10/10. Ninguno de los RF de `RF_v1.md` cubre
+explícitamente la eliminación de preguntas — no mueve ninguna fila de la matriz de
+trazabilidad, mismo criterio que `US-2.1.2`. 237/237 tests, quality gates APROBADO (pylint
+9.18/10, CC máx 8, MI mín 49.62, coverage 99%).
+**Próximo paso:** `US-2.1.7` — Docente filtra el banco de una materia por metadatos, ver
+`docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (última US backend de la iteración). Sin
+spec ni Issue creados todavía.
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
