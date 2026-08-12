@@ -10,6 +10,28 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.5] Docente edita una pregunta existente — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — método `editar()` en
+    `PreguntaPlantillaOpcionMultiple` y `PreguntaPlantillaVerdaderoFalso`, reaplica INV-BP-02/03
+    en el primero (validación extraída a `_validar_opciones()`, compartida con `crear()`); el
+    tipo de la pregunta no es editable
+  - `src/banco_preguntas/entities/errors.py` — `PreguntaNoExiste`, `PreguntaInactiva`
+  - `src/banco_preguntas/entities/eventos.py` — `PreguntaEditada`
+  - `src/banco_preguntas/use_cases/editar_pregunta.py` — `EditarPreguntaUseCase`, dispatch por
+    tipo concreto sin lógica de negocio propia
+  - `PUT /preguntas/{pregunta_id}` (`src/banco_preguntas/frameworks/api/preguntas_router.py`) —
+    requiere rol `docente`, 200 con la respuesta según el tipo real, 404 si `PreguntaNoExiste`,
+    409 si `PreguntaInactiva`, 422 si `OpcionesInvalidas`
+  - `PreguntaRepositoryPort` extendido con `obtener_por_id()` y `actualizar()` (separado de
+    `guardar()`, que es alta)
+  - RF-05 pasa a "Implementado (backend) — frontend Especificado" en la matriz de
+    trazabilidad — las tres US-IEDD de backend (`US-2.1.3`, `US-2.1.4`, `US-2.1.5`) ya están
+    implementadas
+  - 25 tests nuevos (10 unitarios, 12 integración, 3 escenarios BDD) — 100% cobertura en
+    entities/use_cases/interface_adapters del código nuevo
+  - Bug encontrado y corregido en Fase 5: `SQLAlchemyPreguntaRepository.actualizar()` no
+    persistía la columna `activa`, expuesto por el test de rechazo de edición sobre pregunta
+    inactiva
 - [US-2.1.4] Docente carga una pregunta de Verdadero/Falso en un banco — BC Banco de Preguntas
   - `src/banco_preguntas/entities/pregunta_plantilla.py` — aggregate `PreguntaPlantillaVerdaderoFalso`,
     segundo tipo de pregunta, sin invariantes de negocio adicionales sobre `respuesta_correcta`
