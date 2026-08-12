@@ -5,7 +5,6 @@ from __future__ import annotations
 from uuid import UUID
 
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.eventos import PreguntaCargada
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -47,8 +46,14 @@ class PreguntasController:
         tema: str,
         dificultad: Dificultad,
         importancia: Importancia,
-    ) -> tuple[PreguntaPlantillaOpcionMultiple, PreguntaCargada]:
-        """Delega la carga de la pregunta en el caso de uso correspondiente."""
+    ) -> tuple[PreguntaPlantillaOpcionMultiple, object]:
+        """Delega la carga de la pregunta en el caso de uso correspondiente.
+
+        El evento se tipa como `object` en esta capa — mismo criterio de reducción de CBO
+        aplicado a `editar_pregunta`/`eliminar_pregunta`, extendido acá para bajar el CBO del
+        controller de 11/10 a 10/10 tras sumar `EliminarPreguntaUseCase` (`US-2.1.6`). Ningún
+        caller (router) usa la forma concreta del evento hoy.
+        """
         return await self._cargar_pregunta_opcion_multiple.execute(
             banco_id=banco_id,
             texto=texto,
@@ -68,8 +73,12 @@ class PreguntasController:
         tema: str,
         dificultad: Dificultad,
         importancia: Importancia,
-    ) -> tuple[PreguntaPlantillaVerdaderoFalso, PreguntaCargada]:
-        """Delega la carga de la pregunta Verdadero/Falso en el caso de uso correspondiente."""
+    ) -> tuple[PreguntaPlantillaVerdaderoFalso, object]:
+        """Delega la carga de la pregunta Verdadero/Falso en el caso de uso correspondiente.
+
+        El evento se tipa como `object` en esta capa — ver nota en
+        `cargar_pregunta_opcion_multiple`.
+        """
         return await self._cargar_pregunta_verdadero_falso.execute(
             banco_id=banco_id,
             texto=texto,
