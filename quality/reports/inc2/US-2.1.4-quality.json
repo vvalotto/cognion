@@ -1,0 +1,29 @@
+{
+  "us_id": "US-2.1.4",
+  "fecha": "2026-08-08T10:54:39-03:00",
+  "componente": "src/banco_preguntas (PreguntaPlantillaVerdaderoFalso, CargarPreguntaVerdaderoFalsoUseCase, PreguntasController.cargar_pregunta_verdadero_falso, SQLAlchemyPreguntaRepository.guardar extendido, preguntas_router POST /preguntas/verdadero-falso)",
+  "metricas": {
+    "pylint": 9.27,
+    "cc_max_por_funcion": 6,
+    "mi_min": 51.47,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage medido sobre entities/use_cases/interface_adapters del BC banco_preguntas completo (293/293 statements relevantes); frameworks/ excluido del gate por convención del proyecto (pyproject.toml [tool.coverage.run] omit) — se valida vía tests de integración.",
+    "Las 4 líneas sin cubrir (materia_repository.py:39-42) son código preexistente de US-2.1.1, fuera del alcance de esta US; todo el código nuevo/modificado de US-2.1.4 tiene 100% de cobertura.",
+    "C0301 (line-too-long, 109/100) en pregunta_plantilla.py:75 es código preexistente de US-2.1.3 (docstring de PreguntaPlantillaOpcionMultiple.crear), no tocado por esta US — no se corrigió por estar fuera de alcance.",
+    "R0903 (too-few-public-methods) en Ports, Use Case, Controller, Gateway y Modelos SQLAlchemy: mismo criterio de falso positivo esperado para Clean Architecture documentado en reportes previos (US-1.1.0, US-2.1.1, US-2.1.2, US-2.1.3).",
+    "R0913/R0917 (too-many-arguments, 7/5) en CargarPreguntaVerdaderoFalsoUseCase.execute, PreguntasController.cargar_pregunta_verdadero_falso y PreguntaPlantillaVerdaderoFalso.crear: mismo criterio que US-2.1.3 — firma explícita 1:1 con el comando de dominio CargarPreguntaVerdaderoFalso(banco_id, texto, respuesta_correcta, unidad_tematica, tema, dificultad, importancia), sin introducir un DTO/parameter object.",
+    "R0801 (duplicate-code) entre PreguntaPlantillaVerdaderoFalso.crear, CargarPreguntaVerdaderoFalsoUseCase.execute y sus análogos de opción múltiple: duplicación superficial de la firma del comando entre los dos tipos de pregunta, coherente con la decisión de US-2.1.3 de no generalizar entre tipos (BC-banco-preguntas-modelo.md §4).",
+    "CC máximo por función/método: 6 (PreguntaPlantillaOpcionMultiple, preexistente de US-2.1.3) — el código nuevo de US-2.1.4 tiene CC máximo 2. Muy por debajo del umbral de 10.",
+    "Suite completa del proyecto (tests/unit + tests/integration + tests/step_defs) verificada en verde: 194/194 passed.",
+    "Migración 6f523d16bf1c (pregunta_plantilla.respuesta_correcta) aplicada contra PostgreSQL local (alembic upgrade head) antes del cierre de esta fase."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "us_id": "US-1.1.7",
+  "stack": "frontend (React 19 + TypeScript + Vite)",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc1/US-1.1.7-context.md",
+  "resultados": {
+    "eslint_oxlint": { "errores": 0, "warnings": 1, "detalle": "warning preexistente en button.tsx, no introducido por esta US" },
+    "tsc_noemit": { "errores": 0 },
+    "vitest": {
+      "test_files": 6,
+      "tests": 21,
+      "passed": 21,
+      "failed": 0
+    },
+    "coverage": {
+      "statements_pct": 96.96,
+      "branches_pct": 86.66,
+      "functions_pct": 94.73,
+      "lines_pct": 96.87,
+      "umbral_referencia_pct": 80
+    }
+  },
+  "estado": "APROBADO"
+}

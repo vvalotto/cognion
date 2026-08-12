@@ -1,0 +1,80 @@
+[
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.interface_adapters.gateways.banco_repository",
+        "obj": "SQLAlchemyBancoRepository",
+        "line": 12,
+        "column": 0,
+        "endLine": 12,
+        "endColumn": 31,
+        "path": "src/banco_preguntas/interface_adapters/gateways/banco_repository.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.interface_adapters.controllers.materias_controller",
+        "obj": "MateriasController",
+        "line": 11,
+        "column": 0,
+        "endLine": 11,
+        "endColumn": 24,
+        "path": "src/banco_preguntas/interface_adapters/controllers/materias_controller.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.use_cases.crear_materia",
+        "obj": "CrearMateriaUseCase",
+        "line": 13,
+        "column": 0,
+        "endLine": 13,
+        "endColumn": 25,
+        "path": "src/banco_preguntas/use_cases/crear_materia.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.frameworks.db.models",
+        "obj": "MateriaModel",
+        "line": 14,
+        "column": 0,
+        "endLine": 14,
+        "endColumn": 18,
+        "path": "src/banco_preguntas/frameworks/db/models.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (0/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.frameworks.db.models",
+        "obj": "BancoModel",
+        "line": 25,
+        "column": 0,
+        "endLine": 25,
+        "endColumn": 16,
+        "path": "src/banco_preguntas/frameworks/db/models.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (0/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.entities.ports.banco_repository_port",
+        "obj": "BancoRepositoryPort",
+        "line": 10,
+        "column": 0,
+        "endLine": 10,
+        "endColumn": 25,
+        "path": "src/banco_preguntas/entities/ports/banco_repository_port.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    }
+]

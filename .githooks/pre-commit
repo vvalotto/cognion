@@ -1,4 +1,16 @@
 #!/bin/bash
-# Corre black, isort, ruff y CodeGuard sobre archivos staged.
-# Advierte pero no bloquea el commit.
-uv run pre-commit run --files $(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' | tr '\n' ' ') 2>/dev/null || true
+# mypy bloquea el commit si hay errores de tipo reales (fuente de verdad local para tipos,
+# ver CLAUDE.md §Quality gates — CodeGuard no es confiable para esto: software_limpio#70).
+# black, isort, ruff y CodeGuard corren después: advierten pero no bloquean.
+
+STAGED_PY=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' | tr '\n' ' ')
+
+uv run pre-commit run mypy --files $STAGED_PY
+MYPY_STATUS=$?
+
+SKIP=mypy uv run pre-commit run --files $STAGED_PY 2>/dev/null || true
+
+if [ $MYPY_STATUS -ne 0 ]; then
+    echo "❌ mypy encontró errores de tipo — commit bloqueado. Corregí antes de continuar."
+    exit 1
+fi
