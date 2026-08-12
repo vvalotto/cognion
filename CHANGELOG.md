@@ -10,6 +10,21 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.6] Docente elimina (baja lógica) una pregunta — BC Banco de Preguntas
+  - `src/banco_preguntas/entities/pregunta_plantilla.py` — método `eliminar()` en
+    `PreguntaPlantillaOpcionMultiple` y `PreguntaPlantillaVerdaderoFalso`, marca
+    `activa = false` (INV-BP-04, baja lógica, no física)
+  - `src/banco_preguntas/entities/errors.py` — `PreguntaYaEliminada`
+  - `src/banco_preguntas/entities/eventos.py` — `PreguntaEliminada`
+  - `src/banco_preguntas/use_cases/eliminar_pregunta.py` — `EliminarPreguntaUseCase`,
+    reutiliza `obtener_por_id()`/`actualizar()` del puerto (sin cambios de puerto)
+  - `DELETE /preguntas/{pregunta_id}` (`src/banco_preguntas/frameworks/api/preguntas_router.py`)
+    — requiere rol `docente`, 204 sin body en éxito, 404 si `PreguntaNoExiste`, 409 si
+    `PreguntaYaEliminada`
+  - Cuarto use case inyectado en `PreguntasController`; evento tipado `object` en esa capa,
+    mismo criterio preventivo de CBO ya aplicado en `US-2.1.5`
+  - 15 tests nuevos (6 unitarios de entities, 4 unitarios de use case, 1 unitario de
+    controller, 4 integración, 3 escenarios BDD) — 99% cobertura del BC completo
 - [US-2.1.5] Docente edita una pregunta existente — BC Banco de Preguntas
   - `src/banco_preguntas/entities/pregunta_plantilla.py` — método `editar()` en
     `PreguntaPlantillaOpcionMultiple` y `PreguntaPlantillaVerdaderoFalso`, reaplica INV-BP-02/03

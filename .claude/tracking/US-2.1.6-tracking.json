@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "us_id": "US-2.1.6",
+    "us_title": "Docente elimina (baja lógica) una pregunta",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-12T18:45:12.693403+00:00",
+    "completed_at": "2026-08-12T19:20:44.873377+00:00",
+    "total_elapsed_seconds": 2132,
+    "effective_seconds": 2132,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Setup",
+      "started_at": "2026-08-12T18:45:27.342764+00:00",
+      "completed_at": "2026-08-12T18:50:56.919087+00:00",
+      "elapsed_seconds": 329,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-12T18:51:03.438124+00:00",
+      "completed_at": "2026-08-12T18:51:23.706238+00:00",
+      "elapsed_seconds": 20,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-12T18:51:31.425481+00:00",
+      "completed_at": "2026-08-12T18:53:40.579990+00:00",
+      "elapsed_seconds": 129,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-12T18:53:47.359316+00:00",
+      "completed_at": "2026-08-12T19:01:16.867710+00:00",
+      "elapsed_seconds": 449,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "errors",
+          "task_name": "Agregar PreguntaYaEliminada",
+          "task_type": "code",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-12T18:53:51.095663+00:00",
+          "completed_at": "2026-08-12T18:54:04.557585+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -4.78,
+          "file_created": "src/banco_preguntas/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "eventos",
+          "task_name": "Agregar PreguntaEliminada",
+          "task_type": "code",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-12T18:54:07.098699+00:00",
+          "completed_at": "2026-08-12T18:54:19.148263+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -4.8,
+          "file_created": "src/banco_preguntas/entities/eventos.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "pregunta_plantilla",
+          "task_name": "Método eliminar() en ambos aggregates",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-12T18:54:21.958943+00:00",
+          "completed_at": "2026-08-12T18:54:54.438103+00:00",
+          "elapsed_seconds": 32,
+          "actual_minutes": 0.53,
+          "variance_minutes": -9.47,
+          "file_created": "src/banco_preguntas/entities/pregunta_plantilla.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "use_case",
+          "task_name": "EliminarPreguntaUseCase",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-12T18:54:57.204570+00:00",
+          "completed_at": "2026-08-12T18:55:06.935154+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -9.85,
+          "file_created": "src/banco_preguntas/use_cases/eliminar_pregunta.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "controller",
+          "task_name": "Agregar eliminar_pregunta a PreguntasController",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-12T18:55:10.457714+00:00",
+          "completed_at": "2026-08-12T18:55:38.540927+00:00",
+          "elapsed_seconds": 28,
+          "actual_minutes": 0.47,
+          "variance_minutes": -9.53,
+          "file_created": "src/banco_preguntas/interface_adapters/controllers/preguntas_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "dependencies",
+          "task_name": "Instanciar EliminarPreguntaUseCase en dependencies.py",
+          "task_type": "code",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-12T18:55:41.402034+00:00",
+          "completed_at": "2026-08-12T18:56:11.421586+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -4.5,
+          "file_created": "src/banco_preguntas/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "router",
+          "task_name": "Endpoint DELETE /preguntas/{id}",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-12T18:56:14.758542+00:00",
+          "completed_at": "2026-08-12T18:59:22.541103+00:00",
+          "elapsed_seconds": 187,
+          "actual_minutes": 3.12,
+          "variance_minutes": -6.88,
+          "file_created": "src/banco_preguntas/frameworks/api/preguntas_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-12T19:01:26.685319+00:00",
+      "completed_at": "2026-08-12T19:04:21.818539+00:00",
+      "elapsed_seconds": 175,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-12T19:04:24.530204+00:00",
+      "completed_at": "2026-08-12T19:05:47.234170+00:00",
+      "elapsed_seconds": 82,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-12T19:05:50.301011+00:00",
+      "completed_at": "2026-08-12T19:07:42.677419+00:00",
+      "elapsed_seconds": 112,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-12T19:07:49.840543+00:00",
+      "completed_at": "2026-08-12T19:17:52.697627+00:00",
+      "elapsed_seconds": 602,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-12T19:18:00.778759+00:00",
+      "completed_at": "2026-08-12T19:20:10.973158+00:00",
+      "elapsed_seconds": 130,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-12T19:20:16.694592+00:00",
+      "completed_at": "2026-08-12T19:20:44.769001+00:00",
+      "elapsed_seconds": 28,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 7,
+    "completed_tasks": 7,
+    "total_phases": 10,
+    "estimated_total_minutes": 55.0,
+    "actual_total_minutes": 5.18,
+    "variance_minutes": -49.82,
+    "variance_percent": -90.58
+  }
+}

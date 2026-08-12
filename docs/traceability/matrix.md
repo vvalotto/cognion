@@ -3,7 +3,13 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-08-12 — `US-2.1.5` (Docente edita una pregunta existente,
+> Última actualización: 2026-08-12 — `US-2.1.6` (Docente elimina —baja lógica— una pregunta,
+> backend) cerrada. Ninguno de los RF de `RF_v1.md` (RF-04 carga, RF-05 tipos+edición, RF-06
+> metadatos+filtrado) menciona explícitamente la eliminación de preguntas — `US-2.1.6` no
+> mueve ninguna fila de esta tabla, mismo criterio usado para `US-2.1.2` (US técnica sin RF
+> propio). Queda documentada aquí por completitud del BC (INV-BP-04, baja lógica).
+>
+> 2026-08-12 — `US-2.1.5` (Docente edita una pregunta existente,
 > backend) cerrada. Las tres US-IEDD de backend de RF-05 (`US-2.1.3`, `US-2.1.4`, `US-2.1.5`)
 > están implementadas — **RF-05 pasa a "Implementado (backend) — frontend Especificado"**,
 > mismo criterio usado para RF-01/RF-02/RF-04.
