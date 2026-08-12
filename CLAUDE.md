@@ -76,9 +76,17 @@ PR #68 mergeado a `develop` (merge `40849c4`), Issue #45 cerrado,
 `docente`), migración `respuesta_correcta` nullable en `pregunta_plantilla`. Repitió el patrón
 de `US-2.1.3` sin generalizar entre tipos de pregunta, según lo previsto. 194/194 tests, quality
 gates APROBADO (pylint 9.27/10, CC máx 6, MI mín 51.47, coverage 99%).
-**Próximo paso:** `US-2.1.5` — ver `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 para el
-detalle y el orden de implementación (2.1.6 después, 2.1.7 al final). Sin spec ni Issue
-creados todavía.
+**US-2.1.5 (Docente edita una pregunta existente) cerrada 2026-08-12**, PR #71 mergeado a
+`develop` (merge `39e2a12`), Issue #46 cerrado, `docs/reports/inc2/US-2.1.5-report.md`: método
+`editar(...)` en `PreguntaPlantillaOpcionMultiple`/`PreguntaPlantillaVerdaderoFalso`
+(reaplica INV-BP-02/03, tipo no editable), `EditarPreguntaUseCase`, endpoint
+`PUT /preguntas/{pregunta_id}` (rol `docente`). Mismo patrón de CRITICAL de CBO que
+`US-2.1.2` (`CBO=11/10` en `PreguntasController` al inyectar el tercer use case), corregido
+tipando el evento de retorno como `object` en el controller. 219/219 tests, quality gates
+APROBADO (pylint 9.27/10, CC máx 8, MI mín 49.62, coverage 99%).
+**Próximo paso:** `US-2.1.6` — Docente elimina (baja lógica) una pregunta, ver
+`docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (2.1.7 al final). Sin spec ni Issue creados
+todavía.
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.

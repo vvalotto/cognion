@@ -89,6 +89,14 @@ Feature: Eliminación lógica de pregunta (US-2.1.6)
 - [x] Frameworks — endpoint FastAPI `DELETE /preguntas/{id}` (baja lógica, no `DELETE` físico en SQL)
 - [ ] Frontend — cubierto por `US-2.1.13`
 
+**Atención al patrón de CBO detectado en `US-2.1.2` y `US-2.1.5`:** `PreguntasController` ya
+inyecta tres use cases (`CargarPreguntaOpcionMultipleUseCase`,
+`CargarPreguntaVerdaderoFalsoUseCase`, `EditarPreguntaUseCase`); sumar un cuarto
+(`EliminarPreguntaUseCase`) puede repetir el CRITICAL de CBO≥11/10 detectado recién en el
+pre-push gate en ambas US anteriores — no cubierto por los Quality Gates de Fase 7. Si
+reaparece, aplicar el mismo criterio ya usado en `US-2.1.5` (tipar el evento de retorno como
+`object` en el controller) o evaluar en el momento si conviene partir el controller.
+
 ---
 
 ## Fuente de verdad UX
