@@ -41,3 +41,12 @@ class PreguntaInactiva(Exception):
         """Guarda el id de la pregunta inactiva y arma el mensaje de la excepción."""
         self.pregunta_id = pregunta_id
         super().__init__(f"La pregunta '{pregunta_id}' está inactiva y no puede editarse.")
+
+
+class PreguntaYaEliminada(Exception):
+    """Se intentó eliminar una `PreguntaPlantilla` que ya tiene `activa = false`."""
+
+    def __init__(self, pregunta_id: object) -> None:
+        """Guarda el id de la pregunta ya eliminada y arma el mensaje de la excepción."""
+        self.pregunta_id = pregunta_id
+        super().__init__(f"La pregunta '{pregunta_id}' ya fue eliminada.")

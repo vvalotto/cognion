@@ -46,3 +46,12 @@ class PreguntaEditada:
     pregunta_id: UUID
     banco_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class PreguntaEliminada:
+    """Se eliminó (baja lógica) una pregunta existente del banco."""
+
+    pregunta_id: UUID
+    banco_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)

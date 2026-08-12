@@ -6,7 +6,11 @@ from dataclasses import dataclass, field
 from uuid import UUID, uuid4
 
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.errors import OpcionesInvalidas, PreguntaInactiva
+from src.banco_preguntas.entities.errors import (
+    OpcionesInvalidas,
+    PreguntaInactiva,
+    PreguntaYaEliminada,
+)
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.opcion import Opcion
 
@@ -80,6 +84,16 @@ class PreguntaPlantillaVerdaderoFalso:
         self.dificultad = dificultad
         self.importancia = importancia
 
+    def eliminar(self) -> None:
+        """Da de baja lógica la pregunta (INV-BP-04) — `activa` pasa a `False`.
+
+        Levanta `PreguntaYaEliminada` si `activa` ya era `False`.
+        """
+        if not self.activa:
+            raise PreguntaYaEliminada(self.id)
+
+        self.activa = False
+
 
 @dataclass
 class PreguntaPlantillaOpcionMultiple:
@@ -105,7 +119,7 @@ class PreguntaPlantillaOpcionMultiple:
         dificultad: Dificultad,
         importancia: Importancia,
     ) -> PreguntaPlantillaOpcionMultiple:
-        """Crea la pregunta validando INV-BP-02 e INV-BP-03; levanta `OpcionesInvalidas` si no se cumplen."""
+        """Crea la pregunta validando INV-BP-02/03; levanta `OpcionesInvalidas` si no se cumplen."""
         _validar_opciones(opciones)
 
         return PreguntaPlantillaOpcionMultiple(
@@ -144,3 +158,13 @@ class PreguntaPlantillaOpcionMultiple:
         self.tema = tema
         self.dificultad = dificultad
         self.importancia = importancia
+
+    def eliminar(self) -> None:
+        """Da de baja lógica la pregunta (INV-BP-04) — `activa` pasa a `False`.
+
+        Levanta `PreguntaYaEliminada` si `activa` ya era `False`.
+        """
+        if not self.activa:
+            raise PreguntaYaEliminada(self.id)
+
+        self.activa = False
