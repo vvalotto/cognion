@@ -2,8 +2,11 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: procedimiento operativo de branching, PRs, gestión de Issues/Milestones y ciclo de trabajo por US/Incremento
-> Última actualización: 2026-07-14
+> Última actualización: 2026-07-20
 > Fuente normativa relacionada: `docs/plans/PLAN-CM.md` (política) — este documento es el procedimiento que la ejecuta
+> Fuente conceptual: `docs/iedd/05-Fases-y-Gates.md` — este documento instancia, para Cognión,
+> el ciclo Dominio → Arquitectura → Modelo → Especificación → Implementación y sus gates
+> (`docs/iedd/03-Diagrama_Conceptual.md`); no redefine el modelo conceptual, lo ejecuta
 
 ---
 
@@ -19,11 +22,25 @@ No existe un nivel "Subproyecto" separado del Incremento — ver `PLAN-CM.md` §
 Iteración cubre lo que en otros proyectos IEDD podría llamarse "Sprint", pero aquí es
 simplemente la subdivisión que ya trae `PLAN_v1.md` dentro de cada Incremento.
 
+**US-IEDD como esquema único de unidad de trabajo.** No todo el trabajo del proyecto es una
+feature. También hay spikes (resolver una decisión abierta), PoC (verificar viabilidad
+técnica) y artefactos de modelado (event storming, wireframes). En vez de un template distinto
+por tipo, las cuatro se especifican con el **mismo esquema US-IEDD** — Precondición,
+Postcondición, Invariantes, Criterios de Aceptación — agregando un campo `Tipo` que declara
+cuál es y qué cuenta como su Postcondición/DoD. Precedente: en el proyecto de referencia
+(AtaraxiaDive), la iteración de fundación técnica pura ya se especificó como US-IEDD con
+`Aggregate: ninguno (es infraestructura)` en vez de inventar un template aparte. Un único
+esquema, una única mecánica de cierre (GitHub Issue), menos superficie de mantenimiento.
+Tabla de DoD por tipo en §2.
+
 **Iteración 0 — Modelado.** Cuando el incremento introduce un BC nuevo o lo extiende de forma
-significativa (ver `PLAN_v1.md`, tabla de cada incremento), la primera iteración no produce
-US-IEDD sino dos artefactos de diseño: el modelo de dominio del BC (event storming) y, si el BC
-expone pantallas nuevas, el prototipo UX correspondiente. Ambos se aprueban con Víctor antes de
-pasar a la Iteración 1. Procedimiento en §3.
+significativa (ver `PLAN_v1.md`, tabla de cada incremento), la primera iteración produce sus
+artefactos de diseño — el modelo de dominio del BC (event storming) y, si el BC expone
+pantallas nuevas, el prototipo UX correspondiente — como una o más US-IEDD **tipo `Modelado`**,
+cada una con su GitHub Issue. Cierran recién cuando Víctor aprueba explícitamente el artefacto
+(la aprobación es el comentario que cierra el Issue, no un paso informal aparte). Deben estar
+cerradas antes de pasar a la Iteración 1. Procedimiento en §3. Es la instancia operativa del
+**gate de modelado** (`docs/iedd/05-Fases-y-Gates.md` §3.2).
 
 ---
 
@@ -39,14 +56,39 @@ pasar a la Iteración 1. Procedimiento en §3.
 ### Estructura en GitHub
 
 - **Milestones** = uno por Incremento (`Incremento 0 — Walking Skeleton`, `Incremento 1 — Banco de preguntas`, etc.)
-- **Labels** = `us-iedd`, `incremento-0`, `incremento-1`, ..., `blocked`, `in-progress`, `done`
+- **Labels** = `us-iedd`, `incremento-0`, `incremento-1`, ...
+- **Labels de tipo** = `tipo:feature`, `tipo:spike`, `tipo:poc`, `tipo:modelado` — permiten
+  filtrar en GitHub sin tocar el esquema de la spec (ver "US-IEDD como esquema único" en §1)
+- **Labels de estado** = `backlog`, `in-progress`, `blocked` — ver "Estado del Issue" abajo
 - **Sin Project board** — Milestones + Labels alcanzan para desarrollo en solitario
+
+### Estado del Issue
+
+El estado de una unidad de trabajo combina el estado nativo del Issue (`open`/`closed`) con
+un label de estado mientras está abierto. No existe label `done`: **cerrar el Issue es la
+señal de "terminado"** — tenerla duplicada en un label aparte permite que las dos se
+desincronicen (issue cerrado sin el label, o viceversa).
+
+| Estado | Cómo se marca | Significado |
+|---|---|---|
+| Backlog | Issue abierto + label `backlog` | Creado, especificado, trabajo todavía no arrancó |
+| En curso | Issue abierto + label `in-progress` (reemplaza a `backlog`) | Trabajo activo — branch `feature/` o `fix/` abierta |
+| Bloqueado | Issue abierto + label `blocked` (reemplaza a `backlog`/`in-progress`) | Depende de una decisión o Issue externo — anotar en un comentario cuál |
+| Terminado | Issue **cerrado** (sin label de estado) | DoD cumplido — ver tabla "DoD por Tipo" en §2 |
+
+Un Issue siempre tiene exactamente un label de estado mientras está abierto (nunca dos a la
+vez, nunca ninguno) — al cerrarlo se quita el label de estado, el propio cierre ya lo dice
+todo.
 
 ### Template de Issue (US-IEDD)
 
 ```markdown
+## Tipo
+Feature | Spike | PoC | Modelado
+
 ## Descripción
 Como <rol>, quiero <acción> para <valor>.
+(Spike/PoC: qué pregunta o hipótesis resuelve. Modelado: qué artefacto de diseño produce.)
 
 ## Criterios de Aceptación
 - [ ] ...
@@ -56,9 +98,11 @@ Como <rol>, quiero <acción> para <valor>.
 
 ## Postcondición
 ...
+(Ver tabla "DoD por Tipo" — qué cuenta como Postcondición cambia según el Tipo declarado.)
 
 ## Invariantes
 - INV-1: ...
+(Spike/PoC/Modelado sin invariantes de dominio: omitir la sección o dejar "N/A".)
 
 ## Referencias
 - Incremento: N
@@ -66,19 +110,48 @@ Como <rol>, quiero <acción> para <valor>.
 - docs/specs/incN/US-N.M.K.md
 ```
 
+### DoD por Tipo
+
+El Issue se cierra únicamente cuando su Postcondición declarada se cumple — cerrar el Issue
+**es** la comprobación del DoD, no un checklist paralelo. Lo que cuenta como Postcondición
+cambia según el Tipo:
+
+| Tipo | Postcondición (qué cierra el Issue) | Evidencia de cierre |
+|---|---|---|
+| **Feature** | Criterios de aceptación cumplidos, código integrado en `develop` | PR mergeado + `docs/reports/{US_ID}-report.md` |
+| **Spike** | Pregunta/decisión resuelta (puede ser negativa) | ADR o nota de decisión enlazada en el comentario que cierra el Issue |
+| **PoC** | Viabilidad técnica verificada, sí o no | Código exploratorio + comentario de cierre con el resultado |
+| **Modelado** | Artefacto de diseño aprobado explícitamente por Víctor | Doc en `docs/design/domain/` o `docs/design/ux/` + comentario de aprobación en el Issue |
+
+A diferencia de una Feature, un Spike/PoC/Modelado no siempre tiene un build verde que
+verifique el cumplimiento — el cierre del Issue requiere una declaración explícita de Víctor
+en el comentario de cierre, no solo el merge de un PR.
+
 ---
 
 ## 3. Ciclo de Elaboración de US por Incremento
 
+Este ciclo es la instancia operativa del **gate de especificación**
+(`docs/iedd/05-Fases-y-Gates.md` §3.3, la "Definición de Listo para Especificar"): antes de
+escribir cualquier `US-N.M.K.md`, el paso 0 (si aplica) y el paso 3b verifican que el modelo de
+dominio y el diseño UX que la spec necesita ya estén aprobados — no se especifica sobre un
+artefacto que todavía no existe o que diverge del aprobado (anti-patrón "spec-validatoria",
+también tratado como regla general de reingreso en `docs/iedd/03-Diagrama_Conceptual.md` §"La
+regla de reingreso").
+
 ```
 0. [CONDICIONAL — si el Incremento tiene Iteración 0 — Modelado, ver PLAN_v1.md]:
    ejecutar la Iteración 0 ANTES de elaborar candidatas:
-   a. Event storming del BC: agregados, eventos de dominio, comandos, invariantes
-      → docs/design/domain/BC-<bc>-modelo.md
-   b. Si el BC expone pantallas nuevas: prototipo UX (docs/design/ux/prototipos/) +
-      spec de wireframes (docs/design/ux/wireframes-*.md) — mismo gate del §5 de PLAN-CM.md
-   c. Aprobación explícita de Víctor de AMBOS artefactos (modelo de dominio, y UX si
-      corresponde) antes de continuar al paso 1
+   a. Por cada artefacto de diseño necesario, crear una US-IEDD tipo `Modelado` (§2):
+      GitHub Issue con label `tipo:modelado` + docs/specs/incN/US-N.0.K.md
+      → event storming del BC (agregados, eventos de dominio, comandos, invariantes)
+        → docs/design/domain/BC-<bc>-modelo.md
+      → si el BC expone pantallas nuevas: prototipo UX (docs/design/ux/prototipos/) +
+        spec de wireframes (docs/design/ux/wireframes-*.md) — mismo gate del §5 de PLAN-CM.md
+   b. El Issue de cada artefacto cierra solo cuando Víctor lo aprueba explícitamente en el
+      comentario de cierre (DoD de tipo `Modelado`, tabla de §2) — no antes
+   c. Todas las US-IEDD tipo `Modelado` de la Iteración 0 deben estar cerradas antes de
+      continuar al paso 1
    d. No especificar comportamiento nuevo sobre un modelo de dominio que todavía no existe
       o que difiere del aprobado — mismo anti-patrón "spec-validatoria" que en UX (PLAN-CM.md
       §5), aplicado ahora al backend
@@ -128,9 +201,9 @@ Ver `PLAN-CM.md` §13 para el patrón exacto de cada nombre. Reglas:
 ### Commits (Conventional Commits)
 
 ```
-feat(entities): agregar aggregate Sesion [US-2.1.1]
+feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]
 fix(interface_adapters): corregir endpoint ranking provisional
-test(entities): tests unitarios Sesion.cerrar_periodo
+test(entities): tests unitarios ActividadEvaluativa.cerrar_periodo
 docs(adr): ADR-003 decisión SQLite vs PostgreSQL
 chore(cm): registrar BL-002 cierre Incremento 2
 
@@ -171,15 +244,25 @@ chore(cm): registrar BL-002 cierre Incremento 2
 ```
 5. Ejecutar /implement-us US-N.M.K  (10 fases, input: docs/specs/incN/US-N.M.K.md)
    → Cada fase tiene un artefacto físico de output — crearlo con Write, no solo mostrarlo en el chat
-   → Fase 2 (plan): esperar aprobación explícita antes de continuar
-   → Fase 8 (documentación): ídem
+   → Único checkpoint de aprobación por fase (config.json): Fase 1 (BDD), Fase 2 (plan) y
+     Fase 8 (documentación). Fase 3 (implementación) NO pausa tarea por tarea — ejecuta todo
+     el plan aprobado de forma continua, y solo se detiene ante errores reales o ambigüedad
+     de diseño no cubierta por el plan.
    → Fases 8 y 9 deben ejecutarse ANTES del commit final, no después
    → El skill no está completo hasta que docs/reports/{US_ID}-report.md exista en disco
 6. [AUTO] CodeGuard corre en cada commit (pre-commit hook, advierte, no bloquea)
 7. Commits atómicos con referencia: feat(entities): ... [US-N.M.K]
 8. Abrir PR hacia develop con /pr → DesignReviewer corre en pre-push (bloquea si CRITICAL)
    → Usar siempre gh pr create --base develop (el default de gh es main)
-9. Merge del PR — Issue se cierra automáticamente
+   → El body del PR NO necesita "Closes #N": el repo mergea a develop, no a main (rama
+     default), y GitHub solo autocierra Issues por esa keyword al mergear contra la rama
+     default — no funciona en este workflow.
+9. Merge del PR con gh pr merge --merge --delete-branch, luego sincronizar el repo local
+   (checkout develop, pull --ff-only, borrar branch feature local, fetch --prune).
+9a. Cerrar el Issue de la US asociado: comentar con los SHAs de los commits de la US
+    (`gh issue comment N --body ...`) y cerrarlo (`gh issue close N --reason completed`) —
+    sin pedir confirmación previa, salvo ambigüedad real (Issue no encontrado, más de un
+    candidato).
 9b. Actualizar docs/traceability/matrix.md: la(s) fila(s) RF cubiertas por esta US pasan de
     Especificado a Implementado.
     → Si el código mergeado es el mecanismo concreto de un escenario RNF (ver la columna ADR
@@ -262,6 +345,8 @@ anterior), pero su DoD se verifica contra el entorno de destino, no contra `src/
 
 ## 7. Ciclo por Baseline (cierre de Incremento)
 
+Instancia operativa del **gate de cierre** (`docs/iedd/05-Fases-y-Gates.md` §3.5).
+
 ```
 1. Todo el Incremento cerrado en develop — Milestone al 100%
 2. Correr ArchitectAnalyst manualmente:
@@ -299,6 +384,7 @@ antes de cerrar el Baseline, no en la automatización (PLAN-CM.md §10).
 
 ## 8. Quality Gates por Nivel
 
+Instancia operativa del **gate de implementación** (`docs/iedd/05-Fases-y-Gates.md` §3.4).
 Ver tabla completa en `PLAN-CM.md` §10. Resumen operativo:
 
 | Nivel | Herramienta | Cuándo | Acción |
@@ -320,25 +406,66 @@ Ver tabla completa en `PLAN-CM.md` §10. Resumen operativo:
 
 El skill `/implement-us US-N.M.K` lee `docs/specs/incN/US-N.M.K.md` como input y ejecuta las
 10 fases dentro de la branch `feature/US-N.M.K-descripcion`. Al terminar, se abre PR con
-`/pr` y se mergea directo a `develop`.
+`/pr` y se mergea directo a `develop`. Aplica a US-IEDD **tipo `Feature`** — las 10 fases
+asumen que hay código de dominio para implementar. Una US tipo `Spike`, `PoC` o `Modelado`
+(§1, §2) no corre el pipeline completo: su trabajo se hace y se documenta directamente, y el
+Issue cierra con la aprobación de Víctor, no con un PR de `/implement-us`.
 
 ```
-# Ejemplo Incremento 2 — varias US individuales
+# Ejemplo Incremento 3 — varias US individuales (BC Actividad Evaluativa, antes "Sesiones")
 
-feature/US-2.1.1-crear-sesion-abierta   → /implement-us → /pr → merge develop
-feature/US-2.1.2-set-aleatorio          → /implement-us → /pr → merge develop
-feature/US-2.2.1-persistir-respuesta    → /implement-us → /pr → merge develop
+feature/US-3.1.1-crear-actividad-abierta  → /implement-us → /pr → merge develop
+feature/US-3.1.2-set-aleatorio            → /implement-us → /pr → merge develop
+feature/US-3.2.1-persistir-respuesta      → /implement-us → /pr → merge develop
 ...
-(última US mergeada) → designreviewer src/ manual → verificar DoD Incremento 2 → mini-retro
+(última US mergeada) → designreviewer src/ manual → verificar DoD Incremento 3 → mini-retro
 ```
 
 ---
+
+*v1.7 — 2026-07-23. Corrige el gap señalado por v1.6: `Closes #N` **no** cierra el Issue en
+este repo porque los PRs mergean a `develop`, no a `main` (rama default) — GitHub solo honra
+esa keyword contra la rama default. Se reemplaza por el cierre manual explícito como paso 9a
+(comentario con SHAs + `gh issue close`), detectado al cerrar `US-1.1.0` (Issue #5 quedó
+abierto tras el merge) y confirmado como paso estándar del ciclo al cerrar `US-1.1.2`
+(Issue #7, PR #15). También se documenta que Fase 3 de `/implement-us` no tiene checkpoint de
+aprobación por tarea — solo Fases 1, 2 y 8 pausan — decisión tomada explícitamente para
+reducir fricción en la ejecución de US ya planificadas y aprobadas.*
+
+*v1.6 — 2026-07-20. Se corrige un gap real en §5 paso 8–9: el pipeline daba por hecho que "el
+Issue se cierra automáticamente" al mergear el PR, pero nada garantizaba eso — el commit con
+`[US-N.M.K]` no es una keyword de cierre de GitHub. Se agrega la instrucción explícita de
+incluir `Closes #N` (número de Issue) en el body del PR, y se fija el checkpoint de aprobación
+de Víctor en la apertura del PR (no en cada commit local). Detectado al preparar la ejecución
+de `US-1.1.0` a `US-1.1.5`.*
+
+*v1.5 — 2026-07-20. Se referencia explícitamente `docs/iedd/05-Fases-y-Gates.md` como fuente
+conceptual: cada ciclo operativo de este documento (Iteración 0 — Modelado en §1, elaboración
+de US en §3, quality gates en §8, cierre de Baseline en §7) queda marcado como instancia de un
+gate del modelo conceptual (modelado, especificación, implementación, cierre), en vez de
+quedar como práctica sin nombre formal. Motivado por la formalización del "gate de
+especificación" (Definición de Listo para Especificar) durante la Iteración 1 del Incremento 1
+(`US-1.1.0` a `US-1.1.5`).*
 
 *v1.0 — 2026-07-13. Primera versión, adaptada del workflow validado en AtaraxiaDive:
 terminología `incN` en vez de `spX`/SP (no hay nivel Subproyecto separado en Cognion — ver
 PLAN-CM.md §14), capas Clean Architecture (`entities/use_cases/interface_adapters/frameworks`)
 en vez de hexagonal DDD BC-first, y gate de UX + registro de aprendizajes incorporados desde
 el inicio en vez de descubiertos sobre la marcha.*
+
+*v1.3 — 2026-07-17. Se generaliza US-IEDD como esquema único de unidad de trabajo (§1, §2):
+campo `Tipo` (`Feature | Spike | PoC | Modelado`) en el template de Issue, tabla de DoD por
+Tipo (qué cuenta como Postcondición y su evidencia de cierre según el tipo), y labels
+`tipo:*`. La Iteración 0 — Modelado (§1, §3 paso 0) deja de aprobarse de forma informal y pasa
+a trackearse con GitHub Issues tipo `Modelado`, igual que cualquier otra unidad de trabajo —
+el cierre del Issue con la aprobación de Víctor es la comprobación del DoD. Se aclara en §9
+que el pipeline de 10 fases de `/implement-us` aplica solo a tipo `Feature`.*
+
+*v1.4 — 2026-07-17. Se define el modelo de estado del Issue (§2, "Estado del Issue"): labels
+`backlog` / `in-progress` / `blocked` mientras el Issue está abierto, uno solo a la vez; se
+elimina el label `done` por redundante con el estado nativo `closed` — cerrar el Issue ya es
+la señal de "terminado" (consistente con "cerrar el Issue es la comprobación del DoD",
+v1.3).*
 
 *v1.1 — 2026-07-14. Se incorpora la Iteración 0 — Modelado (§1, §3, §6): event storming del BC
 más UX si corresponde, aprobados por Víctor antes de elaborar candidatas de US. Extiende a

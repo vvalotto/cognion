@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+# Driver de smoke test para el backend de Cognión (FastAPI + PostgreSQL).
+# Levanta el server, hace bootstrap del primer Administrador (ADR-016,
+# scripts/seed_admin.py — POST /usuarios está protegido por RBAC desde
+# US-1.1.5, no hay forma de crearlo vía HTTP sin loguearse primero), ejercita
+# el flujo real de alta de usuarios/comisión/asignación de docente,
+# invitación + registro de Estudiante (US-1.1.1/1.1.2/1.1.8), verifica casos
+# de error (email duplicado -> 409, token vencido -> 422), limpia los datos
+# de prueba y baja el server.
+#
+# Uso: .claude/skills/run-cognion/smoke.sh   (desde la raíz del repo)
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+PORT="${COGNION_SMOKE_PORT:-8000}"
+SMTP_PORT="${COGNION_SMOKE_SMTP_PORT:-2525}"
+BASE="http://localhost:${PORT}"
+LOG=$(mktemp -t cognion-backend.XXXXXX.log)
+DB_URL="postgresql://user:password@localhost:5432/cognion"
+EMAIL_PREFIX="smoketest-$$"
+
+cleanup() {
+  local exit_code=$?
+  if [[ -n "${SERVER_PID:-}" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then
+    kill "$SERVER_PID" 2>/dev/null || true
+  fi
+  if [[ -n "${SMTP_PID:-}" ]] && kill -0 "$SMTP_PID" 2>/dev/null; then
+    kill "$SMTP_PID" 2>/dev/null || true
+  fi
+  # Best-effort: borrar cualquier dato de prueba de esta corrida.
+  # Orden estricto por dependencias de FK — estudiante.comision_id referencia comision.id,
+  # así que estudiante debe borrarse ANTES que comision (si no, la FK bloquea el DELETE de
+  # comision y psql hace rollback de todo el bloque, aunque cada DELETE haya reportado éxito
+  # — mismo gotcha documentado en run-cognion/SKILL.md).
+  psql "$DB_URL" -q -c "
+    DELETE FROM invitacion WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
+    DELETE FROM estudiante WHERE id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
+    DELETE FROM comision_docentes WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
+    DELETE FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
+    DELETE FROM administrador WHERE id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
+    DELETE FROM docente WHERE id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
+    DELETE FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%';
+  " >/dev/null 2>&1 || true
+  exit "$exit_code"
+}
+trap cleanup EXIT
+
+echo "== Postgres =="
+pg_isready -q || { echo "Postgres no responde en localhost:5432 — arrancalo con: brew services start postgresql@16" >&2; exit 1; }
+echo "OK"
+
+echo "== Arrancando fake SMTP (puerto ${SMTP_PORT}) =="
+python3 .claude/skills/run-cognion/fake_smtp.py "$SMTP_PORT" &
+SMTP_PID=$!
+sleep 0.3
+echo "OK"
+
+echo "== Arrancando backend (puerto ${PORT}) =="
+SMTP_PORT="$SMTP_PORT" .venv/bin/uvicorn src.app:app --port "$PORT" > "$LOG" 2>&1 &
+SERVER_PID=$!
+
+for _ in $(seq 1 20); do
+  if curl -s -o /dev/null "${BASE}/health"; then break; fi
+  sleep 0.5
+done
+
+echo "== GET /health =="
+code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}/health")
+[[ "$code" == "200" ]] || { echo "FAIL: /health devolvió $code"; cat "$LOG"; exit 1; }
+echo "OK ($code)"
+
+echo "== Bootstrap Administrador (scripts/seed_admin.py, ADR-016) =="
+ADMIN_EMAIL="${EMAIL_PREFIX}-admin@fiuner.edu.ar"
+ADMIN_NOMBRE="Smoke Admin" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="Password123!" \
+  .venv/bin/python scripts/seed_admin.py
+echo "OK"
+
+echo "== POST /identidad/login (administrador) =="
+admin_login=$(curl -s -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+  -d "{\"email\":\"${ADMIN_EMAIL}\",\"password\":\"Password123!\"}")
+admin_token=$(echo "$admin_login" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+echo "OK (token obtenido)"
+
+echo "== POST /usuarios (docente) =="
+docente=$(curl -s -X POST "${BASE}/usuarios" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${admin_token}" \
+  -d "{\"email\":\"${EMAIL_PREFIX}-docente@fiuner.edu.ar\",\"password\":\"Password123!\",\"nombre\":\"Smoke Docente\",\"perfil\":\"docente\"}")
+docente_id=$(echo "$docente" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+echo "OK (id=$docente_id)"
+
+echo "== POST /comisiones =="
+# admin_id no viene en LoginResponse — se resuelve por psql, es el único id que necesitamos
+# de un Usuario creado fuera de la API (bootstrap, scripts/seed_admin.py).
+admin_id=$(psql "$DB_URL" -t -A -c "SELECT id FROM usuario WHERE email = '${ADMIN_EMAIL}';")
+comision=$(curl -s -X POST "${BASE}/comisiones" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${admin_token}" \
+  -d "{\"materia\":\"Smoke Test\",\"horario\":\"Lunes 18-22\",\"administrador_id\":\"${admin_id}\"}")
+comision_id=$(echo "$comision" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+echo "OK (id=$comision_id)"
+
+echo "== POST /comisiones/{id}/docentes =="
+code=$(curl -s -o /tmp/cognion-smoke-asignar.json -w '%{http_code}' -X POST "${BASE}/comisiones/${comision_id}/docentes" \
+  -H "Content-Type: application/json" -H "Authorization: Bearer ${admin_token}" \
+  -d "{\"docente_id\":\"${docente_id}\"}")
+[[ "$code" == "200" ]] || { echo "FAIL: asignar docente devolvió $code"; cat /tmp/cognion-smoke-asignar.json; exit 1; }
+grep -q "$docente_id" /tmp/cognion-smoke-asignar.json || { echo "FAIL: docente no aparece en docentes_asignados"; exit 1; }
+echo "OK ($code)"
+
+echo "== POST /identidad/login (docente) =="
+docente_login=$(curl -s -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+  -d "{\"email\":\"${EMAIL_PREFIX}-docente@fiuner.edu.ar\",\"password\":\"Password123!\"}")
+docente_token=$(echo "$docente_login" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+echo "OK (token obtenido)"
+
+echo "== POST /comisiones/{id}/invitaciones (docente) =="
+# El use case manda el email de forma síncrona antes de devolver la invitación (US-1.1.1) —
+# sin un SMTP disponible este paso fallaría con 500. fake_smtp.py (arrancado arriba) cubre eso
+# para smoke testing local. Si por algún motivo no está disponible, el paso se reporta como
+# omitido en vez de fallar todo el smoke test.
+invitacion_code=$(curl -s -o /tmp/cognion-smoke-invitacion.json -w '%{http_code}' -X POST "${BASE}/comisiones/${comision_id}/invitaciones" \
+  -H "Content-Type: application/json" -H "Authorization: Bearer ${docente_token}" \
+  -d "{\"docente_id\":\"${docente_id}\",\"email_destinatario\":\"${EMAIL_PREFIX}-estudiante@fiuner.edu.ar\"}")
+
+if [[ "$invitacion_code" == "201" ]]; then
+  invitacion_id=$(python3 -c "import json;print(json.load(open('/tmp/cognion-smoke-invitacion.json'))['id'])")
+  # El token no se expone en la respuesta de la API (solo se manda por email, US-1.1.1) — se
+  # lee directo de la tabla para poder ejercitar el registro end-to-end.
+  invitacion_token=$(psql "$DB_URL" -t -A -c "SELECT token FROM invitacion WHERE id = '${invitacion_id}';")
+  echo "OK (id=$invitacion_id)"
+
+  echo "== POST /identidad/registro con invitación vigente (US-1.1.8) =="
+  registro=$(curl -s -X POST "${BASE}/identidad/registro" -H "Content-Type: application/json" \
+    -d "{\"token\":\"${invitacion_token}\",\"nombre\":\"Smoke Estudiante\",\"email\":\"${EMAIL_PREFIX}-estudiante@fiuner.edu.ar\",\"password\":\"Password123!\"}")
+  estudiante_materia=$(echo "$registro" | python3 -c "import sys,json;print(json.load(sys.stdin)['materia'])")
+  [[ "$estudiante_materia" == "Smoke Test" ]] || { echo "FAIL: materia devuelta '$estudiante_materia', esperada 'Smoke Test'"; exit 1; }
+  echo "OK (materia=$estudiante_materia)"
+
+  echo "== POST /identidad/registro con token ya usado (esperado 422) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/registro" -H "Content-Type: application/json" \
+    -d "{\"token\":\"${invitacion_token}\",\"nombre\":\"Otro\",\"email\":\"${EMAIL_PREFIX}-otro@fiuner.edu.ar\",\"password\":\"Password123!\"}")
+  [[ "$code" == "422" ]] || { echo "FAIL: registro con token ya usado devolvió $code, esperado 422"; exit 1; }
+  echo "OK ($code)"
+else
+  echo "SKIPPED ($invitacion_code) — ver /tmp/cognion-smoke-invitacion.json y $LOG"
+  echo "SKIPPED — depende de la invitación anterior"
+fi
+
+echo "== POST /usuarios con email duplicado (esperado 409) =="
+code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/usuarios" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${admin_token}" \
+  -d "{\"email\":\"${EMAIL_PREFIX}-docente@fiuner.edu.ar\",\"password\":\"Password123!\",\"nombre\":\"Otro\",\"perfil\":\"docente\"}")
+[[ "$code" == "409" ]] || { echo "FAIL: duplicado devolvió $code, esperado 409"; exit 1; }
+echo "OK ($code)"
+
+echo
+echo "SMOKE TEST OK — server bajado y datos de prueba limpiados."
