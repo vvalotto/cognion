@@ -1,0 +1,33 @@
+{
+  "us_id": "US-1.1.8",
+  "stack": "frontend (React 19 + TypeScript + Vite) + backend (ampliación mínima, ver adenda en la spec)",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc1/US-1.1.8-context.md",
+  "resultados": {
+    "backend": {
+      "mypy": { "errores": 0, "archivos_analizados": 79 },
+      "codeguard": { "errores": 0, "advertencias": 1, "informativos": 236, "detalle": "1 advertencia B101 (uso de assert como invariante de tipo) — mismo patrón ya aceptado en registro_router.py (isinstance narrowing)" },
+      "black_isort_ruff": { "errores": 0 },
+      "pytest_unit": { "passed": 71, "failed": 0 },
+      "pytest_integration": { "passed": 38, "failed": 0 }
+    },
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 1, "detalle": "warning preexistente en button.tsx, no introducido por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 9,
+        "tests": 30,
+        "passed": 30,
+        "failed": 0
+      },
+      "coverage_registro_pages": {
+        "statements_pct": 91.66,
+        "branches_pct": 88.88,
+        "functions_pct": 100,
+        "lines_pct": 91.66,
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

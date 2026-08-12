@@ -62,8 +62,8 @@ una decisión ratificada.
 
 ## 3. Estructura de `src/` — BC-first con Clean Architecture interna
 
-Cognion usa Clean Architecture (ARQ_v1.md) sobre Bounded Contexts: Sesiones (Core),
-Banco de preguntas, Identidad, Notificaciones, Analytics.
+Cognion usa Clean Architecture (ARQ_v1.md) sobre Bounded Contexts: Actividad Evaluativa (Core,
+antes "Sesiones" — ver `ADR-015`), Banco de preguntas, Identidad, Notificaciones, Analytics.
 
 ```
 src/<bc>/
@@ -292,6 +292,18 @@ separado de "Incremento"), en Cognion el **Incremento es la única unidad de bas
 |---|---|---|
 | Fase 0 — fundación documental (este momento) | BL-000 | `v0.0.0` → `v0.1.0` al cerrar Fase 0 |
 | Cierre de cada Incremento de `PLAN_v1.md` (0 a 6) | BL-001, BL-002, ... | `v0.N.0` |
+
+**Criterio de cierre — backend y frontend juntos.** Si el Incremento tiene un gate UX
+aprobado (`docs/design/ux/wireframes-*.md`), la Baseline no cierra hasta que el frontend
+correspondiente también esté implementado e integrado — no alcanza con que el backend pase
+sus tests. Razón: `PLAN_v1.md` no separa frontend como iteración propia (el Hito de cada
+Incremento se redacta en términos de comportamiento observable — "un estudiante se
+registra", no "el endpoint responde 201") y el principio de iteraciones cortas del propio
+plan exige un hito demostrable al docente real, no solo verificable por `pytest`/`curl`.
+Diferir pantallas US por US dentro de una iteración es aceptable como decisión de alcance
+puntual (ver `docs/plans/WORKFLOW-DESARROLLO.md`), pero esa deuda debe saldarse antes de
+abrir la Baseline — no arrastrarse al Incremento siguiente. Decisión registrada 2026-07-24
+al cierre de la Iteración 1 del Incremento 1 (BC Identidad, 5 US con frontend diferido).
 
 Ver §13 para la jerarquía completa de trabajo.
 
@@ -641,13 +653,13 @@ Incremento (ver §7).
 | Spec de US | `docs/specs/incN/US-N.M.K.md` | `docs/specs/inc2/US-2.3.1.md` | — |
 | Branch de US | `feature/US-N.M.K-descripcion-corta` | `feature/US-2.3.1-registrar-respuesta` | kebab-case, máx. 4 palabras, español |
 | Branch incremento técnico | `feature/inc-N-descripcion-corta` | `feature/inc-0-fundacion-tecnica` | sin US-IEDD asociada |
-| Branch de fix | `fix/descripcion-corta` | `fix/invariante-sesion-nula` | — |
+| Branch de fix | `fix/descripcion-corta` | `fix/invariante-actividad-evaluativa-nula` | — |
 | SP-ADJ | `SP-ADJ-NN` | `SP-ADJ-01` | `docs/plans/sp-adj-NN/` |
 | Wireframe UX | `wireframes-<pantalla-o-rol>.md` | `wireframes-docente-banco.md` | `docs/design/ux/` |
 | Prototipo UX | `prototipo-<pantalla-o-rol>.html` | `prototipo-docente-banco.html` | `docs/design/ux/prototipos/` |
-| Label GitHub | `us-iedd`, `incremento-N`, `blocked`, `in-progress`, `done` | `incremento-2` | Issues |
-| Milestone GitHub | `Incremento N — <nombre de PLAN_v1.md>` | `Incremento 2 — Sesión de período abierto` | Milestones |
-| Commit (Conventional Commits) | `tipo(scope): descripción [US-N.M.K]` | `feat(entities): agregar aggregate Sesion [US-2.1.1]` | — |
+| Label GitHub | `us-iedd`, `incremento-N`, `tipo:{feature\|spike\|poc\|modelado}`, `{backlog\|in-progress\|blocked}` | `incremento-2` | Issues |
+| Milestone GitHub | `Incremento N — <nombre de PLAN_v1.md>` | `Incremento 3 — Sesión de período abierto` (Actividad Evaluativa, ver `ADR-015`) | Milestones |
+| Commit (Conventional Commits) | `tipo(scope): descripción [US-N.M.K]` | `feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]` | — |
 
 **Nota sobre `SP-ADJ`:** el prefijo conserva "SP" por convención heredada (identifica el
 patrón, no una unidad de baseline) — no implica que Cognion tenga un nivel de Subproyecto.
