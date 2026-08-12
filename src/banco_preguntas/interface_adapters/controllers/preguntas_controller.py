@@ -87,9 +87,7 @@ class PreguntasController:
         importancia: Importancia,
         opciones: list[Opcion] | None = None,
         respuesta_correcta: bool | None = None,
-    ) -> tuple[
-        PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, PreguntaEditada
-    ]:
+    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, PreguntaEditada]:
         """Delega la edición de la pregunta en el caso de uso correspondiente."""
         return await self._editar_pregunta.execute(
             pregunta_id=pregunta_id,

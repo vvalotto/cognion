@@ -33,9 +33,7 @@ class EditarPreguntaUseCase:
         importancia: Importancia,
         opciones: list[Opcion] | None = None,
         respuesta_correcta: bool | None = None,
-    ) -> tuple[
-        PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, PreguntaEditada
-    ]:
+    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, PreguntaEditada]:
         """Edita la pregunta según su tipo concreto y persiste los cambios.
 
         Levanta `PreguntaNoExiste`, `PreguntaInactiva` u `OpcionesInvalidas` (esta última
