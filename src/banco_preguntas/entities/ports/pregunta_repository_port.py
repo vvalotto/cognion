@@ -30,4 +30,4 @@ class PreguntaRepositoryPort(ABC):
     async def actualizar(
         self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
     ) -> None:
-        """Persiste los cambios de una pregunta ya existente (no crea una fila nueva)."""
+        """Guarda los cambios de una pregunta ya existente (actualización, no alta)."""
