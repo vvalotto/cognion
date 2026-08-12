@@ -1,0 +1,25 @@
+{
+  "us_id": "US-2.1.2",
+  "fecha": "2026-08-05T13:00:00-03:00",
+  "componente": "src/identidad (Comisión, MateriaPort, CrearComisionUseCase, RegistrarEstudianteUseCase, MateriaPortInProcess) + src/banco_preguntas (MateriaRepositoryPort.obtener_por_id, ObtenerMateriaUseCase)",
+  "metricas": {
+    "pylint": 9.81,
+    "cc_max_por_funcion": 6,
+    "mi_min": 53.5,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage medido sobre entities/use_cases/interface_adapters de ambos BCs afectados (100%, 257/257 statements) — frameworks/ excluido del gate de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit); frameworks/adapters/materia_port_in_process.py y frameworks/db/models.py se validan en su lugar vía tests de integración (tests/integration/inc1/test_materia_port_in_process_integration.py).",
+    "Hallazgos R0903 (too-few-public-methods) en Ports, Use Cases, Controller y Adapter son falsos positivos esperados para Clean Architecture — mismo criterio documentado en reportes previos (US-1.1.0, US-1.1.1, US-2.1.1).",
+    "CC máximo por función: 6 (SQLAlchemyComisionRepository.actualizar, preexistente a esta US, no modificado en su lógica de control) — muy por debajo del umbral de 10.",
+    "Suite completa del proyecto (tests/unit + tests/integration + tests/step_defs) verificada en verde tras el refactor: 158/158 passed.",
+    "Migración 295bc74948c3 (comision_materia_id) verificada con round-trip real upgrade/downgrade/upgrade contra PostgreSQL local antes del cierre de esta fase."
+  ]
+}
