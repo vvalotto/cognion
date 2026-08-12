@@ -5,7 +5,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.eventos import PreguntaCargada, PreguntaEditada
+from src.banco_preguntas.entities.eventos import PreguntaCargada
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -87,8 +87,14 @@ class PreguntasController:
         importancia: Importancia,
         opciones: list[Opcion] | None = None,
         respuesta_correcta: bool | None = None,
-    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, PreguntaEditada]:
-        """Delega la edición de la pregunta en el caso de uso correspondiente."""
+    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
+        """Delega la edición de la pregunta en el caso de uso correspondiente.
+
+        El evento de dominio se tipa como `object` en esta capa: ningún caller (router) usa su
+        forma concreta hoy, y así se evita sumar `PreguntaEditada` al CBO del controller
+        (ya en 11/10 antes de esta US) — el tipo preciso `PreguntaEditada` sigue disponible en
+        `EditarPreguntaUseCase.execute`, que es donde importa para publicarlo a futuro.
+        """
         return await self._editar_pregunta.execute(
             pregunta_id=pregunta_id,
             texto=texto,
