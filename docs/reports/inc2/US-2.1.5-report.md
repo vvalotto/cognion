@@ -104,6 +104,18 @@ inactiva expuso que `SQLAlchemyPreguntaRepository.actualizar()` no persistía la
 `activa` (esperaba 409, devolvía 200). Corregido agregando `modelo.activa = pregunta.activa`
 antes del cierre de la fase.
 
+## CRITICAL detectado en el pre-push gate
+
+El hook `.githooks/pre-push` (`DesignReviewer`, `CBOAnalyzer`) detectó un CRITICAL recién en
+la fase de push — no cubierto por los Quality Gates de Fase 7 (miden pylint/CC/MI/coverage,
+no acoplamiento): `PreguntasController` con CBO=11/10 al inyectar `EditarPreguntaUseCase`
+como tercer use case. Mismo patrón que `US-2.1.2` (`CBO=11/10` en `RegistrarEstudianteUseCase`
+al inyectar `MateriaPort`). Se corrigió tipando el evento de retorno de `editar_pregunta()`
+como `object` en el controller — el tipo preciso `PreguntaEditada` sigue disponible en
+`EditarPreguntaUseCase.execute`, capa donde importa para publicarlo a futuro; ningún caller
+del controller usa hoy la forma concreta del evento. CBO baja a 10/10, `DesignReviewer` 0
+CRITICAL tras el fix.
+
 ---
 
 ## Archivos Creados/Modificados

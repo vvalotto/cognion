@@ -25,6 +25,7 @@
     "R0801 (duplicate-code) entre los métodos crear()/editar() de PreguntaPlantillaOpcionMultiple y PreguntaPlantillaVerdaderoFalso, y entre PreguntasController y los schemas de request/response: duplicación superficial de firma entre los dos tipos de pregunta, coherente con la decisión de US-2.1.3 de no generalizar entre tipos (BC-banco-preguntas-modelo.md §4).",
     "C0301 (line-too-long, 109/100) en pregunta_plantilla.py — preexistente de US-2.1.3, no tocado por esta US.",
     "Bug encontrado y corregido durante Fase 5 (tests de integración): SQLAlchemyPreguntaRepository.actualizar() no persistía la columna activa — expuesto por el test de rechazo de edición sobre pregunta inactiva (esperaba 409, devolvía 200). Corregido antes del cierre de esta fase.",
-    "Suite completa del proyecto (tests/unit + tests/integration + tests/step_defs) verificada en verde: 219/219 passed."
+    "El pre-push gate (DesignReviewer, CBOAnalyzer) detectó un CRITICAL (CBO=11/10 en PreguntasController al inyectar EditarPreguntaUseCase) recién en la fase de push — no cubierto por los Quality Gates de Fase 7, que miden pylint/CC/MI/coverage pero no acoplamiento. Mismo patrón que US-2.1.2. Se corrigió tipando el evento de retorno de editar_pregunta() como `object` en el controller (el tipo preciso PreguntaEditada sigue disponible en EditarPreguntaUseCase.execute, capa donde importa para publicarlo a futuro; ningún caller del controller usa hoy la forma concreta del evento). CBO baja a 10/10.",
+    "Suite completa del proyecto (tests/unit + tests/integration + tests/step_defs) verificada en verde: 219/219 passed. DesignReviewer 0 CRITICAL tras el fix."
   ]
 }
