@@ -37,3 +37,12 @@ class PreguntaCargada:
     pregunta_id: UUID
     banco_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class PreguntaEditada:
+    """Se editó una pregunta existente del banco."""
+
+    pregunta_id: UUID
+    banco_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)

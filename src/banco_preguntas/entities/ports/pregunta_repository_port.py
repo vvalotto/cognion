@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from uuid import UUID
 
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
@@ -18,3 +19,15 @@ class PreguntaRepositoryPort(ABC):
         self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
     ) -> None:
         """Guarda una pregunta nueva (opción múltiple o verdadero/falso)."""
+
+    @abstractmethod
+    async def obtener_por_id(
+        self, pregunta_id: UUID
+    ) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso | None:
+        """Busca una pregunta por id; devuelve `None` si no existe."""
+
+    @abstractmethod
+    async def actualizar(
+        self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
+    ) -> None:
+        """Persiste los cambios de una pregunta ya existente (no crea una fila nueva)."""
