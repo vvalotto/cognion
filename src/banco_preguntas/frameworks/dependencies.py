@@ -7,6 +7,9 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.banco_preguntas.interface_adapters.controllers.bancos_controller import (
+    BancosController,
+)
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
@@ -31,6 +34,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
+from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -58,6 +62,13 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
         EditarPreguntaUseCase(pregunta_repo),
         EliminarPreguntaUseCase(pregunta_repo),
     )
+
+
+def get_bancos_controller(session: SessionDep) -> BancosController:
+    """Arma el `BancosController` con sus dependencias concretas."""
+    banco_repo = SQLAlchemyBancoRepository(session)
+    pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    return BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:
