@@ -128,7 +128,9 @@ class TestSQLAlchemyPreguntaRepositoryFiltrar:
         await _pregunta_om_persistida(session, banco.id, unidad="Unidad 1", tema="Testing")
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
 
-        resultado = await pregunta_repo.filtrar(banco_id=banco.id, unidad="Unidad 2", tema="Testing")
+        resultado = await pregunta_repo.filtrar(
+            banco_id=banco.id, unidad="Unidad 2", tema="Testing"
+        )
 
         assert [p.id for p in resultado] == [match.id]
 
