@@ -80,3 +80,23 @@ class FakePreguntaRepository(PreguntaRepositoryPort):
     ) -> None:
         """Persiste los cambios de una pregunta ya existente."""
         self.preguntas[pregunta.id] = pregunta
+
+    async def filtrar(
+        self,
+        banco_id: UUID,
+        unidad: str | None = None,
+        tema: str | None = None,
+        dificultad: str | None = None,
+        importancia: str | None = None,
+    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        """Lista en memoria las preguntas activas del banco que matchean los filtros."""
+        return [
+            pregunta
+            for pregunta in self.preguntas.values()
+            if pregunta.banco_id == banco_id
+            and pregunta.activa
+            and (unidad is None or pregunta.unidad_tematica == unidad)
+            and (tema is None or pregunta.tema == tema)
+            and (dificultad is None or pregunta.dificultad.value == dificultad)
+            and (importancia is None or pregunta.importancia.value == importancia)
+        ]

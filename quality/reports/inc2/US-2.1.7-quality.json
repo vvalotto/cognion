@@ -1,0 +1,25 @@
+{
+  "us_id": "US-2.1.7",
+  "fecha": "2026-08-13T08:47:06Z",
+  "componente": "src/banco_preguntas",
+  "metricas": {
+    "pylint": 9.28,
+    "cc_max": 2,
+    "mi_min": 41.66,
+    "mi_promedio": 89.99,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "CodeGuard acotado a los 7 archivos de src/ modificados/agregados por esta US (0 errores, 0 warnings tras corregir 1 línea E501 en filtrar_banco.py).",
+    "CC/MI/coverage medidos sobre src/banco_preguntas completo, según convención del proyecto. CC máx real = 2 (PreguntaRepositoryPort, clase ABC con métodos abstractos); todo el código de negocio nuevo tiene CC = 1.",
+    "Coverage 99% sobre src/banco_preguntas; las 3 líneas sin cubrir son preexistentes en materia_repository.py, no tocadas por esta US — mismo patrón que US-2.1.6.",
+    "No se sumó un 5° use case a PreguntasController (CBO=10/10 desde US-2.1.6): se creó BancosController nuevo para la consulta, evitando repetir el patrón de CRITICAL de CBO visto en US-2.1.2/US-2.1.5/US-2.1.6. Verificación de CBO real la hace DesignReviewer en el pre-push hook, no esta fase."
+  ]
+}
