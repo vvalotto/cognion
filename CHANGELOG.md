@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.7] Docente filtra el banco por materia, unidad, tema, dificultad e importancia —
+  BC Banco de Preguntas
+  - `src/banco_preguntas/entities/ports/pregunta_repository_port.py` — método abstracto
+    `filtrar(banco_id, unidad?, tema?, dificultad?, importancia?)`, solo preguntas `activa = true`
+  - `src/banco_preguntas/use_cases/filtrar_banco.py` — `FiltrarBancoUseCase`, valida que el
+    `Banco` exista y delega el filtro combinado (AND) en el repositorio
+  - `src/banco_preguntas/interface_adapters/gateways/pregunta_repository.py` — implementación
+    SQLAlchemy de `filtrar()` con `WHERE` dinámico; mapeo a entidad extraído a `_a_entidad()`
+    para reutilizarlo con `obtener_por_id()`
+  - `src/banco_preguntas/interface_adapters/controllers/bancos_controller.py` (nuevo) —
+    `BancosController`, separado de `PreguntasController` para no repetir el patrón de
+    CRITICAL de CBO ya visto en `US-2.1.2`/`US-2.1.5`/`US-2.1.6` (`PreguntasController` estaba
+    en CBO=10/10, el umbral duro, tras `US-2.1.6`)
+  - `GET /bancos/{banco_id}/preguntas` (`src/banco_preguntas/frameworks/api/bancos_router.py`,
+    nuevo) — requiere rol `docente`, filtros opcionales por query params, 404 si `BancoNoExiste`
+  - 21 tests nuevos (6 unitarios de use case, 2 unitarios de controller, 4 integración de
+    repositorio, 6 integración de API, 3 escenarios BDD) — 99% cobertura del BC completo
 - [US-2.1.6] Docente elimina (baja lógica) una pregunta — BC Banco de Preguntas
   - `src/banco_preguntas/entities/pregunta_plantilla.py` — método `eliminar()` en
     `PreguntaPlantillaOpcionMultiple` y `PreguntaPlantillaVerdaderoFalso`, marca
