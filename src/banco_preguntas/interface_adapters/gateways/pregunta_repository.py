@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.banco_preguntas.entities.dificultad import Dificultad
@@ -73,7 +74,38 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
         modelo = await self._session.get(PreguntaPlantillaModel, pregunta_id)
         if modelo is None:
             return None
+        return self._a_entidad(modelo)
 
+    async def filtrar(
+        self,
+        banco_id: UUID,
+        unidad: str | None = None,
+        tema: str | None = None,
+        dificultad: str | None = None,
+        importancia: str | None = None,
+    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        """Lista las preguntas activas del banco que matchean todos los filtros provistos."""
+        query = select(PreguntaPlantillaModel).where(
+            PreguntaPlantillaModel.banco_id == banco_id,
+            PreguntaPlantillaModel.activa.is_(True),
+        )
+        if unidad is not None:
+            query = query.where(PreguntaPlantillaModel.unidad_tematica == unidad)
+        if tema is not None:
+            query = query.where(PreguntaPlantillaModel.tema == tema)
+        if dificultad is not None:
+            query = query.where(PreguntaPlantillaModel.dificultad == dificultad)
+        if importancia is not None:
+            query = query.where(PreguntaPlantillaModel.importancia == importancia)
+
+        resultado = await self._session.execute(query)
+        return [self._a_entidad(modelo) for modelo in resultado.scalars().all()]
+
+    @staticmethod
+    def _a_entidad(
+        modelo: PreguntaPlantillaModel,
+    ) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso:
+        """Mapea una fila de `pregunta_plantilla` al aggregate concreto según su `tipo`."""
         if modelo.tipo == TIPO_VERDADERO_FALSO:
             return PreguntaPlantillaVerdaderoFalso(
                 id=modelo.id,
