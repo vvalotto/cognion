@@ -31,3 +31,18 @@ class PreguntaRepositoryPort(ABC):
         self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
     ) -> None:
         """Guarda los cambios de una pregunta ya existente (actualización, no alta)."""
+
+    @abstractmethod
+    async def filtrar(
+        self,
+        banco_id: UUID,
+        unidad: str | None = None,
+        tema: str | None = None,
+        dificultad: str | None = None,
+        importancia: str | None = None,
+    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        """Lista las preguntas activas del banco que matchean todos los filtros provistos.
+
+        Los filtros son opcionales y combinables (AND) — un filtro en `None` no restringe el
+        resultado.
+        """
