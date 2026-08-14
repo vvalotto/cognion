@@ -27,7 +27,6 @@ class TestSQLAlchemyMateriaRepositoryIntegration:
 
         assert await repo.obtener_por_nombre("No existe") is None
 
-
     async def test_listar_incluye_materias_persistidas(self, session):
         repo = SQLAlchemyMateriaRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")

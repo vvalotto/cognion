@@ -1,6 +1,6 @@
+from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.eventos import BancoCreado, MateriaCreada
 from src.banco_preguntas.entities.materia import Materia
-from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
