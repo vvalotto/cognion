@@ -105,11 +105,22 @@ el umbral duro de CBO (10/10) tras `US-2.1.6`; detectarlo en Fase 2 evitó repet
 CRITICAL de `US-2.1.2`/`US-2.1.5`/`US-2.1.6`. 258/258 tests, quality gates APROBADO (pylint
 9.28/10, CC máx 2, MI mín 41.66, coverage 99%). Cierra completa la Iteración 1 backend
 (`US-2.1.1` a `US-2.1.7`).
-**Próximo paso:** `US-2.1.8` — Infraestructura de frontend del Banco de Preguntas (rutas,
-cliente API del dominio; bloquea `US-2.1.9` a `US-2.1.13`), ver
-`docs/plans/inc2/inc2-candidatas.md` §Iteración 1. Sin spec ni Issue creados todavía. Con el
-backend completo, evaluar cierre de baseline recién al cerrar también el frontend de la
-Iteración 1 — mismo criterio que `BL-002` (la Baseline no cierra backend-only).
+**US-2.1.8 (Infraestructura de frontend del Banco de Preguntas) cerrada 2026-08-14**, PR #78
+mergeado a `develop` (merge `071a394`), Issue #49 cerrado,
+`docs/reports/inc2/US-2.1.8-report.md`: cliente API tipado (`banco-preguntas-api.ts`, reutiliza
+`apiFetch`/JWT/401/403 de `US-1.1.6`, mapea snake_case↔camelCase), 7 rutas nuevas en
+`router.tsx` protegidas con `RequireRole rol="docente"` (`US-1.1.9`), placeholder temporal
+hasta que `US-2.1.9` a `US-2.1.13` las reemplacen. **Gap detectado en Fase 2 (planificación,
+antes de escribir código):** el backend no expone `GET /materias` (listado) — solo
+`POST /materias` (`US-2.1.1`); la spec de `US-2.1.9` asumía que ya existía. Decisión de
+Víctor: excluir `listarMaterias` del alcance de esta US. 65/65 tests frontend, quality gates
+APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 100% en `banco-preguntas-api.ts`).
+**Próximo paso:** `US-2.1.9` — Docente ve el listado de materias y da de alta una nueva — está
+**bloqueada** por el gap de `GET /materias` detectado en `US-2.1.8`; resolver ese endpoint
+backend antes de continuar, o evaluar si conviene saltar a `US-2.1.10` (banco y filtrado, no
+depende del gap) mientras se decide. Ver `docs/plans/inc2/inc2-candidatas.md` §Iteración 1.
+Con el backend completo y el frontend en curso, evaluar cierre de baseline recién al cerrar
+toda la Iteración 1 — mismo criterio que `BL-002` (la Baseline no cierra backend-only).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
