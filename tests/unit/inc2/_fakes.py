@@ -37,6 +37,10 @@ class FakeMateriaRepository(MateriaRepositoryPort):
         """Busca una materia por id, o `None` si no existe."""
         return self.materias.get(materia_id)
 
+    async def listar(self) -> list[Materia]:
+        """Lista todas las materias existentes."""
+        return list(self.materias.values())
+
 
 class FakeBancoRepository(BancoRepositoryPort):
     """Repositorio de bancos en memoria."""
@@ -52,6 +56,13 @@ class FakeBancoRepository(BancoRepositoryPort):
     async def obtener_por_id(self, banco_id: UUID) -> Banco | None:
         """Busca un banco por id, o `None` si no existe."""
         return self.bancos.get(banco_id)
+
+    async def obtener_por_materia_id(self, materia_id: UUID) -> Banco | None:
+        """Busca el banco de una materia, o `None` si no existe."""
+        for banco in self.bancos.values():
+            if banco.materia_id == materia_id:
+                return banco
+        return None
 
 
 class FakePreguntaRepository(PreguntaRepositoryPort):

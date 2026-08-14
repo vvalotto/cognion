@@ -11,6 +11,7 @@ import {
   editarPregunta,
   eliminarPregunta,
   filtrarBanco,
+  listarMaterias,
 } from "@/lib/banco-preguntas-api"
 
 function jsonResponse(status: number, body: unknown): Response {
@@ -43,6 +44,38 @@ describe("banco-preguntas-api", () => {
       expect(init?.method).toBe("POST")
       expect(JSON.parse(init?.body as string)).toEqual({ nombre: "Ingeniería de Software" })
       expect(materia).toEqual({ id: "m1", nombre: "Ingeniería de Software", bancoId: "b1" })
+    })
+  })
+
+  describe("listarMaterias", () => {
+    it("hace GET /materias y mapea cantidad_preguntas_activas a cantidadPreguntasActivas", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "m1",
+            nombre: "Ingeniería de Software",
+            banco_id: "b1",
+            cantidad_preguntas_activas: 3,
+          },
+        ]),
+      )
+
+      const materias = await listarMaterias()
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toContain("/materias")
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(materias).toEqual([
+        { id: "m1", nombre: "Ingeniería de Software", bancoId: "b1", cantidadPreguntasActivas: 3 },
+      ])
+    })
+
+    it("devuelve lista vacía si no hay materias", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const materias = await listarMaterias()
+
+      expect(materias).toEqual([])
     })
   })
 
