@@ -42,4 +42,46 @@ describe("router (integración)", () => {
 
     expect(await screen.findByRole("heading", { name: "Crear cuenta de Docente" })).toBeInTheDocument()
   })
+
+  it("la ruta /materias redirige a login sin sesión", async () => {
+    await router.navigate("/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+  })
+
+  it("la ruta /materias muestra acceso denegado con sesión de rol distinto de docente", async () => {
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /materias renderiza el placeholder con sesión de docente", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByText("Banco de Preguntas — pendiente de pantalla propia"),
+    ).toBeInTheDocument()
+  })
+
+  it.each([
+    "/materias/nueva",
+    "/materias/m1/banco",
+    "/materias/m1/banco/preguntas/nueva",
+    "/materias/m1/banco/preguntas/nueva/opcion-multiple",
+    "/materias/m1/banco/preguntas/nueva/verdadero-falso",
+    "/materias/m1/banco/preguntas/p1/editar",
+  ])("la ruta %s renderiza el placeholder con sesión de docente", async (path) => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(path)
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByText("Banco de Preguntas — pendiente de pantalla propia"),
+    ).toBeInTheDocument()
+  })
 })
