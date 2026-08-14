@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.banco_preguntas.entities.banco import Banco
@@ -26,6 +27,16 @@ class SQLAlchemyBancoRepository(BancoRepositoryPort):
     async def obtener_por_id(self, banco_id: UUID) -> Banco | None:
         """Busca un banco por id, o `None` si no existe."""
         modelo = await self._session.get(BancoModel, banco_id)
+        if modelo is None:
+            return None
+        return Banco(id=modelo.id, materia_id=modelo.materia_id)
+
+    async def obtener_por_materia_id(self, materia_id: UUID) -> Banco | None:
+        """Busca el banco de una materia, o `None` si no existe (1:1, INV-BP-01)."""
+        resultado = await self._session.execute(
+            select(BancoModel).where(BancoModel.materia_id == materia_id)
+        )
+        modelo = resultado.scalar_one_or_none()
         if modelo is None:
             return None
         return Banco(id=modelo.id, materia_id=modelo.materia_id)

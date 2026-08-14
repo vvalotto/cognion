@@ -40,3 +40,8 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
         if modelo is None:
             return None
         return Materia(id=modelo.id, nombre=modelo.nombre)
+
+    async def listar(self) -> list[Materia]:
+        """Lista todas las materias existentes."""
+        resultado = await self._session.execute(select(MateriaModel))
+        return [Materia(id=modelo.id, nombre=modelo.nombre) for modelo in resultado.scalars()]
