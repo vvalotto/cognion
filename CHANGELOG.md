@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.8] Infraestructura de frontend del Banco de Preguntas — sin cambios de backend
+  - `frontend/src/lib/banco-preguntas-api.ts` (nuevo) — cliente API tipado del BC (reutiliza
+    `apiFetch`/JWT/401/403 de `US-1.1.6`, sin duplicar esa lógica): `crearMateria`,
+    `filtrarBanco`, `cargarPreguntaOpcionMultiple`, `cargarPreguntaVerdaderoFalso`,
+    `editarPregunta`, `eliminarPregunta`; mapea explícitamente snake_case (schemas Pydantic)
+    ↔ camelCase (TS)
+  - `frontend/src/pages/_placeholders.tsx` — `BancoPreguntasPlaceholder`, destino temporal de
+    las rutas nuevas hasta que `US-2.1.9` a `US-2.1.13` las reemplacen
+  - `frontend/src/router.tsx` — 7 rutas nuevas bajo `AppLayout`, protegidas con
+    `RequireRole rol="docente"` (`US-1.1.9`): `/materias`, `/materias/nueva`,
+    `/materias/:materiaId/banco` y sus subrutas de carga/edición de preguntas
+  - **Gap detectado en Fase 2 (planificación):** el backend no expone `GET /materias`
+    (listado) — solo `POST /materias` de `US-2.1.1`. La spec de `US-2.1.9` asumía que ya
+    existía. Decisión de Víctor: excluir `listarMaterias` de esta US; `US-2.1.9` queda
+    bloqueada hasta que ese endpoint se implemente
+  - 19 tests nuevos (12 unitarios de `banco-preguntas-api.ts`, 7 de integración de router) —
+    100% cobertura en `banco-preguntas-api.ts`
 - [US-2.1.7] Docente filtra el banco por materia, unidad, tema, dificultad e importancia —
   BC Banco de Preguntas
   - `src/banco_preguntas/entities/ports/pregunta_repository_port.py` — método abstracto
