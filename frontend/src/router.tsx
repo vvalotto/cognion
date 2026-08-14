@@ -5,7 +5,7 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
-import { InicioPlaceholder } from "@/pages/_placeholders"
+import { BancoPreguntasPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
 import { Login } from "@/pages/Login"
 import { Registro } from "@/pages/Registro"
 import { RegistroError } from "@/pages/RegistroError"
@@ -45,6 +45,62 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="administrador">
             <AltaDocenteExito />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/nueva",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/banco",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/banco/preguntas/nueva",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/banco/preguntas/nueva/opcion-multiple",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/banco/preguntas/nueva/verdadero-falso",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/banco/preguntas/:preguntaId/editar",
+        element: (
+          <RequireRole rol="docente">
+            <BancoPreguntasPlaceholder />
           </RequireRole>
         ),
       },
