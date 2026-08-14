@@ -35,6 +35,7 @@ from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
+from src.banco_preguntas.use_cases.listar_materias import ListarMateriasUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -49,7 +50,11 @@ def get_materias_controller(session: SessionDep) -> MateriasController:
     """Arma el `MateriasController` con sus dependencias concretas."""
     materia_repo = SQLAlchemyMateriaRepository(session)
     banco_repo = SQLAlchemyBancoRepository(session)
-    return MateriasController(CrearMateriaUseCase(materia_repo, banco_repo))
+    pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    return MateriasController(
+        CrearMateriaUseCase(materia_repo, banco_repo),
+        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+    )
 
 
 def get_preguntas_controller(session: SessionDep) -> PreguntasController:
