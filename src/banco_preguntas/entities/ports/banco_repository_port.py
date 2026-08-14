@@ -18,3 +18,7 @@ class BancoRepositoryPort(ABC):
     @abstractmethod
     async def obtener_por_id(self, banco_id: UUID) -> Banco | None:
         """Busca un banco por id, o `None` si no existe."""
+
+    @abstractmethod
+    async def obtener_por_materia_id(self, materia_id: UUID) -> Banco | None:
+        """Busca el banco de una materia, o `None` si no existe (1:1, INV-BP-01)."""

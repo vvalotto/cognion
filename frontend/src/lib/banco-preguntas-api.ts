@@ -9,6 +9,13 @@ export interface MateriaResponse {
   bancoId: string
 }
 
+export interface MateriaListItemResponse {
+  id: string
+  nombre: string
+  bancoId: string
+  cantidadPreguntasActivas: number
+}
+
 export interface Opcion {
   texto: string
   esCorrecta: boolean
@@ -83,6 +90,13 @@ interface MateriaApiResponse {
   banco_id: string
 }
 
+interface MateriaListItemApiResponse {
+  id: string
+  nombre: string
+  banco_id: string
+  cantidad_preguntas_activas: number
+}
+
 interface OpcionApiSchema {
   texto: string
   es_correcta: boolean
@@ -155,6 +169,16 @@ export async function crearMateria(nombre: string): Promise<MateriaResponse> {
     body: { nombre },
   })
   return { id: response.id, nombre: response.nombre, bancoId: response.banco_id }
+}
+
+export async function listarMaterias(): Promise<MateriaListItemResponse[]> {
+  const response = await apiFetch<MateriaListItemApiResponse[]>("/materias")
+  return response.map((materia) => ({
+    id: materia.id,
+    nombre: materia.nombre,
+    bancoId: materia.banco_id,
+    cantidadPreguntasActivas: materia.cantidad_preguntas_activas,
+  }))
 }
 
 export async function filtrarBanco(

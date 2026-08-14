@@ -24,6 +24,15 @@ class MateriaResponse(BaseModel):
     banco_id: UUID
 
 
+class MateriaListItemResponse(BaseModel):
+    """Representación de una materia en el listado, con la cantidad de preguntas activas."""
+
+    id: UUID
+    nombre: str
+    banco_id: UUID
+    cantidad_preguntas_activas: int
+
+
 class OpcionSchema(BaseModel):
     """Una opción de respuesta en el body de la request."""
 

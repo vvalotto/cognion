@@ -22,3 +22,7 @@ class MateriaRepositoryPort(ABC):
     @abstractmethod
     async def obtener_por_id(self, materia_id: UUID) -> Materia | None:
         """Busca una materia por id, o `None` si no existe."""
+
+    @abstractmethod
+    async def listar(self) -> list[Materia]:
+        """Lista todas las materias existentes."""

@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "us_id": "US-2.1.9",
+    "us_title": "Docente ve el listado de materias y da de alta una nueva",
+    "us_points": 5,
+    "producto": "banco_preguntas",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-14T15:24:37.066740+00:00",
+    "completed_at": "2026-08-14T16:00:28.596733+00:00",
+    "total_elapsed_seconds": 2151,
+    "effective_seconds": 2151,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-14T15:24:55.008467+00:00",
+      "completed_at": "2026-08-14T15:25:57.708979+00:00",
+      "elapsed_seconds": 62,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-14T15:26:00.803741+00:00",
+      "completed_at": "2026-08-14T15:26:26.752042+00:00",
+      "elapsed_seconds": 25,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-14T15:26:29.200807+00:00",
+      "completed_at": "2026-08-14T15:27:13.124487+00:00",
+      "elapsed_seconds": 43,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-14T15:27:15.698518+00:00",
+      "completed_at": "2026-08-14T15:39:27.026541+00:00",
+      "elapsed_seconds": 731,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "puertos: listar() y obtener_por_materia_id()",
+          "task_type": "backend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-14T15:27:18.836379+00:00",
+          "completed_at": "2026-08-14T15:29:05.531609+00:00",
+          "elapsed_seconds": 106,
+          "actual_minutes": 1.77,
+          "variance_minutes": -8.23,
+          "file_created": "src/banco_preguntas/entities/ports/materia_repository_port.py,src/banco_preguntas/entities/ports/banco_repository_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "listar_materias.py",
+          "task_type": "backend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-14T15:29:17.983271+00:00",
+          "completed_at": "2026-08-14T15:29:56.722291+00:00",
+          "elapsed_seconds": 38,
+          "actual_minutes": 0.63,
+          "variance_minutes": -14.37,
+          "file_created": "src/banco_preguntas/use_cases/listar_materias.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "MateriasController + gateways",
+          "task_type": "backend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-14T15:30:08.921554+00:00",
+          "completed_at": "2026-08-14T15:31:52.199424+00:00",
+          "elapsed_seconds": 103,
+          "actual_minutes": 1.72,
+          "variance_minutes": -13.28,
+          "file_created": "materias_controller.py,materia_repository.py,banco_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "schema + GET /materias + DI",
+          "task_type": "backend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-14T15:32:06.672386+00:00",
+          "completed_at": "2026-08-14T15:35:21.656432+00:00",
+          "elapsed_seconds": 194,
+          "actual_minutes": 3.23,
+          "variance_minutes": -11.77,
+          "file_created": "schemas.py,materias_router.py,dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "listarMaterias() en banco-preguntas-api.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-14T15:35:38.657185+00:00",
+          "completed_at": "2026-08-14T15:36:53.566406+00:00",
+          "elapsed_seconds": 74,
+          "actual_minutes": 1.23,
+          "variance_minutes": -8.77,
+          "file_created": "frontend/src/lib/banco-preguntas-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Materias.tsx + NuevaMateria.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-14T15:37:59.478207+00:00",
+          "completed_at": "2026-08-14T15:37:59.587238+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -20.0,
+          "file_created": "frontend/src/pages/Materias.tsx,frontend/src/pages/NuevaMateria.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "router.tsx: reemplazar placeholders /materias",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-14T15:38:12.704416+00:00",
+          "completed_at": "2026-08-14T15:38:49.661433+00:00",
+          "elapsed_seconds": 36,
+          "actual_minutes": 0.6,
+          "variance_minutes": -9.4,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-14T15:39:30.566568+00:00",
+      "completed_at": "2026-08-14T15:45:48.516869+00:00",
+      "elapsed_seconds": 377,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-14T15:45:51.415788+00:00",
+      "completed_at": "2026-08-14T15:52:13.124911+00:00",
+      "elapsed_seconds": 381,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-14T15:52:15.893675+00:00",
+      "completed_at": "2026-08-14T15:55:18.354495+00:00",
+      "elapsed_seconds": 182,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-14T15:55:22.084676+00:00",
+      "completed_at": "2026-08-14T15:58:54.057705+00:00",
+      "elapsed_seconds": 211,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-14T15:58:58.202297+00:00",
+      "completed_at": "2026-08-14T15:59:48.472819+00:00",
+      "elapsed_seconds": 50,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-14T15:59:51.897738+00:00",
+      "completed_at": "2026-08-14T16:00:28.483644+00:00",
+      "elapsed_seconds": 36,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 7,
+    "completed_tasks": 7,
+    "total_phases": 10,
+    "estimated_total_minutes": 95.0,
+    "actual_total_minutes": 9.18,
+    "variance_minutes": -85.82,
+    "variance_percent": -90.33
+  }
+}

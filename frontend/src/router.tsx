@@ -7,6 +7,8 @@ import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { BancoPreguntasPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
 import { Login } from "@/pages/Login"
+import { Materias } from "@/pages/Materias"
+import { NuevaMateria } from "@/pages/NuevaMateria"
 import { Registro } from "@/pages/Registro"
 import { RegistroError } from "@/pages/RegistroError"
 import { RegistroExito } from "@/pages/RegistroExito"
@@ -52,7 +54,7 @@ export const router = createBrowserRouter([
         path: "/materias",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <Materias />
           </RequireRole>
         ),
       },
@@ -60,7 +62,7 @@ export const router = createBrowserRouter([
         path: "/materias/nueva",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <NuevaMateria />
           </RequireRole>
         ),
       },

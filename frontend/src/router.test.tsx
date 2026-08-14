@@ -1,16 +1,25 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { RouterProvider } from "react-router"
-import { afterEach, beforeEach, describe, expect, it } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { clearSession, setSession } from "@/lib/session"
 import { router } from "@/router"
 
+function jsonResponse(status: number, body: unknown): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  })
+}
+
 describe("router (integración)", () => {
   beforeEach(() => {
     clearSession()
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse(200, [])))
   })
 
   afterEach(() => {
+    vi.unstubAllGlobals()
     cleanup()
   })
 
@@ -58,18 +67,23 @@ describe("router (integración)", () => {
     expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
   })
 
-  it("la ruta /materias renderiza el placeholder con sesión de docente", async () => {
+  it("la ruta /materias renderiza el listado de materias con sesión de docente", async () => {
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias")
     render(<RouterProvider router={router} />)
 
-    expect(
-      await screen.findByText("Banco de Preguntas — pendiente de pantalla propia"),
-    ).toBeInTheDocument()
+    expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
+  })
+
+  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de docente", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Crear materia" })).toBeInTheDocument()
   })
 
   it.each([
-    "/materias/nueva",
     "/materias/m1/banco",
     "/materias/m1/banco/preguntas/nueva",
     "/materias/m1/banco/preguntas/nueva/opcion-multiple",
