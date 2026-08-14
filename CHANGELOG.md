@@ -10,6 +10,22 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.9] Docente ve el listado de materias y da de alta una nueva — backend + frontend
+  - `GET /materias` (nuevo, `src/banco_preguntas/frameworks/api/materias_router.py`) — lista
+    materias con `id`, `nombre`, `banco_id` y `cantidad_preguntas_activas`, rol `docente`
+  - `ListarMateriasUseCase` (nuevo) — orquesta `MateriaRepositoryPort.listar()` (nuevo),
+    `BancoRepositoryPort.obtener_por_materia_id()` (nuevo) y reutiliza
+    `PreguntaRepositoryPort.filtrar()` (`US-2.1.7`) para el conteo, sin ensanchar ese puerto
+  - `frontend/src/lib/banco-preguntas-api.ts` — `listarMaterias()` (excluida de `US-2.1.8`
+    por este mismo gap: el backend nunca expuso `GET /materias`)
+  - `frontend/src/pages/Materias.tsx` (nuevo) — grilla de materias con conteo de preguntas
+    activas, tarjeta "Nueva materia"
+  - `frontend/src/pages/NuevaMateria.tsx` (nuevo) — formulario de alta, error inline por
+    nombre duplicado (409), vuelve al listado en éxito
+  - 24 tests nuevos (backend: 6 unitarios de use case, 1 unitario de controller, 5 de
+    integración de gateways/API, 1 escenario BDD; frontend: 11 unitarios/integración de
+    Vitest) — coverage 100% en entities/use_cases/interface_adapters del BC, 100%/93.33% en
+    las 2 pantallas nuevas
 - [US-2.1.8] Infraestructura de frontend del Banco de Preguntas — sin cambios de backend
   - `frontend/src/lib/banco-preguntas-api.ts` (nuevo) — cliente API tipado del BC (reutiliza
     `apiFetch`/JWT/401/403 de `US-1.1.6`, sin duplicar esa lógica): `crearMateria`,

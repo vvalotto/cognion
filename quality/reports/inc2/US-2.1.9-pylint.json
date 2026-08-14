@@ -1,0 +1,15 @@
+[
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.use_cases.listar_materias",
+        "obj": "ListarMateriasUseCase",
+        "line": 12,
+        "column": 0,
+        "endLine": 12,
+        "endColumn": 27,
+        "path": "src/banco_preguntas/use_cases/listar_materias.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    }
+]
