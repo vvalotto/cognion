@@ -95,9 +95,21 @@ no solo a los nuevos. CBO baja de 11/10 a 10/10. Ninguno de los RF de `RF_v1.md`
 explícitamente la eliminación de preguntas — no mueve ninguna fila de la matriz de
 trazabilidad, mismo criterio que `US-2.1.2`. 237/237 tests, quality gates APROBADO (pylint
 9.18/10, CC máx 8, MI mín 49.62, coverage 99%).
-**Próximo paso:** `US-2.1.7` — Docente filtra el banco de una materia por metadatos, ver
-`docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (última US backend de la iteración). Sin
-spec ni Issue creados todavía.
+**US-2.1.7 (Docente filtra el banco por materia, unidad, tema, dificultad e importancia)
+cerrada 2026-08-13**, PR #76 mergeado a `develop` (merge `c26ce32`), Issue #48 cerrado,
+`docs/reports/inc2/US-2.1.7-report.md`: método `filtrar()` agregado a `PreguntaRepositoryPort`
+(solo preguntas `activa = true`, filtros opcionales combinables AND), `FiltrarBancoUseCase`,
+endpoint `GET /bancos/{banco_id}/preguntas` (rol `docente`). Controller nuevo y separado
+(`BancosController`) en vez de sumar un 5° use case a `PreguntasController` — ese ya estaba en
+el umbral duro de CBO (10/10) tras `US-2.1.6`; detectarlo en Fase 2 evitó repetir el patrón de
+CRITICAL de `US-2.1.2`/`US-2.1.5`/`US-2.1.6`. 258/258 tests, quality gates APROBADO (pylint
+9.28/10, CC máx 2, MI mín 41.66, coverage 99%). Cierra completa la Iteración 1 backend
+(`US-2.1.1` a `US-2.1.7`).
+**Próximo paso:** `US-2.1.8` — Infraestructura de frontend del Banco de Preguntas (rutas,
+cliente API del dominio; bloquea `US-2.1.9` a `US-2.1.13`), ver
+`docs/plans/inc2/inc2-candidatas.md` §Iteración 1. Sin spec ni Issue creados todavía. Con el
+backend completo, evaluar cierre de baseline recién al cerrar también el frontend de la
+Iteración 1 — mismo criterio que `BL-002` (la Baseline no cierra backend-only).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
