@@ -125,11 +125,23 @@ de preguntas activas por materia, sin ensanchar ese puerto), métodos nuevos
 de `US-2.1.8`. 225/225 tests backend, 73/73 frontend, quality gates APROBADO (pylint 9.96/10,
 CC máx 3, MI mín 55.56, coverage 100% backend / 100%-93.33% en las pantallas nuevas). Smoke
 test manual en navegador real confirmado (login docente, alta de materia, listado).
-**Próximo paso:** `US-2.1.10` — Docente ve y filtra el banco de preguntas de una materia (ya
-no bloqueada). Ver `docs/plans/inc2/inc2-candidatas.md` §Iteración 1. Sin spec ni Issue
-creados todavía. Con el backend completo y el frontend en curso, evaluar cierre de baseline
-recién al cerrar toda la Iteración 1 (`US-2.1.10` a `US-2.1.13`) — mismo criterio que `BL-002`
-(la Baseline no cierra backend-only).
+**US-2.1.10 (Docente ve y filtra el banco de preguntas de una materia) cerrada 2026-08-16**,
+PR #82 mergeado a `develop` (merge `641be0d`), `docs/reports/inc2/US-2.1.10-report.md`:
+frontend puro, sin cambios de backend — consume `GET /bancos/{id}/preguntas` (`US-2.1.7`) y
+`GET /materias` (`US-2.1.9`) para resolver `materiaId → nombre/bancoId` sin agregar un
+endpoint dedicado. Pantalla `Banco.tsx` (tabla + filtros de unidad/tema/dificultad/
+importancia) reemplaza el placeholder de `US-2.1.8` en `/materias/:materiaId/banco`; acciones
+"Editar"/"+ Nueva pregunta" apuntan a rutas placeholder pendientes de `US-2.1.11`–`US-2.1.13`,
+"Eliminar" deshabilitado (sin ruta de confirmación todavía). 80/80 tests frontend, quality
+gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 95.55%/89.28%/89.47% en
+`Banco.tsx`).
+**Próximo paso:** `US-2.1.11` — Docente carga una pregunta eligiendo su tipo (reemplaza el
+placeholder de "+ Nueva pregunta"), luego `US-2.1.12` (editar) y `US-2.1.13` (eliminar con
+confirmación) — en ese orden, según `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (no se
+edita/elimina lo que no existe). Sin spec ni Issue creados todavía para `US-2.1.11`. Con el
+backend completo y el frontend en curso, evaluar cierre de baseline recién al cerrar toda la
+Iteración 1 (`US-2.1.10` a `US-2.1.13`) — mismo criterio que `BL-002` (la Baseline no cierra
+backend-only).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
