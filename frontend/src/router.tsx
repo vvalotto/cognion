@@ -6,6 +6,7 @@ import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { BancoPreguntasPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
+import { Banco } from "@/pages/Banco"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { NuevaMateria } from "@/pages/NuevaMateria"
@@ -70,7 +71,7 @@ export const router = createBrowserRouter([
         path: "/materias/:materiaId/banco",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <Banco />
           </RequireRole>
         ),
       },
