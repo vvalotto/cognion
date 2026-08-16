@@ -10,6 +10,9 @@ import { Banco } from "@/pages/Banco"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { NuevaMateria } from "@/pages/NuevaMateria"
+import { NuevaPreguntaOpcionMultiple } from "@/pages/NuevaPreguntaOpcionMultiple"
+import { NuevaPreguntaTipo } from "@/pages/NuevaPreguntaTipo"
+import { NuevaPreguntaVerdaderoFalso } from "@/pages/NuevaPreguntaVerdaderoFalso"
 import { Registro } from "@/pages/Registro"
 import { RegistroError } from "@/pages/RegistroError"
 import { RegistroExito } from "@/pages/RegistroExito"
@@ -79,7 +82,7 @@ export const router = createBrowserRouter([
         path: "/materias/:materiaId/banco/preguntas/nueva",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <NuevaPreguntaTipo />
           </RequireRole>
         ),
       },
@@ -87,7 +90,7 @@ export const router = createBrowserRouter([
         path: "/materias/:materiaId/banco/preguntas/nueva/opcion-multiple",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <NuevaPreguntaOpcionMultiple />
           </RequireRole>
         ),
       },
@@ -95,7 +98,7 @@ export const router = createBrowserRouter([
         path: "/materias/:materiaId/banco/preguntas/nueva/verdadero-falso",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <NuevaPreguntaVerdaderoFalso />
           </RequireRole>
         ),
       },

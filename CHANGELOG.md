@@ -10,6 +10,22 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.11] Docente carga una pregunta eligiendo su tipo — frontend puro, sin cambios de
+  backend
+  - `frontend/src/pages/NuevaPreguntaTipo.tsx` (nuevo) — selección de tipo (dos tarjetas
+    clicables), navega al formulario correspondiente; aclara que el tipo no se puede cambiar
+    después
+  - `frontend/src/pages/NuevaPreguntaOpcionMultiple.tsx` (nuevo) — texto, opciones dinámicas
+    (mínimo 2, radio de correcta, agregar/quitar), unidad temática y tema (texto libre —
+    sin catálogo ni endpoint de origen, mismo criterio de `US-2.1.8`), dificultad/importancia;
+    validación de cliente (INV-BP-02/03) antes de llamar a `cargarPreguntaOpcionMultiple()`
+    (`US-2.1.8`)
+  - `frontend/src/pages/NuevaPreguntaVerdaderoFalso.tsx` (nuevo) — texto, selector V/F sin
+    default, mismos metadatos; consume `cargarPreguntaVerdaderoFalso()` (`US-2.1.8`)
+  - `frontend/src/router.tsx` — reemplaza los 3 placeholders de `/materias/:id/banco/preguntas/
+    nueva*` por las pantallas reales
+  - 9 tests nuevos (Vitest) + 3 tests de integración de router — coverage 100%/83.33%/90.47%
+    (statements) en las 3 pantallas nuevas
 - [US-2.1.10] Docente ve y filtra el banco de preguntas de una materia — frontend puro, sin
   cambios de backend
   - `frontend/src/pages/Banco.tsx` (nuevo) — resuelve `materiaId` contra `listarMaterias()`
