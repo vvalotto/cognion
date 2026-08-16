@@ -10,6 +10,18 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.10] Docente ve y filtra el banco de preguntas de una materia — frontend puro, sin
+  cambios de backend
+  - `frontend/src/pages/Banco.tsx` (nuevo) — resuelve `materiaId` contra `listarMaterias()`
+    (`US-2.1.9`) para obtener nombre y `bancoId`, sin endpoint nuevo; filtros de unidad/tema
+    (texto libre) y dificultad/importancia (`<select>` nativo, sin dependencia nueva de
+    shadcn/ui); refresca la tabla al cambiar cualquier filtro consumiendo `filtrarBanco()`
+    (`US-2.1.7`); acciones "Editar"/"+ Nueva pregunta" navegan a las rutas placeholder ya
+    existentes (`US-2.1.8`), que reemplazarán `US-2.1.11`–`US-2.1.13`
+  - `frontend/src/router.tsx` — reemplaza el placeholder de `/materias/:materiaId/banco` por
+    la pantalla real
+  - 7 tests nuevos (Vitest, `Banco.test.tsx`) + 1 test de integración de router actualizado —
+    coverage 95.55%/89.28%/89.47% (statements/branches/functions) en `Banco.tsx`
 - [US-2.1.9] Docente ve el listado de materias y da de alta una nueva — backend + frontend
   - `GET /materias` (nuevo, `src/banco_preguntas/frameworks/api/materias_router.py`) — lista
     materias con `id`, `nombre`, `banco_id` y `cantidad_preguntas_activas`, rol `docente`

@@ -84,7 +84,6 @@ describe("router (integración)", () => {
   })
 
   it.each([
-    "/materias/m1/banco",
     "/materias/m1/banco/preguntas/nueva",
     "/materias/m1/banco/preguntas/nueva/opcion-multiple",
     "/materias/m1/banco/preguntas/nueva/verdadero-falso",
@@ -97,5 +96,21 @@ describe("router (integración)", () => {
     expect(
       await screen.findByText("Banco de Preguntas — pendiente de pantalla propia"),
     ).toBeInTheDocument()
+  })
+
+  it("la ruta /materias/:id/banco renderiza el banco de preguntas con sesión de docente", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
+        ]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, []))
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/m1/banco")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Ingeniería de Software" })).toBeInTheDocument()
   })
 })
