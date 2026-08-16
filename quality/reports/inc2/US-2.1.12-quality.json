@@ -1,0 +1,23 @@
+{
+  "us_id": "US-2.1.12",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc2/US-2.1.12-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 1, "detalle": "warning preexistente en button.tsx, no introducido por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 21,
+        "tests": 97,
+        "passed": 97,
+        "failed": 0
+      },
+      "coverage_paginas_nuevas": {
+        "EditarPregunta.tsx": { "statements_pct": 90.52, "branches_pct": 85.18, "functions_pct": 92.1 },
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

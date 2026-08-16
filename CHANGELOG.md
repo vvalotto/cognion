@@ -10,6 +10,17 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.12] Docente edita una pregunta existente desde la UI — frontend puro, sin cambios de
+  backend
+  - `frontend/src/pages/EditarPregunta.tsx` (nuevo) — resuelve la pregunta a editar con
+    `filtrarBanco()` (`US-2.1.7`, sin endpoint `GET /preguntas/{id}` nuevo), reutiliza los
+    campos/validación de `NuevaPreguntaOpcionMultiple.tsx`/`NuevaPreguntaVerdaderoFalso.tsx`
+    prellenados según el tipo concreto, sin selector de tipo; guarda con `editarPregunta()`
+    (`US-2.1.8`/`US-2.1.5`)
+  - `frontend/src/router.tsx` — reemplaza el placeholder de
+    `/materias/:materiaId/banco/preguntas/:preguntaId/editar` por la pantalla real
+  - 8 tests nuevos (Vitest) + 1 test de integración de router — coverage 90.52%/85.18%/92.1%
+    (statements/branches/functions) en `EditarPregunta.tsx`
 - [US-2.1.11] Docente carga una pregunta eligiendo su tipo — frontend puro, sin cambios de
   backend
   - `frontend/src/pages/NuevaPreguntaTipo.tsx` (nuevo) — selección de tipo (dos tarjetas
