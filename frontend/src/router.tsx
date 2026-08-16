@@ -5,8 +5,9 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
-import { BancoPreguntasPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
+import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Banco } from "@/pages/Banco"
+import { EditarPregunta } from "@/pages/EditarPregunta"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { NuevaMateria } from "@/pages/NuevaMateria"
@@ -106,7 +107,7 @@ export const router = createBrowserRouter([
         path: "/materias/:materiaId/banco/preguntas/:preguntaId/editar",
         element: (
           <RequireRole rol="docente">
-            <BancoPreguntasPlaceholder />
+            <EditarPregunta />
           </RequireRole>
         ),
       },
