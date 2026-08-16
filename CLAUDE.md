@@ -135,13 +135,22 @@ importancia) reemplaza el placeholder de `US-2.1.8` en `/materias/:materiaId/ban
 "Eliminar" deshabilitado (sin ruta de confirmación todavía). 80/80 tests frontend, quality
 gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 95.55%/89.28%/89.47% en
 `Banco.tsx`).
-**Próximo paso:** `US-2.1.11` — Docente carga una pregunta eligiendo su tipo (reemplaza el
-placeholder de "+ Nueva pregunta"), luego `US-2.1.12` (editar) y `US-2.1.13` (eliminar con
-confirmación) — en ese orden, según `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (no se
-edita/elimina lo que no existe). Sin spec ni Issue creados todavía para `US-2.1.11`. Con el
-backend completo y el frontend en curso, evaluar cierre de baseline recién al cerrar toda la
-Iteración 1 (`US-2.1.10` a `US-2.1.13`) — mismo criterio que `BL-002` (la Baseline no cierra
-backend-only).
+**US-2.1.11 (Docente carga una pregunta eligiendo su tipo) cerrada 2026-08-16**, PR #84
+mergeado a `develop` (merge `45c6b25`), Issue #52 cerrado,
+`docs/reports/inc2/US-2.1.11-report.md`: frontend puro, sin cambios de backend — consume
+`POST /preguntas/opcion-multiple`/`POST /preguntas/verdadero-falso` (`US-2.1.3`/`US-2.1.4`) y
+`GET /materias` (`US-2.1.9`) para resolver `materiaId → bancoId`. 3 pantallas nuevas
+(`NuevaPreguntaTipo.tsx`, `NuevaPreguntaOpcionMultiple.tsx`, `NuevaPreguntaVerdaderoFalso.tsx`)
+reemplazan los 3 placeholders de "+ Nueva pregunta" en `router.tsx`; validación de cliente
+(INV-BP-02/03) antes de enviar; unidad temática como texto libre — sin catálogo ni endpoint de
+origen, mismo criterio que `US-2.1.8`. 89/89 tests frontend, quality gates APROBADO (oxlint 0
+errores, `tsc --noEmit` 0 errores, coverage 100%/83.33%/90.47% en las 3 pantallas nuevas).
+**Próximo paso:** `US-2.1.12` — Docente edita una pregunta existente (reemplaza el placeholder
+de "Editar" en `Banco.tsx`), luego `US-2.1.13` (eliminar con confirmación) — en ese orden,
+según `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (no se edita/elimina lo que no existe).
+Sin spec ni Issue creados todavía para `US-2.1.12`. Con el backend completo y el frontend en
+curso, evaluar cierre de baseline recién al cerrar toda la Iteración 1 (`US-2.1.10` a
+`US-2.1.13`) — mismo criterio que `BL-002` (la Baseline no cierra backend-only).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
