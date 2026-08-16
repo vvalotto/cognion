@@ -83,18 +83,37 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Crear materia" })).toBeInTheDocument()
   })
 
-  it.each(["/materias/m1/banco/preguntas/p1/editar"])(
-    "la ruta %s renderiza el placeholder con sesión de docente",
-    async (path) => {
-      setSession({ token: "t", rol: "docente" })
-      await router.navigate(path)
-      render(<RouterProvider router={router} />)
+  it("la ruta .../preguntas/:id/editar renderiza el formulario de edición con sesión de docente", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 1 },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "p1",
+            banco_id: "b1",
+            texto: "¿Qué principio prohíbe importar una capa externa?",
+            respuesta_correcta: true,
+            unidad_tematica: "Unidad 3",
+            tema: "Arquitectura",
+            dificultad: "alto",
+            importancia: "alto",
+            activa: true,
+          },
+        ]),
+      )
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/m1/banco/preguntas/p1/editar")
+    render(<RouterProvider router={router} />)
 
-      expect(
-        await screen.findByText("Banco de Preguntas — pendiente de pantalla propia"),
-      ).toBeInTheDocument()
-    },
-  )
+    expect(
+      await screen.findByRole("heading", { name: "Editar pregunta de Verdadero/Falso" }),
+    ).toBeInTheDocument()
+  })
 
   it("la ruta /materias/:id/banco/preguntas/nueva renderiza la selección de tipo con sesión de docente", async () => {
     setSession({ token: "t", rol: "docente" })
