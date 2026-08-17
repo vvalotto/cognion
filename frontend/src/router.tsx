@@ -8,6 +8,7 @@ import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Banco } from "@/pages/Banco"
 import { EditarPregunta } from "@/pages/EditarPregunta"
+import { EliminarPregunta } from "@/pages/EliminarPregunta"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { NuevaMateria } from "@/pages/NuevaMateria"
@@ -108,6 +109,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <EditarPregunta />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/banco/preguntas/:preguntaId/eliminar",
+        element: (
+          <RequireRole rol="docente">
+            <EliminarPregunta />
           </RequireRole>
         ),
       },

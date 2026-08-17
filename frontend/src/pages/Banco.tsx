@@ -206,9 +206,12 @@ export function Banco() {
                     </button>
                     <button
                       type="button"
-                      disabled
-                      title="Disponible en US-2.1.13"
-                      className="rounded-md border border-destructive px-2 py-1 text-xs text-destructive opacity-50"
+                      className="rounded-md border border-destructive px-2 py-1 text-xs text-destructive hover:bg-destructive/10"
+                      onClick={() =>
+                        navigate(
+                          `/materias/${materiaId}/banco/preguntas/${pregunta.id}/eliminar`,
+                        )
+                      }
                     >
                       Eliminar
                     </button>
