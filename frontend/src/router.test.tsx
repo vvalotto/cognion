@@ -157,6 +157,38 @@ describe("router (integración)", () => {
     ).toBeInTheDocument()
   })
 
+  it("la ruta .../preguntas/:id/eliminar renderiza la confirmación con sesión de docente", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 1 },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "p1",
+            banco_id: "b1",
+            texto: "¿Qué principio prohíbe importar una capa externa?",
+            respuesta_correcta: true,
+            unidad_tematica: "Unidad 3",
+            tema: "Arquitectura",
+            dificultad: "alto",
+            importancia: "alto",
+            activa: true,
+          },
+        ]),
+      )
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/m1/banco/preguntas/p1/eliminar")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Eliminar pregunta" }),
+    ).toBeInTheDocument()
+  })
+
   it("la ruta /materias/:id/banco renderiza el banco de preguntas con sesión de docente", async () => {
     vi.mocked(fetch).mockReset()
     vi.mocked(fetch)
