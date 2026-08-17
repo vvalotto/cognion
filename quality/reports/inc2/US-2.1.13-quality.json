@@ -1,0 +1,25 @@
+{
+  "us_id": "US-2.1.13",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc2/US-2.1.13-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 1, "detalle": "warning preexistente en button.tsx, no introducido por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 22,
+        "tests": 103,
+        "passed": 103,
+        "failed": 0
+      },
+      "coverage_paginas_nuevas": {
+        "EliminarPregunta.tsx": { "statements_pct": 96.87, "branches_pct": 77.77, "functions_pct": 100 },
+        "Banco.tsx": { "statements_pct": 95.65, "branches_pct": 89.28, "functions_pct": 90 },
+        "umbral_referencia_pct": 80
+      },
+      "coverage_global": { "statements_pct": 92.51, "branches_pct": 85.84, "functions_pct": 90.65, "lines_pct": 93.33 }
+    }
+  },
+  "estado": "APROBADO"
+}

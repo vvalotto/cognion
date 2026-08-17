@@ -10,6 +10,18 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.1.13] Docente elimina una pregunta desde la UI, con confirmación previa — frontend
+  puro, sin cambios de backend
+  - `frontend/src/pages/EliminarPregunta.tsx` (nuevo) — resuelve la pregunta a eliminar con
+    `filtrarBanco()` (`US-2.1.7`), muestra su texto y aclara explícitamente que es baja lógica
+    (INV-BP-04) antes de confirmar; ejecuta con `eliminarPregunta()` (`US-2.1.8`/`US-2.1.6`)
+  - `frontend/src/router.tsx` — nueva ruta
+    `/materias/:materiaId/banco/preguntas/:preguntaId/eliminar`
+  - `frontend/src/pages/Banco.tsx` — habilita el botón "Eliminar" de la tabla (deshabilitado
+    desde `US-2.1.10`)
+  - 4 tests nuevos (Vitest) + 1 test de integración de router + 1 test nuevo en `Banco.tsx` —
+    coverage 96.87%/77.77%/100% (statements/branches/functions) en `EliminarPregunta.tsx`.
+    Cierra completa la Iteración 1 del Incremento 2 (`US-2.1.10` a `US-2.1.13`)
 - [US-2.1.12] Docente edita una pregunta existente desde la UI — frontend puro, sin cambios de
   backend
   - `frontend/src/pages/EditarPregunta.tsx` (nuevo) — resuelve la pregunta a editar con
