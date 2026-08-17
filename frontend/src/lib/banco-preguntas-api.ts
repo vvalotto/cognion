@@ -256,3 +256,14 @@ export async function editarPregunta(
 export async function eliminarPregunta(preguntaId: string): Promise<void> {
   await apiFetch<void>(`/preguntas/${preguntaId}`, { method: "DELETE" })
 }
+
+/** Valores únicos de unidad temática y tema ya usados en el banco — sugerencias de combobox (US-ADJ-02). */
+export function derivarSugerencias(preguntas: PreguntaResponse[]): {
+  unidades: string[]
+  temas: string[]
+} {
+  return {
+    unidades: [...new Set(preguntas.map((p) => p.unidadTematica))].sort(),
+    temas: [...new Set(preguntas.map((p) => p.tema))].sort(),
+  }
+}

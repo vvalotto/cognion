@@ -127,11 +127,13 @@ describe("router (integración)", () => {
 
   it("la ruta .../nueva/opcion-multiple renderiza el formulario de Opción múltiple con sesión de docente", async () => {
     vi.mocked(fetch).mockReset()
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
-      ]),
-    )
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
+        ]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, []))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/nueva/opcion-multiple")
     render(<RouterProvider router={router} />)
@@ -143,11 +145,13 @@ describe("router (integración)", () => {
 
   it("la ruta .../nueva/verdadero-falso renderiza el formulario de Verdadero/Falso con sesión de docente", async () => {
     vi.mocked(fetch).mockReset()
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
-      ]),
-    )
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
+        ]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, []))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/nueva/verdadero-falso")
     render(<RouterProvider router={router} />)

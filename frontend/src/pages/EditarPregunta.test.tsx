@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -207,6 +207,22 @@ describe("EditarPregunta", () => {
       "DIP editado",
       "LSP",
     ])
+  })
+
+  it("sugiere las unidades y temas de las demás preguntas del banco (US-ADJ-02)", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+
+    renderEdicion("p1")
+    await screen.findByDisplayValue(preguntaOpcionMultiple.texto)
+
+    await waitFor(() => {
+      const valores = Array.from(
+        document.getElementById("editar-unidad-sugerencias")?.querySelectorAll("option") ?? [],
+      ).map((o) => o.getAttribute("value"))
+      expect(valores).toEqual(["Unidad 2", "Unidad 3"])
+    })
   })
 
   it("'Cancelar' vuelve al banco sin llamar al backend", async () => {

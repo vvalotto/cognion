@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   cargarPreguntaOpcionMultiple,
+  derivarSugerencias,
+  filtrarBanco,
   listarMaterias,
   type Dificultad,
   type Importancia,
@@ -37,6 +39,8 @@ export function NuevaPreguntaOpcionMultiple() {
   const [dificultad, setDificultad] = useState<Dificultad>("medio")
   const [importancia, setImportancia] = useState<Importancia>("medio")
   const [error, setError] = useState<string | null>(null)
+  const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
+  const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
 
   useEffect(() => {
     let cancelado = false
@@ -47,6 +51,20 @@ export function NuevaPreguntaOpcionMultiple() {
       cancelado = true
     }
   }, [materiaId])
+
+  useEffect(() => {
+    if (!materia) return
+    let cancelado = false
+    filtrarBanco(materia.bancoId).then((preguntas) => {
+      if (cancelado) return
+      const { unidades, temas } = derivarSugerencias(preguntas)
+      setSugerenciasUnidad(unidades)
+      setSugerenciasTema(temas)
+    })
+    return () => {
+      cancelado = true
+    }
+  }, [materia])
 
   function actualizarOpcionTexto(indice: number, texto: string) {
     setOpciones((prev) => prev.map((o, i) => (i === indice ? { ...o, texto } : o)))
@@ -160,9 +178,15 @@ export function NuevaPreguntaOpcionMultiple() {
             id="om-unidad"
             type="text"
             required
+            list="om-unidad-sugerencias"
             value={unidadTematica}
             onChange={(e) => setUnidadTematica(e.target.value)}
           />
+          <datalist id="om-unidad-sugerencias">
+            {sugerenciasUnidad.map((valor) => (
+              <option key={valor} value={valor} />
+            ))}
+          </datalist>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="om-tema">Tema</Label>
@@ -170,9 +194,15 @@ export function NuevaPreguntaOpcionMultiple() {
             id="om-tema"
             type="text"
             required
+            list="om-tema-sugerencias"
             value={tema}
             onChange={(e) => setTema(e.target.value)}
           />
+          <datalist id="om-tema-sugerencias">
+            {sugerenciasTema.map((valor) => (
+              <option key={valor} value={valor} />
+            ))}
+          </datalist>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="om-dificultad">Dificultad</Label>

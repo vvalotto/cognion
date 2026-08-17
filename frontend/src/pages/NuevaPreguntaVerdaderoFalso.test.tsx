@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -55,6 +55,7 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
   it("completar texto, elegir Verdadero y guardar crea la pregunta y vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(201, preguntaCreadaResponse))
     const user = userEvent.setup()
 
@@ -70,14 +71,41 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
     await user.click(screen.getByText("Guardar pregunta"))
 
     expect(await screen.findByText("Banco")).toBeInTheDocument()
-    const [, segundaLlamada] = vi.mocked(fetch).mock.calls
-    const [, init] = segundaLlamada
+    const [, , terceraLlamada] = vi.mocked(fetch).mock.calls
+    const [, init] = terceraLlamada
     const body = JSON.parse((init as RequestInit).body as string)
     expect(body.respuesta_correcta).toBe(true)
   })
 
+  it("sugiere unidades y temas ya usados en el banco (US-ADJ-02)", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { ...preguntaCreadaResponse, id: "p1", unidad_tematica: "Unidad 2", tema: "DDD" },
+        ]),
+      )
+
+    renderFormulario()
+    await screen.findByLabelText("Texto de la pregunta")
+
+    await waitFor(() => {
+      expect(
+        document
+          .getElementById("vf-unidad-sugerencias")
+          ?.querySelector("option")
+          ?.getAttribute("value"),
+      ).toBe("Unidad 2")
+    })
+    expect(
+      document.getElementById("vf-tema-sugerencias")?.querySelector("option")?.getAttribute("value"),
+    ).toBe("DDD")
+  })
+
   it("guardar sin elegir Verdadero/Falso bloquea el envío y no llama al backend", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, []))
     const user = userEvent.setup()
 
     renderFormulario()
@@ -90,11 +118,13 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
     expect(
       await screen.findByText("Elegí si la respuesta correcta es Verdadero o Falso."),
     ).toBeInTheDocument()
-    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenCalledTimes(2)
   })
 
   it("'Cancelar' vuelve al banco sin guardar", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, []))
     const user = userEvent.setup()
 
     renderFormulario()
@@ -103,6 +133,6 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
     await user.click(screen.getByText("Cancelar"))
 
     expect(await screen.findByText("Banco")).toBeInTheDocument()
-    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenCalledTimes(2)
   })
 })
