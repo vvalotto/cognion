@@ -19,7 +19,11 @@ driver hace bootstrap del primer Administrador (`ADR-016`,
 `scripts/seed_admin.py`) y login para obtener JWTs antes de llamarlos.
 El frontend (`frontend/`, Vite + React) tiene páginas propias desde
 `US-1.1.6`+ (login, registro), pero este skill sigue cubriendo solo el
-backend — no hay driver de smoke test de UI todavía.
+backend — no hay driver de smoke test de UI todavía. Desde el UAT de
+cierre de la Iteración 1 del Incremento 2, el driver también ejercita
+el flujo de Banco de Preguntas (`US-2.1.1` a `US-2.1.13`): alta de
+materia, carga de pregunta de opción múltiple y de verdadero/falso,
+filtrado del banco, edición y baja lógica.
 
 ## Prerrequisitos
 
@@ -67,20 +71,36 @@ OK
 OK (token obtenido)
 == POST /usuarios (docente) ==
 OK (id=...)
+== POST /identidad/login (docente) ==
+OK (token obtenido)
+== POST /materias (docente) ==
+OK (materia_id=..., banco_id=...)
 == POST /comisiones ==
 OK (id=...)
 == POST /comisiones/{id}/docentes ==
 OK (200)
-== POST /identidad/login (docente) ==
-OK (token obtenido)
 == POST /comisiones/{id}/invitaciones (docente) ==
 OK (id=...)
 == POST /identidad/registro con invitación vigente (US-1.1.8) ==
-OK (materia=Smoke Test)
+OK (materia=smoketest-...-materia)
 == POST /identidad/registro con token ya usado (esperado 422) ==
 OK (422)
 == POST /usuarios con email duplicado (esperado 409) ==
 OK (409)
+== POST /preguntas/opcion-multiple (banco de la materia creada arriba) ==
+OK (id=...)
+== POST /preguntas/verdadero-falso ==
+OK (id=...)
+== GET /bancos/{id}/preguntas (sin filtro, deben aparecer ambas) ==
+OK (2 preguntas)
+== PUT /preguntas/{id} (editar texto de la pregunta de opción múltiple) ==
+OK (texto actualizado)
+== DELETE /preguntas/{id} (baja lógica de la pregunta V/F) ==
+OK (204)
+== GET /bancos/{id}/preguntas (la pregunta eliminada ya no debe aparecer, INV-BP-04) ==
+OK (1 pregunta activa)
+== POST /preguntas/opcion-multiple con opciones inválidas (0 correctas, esperado 422) ==
+OK (422)
 
 SMOKE TEST OK — server bajado y datos de prueba limpiados.
 ```
@@ -154,9 +174,13 @@ el server ni Postgres:
   smoke test hay que leerlo directo de la tabla `invitacion` por su `id`.
 - **`POST /usuarios` y `POST /comisiones` exigen campos que no son
   obvios por el nombre del endpoint**: `perfil` (enum
-  `administrador|docente|estudiante`) en usuarios; `materia` y
-  `horario` (no solo `nombre`) en comisiones. Confirmar siempre contra
-  `/openapi.json` antes de armar el payload a mano.
+  `administrador|docente|estudiante`) en usuarios; `materia_id` (UUID,
+  no un nombre de texto libre — desde `US-2.1.2` la comisión referencia
+  la Materia del BC Banco de Preguntas por puerto) y `horario` en
+  comisiones. Hace falta crear la Materia (`POST /materias`, requiere
+  token de Docente) **antes** de poder crear la Comisión que la
+  referencia. Confirmar siempre contra `/openapi.json` antes de armar
+  el payload a mano.
 - El log de arranque de uvicorn a veces tarda un instante en escribirse
   a disco — un `curl` inmediato después del `&` puede fallar con
   connection refused aunque el server vaya a levantar bien 1-2s después.
