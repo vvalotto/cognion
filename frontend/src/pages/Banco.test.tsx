@@ -54,6 +54,10 @@ function renderBanco() {
           path="/materias/:materiaId/banco/preguntas/:preguntaId/editar"
           element={<p>Editar pregunta</p>}
         />
+        <Route
+          path="/materias/:materiaId/banco/preguntas/:preguntaId/eliminar"
+          element={<p>Eliminar pregunta</p>}
+        />
       </Routes>
     </MemoryRouter>,
   )
@@ -129,6 +133,20 @@ describe("Banco", () => {
     await user.click(screen.getAllByText("Editar")[0])
 
     expect(await screen.findByText("Editar pregunta")).toBeInTheDocument()
+  })
+
+  it("el botón 'Eliminar' de una fila navega a la confirmación de eliminación de esa pregunta", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+    const user = userEvent.setup()
+
+    renderBanco()
+    await screen.findByText(/¿Qué principio de Clean Architecture/)
+
+    await user.click(screen.getAllByText("Eliminar")[0])
+
+    expect(await screen.findByText("Eliminar pregunta")).toBeInTheDocument()
   })
 
   it("filtrar por unidad temática dispara una nueva consulta con ese filtro", async () => {
