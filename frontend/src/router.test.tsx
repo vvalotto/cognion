@@ -202,6 +202,7 @@ describe("router (integración)", () => {
         ]),
       )
       .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco")
     render(<RouterProvider router={router} />)
