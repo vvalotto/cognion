@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { RouterProvider } from "react-router"
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { clearSession, setSession } from "@/lib/session"
 import { router } from "@/router"
@@ -13,13 +13,26 @@ function jsonResponse(status: number, body: unknown): Response {
 }
 
 describe("router (integración)", () => {
+  // El fetch mockeado se deja stubeado durante todo el archivo (no se restaura entre tests):
+  // varias pantallas (Banco, EditarPregunta, NuevaPregunta*) disparan más de un fetch en
+  // paralelo tras montar, y alguno puede resolverse después de que el test que lo montó ya
+  // terminó. Si `unstubAllGlobals()` corriera en cada `afterEach`, ese fetch tardío pegaría
+  // contra la red real en vez del mock — restaurar el fetch real recién en `afterAll` evita
+  // esa carrera sin importar el timing exacto de cada efecto.
+  beforeAll(() => {
+    vi.stubGlobal("fetch", vi.fn())
+  })
+
+  afterAll(() => {
+    vi.unstubAllGlobals()
+  })
+
   beforeEach(() => {
     clearSession()
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse(200, [])))
+    vi.mocked(fetch).mockReset().mockResolvedValue(jsonResponse(200, []))
   })
 
   afterEach(() => {
-    vi.unstubAllGlobals()
     cleanup()
   })
 
@@ -208,5 +221,10 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByRole("heading", { name: "Ingeniería de Software" })).toBeInTheDocument()
+    expect(await screen.findByText("0 preguntas activas")).toBeInTheDocument()
+    // Banco.tsx dispara dos fetch en paralelo (sugerencias + tabla) tras cargar la materia —
+    // hay que esperar a que ambos se resuelvan antes de que el afterEach restaure el fetch
+    // real, o el que todavía esté pendiente termina pegándole a la red real.
+    await vi.waitFor(() => expect(fetch).toHaveBeenCalledTimes(3))
   })
 })
