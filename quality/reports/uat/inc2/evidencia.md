@@ -113,3 +113,26 @@ antes de cerrar la iteración, el entorno queda descrito arriba para levantarlo 
 
 **Conclusión:** la Iteración 1 del Incremento 2 (Banco de Preguntas, `US-2.1.1` a `US-2.1.13`)
 queda verificada de punta a punta. No cierra BL-003 — eso espera a la Iteración 2 (RF-03).
+
+---
+
+## UAT manual de Víctor en navegador real (2026-08-18) — No conformidades registradas
+
+Pasada humana pendiente al cierre de la sección anterior (ver "Pendiente" arriba). Víctor
+recorrió el flujo de Banco de Preguntas en Chrome real contra backend + Postgres locales, con
+un usuario Docente sembrado con contraseña conocida, y cargó el contenido real de la materia
+"Ingeniería de Software" (70 preguntas de opción múltiple desde
+`Preguntas Evaluación Ingeniería de Software.docx`, Módulo 1) para ejercitar el banco con
+volumen realista, no solo los 1-2 registros de fixtures previos.
+
+Clasificación de severidad según `docs/plans/PROCEDIMIENTO-UAT.md` §8. Ninguna de las tres es
+🔴 Bloqueante — el flujo funcional completo (alta, carga, filtrado, edición, baja) sigue
+operando correctamente con 71 preguntas activas en el banco.
+
+| # | No conformidad | Severidad | Track (`PLAN-CM.md` §4) | Resolución |
+|---|---|---|---|---|
+| NC-1 | El filtro de "Unidad temática"/"Tema" en `Banco.tsx` pedía texto libre, igual que las pantallas de carga/edición antes de `US-ADJ-02` — mismo riesgo de typo fragmentando el filtrado | 🟡 Observación | Informal (solo `frontend/`) | Resuelta en el momento — commit `9f5e00f`, reusa `derivarSugerencias()` sobre el banco actual en un `<datalist>`, mismo patrón de `US-ADJ-02` |
+| NC-2 | `Banco.tsx` renderiza la tabla completa sin paginación; con 71 preguntas activas (contenido real cargado en esta UAT) la tabla se vuelve difícil de recorrer — ningún criterio de aceptación de `US-2.1.7`/`US-2.1.10` contempló volumen | 🟡 Observación | Formal (toca `src/`: nueva columna `fecha_creacion`, paginación en el puerto/gateway/endpoint) | Especificada en `docs/specs/ajustes/US-ADJ-03.md` — pendiente de implementación |
+| NC-3 | (referencia) `US-ADJ-01` (divergencia visual con el prototipo, `HITO-4`) y `US-ADJ-02` en su alcance original de pantallas de carga/edición (`HITO-5`) siguen especificadas pero no implementadas al momento de esta UAT | — | Formal, ya especificado | Sin cambios — se re-listan aquí solo para que este registro quede completo como snapshot del estado de no conformidades abiertas a 2026-08-18 |
+
+Aprendizaje de escalabilidad (NC-2) documentado en `docs/aprendizajes/HITO-6-BANCO-PREGUNTAS-SIN-PAGINACION-CON-DATOS-REALES.md`.
