@@ -145,12 +145,43 @@ reemplazan los 3 placeholders de "+ Nueva pregunta" en `router.tsx`; validación
 (INV-BP-02/03) antes de enviar; unidad temática como texto libre — sin catálogo ni endpoint de
 origen, mismo criterio que `US-2.1.8`. 89/89 tests frontend, quality gates APROBADO (oxlint 0
 errores, `tsc --noEmit` 0 errores, coverage 100%/83.33%/90.47% en las 3 pantallas nuevas).
-**Próximo paso:** `US-2.1.12` — Docente edita una pregunta existente (reemplaza el placeholder
-de "Editar" en `Banco.tsx`), luego `US-2.1.13` (eliminar con confirmación) — en ese orden,
-según `docs/plans/inc2/inc2-candidatas.md` §Iteración 1 (no se edita/elimina lo que no existe).
-Sin spec ni Issue creados todavía para `US-2.1.12`. Con el backend completo y el frontend en
-curso, evaluar cierre de baseline recién al cerrar toda la Iteración 1 (`US-2.1.10` a
-`US-2.1.13`) — mismo criterio que `BL-002` (la Baseline no cierra backend-only).
+**US-2.1.12 (Docente edita una pregunta existente) cerrada 2026-08-17**, PR #86 mergeado a
+`develop`, Issue #53 cerrado: pantalla `EditarPregunta.tsx` prellenada según el tipo concreto
+de la pregunta, reutiliza `PUT /preguntas/{id}` (`US-2.1.5`) y `filtrarBanco()` (`US-2.1.7`)
+sin backend nuevo; reemplaza el placeholder de "Editar" en `Banco.tsx`. 97/97 tests frontend,
+quality gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 90.52% en
+`EditarPregunta.tsx`).
+**US-2.1.13 (Docente elimina —baja lógica— una pregunta desde la UI) cerrada 2026-08-17**, PR
+#87 mergeado a `develop`, Issue #54 cerrado: pantalla `EliminarPregunta.tsx` con confirmación
+explícita ("no afecta sesiones pasadas"), reutiliza `DELETE /preguntas/{id}` (`US-2.1.6`);
+habilita el botón "Eliminar" deshabilitado desde `US-2.1.10`. 103/103 tests frontend. Cierra
+completa la Iteración 1 del Incremento 2, backend y frontend juntos.
+
+**UAT de cierre de la Iteración 1 ejecutada 2026-08-17/18** (`quality/reports/uat/inc2/`):
+Capa 1 (270 pytest + 103 Vitest) y Capa 2 (`smoke.sh` extendido con el flujo de Banco de
+Preguntas) en verde; recorrido en navegador real primero por la sesión, luego por Víctor en
+persona con el banco de la materia "Ingeniería de Software" cargado con contenido real (70
+preguntas de un `.docx` docente + 1 previa, 71 en total) para ejercitar volumen realista, no
+solo fixtures mínimos. La UAT dejó tres no conformidades registradas (`evidencia.md`), todas
+🟡 Observación, ninguna 🔴 Bloqueante, especificadas como US de ajuste (`SP-ADJ`,
+`docs/specs/ajustes/`) sin Issue de GitHub ni incremento asignado todavía:
+- **US-ADJ-01** (`HITO-4`): las pantallas de Banco de Preguntas no reproducen el lenguaje
+  visual del prototipo aprobado (cards, tags de color, breadcrumb) — deuda de calidad, no
+  implementada.
+- **US-ADJ-02** (`HITO-5`): Unidad temática/Tema como combobox derivado del banco actual en
+  vez de texto libre — **implementada y mergeada 2026-08-18**, PR #88 a `develop` (merge
+  `cfa65d8`): `<datalist>` nativo en carga, edición y filtros (`Banco.tsx`), reusa
+  `GET /bancos/{id}/preguntas` sin endpoint nuevo. 106/106 tests frontend.
+- **US-ADJ-03** (`HITO-6`): el banco sin paginación no aguanta volumen real (71 preguntas en
+  una sola tabla) — especificada, no implementada. Decisiones ya tomadas: página de 20,
+  paginación en backend, `fecha_creacion` nueva (backfill con timestamp único de migración),
+  reset a página 1 al cambiar filtros, UI de números de página + Anterior/Siguiente. Requiere
+  actualizar `wireframes-banco-preguntas.md` (gate UX) antes de tocar `frontend/`.
+
+**Próximo paso:** sin decidir todavía — evaluar si `US-ADJ-01`/`US-ADJ-03` se implementan antes
+de arrancar la Iteración 2 (RF-03) o en paralelo. Con el backend y frontend de la Iteración 1
+completos y la UAT aprobada, evaluar cierre de baseline (`BL-003`) según ese mismo criterio —
+la Baseline no cierra backend-only, mismo criterio que `BL-002`.
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
