@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { RouterProvider } from "react-router"
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { clearSession, setSession } from "@/lib/session"
 import { router } from "@/router"
@@ -13,13 +13,26 @@ function jsonResponse(status: number, body: unknown): Response {
 }
 
 describe("router (integración)", () => {
+  // El fetch mockeado se deja stubeado durante todo el archivo (no se restaura entre tests):
+  // varias pantallas (Banco, EditarPregunta, NuevaPregunta*) disparan más de un fetch en
+  // paralelo tras montar, y alguno puede resolverse después de que el test que lo montó ya
+  // terminó. Si `unstubAllGlobals()` corriera en cada `afterEach`, ese fetch tardío pegaría
+  // contra la red real en vez del mock — restaurar el fetch real recién en `afterAll` evita
+  // esa carrera sin importar el timing exacto de cada efecto.
+  beforeAll(() => {
+    vi.stubGlobal("fetch", vi.fn())
+  })
+
+  afterAll(() => {
+    vi.unstubAllGlobals()
+  })
+
   beforeEach(() => {
     clearSession()
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse(200, [])))
+    vi.mocked(fetch).mockReset().mockResolvedValue(jsonResponse(200, []))
   })
 
   afterEach(() => {
-    vi.unstubAllGlobals()
     cleanup()
   })
 
@@ -127,11 +140,13 @@ describe("router (integración)", () => {
 
   it("la ruta .../nueva/opcion-multiple renderiza el formulario de Opción múltiple con sesión de docente", async () => {
     vi.mocked(fetch).mockReset()
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
-      ]),
-    )
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
+        ]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, []))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/nueva/opcion-multiple")
     render(<RouterProvider router={router} />)
@@ -143,11 +158,13 @@ describe("router (integración)", () => {
 
   it("la ruta .../nueva/verdadero-falso renderiza el formulario de Verdadero/Falso con sesión de docente", async () => {
     vi.mocked(fetch).mockReset()
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
-      ]),
-    )
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
+        ]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, []))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/nueva/verdadero-falso")
     render(<RouterProvider router={router} />)
@@ -198,10 +215,16 @@ describe("router (integración)", () => {
         ]),
       )
       .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco")
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByRole("heading", { name: "Ingeniería de Software" })).toBeInTheDocument()
+    expect(await screen.findByText("0 preguntas activas")).toBeInTheDocument()
+    // Banco.tsx dispara dos fetch en paralelo (sugerencias + tabla) tras cargar la materia —
+    // hay que esperar a que ambos se resuelvan antes de que el afterEach restaure el fetch
+    // real, o el que todavía esté pendiente termina pegándole a la red real.
+    await vi.waitFor(() => expect(fetch).toHaveBeenCalledTimes(3))
   })
 })

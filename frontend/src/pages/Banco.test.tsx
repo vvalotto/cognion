@@ -77,6 +77,7 @@ describe("Banco", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
 
     renderBanco()
 
@@ -91,6 +92,7 @@ describe("Banco", () => {
   it("filtrar por dificultad dispara una nueva consulta con ese filtro", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, [preguntasResponse[0]]))
     const user = userEvent.setup()
@@ -109,6 +111,7 @@ describe("Banco", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, []))
     const user = userEvent.setup()
 
@@ -125,6 +128,7 @@ describe("Banco", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
     const user = userEvent.setup()
 
     renderBanco()
@@ -139,6 +143,7 @@ describe("Banco", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
     const user = userEvent.setup()
 
     renderBanco()
@@ -152,6 +157,7 @@ describe("Banco", () => {
   it("filtrar por unidad temática dispara una nueva consulta con ese filtro", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, [preguntasResponse[1]]))
 
@@ -168,6 +174,7 @@ describe("Banco", () => {
   it("'Limpiar filtros' vuelve a mostrar todas las preguntas activas", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, [preguntasResponse[0]]))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
@@ -187,6 +194,7 @@ describe("Banco", () => {
   it("el botón '+ Nueva pregunta' navega al alta de pregunta", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
       .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
     const user = userEvent.setup()
 

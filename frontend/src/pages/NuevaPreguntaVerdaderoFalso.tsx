@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   cargarPreguntaVerdaderoFalso,
+  derivarSugerencias,
+  filtrarBanco,
   listarMaterias,
   type Dificultad,
   type Importancia,
@@ -32,6 +34,8 @@ export function NuevaPreguntaVerdaderoFalso() {
   const [dificultad, setDificultad] = useState<Dificultad>("medio")
   const [importancia, setImportancia] = useState<Importancia>("medio")
   const [error, setError] = useState<string | null>(null)
+  const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
+  const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
 
   useEffect(() => {
     let cancelado = false
@@ -42,6 +46,20 @@ export function NuevaPreguntaVerdaderoFalso() {
       cancelado = true
     }
   }, [materiaId])
+
+  useEffect(() => {
+    if (!materia) return
+    let cancelado = false
+    filtrarBanco(materia.bancoId).then((preguntas) => {
+      if (cancelado) return
+      const { unidades, temas } = derivarSugerencias(preguntas)
+      setSugerenciasUnidad(unidades)
+      setSugerenciasTema(temas)
+    })
+    return () => {
+      cancelado = true
+    }
+  }, [materia])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -131,9 +149,15 @@ export function NuevaPreguntaVerdaderoFalso() {
             id="vf-unidad"
             type="text"
             required
+            list="vf-unidad-sugerencias"
             value={unidadTematica}
             onChange={(e) => setUnidadTematica(e.target.value)}
           />
+          <datalist id="vf-unidad-sugerencias">
+            {sugerenciasUnidad.map((valor) => (
+              <option key={valor} value={valor} />
+            ))}
+          </datalist>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="vf-tema">Tema</Label>
@@ -141,9 +165,15 @@ export function NuevaPreguntaVerdaderoFalso() {
             id="vf-tema"
             type="text"
             required
+            list="vf-tema-sugerencias"
             value={tema}
             onChange={(e) => setTema(e.target.value)}
           />
+          <datalist id="vf-tema-sugerencias">
+            {sugerenciasTema.map((valor) => (
+              <option key={valor} value={valor} />
+            ))}
+          </datalist>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="vf-dificultad">Dificultad</Label>

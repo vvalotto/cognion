@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -67,6 +67,7 @@ describe("NuevaPreguntaOpcionMultiple", () => {
   it("carga exitosa con 3 opciones y una marcada correcta vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(201, preguntaCreadaResponse))
     const user = userEvent.setup()
 
@@ -83,15 +84,38 @@ describe("NuevaPreguntaOpcionMultiple", () => {
     await user.click(screen.getByText("Guardar pregunta"))
 
     expect(await screen.findByText("Banco")).toBeInTheDocument()
-    const [, segundaLlamada] = vi.mocked(fetch).mock.calls
-    const [, opciones2] = segundaLlamada
+    const [, , terceraLlamada] = vi.mocked(fetch).mock.calls
+    const [, opciones2] = terceraLlamada
     const body = JSON.parse((opciones2 as RequestInit).body as string)
     expect(body.opciones).toHaveLength(3)
     expect(body.opciones.filter((o: { es_correcta: boolean }) => o.es_correcta)).toHaveLength(1)
   })
 
+  it("sugiere unidades y temas ya usados en el banco (US-ADJ-02)", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, [preguntaCreadaResponse]))
+
+    renderFormulario()
+    await screen.findByLabelText("Texto de la pregunta")
+
+    await waitFor(() => {
+      expect(
+        document
+          .getElementById("om-unidad-sugerencias")
+          ?.querySelector("option")
+          ?.getAttribute("value"),
+      ).toBe("Unidad 1")
+    })
+    expect(
+      document.getElementById("om-tema-sugerencias")?.querySelector("option")?.getAttribute("value"),
+    ).toBe("Clean Architecture")
+  })
+
   it("sin ninguna opción marcada como correcta bloquea el envío y no llama al backend", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, []))
     const user = userEvent.setup()
 
     renderFormulario()
@@ -105,11 +129,13 @@ describe("NuevaPreguntaOpcionMultiple", () => {
     expect(
       await screen.findByText("Marcá exactamente una opción como correcta."),
     ).toBeInTheDocument()
-    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenCalledTimes(2)
   })
 
   it("quitar una opción no permite bajar de 2", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, []))
     renderFormulario()
 
     await screen.findByLabelText("Texto de la pregunta")

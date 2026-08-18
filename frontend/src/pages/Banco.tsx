@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import {
+  derivarSugerencias,
   filtrarBanco,
   listarMaterias,
   type Dificultad,
@@ -33,6 +34,8 @@ export function Banco() {
   const [tema, setTema] = useState("")
   const [dificultad, setDificultad] = useState<Dificultad | "">("")
   const [importancia, setImportancia] = useState<Importancia | "">("")
+  const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
+  const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
 
   useEffect(() => {
     let cancelado = false
@@ -43,6 +46,20 @@ export function Banco() {
       cancelado = true
     }
   }, [materiaId])
+
+  useEffect(() => {
+    if (!materia) return
+    let cancelado = false
+    filtrarBanco(materia.bancoId).then((todasLasPreguntas) => {
+      if (cancelado) return
+      const { unidades, temas } = derivarSugerencias(todasLasPreguntas)
+      setSugerenciasUnidad(unidades)
+      setSugerenciasTema(temas)
+    })
+    return () => {
+      cancelado = true
+    }
+  }, [materia])
 
   useEffect(() => {
     if (!materia) return
@@ -99,10 +116,16 @@ export function Banco() {
           <input
             id="filtro-unidad"
             type="text"
+            list="filtro-unidad-sugerencias"
             value={unidad}
             onChange={(e) => setUnidad(e.target.value)}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           />
+          <datalist id="filtro-unidad-sugerencias">
+            {sugerenciasUnidad.map((valor) => (
+              <option key={valor} value={valor} />
+            ))}
+          </datalist>
         </div>
         <div>
           <label htmlFor="filtro-tema" className="text-sm text-muted-foreground">
@@ -111,10 +134,16 @@ export function Banco() {
           <input
             id="filtro-tema"
             type="text"
+            list="filtro-tema-sugerencias"
             value={tema}
             onChange={(e) => setTema(e.target.value)}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           />
+          <datalist id="filtro-tema-sugerencias">
+            {sugerenciasTema.map((valor) => (
+              <option key={valor} value={valor} />
+            ))}
+          </datalist>
         </div>
         <div>
           <label htmlFor="filtro-dificultad" className="text-sm text-muted-foreground">
