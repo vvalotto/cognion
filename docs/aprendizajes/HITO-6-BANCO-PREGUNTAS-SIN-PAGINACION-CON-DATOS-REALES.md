@@ -69,6 +69,39 @@ gap solo se hizo visible al cargar contenido real, no antes.
 
 ---
 
+## Valoración conjunta de NC-1/NC-2/NC-3 (US-ADJ-01/02/03)
+
+Comentario de cierre de sesión, a pedido de Víctor, comparando los tres hallazgos de ajuste
+del Banco de Preguntas antes de decidir cómo seguir con el próximo incremento:
+
+Los tres no son el mismo tipo de problema:
+
+- **`US-ADJ-01`** (divergencia visual, `HITO-4`) es una desviación de implementación respecto
+  a un prototipo ya aprobado — nadie tomó una decisión consciente, el código simplemente no
+  siguió el diseño. Deuda de calidad, no urgente: no afecta funcionalidad ni datos.
+- **`US-ADJ-02`** (unidad/tema texto libre, `HITO-5`) fue una decisión **consciente y
+  documentada** en su momento (sin catálogo, sin endpoint) que igual dejó fricción real de
+  uso. Es el caso más sano de los tres: la decisión estaba justificada, el UAT la corrigió con
+  una solución barata (derivar del cliente, sin tocar el backend), y ya está resuelta.
+- **`US-ADJ-03`** (paginación, este HITO) es cualitativamente distinto: no es un desvío ni una
+  decisión de alcance — es una dimensión del problema que ninguna spec, wireframe ni test
+  consideró, porque hasta esta UAT nunca hubo datos con volumen real corriendo contra el
+  sistema. Pasó 270+ tests automatizados y una UAT completa de cierre de iteración sin que nada
+  lo detectara, porque los fixtures usan 1-2 preguntas en todos lados (`L-6.1`).
+
+El patrón que más preocupa no es ninguno de los tres individualmente, sino lo que el conjunto
+— sobre todo este HITO — dice del proceso: **la UAT de cierre de iteración certificó "listo"
+con datos de juguete.** Los gates automatizados (pytest, Vitest, DesignReviewer) nunca van a
+atrapar esto porque no falla nada, solo degrada (`L-6.2`). Sugerencia para
+`docs/plans/PROCEDIMIENTO-UAT.md`: que al menos una corrida de UAT por incremento use datos de
+volumen real (no necesariamente 70+ registros, pero sí más de 2) — queda como sugerencia
+abierta, no aplicada, porque es una decisión de proceso de Víctor.
+
+Ninguno de los tres bloquea arrancar el próximo incremento — los tres son mejoras acotadas al
+Banco de Preguntas existente, no defectos que invaliden lo ya cerrado.
+
+---
+
 ## Resumen de Aprendizajes
 
 | ID | Aprendizaje | Impacto |
