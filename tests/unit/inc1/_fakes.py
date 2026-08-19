@@ -34,6 +34,9 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
     async def obtener_por_email(self, email: str) -> Usuario | None:
         return next((u for u in self.usuarios.values() if u.email == email), None)
 
+    async def actualizar(self, usuario: Usuario) -> None:
+        self.usuarios[usuario.id] = usuario
+
 
 class FakeComisionRepository(ComisionRepositoryPort):
     def __init__(self) -> None:
