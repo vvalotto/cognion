@@ -1,6 +1,18 @@
+import uuid
+
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
+from src.identidad.entities.comision import Comision
+from src.identidad.entities.usuario import Usuario
+from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
+from src.identidad.interface_adapters.gateways.comision_repository import (
+    SQLAlchemyComisionRepository,
+)
+from src.identidad.interface_adapters.gateways.usuario_repository import (
+    SQLAlchemyUsuarioRepository,
+)
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class TestUsuariosAPIIntegration:
@@ -124,5 +136,77 @@ class TestListarCuentasAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get("/usuarios")
+
+        assert response.status_code == 401
+
+
+class TestObtenerCuentaAPIIntegration:
+    """US-2.2.3: detalle de una cuenta puntual."""
+
+    async def test_detalle_de_un_docente(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            creado = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Detalle Docente",
+                    "email": "detalle.docente@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            usuario_id = creado.json()["id"]
+
+            response = await client.get(f"/usuarios/{usuario_id}", headers=admin_headers)
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["email"] == "detalle.docente@fiuner.edu.ar"
+        assert body["perfil"] == "docente"
+        assert body["comision_id"] is None
+        assert "creado_en" in body
+
+    async def test_detalle_de_un_estudiante_incluye_comision_id(self, session, admin_headers):
+        hasher = BcryptPasswordHasher()
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Admin Detalle",
+            f"admin.detalle.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("x"),
+            TipoPerfil.ADMINISTRADOR,
+        )
+        await usuario_repo.guardar(admin)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        estudiante = Usuario.crear_estudiante(
+            "Estudiante Detalle",
+            f"estudiante.detalle.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("Estudiante#2026"),
+            comision.id,
+        )
+        await usuario_repo.guardar(estudiante)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/usuarios/{estudiante.id}", headers=admin_headers)
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["perfil"] == "estudiante"
+        assert body["comision_id"] == str(comision.id)
+
+    async def test_cuenta_inexistente_devuelve_404(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/usuarios/{uuid.uuid4()}", headers=admin_headers)
+
+        assert response.status_code == 404
+
+    async def test_requiere_rol_administrador(self):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/usuarios/{uuid.uuid4()}")
 
         assert response.status_code == 401

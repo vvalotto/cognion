@@ -1,4 +1,5 @@
 import uuid
+from datetime import UTC, datetime
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Estudiante, Usuario
@@ -46,6 +47,7 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
                 nombre="Huérfano",
                 email="huerfano@fiuner.edu.ar",
                 password_hash="hash",
+                creado_en=datetime.now(UTC),
             )
         )
         await session.commit()
