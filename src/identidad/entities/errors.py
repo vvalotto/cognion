@@ -106,3 +106,12 @@ class CuentaBloqueadaError(Exception):
         """Guarda el id de la cuenta bloqueada y arma el mensaje de la excepción."""
         self.usuario_id = usuario_id
         super().__init__("La cuenta está bloqueada. Contactá a un administrador.")
+
+
+class UsuarioNoExiste(Exception):
+    """Se referenció un usuario que no está registrado (`US-2.2.3`)."""
+
+    def __init__(self, usuario_id: UUID) -> None:
+        """Guarda el id del usuario en conflicto y arma el mensaje de la excepción."""
+        self.usuario_id = usuario_id
+        super().__init__(f"El usuario '{usuario_id}' no existe.")

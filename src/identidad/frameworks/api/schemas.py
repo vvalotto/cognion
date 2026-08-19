@@ -38,6 +38,18 @@ class CuentaResponse(BaseModel):
     bloqueada: bool
 
 
+class CuentaDetalleResponse(BaseModel):
+    """Detalle completo de una cuenta puntual (`US-2.2.3`)."""
+
+    id: UUID
+    nombre: str
+    email: str
+    perfil: TipoPerfil
+    bloqueada: bool
+    creado_en: datetime
+    comision_id: UUID | None
+
+
 class CrearComisionRequest(BaseModel):
     """Body de la request de alta de comisión."""
 
