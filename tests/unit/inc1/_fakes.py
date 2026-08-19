@@ -6,6 +6,7 @@ from uuid import UUID
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
+from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
 from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
@@ -36,6 +37,28 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
 
     async def actualizar(self, usuario: Usuario) -> None:
         self.usuarios[usuario.id] = usuario
+
+
+class FakeCuentaQueryRepository(CuentaQueryPort):
+    def __init__(self) -> None:
+        self.usuarios: dict[UUID, Usuario] = {}
+
+    async def listar(
+        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
+    ) -> list[Usuario]:
+        resultado = list(self.usuarios.values())
+        if rol is not None:
+            resultado = [u for u in resultado if u.tipo_perfil == rol]
+        if estado == "activa":
+            resultado = [u for u in resultado if not u.bloqueada]
+        elif estado == "bloqueada":
+            resultado = [u for u in resultado if u.bloqueada]
+        if busqueda:
+            patron = busqueda.lower()
+            resultado = [
+                u for u in resultado if patron in u.nombre.lower() or patron in u.email.lower()
+            ]
+        return resultado
 
 
 class FakeComisionRepository(ComisionRepositoryPort):

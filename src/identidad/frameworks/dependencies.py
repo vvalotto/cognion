@@ -14,6 +14,7 @@ from src.identidad.frameworks.security.password_hasher import BcryptPasswordHash
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
+from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
@@ -21,6 +22,9 @@ from src.identidad.interface_adapters.controllers.registro_controller import Reg
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
+)
+from src.identidad.interface_adapters.gateways.cuenta_query_repository import (
+    SQLAlchemyCuentaQueryRepository,
 )
 from src.identidad.interface_adapters.gateways.invitacion_repository import (
     SQLAlchemyInvitacionRepository,
@@ -31,6 +35,7 @@ from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
+from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -97,6 +102,12 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
 def get_jwt_issuer() -> JWTIssuerPort:
     """Provee la implementación de emisor de JWT a usar."""
     return PyJWTIssuer()
+
+
+def get_cuentas_controller(session: SessionDep) -> CuentasController:
+    """Arma el `CuentasController` con sus dependencias concretas."""
+    cuenta_query = SQLAlchemyCuentaQueryRepository(session)
+    return CuentasController(ListarCuentasUseCase(cuenta_query))
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:

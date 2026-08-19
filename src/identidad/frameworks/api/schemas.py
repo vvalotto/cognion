@@ -28,6 +28,16 @@ class UsuarioResponse(BaseModel):
     perfil: TipoPerfil
 
 
+class CuentaResponse(BaseModel):
+    """Representación de una cuenta en el listado administrativo (`US-2.2.2`)."""
+
+    id: UUID
+    nombre: str
+    email: str
+    perfil: TipoPerfil
+    bloqueada: bool
+
+
 class CrearComisionRequest(BaseModel):
     """Body de la request de alta de comisión."""
 
