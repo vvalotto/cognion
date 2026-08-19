@@ -90,9 +90,7 @@ async def _get(path: str, params: dict | None = None):
 
 @given("existen cuentas de distintos roles y estados")
 def cuentas_de_distintos_roles_y_estados(context):
-    run_async(
-        _crear_cuenta("Docente BDD", "docente.bdd222@fiuner.edu.ar", TipoPerfil.DOCENTE)
-    )
+    run_async(_crear_cuenta("Docente BDD", "docente.bdd222@fiuner.edu.ar", TipoPerfil.DOCENTE))
     run_async(
         _crear_cuenta(
             "Admin BDD", "admin.bdd222@fiuner.edu.ar", TipoPerfil.ADMINISTRADOR, bloqueada=True
@@ -103,9 +101,7 @@ def cuentas_de_distintos_roles_y_estados(context):
 @given("existen Estudiantes activos y bloqueados, y Docentes activos")
 def estudiantes_y_docentes_variados(context):
     run_async(
-        _crear_cuenta(
-            "Estudiante Activo", "est.activo.bdd222@fiuner.edu.ar", TipoPerfil.ESTUDIANTE
-        )
+        _crear_cuenta("Estudiante Activo", "est.activo.bdd222@fiuner.edu.ar", TipoPerfil.ESTUDIANTE)
     )
     run_async(
         _crear_cuenta(
