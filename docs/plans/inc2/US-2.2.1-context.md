@@ -26,9 +26,9 @@
   - cobertura ≥ 95%
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-2.2.1-context.md
+- Contexto: docs/plans/inc2/US-2.2.1-context.md
 - BDD feature: tests/features/US-2.2.1-bloqueo-cuenta-login.feature
-- Plan: docs/plans/US-2.2.1-plan.md
+- Plan: docs/plans/inc2/US-2.2.1-plan.md
 - Reporte: docs/reports/inc2/US-2.2.1-report.md
 - Quality report: quality/reports/inc2/US-2.2.1-quality.json
 

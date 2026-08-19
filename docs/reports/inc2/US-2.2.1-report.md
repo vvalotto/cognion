@@ -4,7 +4,7 @@
 
 - **Historia de Usuario:** US-2.2.1 - Bloqueo automático de cuenta por 3 intentos fallidos consecutivos de login
 - **Puntos estimados:** 3
-- **Tiempo real:** ~23 min (fases 0-7, ver `docs/plans/US-2.2.1-plan.md` §Métricas de Tiempo)
+- **Tiempo real:** ~23 min (fases 0-7, ver `docs/plans/inc2/US-2.2.1-plan.md` §Métricas de Tiempo)
 - **Estado:** ✅ COMPLETADO
 - **Fecha completado:** 2026-08-19
 
@@ -125,8 +125,8 @@ alcanzable en los flujos actuales.
 - `tests/step_defs/inc2/test_us_2_2_1_steps.py`
 
 ### Documentación
-- `docs/plans/US-2.2.1-context.md`
-- `docs/plans/US-2.2.1-plan.md`
+- `docs/plans/inc2/US-2.2.1-context.md`
+- `docs/plans/inc2/US-2.2.1-plan.md`
 - `docs/reports/inc2/US-2.2.1-report.md` (este archivo)
 - `quality/reports/inc2/US-2.2.1-quality.json`
 
