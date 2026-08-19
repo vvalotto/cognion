@@ -109,9 +109,7 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
     """Arma el `CuentasController` con sus dependencias concretas."""
     cuenta_query = SQLAlchemyCuentaQueryRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
-    return CuentasController(
-        ListarCuentasUseCase(cuenta_query), ObtenerCuentaUseCase(usuario_repo)
-    )
+    return CuentasController(ListarCuentasUseCase(cuenta_query), ObtenerCuentaUseCase(usuario_repo))
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:
