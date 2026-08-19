@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
@@ -79,6 +79,32 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         usuario_model.intentos_fallidos_login = usuario.intentos_fallidos_login
         usuario_model.intentos_fallidos_password = usuario.intentos_fallidos_password
         await self._session.commit()
+
+    async def listar(
+        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
+    ) -> list[Usuario]:
+        """Lista usuarios filtrados (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda."""
+        query = select(UsuarioModel)
+        if rol is not None:
+            model_cls = _MODEL_POR_PERFIL[rol]
+            query = query.join(model_cls, model_cls.id == UsuarioModel.id)
+        if estado == "activa":
+            query = query.where(UsuarioModel.bloqueada.is_(False))
+        elif estado == "bloqueada":
+            query = query.where(UsuarioModel.bloqueada.is_(True))
+        if busqueda:
+            patron = f"%{busqueda}%"
+            query = query.where(
+                or_(UsuarioModel.nombre.ilike(patron), UsuarioModel.email.ilike(patron))
+            )
+
+        resultado = await self._session.execute(query)
+        usuarios: list[Usuario] = []
+        for usuario_model in resultado.scalars().all():
+            usuario = await self._armar_usuario(usuario_model)
+            if usuario is not None:
+                usuarios.append(usuario)
+        return usuarios
 
     @staticmethod
     def _perfil_model(usuario: Usuario) -> AdministradorModel | DocenteModel | EstudianteModel:

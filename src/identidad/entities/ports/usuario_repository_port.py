@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from uuid import UUID
 
 from src.identidad.entities.usuario import Usuario
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class UsuarioRepositoryPort(ABC):
@@ -34,4 +35,11 @@ class UsuarioRepositoryPort(ABC):
     @abstractmethod
     async def obtener_por_email(self, email: str) -> Usuario | None:
         """Busca un usuario por email, o `None` si no existe."""
+        ...
+
+    @abstractmethod
+    async def listar(
+        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
+    ) -> list[Usuario]:
+        """Lista usuarios filtrados (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda."""
         ...
