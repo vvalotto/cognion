@@ -3,10 +3,10 @@
   "fecha": "2026-08-19T00:00:00Z",
   "componente": "src/identidad",
   "metricas": {
-    "pylint": 9.71,
-    "cc_max": 8,
-    "mi_min": 50.41,
-    "mi_promedio": 92.21,
+    "pylint": 9.78,
+    "cc_max": 7,
+    "mi_min": 53.50,
+    "mi_promedio": 92.01,
     "coverage": 99.0
   },
   "umbrales": {
@@ -17,11 +17,12 @@
   },
   "estado": "APROBADO",
   "observaciones": [
-    "Pylint acotado a los 8 archivos de src/identidad modificados/agregados por esta US: 9.71/10.",
-    "W2301 (unnecessary-ellipsis) en usuario_repository_port.py: deuda preexistente en las firmas de método ya presentes antes de esta US; el método nuevo listar() repite el mismo patrón de la interfaz existente.",
-    "R0903 (too-few-public-methods) en CuentasController y ListarCuentasUseCase: mismo patrón ya aceptado en AuthController/IniciarSesionUseCase (US-2.2.1) — clases de una sola responsabilidad por diseño (Clean Architecture, un use case por operación).",
-    "CC/MI medidos sobre src/identidad completo, según convención del proyecto — CC máx 8 (SQLAlchemyUsuarioRepository.listar, el filtro combinado con joins), MI mín 50.41.",
-    "Coverage 99% sobre src/identidad. Las líneas 102-107 de usuario_repository.py (el bucle que arma la lista de resultados de listar()) aparecen como no cubiertas en el reporte de coverage.py pese a ejecutarse correctamente — verificado con una llamada real end-to-end que devuelve datos reales (GET /usuarios con una cuenta creada de antemano). Es un artefacto de instrumentación de coverage.py con el bucle async posterior a un await de SQLAlchemy, no un gap real de tests; los 6 tests de integración y 3 escenarios BDD que ejercitan listar() pasan y verifican el contenido real de la respuesta.",
-    "La línea 76 (guard defensivo preexistente en actualizar(), US-2.2.1) es la única línea genuinamente no cubierta por diseño. La rama estado=activa (línea 92) se cubrió agregando test_filtro_por_estado_activa en test_usuarios_api_integration.py."
+    "Diseño final tras el pre-push gate: CBOAnalyzer detectó CRITICAL (CBO=11/10) en SQLAlchemyUsuarioRepository al agregar listar() directamente ahí (verificado contra develop: el archivo estaba en umbral antes de este cambio). Se corrigió separando la consulta en un puerto propio (CuentaQueryPort) y un gateway propio (SQLAlchemyCuentaQueryRepository) que delega el armado de cada Usuario en SQLAlchemyUsuarioRepository.obtener_por_id() (API pública, no acceso a métodos privados) — mismo criterio command/query que ya separa CuentasController de UsuariosController, extendido a la capa de persistencia. UsuarioRepositoryPort/SQLAlchemyUsuarioRepository quedan sin cambios respecto a develop.",
+    "Pylint acotado a los 8 archivos de src/identidad modificados/agregados por esta US (tras el rediseño): 9.78/10.",
+    "W2301 (unnecessary-ellipsis) en cuenta_query_port.py: mismo patrón preexistente en el resto de los puertos ABC del proyecto.",
+    "R0903 (too-few-public-methods) en CuentaQueryPort, CuentasController, SQLAlchemyCuentaQueryRepository y ListarCuentasUseCase: mismo patrón ya aceptado en AuthController/IniciarSesionUseCase (US-2.2.1) — clases de una sola responsabilidad por diseño.",
+    "CC/MI medidos sobre src/identidad completo — CC máx 7 (SQLAlchemyCuentaQueryRepository.listar, el filtro combinado), MI mín 53.50.",
+    "Coverage 99% sobre src/identidad. Las líneas 59-64 de cuenta_query_repository.py (el bucle que arma la lista de resultados) aparecen como no cubiertas en el reporte de coverage.py pese a ejecutarse correctamente — mismo artefacto de instrumentación de coverage.py con bucles async posteriores a un await de SQLAlchemy ya documentado en US-2.2.1/primera iteración de esta US; verificado con los 6 tests de integración y 3 escenarios BDD que ejercitan listar() y validan el contenido real de la respuesta. La línea 76 de usuario_repository.py (guard defensivo preexistente de US-2.2.1) es la única línea genuinamente no cubierta por diseño.",
+    "Pre-push gate final: 0 CRITICAL."
   ]
 }

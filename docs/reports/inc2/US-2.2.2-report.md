@@ -12,13 +12,25 @@
 
 ## Componentes Implementados
 
+> **Nota:** el diseño original (Fase 2, aprobado) agregaba `listar()` directo a
+> `UsuarioRepositoryPort`/`SQLAlchemyUsuarioRepository`. El pre-push gate (`CBOAnalyzer`)
+> bloqueó ese diseño con CRITICAL (CBO=11/10, verificado contra `develop` que la clase estaba
+> en umbral antes del cambio) — mismo patrón recurrente que `US-2.1.2`/`US-2.1.5`/`US-2.1.6`.
+> Se resolvió separando la consulta en un puerto y gateway propios. Lo que sigue documenta el
+> **diseño final entregado**.
+
 ### Puerto y Gateway
-- ✅ **`UsuarioRepositoryPort.listar()`** (`src/identidad/entities/ports/usuario_repository_port.py`)
-  — nuevo método abstracto `listar(rol, estado, busqueda) -> list[Usuario]`
-- ✅ **`SQLAlchemyUsuarioRepository.listar()`** (`src/identidad/interface_adapters/gateways/usuario_repository.py`)
+- ✅ **`CuentaQueryPort`** (`src/identidad/entities/ports/cuenta_query_port.py`) — puerto nuevo,
+  separado de `UsuarioRepositoryPort` (altas/persistencia) por responsabilidad command/query,
+  mismo criterio que separa `CuentasController` de `UsuariosController`, extendido a
+  persistencia. Único método: `listar(rol, estado, busqueda) -> list[Usuario]`
+- ✅ **`SQLAlchemyCuentaQueryRepository`** (`src/identidad/interface_adapters/gateways/cuenta_query_repository.py`)
   — `SELECT` con `join()` condicional a la tabla de perfil según `rol`, filtro `bloqueada`
   según `estado` (`activa`/`bloqueada`), `ILIKE` combinado con `or_()` contra `nombre`/`email`
-  según `busqueda`; cada fila se resuelve con `_armar_usuario()` ya existente
+  según `busqueda`; delega el armado de cada `Usuario` en
+  `SQLAlchemyUsuarioRepository.obtener_por_id()` (API pública, sin acceder a métodos privados
+  de otra instancia) — `UsuarioRepositoryPort`/`SQLAlchemyUsuarioRepository` quedan sin cambios
+  respecto a `develop`
 
 ### Use Case
 - ✅ **`ListarCuentasUseCase`** (`src/identidad/use_cases/listar_cuentas.py`) — delega directo
@@ -54,16 +66,17 @@ verificado sin conflicto vía el schema OpenAPI.
 
 | Métrica | Valor | Umbral | Estado |
 |---------|-------|--------|--------|
-| Pylint | 9.71/10 | ≥ 8.0 | ✅ |
-| Complejidad Ciclomática (máx/función) | 8 | ≤ 10 | ✅ |
-| Índice de Mantenibilidad (mín) | 50.41 | > 20 | ✅ |
+| Pylint | 9.78/10 | ≥ 8.0 | ✅ |
+| Complejidad Ciclomática (máx/función) | 7 | ≤ 10 | ✅ |
+| Índice de Mantenibilidad (mín) | 53.50 | > 20 | ✅ |
 | Cobertura de Tests | 99% | ≥ 95% | ✅ |
+| Pre-push gate (CBOAnalyzer y resto) | 0 CRITICAL | 0 CRITICAL | ✅ |
 
 Fuente: `quality/reports/inc2/US-2.2.2-quality.json`. Única línea genuinamente no cubierta:
 el guard defensivo preexistente de `actualizar()` (`US-2.2.1`). Las líneas del bucle de
-`listar()` aparecen como no cubiertas en el reporte de `coverage.py` pese a ejecutarse
-correctamente — verificado con una llamada real end-to-end — artefacto de instrumentación
-documentado en el quality report, no un gap de tests.
+`SQLAlchemyCuentaQueryRepository.listar()` aparecen como no cubiertas en el reporte de
+`coverage.py` pese a ejecutarse correctamente — verificado con una llamada real end-to-end —
+artefacto de instrumentación documentado en el quality report, no un gap de tests.
 
 **Estado General:** ✅ APROBADO
 
@@ -92,8 +105,8 @@ documentado en el quality report, no un gap de tests.
 ## Archivos Creados/Modificados
 
 ### Código de producción
-- `src/identidad/entities/ports/usuario_repository_port.py`
-- `src/identidad/interface_adapters/gateways/usuario_repository.py`
+- `src/identidad/entities/ports/cuenta_query_port.py`
+- `src/identidad/interface_adapters/gateways/cuenta_query_repository.py`
 - `src/identidad/use_cases/listar_cuentas.py`
 - `src/identidad/interface_adapters/controllers/cuentas_controller.py`
 - `src/identidad/frameworks/api/schemas.py`
@@ -102,7 +115,7 @@ documentado en el quality report, no un gap de tests.
 - `src/app.py`
 
 ### Tests
-- `tests/unit/inc1/_fakes.py` (agrega `listar()` a `FakeUsuarioRepository`)
+- `tests/unit/inc1/_fakes.py` (agrega `FakeCuentaQueryRepository`)
 - `tests/unit/inc1/test_listar_cuentas_use_case.py`
 - `tests/unit/inc1/test_cuentas_controller.py`
 - `tests/integration/inc1/test_usuarios_api_integration.py`
@@ -143,6 +156,11 @@ documentado en el quality report, no un gap de tests.
   de SQLAlchemy — verificar funcionalmente antes de asumir un gap real de tests.
 - ✅ La separación `CuentasController`/`UsuariosController` (queries vs. creación) sobre el
   mismo aggregate deja una base limpia para las próximas dos US de esta iteración.
+- 🔴 Agregar un método nuevo a un repositorio ya cerca del umbral de CBO lo hace CRITICAL en
+  el pre-push gate, no en Fase 7 (que no mide acoplamiento). El fix consistente con el resto
+  del proyecto es separar en un puerto/gateway propio por responsabilidad (command/query),
+  no forzar el método en la clase existente — y verificar el estado "antes" contra `develop`
+  para confirmar que el cambio propio es la causa antes de rediseñar.
 
 ---
 

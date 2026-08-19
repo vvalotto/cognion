@@ -32,6 +32,16 @@
 - ✅ Separar `CuentasController` (queries administrativas) de `UsuariosController` (creación)
   aunque ambos operen sobre `Usuario` deja lugar para que `US-2.2.3`/`US-2.2.4` sumen métodos
   sin re-litigar la decisión de diseño.
+- 🔴 **Rediseño en el pre-push gate:** agregar `listar()` directo a `UsuarioRepositoryPort`/
+  `SQLAlchemyUsuarioRepository` (diseño original de este plan) hizo que `CBOAnalyzer` bloqueara
+  el push con CRITICAL (CBO=11/10) — verificado contra `develop` que la clase estaba en umbral
+  antes del cambio. Se resolvió separando la consulta en un puerto+gateway propios
+  (`CuentaQueryPort`/`SQLAlchemyCuentaQueryRepository`), extendiendo a persistencia el mismo
+  criterio command/query ya aplicado en `CuentasController`/`UsuariosController`. Mismo patrón
+  recurrente que `US-2.1.2`/`US-2.1.5`/`US-2.1.6` (CBO detectado recién en push, no en Fase 7,
+  que no mide acoplamiento) — la sección "Componentes a Implementar" de abajo refleja el
+  **diseño original aprobado en Fase 2**; el diseño final entregado está documentado en
+  `docs/reports/inc2/US-2.2.2-report.md` y en `quality/reports/inc2/US-2.2.2-quality.json`.
 
 ## Componentes a Implementar
 
