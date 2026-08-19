@@ -78,16 +78,44 @@ US-2.1.11 antes que 2.1.12/2.1.13 (no se edita/elimina lo que no existe).
 
 ---
 
-## Iteración 2 — RF-03: gestión de cuentas por administrador
+## Iteración 2 — RF-03, RF-19: gestión de cuentas por administrador y cambio de contraseña propio
 
 BC Identidad, no Banco de Preguntas — agrupada en este incremento por el plan original
-(`PLAN_v1.md`). El dominio ya está parcialmente modelado como "Diferidos" en
-`docs/design/domain/BC-identidad-modelo.md` §3 y §9 (`ResetearPassword`, `CambiarPassword`,
-`CuentaBloqueada`/RF-19) — probablemente **no** necesita una nueva US de event storming, pero
-sí una **US-Modelado de wireframes** nueva (listado/gestión de cuentas, reset de contraseña),
-ya que `wireframes-identidad.md` §4 la deja explícitamente fuera de alcance. No se detalla
-todavía — se retoma al cerrar esta Iteración 1, siguiendo el mismo ciclo (WORKFLOW-DESARROLLO.md
-§3, paso 0).
+(`PLAN_v1.md`). El event storming ya estaba completo (`BC-identidad-modelo.md` §3
+"Diferidos", §9, §11) — no hizo falta una nueva US de Modelado de dominio, solo la
+**US-Modelado de wireframes** que faltaba (`wireframes-identidad.md` §4 la dejaba
+explícitamente fuera de alcance). Wireframes y prototipo aprobados por Víctor 2026-08-19:
+`docs/design/ux/wireframes-cuentas-administracion.md`,
+`docs/design/ux/prototipos/identidad-cuentas-administracion.html`.
+
+### Backend
+
+| US | Descripción | Comando/Query | Evento(s) | Actor | Invariantes clave | Precondición → Postcondición |
+|---|---|---|---|---|---|---|
+| **US-2.2.1** | Bloqueo automático de cuenta por 3 intentos fallidos consecutivos de login | extiende `IniciarSesion(email, password)` | `CuentaBloqueada` (si corresponde) | — (efecto del intento de login) | INV-ID-10 (contador propio de login, se resetea a 0 en cada acierto, bloquea al 3er fallo consecutivo) | `Usuario` existe → contador incrementado; al llegar a 3, `bloqueada = true` |
+| **US-2.2.2** | Administrador ve el listado de cuentas, filtra por rol/estado/búsqueda | `ListarCuentas(rol?, estado?, busqueda?)` (query) | — | Administrador | — | Administrador autenticado → lista de `Usuario` que matchean los filtros |
+| **US-2.2.3** | Administrador ve el detalle de una cuenta | `ObtenerCuenta(usuario_id)` (query) | — | Administrador | — | `Usuario` existe → datos de la cuenta (incluye `comision_id` si el perfil es Estudiante) |
+| **US-2.2.4** | Administrador resetea la contraseña de una cuenta (desbloqueo incluido) | `ResetearPassword(usuario_id, password_nueva, administrador_id)` | `PasswordReseteada`, `CuentaDesbloqueada` (si estaba bloqueada) | Administrador | INV-ID-11 (mín. 8 caracteres); es la única forma de desbloquear (sin comando separado) | `Usuario` existe → `password_hash` actualizado, `bloqueada = false`, contadores reseteados a 0 |
+| **US-2.2.5** | Usuario autenticado cambia su propia contraseña | `CambiarPassword(usuario_id, password_actual, password_nueva)` | `PasswordCambiada` | Usuario autenticado (cualquier rol) | INV-ID-10 (contador propio de este flujo, independiente del de login), INV-ID-11 (mín. 8 caracteres) | `password_actual` verifica → `password_hash` actualizado, contador de este flujo reseteado a 0; si falla, incrementa contador y al 3er fallo bloquea |
+
+**Orden de implementación:** US-2.2.1 primero — agrega a `Usuario` los campos `bloqueada`,
+`intentos_fallidos_login`, `intentos_fallidos_password` (migración) que el resto de la
+iteración consume. US-2.2.2/US-2.2.3 (queries de lectura) antes que US-2.2.4 (no hay nada que
+gestionar sin poder verlo primero). US-2.2.5 puede ir en paralelo a US-2.2.2/2.2.3/2.2.4 — solo
+depende de US-2.2.1 (comparte el mecanismo de bloqueo sobre `Usuario`, contador propio).
+
+### Frontend
+
+| US | Descripción | Pantallas (`wireframes-cuentas-administracion.md`) | Backend consumido | Depende de |
+|---|---|---|---|---|
+| **US-2.2.6** | Administrador ve y filtra el listado de cuentas | §2.1 `#cuentas` | `GET /usuarios?filtros` (US-2.2.2) | US-2.2.2 |
+| **US-2.2.7** | Administrador ve el detalle de una cuenta y resetea/desbloquea | §2.2 `#cuenta-detalle`, §2.3 `#cuenta-resetear`, §2.4 `#cuenta-reseteada` | `GET /usuarios/{id}` (US-2.2.3), `POST /usuarios/{id}/resetear-password` (US-2.2.4) | US-2.2.6, US-2.2.3, US-2.2.4 |
+| **US-2.2.8** | Cualquier usuario autenticado cambia su propia contraseña | §2.5 `#cambiar-password`, §2.6 `#cambiar-password-error`, §2.7 `#cambiar-password-exito` | `PUT /usuarios/me/password` (US-2.2.5) | US-2.2.5 |
+| **US-2.2.9** | Login refleja el estado de cuenta bloqueada | §2.8 `#login-bloqueada` | extiende `POST /auth/login` (US-2.2.1) | US-2.2.1 |
+
+**Orden de implementación:** US-2.2.6 antes que US-2.2.7 (necesita el listado para navegar al
+detalle de una cuenta). US-2.2.8 y US-2.2.9 son independientes del resto — pueden ir en
+paralelo, cada una depende solo de su US de backend correspondiente.
 
 ---
 
