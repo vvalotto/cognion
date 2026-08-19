@@ -37,6 +37,23 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
     async def actualizar(self, usuario: Usuario) -> None:
         self.usuarios[usuario.id] = usuario
 
+    async def listar(
+        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
+    ) -> list[Usuario]:
+        resultado = list(self.usuarios.values())
+        if rol is not None:
+            resultado = [u for u in resultado if u.tipo_perfil == rol]
+        if estado == "activa":
+            resultado = [u for u in resultado if not u.bloqueada]
+        elif estado == "bloqueada":
+            resultado = [u for u in resultado if u.bloqueada]
+        if busqueda:
+            patron = busqueda.lower()
+            resultado = [
+                u for u in resultado if patron in u.nombre.lower() or patron in u.email.lower()
+            ]
+        return resultado
+
 
 class FakeComisionRepository(ComisionRepositoryPort):
     def __init__(self) -> None:
