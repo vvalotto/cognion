@@ -26,15 +26,11 @@ def upgrade() -> None:
     )
     op.add_column(
         "usuario",
-        sa.Column(
-            "intentos_fallidos_login", sa.Integer(), nullable=False, server_default="0"
-        ),
+        sa.Column("intentos_fallidos_login", sa.Integer(), nullable=False, server_default="0"),
     )
     op.add_column(
         "usuario",
-        sa.Column(
-            "intentos_fallidos_password", sa.Integer(), nullable=False, server_default="0"
-        ),
+        sa.Column("intentos_fallidos_password", sa.Integer(), nullable=False, server_default="0"),
     )
 
 

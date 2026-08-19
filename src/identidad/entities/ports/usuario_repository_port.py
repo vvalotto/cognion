@@ -23,7 +23,7 @@ class UsuarioRepositoryPort(ABC):
 
     @abstractmethod
     async def actualizar(self, usuario: Usuario) -> None:
-        """Persiste cambios sobre un usuario existente (contraseña, bloqueo, contadores)."""
+        """Guarda cambios sobre un usuario existente (contraseña, bloqueo, contadores)."""
         ...
 
     @abstractmethod

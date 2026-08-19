@@ -70,7 +70,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         await self._session.commit()
 
     async def actualizar(self, usuario: Usuario) -> None:
-        """Persiste `password_hash`, `bloqueada` y los contadores de intentos fallidos."""
+        """Guarda `password_hash`, `bloqueada` y los contadores de intentos fallidos."""
         usuario_model = await self._session.get(UsuarioModel, usuario.id)
         if usuario_model is None:
             return
