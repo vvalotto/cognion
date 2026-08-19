@@ -3,7 +3,15 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-08-13 — `US-2.1.7` (Docente filtra el banco por materia, unidad,
+> Última actualización: 2026-08-19 — Iteración 2 del Incremento 2 (BC Identidad, gestión de
+> cuentas por administrador y cambio de contraseña propio, `US-2.2.1` a `US-2.2.9`) modelada
+> (wireframes) y especificada. RF-03 y RF-19 pasan de "Planificado" a "Especificado" — specs
+> recién creadas, sin código todavía. El event storming ya estaba completo desde
+> `BC-identidad-modelo.md` (§3, §9, §11); solo faltaba el wireframe
+> (`docs/design/ux/wireframes-cuentas-administracion.md`), aprobado por Víctor en esta misma
+> sesión.
+>
+> 2026-08-13 — `US-2.1.7` (Docente filtra el banco por materia, unidad,
 > tema, dificultad e importancia, backend) cerrada. Es la única US-IEDD de backend de RF-06 —
 > **RF-06 pasa a "Implementado (backend) — frontend Especificado"**, mismo criterio usado para
 > RF-01/RF-02/RF-04/RF-05.
@@ -74,7 +82,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 |---|---|---|---|---|
 | RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Validado |
 | RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Validado |
-| RF-03 | Identidad | 2 | — | Planificado |
+| RF-03 | Identidad | 2 | US-2.2.1, US-2.2.2, US-2.2.3, US-2.2.4 (backend); US-2.2.6, US-2.2.7, US-2.2.9 (frontend) | Especificado |
 | RF-04 | Banco de preguntas | 2 | US-2.1.1, US-2.1.3, US-2.1.4 (backend); US-2.1.8, US-2.1.9, US-2.1.11 (frontend) | Implementado (backend) — frontend Especificado |
 | RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Implementado (backend) — frontend Especificado |
 | RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Implementado (backend) — frontend Especificado |
@@ -91,7 +99,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-16 | Analytics | 4 | — | Planificado |
 | RF-17 | Analytics | 4 | — | Planificado |
 | RF-18 | Analytics | 7 | — | Planificado |
-| RF-19 | Identidad | 2 | — | Planificado |
+| RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Especificado |
 
 > RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
 > y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
