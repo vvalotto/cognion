@@ -23,6 +23,9 @@ from src.identidad.interface_adapters.controllers.usuarios_controller import Usu
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
+from src.identidad.interface_adapters.gateways.cuenta_query_repository import (
+    SQLAlchemyCuentaQueryRepository,
+)
 from src.identidad.interface_adapters.gateways.invitacion_repository import (
     SQLAlchemyInvitacionRepository,
 )
@@ -103,8 +106,8 @@ def get_jwt_issuer() -> JWTIssuerPort:
 
 def get_cuentas_controller(session: SessionDep) -> CuentasController:
     """Arma el `CuentasController` con sus dependencias concretas."""
-    usuario_repo = SQLAlchemyUsuarioRepository(session)
-    return CuentasController(ListarCuentasUseCase(usuario_repo))
+    cuenta_query = SQLAlchemyCuentaQueryRepository(session)
+    return CuentasController(ListarCuentasUseCase(cuenta_query))
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:

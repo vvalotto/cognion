@@ -3,7 +3,7 @@ import uuid
 from src.identidad.entities.usuario import Usuario
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
-from tests.unit.inc1._fakes import FakeUsuarioRepository
+from tests.unit.inc1._fakes import FakeCuentaQueryRepository
 
 
 def _usuario(nombre: str, email: str, tipo_perfil: TipoPerfil, bloqueada: bool = False) -> Usuario:
@@ -17,7 +17,7 @@ def _usuario(nombre: str, email: str, tipo_perfil: TipoPerfil, bloqueada: bool =
 
 class TestListarCuentasUseCase:
     async def test_listado_sin_filtros_devuelve_todas_las_cuentas(self):
-        repo = FakeUsuarioRepository()
+        repo = FakeCuentaQueryRepository()
         docente = _usuario("Docente", "docente@fiuner.edu.ar", TipoPerfil.DOCENTE)
         admin = _usuario("Admin", "admin@fiuner.edu.ar", TipoPerfil.ADMINISTRADOR)
         repo.usuarios[docente.id] = docente
@@ -29,7 +29,7 @@ class TestListarCuentasUseCase:
         assert {u.id for u in resultado} == {docente.id, admin.id}
 
     async def test_filtro_combinado_por_rol_y_estado(self):
-        repo = FakeUsuarioRepository()
+        repo = FakeCuentaQueryRepository()
         estudiante_activo = _usuario(
             "Est Activo", "activo@fiuner.edu.ar", TipoPerfil.ESTUDIANTE, bloqueada=False
         )
@@ -49,7 +49,7 @@ class TestListarCuentasUseCase:
         assert resultado[0].id == estudiante_bloqueado.id
 
     async def test_busqueda_por_email_parcial(self):
-        repo = FakeUsuarioRepository()
+        repo = FakeCuentaQueryRepository()
         objetivo = _usuario("Marisa Gonzalez", "mgonzalez@fiuner.edu.ar", TipoPerfil.DOCENTE)
         otro = _usuario("Juan Perez", "jperez@fiuner.edu.ar", TipoPerfil.DOCENTE)
         repo.usuarios[objetivo.id] = objetivo
@@ -62,7 +62,7 @@ class TestListarCuentasUseCase:
         assert resultado[0].id == objetivo.id
 
     async def test_busqueda_case_insensitive_contra_nombre(self):
-        repo = FakeUsuarioRepository()
+        repo = FakeCuentaQueryRepository()
         usuario = _usuario("Marisa Gonzalez", "mgonzalez@fiuner.edu.ar", TipoPerfil.DOCENTE)
         repo.usuarios[usuario.id] = usuario
         use_case = ListarCuentasUseCase(repo)
@@ -73,7 +73,7 @@ class TestListarCuentasUseCase:
         assert resultado[0].id == usuario.id
 
     async def test_sin_resultados_devuelve_lista_vacia(self):
-        repo = FakeUsuarioRepository()
+        repo = FakeCuentaQueryRepository()
         use_case = ListarCuentasUseCase(repo)
 
         resultado = await use_case.execute(None, None, "no-existe")

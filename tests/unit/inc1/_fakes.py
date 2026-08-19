@@ -10,6 +10,7 @@ from src.identidad.entities.ports.invitacion_repository_port import InvitacionRe
 from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.usuario import Usuario
 from src.shared.entities.errors import JWTInvalido
@@ -36,6 +37,11 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
 
     async def actualizar(self, usuario: Usuario) -> None:
         self.usuarios[usuario.id] = usuario
+
+
+class FakeCuentaQueryRepository(CuentaQueryPort):
+    def __init__(self) -> None:
+        self.usuarios: dict[UUID, Usuario] = {}
 
     async def listar(
         self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
