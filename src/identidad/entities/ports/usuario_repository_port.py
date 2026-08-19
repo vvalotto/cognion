@@ -22,6 +22,11 @@ class UsuarioRepositoryPort(ABC):
         ...
 
     @abstractmethod
+    async def actualizar(self, usuario: Usuario) -> None:
+        """Persiste cambios sobre un usuario existente (contraseña, bloqueo, contadores)."""
+        ...
+
+    @abstractmethod
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
         """Busca un usuario por id, o `None` si no existe."""
         ...

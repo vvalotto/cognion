@@ -69,6 +69,17 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         self._session.add(self._perfil_model(usuario))
         await self._session.commit()
 
+    async def actualizar(self, usuario: Usuario) -> None:
+        """Persiste `password_hash`, `bloqueada` y los contadores de intentos fallidos."""
+        usuario_model = await self._session.get(UsuarioModel, usuario.id)
+        if usuario_model is None:
+            return
+        usuario_model.password_hash = usuario.password_hash
+        usuario_model.bloqueada = usuario.bloqueada
+        usuario_model.intentos_fallidos_login = usuario.intentos_fallidos_login
+        usuario_model.intentos_fallidos_password = usuario.intentos_fallidos_password
+        await self._session.commit()
+
     @staticmethod
     def _perfil_model(usuario: Usuario) -> AdministradorModel | DocenteModel | EstudianteModel:
         """Construye el modelo de perfil correspondiente al usuario."""
@@ -105,6 +116,9 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
             email=usuario_model.email,
             password_hash=usuario_model.password_hash,
             perfil=perfil,
+            bloqueada=usuario_model.bloqueada,
+            intentos_fallidos_login=usuario_model.intentos_fallidos_login,
+            intentos_fallidos_password=usuario_model.intentos_fallidos_password,
         )
 
     async def _resolver_perfil(self, usuario_id: UUID) -> Perfil | None:

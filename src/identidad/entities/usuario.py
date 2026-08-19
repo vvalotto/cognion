@@ -42,6 +42,9 @@ class Usuario:
     email: str
     password_hash: str
     perfil: Perfil
+    bloqueada: bool = False
+    intentos_fallidos_login: int = 0
+    intentos_fallidos_password: int = 0
 
     @property
     def tipo_perfil(self) -> TipoPerfil:

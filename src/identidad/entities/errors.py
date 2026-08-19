@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from src.identidad.entities.eventos import CuentaBloqueada
+
 
 class EmailYaRegistrado(Exception):
     """Se intentó registrar un usuario con un email ya existente."""
@@ -84,9 +86,23 @@ class CredencialesInvalidas(Exception):
     """El email no existe o la contraseña no verifica contra el hash guardado.
 
     El mensaje no distingue entre ambos casos para no filtrar si una cuenta existe
-    (`US-1.1.4`).
+    (`US-1.1.4`). Cuando el fallo es el 3er intento consecutivo, `evento_cuenta_bloqueada`
+    lleva el evento `CuentaBloqueada` emitido junto con el rechazo (`US-2.2.1`).
     """
 
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos del intento fallido."""
+        self.evento_cuenta_bloqueada: CuentaBloqueada | None = None
         super().__init__("Email o contraseña inválidos.")
+
+
+class CuentaBloqueadaError(Exception):
+    """La cuenta llegó a 3 intentos fallidos consecutivos y está bloqueada (INV-ID-10).
+
+    Solo se desbloquea mediante reseteo de contraseña por un Administrador (`US-2.2.4`).
+    """
+
+    def __init__(self, usuario_id: UUID) -> None:
+        """Guarda el id de la cuenta bloqueada y arma el mensaje de la excepción."""
+        self.usuario_id = usuario_id
+        super().__init__("La cuenta está bloqueada. Contactá a un administrador.")
