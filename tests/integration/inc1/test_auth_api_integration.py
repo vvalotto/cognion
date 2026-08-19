@@ -175,12 +175,8 @@ class TestBloqueoCuentaLoginAPIIntegration:
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            await client.post(
-                "/identidad/login", json={"email": email, "password": "incorrecta"}
-            )
-            await client.post(
-                "/identidad/login", json={"email": email, "password": "incorrecta"}
-            )
+            await client.post("/identidad/login", json={"email": email, "password": "incorrecta"})
+            await client.post("/identidad/login", json={"email": email, "password": "incorrecta"})
             response = await client.post(
                 "/identidad/login", json={"email": email, "password": "Docente#2026"}
             )
