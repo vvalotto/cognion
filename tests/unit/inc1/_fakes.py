@@ -6,11 +6,11 @@ from uuid import UUID
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
+from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
 from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
-from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.usuario import Usuario
 from src.shared.entities.errors import JWTInvalido
