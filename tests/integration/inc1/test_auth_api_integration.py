@@ -121,3 +121,68 @@ class TestAuthAPIIntegration:
             respuesta_password_incorrecta.json()["detail"]
             == respuesta_email_inexistente.json()["detail"]
         )
+
+
+class TestBloqueoCuentaLoginAPIIntegration:
+    """US-2.2.1: bloqueo automático de cuenta por 3 intentos fallidos consecutivos."""
+
+    async def test_tercer_fallo_consecutivo_bloquea_la_cuenta(self, session):
+        hasher = BcryptPasswordHasher()
+        repo = SQLAlchemyUsuarioRepository(session)
+        email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
+        usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
+        await repo.guardar(usuario)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            for _ in range(3):
+                response = await client.post(
+                    "/identidad/login", json={"email": email, "password": "incorrecta"}
+                )
+                assert response.status_code == 401
+
+        actualizado = await repo.obtener_por_id(usuario.id)
+        assert actualizado is not None
+        assert actualizado.bloqueada is True
+        assert actualizado.intentos_fallidos_login == 3
+
+    async def test_intento_sobre_cuenta_ya_bloqueada_responde_403(self, session):
+        hasher = BcryptPasswordHasher()
+        repo = SQLAlchemyUsuarioRepository(session)
+        email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
+        usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
+        await repo.guardar(usuario)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            for _ in range(3):
+                await client.post(
+                    "/identidad/login", json={"email": email, "password": "incorrecta"}
+                )
+
+            response = await client.post(
+                "/identidad/login", json={"email": email, "password": "Docente#2026"}
+            )
+
+        assert response.status_code == 403
+
+    async def test_acierto_antes_del_limite_resetea_el_contador(self, session):
+        hasher = BcryptPasswordHasher()
+        repo = SQLAlchemyUsuarioRepository(session)
+        email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
+        usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
+        await repo.guardar(usuario)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            await client.post("/identidad/login", json={"email": email, "password": "incorrecta"})
+            await client.post("/identidad/login", json={"email": email, "password": "incorrecta"})
+            response = await client.post(
+                "/identidad/login", json={"email": email, "password": "Docente#2026"}
+            )
+
+        assert response.status_code == 200
+        actualizado = await repo.obtener_por_id(usuario.id)
+        assert actualizado is not None
+        assert actualizado.intentos_fallidos_login == 0
+        assert actualizado.bloqueada is False

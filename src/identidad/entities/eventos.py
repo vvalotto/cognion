@@ -80,3 +80,14 @@ class SesionIniciada:
     usuario_id: UUID
     rol: TipoPerfil
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class CuentaBloqueada:
+    """Una cuenta llegó a 3 intentos fallidos consecutivos y se bloqueó (RF-19).
+
+    Puede ser el flujo de login o el de cambio de contraseña (INV-ID-10).
+    """
+
+    usuario_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)

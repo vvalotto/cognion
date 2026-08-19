@@ -2,8 +2,8 @@ import uuid
 
 import pytest
 
-from src.identidad.entities.errors import CredencialesInvalidas
-from src.identidad.entities.eventos import SesionIniciada
+from src.identidad.entities.errors import CredencialesInvalidas, CuentaBloqueadaError
+from src.identidad.entities.eventos import CuentaBloqueada, SesionIniciada
 from src.identidad.entities.usuario import Usuario
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -101,3 +101,70 @@ class TestIniciarSesionUseCase:
             await use_case.execute("no-existe@fiuner.edu.ar", "cualquier-password")
 
         assert str(exc_password.value) == str(exc_email.value)
+
+
+class TestBloqueoCuentaLogin:
+    """US-2.2.1: bloqueo automático por 3 intentos fallidos consecutivos de login."""
+
+    def _crear_usuario(self, hasher: FakePasswordHasher, **overrides: object) -> Usuario:
+        usuario = Usuario.crear(
+            "Docente", "docente@fiuner.edu.ar", hasher.hash("Docente#2026"), TipoPerfil.DOCENTE
+        )
+        for campo, valor in overrides.items():
+            setattr(usuario, campo, valor)
+        return usuario
+
+    async def test_fallo_que_no_llega_al_limite(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher, intentos_fallidos_login=1)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        with pytest.raises(CredencialesInvalidas) as exc:
+            await use_case.execute("docente@fiuner.edu.ar", "password-incorrecta")
+
+        actualizado = usuario_repo.usuarios[usuario.id]
+        assert actualizado.intentos_fallidos_login == 2
+        assert actualizado.bloqueada is False
+        assert exc.value.evento_cuenta_bloqueada is None
+
+    async def test_tercer_fallo_consecutivo_bloquea_la_cuenta(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher, intentos_fallidos_login=2)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        with pytest.raises(CredencialesInvalidas) as exc:
+            await use_case.execute("docente@fiuner.edu.ar", "password-incorrecta")
+
+        actualizado = usuario_repo.usuarios[usuario.id]
+        assert actualizado.intentos_fallidos_login == 3
+        assert actualizado.bloqueada is True
+        assert isinstance(exc.value.evento_cuenta_bloqueada, CuentaBloqueada)
+        assert exc.value.evento_cuenta_bloqueada.usuario_id == usuario.id
+
+    async def test_acierto_resetea_el_contador(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher, intentos_fallidos_login=2)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        await use_case.execute("docente@fiuner.edu.ar", "Docente#2026")
+
+        assert usuario_repo.usuarios[usuario.id].intentos_fallidos_login == 0
+
+    async def test_intento_sobre_cuenta_ya_bloqueada(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher, bloqueada=True, intentos_fallidos_login=3)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        with pytest.raises(CuentaBloqueadaError) as exc:
+            await use_case.execute("docente@fiuner.edu.ar", "cualquier-password")
+
+        assert exc.value.usuario_id == usuario.id
+        assert usuario_repo.usuarios[usuario.id].intentos_fallidos_login == 3

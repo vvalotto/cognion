@@ -1,0 +1,27 @@
+{
+  "us_id": "US-2.2.1",
+  "fecha": "2026-08-19T00:00:00Z",
+  "componente": "src/identidad",
+  "metricas": {
+    "pylint": 9.51,
+    "cc_max": 6,
+    "mi_min": 53.50,
+    "mi_promedio": 91.85,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Pylint acotado a los 8 archivos de src/identidad modificados/agregados por esta US: 9.51/10.",
+    "W2301 (unnecessary-ellipsis) en usuario_repository_port.py: deuda preexistente en las 4 firmas de método ya presentes antes de esta US (verificado contra develop); el método nuevo `actualizar()` repite el mismo patrón de la interfaz existente, no se introduce una convención distinta.",
+    "R0902 (too-many-instance-attributes, 8/7) en Usuario: introducido por esta US al agregar `bloqueada`, `intentos_fallidos_login`, `intentos_fallidos_password` — aceptado, son atributos de estado del aggregate, no candidatos a extraerse sin perder cohesión.",
+    "C0301 (line-too-long) en models.py:59 (EstudianteModel): preexistente, línea no tocada por esta US.",
+    "CC/MI medidos sobre src/identidad completo, según convención del proyecto — CC máx 6 (comision_repository.actualizar, preexistente), MI mín 53.50.",
+    "Coverage 99% sobre src/identidad (frameworks/* excluido por [tool.coverage.run] omit). La única línea sin cubrir es el guard defensivo `if usuario_model is None: return` en SQLAlchemyUsuarioRepository.actualizar() — no alcanzable en los flujos actuales (el use case siempre llama actualizar() sobre un usuario recién obtenido en la misma transacción)."
+  ]
+}

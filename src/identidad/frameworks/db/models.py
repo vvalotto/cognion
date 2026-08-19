@@ -5,7 +5,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, ForeignKey, String, Table
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,6 +30,9 @@ class UsuarioModel(Base):
     nombre: Mapped[str] = mapped_column(String(200), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    bloqueada: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    intentos_fallidos_login: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    intentos_fallidos_password: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
 
 class AdministradorModel(Base):
