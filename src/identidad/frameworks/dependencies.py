@@ -36,6 +36,7 @@ from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
+from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -107,7 +108,8 @@ def get_jwt_issuer() -> JWTIssuerPort:
 def get_cuentas_controller(session: SessionDep) -> CuentasController:
     """Arma el `CuentasController` con sus dependencias concretas."""
     cuenta_query = SQLAlchemyCuentaQueryRepository(session)
-    return CuentasController(ListarCuentasUseCase(cuenta_query))
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    return CuentasController(ListarCuentasUseCase(cuenta_query), ObtenerCuentaUseCase(usuario_repo))
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:

@@ -1,0 +1,28 @@
+{
+  "us_id": "US-2.2.3",
+  "fecha": "2026-08-19T00:00:00Z",
+  "componente": "src/identidad",
+  "metricas": {
+    "pylint": 9.76,
+    "cc_max": 7,
+    "mi_min": 48.87,
+    "mi_promedio": 90.60,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Pylint acotado a los 9 archivos de src/identidad modificados/agregados por esta US: 9.76/10.",
+    "R0902 (too-many-instance-attributes, 9/7) en Usuario: sube de 8/7 (US-2.2.1) a 9/7 al agregar creado_en — mismo criterio aceptado, es un atributo de estado del aggregate.",
+    "C0301 (line-too-long) en models.py:60 (EstudianteModel): deuda preexistente, línea no tocada por esta US (ya documentada en US-2.2.1).",
+    "R0903 (too-few-public-methods) en ObtenerCuentaUseCase: mismo patrón aceptado en el resto de los use cases de una sola responsabilidad.",
+    "Pre-push gate: 0 CRITICAL — no se repitió el CBO CRITICAL de US-2.2.2 porque CuentasController pasó de 1 a 2 métodos (lejos del umbral) y ObtenerCuentaUseCase reutiliza SQLAlchemyUsuarioRepository.obtener_por_id() ya existente, sin acoplar tipos nuevos al gateway.",
+    "CC/MI medidos sobre src/identidad completo — CC máx 7 (SQLAlchemyCuentaQueryRepository.listar, preexistente de US-2.2.2), MI mín 48.87.",
+    "Coverage 99% sobre src/identidad. Únicas líneas no cubiertas: el guard defensivo preexistente de actualizar() (US-2.2.1) y el bucle de SQLAlchemyCuentaQueryRepository.listar() (artefacto de instrumentación de coverage.py con bucles async post-await, ya documentado en US-2.2.2 — verificado funcionalmente correcto)."
+  ]
+}

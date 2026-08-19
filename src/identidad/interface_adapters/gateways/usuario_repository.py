@@ -59,6 +59,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
                 nombre=usuario.nombre,
                 email=usuario.email,
                 password_hash=usuario.password_hash,
+                creado_en=usuario.creado_en,
             )
         )
         # Flush intermedio: no hay `relationship()` declarada entre UsuarioModel y los
@@ -119,6 +120,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
             bloqueada=usuario_model.bloqueada,
             intentos_fallidos_login=usuario_model.intentos_fallidos_login,
             intentos_fallidos_password=usuario_model.intentos_fallidos_password,
+            creado_en=usuario_model.creado_en,
         )
 
     async def _resolver_perfil(self, usuario_id: UUID) -> Perfil | None:

@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from src.shared.entities.tipo_perfil import TipoPerfil
+
+
+def _ahora() -> datetime:
+    """Devuelve el instante actual en UTC."""
+    return datetime.now(UTC)
 
 
 @dataclass(frozen=True)
@@ -45,6 +51,7 @@ class Usuario:
     bloqueada: bool = False
     intentos_fallidos_login: int = 0
     intentos_fallidos_password: int = 0
+    creado_en: datetime = field(default_factory=_ahora)
 
     @property
     def tipo_perfil(self) -> TipoPerfil:
