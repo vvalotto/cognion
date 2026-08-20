@@ -61,7 +61,9 @@ async def _crear_usuario_con_estado(*, bloqueada: bool) -> uuid.UUID:
     async with SessionLocal() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         email = f"docente.bdd224.{uuid.uuid4()}@fiuner.edu.ar"
-        usuario = Usuario.crear("Docente BDD", email, hasher.hash("claveVieja1"), TipoPerfil.DOCENTE)
+        usuario = Usuario.crear(
+            "Docente BDD", email, hasher.hash("claveVieja1"), TipoPerfil.DOCENTE
+        )
         await repo.guardar(usuario)
         usuario.bloqueada = bloqueada
         usuario.intentos_fallidos_login = 3 if bloqueada else 0

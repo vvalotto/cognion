@@ -244,7 +244,9 @@ class TestResetearPasswordAPIIntegration:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         hasher = BcryptPasswordHasher()
         email = f"login.reseteo.{uuid.uuid4()}@fiuner.edu.ar"
-        usuario = Usuario.crear("Login Reseteo", email, hasher.hash("claveVieja1"), TipoPerfil.DOCENTE)
+        usuario = Usuario.crear(
+            "Login Reseteo", email, hasher.hash("claveVieja1"), TipoPerfil.DOCENTE
+        )
         await usuario_repo.guardar(usuario)
 
         transport = ASGITransport(app=app)
