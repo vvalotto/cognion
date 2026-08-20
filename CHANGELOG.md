@@ -10,6 +10,19 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.2.7] Administrador ve el detalle de una cuenta y resetea/desbloquea — frontend puro,
+  sin cambios de backend
+  - `frontend/src/lib/cuentas-api.ts` (extendido) — `obtenerCuenta(id)`,
+    `resetearPassword(id, passwordNueva)`, mapeo snake_case↔camelCase para `CuentaDetalleResponse`
+  - `frontend/src/pages/CuentaDetalle.tsx` (nuevo) — reemplaza el placeholder de `US-2.2.6`;
+    alerta de bloqueo, datos de la cuenta, botón único "Resetear contraseña y desbloquear"
+  - `frontend/src/pages/ResetearPassword.tsx` (nuevo) — formulario con validación de cliente
+    (≥8 caracteres, coincidencia), "Resetear contraseña"/"Cancelar"
+  - `frontend/src/pages/CuentaReseteada.tsx` (nuevo) — confirmación de éxito
+  - `/cuentas/:usuarioId/resetear-password` y `/cuentas/:usuarioId/reseteada` en `router.tsx`,
+    protegidas con `RequireRole rol="administrador"`
+  - 16 tests nuevos + 3 escenarios BDD (validados con Vitest, sin pytest-bdd) — 134/134 tests
+    frontend en verde, oxlint 0 errores, `tsc --noEmit` 0 errores
 - [US-2.2.6] Administrador ve y filtra el listado de cuentas — frontend puro, sin cambios de
   backend
   - `frontend/src/lib/cuentas-api.ts` (nuevo) — `listarCuentas(filtros)`, reutiliza el tipo
