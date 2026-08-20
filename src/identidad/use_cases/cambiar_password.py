@@ -37,8 +37,9 @@ class CambiarPasswordUseCase:
 
         Lanza `UsuarioNoExiste` si la cuenta no existe, `CuentaBloqueadaError` sin verificar
         nada si ya está bloqueada, `PasswordActualIncorrecta` si `password_actual` no
-        verifica (con `evento_cuenta_bloqueada` si este fallo llega al 3er consecutivo) y
-        `PasswordDemasiadoCorta` si `password_nueva` no cumple INV-ID-11.
+        verifica (con `intentos_restantes` siempre fijado, y `evento_cuenta_bloqueada` si
+        este fallo llega al 3er consecutivo) y `PasswordDemasiadoCorta` si `password_nueva`
+        no cumple INV-ID-11.
         """
         usuario = await self._usuario_repositorio.obtener_por_id(usuario_id)
         if usuario is None:
@@ -50,6 +51,7 @@ class CambiarPasswordUseCase:
         if not self._hasher.verificar(password_actual, usuario.password_hash):
             bloqueada_ahora = usuario.registrar_fallo_cambio_password()
             exc = PasswordActualIncorrecta()
+            exc.intentos_restantes = usuario.intentos_restantes_cambio_password()
             if bloqueada_ahora:
                 exc.evento_cuenta_bloqueada = CuentaBloqueada(usuario_id=usuario.id)
             await self._usuario_repositorio.actualizar(usuario)

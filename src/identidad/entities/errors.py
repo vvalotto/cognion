@@ -130,9 +130,12 @@ class PasswordActualIncorrecta(Exception):
 
     Cuando el fallo es el 3er intento consecutivo de este flujo, `evento_cuenta_bloqueada`
     lleva el evento `CuentaBloqueada` emitido junto con el rechazo (INV-ID-10).
+    `intentos_restantes` lo fija el caller tras registrar el fallo — expuesto por la API
+    (`US-2.2.8`) para que la UI muestre cuántos intentos quedan antes del bloqueo.
     """
 
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos del intento fallido."""
         self.evento_cuenta_bloqueada: CuentaBloqueada | None = None
+        self.intentos_restantes: int | None = None
         super().__init__("La contraseña actual es incorrecta.")
