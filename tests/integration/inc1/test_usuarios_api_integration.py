@@ -210,3 +210,123 @@ class TestObtenerCuentaAPIIntegration:
             response = await client.get(f"/usuarios/{uuid.uuid4()}")
 
         assert response.status_code == 401
+
+
+class TestResetearPasswordAPIIntegration:
+    """US-2.2.4: reseteo de contraseña de una cuenta, con desbloqueo si corresponde."""
+
+    async def test_reseteo_de_cuenta_bloqueada_la_desbloquea(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        hasher = BcryptPasswordHasher()
+        usuario = Usuario.crear(
+            "Bloqueado Reseteo",
+            f"bloqueado.reseteo.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("claveVieja1"),
+            TipoPerfil.DOCENTE,
+        )
+        usuario.bloqueada = True
+        usuario.intentos_fallidos_login = 3
+        await usuario_repo.guardar(usuario)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                f"/usuarios/{usuario.id}/resetear-password",
+                json={"password_nueva": "claveNueva123"},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["bloqueada"] is False
+
+    async def test_password_reseteada_habilita_login(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        hasher = BcryptPasswordHasher()
+        email = f"login.reseteo.{uuid.uuid4()}@fiuner.edu.ar"
+        usuario = Usuario.crear(
+            "Login Reseteo", email, hasher.hash("claveVieja1"), TipoPerfil.DOCENTE
+        )
+        await usuario_repo.guardar(usuario)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            await client.post(
+                f"/usuarios/{usuario.id}/resetear-password",
+                json={"password_nueva": "claveNueva123"},
+                headers=admin_headers,
+            )
+            response = await client.post(
+                "/identidad/login", json={"email": email, "password": "claveNueva123"}
+            )
+
+        assert response.status_code == 200
+        assert "access_token" in response.json()
+
+    async def test_reseteo_de_cuenta_activa_no_la_bloquea(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            creado = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Activa Reseteo",
+                    "email": f"activa.reseteo.{uuid.uuid4()}@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            usuario_id = creado.json()["id"]
+
+            response = await client.post(
+                f"/usuarios/{usuario_id}/resetear-password",
+                json={"password_nueva": "claveNueva123"},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 200
+        assert response.json()["bloqueada"] is False
+
+    async def test_password_demasiado_corta_devuelve_422(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            creado = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Corta Reseteo",
+                    "email": f"corta.reseteo.{uuid.uuid4()}@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            usuario_id = creado.json()["id"]
+
+            response = await client.post(
+                f"/usuarios/{usuario_id}/resetear-password",
+                json={"password_nueva": "corta"},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 422
+
+    async def test_cuenta_inexistente_devuelve_404(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                f"/usuarios/{uuid.uuid4()}/resetear-password",
+                json={"password_nueva": "claveNueva123"},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 404
+
+    async def test_requiere_rol_administrador(self):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                f"/usuarios/{uuid.uuid4()}/resetear-password",
+                json={"password_nueva": "claveNueva123"},
+            )
+
+        assert response.status_code == 401

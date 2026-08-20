@@ -91,3 +91,24 @@ class CuentaBloqueada:
 
     usuario_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class PasswordReseteada:
+    """Un Administrador reseteó la contraseña de una cuenta (RF-03, `US-2.2.4`)."""
+
+    usuario_id: UUID
+    administrador_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class CuentaDesbloqueada:
+    """Una cuenta bloqueada volvió a estar activa tras un reseteo de contraseña.
+
+    Se emite junto con `PasswordReseteada` solo si la cuenta estaba `bloqueada = true`
+    (`US-2.2.4`) — no existe un comando `DesbloquearCuenta` separado.
+    """
+
+    usuario_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)

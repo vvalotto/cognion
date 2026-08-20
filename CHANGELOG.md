@@ -10,6 +10,18 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.2.4] Administrador resetea la contraseña de una cuenta, con desbloqueo incluido —
+  backend puro (RF-03)
+  - `src/identidad/entities/usuario.py` — `Usuario.validar_password_nueva()` (INV-ID-11,
+    primera vez que se enforza del lado del dominio) y `usuario.resetear_password()`
+  - `src/identidad/use_cases/resetear_password.py` (nuevo) — `ResetearPasswordUseCase`, emite
+    `PasswordReseteada` siempre y `CuentaDesbloqueada` solo si la cuenta estaba bloqueada
+  - `POST /usuarios/{id}/resetear-password` (rol `administrador`) en `cuentas_router.py` —
+    tercer método de `CuentasController`, junto a `listar_cuentas`/`obtener_cuenta`
+    (`US-2.2.2`/`US-2.2.3`)
+  - 9 tests unitarios nuevos + 5 tests de integración nuevos + 3 escenarios BDD — 329/329 tests
+    del proyecto en verde, quality gates APROBADO (pylint 9.95/10, coverage 99% en
+    `src/identidad`)
 - [US-2.1.13] Docente elimina una pregunta desde la UI, con confirmación previa — frontend
   puro, sin cambios de backend
   - `frontend/src/pages/EliminarPregunta.tsx` (nuevo) — resuelve la pregunta a eliminar con

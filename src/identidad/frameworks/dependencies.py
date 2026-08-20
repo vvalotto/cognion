@@ -38,6 +38,7 @@ from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
+from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -109,7 +110,12 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
     """Arma el `CuentasController` con sus dependencias concretas."""
     cuenta_query = SQLAlchemyCuentaQueryRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
-    return CuentasController(ListarCuentasUseCase(cuenta_query), ObtenerCuentaUseCase(usuario_repo))
+    hasher = get_password_hasher()
+    return CuentasController(
+        ListarCuentasUseCase(cuenta_query),
+        ObtenerCuentaUseCase(usuario_repo),
+        ResetearPasswordUseCase(usuario_repo, hasher),
+    )
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:

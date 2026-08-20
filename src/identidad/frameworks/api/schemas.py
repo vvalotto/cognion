@@ -50,6 +50,12 @@ class CuentaDetalleResponse(BaseModel):
     comision_id: UUID | None
 
 
+class ResetearPasswordRequest(BaseModel):
+    """Body de la request de reseteo de contraseña de una cuenta (`US-2.2.4`)."""
+
+    password_nueva: str = Field(..., min_length=8)
+
+
 class CrearComisionRequest(BaseModel):
     """Body de la request de alta de comisión."""
 
