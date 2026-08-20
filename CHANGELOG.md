@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.2.8] Cualquier usuario autenticado cambia su propia contraseña — accesible a los tres
+  roles, sin `RequireRole`
+  - Backend (extensión mínima sobre `US-2.2.5`, gap detectado en Fase 2): `PUT
+    /usuarios/me/password` expone `intentos_restantes` (401) o `bloqueada` (401/403) en el
+    `detail` del error, en vez de un string genérico — `Usuario.intentos_restantes_cambio_password()`,
+    `PasswordActualIncorrecta.intentos_restantes`; sin cambio de status codes existentes
+  - `frontend/src/lib/api-client.ts` (extendido) — `ApiError.detail`, opción
+    `handleUnauthorized` en `apiFetch` para que un 401 puntual (contraseña actual incorrecta)
+    no dispare el logout global
+  - `frontend/src/lib/cuentas-api.ts` (extendido) — `cambiarPassword(passwordActual,
+    passwordNueva)`, `CambiarPasswordError`
+  - `frontend/src/pages/CambiarPassword.tsx` (nuevo) — un solo componente con los 3 estados
+    del wireframe (formulario/error/éxito), sin ruta separada para el error
+  - `/mi-cuenta/cambiar-password` en `router.tsx`
+  - 15 tests nuevos (3 backend + 12 frontend) + 3 escenarios BDD (validados con Vitest, sin
+    pytest-bdd) — 357/357 tests backend, 145/145 tests frontend, oxlint 0 errores,
+    `tsc --noEmit` 0 errores
 - [US-2.2.7] Administrador ve el detalle de una cuenta y resetea/desbloquea — frontend puro,
   sin cambios de backend
   - `frontend/src/lib/cuentas-api.ts` (extendido) — `obtenerCuenta(id)`,

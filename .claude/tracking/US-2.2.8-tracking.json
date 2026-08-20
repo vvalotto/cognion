@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "us_id": "US-2.2.8",
+    "us_title": "Cualquier usuario autenticado cambia su propia contraseña (UI)",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-20T20:50:22.465243+00:00",
+    "completed_at": "2026-08-20T22:03:21.985622+00:00",
+    "total_elapsed_seconds": 4379,
+    "effective_seconds": 4379,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Investigacion y verificacion de contexto",
+      "started_at": "2026-08-20T20:50:28.260992+00:00",
+      "completed_at": "2026-08-20T20:51:30.749360+00:00",
+      "elapsed_seconds": 62,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-20T20:51:35.534595+00:00",
+      "completed_at": "2026-08-20T21:07:46.124593+00:00",
+      "elapsed_seconds": 970,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-20T21:07:55.386412+00:00",
+      "completed_at": "2026-08-20T21:17:28.813581+00:00",
+      "elapsed_seconds": 573,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-20T21:17:33.457280+00:00",
+      "completed_at": "2026-08-20T21:30:45.365926+00:00",
+      "elapsed_seconds": 791,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Usuario.intentos_restantes_cambio_password",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T21:17:36.042657+00:00",
+          "completed_at": "2026-08-20T21:17:49.881339+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -4.78,
+          "file_created": "src/identidad/entities/usuario.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "PasswordActualIncorrecta.intentos_restantes",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T21:17:52.044384+00:00",
+          "completed_at": "2026-08-20T21:18:05.827565+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -4.78,
+          "file_created": "src/identidad/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "cambiar_password.py fija intentos_restantes",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T21:18:08.037925+00:00",
+          "completed_at": "2026-08-20T21:18:46.707594+00:00",
+          "elapsed_seconds": 38,
+          "actual_minutes": 0.63,
+          "variance_minutes": -4.37,
+          "file_created": "src/identidad/use_cases/cambiar_password.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "perfil_router.py detail estructurado",
+          "task_type": "backend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-08-20T21:18:48.993667+00:00",
+          "completed_at": "2026-08-20T21:20:44.347709+00:00",
+          "elapsed_seconds": 115,
+          "actual_minutes": 1.92,
+          "variance_minutes": -6.08,
+          "file_created": "src/identidad/frameworks/api/perfil_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "api-client.ts ApiError.detail + handleUnauthorized",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T21:22:16.170696+00:00",
+          "completed_at": "2026-08-20T21:23:14.043863+00:00",
+          "elapsed_seconds": 57,
+          "actual_minutes": 0.95,
+          "variance_minutes": -9.05,
+          "file_created": "frontend/src/lib/api-client.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "cuentas-api.ts cambiarPassword",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T21:23:28.479567+00:00",
+          "completed_at": "2026-08-20T21:24:54.967264+00:00",
+          "elapsed_seconds": 86,
+          "actual_minutes": 1.43,
+          "variance_minutes": -8.57,
+          "file_created": "frontend/src/lib/cuentas-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "CambiarPassword.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-20T21:25:22.128129+00:00",
+          "completed_at": "2026-08-20T21:26:17.951441+00:00",
+          "elapsed_seconds": 55,
+          "actual_minutes": 0.92,
+          "variance_minutes": -19.08,
+          "file_created": "frontend/src/pages/CambiarPassword.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "router.tsx ruta cambiar-password",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T21:26:22.931554+00:00",
+          "completed_at": "2026-08-20T21:27:10.315044+00:00",
+          "elapsed_seconds": 47,
+          "actual_minutes": 0.78,
+          "variance_minutes": -4.22,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-20T21:30:53.659455+00:00",
+      "completed_at": "2026-08-20T21:39:23.930955+00:00",
+      "elapsed_seconds": 510,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-20T21:39:31.590470+00:00",
+      "completed_at": "2026-08-20T21:41:16.645905+00:00",
+      "elapsed_seconds": 105,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-20T21:41:20.640500+00:00",
+      "completed_at": "2026-08-20T21:43:50.235972+00:00",
+      "elapsed_seconds": 149,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-20T21:44:15.941491+00:00",
+      "completed_at": "2026-08-20T21:57:19.322428+00:00",
+      "elapsed_seconds": 783,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-20T21:57:29.073202+00:00",
+      "completed_at": "2026-08-20T22:02:38.781479+00:00",
+      "elapsed_seconds": 309,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-20T22:02:43.165871+00:00",
+      "completed_at": "2026-08-20T22:03:21.850844+00:00",
+      "elapsed_seconds": 38,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 10,
+    "estimated_total_minutes": 68.0,
+    "actual_total_minutes": 7.07,
+    "variance_minutes": -60.93,
+    "variance_percent": -89.61
+  }
+}

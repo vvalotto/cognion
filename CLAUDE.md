@@ -217,13 +217,37 @@ vez que se enforza del lado del dominio, reutilizable por `US-2.2.5`) y
 dependa del hasher; `ResetearPasswordUseCase` es el tercer método inyectado en
 `CuentasController` sin llegar a CRITICAL de CBO. 329/329 tests, quality gates APROBADO.
 
-**Próximo paso:** `US-2.2.5` (Usuario autenticado cambia su propia contraseña, Issue #100,
-`docs/specs/inc2/US-2.2.5.md`) — última US backend de la Iteración 2, reutiliza
-`Usuario.validar_password_nueva()` de `US-2.2.4` y el contador propio
-`intentos_fallidos_password` de `US-2.2.1`. Cierra el backend de la Iteración 2; después sigue
-el frontend (`US-2.2.6` a `US-2.2.9`, Issues #101–#104 ya abiertos) antes de evaluar UAT y
-cierre de baseline (`BL-003`) — la Baseline no cierra backend-only, mismo criterio que
-`BL-002`.
+**US-2.2.5 (Usuario autenticado cambia su propia contraseña) cerrada 2026-08-20**, PR #106
+mergeado a `develop`, Issue #100 cerrado: reutiliza `Usuario.validar_password_nueva()` de
+`US-2.2.4` y el contador propio `intentos_fallidos_password` de `US-2.2.1`. Cierra completo
+el backend de la Iteración 2.
+**US-2.2.6 (Administrador ve y filtra el listado de cuentas — UI) cerrada 2026-08-20**, PR
+#107 mergeado a `develop`, Issue #101 cerrado: consume `GET /usuarios?filtros` (`US-2.2.2`).
+**US-2.2.7 (Administrador ve el detalle de una cuenta y resetea/desbloquea — UI) cerrada
+2026-08-20**, PR #108 mergeado a `develop`, Issue #102 cerrado: consume `GET /usuarios/{id}`
+(`US-2.2.3`) y `POST /usuarios/{id}/resetear-password` (`US-2.2.4`).
+
+**US-2.2.8 (Cualquier usuario autenticado cambia su propia contraseña — UI) cerrada
+2026-08-20**, branch `feature/US-2.2.8-cambiar-password-ui`, Issue #103: consume `PUT
+/usuarios/me/password` (`US-2.2.5`), pantalla accesible a los tres roles, sin `RequireRole`.
+**Gap detectado en Fase 2** (antes de escribir código): la spec asumía que el backend exponía
+`intentos_fallidos_password` en el error — no era así (`detail` string genérico). Decisión de
+Víctor: extender el backend (`Usuario.intentos_restantes_cambio_password()`,
+`PasswordActualIncorrecta.intentos_restantes`, `perfil_router.py`), manteniendo los status
+codes 401/403 ya testeados por `US-2.2.5` — el `detail` pasa de string a objeto estructurado.
+**Ajuste detectado en Fase 3** (al correr la suite de `US-2.2.5` antes de dar por cerrado el
+plan): el plan original proponía 403 para el 3er fallo consecutivo, pero
+`test_us_2_2_5_steps.py` ya afirmaba 401 en ese caso — corregido antes de tocar tests
+existentes. Segundo hallazgo de diseño: el interceptor global de 401 de `api-client.ts`
+(limpia sesión, navega a `/login`) rompía el criterio "no requiere volver a iniciar sesión" —
+resuelto con una opción `handleUnauthorized: false` en `apiFetch`, sin cambiar ningún caller
+existente. 357/357 tests backend, 145/145 tests frontend, quality gates APROBADO
+(`quality/reports/inc2/US-2.2.8-quality.json`), pre-push gate (DesignReviewer) 0 CRITICAL.
+
+**Próximo paso:** `US-2.2.9` (Login refleja el estado de cuenta bloqueada — UI, Issue #104,
+`docs/specs/inc2/US-2.2.9.md`) — extiende `POST /auth/login` (`US-2.2.1`), última US de la
+Iteración 2. Después evaluar UAT y cierre de baseline (`BL-003`) — la Baseline no cierra
+backend-only, mismo criterio que `BL-002`.
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
