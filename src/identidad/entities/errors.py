@@ -123,3 +123,16 @@ class PasswordDemasiadoCorta(Exception):
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos de la contraseña rechazada."""
         super().__init__("La contraseña debe tener al menos 8 caracteres.")
+
+
+class PasswordActualIncorrecta(Exception):
+    """La contraseña actual provista no verifica contra el hash guardado (`US-2.2.5`).
+
+    Cuando el fallo es el 3er intento consecutivo de este flujo, `evento_cuenta_bloqueada`
+    lleva el evento `CuentaBloqueada` emitido junto con el rechazo (INV-ID-10).
+    """
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción, sin datos del intento fallido."""
+        self.evento_cuenta_bloqueada: CuentaBloqueada | None = None
+        super().__init__("La contraseña actual es incorrecta.")

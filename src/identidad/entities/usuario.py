@@ -10,6 +10,7 @@ from src.identidad.entities.errors import PasswordDemasiadoCorta
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 _LARGO_MINIMO_PASSWORD = 8
+_INTENTOS_MAXIMOS_CAMBIO_PASSWORD = 3
 
 
 def _ahora() -> datetime:
@@ -112,6 +113,28 @@ class Usuario:
         self.intentos_fallidos_login = 0
         self.intentos_fallidos_password = 0
         return estaba_bloqueada
+
+    def cambiar_password(self, password_hash_nuevo: str) -> None:
+        """Fija `password_hash_nuevo` y resetea `intentos_fallidos_password` a 0.
+
+        Se usa tras verificar la contraseña actual y validar la nueva (`US-2.2.5`) — no toca
+        `bloqueada` ni `intentos_fallidos_login`, contadores independientes de este flujo.
+        """
+        self.password_hash = password_hash_nuevo
+        self.intentos_fallidos_password = 0
+
+    def registrar_fallo_cambio_password(self) -> bool:
+        """Registra un intento fallido de cambio de la propia contraseña (INV-ID-10).
+
+        Incrementa `intentos_fallidos_password`; al 3er fallo consecutivo bloquea la cuenta.
+        Devuelve `True` si este fallo bloqueó la cuenta (el llamador decide si corresponde
+        emitir `CuentaBloqueada`).
+        """
+        self.intentos_fallidos_password += 1
+        if self.intentos_fallidos_password >= _INTENTOS_MAXIMOS_CAMBIO_PASSWORD:
+            self.bloqueada = True
+            return True
+        return False
 
     @staticmethod
     def crear_estudiante(nombre: str, email: str, password_hash: str, comision_id: UUID) -> Usuario:

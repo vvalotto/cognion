@@ -101,3 +101,58 @@ class TestUsuarioResetearPassword:
 
         assert usuario.bloqueada is False
         assert usuario.intentos_fallidos_login == 0
+
+
+class TestUsuarioCambiarPassword:
+    def test_actualiza_el_hash(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash-viejo", TipoPerfil.DOCENTE)
+
+        usuario.cambiar_password("hash-nuevo")
+
+        assert usuario.password_hash == "hash-nuevo"
+
+    def test_resetea_intentos_fallidos_password(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_password = 2
+
+        usuario.cambiar_password("hash-nuevo")
+
+        assert usuario.intentos_fallidos_password == 0
+
+    def test_no_toca_intentos_fallidos_login_ni_bloqueada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_login = 1
+
+        usuario.cambiar_password("hash-nuevo")
+
+        assert usuario.intentos_fallidos_login == 1
+        assert usuario.bloqueada is False
+
+
+class TestUsuarioRegistrarFalloCambioPassword:
+    def test_incrementa_el_contador(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+
+        usuario.registrar_fallo_cambio_password()
+
+        assert usuario.intentos_fallidos_password == 1
+        assert usuario.bloqueada is False
+
+    def test_no_bloquea_antes_del_tercer_fallo(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_password = 1
+
+        resultado = usuario.registrar_fallo_cambio_password()
+
+        assert resultado is False
+        assert usuario.bloqueada is False
+
+    def test_tercer_fallo_bloquea_y_devuelve_true(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_password = 2
+
+        resultado = usuario.registrar_fallo_cambio_password()
+
+        assert resultado is True
+        assert usuario.bloqueada is True
+        assert usuario.intentos_fallidos_password == 3
