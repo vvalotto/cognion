@@ -227,4 +227,35 @@ describe("router (integración)", () => {
     // real, o el que todavía esté pendiente termina pegándole a la red real.
     await vi.waitFor(() => expect(fetch).toHaveBeenCalledTimes(3))
   })
+
+  it("la ruta /cuentas muestra acceso denegado con sesión de rol distinto de administrador", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/cuentas")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /cuentas renderiza el listado de cuentas con sesión de administrador", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, [
+        { id: "u1", nombre: "Ana", email: "ana@fiuner.edu.ar", perfil: "docente", bloqueada: false },
+      ]),
+    )
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/cuentas")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Cuentas" })).toBeInTheDocument()
+    expect(await screen.findByText("Ana")).toBeInTheDocument()
+  })
+
+  it("la ruta /cuentas/:usuarioId renderiza el placeholder de detalle con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/cuentas/u1")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText(/Detalle de cuenta/)).toBeInTheDocument()
+  })
 })
