@@ -5,8 +5,10 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
-import { CuentaDetallePlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
+import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Banco } from "@/pages/Banco"
+import { CuentaDetalle } from "@/pages/CuentaDetalle"
+import { CuentaReseteada } from "@/pages/CuentaReseteada"
 import { Cuentas } from "@/pages/Cuentas"
 import { EditarPregunta } from "@/pages/EditarPregunta"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
@@ -19,6 +21,7 @@ import { NuevaPreguntaVerdaderoFalso } from "@/pages/NuevaPreguntaVerdaderoFalso
 import { Registro } from "@/pages/Registro"
 import { RegistroError } from "@/pages/RegistroError"
 import { RegistroExito } from "@/pages/RegistroExito"
+import { ResetearPassword } from "@/pages/ResetearPassword"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -133,7 +136,23 @@ export const router = createBrowserRouter([
         path: "/cuentas/:usuarioId",
         element: (
           <RequireRole rol="administrador">
-            <CuentaDetallePlaceholder />
+            <CuentaDetalle />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/cuentas/:usuarioId/resetear-password",
+        element: (
+          <RequireRole rol="administrador">
+            <ResetearPassword />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/cuentas/:usuarioId/reseteada",
+        element: (
+          <RequireRole rol="administrador">
+            <CuentaReseteada />
           </RequireRole>
         ),
       },

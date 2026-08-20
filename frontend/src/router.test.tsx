@@ -251,11 +251,51 @@ describe("router (integración)", () => {
     expect(await screen.findByText("Ana")).toBeInTheDocument()
   })
 
-  it("la ruta /cuentas/:usuarioId renderiza el placeholder de detalle con sesión de administrador", async () => {
+  it("la ruta /cuentas/:usuarioId renderiza el detalle de cuenta con sesión de administrador", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        id: "u1",
+        nombre: "Ana",
+        email: "ana@fiuner.edu.ar",
+        perfil: "docente",
+        bloqueada: false,
+        creado_en: "2026-08-01T10:00:00Z",
+        comision_id: null,
+      }),
+    )
     setSession({ token: "t", rol: "administrador" })
     await router.navigate("/cuentas/u1")
     render(<RouterProvider router={router} />)
 
-    expect(await screen.findByText(/Detalle de cuenta/)).toBeInTheDocument()
+    expect(await screen.findByRole("heading", { name: "Ana" })).toBeInTheDocument()
+  })
+
+  it("la ruta /cuentas/:usuarioId/resetear-password renderiza el formulario de reseteo con sesión de administrador", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        id: "u1",
+        nombre: "Ana",
+        email: "ana@fiuner.edu.ar",
+        perfil: "docente",
+        bloqueada: true,
+        creado_en: "2026-08-01T10:00:00Z",
+        comision_id: null,
+      }),
+    )
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/cuentas/u1/resetear-password")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Resetear contraseña" })).toBeInTheDocument()
+  })
+
+  it("la ruta /cuentas/:usuarioId/reseteada renderiza la confirmación con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/cuentas/u1/reseteada")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Contraseña reseteada" })).toBeInTheDocument()
   })
 })

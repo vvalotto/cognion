@@ -4,7 +4,7 @@ vi.mock("@/router", () => ({
   router: { navigate: vi.fn() },
 }))
 
-import { listarCuentas } from "@/lib/cuentas-api"
+import { listarCuentas, obtenerCuenta, resetearPassword } from "@/lib/cuentas-api"
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -67,6 +67,75 @@ describe("cuentas-api", () => {
       const resultado = await listarCuentas()
 
       expect(resultado).toEqual(cuentas)
+    })
+  })
+
+  describe("obtenerCuenta", () => {
+    it("hace GET /usuarios/{id} y mapea snake_case a camelCase", async () => {
+      const cuentaApi = {
+        id: "u1",
+        nombre: "Ana",
+        email: "ana@fiuner.edu.ar",
+        perfil: "docente",
+        bloqueada: false,
+        creado_en: "2026-08-01T10:00:00Z",
+        comision_id: null,
+      }
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaApi))
+
+      const resultado = await obtenerCuenta("u1")
+
+      const [url] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toMatch(/\/usuarios\/u1$/)
+      expect(resultado).toEqual({
+        id: "u1",
+        nombre: "Ana",
+        email: "ana@fiuner.edu.ar",
+        perfil: "docente",
+        bloqueada: false,
+        creadoEn: "2026-08-01T10:00:00Z",
+        comisionId: null,
+      })
+    })
+
+    it("mapea comision_id cuando la cuenta es de un Estudiante", async () => {
+      const cuentaApi = {
+        id: "u2",
+        nombre: "Luis",
+        email: "luis@fiuner.edu.ar",
+        perfil: "estudiante",
+        bloqueada: true,
+        creado_en: "2026-08-01T10:00:00Z",
+        comision_id: "c1",
+      }
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaApi))
+
+      const resultado = await obtenerCuenta("u2")
+
+      expect(resultado.comisionId).toBe("c1")
+    })
+  })
+
+  describe("resetearPassword", () => {
+    it("hace POST /usuarios/{id}/resetear-password con la contraseña nueva", async () => {
+      const cuentaApi = {
+        id: "u1",
+        nombre: "Ana",
+        email: "ana@fiuner.edu.ar",
+        perfil: "docente",
+        bloqueada: false,
+        creado_en: "2026-08-01T10:00:00Z",
+        comision_id: null,
+      }
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaApi))
+
+      const resultado = await resetearPassword("u1", "nuevaPassword123")
+
+      const [url, options] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toMatch(/\/usuarios\/u1\/resetear-password$/)
+      expect(options?.method).toBe("POST")
+      expect(JSON.parse(String(options?.body))).toEqual({ password_nueva: "nuevaPassword123" })
+      expect(resultado.bloqueada).toBe(false)
     })
   })
 })
