@@ -6,11 +6,16 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.identidad.entities.errors import UsuarioNoExiste
-from src.identidad.entities.usuario import Estudiante
-from src.identidad.frameworks.api.schemas import CuentaDetalleResponse, CuentaResponse
+from src.identidad.entities.errors import PasswordDemasiadoCorta, UsuarioNoExiste
+from src.identidad.entities.usuario import Estudiante, Usuario
+from src.identidad.frameworks.api.schemas import (
+    CuentaDetalleResponse,
+    CuentaResponse,
+    ResetearPasswordRequest,
+)
 from src.identidad.frameworks.dependencies import get_cuentas_controller, require_administrador
 from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
+from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 router = APIRouter(prefix="/usuarios", tags=["identidad"])
@@ -56,6 +61,39 @@ async def obtener_cuenta(
     except UsuarioNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
+    return _a_detalle_response(usuario)
+
+
+@router.post(
+    "/{usuario_id}/resetear-password",
+    response_model=CuentaDetalleResponse,
+)
+async def resetear_password(
+    usuario_id: UUID,
+    body: ResetearPasswordRequest,
+    administrador: JWTPayload = Depends(require_administrador),
+    controller: CuentasController = Depends(get_cuentas_controller),
+) -> CuentaDetalleResponse:
+    """Resetea la contraseña de una cuenta y la desbloquea si estaba bloqueada.
+
+    Responde 404 si la cuenta no existe, 422 si la contraseña no cumple INV-ID-11.
+    """
+    try:
+        usuario = await controller.resetear_password(
+            usuario_id, body.password_nueva, administrador.usuario_id
+        )
+    except UsuarioNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except PasswordDemasiadoCorta as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_detalle_response(usuario)
+
+
+def _a_detalle_response(usuario: Usuario) -> CuentaDetalleResponse:
+    """Arma el `CuentaDetalleResponse` a partir de un `Usuario`, resolviendo `comision_id`."""
     comision_id = usuario.perfil.comision_id if isinstance(usuario.perfil, Estudiante) else None
     return CuentaDetalleResponse(
         id=usuario.id,

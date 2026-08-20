@@ -115,3 +115,11 @@ class UsuarioNoExiste(Exception):
         """Guarda el id del usuario en conflicto y arma el mensaje de la excepción."""
         self.usuario_id = usuario_id
         super().__init__(f"El usuario '{usuario_id}' no existe.")
+
+
+class PasswordDemasiadoCorta(Exception):
+    """La contraseña nueva no cumple el mínimo de 8 caracteres (INV-ID-11)."""
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción, sin datos de la contraseña rechazada."""
+        super().__init__("La contraseña debe tener al menos 8 caracteres.")

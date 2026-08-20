@@ -6,7 +6,10 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
+from src.identidad.entities.errors import PasswordDemasiadoCorta
 from src.shared.entities.tipo_perfil import TipoPerfil
+
+_LARGO_MINIMO_PASSWORD = 8
 
 
 def _ahora() -> datetime:
@@ -86,6 +89,29 @@ class Usuario:
             password_hash=password_hash,
             perfil=perfil,
         )
+
+    @staticmethod
+    def validar_password_nueva(password_nueva: str) -> None:
+        """Valida INV-ID-11 sobre una contraseña en texto plano, antes de hashearla.
+
+        Lanza `PasswordDemasiadoCorta` si no llega al mínimo de 8 caracteres.
+        """
+        if len(password_nueva) < _LARGO_MINIMO_PASSWORD:
+            raise PasswordDemasiadoCorta()
+
+    def resetear_password(self, password_hash_nuevo: str) -> bool:
+        """Fija `password_hash_nuevo` y desbloquea la cuenta si estaba bloqueada.
+
+        Resetea `intentos_fallidos_login` e `intentos_fallidos_password` a 0 en ambos casos.
+        Devuelve `True` si la cuenta estaba bloqueada antes del reseteo (el llamador decide si
+        corresponde emitir `CuentaDesbloqueada`).
+        """
+        estaba_bloqueada = self.bloqueada
+        self.password_hash = password_hash_nuevo
+        self.bloqueada = False
+        self.intentos_fallidos_login = 0
+        self.intentos_fallidos_password = 0
+        return estaba_bloqueada
 
     @staticmethod
     def crear_estudiante(nombre: str, email: str, password_hash: str, comision_id: UUID) -> Usuario:
