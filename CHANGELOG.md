@@ -10,6 +10,16 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.2.6] Administrador ve y filtra el listado de cuentas — frontend puro, sin cambios de
+  backend
+  - `frontend/src/lib/cuentas-api.ts` (nuevo) — `listarCuentas(filtros)`, reutiliza el tipo
+    `Rol` de `session.ts`
+  - `frontend/src/pages/Cuentas.tsx` (nuevo) — tabla + filtros de rol/estado/búsqueda, fila
+    navega al detalle (`/cuentas/{id}`, placeholder hasta `US-2.2.7`)
+  - `/cuentas` y `/cuentas/:usuarioId` en `router.tsx`, protegidas con
+    `RequireRole rol="administrador"`
+  - 13 tests nuevos + 2 escenarios BDD (validados con Vitest, sin pytest-bdd) — 119/119 tests
+    frontend en verde, oxlint 0 errores, `tsc --noEmit` 0 errores
 - [US-2.2.5] Usuario autenticado cambia su propia contraseña — backend puro (RF-19)
   - `src/identidad/entities/usuario.py` — `Usuario.cambiar_password()` y
     `Usuario.registrar_fallo_cambio_password()`, contador propio `intentos_fallidos_password`

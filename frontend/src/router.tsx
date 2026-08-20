@@ -5,8 +5,9 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
-import { InicioPlaceholder } from "@/pages/_placeholders"
+import { CuentaDetallePlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
 import { Banco } from "@/pages/Banco"
+import { Cuentas } from "@/pages/Cuentas"
 import { EditarPregunta } from "@/pages/EditarPregunta"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
 import { Login } from "@/pages/Login"
@@ -117,6 +118,22 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <EliminarPregunta />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/cuentas",
+        element: (
+          <RequireRole rol="administrador">
+            <Cuentas />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/cuentas/:usuarioId",
+        element: (
+          <RequireRole rol="administrador">
+            <CuentaDetallePlaceholder />
           </RequireRole>
         ),
       },

@@ -1,0 +1,191 @@
+{
+  "metadata": {
+    "us_id": "US-2.2.6",
+    "us_title": "Administrador ve y filtra el listado de cuentas (UI)",
+    "us_points": 3,
+    "producto": "identidad",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-20T14:30:10.606998+00:00",
+    "completed_at": "2026-08-20T15:24:08.939712+00:00",
+    "total_elapsed_seconds": 3238,
+    "effective_seconds": 3238,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-20T14:30:11.002027+00:00",
+      "completed_at": "2026-08-20T14:34:01.670077+00:00",
+      "elapsed_seconds": 230,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-20T14:34:05.108293+00:00",
+      "completed_at": "2026-08-20T14:39:44.763784+00:00",
+      "elapsed_seconds": 339,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-20T14:39:44.937304+00:00",
+      "completed_at": "2026-08-20T14:41:00.809133+00:00",
+      "elapsed_seconds": 75,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-20T14:41:01.288932+00:00",
+      "completed_at": "2026-08-20T14:44:14.192975+00:00",
+      "elapsed_seconds": 192,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "lib/cuentas-api.ts",
+          "task_type": "frontend-lib",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-20T14:41:07.616652+00:00",
+          "completed_at": "2026-08-20T14:41:54.053323+00:00",
+          "elapsed_seconds": 46,
+          "actual_minutes": 0.77,
+          "variance_minutes": -14.23,
+          "file_created": "frontend/src/lib/cuentas-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "pages/Cuentas.tsx",
+          "task_type": "frontend-page",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-20T14:41:54.330030+00:00",
+          "completed_at": "2026-08-20T14:42:21.459533+00:00",
+          "elapsed_seconds": 27,
+          "actual_minutes": 0.45,
+          "variance_minutes": -24.55,
+          "file_created": "frontend/src/pages/Cuentas.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "pages/_placeholders.tsx: CuentaDetallePlaceholder",
+          "task_type": "frontend-page",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T14:42:21.579329+00:00",
+          "completed_at": "2026-08-20T14:42:49.351059+00:00",
+          "elapsed_seconds": 27,
+          "actual_minutes": 0.45,
+          "variance_minutes": -4.55,
+          "file_created": "frontend/src/pages/_placeholders.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "router.tsx: rutas /cuentas",
+          "task_type": "frontend-router",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T14:42:49.500269+00:00",
+          "completed_at": "2026-08-20T14:43:57.217385+00:00",
+          "elapsed_seconds": 67,
+          "actual_minutes": 1.12,
+          "variance_minutes": -8.88,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-20T14:44:17.989924+00:00",
+      "completed_at": "2026-08-20T14:47:07.547304+00:00",
+      "elapsed_seconds": 169,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-20T14:47:41.209576+00:00",
+      "completed_at": "2026-08-20T14:48:00.769062+00:00",
+      "elapsed_seconds": 19,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-20T14:48:00.983920+00:00",
+      "completed_at": "2026-08-20T14:48:40.685480+00:00",
+      "elapsed_seconds": 39,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-20T14:49:10.817525+00:00",
+      "completed_at": "2026-08-20T14:53:03.053394+00:00",
+      "elapsed_seconds": 232,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-20T14:53:06.037800+00:00",
+      "completed_at": "2026-08-20T14:53:42.362548+00:00",
+      "elapsed_seconds": 36,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-20T15:21:07.065858+00:00",
+      "completed_at": "2026-08-20T15:24:08.815350+00:00",
+      "elapsed_seconds": 181,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 4,
+    "completed_tasks": 4,
+    "total_phases": 10,
+    "estimated_total_minutes": 55.0,
+    "actual_total_minutes": 2.78,
+    "variance_minutes": -52.22,
+    "variance_percent": -94.94
+  }
+}

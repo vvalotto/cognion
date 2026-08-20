@@ -1,0 +1,32 @@
+{
+  "us_id": "US-2.2.6",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc2/US-2.2.6-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 1, "detalle": "warning preexistente en button.tsx, no introducido por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 24,
+        "tests": 116,
+        "passed": 116,
+        "failed": 0
+      },
+      "coverage_paginas_nuevas": {
+        "Cuentas.tsx_statements_pct": 96.0,
+        "Cuentas.tsx_branches_pct": 92.85,
+        "Cuentas.tsx_functions_pct": 91.66,
+        "cuentas-api.ts_statements_pct": 100.0,
+        "umbral_referencia_pct": 80
+      },
+      "coverage_global_pct": {
+        "statements": 92.85,
+        "branches": 86.2,
+        "functions": 91.2,
+        "lines": 94.01
+      }
+    }
+  },
+  "estado": "APROBADO"
+}
