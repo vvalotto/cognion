@@ -1,0 +1,27 @@
+{
+  "us_id": "US-2.2.4",
+  "fecha": "2026-08-20T00:00:00Z",
+  "componente": "src/identidad",
+  "metricas": {
+    "pylint": 9.95,
+    "cc_max": 7,
+    "mi_min": 48.58,
+    "mi_promedio": 90.56,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Pylint acotado a los 8 archivos de src/identidad modificados/agregados por esta US: 9.95/10.",
+    "R0902 (too-many-instance-attributes, 9/7) en Usuario: deuda preexistente, sin cambios — esta US no agregó atributos a la dataclass, solo métodos.",
+    "R0903 (too-few-public-methods) en ResetearPasswordUseCase: mismo patrón aceptado en el resto de los use cases de una sola responsabilidad (CrearUsuarioUseCase, ObtenerCuentaUseCase, etc.).",
+    "codeguard sobre los 8 archivos modificados: 0 errors, 0 warnings, 24 infos (Security/PEP8/Complexity en verde) — se corrigieron 2 E501 (line-too-long) detectados en la primera corrida de resetear_password.py.",
+    "CC/MI medidos sobre src/identidad completo — CC máx 7 (SQLAlchemyCuentaQueryRepository.listar, preexistente de US-2.2.2), MI mín 48.58 (schemas.py, preexistente).",
+    "Coverage 99% sobre src/identidad (frameworks/* excluido por [tool.coverage.run] omit). resetear_password.py: 100% cubierto. Únicas líneas no cubiertas son deuda preexistente ya documentada en US-2.2.2/US-2.2.3 (guard defensivo de actualizar() y bucle async de SQLAlchemyCuentaQueryRepository.listar())."
+  ]
+}
