@@ -18,6 +18,7 @@ from src.identidad.interface_adapters.controllers.cuentas_controller import Cuen
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
+from src.identidad.interface_adapters.controllers.perfil_controller import PerfilController
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.interface_adapters.gateways.comision_repository import (
@@ -31,6 +32,7 @@ from src.identidad.interface_adapters.gateways.invitacion_repository import (
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
+from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
@@ -116,6 +118,13 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
         ObtenerCuentaUseCase(usuario_repo),
         ResetearPasswordUseCase(usuario_repo, hasher),
     )
+
+
+def get_perfil_controller(session: SessionDep) -> PerfilController:
+    """Arma el `PerfilController` con sus dependencias concretas."""
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    hasher = get_password_hasher()
+    return PerfilController(CambiarPasswordUseCase(usuario_repo, hasher))
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:

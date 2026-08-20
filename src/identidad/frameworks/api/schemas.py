@@ -56,6 +56,13 @@ class ResetearPasswordRequest(BaseModel):
     password_nueva: str = Field(..., min_length=8)
 
 
+class CambiarPasswordRequest(BaseModel):
+    """Body de la request de cambio de la propia contraseña (`US-2.2.5`)."""
+
+    password_actual: str
+    password_nueva: str = Field(..., min_length=8)
+
+
 class CrearComisionRequest(BaseModel):
     """Body de la request de alta de comisión."""
 

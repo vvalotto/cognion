@@ -112,3 +112,11 @@ class CuentaDesbloqueada:
 
     usuario_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class PasswordCambiada:
+    """Un Usuario cambió su propia contraseña (RF-19, `US-2.2.5`)."""
+
+    usuario_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)

@@ -10,6 +10,7 @@ from src.identidad.frameworks.api.auth_router import router as auth_router
 from src.identidad.frameworks.api.comisiones_router import router as comisiones_router
 from src.identidad.frameworks.api.cuentas_router import router as cuentas_router
 from src.identidad.frameworks.api.invitaciones_router import router as invitaciones_router
+from src.identidad.frameworks.api.perfil_router import router as perfil_router
 from src.identidad.frameworks.api.registro_router import router as registro_router
 from src.identidad.frameworks.api.usuarios_router import router as usuarios_router
 
@@ -25,6 +26,7 @@ app.add_middleware(
 
 app.include_router(usuarios_router)
 app.include_router(cuentas_router)
+app.include_router(perfil_router)
 app.include_router(comisiones_router)
 app.include_router(invitaciones_router)
 app.include_router(registro_router)
