@@ -46,7 +46,7 @@ advertencias; ArchitectAnalyst (`quality/reports/architectanalyst/BL-002-arquite
 3 críticos "Zone of Pain" a nivel de paquete raíz (`identidad`, `settings`, `shared`), leídos y
 aceptados, `should_block: false` (nunca bloquea, solo informa tendencias — ver retrospectiva
 de `BL-002` para el detalle y el ajuste propuesto para el próximo incremento).
-Incremento 2 — Banco de Preguntas en curso, Iteración 1 (`docs/plans/inc2/inc2-candidatas.md`).
+Incremento 2 — Banco de Preguntas en curso (`docs/plans/inc2/inc2-candidatas.md`).
 Iteración 0 — Modelado cerrada 2026-07-31 (US-2.0.1 event storming, Issue #38; US-2.0.2
 wireframes, Issue #39). **US-2.1.1 (Docente da de alta una Materia; banco vacío en el mismo
 flujo) cerrada 2026-07-31**, PR #56 mergeado a `develop`,
@@ -178,10 +178,52 @@ solo fixtures mínimos. La UAT dejó tres no conformidades registradas (`evidenc
   reset a página 1 al cambiar filtros, UI de números de página + Anterior/Siguiente. Requiere
   actualizar `wireframes-banco-preguntas.md` (gate UX) antes de tocar `frontend/`.
 
-**Próximo paso:** sin decidir todavía — evaluar si `US-ADJ-01`/`US-ADJ-03` se implementan antes
-de arrancar la Iteración 2 (RF-03) o en paralelo. Con el backend y frontend de la Iteración 1
-completos y la UAT aprobada, evaluar cierre de baseline (`BL-003`) según ese mismo criterio —
-la Baseline no cierra backend-only, mismo criterio que `BL-002`.
+**Decisión de secuencia:** `US-ADJ-01`/`US-ADJ-03` no se implementan en paralelo a la
+Iteración 2 — se agrupan en una única iteración de ajuste conjunta después de cerrar la
+Iteración 2 completa (backend + frontend) y su propia UAT, mismo criterio de "no fragmentar en
+mini-ajustes" ya aplicado en Identidad.
+
+Incremento 2 — Iteración 2 (RF-03, RF-19: gestión de cuentas por administrador y cambio de
+contraseña propio) en curso, backend casi completo (`docs/plans/inc2/inc2-candidatas.md`
+§Iteración 2). Wireframes/prototipo de `docs/design/ux/wireframes-cuentas-administracion.md`
+aprobados por Víctor 2026-08-19 — cubren el gap que `wireframes-identidad.md` §4 dejaba fuera
+de alcance; no hizo falta una nueva US de Modelado de dominio (el event storming de
+`BC-identidad-modelo.md` §3/§9/§11 ya alcanzaba).
+**US-2.2.1 (Bloqueo automático de cuenta por 3 intentos fallidos consecutivos de login)
+cerrada 2026-08-19**, PR #92 + PR #93 (fix de rutas `context.md`/`plan.md`) mergeados a
+`develop`, Issue #91 cerrado, `docs/reports/inc2/US-2.2.1-report.md`: `Usuario` gana
+`bloqueada`/`intentos_fallidos_login`/`intentos_fallidos_password`, evento `CuentaBloqueada`,
+`UsuarioRepositoryPort.actualizar()` nuevo (distinto de `guardar()`, lo reutilizan
+`US-2.2.4`/`US-2.2.5`). 281/281 tests, quality gates APROBADO.
+**US-2.2.2 (Administrador ve el listado de cuentas, filtra por rol/estado/búsqueda) cerrada
+2026-08-19**, PR #95 mergeado a `develop`, Issue #94 cerrado,
+`docs/reports/inc2/US-2.2.2-report.md`: mismo patrón de CRITICAL de CBO que
+`US-2.1.2`/`US-2.1.5`/`US-2.1.6`/`US-2.1.7` (esta vez sobre `UsuarioRepositoryPort` al
+diseño original) — resuelto separando la consulta en `CuentaQueryPort`/
+`SQLAlchemyCuentaQueryRepository` propios (command/query), no forzando el método en el
+repositorio existente. `CuentasController` nuevo, separado de `UsuariosController`. Tests
+pasando (ver reporte), quality gates APROBADO.
+**US-2.2.3 (Administrador ve el detalle de una cuenta) cerrada 2026-08-19**, PR #97 mergeado a
+`develop`, Issue #96 cerrado, `docs/reports/inc2/US-2.2.3-report.md`: `Usuario.creado_en`
+agregado (gap de spec detectado y resuelto con Víctor en la sesión, no excluido de alcance),
+`ObtenerCuentaUseCase` reutiliza `obtener_por_id()` existente — el pre-push gate no repitió el
+CRITICAL de CBO de `US-2.2.2` por diseñar la separación command/query desde el inicio.
+305/305 tests, quality gates APROBADO.
+**US-2.2.4 (Administrador resetea la contraseña de una cuenta, desbloqueo incluido) cerrada
+2026-08-20**, PR #98 mergeado a `develop`, Issue #99 cerrado,
+`docs/reports/inc2/US-2.2.4-report.md`: `Usuario.validar_password_nueva()` (INV-ID-11, primera
+vez que se enforza del lado del dominio, reutilizable por `US-2.2.5`) y
+`usuario.resetear_password()` (mutación de estado pura) separados para que la entidad no
+dependa del hasher; `ResetearPasswordUseCase` es el tercer método inyectado en
+`CuentasController` sin llegar a CRITICAL de CBO. 329/329 tests, quality gates APROBADO.
+
+**Próximo paso:** `US-2.2.5` (Usuario autenticado cambia su propia contraseña, Issue #100,
+`docs/specs/inc2/US-2.2.5.md`) — última US backend de la Iteración 2, reutiliza
+`Usuario.validar_password_nueva()` de `US-2.2.4` y el contador propio
+`intentos_fallidos_password` de `US-2.2.1`. Cierra el backend de la Iteración 2; después sigue
+el frontend (`US-2.2.6` a `US-2.2.9`, Issues #101–#104 ya abiertos) antes de evaluar UAT y
+cierre de baseline (`BL-003`) — la Baseline no cierra backend-only, mismo criterio que
+`BL-002`.
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
 **Branch activo:** `develop`.
