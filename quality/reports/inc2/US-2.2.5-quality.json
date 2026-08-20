@@ -1,0 +1,26 @@
+{
+  "us_id": "US-2.2.5",
+  "fecha": "2026-08-20T00:00:00Z",
+  "componente": "src/identidad",
+  "metricas": {
+    "pylint": 9.8,
+    "cc_max": 7,
+    "mi_min": 48.17,
+    "mi_promedio": 90.4,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Pylint acotado a los 9 archivos de src/identidad modificados/agregados por esta US: promedio 9.80/10 (rango 8.89–10.00).",
+    "R0903 (too-few-public-methods) en PerfilController/CambiarPasswordUseCase: mismo patrón aceptado en el resto de los controllers/use cases de una sola responsabilidad (ResetearPasswordUseCase de US-2.2.4, CrearUsuarioUseCase, etc.) — explica el score más bajo de perfil_controller.py (8.89/10).",
+    "codeguard sobre los 9 archivos modificados/agregados: 0 errors reales, 0 warnings tras corregir un E501 (line-too-long) en perfil_router.py detectado en la primera corrida — los 20 'errors' restantes son vulture/codespell no instalados (herramientas opcionales del perfil, sin impacto en el gate) y timeouts intermitentes de pylint/mypy sobre archivos grandes no tocados por esta US (bug conocido `software_limpio#70`, documentado en CLAUDE.md).",
+    "CC/MI medidos sobre src/identidad completo — CC máx 7 (SQLAlchemyCuentaQueryRepository.listar, preexistente de US-2.2.2), MI mín 48.17 (schemas.py, leve baja de 48.58 a 48.17 por CambiarPasswordRequest agregado — sigue grade A, muy por encima del umbral de 20).",
+    "Coverage 99% sobre src/identidad (frameworks/* excluido por [tool.coverage.run] omit, cubierto por integration/BDD). cambiar_password.py, usuario.py (métodos nuevos), perfil_controller.py: 100% cubiertos. Únicas líneas no cubiertas son deuda preexistente ya documentada en US-2.2.2/US-2.2.3/US-2.2.4 (guard defensivo de actualizar() y bucle async de SQLAlchemyCuentaQueryRepository.listar())."
+  ]
+}

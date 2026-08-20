@@ -10,6 +10,18 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.2.5] Usuario autenticado cambia su propia contraseña — backend puro (RF-19)
+  - `src/identidad/entities/usuario.py` — `Usuario.cambiar_password()` y
+    `Usuario.registrar_fallo_cambio_password()`, contador propio `intentos_fallidos_password`
+    independiente del de login (INV-ID-10)
+  - `src/identidad/use_cases/cambiar_password.py` (nuevo) — `CambiarPasswordUseCase`
+  - `PUT /usuarios/me/password` (cualquier rol autenticado) en `perfil_router.py` (nuevo) —
+    `PerfilController` nuevo, separado de `CuentasController` por actor (self-service vs.
+    administración)
+  - 14 tests unitarios nuevos + 7 tests de integración nuevos + 5 escenarios BDD — 354/354
+    tests del proyecto en verde, quality gates APROBADO (pylint 9.80/10, coverage 99% en
+    `src/identidad`)
+  - Cierra el backend completo de la Iteración 2 (`US-2.2.1` a `US-2.2.5`)
 - [US-2.2.4] Administrador resetea la contraseña de una cuenta, con desbloqueo incluido —
   backend puro (RF-03)
   - `src/identidad/entities/usuario.py` — `Usuario.validar_password_nueva()` (INV-ID-11,
