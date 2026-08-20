@@ -2,6 +2,7 @@ import uuid
 
 import pytest
 
+from src.identidad.entities.errors import PasswordDemasiadoCorta
 from src.identidad.entities.usuario import Administrador, Docente, Estudiante, Usuario
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -39,3 +40,64 @@ class TestUsuarioCrearEstudiante:
         assert isinstance(usuario.perfil, Estudiante)
         assert usuario.perfil.comision_id == comision_id
         assert usuario.tipo_perfil == TipoPerfil.ESTUDIANTE
+
+
+class TestUsuarioValidarPasswordNueva:
+    def test_acepta_password_de_8_caracteres(self):
+        Usuario.validar_password_nueva("12345678")
+
+    def test_acepta_password_larga(self):
+        Usuario.validar_password_nueva("unaContraseñaBienLarga123")
+
+    def test_rechaza_password_de_menos_de_8_caracteres(self):
+        with pytest.raises(PasswordDemasiadoCorta):
+            Usuario.validar_password_nueva("corta")
+
+    def test_rechaza_password_vacia(self):
+        with pytest.raises(PasswordDemasiadoCorta):
+            Usuario.validar_password_nueva("")
+
+
+class TestUsuarioResetearPassword:
+    def test_actualiza_el_hash(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash-viejo", TipoPerfil.DOCENTE)
+
+        usuario.resetear_password("hash-nuevo")
+
+        assert usuario.password_hash == "hash-nuevo"
+
+    def test_resetea_bloqueada_y_contadores_de_una_cuenta_bloqueada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.bloqueada = True
+        usuario.intentos_fallidos_login = 3
+        usuario.intentos_fallidos_password = 2
+
+        usuario.resetear_password("hash-nuevo")
+
+        assert usuario.bloqueada is False
+        assert usuario.intentos_fallidos_login == 0
+        assert usuario.intentos_fallidos_password == 0
+
+    def test_devuelve_true_si_estaba_bloqueada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.bloqueada = True
+
+        resultado = usuario.resetear_password("hash-nuevo")
+
+        assert resultado is True
+
+    def test_devuelve_false_si_no_estaba_bloqueada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+
+        resultado = usuario.resetear_password("hash-nuevo")
+
+        assert resultado is False
+
+    def test_resetea_contadores_de_una_cuenta_activa_tambien(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_login = 2
+
+        usuario.resetear_password("hash-nuevo")
+
+        assert usuario.bloqueada is False
+        assert usuario.intentos_fallidos_login == 0
