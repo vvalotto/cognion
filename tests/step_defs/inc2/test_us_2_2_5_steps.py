@@ -57,7 +57,9 @@ def _headers_para(usuario_id: uuid.UUID) -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
-async def _crear_usuario_con_estado(*, bloqueada: bool, intentos_fallidos_password: int) -> uuid.UUID:
+async def _crear_usuario_con_estado(
+    *, bloqueada: bool, intentos_fallidos_password: int
+) -> uuid.UUID:
     hasher = BcryptPasswordHasher()
     async with SessionLocal() as session:
         repo = SQLAlchemyUsuarioRepository(session)
