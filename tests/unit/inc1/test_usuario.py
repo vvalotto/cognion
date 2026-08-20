@@ -156,3 +156,22 @@ class TestUsuarioRegistrarFalloCambioPassword:
         assert resultado is True
         assert usuario.bloqueada is True
         assert usuario.intentos_fallidos_password == 3
+
+
+class TestUsuarioIntentosRestantesCambioPassword:
+    def test_sin_fallos_devuelve_el_maximo(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+
+        assert usuario.intentos_restantes_cambio_password() == 3
+
+    def test_descuenta_por_cada_fallo_registrado(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_password = 2
+
+        assert usuario.intentos_restantes_cambio_password() == 1
+
+    def test_nunca_es_negativo_tras_el_bloqueo(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_password = 3
+
+        assert usuario.intentos_restantes_cambio_password() == 0
