@@ -244,13 +244,24 @@ resuelto con una opción `handleUnauthorized: false` en `apiFetch`, sin cambiar 
 existente. 357/357 tests backend, 145/145 tests frontend, quality gates APROBADO
 (`quality/reports/inc2/US-2.2.8-quality.json`), pre-push gate (DesignReviewer) 0 CRITICAL.
 
-**Próximo paso:** `US-2.2.9` (Login refleja el estado de cuenta bloqueada — UI, Issue #104,
-`docs/specs/inc2/US-2.2.9.md`) — extiende `POST /auth/login` (`US-2.2.1`), última US de la
-Iteración 2. Después evaluar UAT y cierre de baseline (`BL-003`) — la Baseline no cierra
-backend-only, mismo criterio que `BL-002`.
+**US-2.2.9 (Login refleja el estado de cuenta bloqueada — UI) cerrada 2026-08-21**, branch
+`feature/US-2.2.9-login-cuenta-bloqueada`, Issue #104: frontend puro, sin cambios de backend —
+`POST /identidad/login` ya distinguía 403 (`CuentaBloqueadaError`) de 401
+(`CredencialesInvalidas`) desde `US-2.2.1`. **Gap detectado en Fase 2**: la spec asumía
+`frontend/src/lib/auth-api.ts`, que no existe — `Login.tsx` llama `apiFetch` directamente, sin
+capa intermedia. Decisión: distinguir el caso por `ApiError.status === 403` en `Login.tsx`, sin
+crear el archivo ni tocar `src/`. `LoginCuentaBloqueadaError.tsx` (alerta destructiva,
+`wireframes-cuentas-administracion.md` §2.8) + formulario completo deshabilitado (`fieldset`)
+cuando la cuenta está bloqueada. 148/148 tests frontend, quality gates APROBADO
+(`quality/reports/inc2/US-2.2.9-quality.json`). **Cierra completa la Iteración 2 del
+Incremento 2, backend y frontend juntos.**
+
+**Próximo paso:** evaluar UAT de cierre de la Iteración 2 y cierre de baseline (`BL-003`) — la
+Baseline no cierra backend-only, mismo criterio que `BL-002`. También queda pendiente la
+iteración de ajuste conjunta (`US-ADJ-01`/`US-ADJ-03`, ver decisión de secuencia arriba).
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
-**Branch activo:** `develop`.
+**Branch activo:** `feature/US-2.2.9-login-cuenta-bloqueada` (pendiente de PR/merge a `develop`).
 
 ---
 
