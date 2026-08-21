@@ -7,6 +7,7 @@ import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Banco } from "@/pages/Banco"
+import { CambiarPassword } from "@/pages/CambiarPassword"
 import { CuentaDetalle } from "@/pages/CuentaDetalle"
 import { CuentaReseteada } from "@/pages/CuentaReseteada"
 import { Cuentas } from "@/pages/Cuentas"
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { index: true, element: <InicioPlaceholder /> },
+      { path: "/mi-cuenta/cambiar-password", element: <CambiarPassword /> },
       {
         path: "/docentes/nuevo",
         element: (

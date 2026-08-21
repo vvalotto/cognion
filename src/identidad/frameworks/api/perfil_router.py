@@ -25,18 +25,31 @@ async def cambiar_password(
 ) -> None:
     """Cambia la contraseña del Usuario autenticado; cualquier rol puede usarlo.
 
-    Responde 401 si `password_actual` no verifica, 403 si la cuenta ya está bloqueada, 422 si
-    `password_nueva` no cumple INV-ID-11.
+    Responde 401 si `password_actual` no verifica: `detail.intentos_restantes` cuenta los
+    fallos que quedan antes del bloqueo (INV-ID-10), o `detail.bloqueada = true` si este
+    intento fue el 3er fallo consecutivo y acaba de bloquear la cuenta. Responde 403 con
+    `detail.bloqueada = true` si la cuenta ya estaba bloqueada antes de este intento
+    (`CuentaBloqueadaError`, sin llegar a verificar `password_actual`). Responde 422 si
+    `password_nueva` no cumple INV-ID-11 (`US-2.2.8`).
     """
     try:
         await controller.cambiar_password(
             usuario.usuario_id, body.password_actual, body.password_nueva
         )
     except CuentaBloqueadaError as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={"mensaje": str(exc), "bloqueada": True},
+        ) from exc
     except PasswordActualIncorrecta as exc:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
+        detail: dict[str, object] = {"mensaje": str(exc)}
+        if exc.evento_cuenta_bloqueada is not None:
+            detail["bloqueada"] = True
+        else:
+            detail["intentos_restantes"] = exc.intentos_restantes
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail) from exc
     except PasswordDemasiadoCorta as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail={"mensaje": str(exc)},
         ) from exc

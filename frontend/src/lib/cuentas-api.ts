@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api-client"
+import { ApiError, apiFetch } from "@/lib/api-client"
 import type { Rol } from "@/lib/session"
 
 export type Estado = "activa" | "bloqueada"
@@ -68,4 +68,56 @@ export async function resetearPassword(
     body: { password_nueva: passwordNueva },
   })
   return aCuentaDetalleResponse(datos)
+}
+
+interface CambiarPasswordErrorDetail {
+  mensaje: string
+  intentos_restantes?: number
+  bloqueada?: boolean
+}
+
+/** Error de `cambiarPassword` con los datos que la UI necesita para el mensaje (`US-2.2.8`). */
+export class CambiarPasswordError extends Error {
+  intentosRestantes?: number
+  bloqueada: boolean
+
+  constructor(mensaje: string, intentosRestantes: number | undefined, bloqueada: boolean) {
+    super(mensaje)
+    this.name = "CambiarPasswordError"
+    this.intentosRestantes = intentosRestantes
+    this.bloqueada = bloqueada
+  }
+}
+
+function esDetalleCambiarPassword(detail: unknown): detail is CambiarPasswordErrorDetail {
+  return typeof detail === "object" && detail !== null && "mensaje" in detail
+}
+
+/**
+ * Cambia la contraseña del Usuario autenticado (`PUT /usuarios/me/password`, `US-2.2.5`).
+ *
+ * Usa `handleUnauthorized: false` porque un 401 acá es un rechazo puntual de la acción
+ * (contraseña actual incorrecta), no una sesión inválida — el interceptor global de
+ * `apiFetch` no debe desloguear al usuario en este flujo.
+ */
+export async function cambiarPassword(
+  passwordActual: string,
+  passwordNueva: string,
+): Promise<void> {
+  try {
+    await apiFetch<void>("/usuarios/me/password", {
+      method: "PUT",
+      body: { password_actual: passwordActual, password_nueva: passwordNueva },
+      handleUnauthorized: false,
+    })
+  } catch (err) {
+    if (err instanceof ApiError && esDetalleCambiarPassword(err.detail)) {
+      throw new CambiarPasswordError(
+        err.detail.mensaje,
+        err.detail.intentos_restantes,
+        err.detail.bloqueada ?? false,
+      )
+    }
+    throw err
+  }
 }

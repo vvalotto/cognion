@@ -136,6 +136,10 @@ class Usuario:
             return True
         return False
 
+    def intentos_restantes_cambio_password(self) -> int:
+        """Cantidad de fallos que quedan antes del bloqueo automático (INV-ID-10)."""
+        return max(0, _INTENTOS_MAXIMOS_CAMBIO_PASSWORD - self.intentos_fallidos_password)
+
     @staticmethod
     def crear_estudiante(nombre: str, email: str, password_hash: str, comision_id: UUID) -> Usuario:
         """Crea un `Usuario` nuevo con perfil `Estudiante` asignado a `comision_id` (INV-ID-05)."""

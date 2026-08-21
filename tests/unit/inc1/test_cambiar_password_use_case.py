@@ -77,6 +77,7 @@ class TestCambiarPasswordUseCase:
         assert actualizado.intentos_fallidos_password == 2
         assert actualizado.bloqueada is False
         assert exc.value.evento_cuenta_bloqueada is None
+        assert exc.value.intentos_restantes == 1
 
     async def test_tercer_fallo_consecutivo_bloquea_la_cuenta(self):
         repo = FakeUsuarioRepository()
@@ -93,6 +94,7 @@ class TestCambiarPasswordUseCase:
         assert actualizado.bloqueada is True
         assert isinstance(exc.value.evento_cuenta_bloqueada, CuentaBloqueada)
         assert exc.value.evento_cuenta_bloqueada.usuario_id == usuario.id
+        assert exc.value.intentos_restantes == 0
 
     async def test_rechaza_password_nueva_demasiado_corta_sin_modificar_el_usuario(self):
         repo = FakeUsuarioRepository()
