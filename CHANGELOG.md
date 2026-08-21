@@ -10,6 +10,17 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-2.2.9] Login refleja el estado de cuenta bloqueada — frontend puro, sin cambios de
+  backend (`POST /identidad/login` ya distinguía 403/401 desde `US-2.2.1`)
+  - Gap detectado en Fase 2: la spec asumía `frontend/src/lib/auth-api.ts`, que no existe —
+    `Login.tsx` distingue el caso inspeccionando `ApiError.status === 403` directamente
+  - `frontend/src/pages/LoginCuentaBloqueadaError.tsx` (nuevo) — alerta destructiva "Cuenta
+    bloqueada", dirige a contactar a un Administrador
+  - `frontend/src/pages/Login.tsx` (extendido) — estado `bloqueada`, formulario completo
+    (`fieldset`) deshabilitado cuando la cuenta está bloqueada
+  - 4 tests nuevos + 2 escenarios BDD (validados con Vitest, sin pytest-bdd, mismo criterio de
+    `US-2.2.6`/`7`/`8`) — 148/148 tests frontend, oxlint 0 errores, `tsc --noEmit` 0 errores.
+    Cierra completa la Iteración 2 del Incremento 2 (backend y frontend)
 - [US-2.2.8] Cualquier usuario autenticado cambia su propia contraseña — accesible a los tres
   roles, sin `RequireRole`
   - Backend (extensión mínima sobre `US-2.2.5`, gap detectado en Fase 2): `PUT

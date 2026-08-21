@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { LoginError } from "@/pages/LoginError"
+import { LoginCuentaBloqueadaError } from "@/pages/LoginCuentaBloqueadaError"
 import { setSession, type Rol } from "@/lib/session"
 
 interface LoginResponse {
@@ -26,6 +27,7 @@ export function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
+  const [bloqueada, setBloqueada] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -39,6 +41,10 @@ export function Login() {
       setSession({ token: response.access_token, rol: response.rol })
       void navigate(RUTA_POST_LOGIN[response.rol])
     } catch (err) {
+      if (err instanceof ApiError && err.status === 403) {
+        setBloqueada(true)
+        return
+      }
       if (err instanceof ApiError) {
         setPassword("")
         setError(true)
@@ -53,30 +59,32 @@ export function Login() {
       <h1 className="text-lg font-semibold">Iniciar sesión</h1>
       <p className="mb-4 text-sm text-muted-foreground">Ingresá con tu email y contraseña</p>
 
-      {error && <LoginError />}
+      {bloqueada ? <LoginCuentaBloqueadaError /> : error && <LoginError />}
 
       <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="login-email">Email</Label>
-          <Input
-            id="login-email"
-            type="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="login-password">Contraseña</Label>
-          <Input
-            id="login-password"
-            type="password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-        <Button type="submit">Ingresar</Button>
+        <fieldset className="flex flex-col gap-3" disabled={bloqueada}>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="login-email">Email</Label>
+            <Input
+              id="login-email"
+              type="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="login-password">Contraseña</Label>
+            <Input
+              id="login-password"
+              type="password"
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+          <Button type="submit">Ingresar</Button>
+        </fieldset>
       </form>
     </div>
   )

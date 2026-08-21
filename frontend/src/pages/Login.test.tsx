@@ -108,4 +108,32 @@ describe("Login", () => {
       "Email o contraseña incorrectos"
     )
   })
+
+  it("cuenta bloqueada muestra la alerta específica y deshabilita el formulario", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, { detail: "La cuenta está bloqueada. Contactá a un administrador." })
+    )
+
+    renderLogin()
+    await completarFormulario("bloqueado@fiuner.edu.ar", "cualquiera")
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Cuenta bloqueada")
+    expect(screen.getByLabelText("Email")).toBeDisabled()
+    expect(screen.getByLabelText("Contraseña")).toBeDisabled()
+    expect(screen.getByRole("button", { name: "Ingresar" })).toBeDisabled()
+    expect(getSession()).toBeNull()
+  })
+
+  it("cuenta bloqueada no muestra el mensaje genérico de credenciales inválidas", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, { detail: "La cuenta está bloqueada. Contactá a un administrador." })
+    )
+
+    renderLogin()
+    await completarFormulario("bloqueado@fiuner.edu.ar", "cualquiera")
+
+    expect(await screen.findByRole("alert")).not.toHaveTextContent(
+      "Email o contraseña incorrectos"
+    )
+  })
 })

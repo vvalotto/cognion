@@ -1,0 +1,41 @@
+{
+  "us_id": "US-2.2.9",
+  "titulo": "Login refleja el estado de cuenta bloqueada (UI)",
+  "fecha": "2026-08-21",
+  "alcance": "frontend puro — sin cambios de backend",
+  "backend": {
+    "aplica": false,
+    "razon": "Sin archivos de src/ modificados; backend ya extendido en US-2.2.1."
+  },
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_preexistentes": 1,
+      "estado": "APROBADO"
+    },
+    "tsc_noemit": {
+      "errores": 0,
+      "estado": "APROBADO"
+    },
+    "coverage": {
+      "archivos": ["Login.tsx", "LoginCuentaBloqueadaError.tsx"],
+      "statements_percent": 95.83,
+      "branches_percent": 90,
+      "functions_percent": 100,
+      "lines_percent": 95.83,
+      "umbral_min_percent": 80,
+      "estado": "APROBADO"
+    },
+    "tests": {
+      "nuevos": 4,
+      "modificados_o_verificados": 148,
+      "estado": "APROBADO"
+    }
+  },
+  "bdd": {
+    "escenarios": 2,
+    "validados_por": "mapeo directo a tests de Login.test.tsx (mismo criterio que US-2.2.6/7/8)",
+    "estado": "APROBADO"
+  },
+  "estado_general": "APROBADO"
+}
