@@ -13,6 +13,11 @@ const badgeVariants = cva(
         "nivel-alto": "bg-red-50 text-red-800",
         "nivel-medio": "bg-amber-50 text-amber-800",
         "nivel-bajo": "bg-green-50 text-green-800",
+        "rol-docente": "bg-blue-50 text-blue-800",
+        "rol-estudiante": "bg-violet-50 text-violet-800",
+        "rol-admin": "bg-orange-50 text-orange-800",
+        "estado-activa": "bg-green-50 text-green-800",
+        "estado-bloqueada": "bg-red-50 text-red-800",
       },
     },
     defaultVariants: {

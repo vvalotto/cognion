@@ -34,6 +34,19 @@ describe("CuentaReseteada", () => {
     expect(screen.getByText(/Se reseteó la contraseña y la cuenta quedó desbloqueada\./)).toBeInTheDocument()
   })
 
+  it("[US-ADJ-04] muestra un ícono de éxito dentro de una tarjeta centrada", () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: "/cuentas/u1/reseteada", state: { nombre: "Ana" } }]}>
+        <Routes>
+          <Route path="/cuentas/:usuarioId/reseteada" element={<CuentaReseteada />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByText("✓")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Contraseña reseteada" })).toBeInTheDocument()
+  })
+
   it("'Volver al listado de cuentas' navega a /cuentas", async () => {
     const user = userEvent.setup()
     render(

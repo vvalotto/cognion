@@ -10,6 +10,21 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-04] Alinear visualmente las pantallas de Cuentas/Contraseñas con el prototipo
+  aprobado — refactor de presentación puro, sin cambios de comportamiento ni de backend
+  - Mismo gap que resolvió `US-ADJ-01` para Banco de Preguntas, esta vez en
+    `Cuentas.tsx`, `CuentaDetalle.tsx`, `ResetearPassword.tsx`, `CuentaReseteada.tsx`,
+    `CambiarPassword.tsx` — implementadas antes de que existieran `Card`/`Badge`/`Breadcrumb`
+  - Reutiliza las primitivas de `US-ADJ-01` sin agregar componentes nuevos; `Badge` gana 5
+    variantes (`rol-docente`/`rol-estudiante`/`rol-admin`/`estado-activa`/`estado-bloqueada`)
+  - `Cuentas.tsx` suma columna/botón "Ver" por fila (antes solo la fila entera navegaba)
+  - `ResetearPassword.tsx` pasa el botón de reseteo a `destructive-solid` (antes soft)
+  - `CuentaReseteada.tsx`/`CambiarPassword.tsx` (pantalla de éxito) pasan a `Card` centrada
+    con ícono de éxito, en vez de texto suelto
+  - 160/160 tests frontend, oxlint 0 errores, `tsc --noEmit` 0 errores, cobertura global
+    92.09%/85%/90.76%/93.71%. Verificación visual en navegador real confirmada en 3 de las 5
+    pantallas (Cuentas, CuentaDetalle, ResetearPassword); las 2 restantes comparten el mismo
+    patrón ya validado y quedan cubiertas por tests de Vitest dedicados
 - [US-ADJ-03] Paginar el listado del banco de preguntas — página fija de 20, orden estable
   por fecha de creación, reset a página 1 al cambiar filtros
   - Backend: `PreguntaPlantilla*.fecha_creacion` (nuevo, inmutable), migración con backfill

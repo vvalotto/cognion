@@ -72,6 +72,20 @@ describe("CuentaDetalle", () => {
     expect(screen.getByText("Bloqueada")).toBeInTheDocument()
   })
 
+  it("[US-ADJ-04] breadcrumb, tarjeta de datos y tags de color", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaBloqueada))
+
+    renderCuentaDetalle("u2")
+    await screen.findByRole("alert")
+
+    expect(screen.getByText("Administración")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Luis Estudiante" })).toBeInTheDocument()
+    const badge = (texto: string) =>
+      screen.getAllByText(texto).find((el) => el.getAttribute("data-slot") === "badge")
+    expect(badge("Estudiante")).toHaveClass("bg-violet-50")
+    expect(badge("Bloqueada")).toHaveClass("bg-red-50")
+  })
+
   it("botón 'Resetear contraseña y desbloquear' navega al formulario de reseteo", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaBloqueada))
     const user = userEvent.setup()
