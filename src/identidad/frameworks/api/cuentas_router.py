@@ -11,6 +11,7 @@ from src.identidad.entities.usuario import Estudiante, Usuario
 from src.identidad.frameworks.api.schemas import (
     CuentaDetalleResponse,
     CuentaResponse,
+    CuentasPaginadasResponse,
     ResetearPasswordRequest,
 )
 from src.identidad.frameworks.dependencies import get_cuentas_controller, require_administrador
@@ -23,27 +24,35 @@ router = APIRouter(prefix="/usuarios", tags=["identidad"])
 
 @router.get(
     "",
-    response_model=list[CuentaResponse],
+    response_model=CuentasPaginadasResponse,
     dependencies=[Depends(require_administrador)],
 )
 async def listar_cuentas(
     rol: TipoPerfil | None = None,
     estado: str | None = None,
     busqueda: str | None = None,
+    pagina: int = 1,
+    tamanio_pagina: int = 20,
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> list[CuentaResponse]:
-    """Lista cuentas filtradas (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda."""
-    usuarios = await controller.listar_cuentas(rol, estado, busqueda)
-    return [
-        CuentaResponse(
-            id=usuario.id,
-            nombre=usuario.nombre,
-            email=usuario.email,
-            perfil=usuario.tipo_perfil,
-            bloqueada=usuario.bloqueada,
-        )
-        for usuario in usuarios
-    ]
+) -> CuentasPaginadasResponse:
+    """Lista cuentas filtradas (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda.
+
+    Página fija de `tamanio_pagina` (default 20), orden estable por `creado_en`.
+    """
+    resultado = await controller.listar_cuentas(rol, estado, busqueda, pagina, tamanio_pagina)
+    return CuentasPaginadasResponse(
+        cuentas=[
+            CuentaResponse(
+                id=usuario.id,
+                nombre=usuario.nombre,
+                email=usuario.email,
+                perfil=usuario.tipo_perfil,
+                bloqueada=usuario.bloqueada,
+            )
+            for usuario in resultado.cuentas
+        ],
+        total=resultado.total,
+    )
 
 
 @router.get(

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from sqlalchemy import or_, select
+from sqlalchemy import ColumnElement, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
+from src.identidad.entities.resultado_paginado_cuentas import ResultadoPaginadoCuentas
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.db.models import (
     AdministradorModel,
@@ -38,22 +39,48 @@ class SQLAlchemyCuentaQueryRepository(CuentaQueryPort):
         self._usuario_repo = SQLAlchemyUsuarioRepository(session)
 
     async def listar(
-        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
-    ) -> list[Usuario]:
-        """Lista usuarios filtrados (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda."""
-        query = select(UsuarioModel.id)
+        self,
+        rol: TipoPerfil | None,
+        estado: str | None,
+        busqueda: str | None,
+        pagina: int = 1,
+        tamanio_pagina: int = 20,
+    ) -> ResultadoPaginadoCuentas:
+        """Lista usuarios filtrados (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda.
+
+        Devuelve la página pedida, ordenada por `creado_en` (desempate por `id`), junto con
+        el `total` de cuentas que matchean los filtros, sin paginar.
+        """
+        filtros: list[ColumnElement[bool]] = []
+        joins: list[type[AdministradorModel | DocenteModel | EstudianteModel]] = []
         if rol is not None:
             model_cls = _MODEL_POR_ROL[rol]
-            query = query.join(model_cls, model_cls.id == UsuarioModel.id)
+            joins.append(model_cls)
         if estado == "activa":
-            query = query.where(UsuarioModel.bloqueada.is_(False))
+            filtros.append(UsuarioModel.bloqueada.is_(False))
         elif estado == "bloqueada":
-            query = query.where(UsuarioModel.bloqueada.is_(True))
+            filtros.append(UsuarioModel.bloqueada.is_(True))
         if busqueda:
             patron = f"%{busqueda}%"
-            query = query.where(
+            filtros.append(
                 or_(UsuarioModel.nombre.ilike(patron), UsuarioModel.email.ilike(patron))
             )
+
+        total_query = select(func.count()).select_from(UsuarioModel)
+        for model_cls in joins:
+            total_query = total_query.join(model_cls, model_cls.id == UsuarioModel.id)
+        total_query = total_query.where(*filtros)
+        total = (await self._session.execute(total_query)).scalar_one()
+
+        query = select(UsuarioModel.id)
+        for model_cls in joins:
+            query = query.join(model_cls, model_cls.id == UsuarioModel.id)
+        query = (
+            query.where(*filtros)
+            .order_by(UsuarioModel.creado_en, UsuarioModel.id)
+            .limit(tamanio_pagina)
+            .offset((pagina - 1) * tamanio_pagina)
+        )
 
         resultado = await self._session.execute(query)
         usuarios: list[Usuario] = []
@@ -61,4 +88,4 @@ class SQLAlchemyCuentaQueryRepository(CuentaQueryPort):
             usuario = await self._usuario_repo.obtener_por_id(usuario_id)
             if usuario is not None:
                 usuarios.append(usuario)
-        return usuarios
+        return ResultadoPaginadoCuentas(cuentas=usuarios, total=total)
