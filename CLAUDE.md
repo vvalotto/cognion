@@ -256,12 +256,26 @@ cuando la cuenta está bloqueada. 148/148 tests frontend, quality gates APROBADO
 (`quality/reports/inc2/US-2.2.9-quality.json`). **Cierra completa la Iteración 2 del
 Incremento 2, backend y frontend juntos.**
 
-**Próximo paso:** evaluar UAT de cierre de la Iteración 2 y cierre de baseline (`BL-003`) — la
-Baseline no cierra backend-only, mismo criterio que `BL-002`. También queda pendiente la
-iteración de ajuste conjunta (`US-ADJ-01`/`US-ADJ-03`, ver decisión de secuencia arriba).
+**UAT de cierre de la Iteración 2 ejecutada 2026-08-21** (`quality/reports/uat/inc2/`,
+`design-iter2.md`/`evidencia-iter2.md`): Capa 1 (357 pytest + 148 Vitest) en verde sin
+regresiones; Capa 2 (`smoke.sh` extendido con el flujo completo de bloqueo automático →
+detección por Administrador → reseteo → desbloqueo, `US-2.2.1` a `US-2.2.5`) todos los pasos
+en verde; recorrido en navegador real (Chrome vía claude-in-chrome, sesión de Claude Code —
+confirmación humana de Víctor pendiente si la quiere agregar) sin hallazgos 🔴 Bloqueantes:
+login con 3 intentos fallidos muestra la alerta "Cuenta bloqueada" (`US-2.2.9`) con el
+formulario deshabilitado, el Administrador la encuentra filtrando por estado, ve el detalle
+("se bloqueó automáticamente tras 3 intentos..."), resetea y desbloquea, el usuario vuelve a
+loguear y cambia su propia contraseña sin necesidad de volver a iniciar sesión (`US-2.2.8`).
+Sin no conformidades nuevas. **Cierra completa la Iteración 2 del Incremento 2** — segunda
+mitad del Hito completa: el administrador resuelve problemas de cuentas sin depender del
+docente.
+
+**Próximo paso:** iteración de ajuste conjunta (`US-ADJ-01`/`US-ADJ-03`, ver decisión de
+secuencia arriba) antes de evaluar el cierre de baseline (`BL-003`) — la Baseline no cierra
+backend-only, mismo criterio que `BL-002`.
 **Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
 `docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
-**Branch activo:** `feature/US-2.2.9-login-cuenta-bloqueada` (pendiente de PR/merge a `develop`).
+**Branch activo:** `develop`.
 
 ---
 

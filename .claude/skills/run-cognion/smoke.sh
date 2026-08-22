@@ -7,8 +7,11 @@
 # invitación + registro de Estudiante (US-1.1.1/1.1.2/1.1.8), el flujo de
 # Banco de Preguntas (US-2.1.1 a US-2.1.13: alta de materia, carga de pregunta
 # de opción múltiple y de verdadero/falso, filtrado, edición y baja lógica),
-# verifica casos de error (email duplicado -> 409, token vencido -> 422,
-# opciones inválidas -> 422), limpia los datos de prueba y baja el server.
+# el flujo de gestión de cuentas (US-2.2.1 a US-2.2.5: bloqueo automático tras
+# 3 intentos fallidos de login o de cambio de contraseña propio, listado/
+# detalle/reseteo de cuentas por Administrador, desbloqueo), verifica casos
+# de error (email duplicado -> 409, token vencido -> 422, opciones inválidas
+# -> 422), limpia los datos de prueba y baja el server.
 #
 # Uso: .claude/skills/run-cognion/smoke.sh   (desde la raíz del repo)
 set -euo pipefail
@@ -156,6 +159,108 @@ if [[ "$invitacion_code" == "201" ]]; then
   code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/registro" -H "Content-Type: application/json" \
     -d "{\"token\":\"${invitacion_token}\",\"nombre\":\"Otro\",\"email\":\"${EMAIL_PREFIX}-otro@fiuner.edu.ar\",\"password\":\"Password123!\"}")
   [[ "$code" == "422" ]] || { echo "FAIL: registro con token ya usado devolvió $code, esperado 422"; exit 1; }
+  echo "OK ($code)"
+
+  ESTUDIANTE_EMAIL="${EMAIL_PREFIX}-estudiante@fiuner.edu.ar"
+  estudiante_id=$(psql "$DB_URL" -t -A -c "SELECT id FROM usuario WHERE email = '${ESTUDIANTE_EMAIL}';")
+
+  echo "== Flujo de gestión de cuentas (Iteración 2, US-2.2.1 a US-2.2.5) =="
+
+  echo "== POST /identidad/login (estudiante, password incorrecta, intento 1/3) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"incorrecta\"}")
+  [[ "$code" == "401" ]] || { echo "FAIL: login con password incorrecta devolvió $code, esperado 401"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /identidad/login (estudiante, password incorrecta, intento 2/3) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"incorrecta\"}")
+  [[ "$code" == "401" ]] || { echo "FAIL: login con password incorrecta devolvió $code, esperado 401"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /identidad/login (estudiante, password incorrecta, intento 3/3 — bloquea la cuenta) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"incorrecta\"}")
+  [[ "$code" == "401" ]] || { echo "FAIL: 3er intento fallido devolvió $code, esperado 401"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /identidad/login (estudiante, password CORRECTA, esperado 403 — cuenta bloqueada, INV-ID-10) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"Password123!\"}")
+  [[ "$code" == "403" ]] || { echo "FAIL: login con password correcta sobre cuenta bloqueada devolvió $code, esperado 403"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== GET /usuarios?estado=bloqueada (administrador) — la cuenta debe aparecer (US-2.2.2) =="
+  listado_json=$(curl -s "${BASE}/usuarios?estado=bloqueada" -H "Authorization: Bearer ${admin_token}")
+  echo "$listado_json" | grep -q "$estudiante_id" || { echo "FAIL: cuenta bloqueada no aparece en el listado filtrado"; exit 1; }
+  echo "OK"
+
+  echo "== GET /usuarios/{id} (administrador) — detalle con bloqueada=true (US-2.2.3) =="
+  detalle_json=$(curl -s "${BASE}/usuarios/${estudiante_id}" -H "Authorization: Bearer ${admin_token}")
+  echo "$detalle_json" | grep -q '"bloqueada":true' || { echo "FAIL: detalle no refleja bloqueada=true"; exit 1; }
+  echo "OK"
+
+  echo "== POST /usuarios/{id}/resetear-password (administrador) — desbloquea (US-2.2.4) =="
+  reset_json=$(curl -s -X POST "${BASE}/usuarios/${estudiante_id}/resetear-password" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${admin_token}" \
+    -d '{"password_nueva":"Reseteada123!"}')
+  echo "$reset_json" | grep -q '"bloqueada":false' || { echo "FAIL: reseteo no desbloqueó la cuenta"; exit 1; }
+  echo "OK"
+
+  echo "== POST /identidad/login (estudiante, password reseteada) — debe permitir login (desbloqueada) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"Reseteada123!\"}")
+  [[ "$code" == "200" ]] || { echo "FAIL: login tras reseteo devolvió $code, esperado 200"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== PUT /usuarios/me/password (estudiante) — password_actual incorrecta, fallo 1/3 (US-2.2.5) =="
+  estudiante_login=$(curl -s -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"Reseteada123!\"}")
+  estudiante_token=$(echo "$estudiante_login" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+  detalle_error=$(curl -s -o /tmp/cognion-smoke-cambiar-password.json -w '%{http_code}' -X PUT "${BASE}/usuarios/me/password" \
+    -H "Content-Type: application/json" -H "Authorization: Bearer ${estudiante_token}" \
+    -d '{"password_actual":"incorrecta","password_nueva":"Nueva123!"}')
+  [[ "$detalle_error" == "401" ]] || { echo "FAIL: cambio con password_actual incorrecta devolvió $detalle_error, esperado 401"; exit 1; }
+  grep -q '"intentos_restantes":2' /tmp/cognion-smoke-cambiar-password.json || { echo "FAIL: intentos_restantes no es 2 tras el 1er fallo"; cat /tmp/cognion-smoke-cambiar-password.json; exit 1; }
+  echo "OK (401, intentos_restantes=2)"
+
+  echo "== PUT /usuarios/me/password (estudiante) — password_actual incorrecta, fallo 2/3 =="
+  code=$(curl -s -o /tmp/cognion-smoke-cambiar-password.json -w '%{http_code}' -X PUT "${BASE}/usuarios/me/password" \
+    -H "Content-Type: application/json" -H "Authorization: Bearer ${estudiante_token}" \
+    -d '{"password_actual":"incorrecta","password_nueva":"Nueva123!"}')
+  [[ "$code" == "401" ]] || { echo "FAIL: 2do fallo devolvió $code, esperado 401"; exit 1; }
+  grep -q '"intentos_restantes":1' /tmp/cognion-smoke-cambiar-password.json || { echo "FAIL: intentos_restantes no es 1 tras el 2do fallo"; cat /tmp/cognion-smoke-cambiar-password.json; exit 1; }
+  echo "OK (401, intentos_restantes=1)"
+
+  echo "== PUT /usuarios/me/password (estudiante) — password_actual incorrecta, fallo 3/3 (bloquea) =="
+  code=$(curl -s -o /tmp/cognion-smoke-cambiar-password.json -w '%{http_code}' -X PUT "${BASE}/usuarios/me/password" \
+    -H "Content-Type: application/json" -H "Authorization: Bearer ${estudiante_token}" \
+    -d '{"password_actual":"incorrecta","password_nueva":"Nueva123!"}')
+  [[ "$code" == "401" ]] || { echo "FAIL: 3er fallo devolvió $code, esperado 401"; exit 1; }
+  grep -q '"bloqueada":true' /tmp/cognion-smoke-cambiar-password.json || { echo "FAIL: 3er fallo no marcó bloqueada=true"; cat /tmp/cognion-smoke-cambiar-password.json; exit 1; }
+  echo "OK (401, bloqueada=true)"
+
+  echo "== POST /identidad/login (estudiante) — confirma bloqueo cruzado por cambiar_password (esperado 403) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"Reseteada123!\"}")
+  [[ "$code" == "403" ]] || { echo "FAIL: login tras bloqueo por cambiar_password devolvió $code, esperado 403"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /usuarios/{id}/resetear-password (administrador) — desbloquea de nuevo, deja password conocida =="
+  reset_json=$(curl -s -X POST "${BASE}/usuarios/${estudiante_id}/resetear-password" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${admin_token}" \
+    -d '{"password_nueva":"Final123!"}')
+  echo "$reset_json" | grep -q '"bloqueada":false' || { echo "FAIL: segundo reseteo no desbloqueó la cuenta"; exit 1; }
+  echo "OK"
+
+  echo "== PUT /usuarios/me/password (estudiante) — cambio exitoso con password_actual correcta =="
+  estudiante_login=$(curl -s -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${ESTUDIANTE_EMAIL}\",\"password\":\"Final123!\"}")
+  estudiante_token=$(echo "$estudiante_login" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X PUT "${BASE}/usuarios/me/password" \
+    -H "Content-Type: application/json" -H "Authorization: Bearer ${estudiante_token}" \
+    -d '{"password_actual":"Final123!","password_nueva":"UltimaOk123!"}')
+  [[ "$code" == "204" ]] || { echo "FAIL: cambio de contraseña exitoso devolvió $code, esperado 204"; exit 1; }
   echo "OK ($code)"
 else
   echo "SKIPPED ($invitacion_code) — ver /tmp/cognion-smoke-invitacion.json y $LOG"
