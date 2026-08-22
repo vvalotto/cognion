@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.banco_preguntas.entities.dificultad import Dificultad
@@ -14,6 +14,9 @@ from src.banco_preguntas.entities.ports.pregunta_repository_port import Pregunta
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
     PreguntaPlantillaVerdaderoFalso,
+)
+from src.banco_preguntas.entities.resultado_paginado_preguntas import (
+    ResultadoPaginadoPreguntas,
 )
 from src.banco_preguntas.frameworks.db.models import PreguntaPlantillaModel
 
@@ -45,6 +48,7 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
                 dificultad=pregunta.dificultad.value,
                 importancia=pregunta.importancia.value,
                 activa=pregunta.activa,
+                fecha_creacion=pregunta.fecha_creacion,
             )
         else:
             modelo = PreguntaPlantillaModel(
@@ -62,6 +66,7 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
                 dificultad=pregunta.dificultad.value,
                 importancia=pregunta.importancia.value,
                 activa=pregunta.activa,
+                fecha_creacion=pregunta.fecha_creacion,
             )
 
         self._session.add(modelo)
@@ -83,23 +88,41 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
         tema: str | None = None,
         dificultad: str | None = None,
         importancia: str | None = None,
-    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
-        """Lista las preguntas activas del banco que matchean todos los filtros provistos."""
-        query = select(PreguntaPlantillaModel).where(
+        pagina: int | None = None,
+        tamanio_pagina: int | None = None,
+    ) -> ResultadoPaginadoPreguntas:
+        """Lista las preguntas activas del banco que matchean todos los filtros provistos.
+
+        `pagina`/`tamanio_pagina` son opt-in — si alguno falta, devuelve todas las preguntas
+        que matchean (ver `PreguntaRepositoryPort.filtrar`).
+        """
+        filtros = [
             PreguntaPlantillaModel.banco_id == banco_id,
             PreguntaPlantillaModel.activa.is_(True),
-        )
+        ]
         if unidad is not None:
-            query = query.where(PreguntaPlantillaModel.unidad_tematica == unidad)
+            filtros.append(PreguntaPlantillaModel.unidad_tematica == unidad)
         if tema is not None:
-            query = query.where(PreguntaPlantillaModel.tema == tema)
+            filtros.append(PreguntaPlantillaModel.tema == tema)
         if dificultad is not None:
-            query = query.where(PreguntaPlantillaModel.dificultad == dificultad)
+            filtros.append(PreguntaPlantillaModel.dificultad == dificultad)
         if importancia is not None:
-            query = query.where(PreguntaPlantillaModel.importancia == importancia)
+            filtros.append(PreguntaPlantillaModel.importancia == importancia)
+
+        total_query = select(func.count()).select_from(PreguntaPlantillaModel).where(*filtros)
+        total = (await self._session.execute(total_query)).scalar_one()
+
+        query = (
+            select(PreguntaPlantillaModel)
+            .where(*filtros)
+            .order_by(PreguntaPlantillaModel.fecha_creacion, PreguntaPlantillaModel.id)
+        )
+        if pagina is not None and tamanio_pagina is not None:
+            query = query.limit(tamanio_pagina).offset((pagina - 1) * tamanio_pagina)
 
         resultado = await self._session.execute(query)
-        return [self._a_entidad(modelo) for modelo in resultado.scalars().all()]
+        preguntas = [self._a_entidad(modelo) for modelo in resultado.scalars().all()]
+        return ResultadoPaginadoPreguntas(preguntas=preguntas, total=total)
 
     @staticmethod
     def _a_entidad(
@@ -117,6 +140,7 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
                 dificultad=Dificultad(modelo.dificultad),
                 importancia=Importancia(modelo.importancia),
                 activa=modelo.activa,
+                fecha_creacion=modelo.fecha_creacion,
             )
 
         return PreguntaPlantillaOpcionMultiple(
@@ -132,6 +156,7 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
             dificultad=Dificultad(modelo.dificultad),
             importancia=Importancia(modelo.importancia),
             activa=modelo.activa,
+            fecha_creacion=modelo.fecha_creacion,
         )
 
     async def actualizar(

@@ -35,7 +35,7 @@ class ListarMateriasUseCase:
         for materia in materias:
             banco = await self._banco_repositorio.obtener_por_materia_id(materia.id)
             assert banco is not None, f"Materia {materia.id} sin Banco asociado (INV-BP-01)"
-            preguntas_activas = await self._pregunta_repositorio.filtrar(banco.id)
-            resultado.append((materia, banco, len(preguntas_activas)))
+            resultado_preguntas = await self._pregunta_repositorio.filtrar(banco.id)
+            resultado.append((materia, banco, resultado_preguntas.total))
 
         return resultado

@@ -7,9 +7,8 @@ from uuid import UUID
 from src.banco_preguntas.entities.errors import BancoNoExiste
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
-from src.banco_preguntas.entities.pregunta_plantilla import (
-    PreguntaPlantillaOpcionMultiple,
-    PreguntaPlantillaVerdaderoFalso,
+from src.banco_preguntas.entities.resultado_paginado_preguntas import (
+    ResultadoPaginadoPreguntas,
 )
 
 
@@ -32,11 +31,14 @@ class FiltrarBancoUseCase:
         tema: str | None = None,
         dificultad: str | None = None,
         importancia: str | None = None,
-    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        pagina: int | None = None,
+        tamanio_pagina: int | None = None,
+    ) -> ResultadoPaginadoPreguntas:
         """Valida que el `Banco` exista y devuelve las preguntas activas que matchean los filtros.
 
         Levanta `BancoNoExiste` si el banco no existe. Los filtros omitidos (`None`) no
         restringen el resultado — un banco sin preguntas cargadas devuelve lista vacía.
+        `pagina`/`tamanio_pagina` son opt-in (US-ADJ-03) — ver `PreguntaRepositoryPort.filtrar`.
         """
         banco = await self._banco_repositorio.obtener_por_id(banco_id)
         if banco is None:
@@ -48,4 +50,6 @@ class FiltrarBancoUseCase:
             tema=tema,
             dificultad=dificultad,
             importancia=importancia,
+            pagina=pagina,
+            tamanio_pagina=tamanio_pagina,
         )
