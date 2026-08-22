@@ -33,8 +33,8 @@ class TestCuentasController:
 
         resultado = await controller.listar_cuentas(None, None, None)
 
-        assert len(resultado) == 1
-        assert resultado[0].id == usuario.id
+        assert len(resultado.cuentas) == 1
+        assert resultado.cuentas[0].id == usuario.id
 
     async def test_obtener_cuenta_delega_en_el_use_case(self):
         cuenta_query_repo = FakeCuentaQueryRepository()

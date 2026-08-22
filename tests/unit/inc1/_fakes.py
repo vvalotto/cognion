@@ -12,6 +12,7 @@ from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
+from src.identidad.entities.resultado_paginado_cuentas import ResultadoPaginadoCuentas
 from src.identidad.entities.usuario import Usuario
 from src.shared.entities.errors import JWTInvalido
 from src.shared.entities.jwt import JWT, JWTPayload
@@ -44,8 +45,13 @@ class FakeCuentaQueryRepository(CuentaQueryPort):
         self.usuarios: dict[UUID, Usuario] = {}
 
     async def listar(
-        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
-    ) -> list[Usuario]:
+        self,
+        rol: TipoPerfil | None,
+        estado: str | None,
+        busqueda: str | None,
+        pagina: int = 1,
+        tamanio_pagina: int = 20,
+    ) -> ResultadoPaginadoCuentas:
         resultado = list(self.usuarios.values())
         if rol is not None:
             resultado = [u for u in resultado if u.tipo_perfil == rol]
@@ -58,7 +64,11 @@ class FakeCuentaQueryRepository(CuentaQueryPort):
             resultado = [
                 u for u in resultado if patron in u.nombre.lower() or patron in u.email.lower()
             ]
-        return resultado
+        resultado.sort(key=lambda u: (u.creado_en, str(u.id)))
+        total = len(resultado)
+        inicio = (pagina - 1) * tamanio_pagina
+        pagina_resultado = resultado[inicio : inicio + tamanio_pagina]
+        return ResultadoPaginadoCuentas(cuentas=pagina_resultado, total=total)
 
 
 class FakeComisionRepository(ComisionRepositoryPort):

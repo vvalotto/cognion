@@ -142,13 +142,13 @@ def ejecuta_listar_cuentas_busqueda(context, busqueda):
 @then("el sistema devuelve todas las cuentas")
 def valida_devuelve_todas_las_cuentas(context):
     assert context["response"].status_code == 200
-    assert len(context["response"].json()) >= 2
+    assert len(context["response"].json()["cuentas"]) >= 2
 
 
 @then("el sistema devuelve solo los Estudiantes con bloqueada = true")
 def valida_devuelve_solo_estudiantes_bloqueados(context):
     assert context["response"].status_code == 200
-    cuentas = context["response"].json()
+    cuentas = context["response"].json()["cuentas"]
     assert len(cuentas) == 1
     assert cuentas[0]["perfil"] == "estudiante"
     assert cuentas[0]["bloqueada"] is True
@@ -157,5 +157,5 @@ def valida_devuelve_solo_estudiantes_bloqueados(context):
 @then("esa cuenta aparece en el resultado")
 def valida_cuenta_aparece_en_resultado(context):
     assert context["response"].status_code == 200
-    emails = [c["email"] for c in context["response"].json()]
+    emails = [c["email"] for c in context["response"].json()["cuentas"]]
     assert context["email_buscado"] in emails

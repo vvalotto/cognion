@@ -62,9 +62,7 @@ class SQLAlchemyCuentaQueryRepository(CuentaQueryPort):
             filtros.append(UsuarioModel.bloqueada.is_(True))
         if busqueda:
             patron = f"%{busqueda}%"
-            filtros.append(
-                or_(UsuarioModel.nombre.ilike(patron), UsuarioModel.email.ilike(patron))
-            )
+            filtros.append(or_(UsuarioModel.nombre.ilike(patron), UsuarioModel.email.ilike(patron)))
 
         total_query = select(func.count()).select_from(UsuarioModel)
         for model_cls in joins:
