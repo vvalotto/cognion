@@ -12,6 +12,10 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
+function paginado<T>(preguntas: T[]): { preguntas: T[]; total: number } {
+  return { preguntas, total: preguntas.length }
+}
+
 const materiaResponse = [
   { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 2 },
 ]
@@ -67,7 +71,7 @@ describe("NuevaPreguntaOpcionMultiple", () => {
   it("carga exitosa con 3 opciones y una marcada correcta vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
       .mockResolvedValueOnce(jsonResponse(201, preguntaCreadaResponse))
     const user = userEvent.setup()
 
@@ -94,7 +98,7 @@ describe("NuevaPreguntaOpcionMultiple", () => {
   it("sugiere unidades y temas ya usados en el banco (US-ADJ-02)", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [preguntaCreadaResponse]))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([preguntaCreadaResponse])))
 
     renderFormulario()
     await screen.findByLabelText("Texto de la pregunta")
@@ -115,7 +119,7 @@ describe("NuevaPreguntaOpcionMultiple", () => {
   it("sin ninguna opción marcada como correcta bloquea el envío y no llama al backend", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
     const user = userEvent.setup()
 
     renderFormulario()
@@ -135,7 +139,7 @@ describe("NuevaPreguntaOpcionMultiple", () => {
   it("quitar una opción no permite bajar de 2", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
     renderFormulario()
 
     await screen.findByLabelText("Texto de la pregunta")

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from src.banco_preguntas.entities.dificultad import Dificultad
@@ -25,6 +26,11 @@ def _validar_opciones(opciones: list[Opcion]) -> None:
         raise OpcionesInvalidas("Debe haber exactamente una opción marcada como correcta.")
 
 
+def _ahora() -> datetime:
+    """Timestamp actual en UTC — usado como `fecha_creacion` por defecto."""
+    return datetime.now(UTC)
+
+
 @dataclass
 class PreguntaPlantillaVerdaderoFalso:
     """Pregunta de Verdadero/Falso — respuesta correcta fija, sin lista de opciones."""
@@ -38,6 +44,7 @@ class PreguntaPlantillaVerdaderoFalso:
     dificultad: Dificultad
     importancia: Importancia
     activa: bool = field(default=True)
+    fecha_creacion: datetime = field(default_factory=_ahora)
 
     @staticmethod
     def crear(
@@ -108,6 +115,7 @@ class PreguntaPlantillaOpcionMultiple:
     dificultad: Dificultad
     importancia: Importancia
     activa: bool = field(default=True)
+    fecha_creacion: datetime = field(default_factory=_ahora)
 
     @staticmethod
     def crear(

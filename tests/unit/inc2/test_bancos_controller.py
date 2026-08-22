@@ -40,7 +40,7 @@ class TestBancosController:
 
         resultado = await controller.filtrar_preguntas(banco_id=banco.id)
 
-        assert resultado == [pregunta]
+        assert resultado.preguntas == [pregunta]
 
     async def test_filtrar_preguntas_propaga_filtros(self):
         banco_repo = FakeBancoRepository()
@@ -53,4 +53,21 @@ class TestBancosController:
 
         resultado = await controller.filtrar_preguntas(banco_id=banco.id, dificultad="bajo")
 
-        assert resultado == []
+        assert resultado.preguntas == []
+
+    async def test_filtrar_preguntas_propaga_pagina_y_tamanio_pagina(self):
+        banco_repo = FakeBancoRepository()
+        pregunta_repo = FakePreguntaRepository()
+        banco = Banco.crear(materia_id=uuid.uuid4())
+        await banco_repo.guardar(banco)
+        for _ in range(3):
+            await pregunta_repo.guardar(_pregunta_om(banco.id))
+
+        controller = BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
+
+        resultado = await controller.filtrar_preguntas(
+            banco_id=banco.id, pagina=1, tamanio_pagina=2
+        )
+
+        assert len(resultado.preguntas) == 2
+        assert resultado.total == 3

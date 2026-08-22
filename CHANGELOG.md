@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-03] Paginar el listado del banco de preguntas — página fija de 20, orden estable
+  por fecha de creación, reset a página 1 al cambiar filtros
+  - Backend: `PreguntaPlantilla*.fecha_creacion` (nuevo, inmutable), migración con backfill
+    automático (`server_default=now()`, mismo patrón que `usuario_creado_en`)
+  - `GET /bancos/{id}/preguntas` acepta `pagina`/`tamanio_pagina` **opt-in**: si el cliente no
+    los manda, sigue devolviendo el banco completo sin truncar — decisión de diseño detectada
+    en Fase 2 (4 pantallas más consumen este endpoint para buscar una pregunta por id o
+    derivar sugerencias, y se hubieran roto silenciosamente con paginación forzada). Contrato
+    de respuesta pasa a `{ preguntas, total }` siempre (antes lista plana)
+  - `frontend/src/components/ui/pagination.tsx` (nuevo, reusable) — controles de números de
+    página + Anterior/Siguiente en `Banco.tsx`
+  - `docs/design/ux/wireframes-banco-preguntas.md` §2.3 actualizado (gate UX) antes de tocar
+    `frontend/`
+  - 368/368 tests backend (300 unit/integración + 68 BDD, incluye 4 escenarios nuevos con
+    steps reales de `pytest-bdd`), 156/156 tests frontend, pylint 9.16/10, coverage 100%
+    backend / 92.04% frontend. Verificación visual en navegador real con 25 preguntas reales
+    confirmando paginación, cambio de página y reset por filtro
 - [US-ADJ-01] Alinear visualmente las pantallas de Banco de Preguntas con el prototipo
   aprobado — refactor de presentación puro (SP-ADJ-01), sin cambios de comportamiento ni de
   backend

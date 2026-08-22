@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Pagination } from "@/components/ui/pagination"
 import {
   derivarSugerencias,
   filtrarBanco,
@@ -15,6 +16,8 @@ import {
   type MateriaListItemResponse,
   type PreguntaResponse,
 } from "@/lib/banco-preguntas-api"
+
+const TAMANIO_PAGINA = 20
 
 const NIVELES: Array<Dificultad | Importancia> = ["alto", "medio", "bajo"]
 const ETIQUETA_NIVEL: Record<Dificultad | Importancia, string> = {
@@ -39,6 +42,8 @@ export function Banco() {
 
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
   const [preguntas, setPreguntas] = useState<PreguntaResponse[] | null>(null)
+  const [total, setTotal] = useState(0)
+  const [pagina, setPagina] = useState(1)
   const [unidad, setUnidad] = useState("")
   const [tema, setTema] = useState("")
   const [dificultad, setDificultad] = useState<Dificultad | "">("")
@@ -59,9 +64,9 @@ export function Banco() {
   useEffect(() => {
     if (!materia) return
     let cancelado = false
-    filtrarBanco(materia.bancoId).then((todasLasPreguntas) => {
+    filtrarBanco(materia.bancoId).then((resultado) => {
       if (cancelado) return
-      const { unidades, temas } = derivarSugerencias(todasLasPreguntas)
+      const { unidades, temas } = derivarSugerencias(resultado.preguntas)
       setSugerenciasUnidad(unidades)
       setSugerenciasTema(temas)
     })
@@ -79,20 +84,27 @@ export function Banco() {
       dificultad: dificultad || undefined,
       importancia: importancia || undefined,
     }
-    filtrarBanco(materia.bancoId, filtros).then((resultado) => {
-      if (!cancelado) setPreguntas(resultado)
-    })
+    filtrarBanco(materia.bancoId, filtros, { pagina, tamanioPagina: TAMANIO_PAGINA }).then(
+      (resultado) => {
+        if (cancelado) return
+        setPreguntas(resultado.preguntas)
+        setTotal(resultado.total)
+      },
+    )
     return () => {
       cancelado = true
     }
-  }, [materia, unidad, tema, dificultad, importancia])
+  }, [materia, unidad, tema, dificultad, importancia, pagina])
 
   function limpiarFiltros() {
     setUnidad("")
     setTema("")
     setDificultad("")
     setImportancia("")
+    setPagina(1)
   }
+
+  const totalPaginas = Math.ceil(total / TAMANIO_PAGINA)
 
   if (materia === null) {
     return <p className="text-sm text-muted-foreground">Cargando…</p>
@@ -111,8 +123,7 @@ export function Banco() {
         <div>
           <h1 className="text-lg font-semibold">{materia.nombre}</h1>
           <p className="text-sm text-muted-foreground">
-            {preguntas?.length ?? 0} pregunta{preguntas?.length === 1 ? "" : "s"} activa
-            {preguntas?.length === 1 ? "" : "s"}
+            {total} pregunta{total === 1 ? "" : "s"} activa{total === 1 ? "" : "s"}
           </p>
         </div>
         <Button onClick={() => navigate(`/materias/${materiaId}/banco/preguntas/nueva`)}>
@@ -131,7 +142,10 @@ export function Banco() {
             type="text"
             list="filtro-unidad-sugerencias"
             value={unidad}
-            onChange={(e) => setUnidad(e.target.value)}
+            onChange={(e) => {
+              setUnidad(e.target.value)
+              setPagina(1)
+            }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           />
           <datalist id="filtro-unidad-sugerencias">
@@ -149,7 +163,10 @@ export function Banco() {
             type="text"
             list="filtro-tema-sugerencias"
             value={tema}
-            onChange={(e) => setTema(e.target.value)}
+            onChange={(e) => {
+              setTema(e.target.value)
+              setPagina(1)
+            }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           />
           <datalist id="filtro-tema-sugerencias">
@@ -165,7 +182,10 @@ export function Banco() {
           <select
             id="filtro-dificultad"
             value={dificultad}
-            onChange={(e) => setDificultad(e.target.value as Dificultad | "")}
+            onChange={(e) => {
+              setDificultad(e.target.value as Dificultad | "")
+              setPagina(1)
+            }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           >
             <option value="">Todas</option>
@@ -183,7 +203,10 @@ export function Banco() {
           <select
             id="filtro-importancia"
             value={importancia}
-            onChange={(e) => setImportancia(e.target.value as Importancia | "")}
+            onChange={(e) => {
+              setImportancia(e.target.value as Importancia | "")
+              setPagina(1)
+            }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           >
             <option value="">Todas</option>
@@ -274,6 +297,8 @@ export function Banco() {
           </tbody>
         </table>
       </Card>
+
+      <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />
     </div>
   )
 }

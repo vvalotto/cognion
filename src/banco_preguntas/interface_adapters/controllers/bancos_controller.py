@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.banco_preguntas.entities.pregunta_plantilla import (
-    PreguntaPlantillaOpcionMultiple,
-    PreguntaPlantillaVerdaderoFalso,
+from src.banco_preguntas.entities.resultado_paginado_preguntas import (
+    ResultadoPaginadoPreguntas,
 )
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
 
@@ -25,7 +24,9 @@ class BancosController:
         tema: str | None = None,
         dificultad: str | None = None,
         importancia: str | None = None,
-    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        pagina: int | None = None,
+        tamanio_pagina: int | None = None,
+    ) -> ResultadoPaginadoPreguntas:
         """Delega el filtrado del banco en el caso de uso correspondiente."""
         return await self._filtrar_banco.execute(
             banco_id=banco_id,
@@ -33,4 +34,6 @@ class BancosController:
             tema=tema,
             dificultad=dificultad,
             importancia=importancia,
+            pagina=pagina,
+            tamanio_pagina=tamanio_pagina,
         )

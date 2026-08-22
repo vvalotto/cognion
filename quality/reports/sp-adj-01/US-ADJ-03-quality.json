@@ -1,0 +1,28 @@
+{
+  "us_id": "US-ADJ-03",
+  "titulo": "Paginar el listado del banco de preguntas",
+  "tipo": "backend + frontend",
+  "fecha": "2026-08-22",
+  "resultado": "APROBADO",
+  "backend": {
+    "componente": "src/banco_preguntas",
+    "pylint": 9.16,
+    "cc_max": "A (todas las funciones, sin excepciones sobre B)",
+    "mi_min": 48.77,
+    "coverage": 100.0,
+    "umbrales": { "pylint_min": 8.0, "cc_max": 10, "mi_min": 20, "coverage_min": 95.0 },
+    "tests": { "unit_integration": 300, "bdd_step_defs": 68, "total": 368 },
+    "observaciones": [
+      "pylint 9.16/10 (baja de 9.28 previo por duplicate-code entre bancos_router.py y preguntas_router.py — mapeo pregunta->response ya duplicado antes de esta US, no introducido por US-ADJ-03).",
+      "100% coverage sobre src/banco_preguntas completo, incluyendo resultado_paginado_preguntas.py (nuevo) y la rama opt-in de filtrar() con y sin pagina/tamanio_pagina."
+    ]
+  },
+  "frontend": {
+    "oxlint_errores": 0,
+    "tsc_noEmit_errores": 0,
+    "vitest": { "tests_totales": 156, "pasando": 156, "fallando": 0 },
+    "cobertura_global": { "statements": 92.04, "branches": 85.11, "functions": 90.73, "lines": 93.66, "umbral_referencia": 80 }
+  },
+  "decision_diseno": "Paginación opt-in en GET /bancos/{id}/preguntas y en el puerto PreguntaRepositoryPort.filtrar() — si el caller no manda pagina/tamanio_pagina, se devuelve todo sin truncar (comportamiento previo). Solo Banco.tsx pasa esos parámetros; EditarPregunta/EliminarPregunta/NuevaPreguntaOpcionMultiple/NuevaPreguntaVerdaderoFalso siguen recibiendo el banco completo. Contrato de respuesta cambia de list[...] a {preguntas, total} siempre.",
+  "sin_regresion_funcional": "confirmado — 368/368 backend y 156/156 frontend en verde, incluida la suite completa de BDD de US-1.1.x a US-2.2.x"
+}

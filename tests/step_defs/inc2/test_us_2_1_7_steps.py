@@ -160,23 +160,25 @@ def ejecuta_filtrar_banco_dificultad_bajo(context):
 def valida_solo_matchean_ambos_filtros(context):
     assert context["response"].status_code == 200
     data = context["response"].json()
-    assert [p["id"] for p in data] == [context["match_id"]]
+    assert [p["id"] for p in data["preguntas"]] == [context["match_id"]]
+    assert data["total"] == 1
 
 
 @then("el sistema devuelve las 5 preguntas activas")
 def valida_devuelve_cinco_activas(context):
     assert context["response"].status_code == 200
     data = context["response"].json()
-    assert {p["id"] for p in data} == set(context["activas_ids"])
+    assert {p["id"] for p in data["preguntas"]} == set(context["activas_ids"])
+    assert data["total"] == 5
 
 
 @then("no incluye la pregunta inactiva")
 def valida_no_incluye_inactiva(context):
     data = context["response"].json()
-    assert context["inactiva_id"] not in [p["id"] for p in data]
+    assert context["inactiva_id"] not in [p["id"] for p in data["preguntas"]]
 
 
 @then("el sistema devuelve una lista vacía")
 def valida_lista_vacia(context):
     assert context["response"].status_code == 200
-    assert context["response"].json() == []
+    assert context["response"].json() == {"preguntas": [], "total": 0}

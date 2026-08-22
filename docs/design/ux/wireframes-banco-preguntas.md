@@ -50,7 +50,7 @@ automático — sin pantalla propia para crear el banco, no hay decisión que to
 
 ### 2.3 Banco — listado y filtro (`#banco`)
 
-**Query:** `FiltrarBanco(materia_id, unidad?, tema?, dificultad?, importancia?)`.
+**Query:** `FiltrarBanco(materia_id, unidad?, tema?, dificultad?, importancia?, pagina?, tamanio_pagina?)`.
 
 | Elemento | Detalle |
 |---|---|
@@ -60,6 +60,7 @@ automático — sin pantalla propia para crear el banco, no hay decisión que to
 | Acciones por fila | "Editar" (`#editar-pregunta`), "Eliminar" (`#eliminar-pregunta`) |
 | Acción primaria | "+ Nueva pregunta" → `#nueva-pregunta-tipo` |
 | Solo preguntas activas | Preguntas dadas de baja (INV-BP-04) no aparecen en esta tabla |
+| Paginación (`US-ADJ-03`) | Debajo de la tabla: números de página + "Anterior"/"Siguiente", mismo lenguaje visual que el resto de los controles (bordes/radios de `US-ADJ-01`). Tamaño de página fijo (20), ordenado por fecha de creación. Cambiar cualquier filtro vuelve a la página 1. Si el banco tiene 20 preguntas o menos, los controles no se muestran (o se muestran deshabilitados). |
 
 ### 2.4 Nueva pregunta — elegir tipo (`#nueva-pregunta-tipo`)
 

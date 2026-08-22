@@ -81,7 +81,7 @@ describe("banco-preguntas-api", () => {
 
   describe("filtrarBanco", () => {
     it("hace GET /bancos/{id}/preguntas sin query string cuando no hay filtros", async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
 
       await filtrarBanco("b1")
 
@@ -91,7 +91,7 @@ describe("banco-preguntas-api", () => {
     })
 
     it("arma el query string solo con los filtros presentes", async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
 
       await filtrarBanco("b1", { dificultad: "alto", tema: "Cohesión" })
 
@@ -101,10 +101,11 @@ describe("banco-preguntas-api", () => {
       expect(parsed.searchParams.get("tema")).toBe("Cohesión")
       expect(parsed.searchParams.has("unidad")).toBe(false)
       expect(parsed.searchParams.has("importancia")).toBe(false)
+      expect(parsed.searchParams.has("pagina")).toBe(false)
     })
 
     it("incluye unidad e importancia en el query string cuando se proveen", async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
 
       await filtrarBanco("b1", { unidad: "u1", importancia: "medio" })
 
@@ -114,35 +115,57 @@ describe("banco-preguntas-api", () => {
       expect(parsed.searchParams.get("importancia")).toBe("medio")
     })
 
+    it("[US-ADJ-03] incluye pagina y tamanio_pagina en el query string cuando se proveen", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
+
+      await filtrarBanco("b1", {}, { pagina: 2, tamanioPagina: 20 })
+
+      const [url] = vi.mocked(fetch).mock.calls[0]
+      const parsed = new URL(String(url))
+      expect(parsed.searchParams.get("pagina")).toBe("2")
+      expect(parsed.searchParams.get("tamanio_pagina")).toBe("20")
+    })
+
+    it("[US-ADJ-03] devuelve total además de las preguntas mapeadas", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 71 }))
+
+      const resultado = await filtrarBanco("b1")
+
+      expect(resultado.total).toBe(71)
+    })
+
     it("mapea preguntas de opción múltiple y verdadero/falso desde snake_case", async () => {
       vi.mocked(fetch).mockResolvedValueOnce(
-        jsonResponse(200, [
-          {
-            id: "p1",
-            banco_id: "b1",
-            texto: "¿Cuál es SOLID?",
-            opciones: [{ texto: "a", es_correcta: true }],
-            unidad_tematica: "u1",
-            tema: "t1",
-            dificultad: "alto",
-            importancia: "alto",
-            activa: true,
-          },
-          {
-            id: "p2",
-            banco_id: "b1",
-            texto: "¿Verdadero?",
-            respuesta_correcta: false,
-            unidad_tematica: "u2",
-            tema: "t2",
-            dificultad: "bajo",
-            importancia: "medio",
-            activa: true,
-          },
-        ]),
+        jsonResponse(200, {
+          preguntas: [
+            {
+              id: "p1",
+              banco_id: "b1",
+              texto: "¿Cuál es SOLID?",
+              opciones: [{ texto: "a", es_correcta: true }],
+              unidad_tematica: "u1",
+              tema: "t1",
+              dificultad: "alto",
+              importancia: "alto",
+              activa: true,
+            },
+            {
+              id: "p2",
+              banco_id: "b1",
+              texto: "¿Verdadero?",
+              respuesta_correcta: false,
+              unidad_tematica: "u2",
+              tema: "t2",
+              dificultad: "bajo",
+              importancia: "medio",
+              activa: true,
+            },
+          ],
+          total: 2,
+        }),
       )
 
-      const preguntas = await filtrarBanco("b1")
+      const { preguntas } = await filtrarBanco("b1")
 
       expect(preguntas[0]).toEqual({
         id: "p1",

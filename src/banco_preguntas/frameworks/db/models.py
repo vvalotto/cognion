@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import uuid
+from datetime import datetime
 from typing import Any
 
-from sqlalchemy import Boolean, ForeignKey, String
+from sqlalchemy import Boolean, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -61,3 +62,4 @@ class PreguntaPlantillaModel(Base):
     dificultad: Mapped[str] = mapped_column(String(10), nullable=False)
     importancia: Mapped[str] = mapped_column(String(10), nullable=False)
     activa: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    fecha_creacion: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

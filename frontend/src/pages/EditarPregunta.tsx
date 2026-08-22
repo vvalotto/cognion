@@ -64,12 +64,12 @@ export function EditarPregunta() {
   useEffect(() => {
     if (!materia) return
     let cancelado = false
-    filtrarBanco(materia.bancoId).then((preguntas) => {
+    filtrarBanco(materia.bancoId).then((resultado) => {
       if (cancelado) return
-      const { unidades, temas } = derivarSugerencias(preguntas)
+      const { unidades, temas } = derivarSugerencias(resultado.preguntas)
       setSugerenciasUnidad(unidades)
       setSugerenciasTema(temas)
-      const encontrada = preguntas.find((p) => p.id === preguntaId) ?? null
+      const encontrada = resultado.preguntas.find((p) => p.id === preguntaId) ?? null
       setPregunta(encontrada)
       if (encontrada) {
         setTexto(encontrada.texto)

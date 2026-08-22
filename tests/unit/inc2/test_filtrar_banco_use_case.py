@@ -73,7 +73,8 @@ class TestFiltrarBancoUseCase:
             banco_id=banco.id, dificultad=Dificultad.ALTO, importancia=Importancia.ALTO
         )
 
-        assert resultado == [match]
+        assert resultado.preguntas == [match]
+        assert resultado.total == 1
 
     async def test_sin_filtros_adicionales_devuelve_solo_activas(self):
         banco_repo = FakeBancoRepository()
@@ -91,8 +92,9 @@ class TestFiltrarBancoUseCase:
         use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
         resultado = await use_case.execute(banco_id=banco.id)
 
-        assert len(resultado) == 5
-        assert inactiva not in resultado
+        assert len(resultado.preguntas) == 5
+        assert resultado.total == 5
+        assert inactiva not in resultado.preguntas
 
     async def test_ningun_resultado(self):
         banco_repo = FakeBancoRepository()
@@ -104,7 +106,8 @@ class TestFiltrarBancoUseCase:
         use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
         resultado = await use_case.execute(banco_id=banco.id, dificultad=Dificultad.BAJO)
 
-        assert resultado == []
+        assert resultado.preguntas == []
+        assert resultado.total == 0
 
     async def test_rechaza_banco_inexistente(self):
         banco_repo = FakeBancoRepository()
@@ -128,7 +131,7 @@ class TestFiltrarBancoUseCase:
         use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
         resultado = await use_case.execute(banco_id=banco.id, unidad="Unidad 2", tema="Testing")
 
-        assert resultado == [match]
+        assert resultado.preguntas == [match]
 
     async def test_no_incluye_preguntas_de_otro_banco(self):
         banco_repo = FakeBancoRepository()
@@ -144,4 +147,33 @@ class TestFiltrarBancoUseCase:
         use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
         resultado = await use_case.execute(banco_id=banco.id)
 
-        assert resultado == []
+        assert resultado.preguntas == []
+
+    async def test_pagina_y_tamanio_pagina_limitan_el_resultado_pero_no_el_total(self):
+        banco_repo = FakeBancoRepository()
+        pregunta_repo = FakePreguntaRepository()
+        banco = Banco.crear(materia_id=uuid.uuid4())
+        await banco_repo.guardar(banco)
+        for _ in range(5):
+            await pregunta_repo.guardar(_pregunta_om(banco.id))
+
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        resultado = await use_case.execute(banco_id=banco.id, pagina=1, tamanio_pagina=2)
+
+        assert len(resultado.preguntas) == 2
+        assert resultado.total == 5
+
+    async def test_sin_pagina_ni_tamanio_pagina_devuelve_todo_sin_truncar(self):
+        """Opt-in (US-ADJ-03): pantallas que no paginan siguen recibiendo el banco completo."""
+        banco_repo = FakeBancoRepository()
+        pregunta_repo = FakePreguntaRepository()
+        banco = Banco.crear(materia_id=uuid.uuid4())
+        await banco_repo.guardar(banco)
+        for _ in range(25):
+            await pregunta_repo.guardar(_pregunta_om(banco.id))
+
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        resultado = await use_case.execute(banco_id=banco.id)
+
+        assert len(resultado.preguntas) == 25
+        assert resultado.total == 25

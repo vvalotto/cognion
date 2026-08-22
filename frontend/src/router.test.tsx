@@ -105,19 +105,22 @@ describe("router (integración)", () => {
         ]),
       )
       .mockResolvedValueOnce(
-        jsonResponse(200, [
-          {
-            id: "p1",
-            banco_id: "b1",
-            texto: "¿Qué principio prohíbe importar una capa externa?",
-            respuesta_correcta: true,
-            unidad_tematica: "Unidad 3",
-            tema: "Arquitectura",
-            dificultad: "alto",
-            importancia: "alto",
-            activa: true,
-          },
-        ]),
+        jsonResponse(200, {
+          preguntas: [
+            {
+              id: "p1",
+              banco_id: "b1",
+              texto: "¿Qué principio prohíbe importar una capa externa?",
+              respuesta_correcta: true,
+              unidad_tematica: "Unidad 3",
+              tema: "Arquitectura",
+              dificultad: "alto",
+              importancia: "alto",
+              activa: true,
+            },
+          ],
+          total: 1,
+        }),
       )
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/p1/editar")
@@ -146,7 +149,7 @@ describe("router (integración)", () => {
           { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
         ]),
       )
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/nueva/opcion-multiple")
     render(<RouterProvider router={router} />)
@@ -164,7 +167,7 @@ describe("router (integración)", () => {
           { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
         ]),
       )
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/nueva/verdadero-falso")
     render(<RouterProvider router={router} />)
@@ -183,19 +186,22 @@ describe("router (integración)", () => {
         ]),
       )
       .mockResolvedValueOnce(
-        jsonResponse(200, [
-          {
-            id: "p1",
-            banco_id: "b1",
-            texto: "¿Qué principio prohíbe importar una capa externa?",
-            respuesta_correcta: true,
-            unidad_tematica: "Unidad 3",
-            tema: "Arquitectura",
-            dificultad: "alto",
-            importancia: "alto",
-            activa: true,
-          },
-        ]),
+        jsonResponse(200, {
+          preguntas: [
+            {
+              id: "p1",
+              banco_id: "b1",
+              texto: "¿Qué principio prohíbe importar una capa externa?",
+              respuesta_correcta: true,
+              unidad_tematica: "Unidad 3",
+              tema: "Arquitectura",
+              dificultad: "alto",
+              importancia: "alto",
+              activa: true,
+            },
+          ],
+          total: 1,
+        }),
       )
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco/preguntas/p1/eliminar")
@@ -214,8 +220,8 @@ describe("router (integración)", () => {
           { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 0 },
         ]),
       )
-      .mockResolvedValueOnce(jsonResponse(200, []))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/materias/m1/banco")
     render(<RouterProvider router={router} />)

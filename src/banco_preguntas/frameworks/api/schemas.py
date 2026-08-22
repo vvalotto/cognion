@@ -106,3 +106,10 @@ class PreguntaVerdaderoFalsoResponse(BaseModel):
     dificultad: Dificultad
     importancia: Importancia
     activa: bool
+
+
+class PreguntasPaginadasResponse(BaseModel):
+    """Página de preguntas junto con el total que matchea los filtros (US-ADJ-03)."""
+
+    preguntas: list[PreguntaOpcionMultipleResponse | PreguntaVerdaderoFalsoResponse]
+    total: int

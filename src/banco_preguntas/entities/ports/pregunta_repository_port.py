@@ -9,6 +9,9 @@ from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
     PreguntaPlantillaVerdaderoFalso,
 )
+from src.banco_preguntas.entities.resultado_paginado_preguntas import (
+    ResultadoPaginadoPreguntas,
+)
 
 
 class PreguntaRepositoryPort(ABC):
@@ -40,9 +43,16 @@ class PreguntaRepositoryPort(ABC):
         tema: str | None = None,
         dificultad: str | None = None,
         importancia: str | None = None,
-    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        pagina: int | None = None,
+        tamanio_pagina: int | None = None,
+    ) -> ResultadoPaginadoPreguntas:
         """Lista las preguntas activas del banco que matchean todos los filtros provistos.
 
         Los filtros son opcionales y combinables (AND) — un filtro en `None` no restringe el
-        resultado.
+        resultado. `pagina`/`tamanio_pagina` son opt-in (US-ADJ-03): si se omiten (`None`),
+        devuelve todas las preguntas que matchean, ordenadas por `fecha_creacion` — mismo
+        comportamiento que antes de la paginación, usado por las pantallas que necesitan el
+        banco completo (sugerencias, búsqueda por id). Si se proveen ambos, aplica
+        `LIMIT`/`OFFSET` sobre ese mismo orden. `total` siempre refleja la cantidad de
+        preguntas que matchean los filtros, sin paginar.
         """
