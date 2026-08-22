@@ -172,7 +172,12 @@ def cambia_filtro_estado(context):
     context["response"] = run_async(
         _get(
             "/usuarios",
-            {"pagina": 1, "tamanio_pagina": TAMANIO_PAGINA, "rol": "estudiante", "estado": "bloqueada"},
+            {
+                "pagina": 1,
+                "tamanio_pagina": TAMANIO_PAGINA,
+                "rol": "estudiante",
+                "estado": "bloqueada",
+            },
         )
     )
 

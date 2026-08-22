@@ -10,6 +10,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-05] Paginar el listado de cuentas — mismo criterio que `US-ADJ-03`, sin migración
+  (`Usuario.creado_en` ya existía desde `US-2.2.3`)
+  - A diferencia de `US-ADJ-03`, `CuentaQueryPort.listar()` tiene un único consumidor a cada
+    lado (verificado por grep) — no hizo falta el diseño opt-in, `pagina`/`tamanio_pagina`
+    con default fijo (1/20) siempre aplicado
+  - `GET /usuarios` devuelve `{ cuentas, total }` (antes lista plana), orden estable por
+    `creado_en, id`, `LIMIT`/`OFFSET`
+  - `Cuentas.tsx` reutiliza `components/ui/pagination.tsx` de `US-ADJ-03` sin duplicarlo
+  - 374/374 tests backend (306 unit/integración + 68 BDD, incluye 4 escenarios nuevos con
+    steps reales de `pytest-bdd`), 165/165 tests frontend, pylint 9.56/10, coverage 98%
+    backend / 91.95% frontend. Verificación visual en navegador real con 26 cuentas reales
+    confirmando paginación, cambio de página y reset por filtro. **Cierra completa la
+    iteración de ajuste conjunta `SP-ADJ-01`** (`US-ADJ-01`, `US-ADJ-03`, `US-ADJ-04`,
+    `US-ADJ-05`)
 - [US-ADJ-04] Alinear visualmente las pantallas de Cuentas/Contraseñas con el prototipo
   aprobado — refactor de presentación puro, sin cambios de comportamiento ni de backend
   - Mismo gap que resolvió `US-ADJ-01` para Banco de Preguntas, esta vez en
