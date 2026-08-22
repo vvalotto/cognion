@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from src.banco_preguntas.entities.dificultad import Dificultad
@@ -28,7 +28,7 @@ def _validar_opciones(opciones: list[Opcion]) -> None:
 
 def _ahora() -> datetime:
     """Timestamp actual en UTC — usado como `fecha_creacion` por defecto."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 @dataclass
