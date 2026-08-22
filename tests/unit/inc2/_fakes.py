@@ -9,6 +9,9 @@ from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
 from src.banco_preguntas.entities.ports.materia_repository_port import MateriaRepositoryPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
+from src.banco_preguntas.entities.resultado_paginado_preguntas import (
+    ResultadoPaginadoPreguntas,
+)
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
     PreguntaPlantillaVerdaderoFalso,
@@ -99,15 +102,25 @@ class FakePreguntaRepository(PreguntaRepositoryPort):
         tema: str | None = None,
         dificultad: str | None = None,
         importancia: str | None = None,
-    ) -> list[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso]:
+        pagina: int | None = None,
+        tamanio_pagina: int | None = None,
+    ) -> ResultadoPaginadoPreguntas:
         """Lista en memoria las preguntas activas del banco que matchean los filtros."""
-        return [
-            pregunta
-            for pregunta in self.preguntas.values()
-            if pregunta.banco_id == banco_id
-            and pregunta.activa
-            and (unidad is None or pregunta.unidad_tematica == unidad)
-            and (tema is None or pregunta.tema == tema)
-            and (dificultad is None or pregunta.dificultad.value == dificultad)
-            and (importancia is None or pregunta.importancia.value == importancia)
-        ]
+        coincidencias = sorted(
+            (
+                pregunta
+                for pregunta in self.preguntas.values()
+                if pregunta.banco_id == banco_id
+                and pregunta.activa
+                and (unidad is None or pregunta.unidad_tematica == unidad)
+                and (tema is None or pregunta.tema == tema)
+                and (dificultad is None or pregunta.dificultad.value == dificultad)
+                and (importancia is None or pregunta.importancia.value == importancia)
+            ),
+            key=lambda pregunta: (pregunta.fecha_creacion, str(pregunta.id)),
+        )
+        total = len(coincidencias)
+        if pagina is not None and tamanio_pagina is not None:
+            inicio = (pagina - 1) * tamanio_pagina
+            coincidencias = coincidencias[inicio : inicio + tamanio_pagina]
+        return ResultadoPaginadoPreguntas(preguntas=coincidencias, total=total)

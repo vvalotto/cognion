@@ -97,7 +97,8 @@ class TestSQLAlchemyPreguntaRepositoryFiltrar:
             banco_id=banco.id, dificultad="alto", importancia="alto"
         )
 
-        assert [p.id for p in resultado] == [match.id]
+        assert [p.id for p in resultado.preguntas] == [match.id]
+        assert resultado.total == 1
 
     async def test_sin_filtros_devuelve_solo_activas(self, session):
         banco = await _banco_persistido(session)
@@ -109,9 +110,10 @@ class TestSQLAlchemyPreguntaRepositoryFiltrar:
 
         resultado = await pregunta_repo.filtrar(banco_id=banco.id)
 
-        ids_resultado = {p.id for p in resultado}
+        ids_resultado = {p.id for p in resultado.preguntas}
         assert ids_resultado == {p.id for p in activas}
         assert inactiva.id not in ids_resultado
+        assert resultado.total == 3
 
     async def test_ningun_resultado(self, session):
         banco = await _banco_persistido(session)
@@ -120,7 +122,8 @@ class TestSQLAlchemyPreguntaRepositoryFiltrar:
 
         resultado = await pregunta_repo.filtrar(banco_id=banco.id, dificultad="bajo")
 
-        assert resultado == []
+        assert resultado.preguntas == []
+        assert resultado.total == 0
 
     async def test_filtra_por_unidad_y_tema(self, session):
         banco = await _banco_persistido(session)
@@ -132,7 +135,40 @@ class TestSQLAlchemyPreguntaRepositoryFiltrar:
             banco_id=banco.id, unidad="Unidad 2", tema="Testing"
         )
 
-        assert [p.id for p in resultado] == [match.id]
+        assert [p.id for p in resultado.preguntas] == [match.id]
+
+    async def test_orden_estable_por_fecha_creacion_con_desempate_por_id(self, session):
+        banco = await _banco_persistido(session)
+        primera = await _pregunta_om_persistida(session, banco.id)
+        segunda = await _pregunta_vf_persistida(session, banco.id)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+
+        resultado = await pregunta_repo.filtrar(banco_id=banco.id)
+
+        assert [p.id for p in resultado.preguntas] == [primera.id, segunda.id]
+
+    async def test_pagina_y_tamanio_pagina_aplican_limit_y_offset(self, session):
+        banco = await _banco_persistido(session)
+        preguntas = [await _pregunta_om_persistida(session, banco.id) for _ in range(5)]
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+
+        pagina_1 = await pregunta_repo.filtrar(banco_id=banco.id, pagina=1, tamanio_pagina=2)
+        pagina_2 = await pregunta_repo.filtrar(banco_id=banco.id, pagina=2, tamanio_pagina=2)
+
+        assert [p.id for p in pagina_1.preguntas] == [p.id for p in preguntas[0:2]]
+        assert [p.id for p in pagina_2.preguntas] == [p.id for p in preguntas[2:4]]
+        assert pagina_1.total == 5
+        assert pagina_2.total == 5
+
+    async def test_pagina_fuera_de_rango_devuelve_vacio_sin_error(self, session):
+        banco = await _banco_persistido(session)
+        await _pregunta_om_persistida(session, banco.id)
+        pregunta_repo = SQLAlchemyPreguntaRepository(session)
+
+        resultado = await pregunta_repo.filtrar(banco_id=banco.id, pagina=99, tamanio_pagina=20)
+
+        assert resultado.preguntas == []
+        assert resultado.total == 1
 
 
 class TestFiltrarPreguntasAPIIntegration:
@@ -157,7 +193,8 @@ class TestFiltrarPreguntasAPIIntegration:
 
         assert response.status_code == 200
         data = response.json()
-        assert [p["id"] for p in data] == [str(match.id)]
+        assert [p["id"] for p in data["preguntas"]] == [str(match.id)]
+        assert data["total"] == 1
 
     async def test_sin_filtros_adicionales(self, session, docente_headers):
         banco = await _banco_persistido(session)
@@ -174,8 +211,9 @@ class TestFiltrarPreguntasAPIIntegration:
 
         assert response.status_code == 200
         data = response.json()
-        assert len(data) == 5
-        assert str(inactiva.id) not in [p["id"] for p in data]
+        assert len(data["preguntas"]) == 5
+        assert data["total"] == 5
+        assert str(inactiva.id) not in [p["id"] for p in data["preguntas"]]
 
     async def test_ningun_resultado(self, session, docente_headers):
         banco = await _banco_persistido(session)
@@ -190,7 +228,25 @@ class TestFiltrarPreguntasAPIIntegration:
             )
 
         assert response.status_code == 200
-        assert response.json() == []
+        assert response.json() == {"preguntas": [], "total": 0}
+
+    async def test_pagina_y_tamanio_pagina_via_api(self, session, docente_headers):
+        banco = await _banco_persistido(session)
+        for _ in range(5):
+            await _pregunta_om_persistida(session, banco.id)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(
+                f"/bancos/{banco.id}/preguntas",
+                params={"pagina": 2, "tamanio_pagina": 2},
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data["preguntas"]) == 2
+        assert data["total"] == 5
 
     async def test_rechazo_por_banco_inexistente(self, docente_headers):
         transport = ASGITransport(app=app)
