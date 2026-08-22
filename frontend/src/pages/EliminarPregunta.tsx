@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   eliminarPregunta,
   filtrarBanco,
@@ -59,17 +61,23 @@ export function EliminarPregunta() {
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">Banco › Eliminar pregunta</p>
+      <Breadcrumb
+        items={[
+          { label: "Banco de preguntas" },
+          { label: "Banco", to: `/materias/${materiaId}/banco` },
+          { label: "Eliminar pregunta" },
+        ]}
+      />
       <h1 className="text-lg font-semibold">Eliminar pregunta</h1>
 
-      <div className="mt-4 rounded-lg border border-border p-4">
+      <Card className="mt-4 p-4">
         <p className="text-sm text-muted-foreground">Pregunta a eliminar:</p>
         <p className="mt-1 font-medium">{pregunta.texto}</p>
-      </div>
+      </Card>
 
       <div
         role="alert"
-        className="mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+        className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"
       >
         <p>
           Esta es una baja lógica: la pregunta deja de estar disponible para el banco y nuevas
@@ -78,7 +86,7 @@ export function EliminarPregunta() {
       </div>
 
       <div className="mt-4 flex gap-2">
-        <Button variant="destructive" onClick={handleEliminar}>
+        <Button variant="destructive-solid" onClick={handleEliminar}>
           Sí, eliminar
         </Button>
         <Button variant="outline" onClick={handleCancelar}>

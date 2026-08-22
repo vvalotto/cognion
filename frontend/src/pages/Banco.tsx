@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   derivarSugerencias,
   filtrarBanco,
@@ -17,6 +21,11 @@ const ETIQUETA_NIVEL: Record<Dificultad | Importancia, string> = {
   alto: "Alto",
   medio: "Medio",
   bajo: "Bajo",
+}
+const VARIANTE_NIVEL: Record<Dificultad | Importancia, "nivel-alto" | "nivel-medio" | "nivel-bajo"> = {
+  alto: "nivel-alto",
+  medio: "nivel-medio",
+  bajo: "nivel-bajo",
 }
 
 function esOpcionMultiple(pregunta: PreguntaResponse): boolean {
@@ -91,6 +100,13 @@ export function Banco() {
 
   return (
     <div>
+      <Breadcrumb
+        items={[
+          { label: "Banco de preguntas" },
+          { label: "Materias", to: "/materias" },
+          { label: materia.nombre },
+        ]}
+      />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">{materia.nombre}</h1>
@@ -99,16 +115,13 @@ export function Banco() {
             {preguntas?.length === 1 ? "" : "s"}
           </p>
         </div>
-        <button
-          type="button"
-          className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          onClick={() => navigate(`/materias/${materiaId}/banco/preguntas/nueva`)}
-        >
+        <Button onClick={() => navigate(`/materias/${materiaId}/banco/preguntas/nueva`)}>
           + Nueva pregunta
-        </button>
+        </Button>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-end gap-3">
+      <Card className="mt-4">
+        <CardContent className="flex flex-wrap items-end gap-3 p-4">
         <div>
           <label htmlFor="filtro-unidad" className="text-sm text-muted-foreground">
             Unidad temática
@@ -181,20 +194,17 @@ export function Banco() {
             ))}
           </select>
         </div>
-        <button
-          type="button"
-          className="rounded-md border border-border px-3 py-1 text-sm hover:bg-accent"
-          onClick={limpiarFiltros}
-        >
+        <Button type="button" variant="outline" size="sm" onClick={limpiarFiltros}>
           Limpiar filtros
-        </button>
-      </div>
+        </Button>
+        </CardContent>
+      </Card>
 
-      <div className="mt-4 overflow-x-auto">
+      <Card className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border text-muted-foreground">
-              <th className="py-2 pr-4">Pregunta</th>
+            <tr className="border-b border-border bg-muted text-muted-foreground">
+              <th className="py-2 pr-4 pl-4">Pregunta</th>
               <th className="py-2 pr-4">Tipo</th>
               <th className="py-2 pr-4">Unidad / Tema</th>
               <th className="py-2 pr-4">Dificultad</th>
@@ -205,26 +215,38 @@ export function Banco() {
           <tbody>
             {preguntas === null ? (
               <tr>
-                <td colSpan={6} className="py-4 text-muted-foreground">
+                <td colSpan={6} className="py-4 pl-4 text-muted-foreground">
                   Cargando…
                 </td>
               </tr>
             ) : (
               preguntas.map((pregunta) => (
-                <tr key={pregunta.id} className="border-b border-border">
-                  <td className="max-w-xs truncate py-2 pr-4">{pregunta.texto}</td>
-                  <td className="py-2 pr-4">
-                    {esOpcionMultiple(pregunta) ? "Opción múltiple" : "Verdadero/Falso"}
+                <tr key={pregunta.id} className="border-b border-border last:border-0">
+                  <td className="max-w-xs truncate py-3 pr-4 pl-4">{pregunta.texto}</td>
+                  <td className="py-3 pr-4">
+                    <Badge variant={esOpcionMultiple(pregunta) ? "tipo-om" : "tipo-vf"}>
+                      {esOpcionMultiple(pregunta) ? "Opción múltiple" : "Verdadero/Falso"}
+                    </Badge>
                   </td>
-                  <td className="py-2 pr-4">
+                  <td className="py-3 pr-4">
                     {pregunta.unidadTematica} · {pregunta.tema}
                   </td>
-                  <td className="py-2 pr-4">{ETIQUETA_NIVEL[pregunta.dificultad]}</td>
-                  <td className="py-2 pr-4">{ETIQUETA_NIVEL[pregunta.importancia]}</td>
-                  <td className="py-2 pr-4">
-                    <button
+                  <td className="py-3 pr-4">
+                    <Badge variant={VARIANTE_NIVEL[pregunta.dificultad]}>
+                      {ETIQUETA_NIVEL[pregunta.dificultad]}
+                    </Badge>
+                  </td>
+                  <td className="py-3 pr-4">
+                    <Badge variant={VARIANTE_NIVEL[pregunta.importancia]}>
+                      {ETIQUETA_NIVEL[pregunta.importancia]}
+                    </Badge>
+                  </td>
+                  <td className="py-3 pr-4 whitespace-nowrap">
+                    <Button
                       type="button"
-                      className="mr-2 rounded-md border border-border px-2 py-1 text-xs hover:bg-accent"
+                      variant="outline"
+                      size="sm"
+                      className="mr-2"
                       onClick={() =>
                         navigate(
                           `/materias/${materiaId}/banco/preguntas/${pregunta.id}/editar`,
@@ -232,10 +254,11 @@ export function Banco() {
                       }
                     >
                       Editar
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
-                      className="rounded-md border border-destructive px-2 py-1 text-xs text-destructive hover:bg-destructive/10"
+                      variant="destructive-solid"
+                      size="sm"
                       onClick={() =>
                         navigate(
                           `/materias/${materiaId}/banco/preguntas/${pregunta.id}/eliminar`,
@@ -243,14 +266,14 @@ export function Banco() {
                       }
                     >
                       Eliminar
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
-      </div>
+      </Card>
     </div>
   )
 }

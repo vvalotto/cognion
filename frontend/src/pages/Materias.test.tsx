@@ -55,6 +55,17 @@ describe("Materias", () => {
     expect(screen.getByText("1 pregunta activa")).toBeInTheDocument()
   })
 
+  it("[US-ADJ-01] muestra el breadcrumb y la tarjeta 'Nueva materia' con borde punteado", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+    renderMaterias()
+    await screen.findByRole("button", { name: /nueva materia/i })
+
+    expect(screen.getByText("Banco de preguntas")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Materias" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /nueva materia/i })).toHaveClass("border-dashed")
+  })
+
   it("la tarjeta de una materia navega a su banco", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(200, [
@@ -79,7 +90,7 @@ describe("Materias", () => {
     const user = userEvent.setup()
 
     renderMaterias()
-    await user.click(await screen.findByText("+ Nueva materia"))
+    await user.click(await screen.findByRole("button", { name: /nueva materia/i }))
 
     expect(await screen.findByText("Nueva materia")).toBeInTheDocument()
   })
