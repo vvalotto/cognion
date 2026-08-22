@@ -245,9 +245,12 @@ describe("router (integración)", () => {
   it("la ruta /cuentas renderiza el listado de cuentas con sesión de administrador", async () => {
     vi.mocked(fetch).mockReset()
     vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        { id: "u1", nombre: "Ana", email: "ana@fiuner.edu.ar", perfil: "docente", bloqueada: false },
-      ]),
+      jsonResponse(200, {
+        cuentas: [
+          { id: "u1", nombre: "Ana", email: "ana@fiuner.edu.ar", perfil: "docente", bloqueada: false },
+        ],
+        total: 1,
+      }),
     )
     setSession({ token: "t", rol: "administrador" })
     await router.navigate("/cuentas")

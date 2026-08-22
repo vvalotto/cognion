@@ -17,6 +17,21 @@ export interface FiltrosCuentas {
   busqueda?: string
 }
 
+export interface PaginacionCuentas {
+  pagina: number
+  tamanioPagina: number
+}
+
+export interface CuentasPaginadas {
+  cuentas: CuentaResponse[]
+  total: number
+}
+
+interface CuentasPaginadasApiResponse {
+  cuentas: CuentaResponse[]
+  total: number
+}
+
 export interface CuentaDetalleResponse extends CuentaResponse {
   creadoEn: string
   comisionId: string | null
@@ -32,14 +47,19 @@ interface CuentaDetalleApiResponse {
   comision_id: string | null
 }
 
-export async function listarCuentas(filtros: FiltrosCuentas = {}): Promise<CuentaResponse[]> {
+export async function listarCuentas(
+  filtros: FiltrosCuentas = {},
+  paginacion: PaginacionCuentas = { pagina: 1, tamanioPagina: 20 },
+): Promise<CuentasPaginadas> {
   const params = new URLSearchParams()
   if (filtros.rol) params.set("rol", filtros.rol)
   if (filtros.estado) params.set("estado", filtros.estado)
   if (filtros.busqueda) params.set("busqueda", filtros.busqueda)
+  params.set("pagina", String(paginacion.pagina))
+  params.set("tamanio_pagina", String(paginacion.tamanioPagina))
 
   const query = params.toString()
-  return apiFetch<CuentaResponse[]>(`/usuarios${query ? `?${query}` : ""}`)
+  return apiFetch<CuentasPaginadasApiResponse>(`/usuarios${query ? `?${query}` : ""}`)
 }
 
 function aCuentaDetalleResponse(datos: CuentaDetalleApiResponse): CuentaDetalleResponse {

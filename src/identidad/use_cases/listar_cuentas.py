@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
-from src.identidad.entities.usuario import Usuario
+from src.identidad.entities.resultado_paginado_cuentas import ResultadoPaginadoCuentas
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 
@@ -15,7 +15,12 @@ class ListarCuentasUseCase:
         self._cuenta_query = cuenta_query
 
     async def execute(
-        self, rol: TipoPerfil | None, estado: str | None, busqueda: str | None
-    ) -> list[Usuario]:
-        """Delega el filtrado combinado (AND) en el puerto de consulta."""
-        return await self._cuenta_query.listar(rol, estado, busqueda)
+        self,
+        rol: TipoPerfil | None,
+        estado: str | None,
+        busqueda: str | None,
+        pagina: int = 1,
+        tamanio_pagina: int = 20,
+    ) -> ResultadoPaginadoCuentas:
+        """Delega el filtrado combinado (AND) y la paginación en el puerto de consulta."""
+        return await self._cuenta_query.listar(rol, estado, busqueda, pagina, tamanio_pagina)

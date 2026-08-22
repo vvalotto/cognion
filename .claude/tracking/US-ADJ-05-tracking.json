@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-05",
+    "us_title": "Paginar el listado de cuentas",
+    "us_points": 4,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-22T20:25:30.059880+00:00",
+    "completed_at": "2026-08-22T21:29:21.702106+00:00",
+    "total_elapsed_seconds": 3831,
+    "effective_seconds": 3831,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-22T20:25:30.206392+00:00",
+      "completed_at": "2026-08-22T20:26:33.735047+00:00",
+      "elapsed_seconds": 63,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-22T20:26:34.361154+00:00",
+      "completed_at": "2026-08-22T20:32:32.511840+00:00",
+      "elapsed_seconds": 358,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-22T20:32:32.661369+00:00",
+      "completed_at": "2026-08-22T20:35:56.767556+00:00",
+      "elapsed_seconds": 204,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-22T20:35:57.324825+00:00",
+      "completed_at": "2026-08-22T21:01:52.903273+00:00",
+      "elapsed_seconds": 1555,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "ResultadoPaginadoCuentas + Port paginado",
+          "task_type": "entity",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-22T20:36:03.373669+00:00",
+          "completed_at": "2026-08-22T20:36:32.245172+00:00",
+          "elapsed_seconds": 28,
+          "actual_minutes": 0.47,
+          "variance_minutes": -14.53,
+          "file_created": "resultado_paginado_cuentas.py, cuenta_query_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Gateway listar() con LIMIT/OFFSET y total",
+          "task_type": "gateway",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-22T20:36:46.130893+00:00",
+          "completed_at": "2026-08-22T20:40:58.510196+00:00",
+          "elapsed_seconds": 252,
+          "actual_minutes": 4.2,
+          "variance_minutes": -15.8,
+          "file_created": "src/identidad/interface_adapters/gateways/cuenta_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "use_case/controller/schemas/router con paginacion",
+          "task_type": "use_case",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-22T20:41:15.541692+00:00",
+          "completed_at": "2026-08-22T20:43:19.698096+00:00",
+          "elapsed_seconds": 124,
+          "actual_minutes": 2.07,
+          "variance_minutes": -22.93,
+          "file_created": "listar_cuentas.py, cuentas_controller.py, schemas.py, cuentas_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Ajustar fakes/tests backend al nuevo contrato",
+          "task_type": "test",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-22T20:49:07.356574+00:00",
+          "completed_at": "2026-08-22T20:50:24.824780+00:00",
+          "elapsed_seconds": 77,
+          "actual_minutes": 1.28,
+          "variance_minutes": -18.72,
+          "file_created": "fakes y tests unitarios/integracion backend",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "cuentas-api.ts con pagina/total",
+          "task_type": "api",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-22T20:50:24.944266+00:00",
+          "completed_at": "2026-08-22T20:51:11.383240+00:00",
+          "elapsed_seconds": 46,
+          "actual_minutes": 0.77,
+          "variance_minutes": -14.23,
+          "file_created": "frontend/src/lib/cuentas-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Cuentas.tsx con paginacion (reusa Pagination)",
+          "task_type": "screen",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-22T20:51:11.495403+00:00",
+          "completed_at": "2026-08-22T20:52:50.516151+00:00",
+          "elapsed_seconds": 99,
+          "actual_minutes": 1.65,
+          "variance_minutes": -18.35,
+          "file_created": "frontend/src/pages/Cuentas.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Ajustar Cuentas.test.tsx y router.test.tsx al nuevo contrato",
+          "task_type": "test",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-22T20:52:50.634869+00:00",
+          "completed_at": "2026-08-22T20:54:23.609303+00:00",
+          "elapsed_seconds": 92,
+          "actual_minutes": 1.53,
+          "variance_minutes": -18.47,
+          "file_created": "Cuentas.test.tsx, router.test.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "Agregar tests de paginacion (4 escenarios) en Cuentas.test.tsx",
+          "task_type": "test",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-22T20:54:32.113271+00:00",
+          "completed_at": "2026-08-22T20:55:17.849241+00:00",
+          "elapsed_seconds": 45,
+          "actual_minutes": 0.75,
+          "variance_minutes": -19.25,
+          "file_created": "frontend/src/pages/Cuentas.test.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-22T21:02:23.584634+00:00",
+      "completed_at": "2026-08-22T21:02:23.729778+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-22T21:02:23.842367+00:00",
+      "completed_at": "2026-08-22T21:02:23.956395+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-22T21:02:37.033381+00:00",
+      "completed_at": "2026-08-22T21:10:31.671887+00:00",
+      "elapsed_seconds": 474,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-22T21:10:40.514809+00:00",
+      "completed_at": "2026-08-22T21:24:27.989862+00:00",
+      "elapsed_seconds": 827,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-22T21:27:38.756999+00:00",
+      "completed_at": "2026-08-22T21:28:41.142823+00:00",
+      "elapsed_seconds": 62,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-22T21:28:41.288009+00:00",
+      "completed_at": "2026-08-22T21:29:21.591305+00:00",
+      "elapsed_seconds": 40,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 10,
+    "estimated_total_minutes": 155.0,
+    "actual_total_minutes": 12.72,
+    "variance_minutes": -142.28,
+    "variance_percent": -91.8
+  }
+}

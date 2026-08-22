@@ -69,7 +69,7 @@ class TestListarCuentasAPIIntegration:
             response = await client.get("/usuarios", headers=admin_headers)
 
         assert response.status_code == 200
-        emails = [c["email"] for c in response.json()]
+        emails = [c["email"] for c in response.json()["cuentas"]]
         assert "listado.uno@fiuner.edu.ar" in emails
 
     async def test_filtro_por_rol_y_busqueda_por_email_parcial(self, admin_headers):
@@ -103,11 +103,13 @@ class TestListarCuentasAPIIntegration:
             )
 
         assert response.status_code == 200
-        cuentas = response.json()
+        data = response.json()
+        cuentas = data["cuentas"]
         assert len(cuentas) == 1
         assert cuentas[0]["email"] == "mgonzalez.api@fiuner.edu.ar"
         assert cuentas[0]["perfil"] == "docente"
         assert cuentas[0]["bloqueada"] is False
+        assert data["total"] == 1
 
     async def test_filtro_por_estado_activa(self, admin_headers):
         transport = ASGITransport(app=app)
@@ -128,9 +130,38 @@ class TestListarCuentasAPIIntegration:
             )
 
         assert response.status_code == 200
-        emails = [c["email"] for c in response.json()]
+        cuentas = response.json()["cuentas"]
+        emails = [c["email"] for c in cuentas]
         assert "activa.api@fiuner.edu.ar" in emails
-        assert all(c["bloqueada"] is False for c in response.json())
+        assert all(c["bloqueada"] is False for c in cuentas)
+
+    async def test_pagina_y_tamanio_pagina_limitan_el_resultado_pero_no_el_total(
+        self, admin_headers
+    ):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            for i in range(5):
+                await client.post(
+                    "/usuarios",
+                    json={
+                        "nombre": f"Paginado {i}",
+                        "email": f"paginado{i}@fiuner.edu.ar",
+                        "password": "claveSegura1",
+                        "perfil": "docente",
+                    },
+                    headers=admin_headers,
+                )
+
+            response = await client.get(
+                "/usuarios",
+                params={"busqueda": "paginado", "pagina": 1, "tamanio_pagina": 2},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data["cuentas"]) == 2
+        assert data["total"] == 5
 
     async def test_requiere_rol_administrador(self):
         transport = ASGITransport(app=app)

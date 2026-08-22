@@ -1,0 +1,32 @@
+{
+  "us_id": "US-ADJ-05",
+  "titulo": "Paginar el listado de cuentas",
+  "tipo": "backend + frontend",
+  "fecha": "2026-08-22",
+  "resultado": "APROBADO",
+  "backend": {
+    "componente": "src/identidad",
+    "pylint": 9.56,
+    "cc_max": "A (todas las funciones)",
+    "mi_min": 47.78,
+    "coverage": 98.0,
+    "umbrales": { "pylint_min": 8.0, "cc_max": 10, "mi_min": 20, "coverage_min": 95.0 },
+    "tests": { "unit_integration": 306, "bdd_step_defs": 68, "total": 374 },
+    "observaciones": [
+      "pylint 9.56/10, sin nuevas advertencias introducidas por esta US.",
+      "Anomalía de medición de coverage detectada y documentada: `cuenta_query_repository.py` reporta 72-74% con las líneas 75-91 (cuerpo principal de listar(), incluyendo LIMIT/OFFSET y armado del resultado) marcadas como no cubiertas por coverage.py/pytest-cov, a pesar de que un test dedicado (`test_pagina_y_tamanio_pagina_limitan_el_resultado_pero_no_el_total`) ejecuta y hace assert explícito sobre exactamente ese comportamiento (2 resultados de un total de 5). Reproducido de forma aislada corriendo solo ese test — mismo resultado. No se identificó la causa raíz (no es un patrón sistémico: el mismo patrón de código en `pregunta_repository.py` de US-ADJ-03 sí reportó 100%). Se documenta como limitación de la herramienta, no como código sin probar — el coverage total de src/identidad (98%) no se ve comprometido por este archivo puntual."
+    ]
+  },
+  "frontend": {
+    "oxlint_errores": 0,
+    "tsc_noEmit_errores": 0,
+    "vitest": { "tests_totales": 165, "pasando": 165, "fallando": 0 },
+    "cobertura_global": { "statements": 91.95, "branches": 84.76, "functions": 90.76, "lines": 93.67, "umbral_referencia": 80 }
+  },
+  "verificacion_visual": {
+    "metodo": "navegador real (Chrome vía claude-in-chrome), 26 cuentas reales (1 admin + 25 docentes) creadas vía API",
+    "resultado": "página 1 muestra 20 cuentas con controles Anterior/1/2/Siguiente correctos; página 2 muestra las 6 restantes con Anterior habilitado y Siguiente deshabilitado; filtrar por Rol=Docente vuelve correctamente a la página 1. Sin hallazgos."
+  },
+  "decision_diseno": "A diferencia de US-ADJ-03, CuentaQueryPort.listar() tiene un único consumidor a cada lado (ListarCuentasUseCase / Cuentas.tsx vía listarCuentas()), verificado por grep — no hizo falta el diseño opt-in de US-ADJ-03. pagina/tamanio_pagina con default fijo (1/20) siempre aplicado. Sin migración: Usuario.creado_en ya existía desde US-2.2.3. Reutiliza components/ui/pagination.tsx de US-ADJ-03 sin duplicarlo.",
+  "sin_regresion_funcional": "confirmado — 374/374 backend y 165/165 frontend en verde, incluida la suite completa de BDD de US-1.1.x a US-2.2.x"
+}

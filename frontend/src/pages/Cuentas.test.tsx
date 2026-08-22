@@ -12,6 +12,10 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
+function paginado<T>(cuentas: T[]): { cuentas: T[]; total: number } {
+  return { cuentas, total: cuentas.length }
+}
+
 const cuentasResponse = [
   { id: "u1", nombre: "Ana Docente", email: "ana@fiuner.edu.ar", perfil: "docente", bloqueada: false },
   {
@@ -46,7 +50,7 @@ describe("Cuentas", () => {
   })
 
   it("muestra todas las cuentas sin filtros al entrar a la pantalla", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
 
     renderCuentas()
 
@@ -56,9 +60,9 @@ describe("Cuentas", () => {
 
   it("filtrar por rol y estado consulta el backend con ambos filtros combinados", async () => {
     vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [cuentasResponse[1]]))
-      .mockResolvedValueOnce(jsonResponse(200, [cuentasResponse[1]]))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([cuentasResponse[1]])))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([cuentasResponse[1]])))
     const user = userEvent.setup()
 
     renderCuentas()
@@ -76,8 +80,8 @@ describe("Cuentas", () => {
 
   it("una combinación de filtros sin resultados deja la tabla vacía sin mensaje de error", async () => {
     vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
     const user = userEvent.setup()
 
     renderCuentas()
@@ -91,9 +95,9 @@ describe("Cuentas", () => {
 
   it("'Limpiar filtros' vuelve al listado sin filtros", async () => {
     vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [cuentasResponse[1]]))
-      .mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([cuentasResponse[1]])))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
     const user = userEvent.setup()
 
     renderCuentas()
@@ -109,7 +113,7 @@ describe("Cuentas", () => {
   })
 
   it("hacer clic en una fila navega al detalle de esa cuenta", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
     const user = userEvent.setup()
 
     renderCuentas()
@@ -121,7 +125,7 @@ describe("Cuentas", () => {
   })
 
   it("'+ Nueva cuenta' navega al alta de docente existente", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
     const user = userEvent.setup()
 
     renderCuentas()
@@ -133,7 +137,7 @@ describe("Cuentas", () => {
   })
 
   it("[US-ADJ-04] Rol y Estado se muestran con tags de color y cada fila tiene un botón Ver", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
 
     renderCuentas()
     await screen.findByText("Ana Docente")
@@ -148,7 +152,7 @@ describe("Cuentas", () => {
   })
 
   it("[US-ADJ-04] el botón Ver navega al detalle sin duplicar la navegación de la fila", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
     const user = userEvent.setup()
 
     renderCuentas()
@@ -157,5 +161,71 @@ describe("Cuentas", () => {
     await user.click(screen.getAllByRole("button", { name: "Ver" })[0])
 
     expect(await screen.findByText("Detalle de cuenta")).toBeInTheDocument()
+  })
+
+  function paginaDe20(offset: number) {
+    return Array.from({ length: 20 }, (_, i) => ({
+      id: `pag-${offset + i}`,
+      nombre: `Cuenta ${offset + i}`,
+      email: `cuenta${offset + i}@fiuner.edu.ar`,
+      perfil: "docente",
+      bloqueada: false,
+    }))
+  }
+
+  it("[US-ADJ-05] listado con más de una página muestra los controles de paginación", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { cuentas: paginaDe20(1), total: 45 }))
+
+    renderCuentas()
+
+    expect(await screen.findByText("Cuenta 1")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "3" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Siguiente" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled()
+  })
+
+  it("[US-ADJ-05] cambiar de página pide la página siguiente al backend", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, { cuentas: paginaDe20(1), total: 45 }))
+      .mockResolvedValueOnce(jsonResponse(200, { cuentas: paginaDe20(21), total: 45 }))
+    const user = userEvent.setup()
+
+    renderCuentas()
+    await screen.findByText("Cuenta 1")
+
+    await user.click(screen.getByRole("button", { name: "Siguiente" }))
+
+    expect(await screen.findByText("Cuenta 21")).toBeInTheDocument()
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
+    expect(ultimaLlamada).toContain("pagina=2")
+    expect(ultimaLlamada).toContain("tamanio_pagina=20")
+  })
+
+  it("[US-ADJ-05] cambiar un filtro reinicia la paginación a la página 1", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, { cuentas: paginaDe20(1), total: 45 }))
+      .mockResolvedValueOnce(jsonResponse(200, { cuentas: paginaDe20(21), total: 45 }))
+      .mockResolvedValueOnce(jsonResponse(200, { cuentas: paginaDe20(1), total: 10 }))
+    const user = userEvent.setup()
+
+    renderCuentas()
+    await screen.findByText("Cuenta 1")
+    await user.click(screen.getByRole("button", { name: "Siguiente" }))
+    await screen.findByText("Cuenta 21")
+
+    await user.selectOptions(screen.getByLabelText("Estado"), "bloqueada")
+
+    await screen.findByText("Cuenta 1")
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
+    expect(ultimaLlamada).toContain("pagina=1")
+  })
+
+  it("[US-ADJ-05] listado con una sola página no muestra controles de paginación", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, paginado(cuentasResponse)))
+
+    renderCuentas()
+    await screen.findByText("Ana Docente")
+
+    expect(screen.queryByRole("navigation", { name: "Paginación" })).not.toBeInTheDocument()
   })
 })

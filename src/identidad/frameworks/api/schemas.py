@@ -38,6 +38,13 @@ class CuentaResponse(BaseModel):
     bloqueada: bool
 
 
+class CuentasPaginadasResponse(BaseModel):
+    """Página de cuentas junto con el total que matchea los filtros (`US-ADJ-05`)."""
+
+    cuentas: list[CuentaResponse]
+    total: int
+
+
 class CuentaDetalleResponse(BaseModel):
     """Detalle completo de una cuenta puntual (`US-2.2.3`)."""
 

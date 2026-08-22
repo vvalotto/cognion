@@ -26,7 +26,8 @@ class TestListarCuentasUseCase:
 
         resultado = await use_case.execute(None, None, None)
 
-        assert {u.id for u in resultado} == {docente.id, admin.id}
+        assert {u.id for u in resultado.cuentas} == {docente.id, admin.id}
+        assert resultado.total == 2
 
     async def test_filtro_combinado_por_rol_y_estado(self):
         repo = FakeCuentaQueryRepository()
@@ -45,8 +46,8 @@ class TestListarCuentasUseCase:
 
         resultado = await use_case.execute(TipoPerfil.ESTUDIANTE, "bloqueada", None)
 
-        assert len(resultado) == 1
-        assert resultado[0].id == estudiante_bloqueado.id
+        assert len(resultado.cuentas) == 1
+        assert resultado.cuentas[0].id == estudiante_bloqueado.id
 
     async def test_busqueda_por_email_parcial(self):
         repo = FakeCuentaQueryRepository()
@@ -58,8 +59,8 @@ class TestListarCuentasUseCase:
 
         resultado = await use_case.execute(None, None, "mgonzalez")
 
-        assert len(resultado) == 1
-        assert resultado[0].id == objetivo.id
+        assert len(resultado.cuentas) == 1
+        assert resultado.cuentas[0].id == objetivo.id
 
     async def test_busqueda_case_insensitive_contra_nombre(self):
         repo = FakeCuentaQueryRepository()
@@ -69,8 +70,8 @@ class TestListarCuentasUseCase:
 
         resultado = await use_case.execute(None, None, "MARISA")
 
-        assert len(resultado) == 1
-        assert resultado[0].id == usuario.id
+        assert len(resultado.cuentas) == 1
+        assert resultado.cuentas[0].id == usuario.id
 
     async def test_sin_resultados_devuelve_lista_vacia(self):
         repo = FakeCuentaQueryRepository()
@@ -78,4 +79,17 @@ class TestListarCuentasUseCase:
 
         resultado = await use_case.execute(None, None, "no-existe")
 
-        assert resultado == []
+        assert resultado.cuentas == []
+        assert resultado.total == 0
+
+    async def test_pagina_y_tamanio_pagina_limitan_el_resultado_pero_no_el_total(self):
+        repo = FakeCuentaQueryRepository()
+        for i in range(5):
+            u = _usuario(f"Docente {i}", f"docente{i}@fiuner.edu.ar", TipoPerfil.DOCENTE)
+            repo.usuarios[u.id] = u
+        use_case = ListarCuentasUseCase(repo)
+
+        resultado = await use_case.execute(None, None, None, pagina=1, tamanio_pagina=2)
+
+        assert len(resultado.cuentas) == 2
+        assert resultado.total == 5
