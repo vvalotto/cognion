@@ -30,17 +30,20 @@ describe("cuentas-api", () => {
   })
 
   describe("listarCuentas", () => {
-    it("hace GET /usuarios sin query string cuando no hay filtros", async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+    it("hace GET /usuarios sin filtros pero con pagina/tamanio_pagina por defecto", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { cuentas: [], total: 0 }))
 
       await listarCuentas()
 
       const [url] = vi.mocked(fetch).mock.calls[0]
-      expect(String(url)).toMatch(/\/usuarios$/)
+      const parsed = new URL(String(url))
+      expect(parsed.pathname).toMatch(/\/usuarios$/)
+      expect(parsed.searchParams.get("pagina")).toBe("1")
+      expect(parsed.searchParams.get("tamanio_pagina")).toBe("20")
     })
 
     it("arma el query string solo con los filtros presentes", async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { cuentas: [], total: 0 }))
 
       await listarCuentas({ rol: "docente", estado: "bloqueada", busqueda: "ana" })
 
@@ -52,7 +55,7 @@ describe("cuentas-api", () => {
     })
 
     it("omite del query string los filtros no provistos", async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { cuentas: [], total: 0 }))
 
       await listarCuentas({ rol: "estudiante" })
 
@@ -63,16 +66,28 @@ describe("cuentas-api", () => {
       expect(parsed.searchParams.has("busqueda")).toBe(false)
     })
 
-    it("devuelve la lista de cuentas tal como la envía el backend", async () => {
+    it("[US-ADJ-05] incluye pagina y tamanio_pagina en el query string cuando se proveen", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { cuentas: [], total: 0 }))
+
+      await listarCuentas({}, { pagina: 2, tamanioPagina: 20 })
+
+      const [url] = vi.mocked(fetch).mock.calls[0]
+      const parsed = new URL(String(url))
+      expect(parsed.searchParams.get("pagina")).toBe("2")
+      expect(parsed.searchParams.get("tamanio_pagina")).toBe("20")
+    })
+
+    it("devuelve las cuentas y el total tal como los envía el backend", async () => {
       const cuentas = [
         { id: "u1", nombre: "Ana", email: "ana@fiuner.edu.ar", perfil: "docente", bloqueada: false },
         { id: "u2", nombre: "Luis", email: "luis@fiuner.edu.ar", perfil: "estudiante", bloqueada: true },
       ]
-      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentas))
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { cuentas, total: 2 }))
 
       const resultado = await listarCuentas()
 
-      expect(resultado).toEqual(cuentas)
+      expect(resultado.cuentas).toEqual(cuentas)
+      expect(resultado.total).toBe(2)
     })
   })
 

@@ -5,8 +5,11 @@ import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Pagination } from "@/components/ui/pagination"
 import { listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-api"
 import type { Rol } from "@/lib/session"
+
+const TAMANIO_PAGINA = 20
 
 const ETIQUETA_ROL: Record<Rol, string> = {
   administrador: "Administrador",
@@ -39,29 +42,39 @@ export function Cuentas() {
   const navigate = useNavigate()
 
   const [cuentas, setCuentas] = useState<CuentaResponse[] | null>(null)
+  const [total, setTotal] = useState(0)
+  const [pagina, setPagina] = useState(1)
   const [rol, setRol] = useState<Rol | "">("")
   const [estado, setEstado] = useState<Estado | "">("")
   const [busqueda, setBusqueda] = useState("")
 
   useEffect(() => {
     let cancelado = false
-    listarCuentas({
-      rol: rol || undefined,
-      estado: estado || undefined,
-      busqueda: busqueda || undefined,
-    }).then((resultado) => {
-      if (!cancelado) setCuentas(resultado)
+    listarCuentas(
+      {
+        rol: rol || undefined,
+        estado: estado || undefined,
+        busqueda: busqueda || undefined,
+      },
+      { pagina, tamanioPagina: TAMANIO_PAGINA },
+    ).then((resultado) => {
+      if (cancelado) return
+      setCuentas(resultado.cuentas)
+      setTotal(resultado.total)
     })
     return () => {
       cancelado = true
     }
-  }, [rol, estado, busqueda])
+  }, [rol, estado, busqueda, pagina])
 
   function limpiarFiltros() {
     setRol("")
     setEstado("")
     setBusqueda("")
+    setPagina(1)
   }
+
+  const totalPaginas = Math.ceil(total / TAMANIO_PAGINA)
 
   return (
     <div>
@@ -80,7 +93,10 @@ export function Cuentas() {
             <select
               id="filtro-rol"
               value={rol}
-              onChange={(e) => setRol(e.target.value as Rol | "")}
+              onChange={(e) => {
+                setRol(e.target.value as Rol | "")
+                setPagina(1)
+              }}
               className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
             >
               <option value="">Todos</option>
@@ -96,7 +112,10 @@ export function Cuentas() {
             <select
               id="filtro-estado"
               value={estado}
-              onChange={(e) => setEstado(e.target.value as Estado | "")}
+              onChange={(e) => {
+                setEstado(e.target.value as Estado | "")
+                setPagina(1)
+              }}
               className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
             >
               <option value="">Todos</option>
@@ -112,7 +131,10 @@ export function Cuentas() {
               id="filtro-busqueda"
               type="text"
               value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
+              onChange={(e) => {
+                setBusqueda(e.target.value)
+                setPagina(1)
+              }}
               placeholder="Nombre o email"
               className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
             />
@@ -185,6 +207,8 @@ export function Cuentas() {
           </tbody>
         </table>
       </Card>
+
+      <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />
     </div>
   )
 }
