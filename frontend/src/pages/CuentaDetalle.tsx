@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
 import type { Rol } from "@/lib/session"
 
@@ -9,6 +12,12 @@ const ETIQUETA_ROL: Record<Rol, string> = {
   administrador: "Administrador",
   docente: "Docente",
   estudiante: "Estudiante",
+}
+
+const VARIANTE_ROL: Record<Rol, "rol-docente" | "rol-estudiante" | "rol-admin"> = {
+  docente: "rol-docente",
+  estudiante: "rol-estudiante",
+  administrador: "rol-admin",
 }
 
 /** Pantalla de detalle de cuenta (§2.2 `wireframes-cuentas-administracion.md`). */
@@ -35,9 +44,13 @@ export function CuentaDetalle() {
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">
-        Administración › Cuentas › {cuenta.nombre}
-      </p>
+      <Breadcrumb
+        items={[
+          { label: "Administración" },
+          { label: "Cuentas", to: "/cuentas" },
+          { label: cuenta.nombre },
+        ]}
+      />
       <h1 className="text-lg font-semibold">{cuenta.nombre}</h1>
 
       {cuenta.bloqueada && (
@@ -53,14 +66,20 @@ export function CuentaDetalle() {
         </div>
       )}
 
-      <div className="mt-4 rounded-lg border border-border p-4 text-sm">
+      <Card className="mt-4 p-4 text-sm">
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
           <dt className="text-muted-foreground">Email</dt>
           <dd>{cuenta.email}</dd>
           <dt className="text-muted-foreground">Rol</dt>
-          <dd>{ETIQUETA_ROL[cuenta.perfil]}</dd>
+          <dd>
+            <Badge variant={VARIANTE_ROL[cuenta.perfil]}>{ETIQUETA_ROL[cuenta.perfil]}</Badge>
+          </dd>
           <dt className="text-muted-foreground">Estado</dt>
-          <dd>{cuenta.bloqueada ? "Bloqueada" : "Activa"}</dd>
+          <dd>
+            <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
+              {cuenta.bloqueada ? "Bloqueada" : "Activa"}
+            </Badge>
+          </dd>
           {cuenta.perfil === "estudiante" && cuenta.comisionId && (
             <>
               <dt className="text-muted-foreground">Comisión</dt>
@@ -70,7 +89,7 @@ export function CuentaDetalle() {
           <dt className="text-muted-foreground">Fecha de creación</dt>
           <dd>{new Date(cuenta.creadoEn).toLocaleDateString()}</dd>
         </dl>
-      </div>
+      </Card>
 
       <Button
         className="mt-4"

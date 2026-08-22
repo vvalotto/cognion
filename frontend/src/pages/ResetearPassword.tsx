@@ -1,7 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { obtenerCuenta, resetearPassword, type CuentaDetalleResponse } from "@/lib/cuentas-api"
@@ -52,55 +54,64 @@ export function ResetearPassword() {
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">
-        Administración › Cuentas › {cuenta?.nombre ?? "…"} › Resetear contraseña
-      </p>
+      <Breadcrumb
+        items={[
+          { label: "Administración" },
+          { label: "Cuentas", to: "/cuentas" },
+          { label: cuenta?.nombre ?? "…", to: usuarioId ? `/cuentas/${usuarioId}` : undefined },
+          { label: "Resetear contraseña" },
+        ]}
+      />
       <h1 className="text-lg font-semibold">Resetear contraseña</h1>
 
-      <div className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400">
-        <p>Esta acción también desbloquea la cuenta.</p>
-      </div>
+      <Card className="mt-4">
+        <CardContent>
+          <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400">
+            <p>Esta acción también desbloquea la cuenta.</p>
+          </div>
 
-      {error && (
-        <div
-          role="alert"
-          className="mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-        >
-          <p className="font-medium">{error}</p>
-        </div>
-      )}
+          {error && (
+            <div
+              role="alert"
+              className="mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            >
+              <p className="font-medium">{error}</p>
+            </div>
+          )}
 
-      <form className="mt-4 flex flex-col gap-3" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password-nueva">Nueva contraseña temporal</Label>
-          <Input
-            id="password-nueva"
-            type="password"
-            required
-            value={passwordNueva}
-            onChange={(e) => setPasswordNueva(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password-confirmacion">Confirmar contraseña</Label>
-          <Input
-            id="password-confirmacion"
-            type="password"
-            required
-            value={confirmacion}
-            onChange={(e) => setConfirmacion(e.target.value)}
-          />
-        </div>
+          <form className="mt-4 flex flex-col gap-3" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="password-nueva">Nueva contraseña temporal</Label>
+              <Input
+                id="password-nueva"
+                type="password"
+                required
+                value={passwordNueva}
+                onChange={(e) => setPasswordNueva(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="password-confirmacion">Confirmar contraseña</Label>
+              <Input
+                id="password-confirmacion"
+                type="password"
+                required
+                value={confirmacion}
+                onChange={(e) => setConfirmacion(e.target.value)}
+              />
+            </div>
 
-        <div className="flex gap-2">
-          <Button type="submit" variant="destructive">
-            Resetear contraseña
-          </Button>
-          <Button type="button" variant="outline" onClick={handleCancelar}>
-            Cancelar
-          </Button>
-        </div>
-      </form>
+            <div className="flex gap-2">
+              <Button type="submit" variant="destructive-solid">
+                Resetear contraseña
+              </Button>
+              <Button type="button" variant="outline" onClick={handleCancelar}>
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

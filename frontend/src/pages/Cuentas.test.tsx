@@ -131,4 +131,31 @@ describe("Cuentas", () => {
 
     expect(await screen.findByText("Alta de docente")).toBeInTheDocument()
   })
+
+  it("[US-ADJ-04] Rol y Estado se muestran con tags de color y cada fila tiene un botón Ver", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+
+    renderCuentas()
+    await screen.findByText("Ana Docente")
+
+    const badge = (texto: string) =>
+      screen.getAllByText(texto).find((el) => el.getAttribute("data-slot") === "badge")
+    expect(badge("Docente")).toHaveClass("bg-blue-50")
+    expect(badge("Estudiante")).toHaveClass("bg-violet-50")
+    expect(badge("Activa")).toHaveClass("bg-green-50")
+    expect(badge("Bloqueada")).toHaveClass("bg-red-50")
+    expect(screen.getAllByRole("button", { name: "Ver" })).toHaveLength(2)
+  })
+
+  it("[US-ADJ-04] el botón Ver navega al detalle sin duplicar la navegación de la fila", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentasResponse))
+    const user = userEvent.setup()
+
+    renderCuentas()
+    await screen.findByText("Ana Docente")
+
+    await user.click(screen.getAllByRole("button", { name: "Ver" })[0])
+
+    expect(await screen.findByText("Detalle de cuenta")).toBeInTheDocument()
+  })
 })

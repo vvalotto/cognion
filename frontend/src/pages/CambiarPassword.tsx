@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CambiarPasswordError, cambiarPassword } from "@/lib/cuentas-api"
@@ -68,21 +70,25 @@ export function CambiarPassword() {
 
   if (estado === "exito") {
     return (
-      <div>
-        <h1 className="text-lg font-semibold">Contraseña actualizada</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Tu contraseña se cambió correctamente. No hizo falta volver a iniciar sesión — tu
-          sesión actual sigue activa.
-        </p>
-        <Button className="mt-4 w-full" onClick={() => navigate(-1)}>
-          Continuar
-        </Button>
+      <div className="mx-auto mt-16 max-w-md">
+        <Card className="p-8 text-center">
+          <p className="mb-2 text-4xl text-accent">✓</p>
+          <h1 className="text-lg font-semibold">Contraseña actualizada</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Tu contraseña se cambió correctamente. No hizo falta volver a iniciar sesión — tu
+            sesión actual sigue activa.
+          </p>
+          <Button className="mt-4 w-full" onClick={() => navigate(-1)}>
+            Continuar
+          </Button>
+        </Card>
       </div>
     )
   }
 
   return (
     <div>
+      <Breadcrumb items={[{ label: "Mi cuenta" }, { label: "Cambiar contraseña" }]} />
       <h1 className="text-lg font-semibold">Cambiar mi contraseña</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Tu sesión actual sigue activa mientras completás este formulario.
@@ -97,45 +103,49 @@ export function CambiarPassword() {
         </div>
       )}
 
-      <form className="mt-4 flex flex-col gap-3" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password-actual">Contraseña actual</Label>
-          <Input
-            id="password-actual"
-            type="password"
-            required
-            disabled={bloqueada}
-            value={passwordActual}
-            onChange={(e) => setPasswordActual(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password-nueva">Contraseña nueva</Label>
-          <Input
-            id="password-nueva"
-            type="password"
-            required
-            disabled={bloqueada}
-            value={passwordNueva}
-            onChange={(e) => setPasswordNueva(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password-confirmacion">Confirmar contraseña nueva</Label>
-          <Input
-            id="password-confirmacion"
-            type="password"
-            required
-            disabled={bloqueada}
-            value={confirmacion}
-            onChange={(e) => setConfirmacion(e.target.value)}
-          />
-        </div>
+      <Card className="mt-4">
+        <CardContent>
+          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="password-actual">Contraseña actual</Label>
+              <Input
+                id="password-actual"
+                type="password"
+                required
+                disabled={bloqueada}
+                value={passwordActual}
+                onChange={(e) => setPasswordActual(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="password-nueva">Contraseña nueva</Label>
+              <Input
+                id="password-nueva"
+                type="password"
+                required
+                disabled={bloqueada}
+                value={passwordNueva}
+                onChange={(e) => setPasswordNueva(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="password-confirmacion">Confirmar contraseña nueva</Label>
+              <Input
+                id="password-confirmacion"
+                type="password"
+                required
+                disabled={bloqueada}
+                value={confirmacion}
+                onChange={(e) => setConfirmacion(e.target.value)}
+              />
+            </div>
 
-        <Button type="submit" disabled={bloqueada}>
-          Cambiar contraseña
-        </Button>
-      </form>
+            <Button type="submit" disabled={bloqueada}>
+              Cambiar contraseña
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }
