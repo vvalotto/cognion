@@ -52,9 +52,9 @@ export function NuevaPreguntaVerdaderoFalso() {
   useEffect(() => {
     if (!materia) return
     let cancelado = false
-    filtrarBanco(materia.bancoId).then((preguntas) => {
+    filtrarBanco(materia.bancoId).then((resultado) => {
       if (cancelado) return
-      const { unidades, temas } = derivarSugerencias(preguntas)
+      const { unidades, temas } = derivarSugerencias(resultado.preguntas)
       setSugerenciasUnidad(unidades)
       setSugerenciasTema(temas)
     })

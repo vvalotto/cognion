@@ -12,6 +12,10 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
+function paginado<T>(preguntas: T[]): { preguntas: T[]; total: number } {
+  return { preguntas, total: preguntas.length }
+}
+
 const materiaResponse = [
   { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 2 },
 ]
@@ -60,7 +64,7 @@ describe("EliminarPregunta", () => {
   it("muestra el texto de la pregunta y la aclaración de baja lógica", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderEliminacion("p1")
 
@@ -72,7 +76,7 @@ describe("EliminarPregunta", () => {
   it("confirmar eliminación ejecuta la baja lógica y vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
       .mockResolvedValueOnce(new Response(null, { status: 204 }))
     const user = userEvent.setup()
 
@@ -90,7 +94,7 @@ describe("EliminarPregunta", () => {
   it("cancelar vuelve al banco sin llamar al backend", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
     const user = userEvent.setup()
 
     renderEliminacion("p1")
@@ -105,7 +109,7 @@ describe("EliminarPregunta", () => {
   it("pregunta inexistente muestra un mensaje en vez de la confirmación", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderEliminacion("no-existe")
 

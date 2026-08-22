@@ -12,6 +12,10 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
+function paginado<T>(preguntas: T[]): { preguntas: T[]; total: number } {
+  return { preguntas, total: preguntas.length }
+}
+
 const materiaResponse = [
   { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 2 },
 ]
@@ -55,7 +59,7 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
   it("completar texto, elegir Verdadero y guardar crea la pregunta y vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
       .mockResolvedValueOnce(jsonResponse(201, preguntaCreadaResponse))
     const user = userEvent.setup()
 
@@ -81,9 +85,12 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(
-        jsonResponse(200, [
-          { ...preguntaCreadaResponse, id: "p1", unidad_tematica: "Unidad 2", tema: "DDD" },
-        ]),
+        jsonResponse(
+          200,
+          paginado([
+            { ...preguntaCreadaResponse, id: "p1", unidad_tematica: "Unidad 2", tema: "DDD" },
+          ]),
+        ),
       )
 
     renderFormulario()
@@ -105,7 +112,7 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
   it("guardar sin elegir Verdadero/Falso bloquea el envío y no llama al backend", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
     const user = userEvent.setup()
 
     renderFormulario()
@@ -124,7 +131,7 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
   it("'Cancelar' vuelve al banco sin guardar", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
     const user = userEvent.setup()
 
     renderFormulario()

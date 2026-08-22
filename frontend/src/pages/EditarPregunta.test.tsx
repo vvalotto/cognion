@@ -12,6 +12,10 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
+function paginado<T>(preguntas: T[]): { preguntas: T[]; total: number } {
+  return { preguntas, total: preguntas.length }
+}
+
 const materiaResponse = [
   { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 2 },
 ]
@@ -72,7 +76,7 @@ describe("EditarPregunta", () => {
   it("prellena el formulario de Opción Múltiple con los valores actuales", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderEdicion("p1")
 
@@ -87,7 +91,7 @@ describe("EditarPregunta", () => {
   it("edición exitosa de Opción Múltiple persiste los cambios y vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
       .mockResolvedValueOnce(jsonResponse(200, { ...preguntaOpcionMultiple, texto: "Texto editado" }))
     const user = userEvent.setup()
 
@@ -113,7 +117,7 @@ describe("EditarPregunta", () => {
     }
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [preguntaSinCorrecta, preguntaVerdaderoFalso]))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([preguntaSinCorrecta, preguntaVerdaderoFalso])))
     const user = userEvent.setup()
 
     renderEdicion("p1")
@@ -130,7 +134,7 @@ describe("EditarPregunta", () => {
   it("prellena el formulario de Verdadero/Falso con la respuesta actual", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderEdicion("p2")
 
@@ -142,7 +146,7 @@ describe("EditarPregunta", () => {
   it("pregunta inexistente muestra un mensaje en vez del formulario", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderEdicion("no-existe")
 
@@ -154,7 +158,7 @@ describe("EditarPregunta", () => {
   it("edición exitosa de Verdadero/Falso persiste los cambios y vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
       .mockResolvedValueOnce(
         jsonResponse(200, { ...preguntaVerdaderoFalso, respuesta_correcta: false }),
       )
@@ -180,7 +184,7 @@ describe("EditarPregunta", () => {
   it("editar el texto de una opción y agregar/quitar opciones en Opción Múltiple", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
       .mockResolvedValueOnce(jsonResponse(200, preguntaOpcionMultiple))
     const user = userEvent.setup()
 
@@ -212,7 +216,7 @@ describe("EditarPregunta", () => {
   it("sugiere las unidades y temas de las demás preguntas del banco (US-ADJ-02)", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderEdicion("p1")
     await screen.findByDisplayValue(preguntaOpcionMultiple.texto)
@@ -228,7 +232,7 @@ describe("EditarPregunta", () => {
   it("'Cancelar' vuelve al banco sin llamar al backend", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
     const user = userEvent.setup()
 
     renderEdicion("p1")

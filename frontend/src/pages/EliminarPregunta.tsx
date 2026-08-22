@@ -33,8 +33,8 @@ export function EliminarPregunta() {
   useEffect(() => {
     if (!materia) return
     let cancelado = false
-    filtrarBanco(materia.bancoId).then((preguntas) => {
-      if (!cancelado) setPregunta(preguntas.find((p) => p.id === preguntaId) ?? null)
+    filtrarBanco(materia.bancoId).then((resultado) => {
+      if (!cancelado) setPregunta(resultado.preguntas.find((p) => p.id === preguntaId) ?? null)
     })
     return () => {
       cancelado = true

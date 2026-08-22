@@ -54,6 +54,17 @@ export interface FiltrosBanco {
   importancia?: Importancia
 }
 
+/** Opt-in (US-ADJ-03): si se omiten, `filtrarBanco` devuelve el banco completo sin paginar. */
+export interface PaginacionBanco {
+  pagina: number
+  tamanioPagina: number
+}
+
+export interface PreguntasPaginadas {
+  preguntas: PreguntaResponse[]
+  total: number
+}
+
 export interface CargarPreguntaOpcionMultipleBody {
   bancoId: string
   texto: string
@@ -128,6 +139,11 @@ interface PreguntaVerdaderoFalsoApiResponse {
 
 type PreguntaApiResponse = PreguntaOpcionMultipleApiResponse | PreguntaVerdaderoFalsoApiResponse
 
+interface PreguntasPaginadasApiResponse {
+  preguntas: PreguntaApiResponse[]
+  total: number
+}
+
 function esOpcionMultipleApi(
   pregunta: PreguntaApiResponse,
 ): pregunta is PreguntaOpcionMultipleApiResponse {
@@ -184,18 +200,23 @@ export async function listarMaterias(): Promise<MateriaListItemResponse[]> {
 export async function filtrarBanco(
   bancoId: string,
   filtros: FiltrosBanco = {},
-): Promise<PreguntaResponse[]> {
+  paginacion?: PaginacionBanco,
+): Promise<PreguntasPaginadas> {
   const params = new URLSearchParams()
   if (filtros.unidad) params.set("unidad", filtros.unidad)
   if (filtros.tema) params.set("tema", filtros.tema)
   if (filtros.dificultad) params.set("dificultad", filtros.dificultad)
   if (filtros.importancia) params.set("importancia", filtros.importancia)
+  if (paginacion) {
+    params.set("pagina", String(paginacion.pagina))
+    params.set("tamanio_pagina", String(paginacion.tamanioPagina))
+  }
 
   const query = params.toString()
-  const response = await apiFetch<PreguntaApiResponse[]>(
+  const response = await apiFetch<PreguntasPaginadasApiResponse>(
     `/bancos/${bancoId}/preguntas${query ? `?${query}` : ""}`,
   )
-  return response.map(mapearPregunta)
+  return { preguntas: response.preguntas.map(mapearPregunta), total: response.total }
 }
 
 export async function cargarPreguntaOpcionMultiple(

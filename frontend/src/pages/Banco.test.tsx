@@ -12,6 +12,10 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
+function paginado<T>(preguntas: T[]): { preguntas: T[]; total: number } {
+  return { preguntas, total: preguntas.length }
+}
+
 const materiaResponse = [
   { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 2 },
 ]
@@ -76,8 +80,8 @@ describe("Banco", () => {
   it("muestra todas las preguntas activas de la materia sin filtros", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderBanco()
 
@@ -94,8 +98,8 @@ describe("Banco", () => {
   it("[US-ADJ-01] Tipo, Dificultad e Importancia se muestran con tags de color y el botón Eliminar es sólido", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
 
     renderBanco()
     await screen.findByText(/¿Qué principio de Clean Architecture/)
@@ -112,9 +116,9 @@ describe("Banco", () => {
   it("filtrar por dificultad dispara una nueva consulta con ese filtro", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [preguntasResponse[0]]))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([preguntasResponse[0]])))
     const user = userEvent.setup()
 
     renderBanco()
@@ -130,9 +134,9 @@ describe("Banco", () => {
   it("una combinación de filtros sin resultados deja la tabla vacía sin mensaje de error", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
     const user = userEvent.setup()
 
     renderBanco()
@@ -147,8 +151,8 @@ describe("Banco", () => {
   it("el botón 'Editar' de una fila navega a la edición de esa pregunta", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
     const user = userEvent.setup()
 
     renderBanco()
@@ -162,8 +166,8 @@ describe("Banco", () => {
   it("el botón 'Eliminar' de una fila navega a la confirmación de eliminación de esa pregunta", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
     const user = userEvent.setup()
 
     renderBanco()
@@ -177,9 +181,9 @@ describe("Banco", () => {
   it("filtrar por unidad temática dispara una nueva consulta con ese filtro", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [preguntasResponse[1]]))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([preguntasResponse[1]])))
 
     renderBanco()
     await screen.findByText(/¿Qué principio de Clean Architecture/)
@@ -194,10 +198,10 @@ describe("Banco", () => {
   it("'Limpiar filtros' vuelve a mostrar todas las preguntas activas", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, [preguntasResponse[0]]))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([preguntasResponse[0]])))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
     const user = userEvent.setup()
 
     renderBanco()
@@ -214,8 +218,8 @@ describe("Banco", () => {
   it("el botón '+ Nueva pregunta' navega al alta de pregunta", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
-      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
     const user = userEvent.setup()
 
     renderBanco()
@@ -224,5 +228,89 @@ describe("Banco", () => {
     await user.click(screen.getByText("+ Nueva pregunta"))
 
     expect(await screen.findByText("Nueva pregunta")).toBeInTheDocument()
+  })
+
+  function paginaDe20(offset: number) {
+    return Array.from({ length: 20 }, (_, i) => ({
+      id: `pag-${offset + i}`,
+      banco_id: "b1",
+      texto: `Pregunta ${offset + i}`,
+      opciones: [
+        { texto: "a", es_correcta: true },
+        { texto: "b", es_correcta: false },
+      ],
+      unidad_tematica: "Unidad 1",
+      tema: "Tema",
+      dificultad: "medio",
+      importancia: "medio",
+      activa: true,
+    }))
+  }
+
+  it("[US-ADJ-03] banco con más de una página muestra los controles de paginación", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: paginaDe20(1), total: 71 }))
+
+    renderBanco()
+
+    expect(await screen.findByText("Pregunta 1")).toBeInTheDocument()
+    expect(screen.getByText("71 preguntas activas")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "4" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Siguiente" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled()
+  })
+
+  it("[US-ADJ-03] cambiar de página pide la página siguiente al backend", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: paginaDe20(1), total: 71 }))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: paginaDe20(21), total: 71 }))
+    const user = userEvent.setup()
+
+    renderBanco()
+    await screen.findByText("Pregunta 1")
+
+    await user.click(screen.getByRole("button", { name: "Siguiente" }))
+
+    expect(await screen.findByText("Pregunta 21")).toBeInTheDocument()
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
+    expect(ultimaLlamada).toContain("pagina=2")
+    expect(ultimaLlamada).toContain("tamanio_pagina=20")
+  })
+
+  it("[US-ADJ-03] cambiar un filtro reinicia la paginación a la página 1", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado([])))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: paginaDe20(1), total: 71 }))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: paginaDe20(21), total: 71 }))
+      .mockResolvedValueOnce(jsonResponse(200, { preguntas: paginaDe20(1), total: 30 }))
+    const user = userEvent.setup()
+
+    renderBanco()
+    await screen.findByText("Pregunta 1")
+    await user.click(screen.getByRole("button", { name: "Siguiente" }))
+    await screen.findByText("Pregunta 21")
+
+    await user.selectOptions(screen.getByLabelText("Dificultad"), "alto")
+
+    await screen.findByText("30 preguntas activas")
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
+    expect(ultimaLlamada).toContain("pagina=1")
+  })
+
+  it("[US-ADJ-03] banco con una sola página no muestra controles de paginación", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+
+    renderBanco()
+    await screen.findByText(/¿Qué principio de Clean Architecture/)
+
+    expect(screen.queryByRole("navigation", { name: "Paginación" })).not.toBeInTheDocument()
   })
 })
