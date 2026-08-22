@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-04",
+    "us_title": "Alinear visualmente Cuentas/Contraseñas con el prototipo",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-22T18:57:43.948245+00:00",
+    "completed_at": "2026-08-22T20:18:11.207029+00:00",
+    "total_elapsed_seconds": 4827,
+    "effective_seconds": 4827,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-22T18:57:44.442557+00:00",
+      "completed_at": "2026-08-22T18:58:40.827812+00:00",
+      "elapsed_seconds": 56,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-22T18:58:40.951361+00:00",
+      "completed_at": "2026-08-22T19:01:50.502923+00:00",
+      "elapsed_seconds": 189,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-22T19:01:50.614159+00:00",
+      "completed_at": "2026-08-22T19:05:34.756119+00:00",
+      "elapsed_seconds": 224,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-22T19:05:34.900965+00:00",
+      "completed_at": "2026-08-22T19:15:36.706929+00:00",
+      "elapsed_seconds": 601,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Variantes rol-*/estado-* en Badge",
+          "task_type": "component",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-22T19:05:40.580711+00:00",
+          "completed_at": "2026-08-22T19:06:06.308814+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -9.58,
+          "file_created": "frontend/src/components/ui/badge.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Cuentas.tsx con Card/Badge/Breadcrumb/Ver",
+          "task_type": "screen",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-22T19:06:11.235669+00:00",
+          "completed_at": "2026-08-22T19:08:52.832266+00:00",
+          "elapsed_seconds": 161,
+          "actual_minutes": 2.68,
+          "variance_minutes": -17.32,
+          "file_created": "frontend/src/pages/Cuentas.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "CuentaDetalle.tsx con Card/Badge/Breadcrumb",
+          "task_type": "screen",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-22T19:08:52.950021+00:00",
+          "completed_at": "2026-08-22T19:10:03.118449+00:00",
+          "elapsed_seconds": 70,
+          "actual_minutes": 1.17,
+          "variance_minutes": -13.83,
+          "file_created": "frontend/src/pages/CuentaDetalle.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "ResetearPassword.tsx con Card/Breadcrumb/destructive-solid",
+          "task_type": "screen",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-22T19:10:03.242563+00:00",
+          "completed_at": "2026-08-22T19:11:19.711837+00:00",
+          "elapsed_seconds": 76,
+          "actual_minutes": 1.27,
+          "variance_minutes": -13.73,
+          "file_created": "frontend/src/pages/ResetearPassword.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "CuentaReseteada.tsx como result-card con icono",
+          "task_type": "screen",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-22T19:11:19.894570+00:00",
+          "completed_at": "2026-08-22T19:12:43.004025+00:00",
+          "elapsed_seconds": 83,
+          "actual_minutes": 1.38,
+          "variance_minutes": -8.62,
+          "file_created": "frontend/src/pages/CuentaReseteada.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "CambiarPassword.tsx con Breadcrumb/Card/result-card",
+          "task_type": "screen",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-22T19:12:43.136311+00:00",
+          "completed_at": "2026-08-22T19:14:03.704809+00:00",
+          "elapsed_seconds": 80,
+          "actual_minutes": 1.33,
+          "variance_minutes": -13.67,
+          "file_created": "frontend/src/pages/CambiarPassword.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-22T19:15:50.115100+00:00",
+      "completed_at": "2026-08-22T19:15:50.245404+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-22T19:15:50.362442+00:00",
+      "completed_at": "2026-08-22T19:15:50.483803+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-22T19:15:58.450502+00:00",
+      "completed_at": "2026-08-22T19:23:56.982770+00:00",
+      "elapsed_seconds": 478,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-22T19:24:10.338885+00:00",
+      "completed_at": "2026-08-22T19:26:32.164810+00:00",
+      "elapsed_seconds": 141,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-22T19:26:37.478933+00:00",
+      "completed_at": "2026-08-22T20:17:35.399344+00:00",
+      "elapsed_seconds": 3057,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-22T20:17:35.516852+00:00",
+      "completed_at": "2026-08-22T20:18:11.084649+00:00",
+      "elapsed_seconds": 35,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 6,
+    "completed_tasks": 6,
+    "total_phases": 10,
+    "estimated_total_minutes": 85.0,
+    "actual_total_minutes": 8.25,
+    "variance_minutes": -76.75,
+    "variance_percent": -90.29
+  }
+}
