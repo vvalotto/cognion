@@ -9,12 +9,12 @@ from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
 from src.banco_preguntas.entities.ports.materia_repository_port import MateriaRepositoryPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
-from src.banco_preguntas.entities.resultado_paginado_preguntas import (
-    ResultadoPaginadoPreguntas,
-)
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
     PreguntaPlantillaVerdaderoFalso,
+)
+from src.banco_preguntas.entities.resultado_paginado_preguntas import (
+    ResultadoPaginadoPreguntas,
 )
 
 

@@ -119,11 +119,7 @@ def docente_viendo_pagina_de_banco(context, pagina, paginas):
     )
 
 
-@given(
-    parsers.parse(
-        'un Docente viendo la página {pagina:d} de un banco filtrado por "{unidad}"'
-    )
-)
+@given(parsers.parse('un Docente viendo la página {pagina:d} de un banco filtrado por "{unidad}"'))
 def docente_viendo_pagina_filtrada(context, pagina, unidad):
     _crear_banco_con_preguntas(context, TAMANIO_PAGINA * 3, unidad=unidad, dificultad="medio")
     context["banco_unidad"] = unidad
@@ -174,7 +170,11 @@ def ve_primeras_20_ordenadas(context):
     assert [p["id"] for p in data["preguntas"]] == context["ids_en_orden"][:20]
 
 
-@then(parsers.parse('los controles de paginación muestran {paginas:d} páginas y el botón "Siguiente" habilitado'))
+@then(
+    parsers.parse(
+        'los controles de paginación muestran {paginas:d} páginas y el botón "Siguiente" habilitado'
+    )
+)
 def controles_muestran_n_paginas_siguiente_habilitado(context, paginas):
     data = context["response"].json()
     assert math.ceil(data["total"] / TAMANIO_PAGINA) == paginas
