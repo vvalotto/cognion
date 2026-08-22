@@ -81,12 +81,32 @@ describe("Banco", () => {
 
     renderBanco()
 
-    expect(await screen.findByText("Ingeniería de Software")).toBeInTheDocument()
+    expect(
+      await screen.findByRole("heading", { name: "Ingeniería de Software" }),
+    ).toBeInTheDocument()
     expect(
       await screen.findByText(/¿Qué principio de Clean Architecture/),
     ).toBeInTheDocument()
     expect(screen.getByText(/Un Aggregate Root/)).toBeInTheDocument()
     expect(screen.getByText("2 preguntas activas")).toBeInTheDocument()
+  })
+
+  it("[US-ADJ-01] Tipo, Dificultad e Importancia se muestran con tags de color y el botón Eliminar es sólido", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+      .mockResolvedValueOnce(jsonResponse(200, preguntasResponse))
+
+    renderBanco()
+    await screen.findByText(/¿Qué principio de Clean Architecture/)
+
+    expect(screen.getByText("Opción múltiple")).toHaveClass("bg-blue-50")
+    expect(screen.getByText("Verdadero/Falso")).toHaveClass("bg-violet-50")
+    const tagAlto = screen
+      .getAllByText("Alto")
+      .find((el) => el.getAttribute("data-slot") === "badge")
+    expect(tagAlto).toHaveClass("bg-red-50")
+    expect(screen.getAllByText("Eliminar")[0]).toHaveClass("bg-destructive")
   })
 
   it("filtrar por dificultad dispara una nueva consulta con ese filtro", async () => {

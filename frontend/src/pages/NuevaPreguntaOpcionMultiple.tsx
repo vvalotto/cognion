@@ -1,7 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -114,7 +116,14 @@ export function NuevaPreguntaOpcionMultiple() {
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">Banco › Nueva pregunta › Opción múltiple</p>
+      <Breadcrumb
+        items={[
+          { label: "Banco de preguntas" },
+          { label: "Banco", to: `/materias/${materiaId}/banco` },
+          { label: "Nueva pregunta", to: `/materias/${materiaId}/banco/preguntas/nueva` },
+          { label: "Opción múltiple" },
+        ]}
+      />
       <h1 className="text-lg font-semibold">Cargar pregunta de Opción múltiple</h1>
 
       {error && (
@@ -126,7 +135,9 @@ export function NuevaPreguntaOpcionMultiple() {
         </div>
       )}
 
-      <form className="mt-4 flex flex-col gap-3" onSubmit={handleSubmit}>
+      <Card className="mt-4">
+      <CardContent>
+      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="om-texto">Texto de la pregunta</Label>
           <textarea
@@ -141,7 +152,13 @@ export function NuevaPreguntaOpcionMultiple() {
         <div className="flex flex-col gap-2">
           <Label>Opciones</Label>
           {opciones.map((opcion, indice) => (
-            <div key={indice} className="flex items-center gap-2">
+            <div
+              key={indice}
+              className={
+                "flex items-center gap-2 rounded-lg border px-2 py-1.5 " +
+                (opcion.esCorrecta ? "border-accent bg-accent/10" : "border-border")
+              }
+            >
               <input
                 type="radio"
                 name="opcion-correcta"
@@ -246,6 +263,8 @@ export function NuevaPreguntaOpcionMultiple() {
           </Button>
         </div>
       </form>
+      </CardContent>
+      </Card>
     </div>
   )
 }

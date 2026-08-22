@@ -1,7 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -89,7 +91,14 @@ export function NuevaPreguntaVerdaderoFalso() {
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">Banco › Nueva pregunta › Verdadero/Falso</p>
+      <Breadcrumb
+        items={[
+          { label: "Banco de preguntas" },
+          { label: "Banco", to: `/materias/${materiaId}/banco` },
+          { label: "Nueva pregunta", to: `/materias/${materiaId}/banco/preguntas/nueva` },
+          { label: "Verdadero/Falso" },
+        ]}
+      />
       <h1 className="text-lg font-semibold">Cargar pregunta de Verdadero/Falso</h1>
 
       {error && (
@@ -101,7 +110,9 @@ export function NuevaPreguntaVerdaderoFalso() {
         </div>
       )}
 
-      <form className="mt-4 flex flex-col gap-3" onSubmit={handleSubmit}>
+      <Card className="mt-4">
+      <CardContent>
+      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="vf-texto">Texto de la pregunta</Label>
           <textarea
@@ -120,9 +131,9 @@ export function NuevaPreguntaVerdaderoFalso() {
               type="button"
               aria-pressed={respuestaCorrecta === true}
               onClick={() => setRespuestaCorrecta(true)}
-              className={`rounded-md border px-3 py-1 text-sm ${
+              className={`flex-1 rounded-lg border px-4 py-3 text-sm font-semibold ${
                 respuestaCorrecta === true
-                  ? "border-primary bg-primary text-primary-foreground"
+                  ? "border-accent bg-accent/10"
                   : "border-border"
               }`}
             >
@@ -132,9 +143,9 @@ export function NuevaPreguntaVerdaderoFalso() {
               type="button"
               aria-pressed={respuestaCorrecta === false}
               onClick={() => setRespuestaCorrecta(false)}
-              className={`rounded-md border px-3 py-1 text-sm ${
+              className={`flex-1 rounded-lg border px-4 py-3 text-sm font-semibold ${
                 respuestaCorrecta === false
-                  ? "border-primary bg-primary text-primary-foreground"
+                  ? "border-accent bg-accent/10"
                   : "border-border"
               }`}
             >
@@ -217,6 +228,8 @@ export function NuevaPreguntaVerdaderoFalso() {
           </Button>
         </div>
       </form>
+      </CardContent>
+      </Card>
     </div>
   )
 }

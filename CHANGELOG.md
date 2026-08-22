@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-01] Alinear visualmente las pantallas de Banco de Preguntas con el prototipo
+  aprobado — refactor de presentación puro (SP-ADJ-01), sin cambios de comportamiento ni de
+  backend
+  - Detectado en el UAT de cierre de la Iteración 1 (`HITO-4`): las pantallas de Banco de
+    Preguntas no reproducían el lenguaje visual de
+    `docs/design/ux/prototipos/banco-preguntas-carga-filtrado.html`
+  - `frontend/src/components/ui/card.tsx` y `badge.tsx` (nuevos), `Breadcrumb.tsx` (nuevo,
+    propio no-shadcn), variante `destructive-solid` agregada a `button.tsx` sin tocar la
+    variante `destructive` existente (usada por pantallas de Identidad ya aprobadas)
+  - Aplicado a las 8 pantallas de `US-2.1.9` a `US-2.1.13`: breadcrumb, cards con sombra, tags
+    de color por tipo/dificultad/importancia, resaltado de la opción/respuesta correcta, botón
+    "Eliminar" sólido destructivo
+  - Verificación visual en navegador real (Chrome vía claude-in-chrome) contra el prototipo
+    aprobado, sin hallazgos — mismo criterio que el gate de diseño UX de `CLAUDE.md`
+  - 150/150 tests frontend (2 nuevos + ajustes de selectors por el cambio de estructura DOM),
+    oxlint 0 errores, `tsc --noEmit` 0 errores, cobertura global 92.49%/84.85%/91.3%/94.08%
+    (statements/branches/functions/lines)
 - [US-2.2.9] Login refleja el estado de cuenta bloqueada — frontend puro, sin cambios de
   backend (`POST /identidad/login` ya distinguía 403/401 desde `US-2.2.1`)
   - Gap detectado en Fase 2: la spec asumía `frontend/src/lib/auth-api.ts`, que no existe —
