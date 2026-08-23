@@ -9,7 +9,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-23
+
 ### Added
+- **Ajuste UX en vivo post-`SP-ADJ-01`** (PRs #120/#121, sin US formal — track informal por
+  tocar solo `frontend/`, comparación en navegador real contra los prototipos HTML aprobados)
+  - PR #120: login con cuenta bloqueada (layout propio del prototipo, corregido en la spec en
+    vez de en el código — el prototipo manda), detalle de cuenta, resetear contraseña,
+    subtítulo/mayúsculas de Cuentas, pantallas de Registro (Registro/RegistroError/RegistroExito)
+  - PR #121: Banco de Preguntas — bug real de breadcrumb ("Banco" hardcodeado en vez del nombre
+    de la materia, en 5 pantallas), estilo de `NuevaPreguntaTipo`/carga de preguntas, y un bug
+    de layout real (botón "Eliminar" cortado sin scroll) que solo se manifestó al cargar **60
+    preguntas reales** desde dos `.docx` de la materia "Ingeniería de Software" — con los 3
+    fixtures mínimos del prototipo el problema de ancho de columnas no se veía
+  - 3 candidatas nuevas documentadas sin implementar, fuera de alcance de este cierre:
+    `US-ADJ-06` (nombre real en el header), `US-ADJ-07` (`comisionId` sin resolver a nombre
+    legible), `US-ADJ-08` (chip de materia/comisión en Registro antes de completar el formulario)
+  - 165/165 tests frontend en verde, 0 CRITICAL DesignReviewer
 - [US-ADJ-05] Paginar el listado de cuentas — mismo criterio que `US-ADJ-03`, sin migración
   (`Usuario.creado_en` ya existía desde `US-2.2.3`)
   - A diferencia de `US-ADJ-03`, `CuentaQueryPort.listar()` tiene un único consumidor a cada

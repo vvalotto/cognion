@@ -3,7 +3,16 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-08-19 — Iteración 2 del Incremento 2 (BC Identidad, gestión de
+> Última actualización: 2026-08-23 — Cierre de `BL-003` (Incremento 2): backend y frontend de
+> ambas iteraciones (Banco de Preguntas + Cuentas), `SP-ADJ-01` y el ajuste UX en vivo del
+> 2026-08-23 completos, UAT formal aprobada (`quality/reports/uat/inc2/`, Iteración 1 e
+> Iteración 2), ArchitectAnalyst leído (`should_block: false`). **RF-03, RF-04, RF-05, RF-06 y
+> RF-19 pasan a "Validado"**, referenciando `.cm/baselines/BL-003-banco-preguntas-cuentas.md`.
+> El merge `develop → main` y el tag `v0.4.0` quedan diferidos (mismo ítem abierto de
+> infraestructura/Docker que `BL-001`/`BL-002`) — "Validado" certifica tests + UAT + baseline
+> registrada, no requiere el deploy a `main` (ver estados normalizados en §2).
+>
+> 2026-08-19 — Iteración 2 del Incremento 2 (BC Identidad, gestión de
 > cuentas por administrador y cambio de contraseña propio, `US-2.2.1` a `US-2.2.9`) modelada
 > (wireframes) y especificada. RF-03 y RF-19 pasan de "Planificado" a "Especificado" — specs
 > recién creadas, sin código todavía. El event storming ya estaba completo desde
@@ -82,10 +91,10 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 |---|---|---|---|---|
 | RF-01 | Identidad | 1 | US-1.1.1, US-1.1.2, US-1.1.3 (backend); US-1.1.6, US-1.1.8 (frontend) | Validado |
 | RF-02 | Identidad | 1 | US-1.1.4, US-1.1.5 (backend); US-1.1.6, US-1.1.7 (frontend) | Validado |
-| RF-03 | Identidad | 2 | US-2.2.1, US-2.2.2, US-2.2.3, US-2.2.4 (backend); US-2.2.6, US-2.2.7, US-2.2.9 (frontend) | Especificado |
-| RF-04 | Banco de preguntas | 2 | US-2.1.1, US-2.1.3, US-2.1.4 (backend); US-2.1.8, US-2.1.9, US-2.1.11 (frontend) | Implementado (backend) — frontend Especificado |
-| RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Implementado (backend) — frontend Especificado |
-| RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Implementado (backend) — frontend Especificado |
+| RF-03 | Identidad | 2 | US-2.2.1, US-2.2.2, US-2.2.3, US-2.2.4 (backend); US-2.2.6, US-2.2.7, US-2.2.9 (frontend) | Validado |
+| RF-04 | Banco de preguntas | 2 | US-2.1.1, US-2.1.3, US-2.1.4 (backend); US-2.1.8, US-2.1.9, US-2.1.11 (frontend) | Validado |
+| RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Validado |
+| RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Validado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
 | RF-08 | Actividad Evaluativa | 6 | — | Planificado |
 | RF-09 | Actividad Evaluativa | 6 | — | Planificado |
@@ -99,7 +108,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-16 | Analytics | 4 | — | Planificado |
 | RF-17 | Analytics | 4 | — | Planificado |
 | RF-18 | Analytics | 7 | — | Planificado |
-| RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Especificado |
+| RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Validado |
 
 > RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
 > y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
