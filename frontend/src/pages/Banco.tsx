@@ -123,7 +123,7 @@ export function Banco() {
         <div>
           <h1 className="text-lg font-semibold">{materia.nombre}</h1>
           <p className="text-sm text-muted-foreground">
-            {total} pregunta{total === 1 ? "" : "s"} activa{total === 1 ? "" : "s"}
+            {total} pregunta{total === 1 ? "" : "s"} activa{total === 1 ? "" : "s"} en el banco
           </p>
         </div>
         <Button onClick={() => navigate(`/materias/${materiaId}/banco/preguntas/nueva`)}>
@@ -134,7 +134,10 @@ export function Banco() {
       <Card className="mt-4">
         <CardContent className="flex flex-wrap items-end gap-3 p-4">
         <div>
-          <label htmlFor="filtro-unidad" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-unidad"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Unidad temática
           </label>
           <input
@@ -155,7 +158,10 @@ export function Banco() {
           </datalist>
         </div>
         <div>
-          <label htmlFor="filtro-tema" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-tema"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Tema
           </label>
           <input
@@ -176,7 +182,10 @@ export function Banco() {
           </datalist>
         </div>
         <div>
-          <label htmlFor="filtro-dificultad" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-dificultad"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Dificultad
           </label>
           <select
@@ -197,7 +206,10 @@ export function Banco() {
           </select>
         </div>
         <div>
-          <label htmlFor="filtro-importancia" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-importancia"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Importancia
           </label>
           <select
@@ -226,7 +238,7 @@ export function Banco() {
       <Card className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted text-muted-foreground">
+            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
               <th className="py-2 pr-4 pl-4">Pregunta</th>
               <th className="py-2 pr-4">Tipo</th>
               <th className="py-2 pr-4">Unidad / Tema</th>
