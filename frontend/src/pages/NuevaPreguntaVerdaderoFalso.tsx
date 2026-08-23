@@ -94,12 +94,12 @@ export function NuevaPreguntaVerdaderoFalso() {
       <Breadcrumb
         items={[
           { label: "Banco de preguntas" },
-          { label: "Banco", to: `/materias/${materiaId}/banco` },
+          { label: materia?.nombre ?? "…", to: `/materias/${materiaId}/banco` },
           { label: "Nueva pregunta", to: `/materias/${materiaId}/banco/preguntas/nueva` },
           { label: "Verdadero/Falso" },
         ]}
       />
-      <h1 className="text-lg font-semibold">Cargar pregunta de Verdadero/Falso</h1>
+      <h1 className="text-lg font-semibold">Nueva pregunta — Verdadero/Falso</h1>
 
       {error && (
         <div
@@ -120,6 +120,7 @@ export function NuevaPreguntaVerdaderoFalso() {
             required
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
+            placeholder="Escribí el enunciado..."
             className="rounded-md border border-border px-2 py-1 text-sm"
           />
         </div>

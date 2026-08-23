@@ -119,12 +119,12 @@ export function NuevaPreguntaOpcionMultiple() {
       <Breadcrumb
         items={[
           { label: "Banco de preguntas" },
-          { label: "Banco", to: `/materias/${materiaId}/banco` },
+          { label: materia?.nombre ?? "…", to: `/materias/${materiaId}/banco` },
           { label: "Nueva pregunta", to: `/materias/${materiaId}/banco/preguntas/nueva` },
           { label: "Opción múltiple" },
         ]}
       />
-      <h1 className="text-lg font-semibold">Cargar pregunta de Opción múltiple</h1>
+      <h1 className="text-lg font-semibold">Nueva pregunta — Opción múltiple</h1>
 
       {error && (
         <div
@@ -145,12 +145,13 @@ export function NuevaPreguntaOpcionMultiple() {
             required
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
+            placeholder="Escribí el enunciado..."
             className="rounded-md border border-border px-2 py-1 text-sm"
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label>Opciones</Label>
+          <Label>Opciones — marcá cuál es la correcta</Label>
           {opciones.map((opcion, indice) => (
             <div
               key={indice}
@@ -187,6 +188,9 @@ export function NuevaPreguntaOpcionMultiple() {
           <Button type="button" variant="outline" onClick={agregarOpcion}>
             + Agregar opción
           </Button>
+          <p className="text-xs text-muted-foreground">
+            Mínimo 2 opciones. Exactamente una debe estar marcada como correcta.
+          </p>
         </div>
 
         <div className="flex flex-col gap-1.5">
