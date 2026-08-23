@@ -123,7 +123,7 @@ export function Banco() {
         <div>
           <h1 className="text-lg font-semibold">{materia.nombre}</h1>
           <p className="text-sm text-muted-foreground">
-            {total} pregunta{total === 1 ? "" : "s"} activa{total === 1 ? "" : "s"}
+            {total} pregunta{total === 1 ? "" : "s"} activa{total === 1 ? "" : "s"} en el banco
           </p>
         </div>
         <Button onClick={() => navigate(`/materias/${materiaId}/banco/preguntas/nueva`)}>
@@ -134,7 +134,10 @@ export function Banco() {
       <Card className="mt-4">
         <CardContent className="flex flex-wrap items-end gap-3 p-4">
         <div>
-          <label htmlFor="filtro-unidad" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-unidad"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Unidad temática
           </label>
           <input
@@ -155,7 +158,10 @@ export function Banco() {
           </datalist>
         </div>
         <div>
-          <label htmlFor="filtro-tema" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-tema"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Tema
           </label>
           <input
@@ -176,7 +182,10 @@ export function Banco() {
           </datalist>
         </div>
         <div>
-          <label htmlFor="filtro-dificultad" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-dificultad"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Dificultad
           </label>
           <select
@@ -197,7 +206,10 @@ export function Banco() {
           </select>
         </div>
         <div>
-          <label htmlFor="filtro-importancia" className="text-sm text-muted-foreground">
+          <label
+            htmlFor="filtro-importancia"
+            className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+          >
             Importancia
           </label>
           <select
@@ -226,13 +238,13 @@ export function Banco() {
       <Card className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted text-muted-foreground">
-              <th className="py-2 pr-4 pl-4">Pregunta</th>
-              <th className="py-2 pr-4">Tipo</th>
-              <th className="py-2 pr-4">Unidad / Tema</th>
-              <th className="py-2 pr-4">Dificultad</th>
-              <th className="py-2 pr-4">Importancia</th>
-              <th className="py-2 pr-4"></th>
+            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
+              <th className="py-2 pr-3 pl-4">Pregunta</th>
+              <th className="py-2 pr-3">Tipo</th>
+              <th className="py-2 pr-3">Unidad / Tema</th>
+              <th className="py-2 pr-3">Dificultad</th>
+              <th className="py-2 pr-3">Importancia</th>
+              <th className="py-2 pr-3"></th>
             </tr>
           </thead>
           <tbody>
@@ -245,31 +257,31 @@ export function Banco() {
             ) : (
               preguntas.map((pregunta) => (
                 <tr key={pregunta.id} className="border-b border-border last:border-0">
-                  <td className="max-w-xs truncate py-3 pr-4 pl-4">{pregunta.texto}</td>
-                  <td className="py-3 pr-4">
+                  <td className="max-w-[220px] py-3 pr-3 pl-4">{pregunta.texto}</td>
+                  <td className="py-3 pr-3 whitespace-nowrap">
                     <Badge variant={esOpcionMultiple(pregunta) ? "tipo-om" : "tipo-vf"}>
                       {esOpcionMultiple(pregunta) ? "Opción múltiple" : "Verdadero/Falso"}
                     </Badge>
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="max-w-[130px] py-3 pr-3">
                     {pregunta.unidadTematica} · {pregunta.tema}
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3 pr-3">
                     <Badge variant={VARIANTE_NIVEL[pregunta.dificultad]}>
                       {ETIQUETA_NIVEL[pregunta.dificultad]}
                     </Badge>
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3 pr-3">
                     <Badge variant={VARIANTE_NIVEL[pregunta.importancia]}>
                       {ETIQUETA_NIVEL[pregunta.importancia]}
                     </Badge>
                   </td>
-                  <td className="py-3 pr-4 whitespace-nowrap">
+                  <td className="py-3 pr-3 whitespace-nowrap">
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="mr-2"
+                      className="mr-1.5"
                       onClick={() =>
                         navigate(
                           `/materias/${materiaId}/banco/preguntas/${pregunta.id}/editar`,

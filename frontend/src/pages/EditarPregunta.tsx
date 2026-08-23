@@ -153,7 +153,7 @@ export function EditarPregunta() {
       <Breadcrumb
         items={[
           { label: "Banco de preguntas" },
-          { label: "Banco", to: `/materias/${materiaId}/banco` },
+          { label: materia?.nombre ?? "…", to: `/materias/${materiaId}/banco` },
           { label: "Editar pregunta" },
         ]}
       />

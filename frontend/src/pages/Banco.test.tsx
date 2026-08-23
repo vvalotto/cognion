@@ -92,7 +92,7 @@ describe("Banco", () => {
       await screen.findByText(/¿Qué principio de Clean Architecture/),
     ).toBeInTheDocument()
     expect(screen.getByText(/Un Aggregate Root/)).toBeInTheDocument()
-    expect(screen.getByText("2 preguntas activas")).toBeInTheDocument()
+    expect(screen.getByText("2 preguntas activas en el banco")).toBeInTheDocument()
   })
 
   it("[US-ADJ-01] Tipo, Dificultad e Importancia se muestran con tags de color y el botón Eliminar es sólido", async () => {
@@ -126,7 +126,7 @@ describe("Banco", () => {
 
     await user.selectOptions(screen.getByLabelText("Dificultad"), "alto")
 
-    await screen.findByText("1 pregunta activa")
+    await screen.findByText("1 pregunta activa en el banco")
     const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
     expect(ultimaLlamada).toContain("dificultad=alto")
   })
@@ -144,7 +144,7 @@ describe("Banco", () => {
 
     await user.selectOptions(screen.getByLabelText("Dificultad"), "bajo")
 
-    await screen.findByText("0 preguntas activas")
+    await screen.findByText("0 preguntas activas en el banco")
     expect(screen.queryByText(/error/i)).not.toBeInTheDocument()
   })
 
@@ -190,7 +190,7 @@ describe("Banco", () => {
 
     fireEvent.change(screen.getByLabelText("Unidad temática"), { target: { value: "Unidad 2" } })
 
-    await screen.findByText("1 pregunta activa")
+    await screen.findByText("1 pregunta activa en el banco")
     const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
     expect(ultimaLlamada).toContain("unidad=Unidad")
   })
@@ -207,11 +207,11 @@ describe("Banco", () => {
     renderBanco()
     await screen.findByText(/¿Qué principio de Clean Architecture/)
     await user.selectOptions(screen.getByLabelText("Dificultad"), "alto")
-    await screen.findByText("1 pregunta activa")
+    await screen.findByText("1 pregunta activa en el banco")
 
     await user.click(screen.getByText("Limpiar filtros"))
 
-    await screen.findByText("2 preguntas activas")
+    await screen.findByText("2 preguntas activas en el banco")
     expect(screen.getByLabelText("Dificultad")).toHaveValue("")
   })
 
@@ -256,7 +256,7 @@ describe("Banco", () => {
     renderBanco()
 
     expect(await screen.findByText("Pregunta 1")).toBeInTheDocument()
-    expect(screen.getByText("71 preguntas activas")).toBeInTheDocument()
+    expect(screen.getByText("71 preguntas activas en el banco")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "4" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Siguiente" })).toBeEnabled()
     expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled()
@@ -297,7 +297,7 @@ describe("Banco", () => {
 
     await user.selectOptions(screen.getByLabelText("Dificultad"), "alto")
 
-    await screen.findByText("30 preguntas activas")
+    await screen.findByText("30 preguntas activas en el banco")
     const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)?.[0] as string
     expect(ultimaLlamada).toContain("pagina=1")
   })

@@ -155,7 +155,7 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(
-      await screen.findByRole("heading", { name: "Cargar pregunta de Opción múltiple" }),
+      await screen.findByRole("heading", { name: "Nueva pregunta — Opción múltiple" }),
     ).toBeInTheDocument()
   })
 
@@ -173,7 +173,7 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(
-      await screen.findByRole("heading", { name: "Cargar pregunta de Verdadero/Falso" }),
+      await screen.findByRole("heading", { name: "Nueva pregunta — Verdadero/Falso" }),
     ).toBeInTheDocument()
   })
 
@@ -227,7 +227,7 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByRole("heading", { name: "Ingeniería de Software" })).toBeInTheDocument()
-    expect(await screen.findByText("0 preguntas activas")).toBeInTheDocument()
+    expect(await screen.findByText("0 preguntas activas en el banco")).toBeInTheDocument()
     // Banco.tsx dispara dos fetch en paralelo (sugerencias + tabla) tras cargar la materia —
     // hay que esperar a que ambos se resuelvan antes de que el afterEach restaure el fetch
     // real, o el que todavía esté pendiente termina pegándole a la red real.
