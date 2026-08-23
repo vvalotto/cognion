@@ -70,28 +70,36 @@ export function CuentaDetalle() {
         </div>
       )}
 
-      <Card className="mt-4 p-4 text-sm">
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
-          <dt className="text-muted-foreground">Email</dt>
-          <dd>{cuenta.email}</dd>
-          <dt className="text-muted-foreground">Rol</dt>
-          <dd>
-            <Badge variant={VARIANTE_ROL[cuenta.perfil]}>{ETIQUETA_ROL[cuenta.perfil]}</Badge>
-          </dd>
-          <dt className="text-muted-foreground">Estado</dt>
-          <dd>
-            <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
-              {cuenta.bloqueada ? "Bloqueada" : "Activa"}
-            </Badge>
-          </dd>
+      <Card className="mt-4 p-7 text-sm">
+        <dl className="divide-y divide-border">
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="text-muted-foreground">Email</dt>
+            <dd>{cuenta.email}</dd>
+          </div>
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="text-muted-foreground">Rol</dt>
+            <dd>
+              <Badge variant={VARIANTE_ROL[cuenta.perfil]}>{ETIQUETA_ROL[cuenta.perfil]}</Badge>
+            </dd>
+          </div>
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="text-muted-foreground">Estado</dt>
+            <dd>
+              <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
+                {cuenta.bloqueada ? "Bloqueada" : "Activa"}
+              </Badge>
+            </dd>
+          </div>
           {cuenta.perfil === "estudiante" && cuenta.comisionId && (
-            <>
+            <div className="flex items-center justify-between py-2.5">
               <dt className="text-muted-foreground">Comisión</dt>
               <dd>{cuenta.comisionId}</dd>
-            </>
+            </div>
           )}
-          <dt className="text-muted-foreground">Fecha de creación</dt>
-          <dd>{new Date(cuenta.creadoEn).toLocaleDateString()}</dd>
+          <div className="flex items-center justify-between py-2.5">
+            <dt className="text-muted-foreground">Cuenta creada</dt>
+            <dd>{new Date(cuenta.creadoEn).toLocaleDateString()}</dd>
+          </div>
         </dl>
       </Card>
 
