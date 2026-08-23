@@ -239,12 +239,12 @@ export function Banco() {
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
-              <th className="py-2 pr-4 pl-4">Pregunta</th>
-              <th className="py-2 pr-4">Tipo</th>
-              <th className="py-2 pr-4">Unidad / Tema</th>
-              <th className="py-2 pr-4">Dificultad</th>
-              <th className="py-2 pr-4">Importancia</th>
-              <th className="py-2 pr-4"></th>
+              <th className="py-2 pr-3 pl-4">Pregunta</th>
+              <th className="py-2 pr-3">Tipo</th>
+              <th className="py-2 pr-3">Unidad / Tema</th>
+              <th className="py-2 pr-3">Dificultad</th>
+              <th className="py-2 pr-3">Importancia</th>
+              <th className="py-2 pr-3"></th>
             </tr>
           </thead>
           <tbody>
@@ -257,31 +257,39 @@ export function Banco() {
             ) : (
               preguntas.map((pregunta) => (
                 <tr key={pregunta.id} className="border-b border-border last:border-0">
-                  <td className="max-w-xs truncate py-3 pr-4 pl-4">{pregunta.texto}</td>
-                  <td className="py-3 pr-4">
+                  <td
+                    className="max-w-[180px] truncate py-3 pr-3 pl-4"
+                    title={pregunta.texto}
+                  >
+                    {pregunta.texto}
+                  </td>
+                  <td className="py-3 pr-3 whitespace-nowrap">
                     <Badge variant={esOpcionMultiple(pregunta) ? "tipo-om" : "tipo-vf"}>
                       {esOpcionMultiple(pregunta) ? "Opción múltiple" : "Verdadero/Falso"}
                     </Badge>
                   </td>
-                  <td className="py-3 pr-4">
+                  <td
+                    className="max-w-[110px] truncate py-3 pr-3"
+                    title={`${pregunta.unidadTematica} · ${pregunta.tema}`}
+                  >
                     {pregunta.unidadTematica} · {pregunta.tema}
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3 pr-3">
                     <Badge variant={VARIANTE_NIVEL[pregunta.dificultad]}>
                       {ETIQUETA_NIVEL[pregunta.dificultad]}
                     </Badge>
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3 pr-3">
                     <Badge variant={VARIANTE_NIVEL[pregunta.importancia]}>
                       {ETIQUETA_NIVEL[pregunta.importancia]}
                     </Badge>
                   </td>
-                  <td className="py-3 pr-4 whitespace-nowrap">
+                  <td className="py-3 pr-3 whitespace-nowrap">
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="mr-2"
+                      className="mr-1.5"
                       onClick={() =>
                         navigate(
                           `/materias/${materiaId}/banco/preguntas/${pregunta.id}/editar`,
