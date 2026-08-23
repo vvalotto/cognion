@@ -52,17 +52,21 @@ export function CuentaDetalle() {
         ]}
       />
       <h1 className="text-lg font-semibold">{cuenta.nombre}</h1>
+      <p className="text-sm text-muted-foreground">Detalle de cuenta</p>
 
       {cuenta.bloqueada && (
         <div
           role="alert"
-          className="mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          className="mt-4 flex gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
-          <p className="font-medium">Esta cuenta está bloqueada.</p>
-          <p className="mt-1">
-            Se bloqueó automáticamente tras 3 intentos fallidos de inicio de sesión
-            consecutivos.
-          </p>
+          <span aria-hidden="true">🔒</span>
+          <div>
+            <p className="font-medium">Cuenta bloqueada</p>
+            <p className="mt-1">
+              3 intentos fallidos consecutivos de inicio de sesión. No puede volver a intentar
+              hasta que se resetee su contraseña.
+            </p>
+          </div>
         </div>
       )}
 
@@ -92,11 +96,16 @@ export function CuentaDetalle() {
       </Card>
 
       <Button
-        className="mt-4"
+        variant="destructive-solid"
+        className="mt-4 w-full"
         onClick={() => navigate(`/cuentas/${cuenta.id}/resetear-password`)}
       >
         Resetear contraseña y desbloquear
       </Button>
+      <p className="mt-2 text-center text-sm text-muted-foreground">
+        Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear"
+        separada.
+      </p>
     </div>
   )
 }

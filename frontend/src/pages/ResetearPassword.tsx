@@ -63,11 +63,23 @@ export function ResetearPassword() {
         ]}
       />
       <h1 className="text-lg font-semibold">Resetear contraseña</h1>
+      {cuenta && (
+        <p className="text-sm text-muted-foreground">
+          {cuenta.nombre} · {cuenta.email}
+        </p>
+      )}
 
       <Card className="mt-4">
         <CardContent>
-          <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400">
-            <p>Esta acción también desbloquea la cuenta.</p>
+          <div className="flex gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:text-amber-400">
+            <span aria-hidden="true">ⓘ</span>
+            <div>
+              <p className="font-medium">Esta acción también desbloquea la cuenta</p>
+              <p>
+                Si estaba bloqueada por intentos fallidos, queda desbloqueada al fijar la
+                nueva contraseña.
+              </p>
+            </div>
           </div>
 
           {error && (
@@ -89,6 +101,10 @@ export function ResetearPassword() {
                 value={passwordNueva}
                 onChange={(e) => setPasswordNueva(e.target.value)}
               />
+              <p className="text-xs text-muted-foreground">
+                El usuario debería cambiarla por una propia (self-service) en su próximo
+                ingreso.
+              </p>
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-confirmacion">Confirmar contraseña</Label>
