@@ -47,7 +47,7 @@ describe("router (integración)", () => {
     await router.navigate("/registro")
     render(<RouterProvider router={router} />)
 
-    expect(await screen.findByRole("heading", { name: "Crear cuenta" })).toBeInTheDocument()
+    expect(await screen.findByRole("heading", { name: "Crear tu cuenta" })).toBeInTheDocument()
   })
 
   it("la ruta /docentes/nuevo redirige a login sin sesión", async () => {
