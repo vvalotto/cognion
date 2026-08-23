@@ -257,21 +257,13 @@ export function Banco() {
             ) : (
               preguntas.map((pregunta) => (
                 <tr key={pregunta.id} className="border-b border-border last:border-0">
-                  <td
-                    className="max-w-[180px] truncate py-3 pr-3 pl-4"
-                    title={pregunta.texto}
-                  >
-                    {pregunta.texto}
-                  </td>
+                  <td className="max-w-[220px] py-3 pr-3 pl-4">{pregunta.texto}</td>
                   <td className="py-3 pr-3 whitespace-nowrap">
                     <Badge variant={esOpcionMultiple(pregunta) ? "tipo-om" : "tipo-vf"}>
                       {esOpcionMultiple(pregunta) ? "Opción múltiple" : "Verdadero/Falso"}
                     </Badge>
                   </td>
-                  <td
-                    className="max-w-[110px] truncate py-3 pr-3"
-                    title={`${pregunta.unidadTematica} · ${pregunta.tema}`}
-                  >
+                  <td className="max-w-[130px] py-3 pr-3">
                     {pregunta.unidadTematica} · {pregunta.tema}
                   </td>
                   <td className="py-3 pr-3">
