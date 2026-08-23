@@ -109,9 +109,15 @@ entre BCs e iteraciones, sin redefinir tokens nuevos.
 
 | Elemento | Detalle |
 |---|---|
-| Extiende | `wireframes-identidad.md` §2.2 (Login — error) con una variante específica |
-| Alerta | Destructiva: "Cuenta bloqueada", dirige explícitamente a contactar a un Administrador — sin link de recuperación self-service (no existe en v1) |
-| Formulario | Campos deshabilitados tras el bloqueo, botón "Ingresar" deshabilitado |
+| Layout | Propio de esta pantalla — tarjeta centrada sin el bloque de marca (`Cognión`/subtítulo) del resto de `AuthLayout`, ícono de la app (40px) centrado sobre el título "Ingresar" — no reutiliza el encabezado de `wireframes-identidad.md` §2.2 |
+| Alerta | Destructiva, con ícono 🔒: "Cuenta bloqueada" — "Superaste el máximo de intentos permitidos. Contactá a un Administrador para restablecer tu contraseña." — sin link de recuperación self-service (no existe en v1) |
+| Formulario | Campos deshabilitados tras el bloqueo, botón "Ingresar" a todo el ancho, deshabilitado |
+
+> Corrección 2026-08-23 (UAT/UX en vivo): la primera versión de esta fila decía que la
+> pantalla "extiende `wireframes-identidad.md` §2.2" con el mismo encabezado que el resto de
+> Login — la implementación siguió ese texto en vez del prototipo HTML (`#login-bloqueada`),
+> que ya mostraba el layout propio descripto arriba. Corregido para que la spec escrita deje
+> de contradecir al prototipo, que es la fuente de verdad.
 
 ---
 

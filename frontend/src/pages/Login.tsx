@@ -1,9 +1,11 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
+import { Logo } from "@/components/Logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuthBrand } from "@/layouts/AuthLayout"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { LoginError } from "@/pages/LoginError"
 import { LoginCuentaBloqueadaError } from "@/pages/LoginCuentaBloqueadaError"
@@ -28,6 +30,12 @@ export function Login() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
   const [bloqueada, setBloqueada] = useState(false)
+  const { setOcultarMarca } = useAuthBrand()
+
+  useEffect(() => {
+    setOcultarMarca(bloqueada)
+    return () => setOcultarMarca(false)
+  }, [bloqueada, setOcultarMarca])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -56,8 +64,17 @@ export function Login() {
 
   return (
     <div>
-      <h1 className="text-lg font-semibold">Iniciar sesión</h1>
-      <p className="mb-4 text-sm text-muted-foreground">Ingresá con tu email y contraseña</p>
+      {bloqueada ? (
+        <div className="mb-2 flex flex-col items-center text-center">
+          <Logo size={40} className="mb-2" />
+          <h1 className="text-lg font-semibold">Ingresar</h1>
+        </div>
+      ) : (
+        <>
+          <h1 className="text-lg font-semibold">Iniciar sesión</h1>
+          <p className="mb-4 text-sm text-muted-foreground">Ingresá con tu email y contraseña</p>
+        </>
+      )}
 
       {bloqueada ? <LoginCuentaBloqueadaError /> : error && <LoginError />}
 
