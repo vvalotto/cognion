@@ -1,10 +1,14 @@
-import { render, screen } from "@testing-library/react"
+import { cleanup, render, screen } from "@testing-library/react"
 import { MemoryRouter, Route, Routes } from "react-router"
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it } from "vitest"
 
 import { RegistroExito } from "@/pages/RegistroExito"
 
 describe("RegistroExito", () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   it("muestra el nombre de la comisión recibido por navegación", () => {
     render(
       <MemoryRouter
@@ -30,6 +34,8 @@ describe("RegistroExito", () => {
       </MemoryRouter>
     )
 
-    expect(screen.getByText("Ya quedaste asignado automáticamente a tu comisión.")).toBeInTheDocument()
+    expect(
+      screen.getByText("Ya quedaste asignado a tu comisión. Iniciá sesión para continuar.")
+    ).toBeInTheDocument()
   })
 })

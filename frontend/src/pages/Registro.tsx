@@ -60,8 +60,8 @@ export function Registro() {
 
   return (
     <div>
-      <h1 className="text-lg font-semibold">Crear cuenta</h1>
-      <p className="mb-4 text-sm text-muted-foreground">Completá tus datos para unirte a tu comisión</p>
+      <h1 className="text-lg font-semibold">Crear tu cuenta</h1>
+      <p className="mb-4 text-sm text-muted-foreground">Completá tus datos para unirte a la comisión</p>
 
       {error && (
         <div

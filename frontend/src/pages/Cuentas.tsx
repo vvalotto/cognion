@@ -80,14 +80,24 @@ export function Cuentas() {
     <div>
       <Breadcrumb items={[{ label: "Administración" }, { label: "Cuentas" }]} />
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Cuentas</h1>
+        <div>
+          <h1 className="text-lg font-semibold">Cuentas</h1>
+          {cuentas !== null && (
+            <p className="text-sm text-muted-foreground">
+              {total} {total === 1 ? "cuenta registrada" : "cuentas registradas"}
+            </p>
+          )}
+        </div>
         <Button onClick={() => navigate("/docentes/nuevo")}>+ Nueva cuenta</Button>
       </div>
 
       <Card className="mt-4">
         <CardContent className="flex flex-wrap items-end gap-3 p-4">
           <div>
-            <label htmlFor="filtro-rol" className="text-sm text-muted-foreground">
+            <label
+              htmlFor="filtro-rol"
+              className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+            >
               Rol
             </label>
             <select
@@ -106,7 +116,10 @@ export function Cuentas() {
             </select>
           </div>
           <div>
-            <label htmlFor="filtro-estado" className="text-sm text-muted-foreground">
+            <label
+              htmlFor="filtro-estado"
+              className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+            >
               Estado
             </label>
             <select
@@ -124,7 +137,10 @@ export function Cuentas() {
             </select>
           </div>
           <div>
-            <label htmlFor="filtro-busqueda" className="text-sm text-muted-foreground">
+            <label
+              htmlFor="filtro-busqueda"
+              className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+            >
               Búsqueda
             </label>
             <input
@@ -148,7 +164,7 @@ export function Cuentas() {
       <Card className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted text-muted-foreground">
+            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
               <th className="py-2 pr-4 pl-4">Nombre</th>
               <th className="py-2 pr-4">Email</th>
               <th className="py-2 pr-4">Rol</th>

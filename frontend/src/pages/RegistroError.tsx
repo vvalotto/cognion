@@ -10,13 +10,27 @@ import { Button } from "@/components/ui/button"
  */
 export function RegistroError() {
   return (
-    <div>
+    <div className="text-center">
+      <p className="mb-2 text-4xl" aria-hidden="true">
+        ⏱
+      </p>
       <h1 className="text-lg font-semibold">Este link ya no es válido</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        El link de invitación venció, ya fue usado o no existe. No hay forma de recuperarlo
-        automáticamente — pedile a tu docente que te genere uno nuevo.
+        El link de invitación venció o no es correcto. No se puede recuperar automáticamente.
       </p>
-      <Button render={<Link to="/login" />} className="mt-4 w-full">
+
+      <div
+        role="alert"
+        className="mt-4 flex gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-left text-sm text-destructive"
+      >
+        <span aria-hidden="true">⚠</span>
+        <div>
+          <p className="font-medium">Invitación vencida o inválida</p>
+          <p>Pedile a tu docente que te genere un nuevo link de invitación para la comisión.</p>
+        </div>
+      </div>
+
+      <Button render={<Link to="/login" />} variant="outline" className="mt-4 w-full">
         Ir a iniciar sesión
       </Button>
     </div>
