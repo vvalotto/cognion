@@ -70,9 +70,11 @@ extiende el plazo de una sesión activa.
 
 ## Próximos pasos
 
-1. Crear GitHub Issues (Milestone `Incremento 3 — Actividad Evaluativa`, labels `us-iedd`,
-   `incremento-3`, `tipo:modelado`) para US-3.0.1 y US-3.0.2, y sus specs en
-   `docs/specs/inc3/US-3.0.1.md` / `US-3.0.2.md`.
+1. ~~Crear GitHub Issues (Milestone `Incremento 3 — Sesión de Período Abierto`, labels
+   `us-iedd`, `incremento-3`, `tipo:modelado`) para US-3.0.1 y US-3.0.2.~~ Creados 2026-08-24:
+   Issue #137 (US-3.0.1), Issue #138 (US-3.0.2). Las US tipo `Modelado` no generan spec en
+   `docs/specs/` — el propio Issue es la spec completa (a diferencia de las US tipo `feature`
+   de Iteración 1+, mismo criterio que `inc1-candidatas.md`/`inc2-candidatas.md`).
 2. Ejecutar el event storming (US-3.0.1) y los wireframes (US-3.0.2), con aprobación explícita
    de Víctor en cada Issue.
 3. Al cerrar la Iteración 0: actualizar este archivo con el detalle completo de comandos/
