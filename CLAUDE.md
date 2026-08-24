@@ -22,9 +22,9 @@ Documentos de definición (no se modifican retroactivamente):
 ## Estado actual
 
 **Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 en desarrollo local
-(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` diferidos —
-mismo ítem abierto de infraestructura/Docker que el deploy de `BL-001`; se ejecutan cuando esa
-decisión se resuelva. BC Identidad completo: RF-01 (registro por
+(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` ejecutados el
+2026-08-24 junto con el cierre de `BL-003` (ver más abajo) — tag retroactivo sobre el commit
+real de cierre, `75e0de9`. BC Identidad completo: RF-01 (registro por
 invitación) y RF-02 (autenticación y RBAC por rol) implementados de punta a punta, backend
 (Iteración 1: `US-1.1.0` a `US-1.1.5`) y frontend (Iteración 2: `US-1.1.6` a `US-1.1.9`)
 integrados juntos, cumpliendo el criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7
@@ -270,11 +270,26 @@ Sin no conformidades nuevas. **Cierra completa la Iteración 2 del Incremento 2*
 mitad del Hito completa: el administrador resuelve problemas de cuentas sin depender del
 docente.
 
-**Próximo paso:** iteración de ajuste conjunta (`US-ADJ-01`/`US-ADJ-03`, ver decisión de
-secuencia arriba) antes de evaluar el cierre de baseline (`BL-003`) — la Baseline no cierra
-backend-only, mismo criterio que `BL-002`.
-**Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
-`docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
+**Iteración de ajuste `SP-ADJ-01` cerrada 2026-08-23** (`US-ADJ-01`/`US-ADJ-03`/`US-ADJ-04`/
+`US-ADJ-05`): estilo visual alineado al prototipo aprobado (Banco de Preguntas y Cuentas) y
+paginación en ambos listados. **BL-003 (Incremento 2 — Banco de Preguntas + Gestión de
+Cuentas) cerrada el 2026-08-23** en desarrollo local
+(`.cm/baselines/BL-003-banco-preguntas-cuentas.md`), PR #122. Quedan 3 candidatas diferidas,
+fuera de esta baseline: `US-ADJ-06`/`07`/`08` (tocan `src/`, en cola para un próximo
+incremento).
+
+**Merge `develop → main` y tags de cierre ejecutados 2026-08-24**, a pedido explícito de
+Víctor, manteniendo un tag por baseline para coherencia de hitos: `v0.3.0` (`BL-002`, tag
+retroactivo sobre el commit real de cierre `75e0de9`) y `v0.4.0` (`BL-003`, commit `e31ee67`),
+ambos en un único merge commit (`a2a2aee`). El deploy real a un entorno (Fly.io/servidor
+FIUNER) sigue como decisión institucional pendiente, a evaluar hacia el final del desarrollo —
+sin relación con este merge; `cd.yml` en `main`/tags solo construye la imagen Docker
+(`build-and-deploy`), el `flyctl deploy` y el healthcheck post-deploy siguen comentados.
+
+**Próximo paso:** definir el alcance del Incremento 3 (`PLAN_v1.md`) y su Iteración 0 —
+Modelado. Las 3 candidatas diferidas (`US-ADJ-06`/`07`/`08`) son las primeras a evaluar para
+ese incremento.
+**Baseline abierta:** ninguna. La próxima se abre al iniciar el Incremento 3.
 **Branch activo:** `develop`.
 
 ---

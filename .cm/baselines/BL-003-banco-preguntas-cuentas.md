@@ -5,9 +5,9 @@
 | Tipo | Incremento |
 | Fecha apertura | 2026-07-30 |
 | Fecha cierre | 2026-08-23 |
-| Git tag inicial | `v0.2.0` (BL-002 nunca llegó a taggear `v0.3.0` — el merge a `main` sigue diferido desde el cierre de BL-002; BL-003 hereda el mismo estado) |
-| Git tag cierre | Pendiente — `merge develop → main` y tag `v0.4.0` diferidos, mismo ítem abierto de infraestructura/Docker que BL-001/BL-002; se ejecuta cuando esa decisión se resuelva (confirmado con Víctor al cerrar esta baseline) |
-| Estado | ✅ Completado (desarrollo local) — merge a `main` diferido |
+| Git tag inicial | `v0.3.0` (asignado retroactivamente a `BL-002` el 2026-08-24 — ver nota abajo) |
+| Git tag cierre | `v0.4.0`, taggeado el 2026-08-24 sobre el commit `e31ee67` al mergear `develop → main` junto con `BL-002` en una sola operación (decisión de Víctor: mantener coherencia de hitos con un tag por baseline en vez de un único merge sin tags intermedios). El deploy real (Fly.io/servidor FIUNER) queda como decisión institucional a resolver hacia el final del desarrollo, sin relación con este merge — `cd.yml` solo construye la imagen Docker. |
+| Estado | ✅ Completado — mergeado a `main` |
 | DoD | El docente arma y mantiene el banco de preguntas completo, filtrable por materia/unidad/tema/dificultad/importancia. El administrador resuelve problemas de cuentas sin depender del docente (`PLAN_v1.md`, Hito Incremento 2). Backend y frontend implementados e integrados juntos — mismo criterio de cierre de baseline que `BL-002` (`docs/plans/PLAN-CM.md` §7). |
 
 ---

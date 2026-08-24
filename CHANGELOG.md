@@ -11,6 +11,10 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [0.4.0] - 2026-08-23
 
+> Tag `v0.4.0` y merge `develop → main` ejecutados el 2026-08-24 (commit `e31ee67`), junto con
+> `v0.3.0`, a pedido explícito de Víctor — deploy real a un entorno sigue pendiente de decisión
+> institucional, sin relación con este merge (`cd.yml` solo construye la imagen Docker).
+
 ### Added
 - **Ajuste UX en vivo post-`SP-ADJ-01`** (PRs #120/#121, sin US formal — track informal por
   tocar solo `frontend/`, comparación en navegador real contra los prototipos HTML aprobados)
@@ -381,6 +385,10 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   proyecto verificados en verde tras el refactor.
 
 ## [0.3.0] - 2026-07-29
+
+> Tag `v0.3.0` taggeado retroactivamente el 2026-08-24 sobre el commit real de cierre
+> (`75e0de9`), junto con el merge `develop → main` que también cerró `v0.4.0` — ver nota en
+> `[0.4.0]`.
 
 ### Added
 - [US-1.1.9] Administrador da de alta un Docente desde la UI — BC Identidad
