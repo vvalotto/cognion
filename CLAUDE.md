@@ -497,7 +497,13 @@ Decidir el track **antes de codear**:
 
 - **Algoritmo de puntaje en modo en vivo** (RF-10): combina tiempo, corrección, dificultad e importancia. Se cierra como spike en Incremento 6, Iteración 0.
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
-- **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción pendiente de decisión institucional (nube vs. servidor FIUNER).
+- **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción
+  pendiente de decisión institucional (nube vs. servidor FIUNER) y del mecanismo de backup
+  asociado (`RNF_v1.md` Escenario 2 — mensual, retención 12 meses). Cambio de estrategia
+  2026-08-24 (`docs/rf/PLAN_v1.md` revisión 2026-08-24): los Incrementos 3 a 7 corren con datos
+  de prueba/locales, no datos reales de estudiantes — esta decisión se resuelve recién en la
+  última iteración antes de la prueba funcional de validación previa al despliegue real, no
+  antes del Incremento 3 como decía el plan original.
 - **Docker en el entorno de desarrollo local**: no instalado a la fecha (2026-07-16). Se
   usará más adelante en el proyecto — hasta entonces, PostgreSQL local corre vía Homebrew
   (ver `docs/rf/PLAN_v1.md` revisión 2026-07-16). El build de imagen Docker en CI/CD no se
