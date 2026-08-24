@@ -1,0 +1,256 @@
+{
+  "metadata": {
+    "us_id": "US-2.2.5",
+    "us_title": "Usuario autenticado cambia su propia contraseña",
+    "us_points": 2,
+    "producto": "identidad",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-20T13:12:47.055540+00:00",
+    "completed_at": "2026-08-20T14:19:18.019277+00:00",
+    "total_elapsed_seconds": 3990,
+    "effective_seconds": 3990,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Fase 0",
+      "started_at": "2026-08-20T13:12:55.873329+00:00",
+      "completed_at": "2026-08-20T13:13:58.238412+00:00",
+      "elapsed_seconds": 62,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-20T13:14:08.795629+00:00",
+      "completed_at": "2026-08-20T13:17:03.392711+00:00",
+      "elapsed_seconds": 174,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-20T13:17:09.045504+00:00",
+      "completed_at": "2026-08-20T13:33:35.430352+00:00",
+      "elapsed_seconds": 986,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-20T13:33:43.467571+00:00",
+      "completed_at": "2026-08-20T13:39:28.151130+00:00",
+      "elapsed_seconds": 344,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "errors.py: PasswordActualIncorrecta",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T13:33:44.715998+00:00",
+          "completed_at": "2026-08-20T13:34:00.526014+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -4.75,
+          "file_created": "src/identidad/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "eventos.py: PasswordCambiada",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T13:34:02.842396+00:00",
+          "completed_at": "2026-08-20T13:34:20.714739+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -4.72,
+          "file_created": "src/identidad/entities/eventos.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "usuario.py: cambiar_password / registrar_fallo_cambio_password",
+          "task_type": "entities",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T13:34:20.841974+00:00",
+          "completed_at": "2026-08-20T13:34:46.067261+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -9.58,
+          "file_created": "src/identidad/entities/usuario.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "use_cases/cambiar_password.py",
+          "task_type": "use_cases",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-20T13:34:48.708790+00:00",
+          "completed_at": "2026-08-20T13:35:04.265349+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -14.75,
+          "file_created": "src/identidad/use_cases/cambiar_password.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "interface_adapters/controllers/perfil_controller.py",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T13:35:07.307599+00:00",
+          "completed_at": "2026-08-20T13:35:15.787821+00:00",
+          "elapsed_seconds": 8,
+          "actual_minutes": 0.13,
+          "variance_minutes": -9.87,
+          "file_created": "src/identidad/interface_adapters/controllers/perfil_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "frameworks/api/schemas.py: CambiarPasswordRequest",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T13:35:20.367671+00:00",
+          "completed_at": "2026-08-20T13:35:43.707673+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -4.62,
+          "file_created": "src/identidad/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "frameworks/dependencies.py: get_perfil_controller",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T13:35:43.848371+00:00",
+          "completed_at": "2026-08-20T13:36:20.182175+00:00",
+          "elapsed_seconds": 36,
+          "actual_minutes": 0.6,
+          "variance_minutes": -4.4,
+          "file_created": "src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "frameworks/api/perfil_router.py",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-20T13:36:20.369832+00:00",
+          "completed_at": "2026-08-20T13:36:33.426811+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -14.78,
+          "file_created": "src/identidad/frameworks/api/perfil_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "src/app.py: registrar perfil_router",
+          "task_type": "integracion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-20T13:36:33.655248+00:00",
+          "completed_at": "2026-08-20T13:37:25.753406+00:00",
+          "elapsed_seconds": 52,
+          "actual_minutes": 0.87,
+          "variance_minutes": -4.13,
+          "file_created": "src/app.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-20T13:40:00.269105+00:00",
+      "completed_at": "2026-08-20T13:42:12.131548+00:00",
+      "elapsed_seconds": 131,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-20T13:42:15.648915+00:00",
+      "completed_at": "2026-08-20T13:45:25.206220+00:00",
+      "elapsed_seconds": 189,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-20T13:45:38.456530+00:00",
+      "completed_at": "2026-08-20T13:50:06.836342+00:00",
+      "elapsed_seconds": 268,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-20T13:50:10.538212+00:00",
+      "completed_at": "2026-08-20T14:05:14.070847+00:00",
+      "elapsed_seconds": 903,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-20T14:05:46.191615+00:00",
+      "completed_at": "2026-08-20T14:08:35.561422+00:00",
+      "elapsed_seconds": 169,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-20T14:17:57.530556+00:00",
+      "completed_at": "2026-08-20T14:19:17.851320+00:00",
+      "elapsed_seconds": 80,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 9,
+    "completed_tasks": 9,
+    "total_phases": 10,
+    "estimated_total_minutes": 75.0,
+    "actual_total_minutes": 3.4,
+    "variance_minutes": -71.6,
+    "variance_percent": -95.47
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "us_id": "US-2.1.1",
+    "us_title": "Docente da de alta una materia y su banco de preguntas",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-02T19:39:26.851237+00:00",
+    "completed_at": "2026-08-02T20:30:13.670750+00:00",
+    "total_elapsed_seconds": 3046,
+    "effective_seconds": 3046,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-02T19:39:35.050214+00:00",
+      "completed_at": "2026-08-02T19:53:43.017296+00:00",
+      "elapsed_seconds": 847,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-02T19:54:26.327235+00:00",
+      "completed_at": "2026-08-02T20:00:43.419062+00:00",
+      "elapsed_seconds": 377,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-02T19:55:58.501870+00:00",
+      "completed_at": "2026-08-02T19:56:43.598353+00:00",
+      "elapsed_seconds": 45,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-02T19:56:43.707387+00:00",
+      "completed_at": null,
+      "elapsed_seconds": 0,
+      "status": "in_progress",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-02T20:00:50.702008+00:00",
+      "completed_at": "2026-08-02T20:11:49.832582+00:00",
+      "elapsed_seconds": 659,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T0",
+          "task_name": "Refactor JWT/RBAC a shared",
+          "task_type": "refactor",
+          "estimated_minutes": 40.0,
+          "started_at": "2026-08-02T20:02:14.805154+00:00",
+          "completed_at": "2026-08-02T20:06:07.401421+00:00",
+          "elapsed_seconds": 232,
+          "actual_minutes": 3.87,
+          "variance_minutes": -36.13,
+          "file_created": "src/shared/entities/tipo_perfil.py,jwt.py,errors.py,ports/jwt_issuer_port.py,frameworks/security/jwt_pyjwt.py,interface_adapters/security/get_current_user.py,require_rol.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T1",
+          "task_name": "Entities Materia/Banco",
+          "task_type": "entity",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-02T20:06:33.080782+00:00",
+          "completed_at": "2026-08-02T20:07:09.636056+00:00",
+          "elapsed_seconds": 36,
+          "actual_minutes": 0.6,
+          "variance_minutes": -14.4,
+          "file_created": "src/banco_preguntas/entities/materia.py,banco.py,eventos.py,errors.py,ports/materia_repository_port.py,ports/banco_repository_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "CrearMateriaUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-02T20:07:12.575534+00:00",
+          "completed_at": "2026-08-02T20:07:29.912228+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -14.72,
+          "file_created": "src/banco_preguntas/use_cases/crear_materia.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Controller y gateways",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-02T20:07:33.016000+00:00",
+          "completed_at": "2026-08-02T20:08:31.149882+00:00",
+          "elapsed_seconds": 58,
+          "actual_minutes": 0.97,
+          "variance_minutes": -19.03,
+          "file_created": "src/banco_preguntas/interface_adapters/controllers/materias_controller.py,gateways/materia_repository.py,gateways/banco_repository.py,frameworks/db/models.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Migracion, schemas, router, dependencies",
+          "task_type": "frameworks",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-08-02T20:08:34.282839+00:00",
+          "completed_at": "2026-08-02T20:09:44.212251+00:00",
+          "elapsed_seconds": 69,
+          "actual_minutes": 1.15,
+          "variance_minutes": -28.85,
+          "file_created": "migrations/versions/099d86aa5d0d_materia_banco.py,src/banco_preguntas/frameworks/api/schemas.py,materias_router.py,dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Registrar router en app.py",
+          "task_type": "integracion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-02T20:09:47.502816+00:00",
+          "completed_at": "2026-08-02T20:10:26.889557+00:00",
+          "elapsed_seconds": 39,
+          "actual_minutes": 0.65,
+          "variance_minutes": -4.35,
+          "file_created": "src/app.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-02T20:12:00.689750+00:00",
+      "completed_at": "2026-08-02T20:13:35.357109+00:00",
+      "elapsed_seconds": 94,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-02T20:13:43.820872+00:00",
+      "completed_at": "2026-08-02T20:15:12.534345+00:00",
+      "elapsed_seconds": 88,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-02T20:15:21.995396+00:00",
+      "completed_at": "2026-08-02T20:17:00.704812+00:00",
+      "elapsed_seconds": 98,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-02T20:17:27.078042+00:00",
+      "completed_at": "2026-08-02T20:23:45.464343+00:00",
+      "elapsed_seconds": 378,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-02T20:23:55.954202+00:00",
+      "completed_at": "2026-08-02T20:29:19.885394+00:00",
+      "elapsed_seconds": 323,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-02T20:29:29.248793+00:00",
+      "completed_at": "2026-08-02T20:30:13.507499+00:00",
+      "elapsed_seconds": 44,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 6,
+    "completed_tasks": 6,
+    "total_phases": 11,
+    "estimated_total_minutes": 125.0,
+    "actual_total_minutes": 7.52,
+    "variance_minutes": -117.48,
+    "variance_percent": -93.99
+  }
+}

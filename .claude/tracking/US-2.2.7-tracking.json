@@ -1,0 +1,257 @@
+{
+  "metadata": {
+    "us_id": "US-2.2.7",
+    "us_title": "Administrador ve el detalle de una cuenta y resetea/desbloquea (UI)",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-20T15:29:47.623112+00:00",
+    "completed_at": "2026-08-20T15:46:01.745040+00:00",
+    "total_elapsed_seconds": 974,
+    "effective_seconds": 974,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-20T15:30:02.727207+00:00",
+      "completed_at": "2026-08-20T15:30:37.084540+00:00",
+      "elapsed_seconds": 34,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-20T15:30:44.020545+00:00",
+      "completed_at": "2026-08-20T15:32:19.237570+00:00",
+      "elapsed_seconds": 95,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-20T15:32:25.319785+00:00",
+      "completed_at": "2026-08-20T15:33:39.110999+00:00",
+      "elapsed_seconds": 73,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-20T15:33:54.371711+00:00",
+      "completed_at": "2026-08-20T15:35:38.649073+00:00",
+      "elapsed_seconds": 104,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Cliente API cuentas-api.ts",
+          "task_type": "code",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-20T15:34:00.888120+00:00",
+          "completed_at": "2026-08-20T15:34:15.105327+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -14.77,
+          "file_created": "frontend/src/lib/cuentas-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Pantalla CuentaDetalle",
+          "task_type": "code",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-20T15:34:15.212042+00:00",
+          "completed_at": "2026-08-20T15:34:30.074574+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -19.77,
+          "file_created": "frontend/src/pages/CuentaDetalle.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Pantalla ResetearPassword",
+          "task_type": "code",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-20T15:34:30.182877+00:00",
+          "completed_at": "2026-08-20T15:34:46.974649+00:00",
+          "elapsed_seconds": 16,
+          "actual_minutes": 0.27,
+          "variance_minutes": -24.73,
+          "file_created": "frontend/src/pages/ResetearPassword.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Pantalla CuentaReseteada",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T15:34:47.150203+00:00",
+          "completed_at": "2026-08-20T15:34:53.982689+00:00",
+          "elapsed_seconds": 6,
+          "actual_minutes": 0.1,
+          "variance_minutes": -9.9,
+          "file_created": "frontend/src/pages/CuentaReseteada.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Integrar rutas en router.tsx",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T15:34:54.089657+00:00",
+          "completed_at": "2026-08-20T15:35:18.620111+00:00",
+          "elapsed_seconds": 24,
+          "actual_minutes": 0.4,
+          "variance_minutes": -9.6,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-20T15:35:44.946634+00:00",
+      "completed_at": "2026-08-20T15:42:35.012027+00:00",
+      "elapsed_seconds": 410,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T6",
+          "task_name": "Tests cuentas-api.ts (obtenerCuenta/resetearPassword)",
+          "task_type": "test",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-20T15:35:56.208780+00:00",
+          "completed_at": "2026-08-20T15:36:13.648975+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -14.72,
+          "file_created": "frontend/src/lib/cuentas-api.test.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Tests CuentaDetalle.tsx",
+          "task_type": "test",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-20T15:36:13.758413+00:00",
+          "completed_at": "2026-08-20T15:36:26.790749+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -19.78,
+          "file_created": "frontend/src/pages/CuentaDetalle.test.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "Tests ResetearPassword.tsx",
+          "task_type": "test",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-20T15:36:26.896996+00:00",
+          "completed_at": "2026-08-20T15:36:45.643508+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -24.7,
+          "file_created": "frontend/src/pages/ResetearPassword.test.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "Tests CuentaReseteada.tsx",
+          "task_type": "test",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-20T15:36:45.864143+00:00",
+          "completed_at": "2026-08-20T15:42:34.838599+00:00",
+          "elapsed_seconds": 348,
+          "actual_minutes": 5.8,
+          "variance_minutes": -4.2,
+          "file_created": "frontend/src/pages/CuentaReseteada.test.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-20T15:42:44.035915+00:00",
+      "completed_at": "2026-08-20T15:43:03.412728+00:00",
+      "elapsed_seconds": 19,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-20T15:43:10.244407+00:00",
+      "completed_at": "2026-08-20T15:43:14.804043+00:00",
+      "elapsed_seconds": 4,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-20T15:43:18.852410+00:00",
+      "completed_at": "2026-08-20T15:44:20.702139+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-20T15:44:43.180347+00:00",
+      "completed_at": "2026-08-20T15:45:15.674882+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-20T15:45:21.537361+00:00",
+      "completed_at": "2026-08-20T15:46:01.629364+00:00",
+      "elapsed_seconds": 40,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 9,
+    "completed_tasks": 9,
+    "total_phases": 10,
+    "estimated_total_minutes": 150.0,
+    "actual_total_minutes": 7.83,
+    "variance_minutes": -142.17,
+    "variance_percent": -94.78
+  }
+}

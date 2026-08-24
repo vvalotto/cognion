@@ -1,0 +1,28 @@
+{
+  "us_id": "US-ADJ-04",
+  "titulo": "Alinear visualmente las pantallas de Cuentas/Contraseñas con el prototipo aprobado",
+  "tipo": "frontend puro — adaptación de quality gates (sin pylint/CC/MI, sin componente backend)",
+  "fecha": "2026-08-22",
+  "resultado": "APROBADO",
+  "gates": {
+    "oxlint": { "errores": 0, "advertencias": 2, "detalle": "only-export-components en button.tsx y badge.tsx — mismo patrón preexistente, sin cambios por esta US" },
+    "tsc_noEmit": { "errores": 0 },
+    "vitest": { "tests_totales": 160, "pasando": 160, "fallando": 0 },
+    "cobertura_global": { "statements": 92.09, "branches": 85.0, "functions": 90.76, "lines": 93.71, "umbral_referencia": 80 }
+  },
+  "verificacion_visual": {
+    "metodo": "navegador real (Chrome vía claude-in-chrome), comparación contra docs/design/ux/prototipos/identidad-cuentas-administracion.html",
+    "pantallas_verificadas": [
+      "Cuentas.tsx",
+      "CuentaDetalle.tsx",
+      "ResetearPassword.tsx"
+    ],
+    "pantallas_no_verificadas_en_navegador": [
+      "CuentaReseteada.tsx",
+      "CambiarPassword.tsx (pantalla de éxito)"
+    ],
+    "nota": "Inestabilidad de la extensión claude-in-chrome (tabs cerrándose) interrumpió el recorrido antes de cubrir las 2 pantallas restantes. Ambas comparten el mismo patrón Card centrada + ícono de éxito ya confirmado visualmente en las otras 3 pantallas, y están cubiertas por tests de Vitest dedicados (ícono ✓, heading, Card).",
+    "hallazgos": "ninguno en las 3 pantallas verificadas — breadcrumb, cards con sombra, tags de color por rol/estado, alert warning (no destructive) para el reseteo, botón sólido destructivo, todo coincide con el prototipo aprobado"
+  },
+  "sin_regresion_funcional": "confirmado — mismos endpoints/validaciones/rutas de US-2.2.2 a US-2.2.9, 160/160 tests en verde"
+}

@@ -21,24 +21,261 @@ Documentos de definición (no se modifican retroactivamente):
 
 ## Estado actual
 
-**Fase:** BL-000 (Fundación Documental) cerrada el 2026-07-15 — tag `v0.1.0`
-(`.cm/baselines/BL-000-fundacion-documental.md`). Plan de incrementos reestructurado:
-Incremento 0 (Fundación Técnica) es ahora infraestructura pura, sin BC Identidad — ver
-`docs/rf/PLAN_v1.md` (nota de revisión al inicio). Deploy real a un entorno (Fly.io u otro)
-queda diferido a un incremento posterior, pendiente de la decisión de infraestructura aún
-abierta.
-**Próximo paso:** Ejecutar el Incremento 0 siguiendo el ciclo de "incrementos técnicos sin US"
-(`docs/plans/WORKFLOW-DESARROLLO.md` §6): branch `feature/inc-0-fundacion-tecnica` desde
-`develop` (ya creado), commits por tarea (PostgreSQL local vía Homebrew — Docker diferido, ver
-`docs/rf/PLAN_v1.md` revisión 2026-07-16 —, Alembic inicializado, evidencia de pipeline CI/CD
-integrado de punta a punta), PR con `/pr`, merge, y registrar BL-001 al cerrar. No requiere
-`docs/plans/inc0/inc0-candidatas.md` — ese artefacto es para incrementos con US-IEDD (ver
-`HITO-3`). Luego arrancar el Incremento 1 (BC Identidad: RF-01, RF-02, JWT, healthcheck) con
-su propia Iteración 0 — Modelado.
-**Baseline abierta:** BL-001 se abre al iniciar la ejecución del Incremento 0 y se cierra
-cuando su Hito quede verificado con evidencia (ver `docs/plans/PLAN-CM.md` §7 para la
-numeración de baselines).
-**Branch activo:** `develop` (creado desde `main`).
+**Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 en desarrollo local
+(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` diferidos —
+mismo ítem abierto de infraestructura/Docker que el deploy de `BL-001`; se ejecutan cuando esa
+decisión se resuelva. BC Identidad completo: RF-01 (registro por
+invitación) y RF-02 (autenticación y RBAC por rol) implementados de punta a punta, backend
+(Iteración 1: `US-1.1.0` a `US-1.1.5`) y frontend (Iteración 2: `US-1.1.6` a `US-1.1.9`)
+integrados juntos, cumpliendo el criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7
+(decisión 2026-07-24 — la Baseline no cierra backend-only). Decisiones previas al incremento:
+invitación con expiración de 7 días, rechazo sin recuperación automática (`ADR-012`); JWT de
+60 minutos sin refresh ni blacklist (`ADR-013`); hashing bcrypt (`ADR-014`).
+**US-1.1.9 (Administrador da de alta un Docente desde la UI) cerrada 2026-07-29**, PR #35
+mergeado a `develop`, `docs/reports/inc1/US-1.1.9-report.md`: pantallas `AltaDocente.tsx`/
+`AltaDocenteExito.tsx` + guard de ruta `RequireRole` (ampliación de scope detectada en Fase 2:
+el `.feature` asumía ruta protegida, pero no había guard client-side desde `US-1.1.6`).
+**UAT manual de Víctor en navegador real** detectó y corrigió dos gaps preexistentes desde
+`US-1.1.6`/`1.1.7`, invisibles a Vitest: falta de `CORSMiddleware` en el backend (bloqueaba
+cualquier llamada real del frontend) y un bug de cascada CSS (regla heredada sin `@layer`
+pisando las utilities de Tailwind) + paleta/tipografía no institucionales — corregidos dentro
+de `US-1.1.9` a pedido de Víctor. 46/46 tests frontend, quality gates APROBADO
+(`quality/reports/inc1/US-1.1.9-quality.json`). Esta US cierra la Iteración 2 y el Incremento 1.
+**Quality gates de cierre ejecutados:** DesignReviewer del último PR — 0 CRITICAL, 27
+advertencias; ArchitectAnalyst (`quality/reports/architectanalyst/BL-002-arquitectura.json`) —
+3 críticos "Zone of Pain" a nivel de paquete raíz (`identidad`, `settings`, `shared`), leídos y
+aceptados, `should_block: false` (nunca bloquea, solo informa tendencias — ver retrospectiva
+de `BL-002` para el detalle y el ajuste propuesto para el próximo incremento).
+Incremento 2 — Banco de Preguntas en curso (`docs/plans/inc2/inc2-candidatas.md`).
+Iteración 0 — Modelado cerrada 2026-07-31 (US-2.0.1 event storming, Issue #38; US-2.0.2
+wireframes, Issue #39). **US-2.1.1 (Docente da de alta una Materia; banco vacío en el mismo
+flujo) cerrada 2026-07-31**, PR #56 mergeado a `develop`,
+`docs/reports/inc2/US-2.1.1-report.md`. **US-2.1.2 (Comisión referencia Materia por puerto,
+refactor técnico de BC Identidad) cerrada 2026-08-05**, PR #62 mergeado a `develop` (merge
+`8294a82`), Issue #43 cerrado, `docs/reports/inc2/US-2.1.2-report.md`: `Comisión.materia_id`
+resuelto contra `MateriaPort` sin imports directos entre BCs, migración con backfill
+verificada por round-trip real. El pre-push gate (`DesignReviewer`, `CBOAnalyzer`) detectó un
+CRITICAL (CBO=11/10 en `RegistrarEstudianteUseCase` al inyectar `MateriaPort`) recién en la
+fase de PR — no cubierto por los Quality Gates de Fase 7, que miden pylint/CC/MI/coverage pero
+no acoplamiento; se corrigió moviendo la resolución del nombre de materia a
+`RegistroController` (detalle de presentación, no de la regla de negocio de registro). 158/158
+tests, DesignReviewer 0 CRITICAL tras el fix. **US-2.1.3 (Docente carga una pregunta de
+opción múltiple en un banco) cerrada 2026-08-06**, PR #65 mergeado a `develop` (merge
+`80aca29`), Issue #44 cerrado, `docs/reports/inc2/US-2.1.3-report.md`: aggregate
+`PreguntaPlantillaOpcionMultiple` autovalidante (INV-BP-02 exactamente una opción correcta,
+INV-BP-03 mínimo 2 opciones), `CargarPreguntaOpcionMultipleUseCase`, endpoint
+`POST /preguntas/opcion-multiple` (rol `docente`). Primer tipo de pregunta implementado —
+establece el patrón que sigue `US-2.1.4` sin generalizar entre tipos. 180/180 tests, quality
+gates APROBADO (pylint 9.37/10, CC máx 6, MI mín 56.4, coverage 99%), pre-push gate 0
+CRITICAL.
+**US-2.1.4 (Docente carga una pregunta de Verdadero/Falso en un banco) cerrada 2026-08-08**,
+PR #68 mergeado a `develop` (merge `40849c4`), Issue #45 cerrado,
+`docs/reports/inc2/US-2.1.4-report.md`: segundo aggregate de pregunta,
+`PreguntaPlantillaVerdaderoFalso` (sin invariantes adicionales sobre `respuesta_correcta`),
+`CargarPreguntaVerdaderoFalsoUseCase`, endpoint `POST /preguntas/verdadero-falso` (rol
+`docente`), migración `respuesta_correcta` nullable en `pregunta_plantilla`. Repitió el patrón
+de `US-2.1.3` sin generalizar entre tipos de pregunta, según lo previsto. 194/194 tests, quality
+gates APROBADO (pylint 9.27/10, CC máx 6, MI mín 51.47, coverage 99%).
+**US-2.1.5 (Docente edita una pregunta existente) cerrada 2026-08-12**, PR #71 mergeado a
+`develop` (merge `39e2a12`), Issue #46 cerrado, `docs/reports/inc2/US-2.1.5-report.md`: método
+`editar(...)` en `PreguntaPlantillaOpcionMultiple`/`PreguntaPlantillaVerdaderoFalso`
+(reaplica INV-BP-02/03, tipo no editable), `EditarPreguntaUseCase`, endpoint
+`PUT /preguntas/{pregunta_id}` (rol `docente`). Mismo patrón de CRITICAL de CBO que
+`US-2.1.2` (`CBO=11/10` en `PreguntasController` al inyectar el tercer use case), corregido
+tipando el evento de retorno como `object` en el controller. 219/219 tests, quality gates
+APROBADO (pylint 9.27/10, CC máx 8, MI mín 49.62, coverage 99%).
+**US-2.1.6 (Docente elimina —baja lógica— una pregunta) cerrada 2026-08-12**, PR #73 mergeado a
+`develop` (merge `bb5c317`), Issue #47 cerrado, `docs/reports/inc2/US-2.1.6-report.md`: método
+`eliminar()` en `PreguntaPlantillaOpcionMultiple`/`PreguntaPlantillaVerdaderoFalso` (INV-BP-04,
+baja lógica), `EliminarPreguntaUseCase`, endpoint `DELETE /preguntas/{pregunta_id}` (rol
+`docente`). Tercera vez que el pre-push gate detecta CRITICAL de CBO en `PreguntasController`
+(mismo patrón que `US-2.1.2`/`US-2.1.5`) — esta vez se corrigió extendiendo el criterio de
+tipar el evento como `object` también a los dos endpoints de carga (`US-2.1.3`/`US-2.1.4`),
+no solo a los nuevos. CBO baja de 11/10 a 10/10. Ninguno de los RF de `RF_v1.md` cubre
+explícitamente la eliminación de preguntas — no mueve ninguna fila de la matriz de
+trazabilidad, mismo criterio que `US-2.1.2`. 237/237 tests, quality gates APROBADO (pylint
+9.18/10, CC máx 8, MI mín 49.62, coverage 99%).
+**US-2.1.7 (Docente filtra el banco por materia, unidad, tema, dificultad e importancia)
+cerrada 2026-08-13**, PR #76 mergeado a `develop` (merge `c26ce32`), Issue #48 cerrado,
+`docs/reports/inc2/US-2.1.7-report.md`: método `filtrar()` agregado a `PreguntaRepositoryPort`
+(solo preguntas `activa = true`, filtros opcionales combinables AND), `FiltrarBancoUseCase`,
+endpoint `GET /bancos/{banco_id}/preguntas` (rol `docente`). Controller nuevo y separado
+(`BancosController`) en vez de sumar un 5° use case a `PreguntasController` — ese ya estaba en
+el umbral duro de CBO (10/10) tras `US-2.1.6`; detectarlo en Fase 2 evitó repetir el patrón de
+CRITICAL de `US-2.1.2`/`US-2.1.5`/`US-2.1.6`. 258/258 tests, quality gates APROBADO (pylint
+9.28/10, CC máx 2, MI mín 41.66, coverage 99%). Cierra completa la Iteración 1 backend
+(`US-2.1.1` a `US-2.1.7`).
+**US-2.1.8 (Infraestructura de frontend del Banco de Preguntas) cerrada 2026-08-14**, PR #78
+mergeado a `develop` (merge `071a394`), Issue #49 cerrado,
+`docs/reports/inc2/US-2.1.8-report.md`: cliente API tipado (`banco-preguntas-api.ts`, reutiliza
+`apiFetch`/JWT/401/403 de `US-1.1.6`, mapea snake_case↔camelCase), 7 rutas nuevas en
+`router.tsx` protegidas con `RequireRole rol="docente"` (`US-1.1.9`), placeholder temporal
+hasta que `US-2.1.9` a `US-2.1.13` las reemplacen. **Gap detectado en Fase 2 (planificación,
+antes de escribir código):** el backend no expone `GET /materias` (listado) — solo
+`POST /materias` (`US-2.1.1`); la spec de `US-2.1.9` asumía que ya existía. Decisión de
+Víctor: excluir `listarMaterias` del alcance de esta US. 65/65 tests frontend, quality gates
+APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 100% en `banco-preguntas-api.ts`).
+**US-2.1.9 (Docente ve el listado de materias y da de alta una nueva) cerrada 2026-08-14**,
+PR #80 mergeado a `develop` (merge `98deff7`), Issue #50 cerrado,
+`docs/reports/inc2/US-2.1.9-report.md`: resuelve el gap de `US-2.1.8` — `GET /materias`
+(nuevo), `ListarMateriasUseCase` (reutiliza `PreguntaRepositoryPort.filtrar()` para el conteo
+de preguntas activas por materia, sin ensanchar ese puerto), métodos nuevos
+`MateriaRepositoryPort.listar()` y `BancoRepositoryPort.obtener_por_materia_id()`. Frontend:
+`listarMaterias()`, pantallas `Materias.tsx`/`NuevaMateria.tsx`, reemplazando los placeholders
+de `US-2.1.8`. 225/225 tests backend, 73/73 frontend, quality gates APROBADO (pylint 9.96/10,
+CC máx 3, MI mín 55.56, coverage 100% backend / 100%-93.33% en las pantallas nuevas). Smoke
+test manual en navegador real confirmado (login docente, alta de materia, listado).
+**US-2.1.10 (Docente ve y filtra el banco de preguntas de una materia) cerrada 2026-08-16**,
+PR #82 mergeado a `develop` (merge `641be0d`), `docs/reports/inc2/US-2.1.10-report.md`:
+frontend puro, sin cambios de backend — consume `GET /bancos/{id}/preguntas` (`US-2.1.7`) y
+`GET /materias` (`US-2.1.9`) para resolver `materiaId → nombre/bancoId` sin agregar un
+endpoint dedicado. Pantalla `Banco.tsx` (tabla + filtros de unidad/tema/dificultad/
+importancia) reemplaza el placeholder de `US-2.1.8` en `/materias/:materiaId/banco`; acciones
+"Editar"/"+ Nueva pregunta" apuntan a rutas placeholder pendientes de `US-2.1.11`–`US-2.1.13`,
+"Eliminar" deshabilitado (sin ruta de confirmación todavía). 80/80 tests frontend, quality
+gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 95.55%/89.28%/89.47% en
+`Banco.tsx`).
+**US-2.1.11 (Docente carga una pregunta eligiendo su tipo) cerrada 2026-08-16**, PR #84
+mergeado a `develop` (merge `45c6b25`), Issue #52 cerrado,
+`docs/reports/inc2/US-2.1.11-report.md`: frontend puro, sin cambios de backend — consume
+`POST /preguntas/opcion-multiple`/`POST /preguntas/verdadero-falso` (`US-2.1.3`/`US-2.1.4`) y
+`GET /materias` (`US-2.1.9`) para resolver `materiaId → bancoId`. 3 pantallas nuevas
+(`NuevaPreguntaTipo.tsx`, `NuevaPreguntaOpcionMultiple.tsx`, `NuevaPreguntaVerdaderoFalso.tsx`)
+reemplazan los 3 placeholders de "+ Nueva pregunta" en `router.tsx`; validación de cliente
+(INV-BP-02/03) antes de enviar; unidad temática como texto libre — sin catálogo ni endpoint de
+origen, mismo criterio que `US-2.1.8`. 89/89 tests frontend, quality gates APROBADO (oxlint 0
+errores, `tsc --noEmit` 0 errores, coverage 100%/83.33%/90.47% en las 3 pantallas nuevas).
+**US-2.1.12 (Docente edita una pregunta existente) cerrada 2026-08-17**, PR #86 mergeado a
+`develop`, Issue #53 cerrado: pantalla `EditarPregunta.tsx` prellenada según el tipo concreto
+de la pregunta, reutiliza `PUT /preguntas/{id}` (`US-2.1.5`) y `filtrarBanco()` (`US-2.1.7`)
+sin backend nuevo; reemplaza el placeholder de "Editar" en `Banco.tsx`. 97/97 tests frontend,
+quality gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage 90.52% en
+`EditarPregunta.tsx`).
+**US-2.1.13 (Docente elimina —baja lógica— una pregunta desde la UI) cerrada 2026-08-17**, PR
+#87 mergeado a `develop`, Issue #54 cerrado: pantalla `EliminarPregunta.tsx` con confirmación
+explícita ("no afecta sesiones pasadas"), reutiliza `DELETE /preguntas/{id}` (`US-2.1.6`);
+habilita el botón "Eliminar" deshabilitado desde `US-2.1.10`. 103/103 tests frontend. Cierra
+completa la Iteración 1 del Incremento 2, backend y frontend juntos.
+
+**UAT de cierre de la Iteración 1 ejecutada 2026-08-17/18** (`quality/reports/uat/inc2/`):
+Capa 1 (270 pytest + 103 Vitest) y Capa 2 (`smoke.sh` extendido con el flujo de Banco de
+Preguntas) en verde; recorrido en navegador real primero por la sesión, luego por Víctor en
+persona con el banco de la materia "Ingeniería de Software" cargado con contenido real (70
+preguntas de un `.docx` docente + 1 previa, 71 en total) para ejercitar volumen realista, no
+solo fixtures mínimos. La UAT dejó tres no conformidades registradas (`evidencia.md`), todas
+🟡 Observación, ninguna 🔴 Bloqueante, especificadas como US de ajuste (`SP-ADJ`,
+`docs/specs/ajustes/`) sin Issue de GitHub ni incremento asignado todavía:
+- **US-ADJ-01** (`HITO-4`): las pantallas de Banco de Preguntas no reproducen el lenguaje
+  visual del prototipo aprobado (cards, tags de color, breadcrumb) — deuda de calidad, no
+  implementada.
+- **US-ADJ-02** (`HITO-5`): Unidad temática/Tema como combobox derivado del banco actual en
+  vez de texto libre — **implementada y mergeada 2026-08-18**, PR #88 a `develop` (merge
+  `cfa65d8`): `<datalist>` nativo en carga, edición y filtros (`Banco.tsx`), reusa
+  `GET /bancos/{id}/preguntas` sin endpoint nuevo. 106/106 tests frontend.
+- **US-ADJ-03** (`HITO-6`): el banco sin paginación no aguanta volumen real (71 preguntas en
+  una sola tabla) — especificada, no implementada. Decisiones ya tomadas: página de 20,
+  paginación en backend, `fecha_creacion` nueva (backfill con timestamp único de migración),
+  reset a página 1 al cambiar filtros, UI de números de página + Anterior/Siguiente. Requiere
+  actualizar `wireframes-banco-preguntas.md` (gate UX) antes de tocar `frontend/`.
+
+**Decisión de secuencia:** `US-ADJ-01`/`US-ADJ-03` no se implementan en paralelo a la
+Iteración 2 — se agrupan en una única iteración de ajuste conjunta después de cerrar la
+Iteración 2 completa (backend + frontend) y su propia UAT, mismo criterio de "no fragmentar en
+mini-ajustes" ya aplicado en Identidad.
+
+Incremento 2 — Iteración 2 (RF-03, RF-19: gestión de cuentas por administrador y cambio de
+contraseña propio) en curso, backend casi completo (`docs/plans/inc2/inc2-candidatas.md`
+§Iteración 2). Wireframes/prototipo de `docs/design/ux/wireframes-cuentas-administracion.md`
+aprobados por Víctor 2026-08-19 — cubren el gap que `wireframes-identidad.md` §4 dejaba fuera
+de alcance; no hizo falta una nueva US de Modelado de dominio (el event storming de
+`BC-identidad-modelo.md` §3/§9/§11 ya alcanzaba).
+**US-2.2.1 (Bloqueo automático de cuenta por 3 intentos fallidos consecutivos de login)
+cerrada 2026-08-19**, PR #92 + PR #93 (fix de rutas `context.md`/`plan.md`) mergeados a
+`develop`, Issue #91 cerrado, `docs/reports/inc2/US-2.2.1-report.md`: `Usuario` gana
+`bloqueada`/`intentos_fallidos_login`/`intentos_fallidos_password`, evento `CuentaBloqueada`,
+`UsuarioRepositoryPort.actualizar()` nuevo (distinto de `guardar()`, lo reutilizan
+`US-2.2.4`/`US-2.2.5`). 281/281 tests, quality gates APROBADO.
+**US-2.2.2 (Administrador ve el listado de cuentas, filtra por rol/estado/búsqueda) cerrada
+2026-08-19**, PR #95 mergeado a `develop`, Issue #94 cerrado,
+`docs/reports/inc2/US-2.2.2-report.md`: mismo patrón de CRITICAL de CBO que
+`US-2.1.2`/`US-2.1.5`/`US-2.1.6`/`US-2.1.7` (esta vez sobre `UsuarioRepositoryPort` al
+diseño original) — resuelto separando la consulta en `CuentaQueryPort`/
+`SQLAlchemyCuentaQueryRepository` propios (command/query), no forzando el método en el
+repositorio existente. `CuentasController` nuevo, separado de `UsuariosController`. Tests
+pasando (ver reporte), quality gates APROBADO.
+**US-2.2.3 (Administrador ve el detalle de una cuenta) cerrada 2026-08-19**, PR #97 mergeado a
+`develop`, Issue #96 cerrado, `docs/reports/inc2/US-2.2.3-report.md`: `Usuario.creado_en`
+agregado (gap de spec detectado y resuelto con Víctor en la sesión, no excluido de alcance),
+`ObtenerCuentaUseCase` reutiliza `obtener_por_id()` existente — el pre-push gate no repitió el
+CRITICAL de CBO de `US-2.2.2` por diseñar la separación command/query desde el inicio.
+305/305 tests, quality gates APROBADO.
+**US-2.2.4 (Administrador resetea la contraseña de una cuenta, desbloqueo incluido) cerrada
+2026-08-20**, PR #98 mergeado a `develop`, Issue #99 cerrado,
+`docs/reports/inc2/US-2.2.4-report.md`: `Usuario.validar_password_nueva()` (INV-ID-11, primera
+vez que se enforza del lado del dominio, reutilizable por `US-2.2.5`) y
+`usuario.resetear_password()` (mutación de estado pura) separados para que la entidad no
+dependa del hasher; `ResetearPasswordUseCase` es el tercer método inyectado en
+`CuentasController` sin llegar a CRITICAL de CBO. 329/329 tests, quality gates APROBADO.
+
+**US-2.2.5 (Usuario autenticado cambia su propia contraseña) cerrada 2026-08-20**, PR #106
+mergeado a `develop`, Issue #100 cerrado: reutiliza `Usuario.validar_password_nueva()` de
+`US-2.2.4` y el contador propio `intentos_fallidos_password` de `US-2.2.1`. Cierra completo
+el backend de la Iteración 2.
+**US-2.2.6 (Administrador ve y filtra el listado de cuentas — UI) cerrada 2026-08-20**, PR
+#107 mergeado a `develop`, Issue #101 cerrado: consume `GET /usuarios?filtros` (`US-2.2.2`).
+**US-2.2.7 (Administrador ve el detalle de una cuenta y resetea/desbloquea — UI) cerrada
+2026-08-20**, PR #108 mergeado a `develop`, Issue #102 cerrado: consume `GET /usuarios/{id}`
+(`US-2.2.3`) y `POST /usuarios/{id}/resetear-password` (`US-2.2.4`).
+
+**US-2.2.8 (Cualquier usuario autenticado cambia su propia contraseña — UI) cerrada
+2026-08-20**, branch `feature/US-2.2.8-cambiar-password-ui`, Issue #103: consume `PUT
+/usuarios/me/password` (`US-2.2.5`), pantalla accesible a los tres roles, sin `RequireRole`.
+**Gap detectado en Fase 2** (antes de escribir código): la spec asumía que el backend exponía
+`intentos_fallidos_password` en el error — no era así (`detail` string genérico). Decisión de
+Víctor: extender el backend (`Usuario.intentos_restantes_cambio_password()`,
+`PasswordActualIncorrecta.intentos_restantes`, `perfil_router.py`), manteniendo los status
+codes 401/403 ya testeados por `US-2.2.5` — el `detail` pasa de string a objeto estructurado.
+**Ajuste detectado en Fase 3** (al correr la suite de `US-2.2.5` antes de dar por cerrado el
+plan): el plan original proponía 403 para el 3er fallo consecutivo, pero
+`test_us_2_2_5_steps.py` ya afirmaba 401 en ese caso — corregido antes de tocar tests
+existentes. Segundo hallazgo de diseño: el interceptor global de 401 de `api-client.ts`
+(limpia sesión, navega a `/login`) rompía el criterio "no requiere volver a iniciar sesión" —
+resuelto con una opción `handleUnauthorized: false` en `apiFetch`, sin cambiar ningún caller
+existente. 357/357 tests backend, 145/145 tests frontend, quality gates APROBADO
+(`quality/reports/inc2/US-2.2.8-quality.json`), pre-push gate (DesignReviewer) 0 CRITICAL.
+
+**US-2.2.9 (Login refleja el estado de cuenta bloqueada — UI) cerrada 2026-08-21**, branch
+`feature/US-2.2.9-login-cuenta-bloqueada`, Issue #104: frontend puro, sin cambios de backend —
+`POST /identidad/login` ya distinguía 403 (`CuentaBloqueadaError`) de 401
+(`CredencialesInvalidas`) desde `US-2.2.1`. **Gap detectado en Fase 2**: la spec asumía
+`frontend/src/lib/auth-api.ts`, que no existe — `Login.tsx` llama `apiFetch` directamente, sin
+capa intermedia. Decisión: distinguir el caso por `ApiError.status === 403` en `Login.tsx`, sin
+crear el archivo ni tocar `src/`. `LoginCuentaBloqueadaError.tsx` (alerta destructiva,
+`wireframes-cuentas-administracion.md` §2.8) + formulario completo deshabilitado (`fieldset`)
+cuando la cuenta está bloqueada. 148/148 tests frontend, quality gates APROBADO
+(`quality/reports/inc2/US-2.2.9-quality.json`). **Cierra completa la Iteración 2 del
+Incremento 2, backend y frontend juntos.**
+
+**UAT de cierre de la Iteración 2 ejecutada 2026-08-21** (`quality/reports/uat/inc2/`,
+`design-iter2.md`/`evidencia-iter2.md`): Capa 1 (357 pytest + 148 Vitest) en verde sin
+regresiones; Capa 2 (`smoke.sh` extendido con el flujo completo de bloqueo automático →
+detección por Administrador → reseteo → desbloqueo, `US-2.2.1` a `US-2.2.5`) todos los pasos
+en verde; recorrido en navegador real (Chrome vía claude-in-chrome, sesión de Claude Code —
+confirmación humana de Víctor pendiente si la quiere agregar) sin hallazgos 🔴 Bloqueantes:
+login con 3 intentos fallidos muestra la alerta "Cuenta bloqueada" (`US-2.2.9`) con el
+formulario deshabilitado, el Administrador la encuentra filtrando por estado, ve el detalle
+("se bloqueó automáticamente tras 3 intentos..."), resetea y desbloquea, el usuario vuelve a
+loguear y cambia su propia contraseña sin necesidad de volver a iniciar sesión (`US-2.2.8`).
+Sin no conformidades nuevas. **Cierra completa la Iteración 2 del Incremento 2** — segunda
+mitad del Hito completa: el administrador resuelve problemas de cuentas sin depender del
+docente.
+
+**Próximo paso:** iteración de ajuste conjunta (`US-ADJ-01`/`US-ADJ-03`, ver decisión de
+secuencia arriba) antes de evaluar el cierre de baseline (`BL-003`) — la Baseline no cierra
+backend-only, mismo criterio que `BL-002`.
+**Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
+`docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
+**Branch activo:** `develop`.
 
 ---
 
@@ -58,6 +295,12 @@ numeración de baselines).
 | Auth | JWT — PyJWT + cryptography |
 | Gestión de paquetes | uv (backend), npm (frontend) |
 
+**Perfil `implement-us` activo:** `clean-architecture-bc`
+(`.claude/skills/implement-us/customizations/clean-architecture-bc.json`) — no
+`hexagonal-ddd-bc` (perfil genérico de claude-dev-kit, no usado en este proyecto). Cualquier
+doc de fase de `implement-us` que condicione comportamiento por nombre de perfil debe
+referenciar `clean-architecture-bc`.
+
 ---
 
 ## Estructura del repositorio
@@ -68,7 +311,7 @@ cognion/
 ├── CHANGELOG.md                     ← Keep a Changelog, actualizado en cada tag de baseline
 ├── .cm/baselines/                   ← BL-NNN.md + reportes de calidad
 ├── .githooks/pre-push               ← DesignReviewer — bloquea si CRITICAL
-├── .pre-commit-config.yaml          ← black, isort, ruff, CodeGuard (advierte, no bloquea)
+├── .pre-commit-config.yaml          ← black, isort, ruff, mypy (bloquea), CodeGuard (advierte)
 ├── .github/workflows/               ← CI/CD: lint+test en develop, build+deploy en main
 ├── docs/
 │   ├── rf/                          ← documentos de elicitación (RF, RNF, ARQ, PLAN) — históricos
@@ -91,7 +334,7 @@ cognion/
 
 ## Arquitectura interna — reglas no negociables
 
-Monolito modular con **Clean Architecture** interna. Bounded Contexts: Sesiones (Core), Banco de Preguntas, Identidad, Notificaciones, Analytics.
+Monolito modular con **Clean Architecture** interna. Bounded Contexts: Actividad Evaluativa (Core, antes "Sesiones" — ver `ADR-015`), Banco de Preguntas, Identidad, Notificaciones, Analytics.
 
 ```
 src/<bc>/
@@ -101,7 +344,7 @@ src/<bc>/
 └── frameworks/         → FastAPI, SQLAlchemy, WebSockets — implementa puertos
 ```
 
-**Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: solo por puertos definidos en `entities/ports/` — nunca imports directos entre BCs. `shared/entities/` es la única excepción transversal (tipos y utilidades sin lógica de negocio de un BC específico).
+**Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: solo por puertos definidos en `entities/ports/` — nunca imports directos entre BCs. `shared/` es la única excepción transversal: puede tener las 4 capas (`entities/`, `use_cases/`, `interface_adapters/`, `frameworks/`) cuando el contenido es genuinamente transversal — sin lógica de negocio de un BC específico — no solo `entities/` (`ADR-017` para `shared/frameworks/db.py`, `ADR-019` para JWT/RBAC en `shared/entities/`+`frameworks/security/`+`interface_adapters/security/`). Cada BC sigue armando su propio composition root en `frameworks/dependencies.py`, importando de `shared` — nunca de otro BC.
 
 ---
 
@@ -133,9 +376,9 @@ main          ← baselines (v0.N.0) — deploy automático al mergear
 ### Conventional Commits
 
 ```
-feat(entities): agregar aggregate Sesion [US-2.1.1]
+feat(entities): agregar aggregate ActividadEvaluativa [US-3.1.1]
 fix(interface_adapters): corregir endpoint ranking
-test(entities): tests unitarios Sesion.cerrar_periodo
+test(entities): tests unitarios ActividadEvaluativa.cerrar_periodo
 docs(adr): ADR-003 SQLite vs PostgreSQL
 chore(cm): registrar BL-002 cierre Incremento 2
 ```
@@ -150,8 +393,16 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 3. tracker init US-N.M.K → start_phase(0)  ← ANTES de cualquier artefacto
 4. /implement-us US-N.M.K  (lee docs/specs/incN/US-N.M.K.md)
 5. Commits atómicos con referencia [US-N.M.K]
-6. /pr → merge a develop
+6. /pr → push + gh pr create --base develop
+7. Al mergear el PR (gh pr merge): sincronizar develop local (checkout + pull --ff-only,
+   borrar branch feature local/remoto), y cerrar el Issue de la US asociado — comentario con
+   los SHAs de los commits de la US + `gh issue close` — sin pedir confirmación previa, salvo
+   que algo resulte ambiguo (no se encuentra el Issue, hay más de un candidato, etc.)
 ```
+
+**Por qué el paso 7 es manual y no vía `Closes #N` en el commit/PR:** el repo mergea PRs a
+`develop`, no a `main` (rama default) — GitHub solo autocierra Issues por `Closes #N` cuando
+el merge es a la rama default.
 
 **Política de tracking:** operaciones sobre `tracker_cli.py` estrictamente secuenciales, nunca en paralelo sobre el mismo JSON. Usar `.venv/bin/python .claude/tracking/tracker_cli.py`, no `uv run`.
 
@@ -161,6 +412,7 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 
 | Nivel | Herramienta | Modo | Bloquea |
 |-------|-------------|------|---------|
+| Commit backend | mypy (`src/` completo) | Pre-commit automático | Sí |
 | Commit backend | CodeGuard | Pre-commit automático | No — solo advierte |
 | Push backend | DesignReviewer | Pre-push automático | Sí, si CRITICAL |
 | Push/PR a develop | lint + tests + DesignReviewer | GitHub Actions CI | Sí |
@@ -173,6 +425,12 @@ Scopes: `entities | use_cases | interface_adapters | frameworks | frontend | cm 
 - `designreviewer` **siempre** con `--config pyproject.toml` — sin el flag usa defaults genéricos que no reflejan el proyecto.
 - El hook `.githooks/pre-push` **no se activa solo al clonar** — requiere `git config core.hooksPath .githooks` una vez por clon.
 - Umbrales de `[tool.designreviewer]` se calibran **al inicio de cada Incremento completo**, no US por US.
+- El check de tipos integrado en CodeGuard (`software_limpio`) invoca mypy sin `--cache-dir`
+  y con timeout de 10s — en corridas en frío puede superar ese tiempo y el check queda mudo
+  (ni aprueba ni reporta error real), dejando pasar errores de tipo reales sin aviso. Bug
+  reportado: `vvalotto/software_limpio#70`. Mientras se corrige ahí, el hook `mypy` dedicado
+  (arriba, sobre `src/` completo, mismo comando que CI) es la fuente de verdad local para
+  tipos — bloquea el commit si hay errores reales.
 
 ---
 

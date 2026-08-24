@@ -1,0 +1,28 @@
+{
+  "us_id": "US-2.2.2",
+  "fecha": "2026-08-19T00:00:00Z",
+  "componente": "src/identidad",
+  "metricas": {
+    "pylint": 9.78,
+    "cc_max": 7,
+    "mi_min": 53.50,
+    "mi_promedio": 92.01,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Diseño final tras el pre-push gate: CBOAnalyzer detectó CRITICAL (CBO=11/10) en SQLAlchemyUsuarioRepository al agregar listar() directamente ahí (verificado contra develop: el archivo estaba en umbral antes de este cambio). Se corrigió separando la consulta en un puerto propio (CuentaQueryPort) y un gateway propio (SQLAlchemyCuentaQueryRepository) que delega el armado de cada Usuario en SQLAlchemyUsuarioRepository.obtener_por_id() (API pública, no acceso a métodos privados) — mismo criterio command/query que ya separa CuentasController de UsuariosController, extendido a la capa de persistencia. UsuarioRepositoryPort/SQLAlchemyUsuarioRepository quedan sin cambios respecto a develop.",
+    "Pylint acotado a los 8 archivos de src/identidad modificados/agregados por esta US (tras el rediseño): 9.78/10.",
+    "W2301 (unnecessary-ellipsis) en cuenta_query_port.py: mismo patrón preexistente en el resto de los puertos ABC del proyecto.",
+    "R0903 (too-few-public-methods) en CuentaQueryPort, CuentasController, SQLAlchemyCuentaQueryRepository y ListarCuentasUseCase: mismo patrón ya aceptado en AuthController/IniciarSesionUseCase (US-2.2.1) — clases de una sola responsabilidad por diseño.",
+    "CC/MI medidos sobre src/identidad completo — CC máx 7 (SQLAlchemyCuentaQueryRepository.listar, el filtro combinado), MI mín 53.50.",
+    "Coverage 99% sobre src/identidad. Las líneas 59-64 de cuenta_query_repository.py (el bucle que arma la lista de resultados) aparecen como no cubiertas en el reporte de coverage.py pese a ejecutarse correctamente — mismo artefacto de instrumentación de coverage.py con bucles async posteriores a un await de SQLAlchemy ya documentado en US-2.2.1/primera iteración de esta US; verificado con los 6 tests de integración y 3 escenarios BDD que ejercitan listar() y validan el contenido real de la respuesta. La línea 76 de usuario_repository.py (guard defensivo preexistente de US-2.2.1) es la única línea genuinamente no cubierta por diseño.",
+    "Pre-push gate final: 0 CRITICAL."
+  ]
+}

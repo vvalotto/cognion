@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "us_id": "US-2.1.12",
+    "us_title": "Docente edita una pregunta existente desde la UI",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-16T21:08:45.158809+00:00",
+    "completed_at": "2026-08-16T21:49:47.428221+00:00",
+    "total_elapsed_seconds": 2462,
+    "effective_seconds": 2462,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-08-16T21:08:51.961407+00:00",
+      "completed_at": "2026-08-16T21:09:58.270925+00:00",
+      "elapsed_seconds": 66,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-16T21:10:00.512813+00:00",
+      "completed_at": "2026-08-16T21:16:07.626946+00:00",
+      "elapsed_seconds": 367,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-16T21:16:14.029720+00:00",
+      "completed_at": "2026-08-16T21:18:29.660662+00:00",
+      "elapsed_seconds": 135,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-16T21:18:35.398815+00:00",
+      "completed_at": "2026-08-16T21:23:28.753365+00:00",
+      "elapsed_seconds": 293,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "EditarPregunta.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-08-16T21:18:35.501423+00:00",
+          "completed_at": "2026-08-16T21:19:20.920884+00:00",
+          "elapsed_seconds": 45,
+          "actual_minutes": 0.75,
+          "variance_minutes": -29.25,
+          "file_created": "frontend/src/pages/EditarPregunta.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "router.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-16T21:19:26.503951+00:00",
+          "completed_at": "2026-08-16T21:20:21.606693+00:00",
+          "elapsed_seconds": 55,
+          "actual_minutes": 0.92,
+          "variance_minutes": -4.08,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-16T21:24:29.160009+00:00",
+      "completed_at": "2026-08-16T21:39:19.733870+00:00",
+      "elapsed_seconds": 890,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-16T21:39:30.117940+00:00",
+      "completed_at": "2026-08-16T21:39:34.252878+00:00",
+      "elapsed_seconds": 4,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-16T21:39:44.631821+00:00",
+      "completed_at": "2026-08-16T21:40:10.386563+00:00",
+      "elapsed_seconds": 25,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-16T21:40:50.402682+00:00",
+      "completed_at": "2026-08-16T21:45:02.133124+00:00",
+      "elapsed_seconds": 251,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-16T21:45:42.652514+00:00",
+      "completed_at": "2026-08-16T21:49:09.744878+00:00",
+      "elapsed_seconds": 207,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-16T21:49:16.749861+00:00",
+      "completed_at": "2026-08-16T21:49:43.314073+00:00",
+      "elapsed_seconds": 26,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "total_phases": 10,
+    "estimated_total_minutes": 35.0,
+    "actual_total_minutes": 1.67,
+    "variance_minutes": -33.33,
+    "variance_percent": -95.24
+  }
+}

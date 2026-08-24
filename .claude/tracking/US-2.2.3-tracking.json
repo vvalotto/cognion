@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "us_id": "US-2.2.3",
+    "us_title": "Administrador ve el detalle de una cuenta",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-19T20:56:05.031479+00:00",
+    "completed_at": "2026-08-19T21:22:57.978805+00:00",
+    "total_elapsed_seconds": 1612,
+    "effective_seconds": 1612,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-19T20:56:08.318392+00:00",
+      "completed_at": "2026-08-19T20:57:50.823679+00:00",
+      "elapsed_seconds": 102,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-19T20:58:06.195781+00:00",
+      "completed_at": "2026-08-19T20:59:01.323374+00:00",
+      "elapsed_seconds": 55,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-19T20:59:05.591435+00:00",
+      "completed_at": "2026-08-19T21:00:31.431991+00:00",
+      "elapsed_seconds": 85,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-19T21:00:35.586763+00:00",
+      "completed_at": "2026-08-19T21:08:48.945773+00:00",
+      "elapsed_seconds": 493,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Entities: creado_en en Usuario + UsuarioNoExiste",
+          "task_type": "code",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-19T21:00:35.790615+00:00",
+          "completed_at": "2026-08-19T21:01:27.970887+00:00",
+          "elapsed_seconds": 52,
+          "actual_minutes": 0.87,
+          "variance_minutes": -14.13,
+          "file_created": "src/identidad/entities/usuario.py,errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Modelo SQLAlchemy + migración: creado_en",
+          "task_type": "code",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-19T21:01:30.999550+00:00",
+          "completed_at": "2026-08-19T21:03:41.822864+00:00",
+          "elapsed_seconds": 130,
+          "actual_minutes": 2.17,
+          "variance_minutes": -17.83,
+          "file_created": "models.py,migrations/versions/92b42288ef96_usuario_creado_en.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Gateway: creado_en en guardar()/_armar_usuario()",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-19T21:03:54.167704+00:00",
+          "completed_at": "2026-08-19T21:05:33.900951+00:00",
+          "elapsed_seconds": 99,
+          "actual_minutes": 1.65,
+          "variance_minutes": -8.35,
+          "file_created": "usuario_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Use case: ObtenerCuentaUseCase",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-19T21:05:43.082129+00:00",
+          "completed_at": "2026-08-19T21:06:02.007202+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -9.7,
+          "file_created": "src/identidad/use_cases/obtener_cuenta.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Controller: obtener_cuenta en CuentasController",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-19T21:06:05.963365+00:00",
+          "completed_at": "2026-08-19T21:06:23.257830+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -9.72,
+          "file_created": "src/identidad/interface_adapters/controllers/cuentas_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Schema CuentaDetalleResponse + endpoint GET /usuarios/{id} + wiring",
+          "task_type": "code",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-19T21:06:26.043816+00:00",
+          "completed_at": "2026-08-19T21:08:11.276213+00:00",
+          "elapsed_seconds": 105,
+          "actual_minutes": 1.75,
+          "variance_minutes": -18.25,
+          "file_created": "schemas.py,cuentas_router.py,dependencies.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-19T21:09:08.113484+00:00",
+      "completed_at": "2026-08-19T21:10:50.216587+00:00",
+      "elapsed_seconds": 102,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-19T21:11:00.430605+00:00",
+      "completed_at": "2026-08-19T21:16:55.691076+00:00",
+      "elapsed_seconds": 355,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-19T21:16:59.113409+00:00",
+      "completed_at": "2026-08-19T21:18:26.066636+00:00",
+      "elapsed_seconds": 86,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-19T21:18:30.195730+00:00",
+      "completed_at": "2026-08-19T21:21:04.671177+00:00",
+      "elapsed_seconds": 154,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-19T21:21:21.595180+00:00",
+      "completed_at": "2026-08-19T21:22:21.087482+00:00",
+      "elapsed_seconds": 59,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-19T21:22:24.961081+00:00",
+      "completed_at": "2026-08-19T21:22:57.827721+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 6,
+    "completed_tasks": 6,
+    "total_phases": 10,
+    "estimated_total_minutes": 85.0,
+    "actual_total_minutes": 7.02,
+    "variance_minutes": -77.98,
+    "variance_percent": -91.75
+  }
+}

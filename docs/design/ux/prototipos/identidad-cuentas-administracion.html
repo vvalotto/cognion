@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Gestión de Cuentas (Incremento 2, Iteración 2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Mismos tokens que identidad-registro-login.html y
+    banco-preguntas-carga-filtrado.html (paleta institucional UNER, tipografía
+    Roboto) — continuidad visual entre BCs e iteraciones.
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --warning: #b5791d;
+    --warning-bg: #fdf5e8;
+    --warning-border: #f0ddb3;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .app-body { padding: 28px 16px 60px; max-width: 900px; margin: 0 auto; }
+  .app-body.narrow { max-width: 480px; }
+  .breadcrumb { font-size: 12px; color: var(--muted-foreground); margin-bottom: 6px; }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .page-subtitle { font-size: 14px; color: var(--muted-foreground); margin: 0 0 24px; }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.outline { background: var(--background); color: var(--foreground); border: 1px solid var(--border); }
+  .btn.destructive { background: var(--destructive); color: #fff; }
+  .btn.accent { background: var(--accent); color: #fff; }
+  .btn.full { width: 100%; }
+  .btn.sm { padding: 6px 12px; font-size: 12px; }
+
+  .form-card, .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .result-card { max-width: 480px; margin: 40px auto 0; text-align: center; }
+
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+  }
+  .field .hint { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  .center-icon { text-align: center; font-size: 40px; margin-bottom: 8px; }
+
+  .alert {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    text-align: left;
+  }
+  .alert.destructive { background: var(--destructive-bg); border-color: var(--destructive-border); color: #7f1d1d; }
+  .alert.success { background: var(--success-bg); border-color: var(--success-border); color: #14532d; }
+  .alert.warning { background: var(--warning-bg); border-color: var(--warning-border); color: #7a5210; }
+  .alert .icon { flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .alert .body strong { display: block; margin-bottom: 2px; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  .filter-bar .field { margin-bottom: 0; min-width: 150px; flex: 1; }
+  .filter-bar .field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted-foreground); }
+
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  table.cuentas { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.cuentas th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted-foreground);
+    background: var(--muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.cuentas td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.cuentas tr:last-child td { border-bottom: none; }
+  table.cuentas tr.row-link { cursor: pointer; }
+  table.cuentas tr.row-link:hover { background: var(--muted); }
+  table.cuentas .acciones { display: flex; gap: 6px; white-space: nowrap; }
+
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .tag.rol-docente { background: #eaf2f8; color: var(--primary-dark); }
+  .tag.rol-estudiante { background: #f1ecf9; color: #5b3aa8; }
+  .tag.rol-admin { background: #fdeee0; color: #9a4a12; }
+  .tag.estado-activa { background: var(--success-bg); color: #14532d; }
+  .tag.estado-bloqueada { background: var(--destructive-bg); color: #7f1d1d; }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--muted-foreground); }
+  .detail-row .v { font-weight: 500; text-align: right; }
+
+  @media (max-width: 560px) {
+    table.cuentas { display: block; overflow-x: auto; }
+    .detail-row { flex-direction: column; gap: 2px; }
+    .detail-row .v { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>Inc.2 It.2 — Prototipo:</strong>
+  <button data-target="cuentas" class="active">1. Listado de cuentas</button>
+  <button data-target="cuenta-detalle">2. Detalle de cuenta</button>
+  <button data-target="cuenta-resetear">3. Resetear / desbloquear</button>
+  <button data-target="cuenta-reseteada">4. Confirmación</button>
+  <button data-target="cambiar-password">5. Cambiar mi contraseña</button>
+  <button data-target="cambiar-password-error">5b. Error — actual incorrecta</button>
+  <button data-target="cambiar-password-exito">6. Contraseña cambiada</button>
+  <button data-target="login-bloqueada">7. Login — cuenta bloqueada</button>
+</nav>
+
+<!-- 1. LISTADO DE CUENTAS -->
+<section class="screen active" id="cuentas">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Administrador</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Administración &nbsp;›&nbsp; <span class="current">Cuentas</span></div>
+    <div class="toolbar">
+      <div>
+        <h1 class="page-title" style="margin-bottom:2px;">Cuentas</h1>
+        <p class="page-subtitle" style="margin-bottom:0;">42 cuentas registradas</p>
+      </div>
+      <button class="btn" onclick="alert('Alta directa de usuario — ya implementada en US-1.1.9 (Alta de Docente); esta pantalla no la reemplaza, solo referencia el flujo existente.')">+ Nueva cuenta</button>
+    </div>
+
+    <div class="filter-bar">
+      <div class="field">
+        <label>Rol</label>
+        <select><option>Todos</option><option>Docente</option><option>Estudiante</option><option>Administrador</option></select>
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <select><option>Todos</option><option>Activa</option><option>Bloqueada</option></select>
+      </div>
+      <div class="field" style="flex:2; min-width:220px;">
+        <label>Buscar por nombre o email</label>
+        <input type="text" placeholder="ej. mgonzalez@fiuner.edu.ar">
+      </div>
+      <button class="btn outline sm">Limpiar filtros</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="cuentas">
+        <thead>
+          <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr class="row-link" onclick="go('cuenta-detalle')">
+            <td>María González</td>
+            <td>mgonzalez@fiuner.edu.ar</td>
+            <td><span class="tag rol-estudiante">Estudiante</span></td>
+            <td><span class="tag estado-bloqueada">Bloqueada</span></td>
+            <td class="acciones"><button class="btn outline sm" onclick="event.stopPropagation(); go('cuenta-detalle')">Ver</button></td>
+          </tr>
+          <tr class="row-link" onclick="go('cuenta-detalle')">
+            <td>Jorge Ibáñez</td>
+            <td>jibanez@fiuner.edu.ar</td>
+            <td><span class="tag rol-docente">Docente</span></td>
+            <td><span class="tag estado-activa">Activa</span></td>
+            <td class="acciones"><button class="btn outline sm" onclick="event.stopPropagation(); go('cuenta-detalle')">Ver</button></td>
+          </tr>
+          <tr class="row-link" onclick="go('cuenta-detalle')">
+            <td>Ana Pereyra</td>
+            <td>apereyra@fiuner.edu.ar</td>
+            <td><span class="tag rol-estudiante">Estudiante</span></td>
+            <td><span class="tag estado-activa">Activa</span></td>
+            <td class="acciones"><button class="btn outline sm" onclick="event.stopPropagation(); go('cuenta-detalle')">Ver</button></td>
+          </tr>
+          <tr class="row-link" onclick="go('cuenta-detalle')">
+            <td>Víctor Valotto</td>
+            <td>vvalotto@fiuner.edu.ar</td>
+            <td><span class="tag rol-admin">Administrador</span></td>
+            <td><span class="tag estado-activa">Activa</span></td>
+            <td class="acciones"><button class="btn outline sm" onclick="event.stopPropagation(); go('cuenta-detalle')">Ver</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 2. DETALLE DE CUENTA -->
+<section class="screen" id="cuenta-detalle">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Administrador</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Administración &nbsp;›&nbsp; Cuentas &nbsp;›&nbsp; <span class="current">María González</span></div>
+    <h1 class="page-title">María González</h1>
+    <p class="page-subtitle">Detalle de cuenta</p>
+
+    <div class="alert destructive">
+      <span class="icon">🔒</span>
+      <div class="body">
+        <strong>Cuenta bloqueada</strong>
+        3 intentos fallidos consecutivos de inicio de sesión. No puede volver a intentar hasta que se resetee su contraseña.
+      </div>
+    </div>
+
+    <div class="form-card" style="margin-bottom:20px;">
+      <div class="detail-row"><span class="k">Email</span><span class="v">mgonzalez@fiuner.edu.ar</span></div>
+      <div class="detail-row"><span class="k">Rol</span><span class="v"><span class="tag rol-estudiante">Estudiante</span></span></div>
+      <div class="detail-row"><span class="k">Estado</span><span class="v"><span class="tag estado-bloqueada">Bloqueada</span></span></div>
+      <div class="detail-row"><span class="k">Comisión</span><span class="v">Ingeniería de Software — Com. A</span></div>
+      <div class="detail-row"><span class="k">Cuenta creada</span><span class="v">14/03/2026</span></div>
+    </div>
+
+    <button class="btn destructive full" onclick="go('cuenta-resetear')">Resetear contraseña y desbloquear</button>
+    <p class="field hint" style="text-align:center; margin-top:8px;">Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear" separada.</p>
+  </div>
+</section>
+
+<!-- 3. RESETEAR / DESBLOQUEAR -->
+<section class="screen" id="cuenta-resetear">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Administrador</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Administración &nbsp;›&nbsp; Cuentas &nbsp;›&nbsp; María González &nbsp;›&nbsp; <span class="current">Resetear contraseña</span></div>
+    <h1 class="page-title">Resetear contraseña</h1>
+    <p class="page-subtitle">María González · mgonzalez@fiuner.edu.ar</p>
+
+    <div class="form-card">
+      <div class="alert warning">
+        <span class="icon">ℹ</span>
+        <div class="body">
+          <strong>Esta acción también desbloquea la cuenta</strong>
+          Si estaba bloqueada por intentos fallidos, queda desbloqueada al fijar la nueva contraseña.
+        </div>
+      </div>
+      <div class="field">
+        <label>Nueva contraseña temporal</label>
+        <input type="password" placeholder="Mínimo 8 caracteres">
+        <div class="hint">El usuario debería cambiarla por una propia (self-service) en su próximo ingreso.</div>
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña</label>
+        <input type="password">
+      </div>
+      <div class="form-actions">
+        <button class="btn destructive" onclick="go('cuenta-reseteada')">Resetear contraseña</button>
+        <button class="btn outline" onclick="go('cuenta-detalle')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. CONFIRMACIÓN -->
+<section class="screen" id="cuenta-reseteada">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Administrador</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card" style="margin-top:60px;">
+      <div class="center-icon" style="color: var(--success);">✓</div>
+      <h1 class="page-title" style="text-align:center;">Contraseña reseteada</h1>
+      <p class="page-subtitle" style="text-align:center;">La cuenta de María González quedó desbloqueada y con la contraseña nueva.</p>
+      <button class="btn full" onclick="go('cuentas')">Volver al listado de cuentas</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. CAMBIAR MI CONTRASEÑA (self-service) -->
+<section class="screen" id="cambiar-password">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">JI</span>Jorge Ibáñez · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mi cuenta &nbsp;›&nbsp; <span class="current">Cambiar contraseña</span></div>
+    <h1 class="page-title">Cambiar mi contraseña</h1>
+    <p class="page-subtitle">Disponible para cualquier usuario autenticado, sin importar el rol.</p>
+
+    <div class="form-card">
+      <div class="field">
+        <label>Contraseña actual</label>
+        <input type="password">
+      </div>
+      <div class="field">
+        <label>Contraseña nueva</label>
+        <input type="password" placeholder="Mínimo 8 caracteres">
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña nueva</label>
+        <input type="password">
+      </div>
+      <div class="form-actions">
+        <button class="btn full" onclick="go('cambiar-password-exito')">Cambiar contraseña</button>
+      </div>
+    </div>
+    <p class="field hint" style="text-align:center; margin-top:10px;">Tu sesión actual sigue activa — cambiar la contraseña no te desconecta.</p>
+  </div>
+</section>
+
+<!-- 5b. ERROR -->
+<section class="screen" id="cambiar-password-error">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">JI</span>Jorge Ibáñez · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mi cuenta &nbsp;›&nbsp; <span class="current">Cambiar contraseña</span></div>
+    <h1 class="page-title">Cambiar mi contraseña</h1>
+
+    <div class="form-card">
+      <div class="alert destructive">
+        <span class="icon">✕</span>
+        <div class="body">
+          <strong>Contraseña actual incorrecta</strong>
+          Te quedan 1 intento(s) antes de que la cuenta se bloquee. Si se bloquea, un Administrador debe resetear tu contraseña.
+        </div>
+      </div>
+      <div class="field">
+        <label>Contraseña actual</label>
+        <input type="password">
+      </div>
+      <div class="field">
+        <label>Contraseña nueva</label>
+        <input type="password" placeholder="Mínimo 8 caracteres">
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña nueva</label>
+        <input type="password">
+      </div>
+      <div class="form-actions">
+        <button class="btn full" onclick="go('cambiar-password-exito')">Cambiar contraseña</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. CONTRASEÑA CAMBIADA -->
+<section class="screen" id="cambiar-password-exito">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">JI</span>Jorge Ibáñez · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card" style="margin-top:60px;">
+      <div class="center-icon" style="color: var(--success);">✓</div>
+      <h1 class="page-title" style="text-align:center;">Contraseña actualizada</h1>
+      <p class="page-subtitle" style="text-align:center;">Tu sesión sigue activa, no fue necesario volver a iniciar sesión.</p>
+      <button class="btn full" onclick="alert('Vuelve a la pantalla anterior a esta (banco, materias, etc. según el rol)')">Continuar</button>
+    </div>
+  </div>
+</section>
+
+<!-- 7. LOGIN — CUENTA BLOQUEADA -->
+<section class="screen" id="login-bloqueada">
+  <div class="app-body narrow" style="display:flex; align-items:center; justify-content:center; min-height:80vh;">
+    <div class="form-card" style="width:100%; max-width:380px;">
+      <div class="center-icon" style="color: var(--primary);">
+        <svg viewBox="0 0 44 44" width="40" height="40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <h1 class="page-title" style="text-align:center;">Ingresar</h1>
+
+      <div class="alert destructive">
+        <span class="icon">🔒</span>
+        <div class="body">
+          <strong>Cuenta bloqueada</strong>
+          Superaste el máximo de intentos permitidos. Contactá a un Administrador para restablecer tu contraseña.
+        </div>
+      </div>
+
+      <div class="field"><label>Email</label><input type="email" value="mgonzalez@fiuner.edu.ar" disabled></div>
+      <div class="field"><label>Contraseña</label><input type="password" disabled></div>
+      <button class="btn full" disabled style="opacity:0.5; cursor:not-allowed;">Ingresar</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+</script>
+
+</body>
+</html>

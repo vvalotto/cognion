@@ -1,0 +1,28 @@
+[
+    {
+        "type": "refactor",
+        "module": "src.identidad.use_cases.registrar_estudiante",
+        "obj": "RegistrarEstudianteUseCase",
+        "line": 16,
+        "column": 0,
+        "endLine": 16,
+        "endColumn": 32,
+        "path": "src/identidad/use_cases/registrar_estudiante.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.identidad.interface_adapters.controllers.registro_controller",
+        "obj": "RegistroController",
+        "line": 10,
+        "column": 0,
+        "endLine": 10,
+        "endColumn": 24,
+        "path": "src/identidad/interface_adapters/controllers/registro_controller.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    }
+]

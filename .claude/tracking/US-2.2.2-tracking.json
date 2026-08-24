@@ -1,0 +1,204 @@
+{
+  "metadata": {
+    "us_id": "US-2.2.2",
+    "us_title": "Administrador ve el listado de cuentas, filtra por rol/estado/búsqueda",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-19T18:39:31.032350+00:00",
+    "completed_at": "2026-08-19T19:11:21.376708+00:00",
+    "total_elapsed_seconds": 1910,
+    "effective_seconds": 1910,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-19T18:39:32.451631+00:00",
+      "completed_at": "2026-08-19T18:41:01.875511+00:00",
+      "elapsed_seconds": 89,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-19T18:41:05.570010+00:00",
+      "completed_at": "2026-08-19T18:43:31.508143+00:00",
+      "elapsed_seconds": 145,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-19T18:43:37.879286+00:00",
+      "completed_at": "2026-08-19T18:45:22.751035+00:00",
+      "elapsed_seconds": 104,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-19T18:45:28.086838+00:00",
+      "completed_at": "2026-08-19T18:54:48.507049+00:00",
+      "elapsed_seconds": 560,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Puerto + gateway: listar()",
+          "task_type": "code",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-19T18:45:28.270684+00:00",
+          "completed_at": "2026-08-19T18:47:05.131528+00:00",
+          "elapsed_seconds": 96,
+          "actual_minutes": 1.6,
+          "variance_minutes": -23.4,
+          "file_created": "usuario_repository_port.py,usuario_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Use case: ListarCuentasUseCase",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-19T18:47:05.282397+00:00",
+          "completed_at": "2026-08-19T18:47:48.405675+00:00",
+          "elapsed_seconds": 43,
+          "actual_minutes": 0.72,
+          "variance_minutes": -9.28,
+          "file_created": "src/identidad/use_cases/listar_cuentas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Controller: CuentasController",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-19T18:47:58.774224+00:00",
+          "completed_at": "2026-08-19T18:48:33.625944+00:00",
+          "elapsed_seconds": 34,
+          "actual_minutes": 0.57,
+          "variance_minutes": -9.43,
+          "file_created": "src/identidad/interface_adapters/controllers/cuentas_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Schema CuentaResponse + cuentas_router.py",
+          "task_type": "code",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-19T18:48:54.210702+00:00",
+          "completed_at": "2026-08-19T18:53:44.258782+00:00",
+          "elapsed_seconds": 290,
+          "actual_minutes": 4.83,
+          "variance_minutes": -15.17,
+          "file_created": "schemas.py,cuentas_router.py,dependencies.py,app.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Fake repository: agregar listar()",
+          "task_type": "code",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-19T18:53:53.377638+00:00",
+          "completed_at": "2026-08-19T18:54:10.875761+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -9.72,
+          "file_created": "tests/unit/inc1/_fakes.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-19T18:54:51.167844+00:00",
+      "completed_at": "2026-08-19T18:57:33.459199+00:00",
+      "elapsed_seconds": 162,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-19T18:57:36.779222+00:00",
+      "completed_at": "2026-08-19T18:59:06.200818+00:00",
+      "elapsed_seconds": 89,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-19T18:59:08.849844+00:00",
+      "completed_at": "2026-08-19T19:00:43.232362+00:00",
+      "elapsed_seconds": 94,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-19T19:00:49.194829+00:00",
+      "completed_at": "2026-08-19T19:10:13.445277+00:00",
+      "elapsed_seconds": 564,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-19T19:10:16.751535+00:00",
+      "completed_at": "2026-08-19T19:10:48.022721+00:00",
+      "elapsed_seconds": 31,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-19T19:10:50.845181+00:00",
+      "completed_at": "2026-08-19T19:11:21.267900+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 5,
+    "completed_tasks": 5,
+    "total_phases": 10,
+    "estimated_total_minutes": 75.0,
+    "actual_total_minutes": 8.0,
+    "variance_minutes": -67.0,
+    "variance_percent": -89.33
+  }
+}

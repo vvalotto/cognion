@@ -1,0 +1,67 @@
+[
+    {
+        "type": "refactor",
+        "module": "src.identidad.entities.ports.materia_port",
+        "obj": "MateriaPort",
+        "line": 22,
+        "column": 0,
+        "endLine": 22,
+        "endColumn": 17,
+        "path": "src/identidad/entities/ports/materia_port.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.identidad.use_cases.crear_comision",
+        "obj": "CrearComisionUseCase",
+        "line": 14,
+        "column": 0,
+        "endLine": 14,
+        "endColumn": 26,
+        "path": "src/identidad/use_cases/crear_comision.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.identidad.use_cases.registrar_estudiante",
+        "obj": "RegistrarEstudianteUseCase",
+        "line": 18,
+        "column": 0,
+        "endLine": 18,
+        "endColumn": 32,
+        "path": "src/identidad/use_cases/registrar_estudiante.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.identidad.frameworks.adapters.materia_port_in_process",
+        "obj": "MateriaPortInProcess",
+        "line": 21,
+        "column": 0,
+        "endLine": 21,
+        "endColumn": 26,
+        "path": "src/identidad/frameworks/adapters/materia_port_in_process.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.banco_preguntas.use_cases.obtener_materia",
+        "obj": "ObtenerMateriaUseCase",
+        "line": 11,
+        "column": 0,
+        "endLine": 11,
+        "endColumn": 27,
+        "path": "src/banco_preguntas/use_cases/obtener_materia.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    }
+]

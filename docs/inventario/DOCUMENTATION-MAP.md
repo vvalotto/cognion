@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: navegación documental y jerarquía de lectura
-> Última actualización: 2026-07-16
+> Última actualización: 2026-07-20 (rev. /docs-audit — corrección de conteo de ADRs)
 
 ## 1. Propósito
 
@@ -54,6 +54,7 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 | Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
 | Diseño UX aprobado | `docs/design/ux/` | Gate obligatorio antes de código en `frontend/`. |
 | Trazabilidad | `docs/traceability/matrix.md` | Relación RF → BC → incremento → US → estado. |
+| Specs de ajuste (SP-ADJ) | `docs/specs/ajustes/` | US-ADJ sin incremento asignado todavía — ver `PLAN-CM.md` §12. |
 
 ---
 
@@ -72,7 +73,7 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 |---|---|
 | `docs/rf/RF_v1.md` | Elicitación funcional inicial. Fuente base para la matriz de trazabilidad. |
 | `docs/rf/RNF_v1.md` | Atributos de calidad y escenarios validados. |
-| `docs/rf/ARQ_v1.md` | Arquitectura de referencia inicial y ADRs 001–006 — hasta que `docs/architecture/` tenga contenido propio, esta es la fuente vigente. |
+| `docs/rf/ARQ_v1.md` | Arquitectura de referencia inicial. `docs/architecture/` ya tiene contenido propio (vista de contexto, contenedores, catálogo de BC y context map) que la deriva y actualiza por incremento — ver `docs/architecture/README.md`. Los ADRs (hoy 001–015) viven en `docs/adr/`. |
 | `docs/rf/PLAN_v1.md` | Plan de 7 incrementos. Ajustes de *proceso* (ej. Iteración 0 — Modelado) se documentan en `WORKFLOW-DESARROLLO.md`; el plan mismo no se reescribe salvo agregar la estructura de iteraciones. |
 
 ---
