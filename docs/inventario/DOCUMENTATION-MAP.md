@@ -51,7 +51,7 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 | Procedimiento de UAT | `docs/plans/PROCEDIMIENTO-UAT.md` | Gate obligatorio antes de merge a main. |
 | Checklist de instalación/entorno | `docs/plans/CHECKLIST-INSTALACION.md` | Pasos de setup del entorno local. |
 | Plan de incrementos | `docs/rf/PLAN_v1.md` | Los 7 incrementos y su orden por riesgo. |
-| Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
+| Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` (+ `-diagramas.html`/`-event-storming.html` opcionales) | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
 | Diseño UX aprobado | `docs/design/ux/` | Gate obligatorio antes de código en `frontend/`. |
 | Trazabilidad | `docs/traceability/matrix.md` | Relación RF → BC → incremento → US → estado. |
 | Specs de ajuste (SP-ADJ) | `docs/specs/ajustes/` | US-ADJ sin incremento asignado todavía — ver `PLAN-CM.md` §12. |
