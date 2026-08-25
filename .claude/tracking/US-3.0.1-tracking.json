@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "us_id": "US-3.0.1",
+    "us_title": "Event storming BC Actividad Evaluativa",
+    "us_points": 3,
+    "producto": "Cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-25T11:04:57.413091+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 8,
+    "effective_seconds": 8,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Inicio Modelado",
+      "started_at": "2026-08-25T11:05:05.748049+00:00",
+      "completed_at": null,
+      "elapsed_seconds": 0,
+      "status": "in_progress",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 1,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
