@@ -8,9 +8,9 @@
   },
   "timeline": {
     "started_at": "2026-08-25T11:04:57.413091+00:00",
-    "completed_at": null,
-    "total_elapsed_seconds": 8,
-    "effective_seconds": 8,
+    "completed_at": "2026-08-25T11:57:55.090824+00:00",
+    "total_elapsed_seconds": 3177,
+    "effective_seconds": 3177,
     "paused_seconds": 0
   },
   "phases": [
@@ -18,9 +18,9 @@
       "phase_number": 0,
       "phase_name": "Inicio Modelado",
       "started_at": "2026-08-25T11:05:05.748049+00:00",
-      "completed_at": null,
-      "elapsed_seconds": 0,
-      "status": "in_progress",
+      "completed_at": "2026-08-25T11:57:54.923433+00:00",
+      "elapsed_seconds": 3169,
+      "status": "completed",
       "tasks": [],
       "auto_approved": true,
       "user_approval_time_seconds": 0
