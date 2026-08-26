@@ -40,9 +40,7 @@ class SQLAlchemyEventStore(EventStorePort):
         events: list[EventoParaAlmacenar],
     ) -> None:
         """Inserta `events` como los siguientes del stream, o rechaza el lote completo."""
-        ultimo_sequence_number = await self._ultimo_sequence_number(
-            aggregate_type, aggregate_id
-        )
+        ultimo_sequence_number = await self._ultimo_sequence_number(aggregate_type, aggregate_id)
         if ultimo_sequence_number != expected_sequence_number:
             raise ConcurrenciaOptimistaError(
                 aggregate_type, aggregate_id, expected_sequence_number, ultimo_sequence_number
