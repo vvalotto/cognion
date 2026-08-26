@@ -41,3 +41,15 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
             return 0
         resultado = await self._pregunta_repositorio.filtrar(banco.id)
         return resultado.total
+
+    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
+        """Lista los ids de las preguntas `activa = true` del banco de la materia.
+
+        Lista vacía si la materia no tiene `Banco` asociado — mismo criterio que
+        `contar_activas_por_materia`.
+        """
+        banco = await self._banco_repositorio.obtener_por_materia_id(materia_id)
+        if banco is None:
+            return []
+        resultado = await self._pregunta_repositorio.filtrar(banco.id)
+        return [pregunta.id for pregunta in resultado.preguntas]

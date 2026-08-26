@@ -11,8 +11,8 @@ from src.actividad_evaluativa.entities.errors import (
     EstudianteNoExiste,
     FueraDePeriodo,
 )
-from src.actividad_evaluativa.entities.eventos import EvaluacionIniciada
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion, PreguntaAsignada
+from src.actividad_evaluativa.entities.eventos import EvaluacionIniciada
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
