@@ -82,3 +82,34 @@ class CantidadIntentosInvalida(Exception):
             f"La cantidad de intentos permitidos debe ser al menos 1, se recibió "
             f"{cantidad_intentos_permitidos}."
         )
+
+
+class ActividadNoExiste(Exception):
+    """Se referenció un `actividad_id` sin `ActividadEvaluativaPeriodoAbierto` en su stream."""
+
+    def __init__(self, actividad_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.actividad_id = actividad_id
+        super().__init__(f"La actividad '{actividad_id}' no existe.")
+
+
+class EstudianteNoExiste(Exception):
+    """`estudiante_id` no corresponde a ningún `Usuario` con rol Estudiante en BC Identidad."""
+
+    def __init__(self, estudiante_id: object) -> None:
+        """Guarda el id inválido y arma el mensaje de la excepción."""
+        self.estudiante_id = estudiante_id
+        super().__init__(f"El estudiante '{estudiante_id}' no existe.")
+
+
+class FueraDePeriodo(Exception):
+    """`ahora` no está dentro de la ventana vigente de la actividad, o está cerrada manualmente."""
+
+    def __init__(self, actividad_id: object, ahora: datetime) -> None:
+        """Guarda el id de la actividad y el instante rechazado, arma el mensaje."""
+        self.actividad_id = actividad_id
+        self.ahora = ahora
+        super().__init__(
+            f"La actividad '{actividad_id}' no admite iniciar una evaluación en este momento "
+            f"({ahora})."
+        )

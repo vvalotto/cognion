@@ -33,6 +33,7 @@ propia Iteración 0 (ver `docs/architecture/README.md` — "no todas de una vez"
 | Actividad Evaluativa | Banco de Preguntas (`Materia`, `PreguntaPlantilla`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-2.1.2`) | `ActividadEvaluativaPeriodoAbierto` referencia una `Materia` y valida `cantidad_preguntas` contra las `PreguntaPlantilla` activas de su banco (INV-AE-01). Actividad Evaluativa define `MateriaConsultaPort`/`PreguntaConsultaPort` en `entities/ports/` y los implementa en `frameworks/adapters/*_in_process.py`, que invocan `ObtenerMateriaUseCase`/`PreguntaRepositoryPort.filtrar()` de Banco de Preguntas con la misma sesión de BD — sin FK de base entre esquemas de BCs. `CrearActividadPeriodoAbiertoUseCase` valida ambas cosas antes de persistir el aggregate. | `docs/specs/inc3/US-3.1.2.md`, `ADR-006` |
 | Actividad Evaluativa | Notificaciones | **Conformist** (acoplamiento directo, deuda técnica consciente) | El Use Case de Actividad Evaluativa llama directamente al Use Case de Notificaciones al abrir/cerrar una actividad de período abierto. | `ADR-006` |
 | Actividad Evaluativa | Analytics | **Customer-Supplier** vía event store compartido | Analytics proyecta read models leyendo directamente el event store (tabla `events`) de Actividad Evaluativa — sin pasar por un puerto de comandos, solo lectura. | `ADR-002` |
+| Actividad Evaluativa | Identidad (`Usuario`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-2.1.2`) | `IniciarEvaluacion` valida que el `estudiante_id` del JWT corresponde a un `Usuario` existente con rol Estudiante — más allá del rol ya validado por el JWT (RBAC). Actividad Evaluativa define `EstudianteConsultaPort` en `entities/ports/` y lo implementa en `frameworks/adapters/estudiante_consulta_port_in_process.py`, que invoca `SQLAlchemyUsuarioRepository.obtener_por_id()` de Identidad con la misma sesión de BD — sin FK de base entre esquemas de BCs. Resuelve la relación que quedaba "a definir en Incremento 3". | `docs/specs/inc3/US-3.1.3.md`, `ADR-006` |
 | Identidad | (servicio externo SMTP) | — | BC Identidad envía el email de invitación con su propio adaptador SMTP, independiente del Servicio Email que usará Notificaciones. | `ADR-012` |
 
 ## Relaciones pendientes de definir
@@ -41,9 +42,6 @@ Estas relaciones existen conceptualmente (el módulo de arquitectura de `ARQ_v1.
 insinúa) pero **no están modeladas todavía** — se definen recién en la Iteración 0 del
 incremento que introduce el BC consumidor:
 
-- **Actividad Evaluativa → Identidad**: si el aggregate `ActividadEvaluativa` necesita algo más
-  que el `Usuario` validado por el puerto de Identidad (ej. metadatos de comisión). *A definir
-  en Incremento 3.*
 - **Analytics → Banco de Preguntas**: si las métricas de desempeño por tema/unidad (RF-17)
   necesitan cruzar datos de Analytics con metadatos del Banco de Preguntas, o si esos metadatos
   ya viajan denormalizados en los eventos de Actividad Evaluativa. *A definir en Incremento 4.*
@@ -85,6 +83,8 @@ flowchart LR
     llamada directa (ADR-006)"| notificaciones
     actividad -->|"Customer-Supplier
     event store compartido (ADR-002)"| analytics
+    actividad -->|"Customer-Supplier
+    EstudianteConsultaPort (US-3.1.3)"| identidad
 
     identidad -->|"Adaptador SMTP propio
     (ADR-012)"| smtp
@@ -94,5 +94,7 @@ flowchart LR
 
 Se actualiza esta vista cada vez que un nuevo incremento modela un BC y define sus relaciones
 reales — no antes. Actualizada en `US-2.1.2` con la relación Identidad → Banco de Preguntas
-(`Materia`, vía `MateriaPort`). La próxima actualización esperada es al resolver la relación
-de Banco de Preguntas con Actividad Evaluativa y con la gestión de cuentas de Identidad (RF-03).
+(`Materia`, vía `MateriaPort`); en `US-3.1.2` con Actividad Evaluativa → Banco de Preguntas; en
+`US-3.1.3` con Actividad Evaluativa → Identidad (`Usuario`, vía `EstudianteConsultaPort`) —
+resuelve la última relación que quedaba pendiente en esta vista. La próxima actualización
+esperada es al resolver Analytics → Banco de Preguntas (Incremento 4).

@@ -28,3 +28,27 @@ class ActividadResponse(BaseModel):
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool
+
+
+class IniciarEvaluacionRequest(BaseModel):
+    """Body de la request de inicio de evaluación — `estudiante_id` sale del JWT, no del body."""
+
+    actividad_id: UUID
+
+
+class PreguntaAsignadaResponse(BaseModel):
+    """Representación de una `PreguntaAsignada` devuelta por la API."""
+
+    pregunta_id: UUID
+    orden: int
+
+
+class EvaluacionResponse(BaseModel):
+    """Representación de una `Evaluacion` devuelta por la API."""
+
+    id: UUID
+    actividad_id: UUID
+    estudiante_id: UUID
+    preguntas_asignadas: list[PreguntaAsignadaResponse]
+    estado: str
+    iniciada_en: datetime

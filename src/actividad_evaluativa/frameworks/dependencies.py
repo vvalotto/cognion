@@ -13,6 +13,9 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
+from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
+    EstudianteConsultaPortInProcess,
+)
 from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_process import (
     MateriaConsultaPortInProcess,
 )
@@ -25,9 +28,13 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
+    EvaluacionesController,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -63,3 +70,16 @@ get_current_user = build_get_current_user(get_jwt_issuer())
 
 require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 """Dependency que exige rol `docente` — endpoints de gestión de actividades (RF-02, RF-11)."""
+
+require_estudiante = require_rol([TipoPerfil.ESTUDIANTE], get_current_user)
+"""Dependency que exige rol `estudiante` — endpoints de rendición de evaluaciones (RF-02, RF-12)."""
+
+
+def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
+    """Arma el `EvaluacionesController` con sus dependencias concretas."""
+    estudiante_consulta = EstudianteConsultaPortInProcess(session)
+    pregunta_consulta = PreguntaConsultaPortInProcess(session)
+    event_store = SQLAlchemyEventStore(session)
+    return EvaluacionesController(
+        IniciarEvaluacionUseCase(estudiante_consulta, pregunta_consulta, event_store)
+    )
