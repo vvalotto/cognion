@@ -2,8 +2,11 @@ from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 from src.actividad_evaluativa.entities.errors import (
+    ActividadNoExiste,
     CantidadIntentosInvalida,
     ConcurrenciaOptimistaError,
+    EstudianteNoExiste,
+    FueraDePeriodo,
     MateriaNoExiste,
     PeriodoInvalido,
     PreguntasInsuficientes,
@@ -80,3 +83,35 @@ class TestCantidadIntentosInvalida:
 
         assert error.cantidad_intentos_permitidos == 0
         assert "0" in str(error)
+
+
+class TestActividadNoExiste:
+    def test_guarda_actividad_id_y_arma_mensaje(self):
+        actividad_id = uuid4()
+
+        error = ActividadNoExiste(actividad_id)
+
+        assert error.actividad_id == actividad_id
+        assert str(actividad_id) in str(error)
+
+
+class TestEstudianteNoExiste:
+    def test_guarda_estudiante_id_y_arma_mensaje(self):
+        estudiante_id = uuid4()
+
+        error = EstudianteNoExiste(estudiante_id)
+
+        assert error.estudiante_id == estudiante_id
+        assert str(estudiante_id) in str(error)
+
+
+class TestFueraDePeriodo:
+    def test_guarda_actividad_id_y_ahora_y_arma_mensaje(self):
+        actividad_id = uuid4()
+        ahora = datetime.now(UTC)
+
+        error = FueraDePeriodo(actividad_id, ahora)
+
+        assert error.actividad_id == actividad_id
+        assert error.ahora == ahora
+        assert str(actividad_id) in str(error)

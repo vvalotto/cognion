@@ -6,6 +6,9 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.errors import ConcurrenciaOptimistaError
+from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
+    EstudianteConsultaPort,
+)
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoAlmacenado,
     EventoParaAlmacenar,
@@ -16,6 +19,18 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import (
     MateriaDTO,
 )
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
+
+
+class FakeEstudianteConsultaPort(EstudianteConsultaPort):
+    """Consulta de estudiantes en memoria — devuelve lo que se le precarga en `estudiantes`."""
+
+    def __init__(self) -> None:
+        """Inicializa el almacenamiento en memoria."""
+        self.estudiantes: set[UUID] = set()
+
+    async def existe(self, estudiante_id: UUID) -> bool:
+        """Indica si el estudiante fue precargado como válido."""
+        return estudiante_id in self.estudiantes
 
 
 class FakeMateriaConsultaPort(MateriaConsultaPort):
@@ -36,10 +51,15 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     def __init__(self) -> None:
         """Inicializa el almacenamiento en memoria."""
         self.conteos: dict[UUID, int] = {}
+        self.ids_activas: dict[UUID, list[UUID]] = {}
 
     async def contar_activas_por_materia(self, materia_id: UUID) -> int:
         """Devuelve el conteo precargado para la materia, o 0 si no se precargó."""
         return self.conteos.get(materia_id, 0)
+
+    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
+        """Devuelve los ids precargados para la materia, o lista vacía si no se precargó."""
+        return list(self.ids_activas.get(materia_id, []))
 
 
 class FakeEventStore(EventStorePort):
