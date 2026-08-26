@@ -42,11 +42,7 @@ async def _actividad_vigente(
         AGGREGATE_TYPE,
         actividad_id,
         0,
-        [
-            _evento_actividad_creada(
-                actividad_id, materia_id, apertura, cierre, cantidad_preguntas
-            )
-        ],
+        [_evento_actividad_creada(actividad_id, materia_id, apertura, cierre, cantidad_preguntas)],
     )
     return actividad_id
 

@@ -122,17 +122,21 @@ def _periodo_vigente() -> tuple[datetime, datetime]:
     return apertura, apertura + timedelta(days=7)
 
 
-@given(parsers.parse("una ActividadEvaluativaPeriodoAbierto vigente con cantidad_preguntas={cantidad:d}"))
+@given(
+    parsers.parse(
+        "una ActividadEvaluativaPeriodoAbierto vigente con cantidad_preguntas={cantidad:d}"
+    )
+)
 def actividad_vigente_con_cantidad(context, cantidad):
     materia_id = run_async(_crear_materia_con_preguntas(cantidad + 10))
     apertura, cierre = _periodo_vigente()
     context["cantidad_preguntas"] = cantidad
-    context["actividad_id"] = run_async(
-        _crear_actividad(materia_id, cantidad, apertura, cierre)
-    )
+    context["actividad_id"] = run_async(_crear_actividad(materia_id, cantidad, apertura, cierre))
 
 
-@given("una ActividadEvaluativaPeriodoAbierto vigente con más preguntas activas que cantidad_preguntas")
+@given(
+    "una ActividadEvaluativaPeriodoAbierto vigente con más preguntas activas que cantidad_preguntas"
+)
 def actividad_vigente_con_banco_amplio(context):
     materia_id = run_async(_crear_materia_con_preguntas(20))
     apertura, cierre = _periodo_vigente()
@@ -172,9 +176,7 @@ def evaluacion_en_curso_existente(context):
     estudiante_id, headers = run_async(crear_estudiante())
     context["estudiante_id"] = estudiante_id
     context["estudiante_headers"] = headers
-    context["response"] = run_async(
-        _post_iniciar_evaluacion(context["actividad_id"], headers)
-    )
+    context["response"] = run_async(_post_iniciar_evaluacion(context["actividad_id"], headers))
     context["evaluacion_original"] = context["response"].json()
 
 

@@ -35,7 +35,10 @@ async def crear_estudiante() -> tuple[str, dict[str, str]]:
         comision_repo = SQLAlchemyComisionRepository(session)
 
         admin = Usuario.crear(
-            "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
+            "Admin",
+            f"admin.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("x"),
+            TipoPerfil.ADMINISTRADOR,
         )
         await usuario_repo.guardar(admin)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)

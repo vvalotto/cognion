@@ -216,9 +216,7 @@ class TestIniciarEvaluacionAPIIntegration:
     async def test_rechazo_sin_autenticacion(self):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.post(
-                "/evaluaciones", json={"actividad_id": str(uuid.uuid4())}
-            )
+            response = await client.post("/evaluaciones", json={"actividad_id": str(uuid.uuid4())})
 
         assert response.status_code == 401
 

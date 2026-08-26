@@ -1,0 +1,24 @@
+{
+  "us_id": "US-3.1.3",
+  "fecha": "2026-08-26T16:56:00Z",
+  "componente": "src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.68,
+    "cc_max_funcion": 2,
+    "mi_min": 67.32,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard sobre los 13 archivos modificados/agregados de la US: 0 errores, 0 warnings, 39 infos (quality/reports/inc3/US-3.1.3-codeguard.json) — se corrigió una línea >100 caracteres en src/app.py detectada en la primera corrida.",
+    "coverage 100% en entities/use_cases/interface_adapters — frameworks/ excluido de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit), cubierto en cambio por 9 tests de integración HTTP y 5 escenarios BDD.",
+    "pylint duplicate-code (R0801) entre EstudianteConsultaPort/otros archivos — mismo patrón de falso positivo ya aceptado en US-3.1.2 (mapeo de campos DTO/evento), no afecta el score por debajo del umbral.",
+    "Se corrigió un bug de sintaxis Gherkin preexistente en tests/features/inc3/US-3.1.3-iniciar-evaluacion.feature (step partido en dos líneas) detectado al ejecutar Fase 6."
+  ]
+}
