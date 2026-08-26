@@ -59,6 +59,18 @@ class Evaluacion:
         return uuid5(_NAMESPACE_EVALUACION, f"{actividad_id}:{estudiante_id}")
 
     @staticmethod
+    def armar_preguntas_asignadas(ids_muestreados: list[UUID]) -> list[PreguntaAsignada]:
+        """Arma la lista de `PreguntaAsignada` a partir de una muestra ya sampleada.
+
+        `orden` es la posición dentro de la muestra — el sampleo aleatorio en sí (RF-12) es
+        responsabilidad del Use Case, que no conoce la construcción del Value Object.
+        """
+        return [
+            PreguntaAsignada(pregunta_id=pregunta_id, orden=orden)
+            for orden, pregunta_id in enumerate(ids_muestreados)
+        ]
+
+    @staticmethod
     def crear(
         actividad_id: UUID,
         estudiante_id: UUID,

@@ -14,7 +14,7 @@
 
 ### Entities (`src/actividad_evaluativa/entities/`)
 
-- ✅ **`Evaluacion` / `PreguntaAsignada` / `EstadoEvaluacion`** (`entities/evaluacion.py`) — aggregate root con `id` determinístico (`id_para`, `uuid5` sobre `(actividad_id, estudiante_id)`), factory `crear()`, `reconstruir()` (replay puro del propio stream)
+- ✅ **`Evaluacion` / `PreguntaAsignada` / `EstadoEvaluacion`** (`entities/evaluacion.py`) — aggregate root con `id` determinístico (`id_para`, `uuid5` sobre `(actividad_id, estudiante_id)`), factory `crear()`, `armar_preguntas_asignadas()`, `reconstruir()` (replay puro del propio stream)
 - ✅ **`EvaluacionIniciada`** (`entities/eventos.py`, extendido) — único evento de esta US
 - ✅ **`ActividadNoExiste`, `EstudianteNoExiste`, `FueraDePeriodo`** (`entities/errors.py`, extendido) — errores de dominio nuevos
 - ✅ **`EstudianteConsultaPort`** (`entities/ports/estudiante_consulta_port.py`, nuevo) — puerto hacia BC Identidad, valida existencia + rol Estudiante
@@ -161,6 +161,11 @@
   no se detectó hasta ejecutar Fase 6; corregido ahí mismo.
 - ✅ `codeguard` detectó una línea de import >100 caracteres en `src/app.py` — mismo tipo de
   hallazgo que en `US-3.1.2`, confirma que el límite real del proyecto es 100 caracteres.
+- 🐛 El pre-push gate (DesignReviewer) detectó CBO=11/10 CRITICAL en `IniciarEvaluacionUseCase`
+  recién al pushear — mismo patrón recurrente que `US-2.1.2`/`US-2.1.5`/`US-2.1.6`/`US-2.2.2`
+  (CBO no se mide en Fase 7). Corregido moviendo la construcción de `PreguntaAsignada` a
+  `Evaluacion.armar_preguntas_asignadas()` — el Use Case deja de instanciar ese Value Object
+  directamente, CBO baja a 10/10 sin cambiar comportamiento.
 
 ---
 

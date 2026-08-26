@@ -11,7 +11,7 @@ from src.actividad_evaluativa.entities.errors import (
     EstudianteNoExiste,
     FueraDePeriodo,
 )
-from src.actividad_evaluativa.entities.evaluacion import Evaluacion, PreguntaAsignada
+from src.actividad_evaluativa.entities.evaluacion import Evaluacion
 from src.actividad_evaluativa.entities.eventos import EvaluacionIniciada
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
@@ -73,10 +73,7 @@ class IniciarEvaluacionUseCase:
 
         ids_disponibles = await self._pregunta_consulta.listar_ids_activas_por_materia(materia_id)
         muestra = random.sample(ids_disponibles, k=cantidad_preguntas)
-        preguntas_asignadas = [
-            PreguntaAsignada(pregunta_id=pregunta_id, orden=orden)
-            for orden, pregunta_id in enumerate(muestra)
-        ]
+        preguntas_asignadas = Evaluacion.armar_preguntas_asignadas(muestra)
 
         evaluacion = Evaluacion.crear(actividad_id, estudiante_id, preguntas_asignadas)
         evento = EvaluacionIniciada(
