@@ -76,39 +76,30 @@ SELECT count(*) FROM materia WHERE nombre LIKE 'smoketest-%'; -- 0
 
 ---
 
-## Revisión manual de Víctor — instrucciones
+## Revisión manual de Víctor — guión
 
 Sin frontend todavía (`US-3.4.*` es Iteración 4) — no hay pantalla que recorrer en navegador.
-La revisión humana de esta iteración es vía HTTP directo, con dos opciones:
+Se armó un guión dedicado, pensado para que Víctor lo corra y juzgue los resultados a ojo (no
+solo códigos HTTP):
 
-**Opción A — reproducir el smoke test tal cual:**
 ```bash
-.claude/skills/run-cognion/smoke.sh
+tests/uat/inc3/guion_manual_iteracion1.sh
 ```
-Levanta y baja el server solo, siembra y limpia sus propios datos — no deja nada corriendo.
 
-**Opción B — exploración interactiva vía Swagger UI (`/docs`):**
-```bash
-# Terminal 1 — levantar el backend
-.venv/bin/uvicorn src.app:app --reload
+Siembra Administrador + Docente + Estudiante (vía invitación real, con fake SMTP), levanta el
+backend si no hay uno corriendo, y recorre los 6 pasos del `design.md` imprimiendo cada
+request/respuesta junto con qué revisar puntualmente en cada uno (ej. "los `pregunta_id` de
+`preguntas_asignadas` corresponden a las preguntas cargadas", "¿el mensaje de error le queda
+claro a un Estudiante?"). Al final deja el backend corriendo (si lo arrancó él) y las
+credenciales/ids a mano para seguir explorando libremente en Swagger UI (`/docs`) — no limpia
+nada automáticamente.
 
-# Terminal 2 — sembrar el primer Administrador (ADR-016)
-ADMIN_NOMBRE="Victor" ADMIN_EMAIL="victor@fiuner.edu.ar" ADMIN_PASSWORD="TuPassword123!" \
-  .venv/bin/python scripts/seed_admin.py
-```
-Abrir `http://localhost:8000/docs`, loguearse (`POST /identidad/login`) con ese Administrador,
-pegar el `access_token` en el botón "Authorize" (arriba a la derecha), y desde ahí:
-1. `POST /usuarios` — crear un Docente
-2. Loguear como Docente, `POST /materias`, `POST /preguntas/verdadero-falso` (2-3 preguntas)
-3. `POST /actividades` (`fecha_apertura` en el pasado, `fecha_cierre` en el futuro,
-   `cantidad_preguntas` ≤ preguntas activas)
-4. Crear un Estudiante (invitación + registro, o directamente en la comisión si ya existe) y
-   loguear como Estudiante
-5. `POST /evaluaciones` con el `actividad_id` — confirmar que devuelve un set de preguntas del
-   tamaño pedido, y que repetir la misma llamada devuelve el mismo `id`/set
+**Verificado con una corrida propia de esta sesión antes de entregarlo**: los 3 endpoints
+responden como se espera (creación con 3 preguntas asignadas, idempotencia exacta en la
+reconexión — mismo `id`, mismo set y orden —, 422 en `FueraDePeriodo`, 403 por rol). Datos de
+esa corrida ya limpiados (`tests/uat/inc3/limpiar_uat.sh`, 0 residuos verificados).
 
-**Pendiente:** Víctor revisa contra este entorno cuando lo levante — no hay un server dejado
-corriendo por esta sesión al momento de escribir este documento.
+Hallazgos de Víctor a completar en `quality/reports/uat/inc3/hallazgos-revision-manual.md`.
 
 ---
 
