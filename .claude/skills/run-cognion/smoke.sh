@@ -9,9 +9,13 @@
 # de opción múltiple y de verdadero/falso, filtrado, edición y baja lógica),
 # el flujo de gestión de cuentas (US-2.2.1 a US-2.2.5: bloqueo automático tras
 # 3 intentos fallidos de login o de cambio de contraseña propio, listado/
-# detalle/reseteo de cuentas por Administrador, desbloqueo), verifica casos
-# de error (email duplicado -> 409, token vencido -> 422, opciones inválidas
-# -> 422), limpia los datos de prueba y baja el server.
+# detalle/reseteo de cuentas por Administrador, desbloqueo), el flujo de
+# Actividad Evaluativa período abierto (US-3.1.1 a US-3.1.3: docente crea una
+# actividad, estudiante inicia su evaluación con set aleatorio fijo, idempotencia
+# en reconexión, rechazo fuera de período), verifica casos de error (email
+# duplicado -> 409, token vencido -> 422, opciones inválidas -> 422, evaluación
+# fuera de período -> 422, rol insuficiente -> 403), limpia los datos de prueba
+# y baja el server.
 #
 # Uso: .claude/skills/run-cognion/smoke.sh   (desde la raíz del repo)
 set -euo pipefail
@@ -38,6 +42,13 @@ cleanup() {
   # comision y psql hace rollback de todo el bloque, aunque cada DELETE haya reportado éxito
   # — mismo gotcha documentado en run-cognion/SKILL.md).
   psql "$DB_URL" -q -c "
+    DELETE FROM events WHERE aggregate_type = 'Evaluacion' AND payload->>'actividad_id' IN (
+      SELECT aggregate_id::text FROM events
+      WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
+        AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%')
+    );
+    DELETE FROM events WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
+      AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%');
     DELETE FROM invitacion WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
     DELETE FROM estudiante WHERE id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
     DELETE FROM comision_docentes WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
@@ -261,6 +272,66 @@ if [[ "$invitacion_code" == "201" ]]; then
     -H "Content-Type: application/json" -H "Authorization: Bearer ${estudiante_token}" \
     -d '{"password_actual":"Final123!","password_nueva":"UltimaOk123!"}')
   [[ "$code" == "204" ]] || { echo "FAIL: cambio de contraseña exitoso devolvió $code, esperado 204"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== Flujo de Actividad Evaluativa, período abierto (Incremento 3, Iteración 1) =="
+
+  echo "== POST /preguntas/verdadero-falso (banco propio de este flujo, todavía sin las preguntas del flujo de abajo) =="
+  curl -s -X POST "${BASE}/preguntas/verdadero-falso" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"banco_id\":\"${banco_id}\",\"texto\":\"El Paraná es el río más largo de Sudamérica.\",\"respuesta_correcta\":false,\"unidad_tematica\":\"Unidad 1\",\"tema\":\"Geografía\",\"dificultad\":\"medio\",\"importancia\":\"alto\"}" >/dev/null
+  curl -s -X POST "${BASE}/preguntas/verdadero-falso" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"banco_id\":\"${banco_id}\",\"texto\":\"PostgreSQL es una base de datos NoSQL.\",\"respuesta_correcta\":false,\"unidad_tematica\":\"Unidad 1\",\"tema\":\"Arquitectura\",\"dificultad\":\"medio\",\"importancia\":\"alto\"}" >/dev/null
+  echo "OK (2 preguntas activas — este bloque corre antes del flujo de banco de más abajo)"
+
+  echo "== POST /actividades (docente crea una actividad de período abierto, US-3.1.2) =="
+  fecha_apertura=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)-timedelta(minutes=1)).isoformat())")
+  fecha_cierre=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=7)).isoformat())")
+  actividad=$(curl -s -X POST "${BASE}/actividades" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"materia_id\":\"${materia_id}\",\"fecha_apertura\":\"${fecha_apertura}\",\"fecha_cierre\":\"${fecha_cierre}\",\"cantidad_preguntas\":2,\"cantidad_intentos_permitidos\":1}")
+  actividad_id=$(echo "$actividad" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  echo "OK (id=$actividad_id, vigente por 7 días)"
+
+  echo "== POST /evaluaciones (estudiante inicia su evaluación, US-3.1.3, RF-12) =="
+  evaluacion=$(curl -s -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  evaluacion_id=$(echo "$evaluacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  cantidad_asignadas=$(echo "$evaluacion" | python3 -c "import sys,json;print(len(json.load(sys.stdin)['preguntas_asignadas']))")
+  [[ "$cantidad_asignadas" == "2" ]] || { echo "FAIL: preguntas_asignadas tiene $cantidad_asignadas, esperado 2"; exit 1; }
+  echo "OK (id=$evaluacion_id, 2 preguntas asignadas)"
+
+  echo "== POST /evaluaciones de nuevo (reconexión — idempotente, INV-AE-05/06) =="
+  evaluacion_2=$(curl -s -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  evaluacion_2_id=$(echo "$evaluacion_2" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  [[ "$evaluacion_2_id" == "$evaluacion_id" ]] || { echo "FAIL: la reconexión devolvió una Evaluacion distinta ($evaluacion_2_id != $evaluacion_id)"; exit 1; }
+  set1=$(echo "$evaluacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['preguntas_asignadas'])")
+  set2=$(echo "$evaluacion_2" | python3 -c "import sys,json;print(json.load(sys.stdin)['preguntas_asignadas'])")
+  [[ "$set1" == "$set2" ]] || { echo "FAIL: el set de preguntas cambió entre reconexiones"; exit 1; }
+  echo "OK (misma Evaluacion, mismo set)"
+
+  echo "== POST /evaluaciones sobre una actividad con fecha_apertura futura (esperado 422, FueraDePeriodo) =="
+  apertura_futura=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=1)).isoformat())")
+  cierre_futuro=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=8)).isoformat())")
+  actividad_futura=$(curl -s -X POST "${BASE}/actividades" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"materia_id\":\"${materia_id}\",\"fecha_apertura\":\"${apertura_futura}\",\"fecha_cierre\":\"${cierre_futuro}\",\"cantidad_preguntas\":2,\"cantidad_intentos_permitidos\":1}")
+  actividad_futura_id=$(echo "$actividad_futura" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"actividad_id\":\"${actividad_futura_id}\"}")
+  [[ "$code" == "422" ]] || { echo "FAIL: iniciar evaluación antes de la apertura devolvió $code, esperado 422"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /evaluaciones con rol docente (esperado 403, RBAC) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  [[ "$code" == "403" ]] || { echo "FAIL: docente iniciando evaluación devolvió $code, esperado 403"; exit 1; }
   echo "OK ($code)"
 else
   echo "SKIPPED ($invitacion_code) — ver /tmp/cognion-smoke-invitacion.json y $LOG"
