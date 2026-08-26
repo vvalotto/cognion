@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.actividad_evaluativa.frameworks.api.actividades_router import router as actividades_router
 from src.banco_preguntas.frameworks.api.bancos_router import router as bancos_router
 from src.banco_preguntas.frameworks.api.materias_router import router as materias_router
 from src.banco_preguntas.frameworks.api.preguntas_router import router as preguntas_router
@@ -34,6 +35,7 @@ app.include_router(auth_router)
 app.include_router(materias_router)
 app.include_router(preguntas_router)
 app.include_router(bancos_router)
+app.include_router(actividades_router)
 
 
 @app.get("/health", tags=["infra"])
