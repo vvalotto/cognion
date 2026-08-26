@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "us_id": "US-3.1.2",
+    "us_title": "Docente crea una actividad de período abierto",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-26T18:59:55.751951+00:00",
+    "completed_at": "2026-08-26T19:20:32.767659+00:00",
+    "total_elapsed_seconds": 1237,
+    "effective_seconds": 1237,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-26T19:00:03.114710+00:00",
+      "completed_at": "2026-08-26T19:01:01.600174+00:00",
+      "elapsed_seconds": 58,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-26T19:01:09.730006+00:00",
+      "completed_at": "2026-08-26T19:01:40.832323+00:00",
+      "elapsed_seconds": 31,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-26T19:01:46.227445+00:00",
+      "completed_at": "2026-08-26T19:03:41.150934+00:00",
+      "elapsed_seconds": 114,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-26T19:03:46.304388+00:00",
+      "completed_at": "2026-08-26T19:08:19.570987+00:00",
+      "elapsed_seconds": 273,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task_01",
+          "task_name": "Aggregate ActividadEvaluativaPeriodoAbierto",
+          "task_type": "dominio",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-26T19:03:51.013495+00:00",
+          "completed_at": "2026-08-26T19:04:28.720907+00:00",
+          "elapsed_seconds": 37,
+          "actual_minutes": 0.62,
+          "variance_minutes": -9.38,
+          "file_created": "src/actividad_evaluativa/entities/actividad_evaluativa_periodo_abierto.py, src/actividad_evaluativa/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_02",
+          "task_name": "DomainEvent ActividadEvaluativaCreada",
+          "task_type": "dominio",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-26T19:04:37.416900+00:00",
+          "completed_at": "2026-08-26T19:04:43.423959+00:00",
+          "elapsed_seconds": 6,
+          "actual_minutes": 0.1,
+          "variance_minutes": -4.9,
+          "file_created": "src/actividad_evaluativa/entities/eventos.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_03",
+          "task_name": "Ports PreguntaConsultaPort y MateriaConsultaPort",
+          "task_type": "dominio",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-08-26T19:04:48.387322+00:00",
+          "completed_at": "2026-08-26T19:04:59.605276+00:00",
+          "elapsed_seconds": 11,
+          "actual_minutes": 0.18,
+          "variance_minutes": -7.82,
+          "file_created": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py, src/actividad_evaluativa/entities/ports/materia_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_04",
+          "task_name": "UseCase CrearActividadPeriodoAbierto",
+          "task_type": "dominio",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-26T19:05:07.738961+00:00",
+          "completed_at": "2026-08-26T19:05:36.533906+00:00",
+          "elapsed_seconds": 28,
+          "actual_minutes": 0.47,
+          "variance_minutes": -14.53,
+          "file_created": "src/actividad_evaluativa/use_cases/crear_actividad_periodo_abierto.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_05",
+          "task_name": "Controller ActividadesController",
+          "task_type": "adapter",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-08-26T19:05:41.322094+00:00",
+          "completed_at": "2026-08-26T19:05:56.586698+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -7.75,
+          "file_created": "src/actividad_evaluativa/interface_adapters/controllers/actividades_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_06",
+          "task_name": "Adapters InProcess de puertos hacia Banco de Preguntas",
+          "task_type": "adapter",
+          "estimated_minutes": 12.0,
+          "started_at": "2026-08-26T19:06:04.718654+00:00",
+          "completed_at": "2026-08-26T19:06:36.151190+00:00",
+          "elapsed_seconds": 31,
+          "actual_minutes": 0.52,
+          "variance_minutes": -11.48,
+          "file_created": "src/actividad_evaluativa/frameworks/adapters/materia_consulta_port_in_process.py, src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_07",
+          "task_name": "Schemas Pydantic de la API",
+          "task_type": "adapter",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-08-26T19:06:44.063086+00:00",
+          "completed_at": "2026-08-26T19:06:54.860027+00:00",
+          "elapsed_seconds": 10,
+          "actual_minutes": 0.17,
+          "variance_minutes": -7.83,
+          "file_created": "src/actividad_evaluativa/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_08",
+          "task_name": "Extender dependencies.py con controller y require_docente",
+          "task_type": "adapter",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-26T19:07:00.339196+00:00",
+          "completed_at": "2026-08-26T19:07:18.813574+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -9.7,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_09",
+          "task_name": "Router POST /actividades",
+          "task_type": "adapter",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-26T19:07:23.544480+00:00",
+          "completed_at": "2026-08-26T19:07:36.795760+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -9.78,
+          "file_created": "src/actividad_evaluativa/frameworks/api/actividades_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_10",
+          "task_name": "Registrar actividades_router en app.py",
+          "task_type": "adapter",
+          "estimated_minutes": 3.0,
+          "started_at": "2026-08-26T19:07:42.052589+00:00",
+          "completed_at": "2026-08-26T19:08:03.222580+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -2.65,
+          "file_created": "src/app.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-26T19:08:25.166961+00:00",
+      "completed_at": "2026-08-26T19:09:55.574803+00:00",
+      "elapsed_seconds": 90,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task_11",
+          "task_name": "Tests unitarios: aggregate, use case, controller, errors",
+          "task_type": "test",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-08-26T19:08:45.124861+00:00",
+          "completed_at": "2026-08-26T19:09:53.808099+00:00",
+          "elapsed_seconds": 68,
+          "actual_minutes": 1.13,
+          "variance_minutes": -28.87,
+          "file_created": "tests/unit/inc3/_fakes.py, tests/unit/inc3/test_actividad_evaluativa_periodo_abierto.py, tests/unit/inc3/test_crear_actividad_periodo_abierto_use_case.py, tests/unit/inc3/test_actividades_controller.py, tests/unit/inc3/test_errors.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-26T19:10:08.621667+00:00",
+      "completed_at": "2026-08-26T19:11:59.745234+00:00",
+      "elapsed_seconds": 111,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task_12",
+          "task_name": "Tests de integración HTTP: POST /actividades",
+          "task_type": "test",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-26T19:10:37.440073+00:00",
+          "completed_at": "2026-08-26T19:11:59.610371+00:00",
+          "elapsed_seconds": 82,
+          "actual_minutes": 1.37,
+          "variance_minutes": -23.63,
+          "file_created": "tests/integration/inc3/conftest.py, tests/integration/inc3/test_actividades_api_integration.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-26T19:12:04.987970+00:00",
+      "completed_at": "2026-08-26T19:13:40.068482+00:00",
+      "elapsed_seconds": 95,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-26T19:13:45.344995+00:00",
+      "completed_at": "2026-08-26T19:18:23.257473+00:00",
+      "elapsed_seconds": 277,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-26T19:18:35.464652+00:00",
+      "completed_at": "2026-08-26T19:19:48.300492+00:00",
+      "elapsed_seconds": 72,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-26T19:19:56.290451+00:00",
+      "completed_at": "2026-08-26T19:20:32.636777+00:00",
+      "elapsed_seconds": 36,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 12,
+    "completed_tasks": 12,
+    "total_phases": 10,
+    "estimated_total_minutes": 144.0,
+    "actual_total_minutes": 5.67,
+    "variance_minutes": -138.33,
+    "variance_percent": -96.06
+  }
+}
