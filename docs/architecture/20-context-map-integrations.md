@@ -30,6 +30,7 @@ propia Iteración 0 (ver `docs/architecture/README.md` — "no todas de una vez"
 |-----------|-----------|--------|-----------|--------|
 | Identidad | Banco de Preguntas, Actividad Evaluativa, Analytics, Notificaciones | **Open Host Service** | Los cuatro BC validan rol/identidad a través de un puerto de Identidad (dependency injection de FastAPI) — ninguno implementa su propia autenticación. | `03-bounded-contexts.md`, `ADR-007` |
 | Identidad | Banco de Preguntas (`Materia`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`) | `Comision.materia_id` referencia una `Materia` dueña de Banco de Preguntas. Identidad define `MateriaPort` en `entities/ports/` y lo implementa en `frameworks/adapters/materia_port_in_process.py`, que invoca `ObtenerMateriaUseCase` de Banco de Preguntas con la misma sesión de BD — sin FK de base entre esquemas de BCs. `CrearComisionUseCase` valida existencia antes de crear la comisión; `RegistrarEstudianteUseCase` resuelve el nombre para `RegistroResponse`. | `docs/specs/inc2/US-2.1.2.md`, `ADR-006` |
+| Actividad Evaluativa | Banco de Preguntas (`Materia`, `PreguntaPlantilla`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-2.1.2`) | `ActividadEvaluativaPeriodoAbierto` referencia una `Materia` y valida `cantidad_preguntas` contra las `PreguntaPlantilla` activas de su banco (INV-AE-01). Actividad Evaluativa define `MateriaConsultaPort`/`PreguntaConsultaPort` en `entities/ports/` y los implementa en `frameworks/adapters/*_in_process.py`, que invocan `ObtenerMateriaUseCase`/`PreguntaRepositoryPort.filtrar()` de Banco de Preguntas con la misma sesión de BD — sin FK de base entre esquemas de BCs. `CrearActividadPeriodoAbiertoUseCase` valida ambas cosas antes de persistir el aggregate. | `docs/specs/inc3/US-3.1.2.md`, `ADR-006` |
 | Actividad Evaluativa | Notificaciones | **Conformist** (acoplamiento directo, deuda técnica consciente) | El Use Case de Actividad Evaluativa llama directamente al Use Case de Notificaciones al abrir/cerrar una actividad de período abierto. | `ADR-006` |
 | Actividad Evaluativa | Analytics | **Customer-Supplier** vía event store compartido | Analytics proyecta read models leyendo directamente el event store (tabla `events`) de Actividad Evaluativa — sin pasar por un puerto de comandos, solo lectura. | `ADR-002` |
 | Identidad | (servicio externo SMTP) | — | BC Identidad envía el email de invitación con su propio adaptador SMTP, independiente del Servicio Email que usará Notificaciones. | `ADR-012` |
@@ -40,9 +41,6 @@ Estas relaciones existen conceptualmente (el módulo de arquitectura de `ARQ_v1.
 insinúa) pero **no están modeladas todavía** — se definen recién en la Iteración 0 del
 incremento que introduce el BC consumidor:
 
-- **Banco de Preguntas → Actividad Evaluativa**: cómo Actividad Evaluativa selecciona
-  `PreguntaPlantilla` al armar un set de preguntas para un estudiante (RF-11). *A definir en
-  Incremento 3.*
 - **Actividad Evaluativa → Identidad**: si el aggregate `ActividadEvaluativa` necesita algo más
   que el `Usuario` validado por el puerto de Identidad (ej. metadatos de comisión). *A definir
   en Incremento 3.*
