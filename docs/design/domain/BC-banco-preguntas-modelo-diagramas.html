@@ -1,4 +1,4 @@
-<title>Modelo Actividad Evaluativa</title>
+<title>Modelo Banco de Preguntas</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
@@ -278,33 +278,38 @@
 <div class="page">
 
   <header class="masthead">
-    <div class="eyebrow"><span class="dot"></span> BC Actividad Evaluativa · Incremento 3 · Iteración 0 — Modelado</div>
+    <div class="eyebrow"><span class="dot"></span> BC Banco de Preguntas · Incremento 2 · Iteración 0 — Modelado</div>
     <h1>Modelo de dominio, en diagramas</h1>
     <p class="subtitle">
-      Complemento visual de <code>BC-actividad-evaluativa-modelo.md</code> — los dos aggregates,
-      sus relaciones a través de puertos, y el ciclo de vida de <strong>Evaluacion</strong>, con
-      sus disparadores manuales y automáticos. Alcance: exclusivamente período abierto
-      (RF-11, RF-11b, RF-12, RF-13).
+      Complemento visual de <code>BC-banco-preguntas-modelo.md</code> — los tres aggregates
+      (<strong>Materia</strong>, <strong>Banco</strong>, <strong>PreguntaPlantilla</strong>), sus
+      relaciones, y el único ciclo de vida real del modelo: la baja lógica de una pregunta
+      (RF-04, RF-05, RF-06).
     </p>
     <div class="meta-row">
-      <span>Estado: <code>borrador</code></span>
-      <span>Issue: <code>#137</code></span>
-      <span>Fuente: <code>docs/design/domain/BC-actividad-evaluativa-modelo.md</code></span>
+      <span>Estado: <code>vigente</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-banco-preguntas-modelo.md</code></span>
     </div>
+    <p class="subtitle" style="margin-top: 0.9rem;">
+      Actualizado 2026-08-26 tras verificar el modelo contra <code style="font-family: var(--font-mono);">src/banco_preguntas/</code>:
+      <code style="font-family: var(--font-mono);">CrearBanco</code> se fusionó en
+      <code style="font-family: var(--font-mono);">CrearMateria</code> (<code style="font-family: var(--font-mono);">US-2.1.1</code>),
+      y se agregan <code style="font-family: var(--font-mono);">fecha_creacion</code> y
+      <code style="font-family: var(--font-mono);">ListarMaterias</code>, ya implementados
+      (<code style="font-family: var(--font-mono);">US-ADJ-03</code>, <code style="font-family: var(--font-mono);">US-2.1.9</code>).
+    </p>
   </header>
 
   <main>
 
     <section id="estructura">
-      <h2><span class="num">01</span> Estructura — dos aggregates, sin invariante compartida en memoria</h2>
+      <h2><span class="num">01</span> Estructura — tres aggregates encadenados por referencia</h2>
       <p class="lede">
-        <code style="font-family: var(--font-mono);">ActividadEvaluativaPeriodoAbierto</code> (dueño: Docente) y
-        <code style="font-family: var(--font-mono);">Evaluacion</code> (dueño: Estudiante) son streams de eventos
-        independientes. <code style="font-family: var(--font-mono);">Respuesta</code> vive como colección de
-        primer nivel dentro de <code style="font-family: var(--font-mono);">Evaluacion</code> — no anidada bajo
-        <code style="font-family: var(--font-mono);">PreguntaAsignada</code> — porque cada confirmación es un hecho
-        irrepetible que conviene poder referenciar por su propio id, aunque por regla estricta de DDD sería un
-        Value Object individuado por <code style="font-family: var(--font-mono);">(pregunta_id, numero_intento)</code>.
+        <code style="font-family: var(--font-mono);">Materia</code> → <code style="font-family: var(--font-mono);">Banco</code>
+        (1:1, INV-BP-01) → <code style="font-family: var(--font-mono);">PreguntaPlantilla</code> (1:N, sin
+        colección propia en <code style="font-family: var(--font-mono);">Banco</code> — §4 del modelo
+        escrito). Dos tipos concretos de pregunta, sin estructura de datos forzada en común
+        (RF-05).
       </p>
 
       <div class="legend">
@@ -318,134 +323,117 @@
         <div class="diagram-wrap">
 <pre class="mermaid">
 classDiagram
-    class ActividadEvaluativaPeriodoAbierto {
-        &lt;&lt;Aggregate Root — Docente&gt;&gt;
+    class Materia {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        UUID id
+        string nombre — único
+    }
+
+    class Banco {
+        &lt;&lt;Aggregate Root&gt;&gt;
         UUID id
         UUID materia_id
-        datetime fecha_apertura
-        datetime fecha_cierre
-        int cantidad_preguntas
-        int cantidad_intentos_permitidos
-        bool cerrada_manualmente
     }
 
-    class Evaluacion {
-        &lt;&lt;Aggregate Root — Estudiante&gt;&gt;
+    class PreguntaPlantillaOpcionMultiple {
+        &lt;&lt;Aggregate Root&gt;&gt;
         UUID id
-        UUID actividad_id
-        UUID estudiante_id
-        Estado estado
-        datetime iniciada_en
-        datetime finalizada_en
+        UUID banco_id
+        string texto
+        list~Opcion~ opciones
+        string unidad_tematica
+        string tema
+        Dificultad dificultad
+        Importancia importancia
+        bool activa
+        datetime fecha_creacion
     }
 
-    class PreguntaAsignada {
+    class PreguntaPlantillaVerdaderoFalso {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        UUID id
+        UUID banco_id
+        string texto
+        bool respuesta_correcta
+        string unidad_tematica
+        string tema
+        Dificultad dificultad
+        Importancia importancia
+        bool activa
+        datetime fecha_creacion
+    }
+
+    class Dificultad {
         &lt;&lt;Value Object&gt;&gt;
-        UUID pregunta_id
-        int orden
+        Alto | Medio | Bajo
     }
 
-    class Respuesta {
-        &lt;&lt;Entity&gt;&gt;
-        UUID id
-        UUID pregunta_id
-        int numero_intento
-        Contenido contenido
-        bool es_correcta
-        datetime confirmada_en
+    class Importancia {
+        &lt;&lt;Value Object&gt;&gt;
+        Alto | Medio | Bajo
     }
 
-    class Materia {
-        &lt;&lt;externo — Banco de Preguntas&gt;&gt;
-    }
-    class PreguntaPlantilla {
-        &lt;&lt;externo — Banco de Preguntas&gt;&gt;
-    }
-    class Usuario {
+    class Comision {
         &lt;&lt;externo — Identidad&gt;&gt;
     }
 
-    Evaluacion "1" *-- "N" PreguntaAsignada : preguntas_asignadas — fija al iniciar
-    Evaluacion "1" *-- "N" Respuesta : respuestas — solo se agregan
-    Respuesta ..> PreguntaAsignada : pregunta_id
-    Evaluacion ..> ActividadEvaluativaPeriodoAbierto : actividad_id — sin carga conjunta
-    ActividadEvaluativaPeriodoAbierto ..> Materia : materia_id, vía puerto
-    Evaluacion ..> Usuario : estudiante_id, vía puerto
-    PreguntaAsignada ..> PreguntaPlantilla : pregunta_id, vía puerto
+    Banco "1" ..> "1" Materia : materia_id — INV-BP-01
+    PreguntaPlantillaOpcionMultiple ..> Banco : banco_id
+    PreguntaPlantillaVerdaderoFalso ..> Banco : banco_id
+    PreguntaPlantillaOpcionMultiple ..> Dificultad : dificultad
+    PreguntaPlantillaOpcionMultiple ..> Importancia : importancia
+    PreguntaPlantillaVerdaderoFalso ..> Dificultad : dificultad
+    PreguntaPlantillaVerdaderoFalso ..> Importancia : importancia
+    Comision ..> Materia : materia_id, vía MateriaPort — US-2.1.2
 </pre>
         </div>
         <figcaption>
-          <strong>Lo que hay que ver acá:</strong> la línea punteada entre <code style="font-family: var(--font-mono);">Evaluacion</code>
-          y <code style="font-family: var(--font-mono);">ActividadEvaluativaPeriodoAbierto</code> es una referencia,
-          no una carga conjunta — el único invariante cruzado (RF-11b) se resuelve contra un read model, nunca
-          cargando ambos aggregates juntos (§2, §6 del modelo escrito). Las tres clases marcadas "externo" cruzan
-          el límite de Bounded Context solo a través de un puerto propio (§7) — nunca por import directo.
+          <strong>Lo que hay que ver acá:</strong> <code style="font-family: var(--font-mono);">Banco</code> no
+          tiene colección propia de <code style="font-family: var(--font-mono);">PreguntaPlantilla</code> — cada
+          pregunta es un aggregate independiente que solo referencia <code style="font-family: var(--font-mono);">banco_id</code>,
+          para no cargar todo el banco al tocar una sola pregunta (§4/§5 punto 3 del modelo escrito).
+          <code style="font-family: var(--font-mono);">CrearMateria</code> crea la
+          <code style="font-family: var(--font-mono);">Materia</code> y su
+          <code style="font-family: var(--font-mono);">Banco</code> en la misma operación
+          (<code style="font-family: var(--font-mono);">US-2.1.1</code>) — no existe un comando
+          <code style="font-family: var(--font-mono);">CrearBanco</code> separado en la
+          implementación, aunque INV-BP-01 (1:1) sigue siendo la misma. La flecha punteada desde
+          <code style="font-family: var(--font-mono);">Comision</code> (BC Identidad) es la única
+          entrada externa al modelo — resuelta por <code style="font-family: var(--font-mono);">MateriaPort</code>,
+          nunca por import directo entre BCs.
         </figcaption>
       </figure>
     </section>
 
-    <section id="evaluacion">
-      <h2><span class="num">02</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">Evaluacion</span></h2>
-      <p class="lede">
-        Tres estados, dos disparadores humanos (Estudiante, Docente) y un proceso automático —
-        el <code style="font-family: var(--font-mono);">VerificadorDeVencimientos</code> (§6b del modelo escrito) —
-        que no es un aggregate: reacciona al paso del tiempo, no a un comando de un actor.
-      </p>
-      <figure>
-        <div class="diagram-wrap">
-<pre class="mermaid">
-stateDiagram-v2
-    [*] --> EnCurso : IniciarEvaluacion (Estudiante — arma el set fijo)
-    EnCurso --> EnCurso : RegistrarRespuesta (agrega una Respuesta)
-    EnCurso --> Suspendida : SuspenderEvaluacion (Estudiante)
-    EnCurso --> Suspendida : VerificadorDeVencimientos\ninactividad > umbral
-    Suspendida --> EnCurso : ReanudarEvaluacion (Estudiante, explícito)
-    EnCurso --> Finalizada : FinalizarEvaluacion (Estudiante)
-    EnCurso --> Finalizada : VerificadorDeVencimientos\nfecha_cierre vencida
-    Suspendida --> Finalizada : VerificadorDeVencimientos\nfecha_cierre vencida
-    EnCurso --> Finalizada : CerrarActividad (Docente — cascada inmediata)
-    Suspendida --> Finalizada : CerrarActividad (Docente — cascada inmediata)
-    Finalizada --> [*] : habilita revisión, RF-13
-</pre>
-        </div>
-        <figcaption>
-          <strong>Lo que hay que ver acá:</strong> hay tres caminos distintos hacia
-          <code style="font-family: var(--font-mono);">Finalizada</code> — el estudiante decide, el reloj vence el
-          período, o el docente cierra antes de tiempo — y todos convergen en el mismo evento
-          (<code style="font-family: var(--font-mono);">EvaluacionFinalizada</code>), no en tres eventos distintos.
-          Reanudar es siempre explícito: ninguna acción del estudiante saca a una <code style="font-family: var(--font-mono);">Evaluacion</code>
-          de <code style="font-family: var(--font-mono);">Suspendida</code> salvo <code style="font-family: var(--font-mono);">ReanudarEvaluacion</code>.
-        </figcaption>
-      </figure>
-    </section>
-
-    <section id="actividad">
-      <h2><span class="num">03</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">ActividadEvaluativaPeriodoAbierto</span></h2>
+    <section id="pregunta">
+      <h2><span class="num">02</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">PreguntaPlantilla</span></h2>
       <div class="two-col">
         <figure>
           <div class="diagram-wrap">
 <pre class="mermaid">
 stateDiagram-v2
-    [*] --> Abierta : CrearActividadPeriodoAbierto
-    Abierta --> Abierta : ModificarPeriodoDisponibilidad\n(fecha_cierre pasada NO bloquea extender)
-    Abierta --> CerradaManualmente : CerrarActividad\n(Docente — opcional, terminal)
-    CerradaManualmente --> CerradaManualmente : ModificarPeriodoDisponibilidad\n❌ ActividadYaCerrada
+    [*] --> Activa : CargarPreguntaOpcionMultiple\nCargarPreguntaVerdaderoFalso
+    Activa --> Activa : EditarPregunta\n(tipo no editable, reaplica INV-BP-02/03)
+    Activa --> Inactiva : EliminarPregunta\n(baja lógica, INV-BP-04)
+    Inactiva --> Inactiva : EliminarPregunta\n❌ PreguntaYaEliminada
 </pre>
           </div>
           <figcaption>
-            <strong>Lo que hay que ver acá:</strong> llegar a <code style="font-family: var(--font-mono);">fecha_cierre</code>
-            nunca es, por sí solo, un cambio de estado del aggregate — sigue <code style="font-family: var(--font-mono);">Abierta</code>
-            y admite extender (cubre la caída del sistema de RF-11b). El único camino a un estado
-            terminal que bloquea futuras modificaciones es la decisión deliberada del docente.
+            <strong>Lo que hay que ver acá:</strong> no hay borrado físico — <code style="font-family: var(--font-mono);">EliminarPregunta</code>
+            es terminal en los hechos (nada la reactiva en v1) pero técnicamente solo pone
+            <code style="font-family: var(--font-mono);">activa = false</code>. Una pregunta
+            <code style="font-family: var(--font-mono);">Inactiva</code> desaparece de
+            <code style="font-family: var(--font-mono);">FiltrarBanco</code> y de nuevas evaluaciones,
+            pero se preserva para no romper el historial de sesiones pasadas que ya la usaron.
           </figcaption>
         </figure>
         <div class="callout">
-          <strong>Por qué no hay un tercer estado "Vencida"</strong>
-          El vencimiento pasivo de <code style="font-family: var(--font-mono);">fecha_cierre</code> no es un estado
-          del aggregate — es una condición que lee el <code style="font-family: var(--font-mono);">VerificadorDeVencimientos</code>
-          (diagrama 02) para finalizar <code style="font-family: var(--font-mono);">Evaluacion</code> activas. La
-          actividad en sí sigue <code style="font-family: var(--font-mono);">Abierta</code> — solo
-          <code style="font-family: var(--font-mono);">CerrarActividad</code> la cierra de verdad.
+          <strong>Por qué no hay un ciclo de vida propio para Materia/Banco</strong>
+          Ninguno de los dos tiene estados — <code style="font-family: var(--font-mono);">Materia</code>
+          solo se crea (sin edición ni baja modelada) y <code style="font-family: var(--font-mono);">Banco</code>
+          es, en la práctica, poco más que el par <code style="font-family: var(--font-mono);">(id, materia_id)</code>
+          que ancla las preguntas de esa materia (§4 del modelo escrito) — su valor es dar
+          identidad estable, no acumular estado propio.
         </div>
       </div>
     </section>
@@ -453,8 +441,8 @@ stateDiagram-v2
   </main>
 
   <footer>
-    <span>Cognión — BC Actividad Evaluativa</span>
-    <span>Modelado en conversación con Víctor, 2026-08-25</span>
+    <span>Cognión — BC Banco de Preguntas</span>
+    <span>Modelado en sesión con Víctor, 2026-07-31 · Diagramas agregados 2026-08-26</span>
   </footer>
 
 </div>

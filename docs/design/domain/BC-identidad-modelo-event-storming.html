@@ -1,4 +1,4 @@
-<title>Event Storming Actividad Evaluativa</title>
+<title>Event Storming Identidad</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
@@ -244,18 +244,20 @@
 <div class="page">
 
   <header class="masthead">
-    <div class="eyebrow"><span class="dot"></span> BC Actividad Evaluativa · Incremento 3 · Iteración 0 — Modelado</div>
+    <div class="eyebrow"><span class="dot"></span> BC Identidad · Incremento 1 + 2 · Iteración 0 — Modelado</div>
     <h1>Event storming, en línea de tiempo</h1>
     <p class="subtitle">
-      La vista narrativa del modelo — quién dispara qué, en qué orden, y dónde el
-      <code>VerificadorDeVencimientos</code> se mete en la línea de tiempo aunque no sea un
-      actor humano. Para la estructura de aggregates y el detalle de estados, ver
-      <code>BC-actividad-evaluativa-modelo-diagramas.html</code>.
+      La vista narrativa del modelo — cuatro carriles: los tres actores humanos
+      (Docente, Estudiante, Administrador) y la regla de bloqueo automático (RF-19), que no es
+      un proceso en background sino una condición que se evalúa dentro de los propios comandos
+      de autenticación. Para la estructura de aggregates y los ciclos de vida de
+      <code>Invitación</code> y <code>Usuario</code>, ver
+      <code>BC-identidad-modelo-diagramas.html</code>.
     </p>
     <div class="meta-row">
-      <span>Estado: <code>borrador</code></span>
-      <span>Issue: <code>#137</code></span>
-      <span>Fuente: <code>docs/design/domain/BC-actividad-evaluativa-modelo.md</code> §3</span>
+      <span>Estado: <code>vigente</code></span>
+      <span>Issue: <code>#2</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-identidad-modelo.md</code> §2, §3, §11</span>
     </div>
   </header>
 
@@ -264,7 +266,7 @@
     <div class="legend">
       <span class="item"><span class="swatch cmd"></span>Comando</span>
       <span class="item"><span class="swatch evt"></span>Evento de dominio</span>
-      <span class="item"><span class="swatch pol"></span>Regla de la Policy (dispara sobre el paso del tiempo)</span>
+      <span class="item"><span class="swatch pol"></span>Regla de bloqueo — INV-ID-10</span>
       <span class="item"><span class="swatch lane"></span>Carril = actor</span>
     </div>
 
@@ -272,38 +274,54 @@
       <div class="diagram-wrap">
 <pre class="mermaid">
 flowchart TB
-    subgraph DOCENTE["🧑‍🏫 Docente — sobre ActividadEvaluativaPeriodoAbierto"]
+    subgraph ADMIN["🛡️ Administrador"]
         direction LR
-        C1["CrearActividadPeriodoAbierto"] --> E1["ActividadEvaluativaCreada"]
-        E1 --> C2["ModificarPeriodoDisponibilidad"] --> E2["PeriodoDisponibilidadModificado"]
-        E2 --> C3["CerrarActividad (opcional)"] --> E3["ActividadEvaluativaCerrada"]
+        C1["CrearUsuario(nombre, email,\npassword, perfil)"] --> E1["UsuarioCreado"]
+        C2["CrearComision(materia_id, horario)"] --> E2["ComisionCreada"]
+        E2 --> C3["AsignarDocenteAComision"] --> E3["DocenteAsignado"]
+        C4["ResetearPassword(usuario_id, nueva)"] --> E4a["PasswordReseteada"]
+        E4a --> E4b["CuentaDesbloqueada (si estaba bloqueada)"]
     end
 
-    subgraph ESTUDIANTE["🎓 Estudiante — sobre Evaluacion"]
+    subgraph DOCENTE["🧑‍🏫 Docente"]
         direction LR
-        C4["IniciarEvaluacion"] --> E4["EvaluacionIniciada"]
-        E4 --> C5["RegistrarRespuesta (×N por pregunta)"] --> E5["RespuestaRegistrada"]
-        E5 --> C6["SuspenderEvaluacion"] --> E6["EvaluacionSuspendida"]
-        E6 --> C7["ReanudarEvaluacion"] --> E7["EvaluacionReanudada"]
-        E7 --> C5
-        E5 --> C8["FinalizarEvaluacion"] --> E8["EvaluacionFinalizada"]
+        C5["GenerarInvitacion(comision_id)"] --> E5["InvitacionGenerada"]
     end
 
-    subgraph POLICY["⏰ Sistema — VerificadorDeVencimientos, no es aggregate"]
+    E3 -. requiere docente asignado, INV-ID-08 .-> C5
+
+    subgraph ESTUDIANTE["🎓 Estudiante"]
         direction LR
-        P1{{"Regla 1 — inactividad mayor al umbral"}}
-        P2{{"Regla 2 — fecha_cierre vencida, pasivo"}}
-        P3{{"Regla 3 — cascada de CerrarActividad"}}
+        C6["RegistrarEstudiante(token, datos)"] --> E6a["InvitacionAceptada"]
+        E6a --> E6b["UsuarioRegistrado"]
     end
 
-    P1 -. emite .-> C6
-    P2 -. emite .-> C8
-    P3 -. emite .-> C8
-    E3 -. dispara .-> P3
+    E5 -. token vigente, INV-ID-03 .-> C6
+
+    subgraph AUTH["🔐 Docente · Administrador · Estudiante — sobre Usuario"]
+        direction LR
+        C7["IniciarSesion(email, password)"] --> E7["SesionIniciada"]
+        C8["CambiarPassword(actual, nueva)"] --> E8["PasswordCambiada"]
+    end
+
+    E1 -. habilita .-> C7
+    E6b -. habilita .-> C7
+
+    subgraph BLOQUEO["🚫 Regla de bloqueo — dentro de IniciarSesion / CambiarPassword, INV-ID-10"]
+        direction LR
+        P1{{"3er fallo consecutivo\n(login o cambio, contadores independientes)"}}
+    end
+
+    C7 -. fallo .-> P1
+    C8 -. fallo .-> P1
+    P1 --> E9["CuentaBloqueada"]
+    E9 -. rechaza .-> C7
+    E9 -. rechaza .-> C8
+    E4b -. desbloquea .-> C7
 
     class C1,C2,C3,C4,C5,C6,C7,C8 cmd
-    class E1,E2,E3,E4,E5,E6,E7,E8 evt
-    class P1,P2,P3 pol
+    class E1,E2,E3,E4a,E4b,E5,E6a,E6b,E7,E8,E9 evt
+    class P1 pol
 
     classDef cmd fill:#dce7fb,stroke:#5b8def,color:#1b2a4a,stroke-width:1px
     classDef evt fill:#f6e3c4,stroke:#c98a2e,color:#5a3a10,stroke-width:1px
@@ -311,34 +329,34 @@ flowchart TB
 </pre>
       </div>
       <figcaption>
-        <strong>Lo que hay que ver acá:</strong> tres carriles, no dos — el
-        <code>VerificadorDeVencimientos</code> es un tercer emisor de comandos que no tiene
-        actor humano detrás. <code>SuspenderEvaluacion</code> y <code>FinalizarEvaluacion</code>
-        son los dos puntos donde convergen varios orígenes: <code>FinalizarEvaluacion</code> lo
-        puede disparar el propio estudiante, la Regla 2 (vencimiento pasivo) o la Regla 3
-        (cascada inmediata de un cierre manual del docente) — son el mismo comando y el mismo
-        evento sin importar quién lo emitió (payload distingue el actor, no el tipo de evento).
-        El orden dentro de cada carril es narrativo, no una secuencia obligatoria: un estudiante
-        puede finalizar sin haber suspendido nunca, o suspenderse y reanudarse varias veces.
+        <strong>Lo que hay que ver acá:</strong> hay dos vías de alta de <code>Usuario</code> que
+        conviven sin pisarse — <code>CrearUsuario</code> (Administrador, directa) y
+        <code>RegistrarEstudiante</code> (Estudiante, mediada por <code>Invitación</code>) — y
+        ambas habilitan el mismo carril de autenticación (§9 del modelo escrito). La regla de
+        bloqueo no es una Policy de background como el
+        <code>VerificadorDeVencimientos</code> de Actividad Evaluativa: se evalúa de forma
+        síncrona, dentro de la misma invocación de <code>IniciarSesion</code> o
+        <code>CambiarPassword</code> que produjo el fallo — por eso el diamante está conectado
+        con línea punteada a los dos comandos, no colgando de un evento que "dispara después".
+        <code>ResetearPassword</code> es la única vía de vuelta: no existe un comando
+        <code>DesbloquearCuenta</code> separado.
       </figcaption>
     </figure>
 
     <div class="callout">
-      <strong>Por qué la Policy cruza los carriles</strong>
-      En event storming clásico, una regla de negocio disparada automáticamente (una "Policy")
-      se dibuja como una nota lila conectando un evento con un comando nuevo — acá,
-      <code>ActividadEvaluativaCerrada</code> (carril Docente) dispara la Regla 3, que a su vez
-      emite <code>FinalizarEvaluacion</code> sobre cada <code>Evaluacion</code> activa (carril
-      Estudiante). Es la única flecha que cruza de un aggregate al otro en todo el modelo — y
-      cruza por la Policy, nunca por invariante compartido entre los dos aggregates (ver
-      diagrama de estructura, sección 01 del archivo de diagramas).
+      <strong>Por qué RegistroRechazado y CredencialesInvalidas no aparecen como eventos</strong>
+      Un token de invitación inválido/vencido, o credenciales incorrectas que no llegan al 3er
+      fallo, son excepciones de aplicación (4xx) — no entran al Event Store (§5 hot spot 2 del
+      modelo escrito). Solo el fallo que cruza el umbral produce un evento de dominio persistente:
+      <code>CuentaBloqueada</code>. Es la misma razón por la que <code>Vencida</code> no aparece
+      como evento en el ciclo de vida de <code>Invitación</code> (ver diagrama de estructura).
     </div>
 
   </main>
 
   <footer>
-    <span>Cognión — BC Actividad Evaluativa</span>
-    <span>Modelado en conversación con Víctor, 2026-08-25</span>
+    <span>Cognión — BC Identidad</span>
+    <span>Modelado en conversación con Víctor, 2026-07-17/18 · Event storming agregado 2026-08-26</span>
   </footer>
 
 </div>
