@@ -4,7 +4,7 @@
 |---|---|
 | Guión ejecutado | `tests/uat/inc3/guion_manual_iteracion1.sh` |
 | Diseño UAT | `quality/reports/uat/inc3/design.md` |
-| Fecha | _(completar)_ |
+| Fecha | 2026-08-26 |
 | Ejecutor | Víctor Valotto |
 
 Clasificación de severidad según `docs/plans/PROCEDIMIENTO-UAT.md` §8:
@@ -14,14 +14,13 @@ Clasificación de severidad según `docs/plans/PROCEDIMIENTO-UAT.md` §8:
 
 ## Hallazgos
 
-| # | Hallazgo | Paso del guión | Severidad | Notas |
-|---|---|---|---|---|
-| | | | | |
-
-_(Si no hay hallazgos, dejar la tabla vacía y decirlo explícitamente abajo.)_
+Ninguno. Los 6 pasos del guión se comportaron según lo esperado: creación de actividad,
+inicio de evaluación con set aleatorio, idempotencia exacta en la reconexión (mismo `id`,
+mismo set/orden), rechazo `422` fuera de período y rechazo `403` por rol insuficiente.
 
 ---
 
 ## Conclusión
 
-_(completar: ¿la Iteración 1 queda aceptada tal cual, o hay algo que resolver antes?)_
+La Iteración 1 del Incremento 3 (`US-3.1.1` a `US-3.1.3`) queda **aceptada** — UAT validado por
+Víctor, sin hallazgos de ninguna severidad.

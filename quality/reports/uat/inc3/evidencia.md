@@ -109,9 +109,8 @@ Hallazgos de Víctor a completar en `quality/reports/uat/inc3/hallazgos-revision
 - Capa 2 (HTTP vía `smoke.sh` extendido): ✅ todos los códigos HTTP esperados, sin pérdida de
   datos, cleanup verificado.
 - DesignReviewer (`src/` completo): ✅ 0 CRITICAL.
-- Revisión de Víctor: **pendiente** — instrucciones arriba.
+- Revisión de Víctor: ✅ validada — sin hallazgos (`quality/reports/uat/inc3/hallazgos-revision-manual.md`).
 
-**Conclusión preliminar:** el alcance backend de la Iteración 1 del Incremento 3 (crear
-actividad + iniciar evaluación con set fijo idempotente) queda verificado de punta a punta por
-Capa 1 + Capa 2 + DesignReviewer. Falta la confirmación humana de Víctor para cerrar
-definitivamente esta verificación.
+**Conclusión:** el alcance backend de la Iteración 1 del Incremento 3 (crear actividad +
+iniciar evaluación con set fijo idempotente) queda verificado de punta a punta por Capa 1 +
+Capa 2 + DesignReviewer + revisión manual de Víctor. **UAT aprobado.**
