@@ -42,7 +42,7 @@ class EventStorePort(ABC):
         expected_sequence_number: int,
         events: list[EventoParaAlmacenar],
     ) -> None:
-        """Persiste `events` como los siguientes del stream, o rechaza todo el lote.
+        """Agrega `events` como los siguientes del stream, o rechaza todo el lote.
 
         `expected_sequence_number` es la cantidad de eventos que el llamador cree que ya
         tiene el stream (0 para un stream nuevo). Si no coincide con el último
