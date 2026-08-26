@@ -37,12 +37,8 @@ class TestSQLAlchemyEventStoreAppendYLoad:
         store = SQLAlchemyEventStore(session)
         aggregate_id = uuid.uuid4()
 
-        await store.append(
-            AGGREGATE_TYPE, aggregate_id, 0, [EventoParaAlmacenar("Evento1", {})]
-        )
-        await store.append(
-            AGGREGATE_TYPE, aggregate_id, 1, [EventoParaAlmacenar("Evento2", {})]
-        )
+        await store.append(AGGREGATE_TYPE, aggregate_id, 0, [EventoParaAlmacenar("Evento1", {})])
+        await store.append(AGGREGATE_TYPE, aggregate_id, 1, [EventoParaAlmacenar("Evento2", {})])
 
         stream = await store.load(AGGREGATE_TYPE, aggregate_id)
         assert [e.sequence_number for e in stream] == [1, 2]
@@ -52,12 +48,8 @@ class TestSQLAlchemyEventStoreConcurrenciaOptimista:
     async def test_rechazo_por_concurrencia_optimista(self, session):
         store = SQLAlchemyEventStore(session)
         aggregate_id = uuid.uuid4()
-        await store.append(
-            AGGREGATE_TYPE, aggregate_id, 0, [EventoParaAlmacenar("Evento1", {})]
-        )
-        await store.append(
-            AGGREGATE_TYPE, aggregate_id, 1, [EventoParaAlmacenar("Evento2", {})]
-        )
+        await store.append(AGGREGATE_TYPE, aggregate_id, 0, [EventoParaAlmacenar("Evento1", {})])
+        await store.append(AGGREGATE_TYPE, aggregate_id, 1, [EventoParaAlmacenar("Evento2", {})])
 
         with pytest.raises(ConcurrenciaOptimistaError):
             await store.append(
