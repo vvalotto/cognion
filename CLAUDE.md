@@ -286,10 +286,50 @@ FIUNER) sigue como decisión institucional pendiente, a evaluar hacia el final d
 sin relación con este merge; `cd.yml` en `main`/tags solo construye la imagen Docker
 (`build-and-deploy`), el `flyctl deploy` y el healthcheck post-deploy siguen comentados.
 
-**Próximo paso:** definir el alcance del Incremento 3 (`PLAN_v1.md`) y su Iteración 0 —
-Modelado. Las 3 candidatas diferidas (`US-ADJ-06`/`07`/`08`) son las primeras a evaluar para
-ese incremento.
-**Baseline abierta:** ninguna. La próxima se abre al iniciar el Incremento 3.
+Incremento 3 — Actividad Evaluativa, período abierto — en curso
+(`docs/plans/inc3/inc3-candidatas.md`). Primer Core Domain del sistema (`ARQ_v1.md`, driver 3)
+y primer BC con Event Sourcing + CQRS (`ADR-002`); BC renombrado de "Sesiones" a "Actividad
+Evaluativa" (`ADR-015`). Decisión 2026-08-24 (PR #135): los Incrementos 3 a 7 corren con datos
+de prueba/locales, no datos reales de estudiantes — el gate de infraestructura de producción no
+bloquea el arranque de este incremento.
+**Iteración 0 — Modelado cerrada 2026-08-25/26**: `US-3.0.1` (event storming, Issue #137,
+`docs/design/domain/BC-actividad-evaluativa-modelo.md`) y `US-3.0.2` (wireframes, Issue #138,
+`docs/design/ux/wireframes-actividad-evaluativa.md`) aprobadas por Víctor. Matriz de
+trazabilidad: RF-11, RF-11b, RF-12, RF-13 pasan de Planificado a Especificado.
+**Iteración 1 — RF-11/RF-12: creación de actividad y set aleatorio por estudiante, cerrada
+2026-08-26**, backend únicamente (el frontend de todo el incremento se difiere a la Iteración
+4 — cruza las 3 iteraciones de backend, a diferencia de Banco de Preguntas). **US-3.1.1**
+(técnica: infraestructura de Event Sourcing + CQRS, tabla `events` JSONB append/replay por
+stream, Unit of Work por Use Case `ADR-009`, concurrencia optimista por `sequence_number`),
+Issue #145. **US-3.1.2** (Docente crea una actividad de período abierto —
+`CrearActividadPeriodoAbierto`, evento `ActividadEvaluativaCreada`, INV-AE-01/02/03), Issue
+#146. **US-3.1.3** (Estudiante inicia su evaluación con set aleatorio de preguntas fijado
+desde el inicio, reconexión idempotente sin regenerar el set — `IniciarEvaluacion`, evento
+`EvaluacionIniciada`, INV-AE-05/06), Issue #147, PR #151 mergeado a `develop`: aggregate
+`Evaluacion`, adapter in-process hacia Identidad/Banco de Preguntas, fix de CBO
+(`IniciarEvaluacionUseCase` de 11 a 10, mismo patrón de CRITICAL en pre-push ya visto en
+Incremento 2). Specs en `docs/specs/inc3/US-3.1.1.md` a `US-3.1.3.md`, reportes en
+`docs/reports/inc3/`.
+**Cierre de Iteración 1 verificado 2026-08-26** (PR #152 mergeado a `develop`): DesignReviewer
+sobre `src/` completo (163 archivos) — 0 CRITICAL, 114 WARNING, `should_block: false`, 11
+hallazgos propios de Actividad Evaluativa, todos WARNING, mismo patrón ya aceptado en
+`US-3.1.2`. UAT Capa 1 (447/447 pytest, sin regresiones) y Capa 2 (`smoke.sh` extendido con el
+flujo de Actividad Evaluativa) en verde. **Revisión manual de Víctor validada 2026-08-26**
+(`tests/uat/inc3/guion_manual_iteracion1.sh`, sin frontend todavía — vía Swagger UI/HTTP
+directo): sin hallazgos de ninguna severidad — idempotencia exacta en la reconexión (mismo id,
+mismo set/orden), 422 en `FueraDePeriodo`, 403 por rol. Cierra completa la verificación de la
+Iteración 1 (Capa 1 + Capa 2 + DesignReviewer + revisión manual), pero **no** el RF-11/RF-12
+completos ni la matriz de trazabilidad — esos pasan a Validado recién cuando el flujo completo
+(backend + frontend, Iteración 4) cierre en UAT, mismo criterio que Identidad/Banco de
+Preguntas.
+
+**Próximo paso:** Iteración 2 del Incremento 3 — RNF Confiabilidad, RF-13: persistencia
+respuesta a respuesta (`US-3.2.1`), suspender/reanudar (`US-3.2.2`), finalizar y revisión
+(`US-3.2.3`), `VerificadorDeVencimientos` técnica (`US-3.2.4`). Crear Issues y specs
+`docs/specs/inc3/US-3.2.*.md` antes de implementar, mismo flujo que Iteración 1.
+**Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
+(frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
+a fin, docente extiende el plazo de una sesión activa).
 **Branch activo:** `develop`.
 
 ---
