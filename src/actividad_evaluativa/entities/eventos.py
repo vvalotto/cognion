@@ -80,3 +80,17 @@ class EvaluacionReanudada:
 
     evaluacion_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class EvaluacionFinalizada:
+    """Se cerró una `Evaluacion` `EnCurso`/`Suspendida` — mismo hecho de dominio sin actor fijo.
+
+    `actor` distingue quién disparó el cierre (`"estudiante"` en `US-3.2.3`, `"sistema"` cuando
+    `US-3.2.4` reutilice este evento desde el `VerificadorDeVencimientos`) — mismo criterio que
+    `EvaluacionSuspendida`. Habilita `ObtenerRevisionEvaluacion` (RF-13).
+    """
+
+    evaluacion_id: UUID
+    actor: str
+    ocurrido_en: datetime = field(default_factory=_ahora)

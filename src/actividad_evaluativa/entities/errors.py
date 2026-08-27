@@ -188,3 +188,15 @@ class EvaluacionNoSuspendida(Exception):
         super().__init__(
             f"La evaluación '{evaluacion_id}' no está suspendida — no hay nada que reanudar."
         )
+
+
+class EvaluacionNoFinalizada(Exception):
+    """`ObtenerRevisionEvaluacion` requiere `Evaluacion` `Finalizada` (RF-13)."""
+
+    def __init__(self, evaluacion_id: object) -> None:
+        """Guarda el id de la evaluación y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        super().__init__(
+            f"La evaluación '{evaluacion_id}' todavía no fue finalizada — la revisión no está "
+            "disponible."
+        )
