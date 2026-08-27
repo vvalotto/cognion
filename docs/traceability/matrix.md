@@ -110,7 +110,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado) | Especificado |
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado) | Especificado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado) | Especificado |
-| RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado) | Especificado |
+| RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1 | Especificado |
 | RF-14 | Notificaciones | 5 | — | Planificado |
 | RF-15 | Analytics | 4 | — | Planificado |
 | RF-16 | Analytics | 4 | — | Planificado |
