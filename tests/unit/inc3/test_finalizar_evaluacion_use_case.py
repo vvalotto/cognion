@@ -123,3 +123,28 @@ class TestFinalizarEvaluacionUseCase:
         evaluacion = await use_case.execute(evaluacion_id, estudiante_id)
 
         assert evaluacion.estado.value == "Finalizada"
+
+    async def test_actor_sistema_finaliza_sin_estudiante_id(self):
+        """US-3.2.4: la Policy invoca sin `estudiante_id`, sin chequeo de pertenencia."""
+        event_store = FakeEventStore()
+        evaluacion_id, _estudiante_id = await _evaluacion_en_curso(event_store)
+        use_case = FinalizarEvaluacionUseCase(event_store)
+
+        evaluacion = await use_case.execute(evaluacion_id, actor="sistema")
+
+        assert evaluacion.estado.value == "Finalizada"
+        stream = await event_store.load(AGGREGATE_TYPE_EVALUACION, evaluacion_id)
+        assert stream[1].payload["actor"] == "sistema"
+
+    async def test_actor_sistema_sobre_ya_finalizada_es_no_op(self):
+        """US-3.2.4: idempotencia — no propaga `EvaluacionYaFinalizada`, no reemite el evento."""
+        event_store = FakeEventStore()
+        evaluacion_id, estudiante_id = await _evaluacion_en_curso(event_store)
+        use_case = FinalizarEvaluacionUseCase(event_store)
+        await use_case.execute(evaluacion_id, estudiante_id)
+
+        resultado = await use_case.execute(evaluacion_id, actor="sistema")
+
+        assert resultado is None
+        stream = await event_store.load(AGGREGATE_TYPE_EVALUACION, evaluacion_id)
+        assert len(stream) == 2

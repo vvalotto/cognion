@@ -102,3 +102,53 @@ class TestSuspenderEvaluacionUseCase:
         evaluacion = await use_case.execute(evaluacion_id, estudiante_id)
 
         assert evaluacion.estado.value == "Suspendida"
+
+    async def test_actor_sistema_suspende_sin_estudiante_id(self):
+        """US-3.2.4: la Policy invoca sin `estudiante_id`, sin chequeo de pertenencia."""
+        event_store = FakeEventStore()
+        evaluacion_id, _estudiante_id = await _evaluacion_en_curso(event_store)
+        use_case = SuspenderEvaluacionUseCase(event_store)
+
+        evaluacion = await use_case.execute(evaluacion_id, actor="sistema")
+
+        assert evaluacion.estado.value == "Suspendida"
+        stream = await event_store.load(AGGREGATE_TYPE_EVALUACION, evaluacion_id)
+        assert stream[1].payload["actor"] == "sistema"
+
+    async def test_actor_sistema_sobre_ya_suspendida_es_no_op(self):
+        """US-3.2.4: idempotencia — no propaga `EvaluacionYaSuspendida`, no reemite el evento."""
+        event_store = FakeEventStore()
+        evaluacion_id, estudiante_id = await _evaluacion_en_curso(event_store)
+        use_case = SuspenderEvaluacionUseCase(event_store)
+        await use_case.execute(evaluacion_id, estudiante_id)
+
+        resultado = await use_case.execute(evaluacion_id, actor="sistema")
+
+        assert resultado is None
+        stream = await event_store.load(AGGREGATE_TYPE_EVALUACION, evaluacion_id)
+        assert len(stream) == 2
+
+    async def test_actor_sistema_sobre_ya_finalizada_es_no_op(self):
+        """US-3.2.4: idempotencia — tampoco propaga `EvaluacionYaFinalizada`."""
+        event_store = FakeEventStore()
+        evaluacion_id, estudiante_id = await _evaluacion_en_curso(event_store)
+        await event_store.append(
+            AGGREGATE_TYPE_EVALUACION,
+            evaluacion_id,
+            1,
+            [
+                EventoParaAlmacenar(
+                    event_type="EvaluacionFinalizada",
+                    payload={
+                        "evaluacion_id": str(evaluacion_id),
+                        "actor": "estudiante",
+                        "ocurrido_en": "2026-01-03T00:00:00+00:00",
+                    },
+                )
+            ],
+        )
+        use_case = SuspenderEvaluacionUseCase(event_store)
+
+        resultado = await use_case.execute(evaluacion_id, actor="sistema")
+
+        assert resultado is None

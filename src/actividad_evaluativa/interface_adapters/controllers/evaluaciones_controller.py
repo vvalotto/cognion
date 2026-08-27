@@ -50,13 +50,27 @@ class EvaluacionesController:
         )
 
     async def suspender_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
-        """Delega la pausa explícita en el caso de uso correspondiente."""
-        return await self._suspender_evaluacion.execute(evaluacion_id, estudiante_id)
+        """Delega la pausa explícita en el caso de uso correspondiente.
+
+        `actor="estudiante"` (default de `SuspenderEvaluacionUseCase.execute`) nunca devuelve
+        `None` — ese valor es exclusivo del modo `actor="sistema"` que usa
+        `VerificarVencimientosUseCase` (`US-3.2.4`), no este controller HTTP.
+        """
+        resultado = await self._suspender_evaluacion.execute(evaluacion_id, estudiante_id)
+        assert resultado is not None
+        return resultado
 
     async def reanudar_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
         """Delega la reanudación explícita en el caso de uso correspondiente."""
         return await self._reanudar_evaluacion.execute(evaluacion_id, estudiante_id)
 
     async def finalizar_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
-        """Delega el cierre explícito en el caso de uso correspondiente."""
-        return await self._finalizar_evaluacion.execute(evaluacion_id, estudiante_id)
+        """Delega el cierre explícito en el caso de uso correspondiente.
+
+        `actor="estudiante"` (default de `FinalizarEvaluacionUseCase.execute`) nunca devuelve
+        `None` — ese valor es exclusivo del modo `actor="sistema"` que usa
+        `VerificarVencimientosUseCase` (`US-3.2.4`), no este controller HTTP.
+        """
+        resultado = await self._finalizar_evaluacion.execute(evaluacion_id, estudiante_id)
+        assert resultado is not None
+        return resultado
