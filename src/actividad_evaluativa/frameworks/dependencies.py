@@ -35,6 +35,7 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -81,5 +82,6 @@ def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
     pregunta_consulta = PreguntaConsultaPortInProcess(session)
     event_store = SQLAlchemyEventStore(session)
     return EvaluacionesController(
-        IniciarEvaluacionUseCase(estudiante_consulta, pregunta_consulta, event_store)
+        IniciarEvaluacionUseCase(estudiante_consulta, pregunta_consulta, event_store),
+        RegistrarRespuestaUseCase(pregunta_consulta, event_store),
     )

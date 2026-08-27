@@ -2,17 +2,26 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
     EstudianteNoExiste,
+    EvaluacionNoExiste,
+    EvaluacionSuspendida,
+    EvaluacionYaFinalizada,
     FueraDePeriodo,
+    IntentosAgotados,
+    PreguntaNoAsignada,
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
     EvaluacionResponse,
     IniciarEvaluacionRequest,
     PreguntaAsignadaResponse,
+    RegistrarRespuestaRequest,
+    RespuestaResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_current_user,
@@ -63,4 +72,44 @@ async def iniciar_evaluacion(
         ],
         estado=evaluacion.estado.value,
         iniciada_en=evaluacion.iniciada_en,
+    )
+
+
+@router.post(
+    "/{evaluacion_id}/respuestas",
+    response_model=RespuestaResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_estudiante)],
+)
+async def registrar_respuesta(
+    evaluacion_id: UUID,
+    body: RegistrarRespuestaRequest,
+    usuario: JWTPayload = Depends(get_current_user),
+    controller: EvaluacionesController = Depends(get_evaluaciones_controller),
+) -> RespuestaResponse:
+    """Confirma una respuesta del Estudiante autenticado — persistencia atómica (INV-AE-09).
+
+    Responde 404/422 ante los rechazos de dominio. No informa `es_correcta` en la respuesta.
+    """
+    try:
+        respuesta = await controller.registrar_respuesta(
+            evaluacion_id, usuario.usuario_id, body.pregunta_id, body.contenido
+        )
+    except (EvaluacionNoExiste, PreguntaNoAsignada) as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (
+        IntentosAgotados,
+        EvaluacionSuspendida,
+        EvaluacionYaFinalizada,
+        FueraDePeriodo,
+    ) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return RespuestaResponse(
+        id=respuesta.id,
+        pregunta_id=respuesta.pregunta_id,
+        numero_intento=respuesta.numero_intento,
+        confirmada_en=respuesta.confirmada_en,
     )
