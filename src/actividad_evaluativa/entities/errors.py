@@ -168,3 +168,23 @@ class EvaluacionYaFinalizada(Exception):
         """Guarda el id de la evaluación y arma el mensaje de la excepción."""
         self.evaluacion_id = evaluacion_id
         super().__init__(f"La evaluación '{evaluacion_id}' ya está finalizada.")
+
+
+class EvaluacionYaSuspendida(Exception):
+    """`SuspenderEvaluacion` requiere `Evaluacion` `EnCurso` — ya está `Suspendida` (INV-AE-12)."""
+
+    def __init__(self, evaluacion_id: object) -> None:
+        """Guarda el id de la evaluación y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        super().__init__(f"La evaluación '{evaluacion_id}' ya está suspendida.")
+
+
+class EvaluacionNoSuspendida(Exception):
+    """`ReanudarEvaluacion` requiere `Evaluacion` `Suspendida` — está `EnCurso` (INV-AE-11)."""
+
+    def __init__(self, evaluacion_id: object) -> None:
+        """Guarda el id de la evaluación y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        super().__init__(
+            f"La evaluación '{evaluacion_id}' no está suspendida — no hay nada que reanudar."
+        )

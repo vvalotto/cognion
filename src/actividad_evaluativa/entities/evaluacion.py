@@ -9,8 +9,10 @@ from typing import Any
 from uuid import UUID, uuid5
 
 from src.actividad_evaluativa.entities.errors import (
+    EvaluacionNoSuspendida,
     EvaluacionSuspendida,
     EvaluacionYaFinalizada,
+    EvaluacionYaSuspendida,
     IntentosAgotados,
     PreguntaNoAsignada,
 )
@@ -117,9 +119,10 @@ class Evaluacion:
     def reconstruir(eventos: list[EventoAlmacenado]) -> Evaluacion:
         """Reconstruye la `Evaluacion` reproduciendo su stream completo (replay, `ADR-002`).
 
-        El primer evento es siempre `EvaluacionIniciada` (arma los campos base). Cada evento
-        siguiente es una `RespuestaRegistrada` (`US-3.2.1`) que se acumula en `respuestas` —
-        el stream nunca reordena ni reemplaza eventos existentes.
+        El primer evento es siempre `EvaluacionIniciada` (arma los campos base). Los eventos
+        siguientes se aplican según su `event_type` — `RespuestaRegistrada` (`US-3.2.1`) se
+        acumula en `respuestas`, `EvaluacionSuspendida`/`EvaluacionReanudada` (`US-3.2.2`)
+        mutan `estado` — el stream nunca reordena ni reemplaza eventos existentes.
         """
         primero = eventos[0]
         payload = primero.payload
@@ -136,17 +139,7 @@ class Evaluacion:
             iniciada_en=datetime.fromisoformat(payload["ocurrido_en"]),
         )
         for evento in eventos[1:]:
-            payload_respuesta = evento.payload
-            evaluacion.respuestas.append(
-                Respuesta(
-                    id=UUID(payload_respuesta["respuesta_id"]),
-                    pregunta_id=UUID(payload_respuesta["pregunta_id"]),
-                    numero_intento=payload_respuesta["numero_intento"],
-                    contenido=payload_respuesta["contenido"],
-                    es_correcta=payload_respuesta["es_correcta"],
-                    confirmada_en=datetime.fromisoformat(payload_respuesta["ocurrido_en"]),
-                )
-            )
+            _aplicar_evento(evaluacion, evento)
         return evaluacion
 
     def contar_respuestas_de(self, pregunta_id: UUID) -> int:
@@ -163,6 +156,58 @@ class Evaluacion:
         event store (INV-AE-09); este método no muta `self.respuestas`.
         """
         return _validar_para_registrar_respuesta(self, pregunta_id, cantidad_intentos_permitidos)
+
+    def validar_para_suspender(self) -> None:
+        """Valida INV-AE-12 para `SuspenderEvaluacion` — no muta `self.estado`.
+
+        No valida período vigente: pausar debe poder hacerse incluso si la actividad ya
+        venció (la revalidación de vigencia ocurre recién al reanudar o registrar respuesta).
+        """
+        _validar_para_suspender(self)
+
+    def validar_para_reanudar(self) -> None:
+        """Valida INV-AE-11 para `ReanudarEvaluacion` — no muta `self.estado`."""
+        _validar_para_reanudar(self)
+
+
+def _validar_para_suspender(evaluacion: Evaluacion) -> None:
+    """Implementa INV-AE-12 para `validar_para_suspender` (misma extracción que INV-AE-07/08/12)."""
+    if evaluacion.estado is EstadoEvaluacion.SUSPENDIDA:
+        raise EvaluacionYaSuspendida(evaluacion.id)
+    if evaluacion.estado is EstadoEvaluacion.FINALIZADA:
+        raise EvaluacionYaFinalizada(evaluacion.id)
+
+
+def _validar_para_reanudar(evaluacion: Evaluacion) -> None:
+    """Implementa INV-AE-11 para `validar_para_reanudar` (misma extracción que INV-AE-07/08/12)."""
+    if evaluacion.estado is EstadoEvaluacion.EN_CURSO:
+        raise EvaluacionNoSuspendida(evaluacion.id)
+    if evaluacion.estado is EstadoEvaluacion.FINALIZADA:
+        raise EvaluacionYaFinalizada(evaluacion.id)
+
+
+def _aplicar_evento(evaluacion: Evaluacion, evento: EventoAlmacenado) -> None:
+    """Aplica un evento del stream posterior a `EvaluacionIniciada`, según su `event_type`.
+
+    Extraído a función de módulo para que `reconstruir` no acumule un `if/elif` por tipo de
+    evento dentro del propio método (mismo criterio de bajar CBO/CC ya aplicado en el BC).
+    """
+    if evento.event_type == "RespuestaRegistrada":
+        payload = evento.payload
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=UUID(payload["respuesta_id"]),
+                pregunta_id=UUID(payload["pregunta_id"]),
+                numero_intento=payload["numero_intento"],
+                contenido=payload["contenido"],
+                es_correcta=payload["es_correcta"],
+                confirmada_en=datetime.fromisoformat(payload["ocurrido_en"]),
+            )
+        )
+    elif evento.event_type == "EvaluacionSuspendida":
+        evaluacion.estado = EstadoEvaluacion.SUSPENDIDA
+    elif evento.event_type == "EvaluacionReanudada":
+        evaluacion.estado = EstadoEvaluacion.EN_CURSO
 
 
 def _validar_para_registrar_respuesta(
