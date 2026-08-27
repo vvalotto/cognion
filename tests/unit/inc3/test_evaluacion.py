@@ -4,8 +4,10 @@ from uuid import uuid4
 import pytest
 
 from src.actividad_evaluativa.entities.errors import (
+    EvaluacionNoSuspendida,
     EvaluacionSuspendida,
     EvaluacionYaFinalizada,
+    EvaluacionYaSuspendida,
     IntentosAgotados,
     PreguntaNoAsignada,
 )
@@ -130,6 +132,46 @@ class TestReconstruir:
         assert respuesta.contenido == {"opcion_indice": 0}
         assert respuesta.es_correcta is True
 
+    def test_reconstruye_aplicando_suspension_y_reanudacion(self):
+        evaluacion_id, actividad_id, estudiante_id = uuid4(), uuid4(), uuid4()
+        pregunta_id = uuid4()
+        ocurrido_en = datetime.now(UTC)
+        evento_inicio = EventoAlmacenado(
+            sequence_number=1,
+            event_type="EvaluacionIniciada",
+            payload={
+                "evaluacion_id": str(evaluacion_id),
+                "actividad_id": str(actividad_id),
+                "estudiante_id": str(estudiante_id),
+                "preguntas_asignadas": [{"pregunta_id": str(pregunta_id), "orden": 0}],
+                "ocurrido_en": ocurrido_en.isoformat(),
+            },
+            occurred_at=ocurrido_en,
+        )
+        evento_suspendida = EventoAlmacenado(
+            sequence_number=2,
+            event_type="EvaluacionSuspendida",
+            payload={
+                "evaluacion_id": str(evaluacion_id),
+                "actor": "estudiante",
+                "ocurrido_en": ocurrido_en.isoformat(),
+            },
+            occurred_at=ocurrido_en,
+        )
+
+        evaluacion = Evaluacion.reconstruir([evento_inicio, evento_suspendida])
+        assert evaluacion.estado == EstadoEvaluacion.SUSPENDIDA
+
+        evento_reanudada = EventoAlmacenado(
+            sequence_number=3,
+            event_type="EvaluacionReanudada",
+            payload={"evaluacion_id": str(evaluacion_id), "ocurrido_en": ocurrido_en.isoformat()},
+            occurred_at=ocurrido_en,
+        )
+
+        evaluacion = Evaluacion.reconstruir([evento_inicio, evento_suspendida, evento_reanudada])
+        assert evaluacion.estado == EstadoEvaluacion.EN_CURSO
+
 
 class TestContarRespuestasDe:
     def test_cuenta_solo_las_respuestas_de_la_pregunta_pedida(self):
@@ -233,3 +275,47 @@ class TestValidarParaRegistrarRespuesta:
 
         with pytest.raises(EvaluacionYaFinalizada):
             evaluacion.validar_para_registrar_respuesta(pregunta_id, cantidad_intentos_permitidos=1)
+
+
+def _evaluacion_con_estado(estado):
+    evaluacion = Evaluacion.crear(uuid4(), uuid4(), [PreguntaAsignada(pregunta_id=uuid4(), orden=0)])
+    evaluacion.estado = estado
+    return evaluacion
+
+
+class TestValidarParaSuspender:
+    def test_no_levanta_error_sobre_evaluacion_en_curso(self):
+        evaluacion = _evaluacion_con_estado(EstadoEvaluacion.EN_CURSO)
+
+        evaluacion.validar_para_suspender()
+
+    def test_rechaza_evaluacion_ya_suspendida(self):
+        evaluacion = _evaluacion_con_estado(EstadoEvaluacion.SUSPENDIDA)
+
+        with pytest.raises(EvaluacionYaSuspendida):
+            evaluacion.validar_para_suspender()
+
+    def test_rechaza_evaluacion_finalizada(self):
+        evaluacion = _evaluacion_con_estado(EstadoEvaluacion.FINALIZADA)
+
+        with pytest.raises(EvaluacionYaFinalizada):
+            evaluacion.validar_para_suspender()
+
+
+class TestValidarParaReanudar:
+    def test_no_levanta_error_sobre_evaluacion_suspendida(self):
+        evaluacion = _evaluacion_con_estado(EstadoEvaluacion.SUSPENDIDA)
+
+        evaluacion.validar_para_reanudar()
+
+    def test_rechaza_evaluacion_en_curso(self):
+        evaluacion = _evaluacion_con_estado(EstadoEvaluacion.EN_CURSO)
+
+        with pytest.raises(EvaluacionNoSuspendida):
+            evaluacion.validar_para_reanudar()
+
+    def test_rechaza_evaluacion_finalizada(self):
+        evaluacion = _evaluacion_con_estado(EstadoEvaluacion.FINALIZADA)
+
+        with pytest.raises(EvaluacionYaFinalizada):
+            evaluacion.validar_para_reanudar()

@@ -6,7 +6,6 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.actividad_evaluativa.entities.evaluacion import Evaluacion
 from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
     EstudianteNoExiste,
@@ -19,6 +18,7 @@ from src.actividad_evaluativa.entities.errors import (
     IntentosAgotados,
     PreguntaNoAsignada,
 )
+from src.actividad_evaluativa.entities.evaluacion import Evaluacion
 from src.actividad_evaluativa.frameworks.api.schemas import (
     EvaluacionResponse,
     IniciarEvaluacionRequest,

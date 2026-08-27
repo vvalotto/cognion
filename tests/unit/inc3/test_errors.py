@@ -7,8 +7,10 @@ from src.actividad_evaluativa.entities.errors import (
     ConcurrenciaOptimistaError,
     EstudianteNoExiste,
     EvaluacionNoExiste,
+    EvaluacionNoSuspendida,
     EvaluacionSuspendida,
     EvaluacionYaFinalizada,
+    EvaluacionYaSuspendida,
     FueraDePeriodo,
     IntentosAgotados,
     MateriaNoExiste,
@@ -169,6 +171,26 @@ class TestEvaluacionYaFinalizada:
         evaluacion_id = uuid4()
 
         error = EvaluacionYaFinalizada(evaluacion_id)
+
+        assert error.evaluacion_id == evaluacion_id
+        assert str(evaluacion_id) in str(error)
+
+
+class TestEvaluacionYaSuspendida:
+    def test_guarda_evaluacion_id_y_arma_mensaje(self):
+        evaluacion_id = uuid4()
+
+        error = EvaluacionYaSuspendida(evaluacion_id)
+
+        assert error.evaluacion_id == evaluacion_id
+        assert str(evaluacion_id) in str(error)
+
+
+class TestEvaluacionNoSuspendida:
+    def test_guarda_evaluacion_id_y_arma_mensaje(self):
+        evaluacion_id = uuid4()
+
+        error = EvaluacionNoSuspendida(evaluacion_id)
 
         assert error.evaluacion_id == evaluacion_id
         assert str(evaluacion_id) in str(error)
