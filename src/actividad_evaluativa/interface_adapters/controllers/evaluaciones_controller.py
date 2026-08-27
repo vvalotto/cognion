@@ -7,7 +7,9 @@ from uuid import UUID
 
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion, Respuesta
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
+from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
 
 
 class EvaluacionesController:
@@ -17,10 +19,14 @@ class EvaluacionesController:
         self,
         iniciar_evaluacion: IniciarEvaluacionUseCase,
         registrar_respuesta: RegistrarRespuestaUseCase,
+        suspender_evaluacion: SuspenderEvaluacionUseCase,
+        reanudar_evaluacion: ReanudarEvaluacionUseCase,
     ) -> None:
-        """Recibe los casos de uso de inicio de evaluaciones y registro de respuestas."""
+        """Recibe los casos de uso sobre evaluaciones de un Estudiante."""
         self._iniciar_evaluacion = iniciar_evaluacion
         self._registrar_respuesta = registrar_respuesta
+        self._suspender_evaluacion = suspender_evaluacion
+        self._reanudar_evaluacion = reanudar_evaluacion
 
     async def iniciar_evaluacion(
         self, actividad_id: UUID, estudiante_id: UUID
@@ -39,3 +45,11 @@ class EvaluacionesController:
         return await self._registrar_respuesta.execute(
             evaluacion_id, estudiante_id, pregunta_id, contenido
         )
+
+    async def suspender_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
+        """Delega la pausa explícita en el caso de uso correspondiente."""
+        return await self._suspender_evaluacion.execute(evaluacion_id, estudiante_id)
+
+    async def reanudar_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
+        """Delega la reanudación explícita en el caso de uso correspondiente."""
+        return await self._reanudar_evaluacion.execute(evaluacion_id, estudiante_id)

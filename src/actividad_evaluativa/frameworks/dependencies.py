@@ -35,7 +35,9 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
+from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -84,4 +86,6 @@ def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
     return EvaluacionesController(
         IniciarEvaluacionUseCase(estudiante_consulta, pregunta_consulta, event_store),
         RegistrarRespuestaUseCase(pregunta_consulta, event_store),
+        SuspenderEvaluacionUseCase(event_store),
+        ReanudarEvaluacionUseCase(event_store),
     )
