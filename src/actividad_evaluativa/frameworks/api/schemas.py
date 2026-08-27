@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -52,3 +53,23 @@ class EvaluacionResponse(BaseModel):
     preguntas_asignadas: list[PreguntaAsignadaResponse]
     estado: str
     iniciada_en: datetime
+
+
+class RegistrarRespuestaRequest(BaseModel):
+    """Body de la request de confirmación de una respuesta."""
+
+    pregunta_id: UUID
+    contenido: dict[str, Any]
+
+
+class RespuestaResponse(BaseModel):
+    """Representación de una `Respuesta` devuelta por la API.
+
+    Sin `es_correcta` ni `contenido` — el estudiante no debe poder inferir si acertó desde la
+    respuesta HTTP (hot spot "sin feedback inmediato", `BC-actividad-evaluativa-modelo.md` §5).
+    """
+
+    id: UUID
+    pregunta_id: UUID
+    numero_intento: int
+    confirmada_en: datetime

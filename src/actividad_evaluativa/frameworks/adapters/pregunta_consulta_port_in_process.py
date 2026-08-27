@@ -8,11 +8,14 @@ preguntas activas resolviendo primero el `Banco` de la materia (1:1, INV-BP-01) 
 
 from __future__ import annotations
 
+from typing import Any
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.actividad_evaluativa.entities.errors import PreguntaNoAsignada
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
+from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
     SQLAlchemyBancoRepository,
 )
@@ -53,3 +56,24 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
             return []
         resultado = await self._pregunta_repositorio.filtrar(banco.id)
         return [pregunta.id for pregunta in resultado.preguntas]
+
+    async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict[str, Any]) -> bool:
+        """Calcula `es_correcta` comparando `contenido` contra la `PreguntaPlantilla` vigente.
+
+        Único lugar del BC que conoce los tipos concretos de Banco de Preguntas — el puerto
+        expone solo `dict`/`bool` hacia el resto de Actividad Evaluativa (INV-AE-10). El caso
+        `None` es defensivo (INV-AE-07 ya garantiza que `pregunta_id` existía al samplearse):
+        se relanza como `PreguntaNoAsignada` en vez de un error nuevo para algo que no debería
+        ocurrir en la práctica.
+        """
+        pregunta = await self._pregunta_repositorio.obtener_por_id(pregunta_id)
+        if pregunta is None:
+            raise PreguntaNoAsignada(None, pregunta_id)
+
+        if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
+            indice_correcto = next(
+                indice for indice, opcion in enumerate(pregunta.opciones) if opcion.es_correcta
+            )
+            return contenido.get("opcion_indice") == indice_correcto
+
+        return contenido.get("valor") == pregunta.respuesta_correcta

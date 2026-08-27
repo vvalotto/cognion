@@ -8,6 +8,7 @@ puerto evita que Actividad Evaluativa importe directamente ningún módulo de
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import Any
 from uuid import UUID
 
 
@@ -24,4 +25,13 @@ class PreguntaConsultaPort(ABC):
 
         Base del sampleo aleatorio (RF-12) — el Use Case hace `random.sample` sobre esta lista,
         el puerto no sabe nada de muestreo.
+        """
+
+    @abstractmethod
+    async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict[str, Any]) -> bool:
+        """Calcula si `contenido` es la respuesta correcta de `pregunta_id` (INV-AE-10).
+
+        Compara contra el estado vigente de la `PreguntaPlantilla` en el momento de la
+        llamada — el resultado se persiste de inmediato y queda inmutable a ediciones
+        posteriores de esa pregunta en el banco.
         """

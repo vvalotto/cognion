@@ -6,9 +6,14 @@ from src.actividad_evaluativa.entities.errors import (
     CantidadIntentosInvalida,
     ConcurrenciaOptimistaError,
     EstudianteNoExiste,
+    EvaluacionNoExiste,
+    EvaluacionSuspendida,
+    EvaluacionYaFinalizada,
     FueraDePeriodo,
+    IntentosAgotados,
     MateriaNoExiste,
     PeriodoInvalido,
+    PreguntaNoAsignada,
     PreguntasInsuficientes,
 )
 
@@ -115,3 +120,55 @@ class TestFueraDePeriodo:
         assert error.actividad_id == actividad_id
         assert error.ahora == ahora
         assert str(actividad_id) in str(error)
+
+
+class TestEvaluacionNoExiste:
+    def test_guarda_evaluacion_id_y_arma_mensaje(self):
+        evaluacion_id = uuid4()
+
+        error = EvaluacionNoExiste(evaluacion_id)
+
+        assert error.evaluacion_id == evaluacion_id
+        assert str(evaluacion_id) in str(error)
+
+
+class TestPreguntaNoAsignada:
+    def test_guarda_ids_y_arma_mensaje(self):
+        evaluacion_id, pregunta_id = uuid4(), uuid4()
+
+        error = PreguntaNoAsignada(evaluacion_id, pregunta_id)
+
+        assert error.evaluacion_id == evaluacion_id
+        assert error.pregunta_id == pregunta_id
+        assert str(pregunta_id) in str(error)
+
+
+class TestIntentosAgotados:
+    def test_guarda_pregunta_y_tope_y_arma_mensaje(self):
+        pregunta_id = uuid4()
+
+        error = IntentosAgotados(pregunta_id, 2)
+
+        assert error.pregunta_id == pregunta_id
+        assert error.cantidad_intentos_permitidos == 2
+        assert "2" in str(error)
+
+
+class TestEvaluacionSuspendida:
+    def test_guarda_evaluacion_id_y_arma_mensaje(self):
+        evaluacion_id = uuid4()
+
+        error = EvaluacionSuspendida(evaluacion_id)
+
+        assert error.evaluacion_id == evaluacion_id
+        assert str(evaluacion_id) in str(error)
+
+
+class TestEvaluacionYaFinalizada:
+    def test_guarda_evaluacion_id_y_arma_mensaje(self):
+        evaluacion_id = uuid4()
+
+        error = EvaluacionYaFinalizada(evaluacion_id)
+
+        assert error.evaluacion_id == evaluacion_id
+        assert str(evaluacion_id) in str(error)

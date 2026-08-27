@@ -113,3 +113,58 @@ class FueraDePeriodo(Exception):
             f"La actividad '{actividad_id}' no admite iniciar una evaluación en este momento "
             f"({ahora})."
         )
+
+
+class EvaluacionNoExiste(Exception):
+    """`evaluacion_id` no corresponde a ninguna `Evaluacion` existente del estudiante."""
+
+    def __init__(self, evaluacion_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        super().__init__(f"La evaluación '{evaluacion_id}' no existe.")
+
+
+class PreguntaNoAsignada(Exception):
+    """`pregunta_id` no pertenece al set `preguntas_asignadas` de la `Evaluacion` (INV-AE-07)."""
+
+    def __init__(self, evaluacion_id: object, pregunta_id: object) -> None:
+        """Guarda los ids en conflicto y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        self.pregunta_id = pregunta_id
+        super().__init__(
+            f"La pregunta '{pregunta_id}' no pertenece al set asignado de la evaluación "
+            f"'{evaluacion_id}'."
+        )
+
+
+class IntentosAgotados(Exception):
+    """Se superó `cantidad_intentos_permitidos` para `pregunta_id` (INV-AE-08)."""
+
+    def __init__(self, pregunta_id: object, cantidad_intentos_permitidos: int) -> None:
+        """Guarda la pregunta y el tope en conflicto, arma el mensaje de la excepción."""
+        self.pregunta_id = pregunta_id
+        self.cantidad_intentos_permitidos = cantidad_intentos_permitidos
+        super().__init__(
+            f"Se agotaron los {cantidad_intentos_permitidos} intentos permitidos para la "
+            f"pregunta '{pregunta_id}'."
+        )
+
+
+class EvaluacionSuspendida(Exception):
+    """`RegistrarRespuesta` requiere `Evaluacion` `EnCurso` — está `Suspendida` (INV-AE-12)."""
+
+    def __init__(self, evaluacion_id: object) -> None:
+        """Guarda el id de la evaluación y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        super().__init__(
+            f"La evaluación '{evaluacion_id}' está suspendida — hay que reanudarla primero."
+        )
+
+
+class EvaluacionYaFinalizada(Exception):
+    """`RegistrarRespuesta` requiere `Evaluacion` `EnCurso` — está `Finalizada` (INV-AE-12)."""
+
+    def __init__(self, evaluacion_id: object) -> None:
+        """Guarda el id de la evaluación y arma el mensaje de la excepción."""
+        self.evaluacion_id = evaluacion_id
+        super().__init__(f"La evaluación '{evaluacion_id}' ya está finalizada.")
