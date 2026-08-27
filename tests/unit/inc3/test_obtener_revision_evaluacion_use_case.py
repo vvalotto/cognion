@@ -108,9 +108,7 @@ class TestObtenerRevisionEvaluacionUseCase:
         assert fila_correcta.contenido_propio == {"opcion_indice": 0}
         assert fila_correcta.contenido_correcto is None
 
-        fila_incorrecta = next(
-            f for f in revision.detalle if f.pregunta_id == pregunta_incorrecta
-        )
+        fila_incorrecta = next(f for f in revision.detalle if f.pregunta_id == pregunta_incorrecta)
         assert fila_incorrecta.respondida is True
         assert fila_incorrecta.es_correcta is False
         assert fila_incorrecta.contenido_propio == {"opcion_indice": 1}
@@ -184,9 +182,7 @@ class TestObtenerRevisionEvaluacionUseCase:
 
     async def test_rechaza_evaluacion_de_otro_estudiante(self):
         event_store = FakeEventStore()
-        evaluacion_id, _estudiante_id = await _evaluacion_finalizada_con(
-            event_store, [uuid4()], []
-        )
+        evaluacion_id, _estudiante_id = await _evaluacion_finalizada_con(event_store, [uuid4()], [])
         pregunta_consulta = FakePreguntaConsultaPort()
         use_case = ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store)
 
@@ -208,9 +204,7 @@ class TestObtenerRevisionEvaluacionUseCase:
                         "evaluacion_id": str(evaluacion_id),
                         "actividad_id": str(actividad_id),
                         "estudiante_id": str(estudiante_id),
-                        "preguntas_asignadas": [
-                            {"pregunta_id": str(pregunta_id), "orden": 0}
-                        ],
+                        "preguntas_asignadas": [{"pregunta_id": str(pregunta_id), "orden": 0}],
                         "ocurrido_en": "2026-01-01T00:00:00+00:00",
                     },
                 )
@@ -237,9 +231,7 @@ class TestObtenerRevisionEvaluacionUseCase:
                         "evaluacion_id": str(evaluacion_id),
                         "actividad_id": str(actividad_id),
                         "estudiante_id": str(estudiante_id),
-                        "preguntas_asignadas": [
-                            {"pregunta_id": str(pregunta_id), "orden": 0}
-                        ],
+                        "preguntas_asignadas": [{"pregunta_id": str(pregunta_id), "orden": 0}],
                         "ocurrido_en": "2026-01-01T00:00:00+00:00",
                     },
                 ),

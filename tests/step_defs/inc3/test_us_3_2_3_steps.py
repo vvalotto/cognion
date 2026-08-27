@@ -211,9 +211,7 @@ def evaluacion_finalizada_con_correctas_e_incorrectas(context):
             respuesta_correcta=True, cantidad=3
         )
         apertura, cierre = _periodo_vigente()
-        actividad_id = await _crear_actividad(
-            materia_id, apertura, cierre, cantidad_preguntas=3
-        )
+        actividad_id = await _crear_actividad(materia_id, apertura, cierre, cantidad_preguntas=3)
         _estudiante_id, headers = await crear_estudiante()
         evaluacion = await _iniciar_evaluacion(actividad_id, headers)
         asignadas = [p["pregunta_id"] for p in evaluacion["preguntas_asignadas"]]
@@ -330,9 +328,7 @@ def valida_devuelve_detalle_de_tres_preguntas(context):
 @then("la pregunta incorrecta incluye la respuesta correcta")
 def valida_pregunta_incorrecta_incluye_correccion(context):
     cuerpo = context["response"].json()
-    fila = next(
-        f for f in cuerpo["detalle"] if f["pregunta_id"] == context["pregunta_incorrecta"]
-    )
+    fila = next(f for f in cuerpo["detalle"] if f["pregunta_id"] == context["pregunta_incorrecta"])
     assert fila["es_correcta"] is False
     assert fila["contenido_correcto"] is not None
 

@@ -28,9 +28,7 @@ class TestRevisionController:
                         "evaluacion_id": str(evaluacion_id),
                         "actividad_id": str(actividad_id),
                         "estudiante_id": str(estudiante_id),
-                        "preguntas_asignadas": [
-                            {"pregunta_id": str(pregunta_id), "orden": 0}
-                        ],
+                        "preguntas_asignadas": [{"pregunta_id": str(pregunta_id), "orden": 0}],
                         "ocurrido_en": "2026-01-01T00:00:00+00:00",
                     },
                 ),

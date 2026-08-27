@@ -99,7 +99,9 @@ async def _iniciar_evaluacion(client: AsyncClient, headers: dict, actividad_id: 
     return response.json()
 
 
-async def _actividad_vigente(client, docente_headers, cantidad_preguntas: int = 1) -> tuple[str, str]:
+async def _actividad_vigente(
+    client, docente_headers, cantidad_preguntas: int = 1
+) -> tuple[str, str]:
     """Crea materia + banco con `cantidad_preguntas` VF (respuesta correcta True) + actividad.
 
     Carga las preguntas **antes** de crear la actividad — INV-AE-01 exige que
@@ -223,9 +225,7 @@ class TestRevisionAPIIntegration:
                 client, docente_headers, materia_id, 2, apertura, cierre
             )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
-            ids_asignados = {
-                p["pregunta_id"] for p in evaluacion["preguntas_asignadas"]
-            }
+            ids_asignados = {p["pregunta_id"] for p in evaluacion["preguntas_asignadas"]}
             assert ids_asignados == {pregunta_correcta, pregunta_incorrecta}
 
             await client.post(
@@ -252,9 +252,7 @@ class TestRevisionAPIIntegration:
         assert cuerpo["cantidad_correctas"] == 1
         assert cuerpo["cantidad_incorrectas"] == 1
 
-        fila_correcta = next(
-            f for f in cuerpo["detalle"] if f["pregunta_id"] == pregunta_correcta
-        )
+        fila_correcta = next(f for f in cuerpo["detalle"] if f["pregunta_id"] == pregunta_correcta)
         assert fila_correcta["respondida"] is True
         assert fila_correcta["es_correcta"] is True
         assert fila_correcta["contenido_correcto"] is None
@@ -266,9 +264,7 @@ class TestRevisionAPIIntegration:
         assert fila_incorrecta["es_correcta"] is False
         assert fila_incorrecta["contenido_correcto"] == {"valor": False}
 
-    async def test_revision_incluye_no_respondidas_como_incorrectas(
-        self, session, docente_headers
-    ):
+    async def test_revision_incluye_no_respondidas_como_incorrectas(self, session, docente_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -309,7 +305,12 @@ class TestRevisionAPIIntegration:
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
-                client, docente_headers, materia_id, 1, apertura, cierre,
+                client,
+                docente_headers,
+                materia_id,
+                1,
+                apertura,
+                cierre,
                 cantidad_intentos_permitidos=2,
             )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
