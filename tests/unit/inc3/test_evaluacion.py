@@ -218,24 +218,18 @@ class TestValidarParaRegistrarRespuesta:
         )
 
         with pytest.raises(IntentosAgotados):
-            evaluacion.validar_para_registrar_respuesta(
-                pregunta_id, cantidad_intentos_permitidos=1
-            )
+            evaluacion.validar_para_registrar_respuesta(pregunta_id, cantidad_intentos_permitidos=1)
 
     def test_rechaza_evaluacion_suspendida(self):
         pregunta_id = uuid4()
         evaluacion = self._evaluacion(pregunta_id, estado=EstadoEvaluacion.SUSPENDIDA)
 
         with pytest.raises(EvaluacionSuspendida):
-            evaluacion.validar_para_registrar_respuesta(
-                pregunta_id, cantidad_intentos_permitidos=1
-            )
+            evaluacion.validar_para_registrar_respuesta(pregunta_id, cantidad_intentos_permitidos=1)
 
     def test_rechaza_evaluacion_finalizada(self):
         pregunta_id = uuid4()
         evaluacion = self._evaluacion(pregunta_id, estado=EstadoEvaluacion.FINALIZADA)
 
         with pytest.raises(EvaluacionYaFinalizada):
-            evaluacion.validar_para_registrar_respuesta(
-                pregunta_id, cantidad_intentos_permitidos=1
-            )
+            evaluacion.validar_para_registrar_respuesta(pregunta_id, cantidad_intentos_permitidos=1)

@@ -61,7 +61,9 @@ def context():
 
 async def _contar_eventos(evaluacion_id: str, event_type: str | None = None) -> int:
     async with SessionLocal() as session:
-        query = "SELECT count(*) FROM events WHERE aggregate_type = 'Evaluacion' AND aggregate_id = :id"
+        query = (
+            "SELECT count(*) FROM events WHERE aggregate_type = 'Evaluacion' AND aggregate_id = :id"
+        )
         params: dict[str, object] = {"id": evaluacion_id}
         if event_type is not None:
             query += " AND event_type = :event_type"
@@ -148,7 +150,9 @@ def _periodo_vigente() -> tuple[datetime, datetime]:
 async def _armar_evaluacion_en_curso(cantidad_intentos_permitidos: int = 1):
     materia_id, pregunta_id = await _crear_materia_con_opcion_multiple()
     apertura, cierre = _periodo_vigente()
-    actividad_id = await _crear_actividad(materia_id, apertura, cierre, cantidad_intentos_permitidos)
+    actividad_id = await _crear_actividad(
+        materia_id, apertura, cierre, cantidad_intentos_permitidos
+    )
     estudiante_id, headers = await crear_estudiante()
     evaluacion = await _iniciar_evaluacion(actividad_id, headers)
     return evaluacion, pregunta_id, headers
@@ -251,7 +255,11 @@ def estudiante_que_confirma_respuesta(context):
     )
 
 
-@when(parsers.parse("el Estudiante ejecuta RegistrarRespuesta(evaluacion_id, pregunta_id, {{opcion_indice: {indice:d}}})"))
+@when(
+    parsers.parse(
+        "el Estudiante ejecuta RegistrarRespuesta(evaluacion_id, pregunta_id, {{opcion_indice: {indice:d}}})"
+    )
+)
 def ejecuta_registrar_respuesta_opcion_indice(context, indice):
     context["response"] = run_async(
         _registrar_respuesta(
