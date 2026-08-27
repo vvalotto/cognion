@@ -8,8 +8,22 @@ puerto evita que Actividad Evaluativa importe directamente ningún módulo de
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
+
+
+@dataclass(frozen=True)
+class DetalleCorreccionPregunta:
+    """Texto y respuesta correcta de una `PreguntaPlantilla` — insumo de la revisión.
+
+    `contenido_correcto` tiene el mismo shape que `Respuesta.contenido` (`Evaluacion`), para
+    que el llamador pueda comparar/mostrar ambos de forma uniforme sin conocer el tipo
+    concreto de la pregunta (`US-3.2.3`, RF-13).
+    """
+
+    texto: str
+    contenido_correcto: dict[str, Any]
 
 
 class PreguntaConsultaPort(ABC):
@@ -34,4 +48,13 @@ class PreguntaConsultaPort(ABC):
         Compara contra el estado vigente de la `PreguntaPlantilla` en el momento de la
         llamada — el resultado se persiste de inmediato y queda inmutable a ediciones
         posteriores de esa pregunta en el banco.
+        """
+
+    @abstractmethod
+    async def obtener_detalle_correccion(self, pregunta_id: UUID) -> DetalleCorreccionPregunta:
+        """Devuelve el texto y la respuesta correcta vigente de `pregunta_id` (RF-13).
+
+        Usado por `ObtenerRevisionEvaluacion` (`US-3.2.3`) — a diferencia de
+        `evaluar_correccion`, que solo informa `bool`, la revisión necesita mostrarle al
+        estudiante cuál era la respuesta correcta cuando falló o no respondió.
         """

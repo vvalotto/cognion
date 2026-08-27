@@ -14,7 +14,10 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.errors import PreguntaNoAsignada
-from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
+from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
+    DetalleCorreccionPregunta,
+    PreguntaConsultaPort,
+)
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
     SQLAlchemyBancoRepository,
@@ -77,3 +80,25 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
             return contenido.get("opcion_indice") == indice_correcto
 
         return contenido.get("valor") == pregunta.respuesta_correcta
+
+    async def obtener_detalle_correccion(self, pregunta_id: UUID) -> DetalleCorreccionPregunta:
+        """Arma `DetalleCorreccionPregunta` con el texto y el `contenido` correcto vigente.
+
+        Mismo criterio defensivo que `evaluar_correccion` ante `pregunta is None`. El shape de
+        `contenido_correcto` replica el de `Respuesta.contenido` para cada tipo concreto.
+        """
+        pregunta = await self._pregunta_repositorio.obtener_por_id(pregunta_id)
+        if pregunta is None:
+            raise PreguntaNoAsignada(None, pregunta_id)
+
+        if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
+            indice_correcto = next(
+                indice for indice, opcion in enumerate(pregunta.opciones) if opcion.es_correcta
+            )
+            contenido_correcto: dict[str, Any] = {"opcion_indice": indice_correcto}
+        else:
+            contenido_correcto = {"valor": pregunta.respuesta_correcta}
+
+        return DetalleCorreccionPregunta(
+            texto=pregunta.texto, contenido_correcto=contenido_correcto
+        )

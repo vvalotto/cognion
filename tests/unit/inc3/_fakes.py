@@ -18,7 +18,10 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import (
     MateriaConsultaPort,
     MateriaDTO,
 )
-from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
+from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
+    DetalleCorreccionPregunta,
+    PreguntaConsultaPort,
+)
 
 
 class FakeEstudianteConsultaPort(EstudianteConsultaPort):
@@ -53,6 +56,7 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         self.conteos: dict[UUID, int] = {}
         self.ids_activas: dict[UUID, list[UUID]] = {}
         self.correcciones: dict[UUID, bool] = {}
+        self.detalles: dict[UUID, DetalleCorreccionPregunta] = {}
 
     async def contar_activas_por_materia(self, materia_id: UUID) -> int:
         """Devuelve el conteo precargado para la materia, o 0 si no se precargó."""
@@ -65,6 +69,12 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict) -> bool:
         """Devuelve la corrección precargada para la pregunta, o `False` si no se precargó."""
         return self.correcciones.get(pregunta_id, False)
+
+    async def obtener_detalle_correccion(self, pregunta_id: UUID) -> DetalleCorreccionPregunta:
+        """Devuelve el detalle precargado para la pregunta, o uno vacío si no se precargó."""
+        return self.detalles.get(
+            pregunta_id, DetalleCorreccionPregunta(texto="", contenido_correcto={})
+        )
 
 
 class FakeEventStore(EventStorePort):

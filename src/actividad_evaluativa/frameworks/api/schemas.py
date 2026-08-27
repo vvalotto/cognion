@@ -73,3 +73,29 @@ class RespuestaResponse(BaseModel):
     pregunta_id: UUID
     numero_intento: int
     confirmada_en: datetime
+
+
+class DetallePreguntaRevisionResponse(BaseModel):
+    """Representación de un `DetallePreguntaRevision` devuelto por la API (RF-13).
+
+    `contenido_correcto` es `None` cuando el estudiante acertó — la API no expone la respuesta
+    correcta salvo que haya fallado o no respondido.
+    """
+
+    pregunta_id: UUID
+    orden: int
+    texto: str
+    respondida: bool
+    contenido_propio: dict[str, Any] | None
+    es_correcta: bool
+    contenido_correcto: dict[str, Any] | None
+
+
+class RevisionEvaluacionResponse(BaseModel):
+    """Representación de una `RevisionEvaluacion` devuelta por la API (RF-13)."""
+
+    evaluacion_id: UUID
+    cantidad_preguntas: int
+    cantidad_correctas: int
+    cantidad_incorrectas: int
+    detalle: list[DetallePreguntaRevisionResponse]

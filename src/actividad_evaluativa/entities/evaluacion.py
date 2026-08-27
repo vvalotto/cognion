@@ -24,7 +24,8 @@ _NAMESPACE_EVALUACION = UUID("a3f1c2d4-6b8e-4a1f-9c3d-2e5f7a8b9c0d")
 class EstadoEvaluacion(StrEnum):
     """Estados del ciclo de vida de una `Evaluacion` (`BC-actividad-evaluativa-modelo.md` §5).
 
-    `US-3.1.3` solo produce `EN_CURSO` — `SUSPENDIDA`/`FINALIZADA` llegan con `US-3.2.2`/`US-3.2.3`.
+    `US-3.1.3` produce `EN_CURSO`, `SUSPENDIDA` llega con `US-3.2.2`, `FINALIZADA` (terminal)
+    con `US-3.2.3`.
     """
 
     EN_CURSO = "EnCurso"
@@ -169,6 +170,23 @@ class Evaluacion:
         """Valida INV-AE-11 para `ReanudarEvaluacion` — no muta `self.estado`."""
         _validar_para_reanudar(self)
 
+    def validar_para_finalizar(self) -> None:
+        """Valida que la `Evaluacion` no esté ya `Finalizada` — no muta `self.estado`."""
+        _validar_para_finalizar(self)
+
+    def respuesta_vigente_de(self, pregunta_id: UUID) -> Respuesta | None:
+        """Devuelve la `Respuesta` vigente de `pregunta_id` (INV-AE-09), o `None` si no respondió.
+
+        La vigente es la de `confirmada_en` más reciente entre los reintentos de esa pregunta —
+        usada por `ObtenerRevisionEvaluacion` (RF-13) para no exponer respuestas superadas.
+        """
+        respuestas_de_la_pregunta = [
+            respuesta for respuesta in self.respuestas if respuesta.pregunta_id == pregunta_id
+        ]
+        if not respuestas_de_la_pregunta:
+            return None
+        return max(respuestas_de_la_pregunta, key=lambda respuesta: respuesta.confirmada_en)
+
 
 def _validar_para_suspender(evaluacion: Evaluacion) -> None:
     """Implementa INV-AE-12 para `validar_para_suspender` (misma extracción que INV-AE-07/08/12)."""
@@ -182,6 +200,16 @@ def _validar_para_reanudar(evaluacion: Evaluacion) -> None:
     """Implementa INV-AE-11 para `validar_para_reanudar` (misma extracción que INV-AE-07/08/12)."""
     if evaluacion.estado is EstadoEvaluacion.EN_CURSO:
         raise EvaluacionNoSuspendida(evaluacion.id)
+    if evaluacion.estado is EstadoEvaluacion.FINALIZADA:
+        raise EvaluacionYaFinalizada(evaluacion.id)
+
+
+def _validar_para_finalizar(evaluacion: Evaluacion) -> None:
+    """Implementa el único rechazo de `validar_para_finalizar` — ya `Finalizada`.
+
+    `FinalizarEvaluacion` es válido desde `EnCurso` o `Suspendida` — no hay más restricciones
+    (a diferencia de `SuspenderEvaluacion`/`ReanudarEvaluacion`, no valida período vigente).
+    """
     if evaluacion.estado is EstadoEvaluacion.FINALIZADA:
         raise EvaluacionYaFinalizada(evaluacion.id)
 
@@ -208,6 +236,8 @@ def _aplicar_evento(evaluacion: Evaluacion, evento: EventoAlmacenado) -> None:
         evaluacion.estado = EstadoEvaluacion.SUSPENDIDA
     elif evento.event_type == "EvaluacionReanudada":
         evaluacion.estado = EstadoEvaluacion.EN_CURSO
+    elif evento.event_type == "EvaluacionFinalizada":
+        evaluacion.estado = EstadoEvaluacion.FINALIZADA
 
 
 def _validar_para_registrar_respuesta(
