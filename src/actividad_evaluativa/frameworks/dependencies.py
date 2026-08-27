@@ -7,6 +7,7 @@ patrón que `src/banco_preguntas/frameworks/dependencies.py`.
 
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Annotated
 
 from fastapi import Depends
@@ -15,6 +16,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
 from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
+)
+from src.actividad_evaluativa.frameworks.adapters.evaluacion_activa_query_repository import (
+    SQLAlchemyEvaluacionActivaQueryRepository,
 )
 from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_process import (
     MateriaConsultaPortInProcess,
@@ -45,6 +49,10 @@ from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
 from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
 from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.verificar_vencimientos import (
+    VerificarVencimientosUseCase,
+)
+from src.settings import settings
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -104,3 +112,24 @@ def get_revision_controller(session: SessionDep) -> RevisionController:
     pregunta_consulta = PreguntaConsultaPortInProcess(session)
     event_store = SQLAlchemyEventStore(session)
     return RevisionController(ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store))
+
+
+def build_verificar_vencimientos_use_case(session: AsyncSession) -> VerificarVencimientosUseCase:
+    """Arma `VerificarVencimientosUseCase` (`US-3.2.4`) con su propia sesión.
+
+    A diferencia del resto de las factories de este módulo, no usa `Annotated[..., Depends]`:
+    la Policy corre en un background task (`src/app.py`), fuera del ciclo request/response de
+    FastAPI, con una sesión propia por corrida.
+    """
+    evaluacion_activa_query = SQLAlchemyEvaluacionActivaQueryRepository(session)
+    event_store = SQLAlchemyEventStore(session)
+    umbral_inactividad = timedelta(
+        minutes=settings.verificador_vencimientos_umbral_inactividad_minutos
+    )
+    return VerificarVencimientosUseCase(
+        evaluacion_activa_query,
+        event_store,
+        SuspenderEvaluacionUseCase(event_store),
+        FinalizarEvaluacionUseCase(event_store),
+        umbral_inactividad,
+    )
