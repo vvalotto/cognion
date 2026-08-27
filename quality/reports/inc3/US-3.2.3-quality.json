@@ -1,0 +1,24 @@
+{
+  "us_id": "US-3.2.3",
+  "fecha": "2026-08-27T17:50:00-03:00",
+  "componente": "src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.70,
+    "cc_max": 5,
+    "mi_min": 60.40,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard acotado a los 15 archivos de src/ tocados por esta US (CLAUDE.md, Fase 7): 0 errors, 0 warnings, 45 checks OK.",
+    "Coverage 100% medido sobre src/actividad_evaluativa completo (entities/use_cases/interface_adapters) — frameworks/ excluido por config del proyecto (pyproject.toml [tool.coverage.run] omit).",
+    "Pylint y radon corridos sobre el paquete completo del BC (no solo los archivos modificados) para no perder contexto de acoplamiento con el resto del código existente.",
+    "CBO de EvaluacionesController vigilado a propósito (pasa de 4 a 5 Use Case inyectados, todos comandos) — la query ObtenerRevisionEvaluacionUseCase se separó en RevisionController desde el diseño (spec, Impacto arquitectónico) para no repetir el CRITICAL de CBO de Incremento 2. Confirmación final de CBO real la da el pre-push gate (DesignReviewer)."
+  ]
+}
