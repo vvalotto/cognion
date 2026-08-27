@@ -278,7 +278,9 @@ class TestValidarParaRegistrarRespuesta:
 
 
 def _evaluacion_con_estado(estado):
-    evaluacion = Evaluacion.crear(uuid4(), uuid4(), [PreguntaAsignada(pregunta_id=uuid4(), orden=0)])
+    evaluacion = Evaluacion.crear(
+        uuid4(), uuid4(), [PreguntaAsignada(pregunta_id=uuid4(), orden=0)]
+    )
     evaluacion.estado = estado
     return evaluacion
 

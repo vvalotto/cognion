@@ -114,9 +114,7 @@ class TestReanudarEvaluacionUseCase:
                         "evaluacion_id": str(evaluacion_id),
                         "actividad_id": str(actividad_id),
                         "estudiante_id": str(estudiante_id),
-                        "preguntas_asignadas": [
-                            {"pregunta_id": str(pregunta_id), "orden": 0}
-                        ],
+                        "preguntas_asignadas": [{"pregunta_id": str(pregunta_id), "orden": 0}],
                         "ocurrido_en": datetime.now(UTC).isoformat(),
                     },
                 )

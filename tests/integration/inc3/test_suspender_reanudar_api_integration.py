@@ -152,9 +152,7 @@ class TestSuspenderReanudarAPIIntegration:
         stream = await store.load("Evaluacion", uuid.UUID(evaluacion["id"]))
         assert stream[-1].event_type == "EvaluacionReanudada"
 
-    async def test_reanudar_habilita_volver_a_registrar_respuestas(
-        self, session, docente_headers
-    ):
+    async def test_reanudar_habilita_volver_a_registrar_respuestas(self, session, docente_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -263,7 +261,9 @@ class TestSuspenderReanudarAPIIntegration:
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=2)
-            actividad_id = await _crear_actividad(client, docente_headers, materia_id, apertura, cierre)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, apertura, cierre
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
             response = await client.post(
