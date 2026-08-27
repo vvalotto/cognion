@@ -31,10 +31,17 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_control
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.revision_controller import (
+    RevisionController,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
+    ObtenerRevisionEvaluacionUseCase,
+)
 from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
 from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
@@ -88,4 +95,12 @@ def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
         RegistrarRespuestaUseCase(pregunta_consulta, event_store),
         SuspenderEvaluacionUseCase(event_store),
         ReanudarEvaluacionUseCase(event_store),
+        FinalizarEvaluacionUseCase(event_store),
     )
+
+
+def get_revision_controller(session: SessionDep) -> RevisionController:
+    """Arma el `RevisionController` con sus dependencias concretas."""
+    pregunta_consulta = PreguntaConsultaPortInProcess(session)
+    event_store = SQLAlchemyEventStore(session)
+    return RevisionController(ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store))

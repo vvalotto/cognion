@@ -175,3 +175,30 @@ async def reanudar_evaluacion(
         ) from exc
 
     return _a_response(evaluacion)
+
+
+@router.post(
+    "/{evaluacion_id}/finalizar",
+    response_model=EvaluacionResponse,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(require_estudiante)],
+)
+async def finalizar_evaluacion(
+    evaluacion_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
+    controller: EvaluacionesController = Depends(get_evaluaciones_controller),
+) -> EvaluacionResponse:
+    """Finaliza explícitamente la evaluación del Estudiante autenticado (RF-13).
+
+    Responde 404/422 ante los rechazos de dominio. No valida período vigente.
+    """
+    try:
+        evaluacion = await controller.finalizar_evaluacion(evaluacion_id, usuario.usuario_id)
+    except EvaluacionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except EvaluacionYaFinalizada as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_response(evaluacion)
