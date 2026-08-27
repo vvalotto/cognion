@@ -1,10 +1,19 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
+import pytest
+
+from src.actividad_evaluativa.entities.errors import (
+    EvaluacionSuspendida,
+    EvaluacionYaFinalizada,
+    IntentosAgotados,
+    PreguntaNoAsignada,
+)
 from src.actividad_evaluativa.entities.evaluacion import (
     EstadoEvaluacion,
     Evaluacion,
     PreguntaAsignada,
+    Respuesta,
 )
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 
@@ -77,3 +86,156 @@ class TestReconstruir:
         ]
         assert evaluacion.estado == EstadoEvaluacion.EN_CURSO
         assert evaluacion.iniciada_en == ocurrido_en
+        assert evaluacion.respuestas == []
+
+    def test_reconstruye_acumulando_respuestas_registradas(self):
+        evaluacion_id, actividad_id, estudiante_id = uuid4(), uuid4(), uuid4()
+        pregunta_id = uuid4()
+        ocurrido_en = datetime.now(UTC)
+        evento_inicio = EventoAlmacenado(
+            sequence_number=1,
+            event_type="EvaluacionIniciada",
+            payload={
+                "evaluacion_id": str(evaluacion_id),
+                "actividad_id": str(actividad_id),
+                "estudiante_id": str(estudiante_id),
+                "preguntas_asignadas": [{"pregunta_id": str(pregunta_id), "orden": 0}],
+                "ocurrido_en": ocurrido_en.isoformat(),
+            },
+            occurred_at=ocurrido_en,
+        )
+        respuesta_id = uuid4()
+        evento_respuesta = EventoAlmacenado(
+            sequence_number=2,
+            event_type="RespuestaRegistrada",
+            payload={
+                "respuesta_id": str(respuesta_id),
+                "evaluacion_id": str(evaluacion_id),
+                "pregunta_id": str(pregunta_id),
+                "numero_intento": 1,
+                "contenido": {"opcion_indice": 0},
+                "es_correcta": True,
+                "ocurrido_en": ocurrido_en.isoformat(),
+            },
+            occurred_at=ocurrido_en,
+        )
+
+        evaluacion = Evaluacion.reconstruir([evento_inicio, evento_respuesta])
+
+        assert len(evaluacion.respuestas) == 1
+        respuesta = evaluacion.respuestas[0]
+        assert respuesta.id == respuesta_id
+        assert respuesta.pregunta_id == pregunta_id
+        assert respuesta.numero_intento == 1
+        assert respuesta.contenido == {"opcion_indice": 0}
+        assert respuesta.es_correcta is True
+
+
+class TestContarRespuestasDe:
+    def test_cuenta_solo_las_respuestas_de_la_pregunta_pedida(self):
+        pregunta_id, otra_pregunta_id = uuid4(), uuid4()
+        evaluacion = Evaluacion.crear(
+            uuid4(), uuid4(), [PreguntaAsignada(pregunta_id=pregunta_id, orden=0)]
+        )
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=pregunta_id,
+                numero_intento=1,
+                contenido={},
+                es_correcta=False,
+            )
+        )
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=otra_pregunta_id,
+                numero_intento=1,
+                contenido={},
+                es_correcta=False,
+            )
+        )
+
+        assert evaluacion.contar_respuestas_de(pregunta_id) == 1
+        assert evaluacion.contar_respuestas_de(otra_pregunta_id) == 1
+        assert evaluacion.contar_respuestas_de(uuid4()) == 0
+
+
+class TestValidarParaRegistrarRespuesta:
+    def _evaluacion(self, pregunta_id, estado=EstadoEvaluacion.EN_CURSO):
+        evaluacion = Evaluacion.crear(
+            uuid4(), uuid4(), [PreguntaAsignada(pregunta_id=pregunta_id, orden=0)]
+        )
+        evaluacion.estado = estado
+        return evaluacion
+
+    def test_devuelve_numero_de_intento_uno_para_la_primera_respuesta(self):
+        pregunta_id = uuid4()
+        evaluacion = self._evaluacion(pregunta_id)
+
+        numero_intento = evaluacion.validar_para_registrar_respuesta(
+            pregunta_id, cantidad_intentos_permitidos=2
+        )
+
+        assert numero_intento == 1
+
+    def test_devuelve_numero_de_intento_incrementado(self):
+        pregunta_id = uuid4()
+        evaluacion = self._evaluacion(pregunta_id)
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=pregunta_id,
+                numero_intento=1,
+                contenido={},
+                es_correcta=False,
+            )
+        )
+
+        numero_intento = evaluacion.validar_para_registrar_respuesta(
+            pregunta_id, cantidad_intentos_permitidos=2
+        )
+
+        assert numero_intento == 2
+
+    def test_rechaza_pregunta_no_asignada(self):
+        evaluacion = self._evaluacion(uuid4())
+
+        with pytest.raises(PreguntaNoAsignada):
+            evaluacion.validar_para_registrar_respuesta(uuid4(), cantidad_intentos_permitidos=1)
+
+    def test_rechaza_intentos_agotados(self):
+        pregunta_id = uuid4()
+        evaluacion = self._evaluacion(pregunta_id)
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=pregunta_id,
+                numero_intento=1,
+                contenido={},
+                es_correcta=False,
+            )
+        )
+
+        with pytest.raises(IntentosAgotados):
+            evaluacion.validar_para_registrar_respuesta(
+                pregunta_id, cantidad_intentos_permitidos=1
+            )
+
+    def test_rechaza_evaluacion_suspendida(self):
+        pregunta_id = uuid4()
+        evaluacion = self._evaluacion(pregunta_id, estado=EstadoEvaluacion.SUSPENDIDA)
+
+        with pytest.raises(EvaluacionSuspendida):
+            evaluacion.validar_para_registrar_respuesta(
+                pregunta_id, cantidad_intentos_permitidos=1
+            )
+
+    def test_rechaza_evaluacion_finalizada(self):
+        pregunta_id = uuid4()
+        evaluacion = self._evaluacion(pregunta_id, estado=EstadoEvaluacion.FINALIZADA)
+
+        with pytest.raises(EvaluacionYaFinalizada):
+            evaluacion.validar_para_registrar_respuesta(
+                pregunta_id, cantidad_intentos_permitidos=1
+            )

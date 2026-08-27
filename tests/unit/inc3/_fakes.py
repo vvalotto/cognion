@@ -52,6 +52,7 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         """Inicializa el almacenamiento en memoria."""
         self.conteos: dict[UUID, int] = {}
         self.ids_activas: dict[UUID, list[UUID]] = {}
+        self.correcciones: dict[UUID, bool] = {}
 
     async def contar_activas_por_materia(self, materia_id: UUID) -> int:
         """Devuelve el conteo precargado para la materia, o 0 si no se precargó."""
@@ -60,6 +61,10 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
         """Devuelve los ids precargados para la materia, o lista vacía si no se precargó."""
         return list(self.ids_activas.get(materia_id, []))
+
+    async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict) -> bool:
+        """Devuelve la corrección precargada para la pregunta, o `False` si no se precargó."""
+        return self.correcciones.get(pregunta_id, False)
 
 
 class FakeEventStore(EventStorePort):
