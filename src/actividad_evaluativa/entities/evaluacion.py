@@ -162,15 +162,27 @@ class Evaluacion:
         arma la `Respuesta` en sí, recién después de persistir `RespuestaRegistrada` en el
         event store (INV-AE-09); este método no muta `self.respuestas`.
         """
-        if self.estado is EstadoEvaluacion.SUSPENDIDA:
-            raise EvaluacionSuspendida(self.id)
-        if self.estado is EstadoEvaluacion.FINALIZADA:
-            raise EvaluacionYaFinalizada(self.id)
-        if not any(p.pregunta_id == pregunta_id for p in self.preguntas_asignadas):
-            raise PreguntaNoAsignada(self.id, pregunta_id)
+        return _validar_para_registrar_respuesta(self, pregunta_id, cantidad_intentos_permitidos)
 
-        numero_intento = self.contar_respuestas_de(pregunta_id) + 1
-        if numero_intento > cantidad_intentos_permitidos:
-            raise IntentosAgotados(pregunta_id, cantidad_intentos_permitidos)
 
-        return numero_intento
+def _validar_para_registrar_respuesta(
+    evaluacion: Evaluacion, pregunta_id: UUID, cantidad_intentos_permitidos: int
+) -> int:
+    """Implementa INV-AE-07/08/12 para `validar_para_registrar_respuesta`.
+
+    Función de módulo, no método, para no acoplar `Evaluacion` a los 4 errores de dominio que
+    puede levantar (mismo criterio de extracción de responsabilidad ya aplicado en `US-3.1.3`
+    para bajar CBO sin cambiar comportamiento).
+    """
+    if evaluacion.estado is EstadoEvaluacion.SUSPENDIDA:
+        raise EvaluacionSuspendida(evaluacion.id)
+    if evaluacion.estado is EstadoEvaluacion.FINALIZADA:
+        raise EvaluacionYaFinalizada(evaluacion.id)
+    if not any(p.pregunta_id == pregunta_id for p in evaluacion.preguntas_asignadas):
+        raise PreguntaNoAsignada(evaluacion.id, pregunta_id)
+
+    numero_intento = evaluacion.contar_respuestas_de(pregunta_id) + 1
+    if numero_intento > cantidad_intentos_permitidos:
+        raise IntentosAgotados(pregunta_id, cantidad_intentos_permitidos)
+
+    return numero_intento
