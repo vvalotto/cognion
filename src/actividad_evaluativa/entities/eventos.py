@@ -58,3 +58,25 @@ class RespuestaRegistrada:
     contenido: dict[str, Any]
     es_correcta: bool
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class EvaluacionSuspendida:
+    """Se pausó una `Evaluacion` `EnCurso` — mismo hecho de dominio sin importar el actor.
+
+    `actor` distingue quién disparó la pausa (`"estudiante"` en `US-3.2.2`, `"sistema"` cuando
+    `US-3.2.4` reutilice este evento desde el `VerificadorDeVencimientos`) — no cambia el
+    invariante que se cumple en ambos casos (INV-AE-12).
+    """
+
+    evaluacion_id: UUID
+    actor: str
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class EvaluacionReanudada:
+    """Se retomó una `Evaluacion` `Suspendida` — vuelve a `EnCurso`, mismo set y `respuestas`."""
+
+    evaluacion_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
