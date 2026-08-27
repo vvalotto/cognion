@@ -398,6 +398,21 @@ efecto (los invariantes INV-AE-11/INV-AE-12 del propio aggregate `Evaluacion` lo
 Use Case que ejecuta cada comando emitido por la Policy sigue las mismas reglas que si lo
 llamara un actor humano).
 
+**Nota de implementación (`US-3.2.4`, confirmada con Víctor 2026-08-27) — dos decisiones que se
+apartan de lo escrito arriba, documentadas en `docs/specs/inc3/US-3.2.4.md`:**
+1. `evaluaciones_activas_por_actividad` **no** se implementó como tabla sincronizada en cada
+   evento — se implementó como una query de lectura sobre la tabla `events` existente
+   (`EvaluacionActivaQueryPort`/`SQLAlchemyEvaluacionActivaQueryRepository`), para no tocar los
+   4 Use Case ya cerrados de `US-3.1.3` a `US-3.2.3` ni sumar una migración nueva. A esta escala
+   el propio párrafo de arriba ya admite que "no justifica un mecanismo más fino que polling" —
+   mismo criterio aplicado acá.
+2. El disparador es un `asyncio.create_task` en el `lifespan` de `src/app.py` (cadencia 120s),
+   no un job externo — el proyecto no tiene APScheduler/Celery.
+
+Las Reglas 1 y 2 (`SuspenderEvaluacion`/`FinalizarEvaluacion` con `actor="sistema"`) están
+implementadas tal como se describen arriba. La Regla 3 (cascada síncrona de `CerrarActividad`)
+sigue pendiente de `US-3.3.2` (Iteración 3).
+
 ---
 
 ## 7. Integraciones con otros BC (vía puertos, sin imports directos)
