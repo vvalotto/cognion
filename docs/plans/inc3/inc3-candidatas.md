@@ -139,6 +139,19 @@ reutilizado por la cascada de US-3.3.2).
 (US-3.4.2→3.4.3→3.4.4) y lado estudiante (US-3.4.5→3.4.6→3.4.7) pueden avanzar en paralelo —
 son independientes entre sí, ambos solo dependen de US-3.4.1.
 
+**Gap de backend detectado al crear las specs (2026-08-28):** la tabla de candidatas asumía
+"Iteración 4 = solo frontend, consume las Iteraciones 1 a 3 tal cual" — no es así. Los routers
+reales (`actividades_router.py`, `evaluaciones_router.py`) no exponen ningún `GET` de lectura
+(listado/detalle de actividades, contenido de pregunta asignada, respuestas ya dadas), y el
+lado Estudiante no tiene ningún endpoint propio fuera de login/registro/password. Decisión de
+Víctor: cada US que lo necesite extiende el backend mínimo dentro de su propio alcance (mismo
+criterio que `US-2.1.9`/`US-2.2.8`), documentado en el spec de cada una — no se abre una
+iteración técnica aparte. Afecta a `US-3.4.2`, `US-3.4.4`, `US-3.4.5` y `US-3.4.6`.
+
+~~US-3.4.1~~ Issue #170. ~~US-3.4.2~~ Issue #171. ~~US-3.4.3~~ Issue #172. ~~US-3.4.4~~ Issue
+#173. ~~US-3.4.5~~ Issue #174. ~~US-3.4.6~~ Issue #175. ~~US-3.4.7~~ Issue #176. Specs en
+`docs/specs/inc3/US-3.4.1.md` a `US-3.4.7.md`.
+
 ---
 
 ## DoD del Incremento (hito, `PLAN_v1.md`)
@@ -172,7 +185,8 @@ de la siguiente confirmación (INV-AE-09).
    de la infraestructura de Event Sourcing en `US-3.1.1`, el `VerificadorDeVencimientos` como
    `US-3.2.4`, y la decisión de diferir todo el frontend a una Iteración 4 en vez de intercalarlo
    con cada iteración de backend (a diferencia de Banco de Preguntas).
-5. Crear GitHub Issues (Milestone `Incremento 3 — Sesión de Período Abierto`) y
-   `docs/specs/inc3/US-3.M.K.md` por cada US aprobada.
+5. ~~Crear GitHub Issues (Milestone `Incremento 3 — Sesión de Período Abierto`) y
+   `docs/specs/inc3/US-3.M.K.md` por cada US aprobada.~~ Hecho para Iteraciones 1 a 3
+   (backend) y, 2026-08-28, para la Iteración 4 (frontend) — Issues #170 a #176.
 6. Implementar Iteración 1 → 2 → 3 (backend, en ese orden — cada una depende de la anterior) →
-   Iteración 4 (frontend).
+   Iteración 4 (frontend, en curso).
