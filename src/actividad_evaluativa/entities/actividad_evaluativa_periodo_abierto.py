@@ -99,9 +99,7 @@ class ActividadEvaluativaPeriodoAbierto:
             raise NoSePuedeAcortarConEvaluacionesActivas(self.id)
 
 
-def _aplicar_evento(
-    actividad: ActividadEvaluativaPeriodoAbierto, evento: EventoAlmacenado
-) -> None:
+def _aplicar_evento(actividad: ActividadEvaluativaPeriodoAbierto, evento: EventoAlmacenado) -> None:
     """Aplica un evento del stream posterior a `ActividadEvaluativaCreada`, según su `event_type`.
 
     Extraído a función de módulo por el mismo criterio ya aplicado en

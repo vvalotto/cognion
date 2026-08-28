@@ -10,12 +10,12 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto impo
 )
 from src.actividad_evaluativa.entities.errors import ActividadNoExiste
 from src.actividad_evaluativa.entities.eventos import PeriodoDisponibilidadModificado
+from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
+    EvaluacionActivaQueryPort,
+)
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
-)
-from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
-    EvaluacionActivaQueryPort,
 )
 
 AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
@@ -50,9 +50,7 @@ class ModificarPeriodoDisponibilidadUseCase:
         actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(eventos)
 
         resumen = await self._evaluacion_activa_query.listar_no_finalizadas()
-        hay_evaluaciones_activas = any(
-            item.actividad_id == actividad_id for item in resumen
-        )
+        hay_evaluaciones_activas = any(item.actividad_id == actividad_id for item in resumen)
 
         actividad.validar_para_modificar_periodo(nueva_fecha_cierre, hay_evaluaciones_activas)
 

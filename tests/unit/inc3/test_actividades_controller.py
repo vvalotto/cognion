@@ -9,11 +9,28 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_control
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
+    ModificarPeriodoDisponibilidadUseCase,
+)
 from tests.unit.inc3._fakes import (
     FakeEventStore,
     FakeMateriaConsultaPort,
     FakePreguntaConsultaPort,
 )
+from tests.unit.inc3.test_modificar_periodo_disponibilidad_use_case import (
+    FakeEvaluacionActivaQueryPort,
+    _crear_actividad,
+)
+
+
+def _controller(event_store: FakeEventStore | None = None) -> ActividadesController:
+    event_store = event_store or FakeEventStore()
+    materia_consulta = FakeMateriaConsultaPort()
+    pregunta_consulta = FakePreguntaConsultaPort()
+    return ActividadesController(
+        CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
+        ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
+    )
 
 
 class TestActividadesController:
@@ -23,10 +40,10 @@ class TestActividadesController:
         materia_consulta.materias[materia_id] = MateriaDTO(id=materia_id, nombre="Materia")
         pregunta_consulta = FakePreguntaConsultaPort()
         pregunta_consulta.conteos[materia_id] = 20
+        event_store = FakeEventStore()
         controller = ActividadesController(
-            CrearActividadPeriodoAbiertoUseCase(
-                materia_consulta, pregunta_consulta, FakeEventStore()
-            )
+            CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
+            ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
         )
         apertura = datetime.now(UTC)
         cierre = apertura + timedelta(days=7)
@@ -37,3 +54,17 @@ class TestActividadesController:
         assert actividad.cantidad_preguntas == 10
         assert isinstance(evento, ActividadEvaluativaCreada)
         assert evento.actividad_id == actividad.id
+
+    async def test_modificar_periodo_disponibilidad_delega_al_use_case(self):
+        event_store = FakeEventStore()
+        apertura = datetime.now(UTC)
+        cierre = apertura + timedelta(days=7)
+        actividad_id = await _crear_actividad(event_store, apertura, cierre)
+        controller = _controller(event_store)
+        nueva_fecha_cierre = cierre + timedelta(days=3)
+
+        actividad = await controller.modificar_periodo_disponibilidad(
+            actividad_id, nueva_fecha_cierre
+        )
+
+        assert actividad.fecha_cierre == nueva_fecha_cierre
