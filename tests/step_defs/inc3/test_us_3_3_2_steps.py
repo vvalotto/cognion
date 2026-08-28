@@ -114,9 +114,7 @@ async def _suspender(evaluacion_id: str, estudiante_headers: dict) -> None:
 async def _cerrar_actividad(actividad_id: str):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(
-            f"/actividades/{actividad_id}/cerrar", headers=docente_headers()
-        )
+        return await client.post(f"/actividades/{actividad_id}/cerrar", headers=docente_headers())
 
 
 async def _modificar_periodo(actividad_id: str, nueva_fecha_cierre: datetime):
@@ -239,8 +237,7 @@ def valida_cerrada_manualmente(context):
 def valida_ambas_finalizadas(context):
     for evaluacion in context["evaluaciones"]:
         assert (
-            run_async(_contar_eventos("Evaluacion", evaluacion["id"], "EvaluacionFinalizada"))
-            == 1
+            run_async(_contar_eventos("Evaluacion", evaluacion["id"], "EvaluacionFinalizada")) == 1
         )
 
 
@@ -253,7 +250,9 @@ def valida_actor_sistema_en_ambas(context):
 @then("la Evaluacion pasa a Finalizada")
 def valida_evaluacion_finalizada(context):
     assert (
-        run_async(_contar_eventos("Evaluacion", context["evaluacion"]["id"], "EvaluacionFinalizada"))
+        run_async(
+            _contar_eventos("Evaluacion", context["evaluacion"]["id"], "EvaluacionFinalizada")
+        )
         == 1
     )
 

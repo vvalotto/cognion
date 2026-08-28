@@ -5,10 +5,10 @@ import pytest
 
 from src.actividad_evaluativa.entities.errors import ActividadNoExiste, ActividadYaCerrada
 from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion, Evaluacion
-from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
     EvaluacionActivaResumen,
 )
+from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.use_cases.cerrar_actividad import (
     AGGREGATE_TYPE,
     CerrarActividadUseCase,
