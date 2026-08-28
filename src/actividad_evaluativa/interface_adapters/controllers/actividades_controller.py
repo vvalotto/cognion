@@ -55,8 +55,6 @@ class ActividadesController:
         """Delega la modificación del período en el caso de uso correspondiente (RF-11b)."""
         return await self._modificar_periodo.execute(actividad_id, nueva_fecha_cierre)
 
-    async def cerrar_actividad(
-        self, actividad_id: UUID
-    ) -> ActividadEvaluativaPeriodoAbierto:
+    async def cerrar_actividad(self, actividad_id: UUID) -> ActividadEvaluativaPeriodoAbierto:
         """Delega el cierre manual de la actividad en el caso de uso correspondiente (RF-11b)."""
         return await self._cerrar_actividad.execute(actividad_id)

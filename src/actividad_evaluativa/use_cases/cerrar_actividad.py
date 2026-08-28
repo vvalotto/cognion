@@ -9,12 +9,12 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto impo
 )
 from src.actividad_evaluativa.entities.errors import ActividadNoExiste
 from src.actividad_evaluativa.entities.eventos import ActividadEvaluativaCerrada
+from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
+    EvaluacionActivaQueryPort,
+)
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
-)
-from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
-    EvaluacionActivaQueryPort,
 )
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 
