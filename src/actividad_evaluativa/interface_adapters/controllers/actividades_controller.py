@@ -9,6 +9,7 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto impo
     ActividadEvaluativaPeriodoAbierto,
 )
 from src.actividad_evaluativa.entities.eventos import ActividadEvaluativaCreada
+from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
@@ -24,10 +25,12 @@ class ActividadesController:
         self,
         crear_actividad: CrearActividadPeriodoAbiertoUseCase,
         modificar_periodo: ModificarPeriodoDisponibilidadUseCase,
+        cerrar_actividad: CerrarActividadUseCase,
     ) -> None:
-        """Recibe los casos de uso de creación y modificación de actividades."""
+        """Recibe los casos de uso de creación, modificación y cierre de actividades."""
         self._crear_actividad = crear_actividad
         self._modificar_periodo = modificar_periodo
+        self._cerrar_actividad = cerrar_actividad
 
     async def crear_actividad(
         self,
@@ -51,3 +54,9 @@ class ActividadesController:
     ) -> ActividadEvaluativaPeriodoAbierto:
         """Delega la modificación del período en el caso de uso correspondiente (RF-11b)."""
         return await self._modificar_periodo.execute(actividad_id, nueva_fecha_cierre)
+
+    async def cerrar_actividad(
+        self, actividad_id: UUID
+    ) -> ActividadEvaluativaPeriodoAbierto:
+        """Delega el cierre manual de la actividad en el caso de uso correspondiente (RF-11b)."""
+        return await self._cerrar_actividad.execute(actividad_id)

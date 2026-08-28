@@ -42,6 +42,19 @@ class PeriodoDisponibilidadModificado:
 
 
 @dataclass(frozen=True)
+class ActividadEvaluativaCerrada:
+    """Se cerró manualmente una actividad — terminal (INV-AE-04b, `US-3.3.2`).
+
+    Tercer evento posible del stream de `ActividadEvaluativaPeriodoAbierto`. A diferencia de
+    `PeriodoDisponibilidadModificado`, no admite revertirse: una vez emitido, ningún otro
+    comando sobre esta actividad tiene efecto.
+    """
+
+    actividad_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
 class EvaluacionIniciada:
     """Se fijó el set de preguntas de un Estudiante — primer evento del stream de `Evaluacion`.
 
