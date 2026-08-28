@@ -321,10 +321,33 @@ Crear archivo JSON con todas las métricas:
     "mi_min": "{MI_MIN}",
     "coverage_min": "{COVERAGE_MIN}"
   },
+  "codeguard": {
+    "archivos_analizados": 0,
+    "errors": 0,
+    "warnings": 0,
+    "infos": 0,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 0},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 0},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 0},
+      "DeadCode": {"errors": 0, "warnings": 0, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 0},
+      "Pylint": {"errors": 0, "warnings": 0, "infos": 0},
+      "Spelling": {"errors": 0, "warnings": 0, "infos": 0},
+      "Types": {"errors": 0, "warnings": 0, "infos": 0},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 0}
+    },
+    "reporte": "quality/reports/{US_ID}-codeguard.json"
+  },
   "estado": "APROBADO",
   "observaciones": []
 }
 ```
+
+> El desglose por check (`codeguard.checks`) se calcula a partir de `results` en
+> `{US_ID}-codeguard.json` — un check con los tres contadores en 0 significa que corrió y
+> no encontró nada que reportar, no que fue omitido (si fuera omitido, el gate de la
+> sección "Verificar reporte antes de cerrar" ya habría bloqueado el avance).
 
 **Script de generación (opcional):**
 
@@ -347,6 +370,32 @@ def leer_umbrales_perfil(config_path=".claude/skills/implement-us/config.json"):
         "coverage_min": qg["coverage"]["min_percent"]
     }
 
+def desglosar_codeguard(codeguard_report_path):
+    """Desglosar el reporte crudo de codeguard en conteos por check.
+
+    Requiere que codeguard_report_path haya sido generado con --analysis-type
+    full (ver comando de la sección anterior) — de lo contrario faltan checks
+    y el gate de verificación de esta fase ya lo habría rechazado antes de
+    llegar acá.
+    """
+    with open(codeguard_report_path) as f:
+        cg = json.load(f)
+
+    checks = {}
+    for r in cg["results"]:
+        entry = checks.setdefault(r["check"], {"errors": 0, "warnings": 0, "infos": 0})
+        clave = "infos" if r["severity"] == "info" else f"{r['severity']}s"
+        entry[clave] += 1
+
+    return {
+        "archivos_analizados": cg["summary"]["total_files"],
+        "errors": cg["summary"]["errors"],
+        "warnings": cg["summary"]["warnings"],
+        "infos": cg["summary"]["infos"],
+        "checks": checks,
+        "reporte": codeguard_report_path,
+    }
+
 def todas_metricas_pasan(metricas, umbrales):
     """Validar que todas las métricas superan los umbrales del perfil activo."""
     return (
@@ -367,6 +416,7 @@ def generar_reporte_quality(us_id, component_path, metricas):
         "componente": component_path,
         "metricas": metricas,
         "umbrales": umbrales,
+        "codeguard": desglosar_codeguard(f"quality/reports/{us_id}-codeguard.json"),
         "estado": estado,
         "observaciones": calcular_observaciones(metricas, umbrales)
     }
