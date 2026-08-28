@@ -109,6 +109,9 @@ model `evaluaciones_activas_por_actividad` que reutilizará US-3.3.1.
 dependen de la Iteración 2 (read model de evaluaciones activas, Use Case de finalización
 reutilizado por la cascada de US-3.3.2).
 
+~~US-3.3.1~~ Issue #163. ~~US-3.3.2~~ Issue #164. Specs en `docs/specs/inc3/US-3.3.1.md`,
+`US-3.3.2.md`.
+
 ---
 
 ## Iteración 4 — Frontend (consume las Iteraciones 1 a 3 completas)

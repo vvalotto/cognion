@@ -6,7 +6,13 @@ import pytest
 from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
     ActividadEvaluativaPeriodoAbierto,
 )
-from src.actividad_evaluativa.entities.errors import CantidadIntentosInvalida, PeriodoInvalido
+from src.actividad_evaluativa.entities.errors import (
+    ActividadYaCerrada,
+    CantidadIntentosInvalida,
+    NoSePuedeAcortarConEvaluacionesActivas,
+    PeriodoInvalido,
+)
+from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 
 
 def _fechas() -> tuple[datetime, datetime]:
@@ -74,3 +80,103 @@ class TestActividadEvaluativaPeriodoAbiertoCrear:
         actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 3)
 
         assert actividad.cantidad_intentos_permitidos == 3
+
+
+def _evento_creada(actividad: ActividadEvaluativaPeriodoAbierto) -> EventoAlmacenado:
+    return EventoAlmacenado(
+        sequence_number=1,
+        event_type="ActividadEvaluativaCreada",
+        payload={
+            "actividad_id": str(actividad.id),
+            "materia_id": str(actividad.materia_id),
+            "fecha_apertura": actividad.fecha_apertura.isoformat(),
+            "fecha_cierre": actividad.fecha_cierre.isoformat(),
+            "cantidad_preguntas": actividad.cantidad_preguntas,
+            "cantidad_intentos_permitidos": actividad.cantidad_intentos_permitidos,
+            "ocurrido_en": "2026-01-01T00:00:00+00:00",
+        },
+        occurred_at=datetime.now(UTC),
+    )
+
+
+def _evento_modificado(actividad_id, nueva_fecha_cierre: datetime) -> EventoAlmacenado:
+    return EventoAlmacenado(
+        sequence_number=2,
+        event_type="PeriodoDisponibilidadModificado",
+        payload={
+            "actividad_id": str(actividad_id),
+            "nueva_fecha_cierre": nueva_fecha_cierre.isoformat(),
+            "ocurrido_en": "2026-01-02T00:00:00+00:00",
+        },
+        occurred_at=datetime.now(UTC),
+    )
+
+
+class TestActividadEvaluativaPeriodoAbiertoReconstruir:
+    def test_reconstruye_desde_un_unico_evento(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        reconstruida = ActividadEvaluativaPeriodoAbierto.reconstruir([_evento_creada(actividad)])
+
+        assert reconstruida.id == actividad.id
+        assert reconstruida.fecha_cierre == cierre
+        assert reconstruida.cerrada_manualmente is False
+
+    def test_reconstruye_aplicando_periodo_disponibilidad_modificado(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+        nueva_fecha_cierre = cierre + timedelta(days=3)
+
+        reconstruida = ActividadEvaluativaPeriodoAbierto.reconstruir(
+            [_evento_creada(actividad), _evento_modificado(actividad.id, nueva_fecha_cierre)]
+        )
+
+        assert reconstruida.fecha_cierre == nueva_fecha_cierre
+        assert reconstruida.fecha_apertura == apertura
+
+
+class TestActividadEvaluativaPeriodoAbiertoValidarParaModificarPeriodo:
+    def test_extender_siempre_se_permite_con_evaluaciones_activas(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        actividad.validar_para_modificar_periodo(
+            cierre + timedelta(days=1), hay_evaluaciones_activas=True
+        )
+
+    def test_acortar_sin_evaluaciones_activas_se_permite(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        actividad.validar_para_modificar_periodo(
+            cierre - timedelta(hours=1), hay_evaluaciones_activas=False
+        )
+
+    def test_acortar_con_evaluaciones_activas_se_rechaza(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        with pytest.raises(NoSePuedeAcortarConEvaluacionesActivas):
+            actividad.validar_para_modificar_periodo(
+                cierre - timedelta(hours=1), hay_evaluaciones_activas=True
+            )
+
+    def test_nueva_fecha_anterior_a_apertura_se_rechaza(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        with pytest.raises(PeriodoInvalido):
+            actividad.validar_para_modificar_periodo(
+                apertura - timedelta(hours=1), hay_evaluaciones_activas=False
+            )
+
+    def test_actividad_cerrada_manualmente_se_rechaza(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+        actividad.cerrada_manualmente = True
+
+        with pytest.raises(ActividadYaCerrada):
+            actividad.validar_para_modificar_periodo(
+                cierre + timedelta(days=1), hay_evaluaciones_activas=False
+            )

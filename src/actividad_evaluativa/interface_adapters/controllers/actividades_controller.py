@@ -12,14 +12,22 @@ from src.actividad_evaluativa.entities.eventos import ActividadEvaluativaCreada
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
+    ModificarPeriodoDisponibilidadUseCase,
+)
 
 
 class ActividadesController:
-    """Adapta requests HTTP al caso de uso de alta de actividades de período abierto."""
+    """Adapta requests HTTP a los casos de uso sobre actividades de período abierto."""
 
-    def __init__(self, crear_actividad: CrearActividadPeriodoAbiertoUseCase) -> None:
-        """Recibe el caso de uso de creación de actividades."""
+    def __init__(
+        self,
+        crear_actividad: CrearActividadPeriodoAbiertoUseCase,
+        modificar_periodo: ModificarPeriodoDisponibilidadUseCase,
+    ) -> None:
+        """Recibe los casos de uso de creación y modificación de actividades."""
         self._crear_actividad = crear_actividad
+        self._modificar_periodo = modificar_periodo
 
     async def crear_actividad(
         self,
@@ -37,3 +45,9 @@ class ActividadesController:
             cantidad_preguntas,
             cantidad_intentos_permitidos,
         )
+
+    async def modificar_periodo_disponibilidad(
+        self, actividad_id: UUID, nueva_fecha_cierre: datetime
+    ) -> ActividadEvaluativaPeriodoAbierto:
+        """Delega la modificación del período en el caso de uso correspondiente (RF-11b)."""
+        return await self._modificar_periodo.execute(actividad_id, nueva_fecha_cierre)

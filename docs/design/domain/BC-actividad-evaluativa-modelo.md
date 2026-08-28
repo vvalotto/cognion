@@ -229,6 +229,18 @@ activas de inmediato (mismo efecto que la Regla 2) y no admite reabrir con
 **Sin estado propio de las evaluaciones de los estudiantes** — ver §2. El aggregate no crece con
 la cantidad de alumnos ni de respuestas.
 
+**Nota de implementación (`US-3.3.1`, 2026-08-28):** `ModificarPeriodoDisponibilidad`
+(INV-AE-02/04/04b) implementada — primer comando que agrega un segundo evento posible
+(`PeriodoDisponibilidadModificado`) al stream de esta actividad, que hasta acá siempre tenía un
+único evento (`ActividadEvaluativaCreada`). Introduce `ActividadEvaluativaPeriodoAbierto.
+reconstruir()` (replay real, mismo patrón de dispatch por `event_type` que
+`Evaluacion.reconstruir()`/`_aplicar_evento`, `US-3.2.2`) — consecuencia obligatoria: los 4 Use
+Case que hasta `US-3.2.4` leían `fecha_apertura`/`fecha_cierre`/`cantidad_preguntas` directamente
+del primer evento del stream (`IniciarEvaluacion`, `RegistrarRespuesta`, `ReanudarEvaluacion`, y
+la Regla 2 del `VerificadorDeVencimientos`) pasan a usar `reconstruir()`, para que una extensión
+o acortamiento del plazo sea visible en el resto del BC. `CerrarActividad` (INV-AE-04b, Regla 3)
+sigue pendiente de `US-3.3.2`.
+
 ### `Evaluacion` (Aggregate Root)
 
 | Atributo | Tipo | Notas |

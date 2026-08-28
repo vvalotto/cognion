@@ -6,6 +6,9 @@ import random
 from datetime import UTC, datetime
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
     EstudianteNoExiste,
@@ -56,11 +59,11 @@ class IniciarEvaluacionUseCase:
         if not eventos_actividad:
             raise ActividadNoExiste(actividad_id)
 
-        actividad = eventos_actividad[0].payload
-        materia_id = UUID(actividad["materia_id"])
-        fecha_apertura = datetime.fromisoformat(actividad["fecha_apertura"])
-        fecha_cierre = datetime.fromisoformat(actividad["fecha_cierre"])
-        cantidad_preguntas = int(actividad["cantidad_preguntas"])
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(eventos_actividad)
+        materia_id = actividad.materia_id
+        fecha_apertura = actividad.fecha_apertura
+        fecha_cierre = actividad.fecha_cierre
+        cantidad_preguntas = actividad.cantidad_preguntas
 
         ahora = datetime.now(UTC)
         if ahora < fecha_apertura or ahora > fecha_cierre:

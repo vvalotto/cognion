@@ -6,6 +6,9 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.entities.errors import EvaluacionNoExiste, FueraDePeriodo
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion, Respuesta
 from src.actividad_evaluativa.entities.eventos import RespuestaRegistrada
@@ -56,10 +59,10 @@ class RegistrarRespuestaUseCase:
         eventos_actividad = await self._event_store.load(
             AGGREGATE_TYPE_ACTIVIDAD, evaluacion.actividad_id
         )
-        actividad = eventos_actividad[0].payload
-        fecha_apertura = datetime.fromisoformat(actividad["fecha_apertura"])
-        fecha_cierre = datetime.fromisoformat(actividad["fecha_cierre"])
-        cantidad_intentos_permitidos = int(actividad["cantidad_intentos_permitidos"])
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(eventos_actividad)
+        fecha_apertura = actividad.fecha_apertura
+        fecha_cierre = actividad.fecha_cierre
+        cantidad_intentos_permitidos = actividad.cantidad_intentos_permitidos
 
         ahora = datetime.now(UTC)
         if ahora < fecha_apertura or ahora > fecha_cierre:
