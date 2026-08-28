@@ -323,10 +323,57 @@ completos ni la matriz de trazabilidad — esos pasan a Validado recién cuando 
 (backend + frontend, Iteración 4) cierre en UAT, mismo criterio que Identidad/Banco de
 Preguntas.
 
-**Próximo paso:** Iteración 2 del Incremento 3 — RNF Confiabilidad, RF-13: persistencia
-respuesta a respuesta (`US-3.2.1`), suspender/reanudar (`US-3.2.2`), finalizar y revisión
-(`US-3.2.3`), `VerificadorDeVencimientos` técnica (`US-3.2.4`). Crear Issues y specs
-`docs/specs/inc3/US-3.2.*.md` antes de implementar, mismo flujo que Iteración 1.
+**Iteración 2 del Incremento 3 — RNF Confiabilidad, RF-13, cerrada 2026-08-27** (backend
+únicamente, mismo criterio de diferir frontend a la Iteración 4 que en Iteración 1).
+**US-3.2.1** (Estudiante confirma una respuesta — persistencia atómica), PR
+[#155](https://github.com/vvalotto/cognion/pull/155) mergeado a `develop`: Entity `Respuesta`
+dentro de `Evaluacion.respuestas`, `Evaluacion.reconstruir()` reescrito para hacer replay real
+del stream completo (antes solo leía el primer evento), evento `RespuestaRegistrada`
+repetible, `RegistrarRespuestaUseCase`, endpoint `POST /evaluaciones/{id}/respuestas`
+(INV-AE-07/08/12). Fix de CBO en `Evaluacion` (11→10), mismo patrón de CRITICAL en pre-push ya
+visto en Incrementos 2 y en `US-3.1.3`.
+**US-3.2.2** (Estudiante suspende y reanuda su evaluación) cerrada 2026-08-27, PR
+[#157](https://github.com/vvalotto/cognion/pull/157) mergeado a `develop`, Issue
+[#156](https://github.com/vvalotto/cognion/issues/156):
+`Evaluacion.validar_para_suspender()`/`validar_para_reanudar()` (INV-AE-11/12, separación
+validación/mutación), `_aplicar_evento` como dispatch por `event_type` en `reconstruir()` (en
+vez de asumir que todo evento posterior al primero es `RespuestaRegistrada`), eventos
+`EvaluacionSuspendida`/`EvaluacionReanudada` (el primero con campo `actor`, reutilizado luego
+por `US-3.2.4`), endpoints `POST /evaluaciones/{id}/suspender` y `/reanudar`.
+**US-3.2.3** (Estudiante finaliza su evaluación y ve la revisión completa) cerrada 2026-08-27,
+PR [#160](https://github.com/vvalotto/cognion/pull/160) mergeado a `develop`, Issue
+[#158](https://github.com/vvalotto/cognion/issues/158):
+`Evaluacion.validar_para_finalizar()` (único rechazo: ya `Finalizada` — finalizar siempre debe
+poder hacerse, sin validación de período), `Evaluacion.respuesta_vigente_de(pregunta_id)`
+(INV-AE-09, `confirmada_en` más reciente por pregunta), evento `EvaluacionFinalizada` (mismo
+shape que `EvaluacionSuspendida`, con `actor`), endpoints `POST /evaluaciones/{id}/finalizar` y
+`GET /evaluaciones/{id}/revision`.
+**US-3.2.4** (`VerificadorDeVencimientos` — suspensión y finalización automáticas, técnica)
+cerrada 2026-08-27, PR [#161](https://github.com/vvalotto/cognion/pull/161) mergeado a
+`develop`, Issue [#159](https://github.com/vvalotto/cognion/issues/159),
+`docs/reports/inc3/US-3.2.4-report.md`: extiende `SuspenderEvaluacionUseCase`/
+`FinalizarEvaluacionUseCase` con `actor="sistema"` (no-op silencioso e idempotente sobre
+`EvaluacionYaSuspendida`/`EvaluacionYaFinalizada`) en vez de duplicar lógica —
+`VerificarVencimientosUseCase` orquesta Regla 1 (inactividad, umbral 15 min) y Regla 2
+(vencimiento de período) reutilizando ambos Use Case sin comando ni evento propio. Read model
+de evaluaciones activas (`EvaluacionActivaQueryPort`/`SQLAlchemyEvaluacionActivaQueryRepository`)
+implementado como query de lectura sobre la tabla `events` existente, no como proyección
+sincronizada — decisión confirmada con Víctor para evitar tocar Use Case ya cerrados; válida a
+esta escala (30-60 alumnos), documentada como reversible si el volumen cambia. Background task
+`asyncio` en el `lifespan` de FastAPI, cadencia 120s configurable
+(`verificador_vencimientos_cadencia_segundos`). 599/599 tests (unit + integration + BDD),
+quality gates APROBADO (pylint 9.74/10, CC máx 6, MI mín 67.11, coverage 100%). **Cierra
+completa la Iteración 2 del Incremento 3 (backend):** a partir de esta US ninguna `Evaluacion`
+puede quedar indefinidamente `EnCurso` sin actividad ni sobrevivir pasivamente al cierre del
+período de su actividad. Nota dejada para `US-3.3.1`: al implementar
+`ModificarPeriodoDisponibilidad`, la Regla 2 deberá reconstruir el stream completo de
+`ActividadEvaluativaPeriodoAbierto` en vez de leer solo el primer evento.
+
+**Próximo paso:** Iteración 3 del Incremento 3 — RF-11b: `US-3.3.1` (Docente
+extiende/acorta el plazo de una actividad vigente) y `US-3.3.2` (Docente cierra una actividad
+manualmente, reutilizando `FinalizarEvaluacionUseCase` con `actor="sistema"` para la cascada
+síncrona). Crear Issues y specs `docs/specs/inc3/US-3.3.*.md` antes de implementar, mismo
+flujo que Iteraciones 1 y 2.
 **Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
 (frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
 a fin, docente extiende el plazo de una sesión activa).
