@@ -239,7 +239,16 @@ Case que hasta `US-3.2.4` leían `fecha_apertura`/`fecha_cierre`/`cantidad_pregu
 del primer evento del stream (`IniciarEvaluacion`, `RegistrarRespuesta`, `ReanudarEvaluacion`, y
 la Regla 2 del `VerificadorDeVencimientos`) pasan a usar `reconstruir()`, para que una extensión
 o acortamiento del plazo sea visible en el resto del BC. `CerrarActividad` (INV-AE-04b, Regla 3)
-sigue pendiente de `US-3.3.2`.
+implementada en `US-3.3.2` (nota abajo, §6b) — cierra la Iteración 3 del Incremento 3 (backend).
+
+**Nota de implementación (`US-3.3.2`, 2026-08-28):** `CerrarActividad` implementada —
+tercer evento posible del stream (`ActividadEvaluativaCerrada`), rama nueva en `_aplicar_evento`
+(`cerrada_manualmente = True`) y `validar_para_cerrar()` (INV-AE-04b, sin otra restricción: a
+diferencia de INV-AE-04 no requiere ausencia de `Evaluacion` activas). La cascada síncrona
+(Regla 3, §6b) vive en `CerrarActividadUseCase`: emite el evento y, en la misma invocación,
+reutiliza `FinalizarEvaluacionUseCase` con `actor="sistema"` (mecanismo introducido en
+`US-3.2.4`) por cada `Evaluacion` activa de la actividad, sin esperar la próxima pasada del job
+periódico.
 
 ### `Evaluacion` (Aggregate Root)
 
@@ -421,9 +430,9 @@ apartan de lo escrito arriba, documentadas en `docs/specs/inc3/US-3.2.4.md`:**
 2. El disparador es un `asyncio.create_task` en el `lifespan` de `src/app.py` (cadencia 120s),
    no un job externo — el proyecto no tiene APScheduler/Celery.
 
-Las Reglas 1 y 2 (`SuspenderEvaluacion`/`FinalizarEvaluacion` con `actor="sistema"`) están
-implementadas tal como se describen arriba. La Regla 3 (cascada síncrona de `CerrarActividad`)
-sigue pendiente de `US-3.3.2` (Iteración 3).
+Las Reglas 1, 2 y 3 (`SuspenderEvaluacion`/`FinalizarEvaluacion` con `actor="sistema"`, y la
+cascada síncrona de `CerrarActividad`) están implementadas tal como se describen arriba —
+Regla 3 en `US-3.3.2` (`CerrarActividadUseCase`), sin diferencias respecto de lo modelado.
 
 ---
 
