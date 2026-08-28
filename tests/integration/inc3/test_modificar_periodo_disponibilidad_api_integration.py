@@ -129,9 +129,7 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
             )
 
         assert response.status_code == 200
-        assert (
-            datetime.fromisoformat(response.json()["fecha_cierre"]) == nueva_fecha_cierre
-        )
+        assert datetime.fromisoformat(response.json()["fecha_cierre"]) == nueva_fecha_cierre
 
     async def test_rechazo_al_acortar_con_evaluacion_en_curso(self, session, docente_headers):
         _estudiante, estudiante_headers = await _crear_estudiante(session)

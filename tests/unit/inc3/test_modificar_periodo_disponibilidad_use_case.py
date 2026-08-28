@@ -9,11 +9,11 @@ from src.actividad_evaluativa.entities.errors import (
     PeriodoInvalido,
 )
 from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion
-from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
     EvaluacionActivaQueryPort,
     EvaluacionActivaResumen,
 )
+from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     AGGREGATE_TYPE,
     ModificarPeriodoDisponibilidadUseCase,

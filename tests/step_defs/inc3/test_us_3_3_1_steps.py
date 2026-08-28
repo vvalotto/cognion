@@ -173,7 +173,11 @@ def evaluacion_suspendida_de_esa_actividad(context):
     context["estudiante_headers"] = headers
 
 
-@when(parsers.parse("el Docente ejecuta ModificarPeriodoDisponibilidad con una nueva_fecha_cierre posterior"))
+@when(
+    parsers.parse(
+        "el Docente ejecuta ModificarPeriodoDisponibilidad con una nueva_fecha_cierre posterior"
+    )
+)
 def modificar_periodo_posterior(context):
     nueva_fecha_cierre = context["cierre"] + timedelta(days=3)
     context["nueva_fecha_cierre"] = nueva_fecha_cierre
@@ -182,7 +186,11 @@ def modificar_periodo_posterior(context):
     )
 
 
-@when(parsers.parse("el Docente ejecuta ModificarPeriodoDisponibilidad con una nueva_fecha_cierre anterior"))
+@when(
+    parsers.parse(
+        "el Docente ejecuta ModificarPeriodoDisponibilidad con una nueva_fecha_cierre anterior"
+    )
+)
 def modificar_periodo_anterior(context):
     nueva_fecha_cierre = context["cierre"] - timedelta(hours=1)
     context["nueva_fecha_cierre"] = nueva_fecha_cierre
