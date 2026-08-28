@@ -93,6 +93,27 @@ class ActividadNoExiste(Exception):
         super().__init__(f"La actividad '{actividad_id}' no existe.")
 
 
+class NoSePuedeAcortarConEvaluacionesActivas(Exception):
+    """`ModificarPeriodoDisponibilidad` acorta el plazo con `Evaluacion` activas (INV-AE-04)."""
+
+    def __init__(self, actividad_id: object) -> None:
+        """Guarda el id de la actividad y arma el mensaje de la excepción."""
+        self.actividad_id = actividad_id
+        super().__init__(
+            f"No se puede acortar el plazo de la actividad '{actividad_id}': hay evaluaciones "
+            "EnCurso o Suspendida en este momento."
+        )
+
+
+class ActividadYaCerrada(Exception):
+    """La actividad ya fue cerrada manualmente — terminal (INV-AE-04b)."""
+
+    def __init__(self, actividad_id: object) -> None:
+        """Guarda el id de la actividad y arma el mensaje de la excepción."""
+        self.actividad_id = actividad_id
+        super().__init__(f"La actividad '{actividad_id}' ya fue cerrada manualmente.")
+
+
 class EstudianteNoExiste(Exception):
     """`estudiante_id` no corresponde a ningún `Usuario` con rol Estudiante en BC Identidad."""
 

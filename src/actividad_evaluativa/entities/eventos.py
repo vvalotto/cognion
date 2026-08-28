@@ -29,6 +29,19 @@ class ActividadEvaluativaCreada:
 
 
 @dataclass(frozen=True)
+class PeriodoDisponibilidadModificado:
+    """Se modificó `fecha_cierre` de una actividad vigente (RF-11b, `US-3.3.1`).
+
+    Segundo evento posible del stream de `ActividadEvaluativaPeriodoAbierto` — hasta esta US
+    el aggregate nunca tenía más de un evento (`ActividadEvaluativaCreada`).
+    """
+
+    actividad_id: UUID
+    nueva_fecha_cierre: datetime
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
 class EvaluacionIniciada:
     """Se fijó el set de preguntas de un Estudiante — primer evento del stream de `Evaluacion`.
 

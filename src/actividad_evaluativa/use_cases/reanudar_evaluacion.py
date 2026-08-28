@@ -5,6 +5,9 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.entities.errors import EvaluacionNoExiste, FueraDePeriodo
 from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion, Evaluacion
 from src.actividad_evaluativa.entities.eventos import EvaluacionReanudada
@@ -45,9 +48,9 @@ class ReanudarEvaluacionUseCase:
         eventos_actividad = await self._event_store.load(
             AGGREGATE_TYPE_ACTIVIDAD, evaluacion.actividad_id
         )
-        actividad = eventos_actividad[0].payload
-        fecha_apertura = datetime.fromisoformat(actividad["fecha_apertura"])
-        fecha_cierre = datetime.fromisoformat(actividad["fecha_cierre"])
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(eventos_actividad)
+        fecha_apertura = actividad.fecha_apertura
+        fecha_cierre = actividad.fecha_cierre
 
         ahora = datetime.now(UTC)
         if ahora < fecha_apertura or ahora > fecha_cierre:

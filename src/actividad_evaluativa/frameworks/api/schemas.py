@@ -31,6 +31,12 @@ class ActividadResponse(BaseModel):
     cerrada_manualmente: bool
 
 
+class ModificarPeriodoDisponibilidadRequest(BaseModel):
+    """Body de la request de modificación del período de disponibilidad (US-3.3.1, RF-11b)."""
+
+    nueva_fecha_cierre: datetime
+
+
 class IniciarEvaluacionRequest(BaseModel):
     """Body de la request de inicio de evaluación — `estudiante_id` sale del JWT, no del body."""
 

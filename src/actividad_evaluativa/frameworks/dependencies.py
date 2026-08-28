@@ -43,6 +43,9 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 )
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
+    ModificarPeriodoDisponibilidadUseCase,
+)
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
@@ -73,8 +76,10 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
     materia_consulta = MateriaConsultaPortInProcess(session)
     pregunta_consulta = PreguntaConsultaPortInProcess(session)
     event_store = SQLAlchemyEventStore(session)
+    evaluacion_activa_query = SQLAlchemyEvaluacionActivaQueryRepository(session)
     return ActividadesController(
-        CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store)
+        CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
+        ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query),
     )
 
 

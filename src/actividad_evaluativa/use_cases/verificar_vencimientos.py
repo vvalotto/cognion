@@ -11,6 +11,9 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion
 from src.actividad_evaluativa.entities.ports.evaluacion_activa_query_port import (
     EvaluacionActivaQueryPort,
@@ -103,16 +106,15 @@ class VerificarVencimientosUseCase:
     async def _fecha_cierre_de(
         self, actividad_id: UUID, cache_fecha_cierre: dict[UUID, datetime]
     ) -> datetime:
-        """Lee `fecha_cierre` del stream de la actividad, cacheado por corrida.
+        """Lee `fecha_cierre` vigente del stream de la actividad, cacheado por corrida.
 
-        `ModificarPeriodoDisponibilidad`/`CerrarActividad` (`US-3.3.1`/`US-3.3.2`, Iteración 3)
-        todavía no existen — el stream de cada actividad tiene un único evento
-        (`ActividadEvaluativaCreada`) hasta que esas US lo extiendan, así que alcanza con leer
-        el primero.
+        Reconstruye el stream completo (`US-3.3.1` agrega `PeriodoDisponibilidadModificado`
+        como segundo evento posible) — leer solo el primero, como hasta antes de `US-3.3.1`,
+        ignoraría una extensión/acortamiento del plazo aplicado después de crear la actividad.
         """
         if actividad_id in cache_fecha_cierre:
             return cache_fecha_cierre[actividad_id]
         eventos = await self._event_store.load(AGGREGATE_TYPE_ACTIVIDAD, actividad_id)
-        fecha_cierre = datetime.fromisoformat(eventos[0].payload["fecha_cierre"])
-        cache_fecha_cierre[actividad_id] = fecha_cierre
-        return fecha_cierre
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(eventos)
+        cache_fecha_cierre[actividad_id] = actividad.fecha_cierre
+        return actividad.fecha_cierre
