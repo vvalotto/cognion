@@ -369,11 +369,48 @@ período de su actividad. Nota dejada para `US-3.3.1`: al implementar
 `ModificarPeriodoDisponibilidad`, la Regla 2 deberá reconstruir el stream completo de
 `ActividadEvaluativaPeriodoAbierto` en vez de leer solo el primer evento.
 
-**Próximo paso:** Iteración 3 del Incremento 3 — RF-11b: `US-3.3.1` (Docente
-extiende/acorta el plazo de una actividad vigente) y `US-3.3.2` (Docente cierra una actividad
-manualmente, reutilizando `FinalizarEvaluacionUseCase` con `actor="sistema"` para la cascada
-síncrona). Crear Issues y specs `docs/specs/inc3/US-3.3.*.md` antes de implementar, mismo
-flujo que Iteraciones 1 y 2.
+**Iteración 3 del Incremento 3 — RF-11b, cerrada 2026-08-28** (backend únicamente, mismo
+criterio de diferir frontend a la Iteración 4).
+**US-3.3.1** (Docente extiende, o intenta acortar, el plazo de una actividad vigente) cerrada
+2026-08-28, PR [#165](https://github.com/vvalotto/cognion/pull/165) mergeado a `develop`, Issue
+[#163](https://github.com/vvalotto/cognion/issues/163):
+`ModificarPeriodoDisponibilidadUseCase`, evento `PeriodoDisponibilidadModificado` (segundo
+evento posible del stream de `ActividadEvaluativaPeriodoAbierto`, que hasta acá siempre tenía
+uno solo), primer `ActividadEvaluativaPeriodoAbierto.reconstruir()` real (mismo patrón de
+dispatch por `event_type` que `Evaluacion.reconstruir()`, `US-3.2.2`). Consecuencia obligatoria:
+los 4 Use Case que leían `eventos[0].payload` directamente (`IniciarEvaluacion`,
+`RegistrarRespuesta`, `ReanudarEvaluacion`, Regla 2 del `VerificadorDeVencimientos`) pasan a usar
+`reconstruir()`. Endpoint `PATCH /actividades/{id}/periodo` (rol `docente`). El escenario BDD de
+`ActividadYaCerrada` quedó diferido a `US-3.3.2` — su precondición (`cerrada_manualmente = true`)
+todavía no existía. 138/138 tests unit, 67/67 integration, 6/6 BDD del BC, quality gates
+APROBADO (pylint 9.71/10, CC máx 7, MI mín 60.40, coverage 100%).
+**US-3.3.2** (Docente cierra una actividad manualmente antes de tiempo) cerrada 2026-08-28, PR
+[#166](https://github.com/vvalotto/cognion/pull/166) mergeado a `develop`, Issue
+[#164](https://github.com/vvalotto/cognion/issues/164): `CerrarActividadUseCase` — tercer
+evento del stream (`ActividadEvaluativaCerrada`), `validar_para_cerrar()` (INV-AE-04b) —
+implementa la Regla 3 del `VerificadorDeVencimientos` como cascada síncrona dentro del propio
+Use Case, reutilizando `FinalizarEvaluacionUseCase` con `actor="sistema"` (mecanismo de
+`US-3.2.4`) sin cambios en ese Use Case. Endpoint `POST /actividades/{id}/cerrar` (rol
+`docente`, sin body). Verificó end-to-end el escenario BDD diferido de `US-3.3.1`
+(`ModificarPeriodoDisponibilidad` sobre actividad ya cerrada) sin requerir cambios de código
+adicionales. 147/147 tests unit, 74/74 integration, 6/6 BDD del BC, quality gates APROBADO
+(pylint 9.70/10, CC máx 7, MI mín 60.40, coverage 100%). **Cierra completa la Iteración 3 del
+Incremento 3 (backend)** — las Reglas 1, 2 y 3 del `VerificadorDeVencimientos` quedan
+implementadas sin desviaciones respecto de lo modelado en
+`BC-actividad-evaluativa-modelo.md` §6b.
+
+**Detectado durante la Iteración 3:** `tests/step_defs/inc3/test_us_3_2_1_steps.py::
+test_rechazo_fuera_del_período_vigente` falla de forma determinística en este entorno por una
+ventana de tiempo demasiado ajustada (~1s) entre la creación de la actividad y el
+`IniciarEvaluacion` vía HTTP en el propio setup del test — confirmado que no es una regresión de
+ninguna US de esta iteración (falla igual en `develop` limpio antes de estos cambios). Reportado
+como chip aparte (`task_471c8a04`), no bloquea el avance.
+
+**Próximo paso:** Iteración 4 del Incremento 3 — frontend, consume las Iteraciones 1 a 3 de una
+sola vez (`US-3.4.1` a `US-3.4.7`, `docs/plans/inc3/inc3-candidatas.md`). Gate de diseño UX
+obligatorio antes de tocar `frontend/` — verificar contra
+`docs/design/ux/wireframes-actividad-evaluativa.md` (aprobado en `US-3.0.2`) antes de escribir
+código. Crear Issues y specs `docs/specs/inc3/US-3.4.*.md` antes de implementar.
 **Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
 (frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
 a fin, docente extiende el plazo de una sesión activa).
