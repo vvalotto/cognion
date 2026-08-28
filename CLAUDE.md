@@ -406,15 +406,39 @@ ventana de tiempo demasiado ajustada (~1s) entre la creación de la actividad y 
 ninguna US de esta iteración (falla igual en `develop` limpio antes de estos cambios). Reportado
 como chip aparte (`task_471c8a04`), no bloquea el avance.
 
-**Próximo paso:** Iteración 4 del Incremento 3 — frontend, consume las Iteraciones 1 a 3 de una
-sola vez (`US-3.4.1` a `US-3.4.7`, `docs/plans/inc3/inc3-candidatas.md`). Gate de diseño UX
-obligatorio antes de tocar `frontend/` — verificar contra
-`docs/design/ux/wireframes-actividad-evaluativa.md` (aprobado en `US-3.0.2`) antes de escribir
-código. Crear Issues y specs `docs/specs/inc3/US-3.4.*.md` antes de implementar.
+**Sesión de métricas de proceso y fix de CodeGuard (2026-08-28), posterior al cierre de la
+Iteración 3:** análisis estadístico del tiempo de `/implement-us` sobre las 47 US
+implementadas hasta la fecha (media 40.3 min, mediana 35.4 min, sin correlación con story
+points — Pearson r=0.035; la iteración de ajuste `SP-ADJ-01` casi duplica el promedio de
+cualquier otra iteración), publicado como artifact y guardado en
+`quality/reports/metricas/implement-us-tiempos.{html,json}` (carpeta nueva). A partir de ahí,
+análisis estadístico de los reportes de CodeGuard detectó que solo 13/47 US tenían reporte
+guardado y que 10 de esos 13 estaban parciales (3 de 9 checks) sin ninguna señal de ello:
+`codeguard` sin `--analysis-type` explícito cae en el default `pre-commit`, que por diseño
+filtra los checks con `priority > 3` (`DeadCode`/`Maintainability`/`Pylint`/`Spelling`/
+`Types`/`UnusedImports`), y `summary.checks_executed` del JSON cuenta los checks
+*descubiertos*, no los ejecutados — reportado upstream en
+[`vvalotto/software_limpio#71`](https://github.com/vvalotto/software_limpio/issues/71).
+Fix de proceso (sin backfill retroactivo, decisión explícita) en
+[PR #168](https://github.com/vvalotto/cognion/pull/168), rama `fix/codeguard-analysis-type-full`,
+**abierto, pendiente de merge**: `--analysis-type full` obligatorio en el comando de Fase 7
+(el hook de pre-commit sigue rápido, sin tocar), gate de verificación que bloquea Fase 7 si
+el reporte queda parcial, y desglose por check (`codeguard.checks` en `quality.json` + tabla
+"Detalle de CodeGuard" en `.claude/templates/reporting/implementation-report.md`) para que el
+reporte final de cada US muestre no solo el conteo agregado sino qué encontró cada uno de los
+9 checks. Aplica desde la próxima US que corra `/implement-us` — las 47 ya cerradas no se
+tocan.
+
+**Próximo paso:** mergear PR #168 a `develop`, y luego continuar con la Iteración 4 del
+Incremento 3 — frontend, consume las Iteraciones 1 a 3 de una sola vez (`US-3.4.1` a
+`US-3.4.7`, `docs/plans/inc3/inc3-candidatas.md`). Gate de diseño UX obligatorio antes de
+tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
+(aprobado en `US-3.0.2`) antes de escribir código. Crear Issues y specs
+`docs/specs/inc3/US-3.4.*.md` antes de implementar.
 **Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
 (frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
 a fin, docente extiende el plazo de una sesión activa).
-**Branch activo:** `develop`.
+**Branch activo:** `fix/codeguard-analysis-type-full` (PR #168 abierto contra `develop`).
 
 ---
 
