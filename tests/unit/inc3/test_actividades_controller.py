@@ -6,9 +6,11 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import Materi
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
 )
+from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
@@ -30,6 +32,9 @@ def _controller(event_store: FakeEventStore | None = None) -> ActividadesControl
     return ActividadesController(
         CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
         ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
+        CerrarActividadUseCase(
+            event_store, FakeEvaluacionActivaQueryPort(), FinalizarEvaluacionUseCase(event_store)
+        ),
     )
 
 
@@ -44,6 +49,11 @@ class TestActividadesController:
         controller = ActividadesController(
             CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
             ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
+            CerrarActividadUseCase(
+                event_store,
+                FakeEvaluacionActivaQueryPort(),
+                FinalizarEvaluacionUseCase(event_store),
+            ),
         )
         apertura = datetime.now(UTC)
         cierre = apertura + timedelta(days=7)
@@ -68,3 +78,14 @@ class TestActividadesController:
         )
 
         assert actividad.fecha_cierre == nueva_fecha_cierre
+
+    async def test_cerrar_actividad_delega_al_use_case(self):
+        event_store = FakeEventStore()
+        apertura = datetime.now(UTC)
+        cierre = apertura + timedelta(days=7)
+        actividad_id = await _crear_actividad(event_store, apertura, cierre)
+        controller = _controller(event_store)
+
+        actividad = await controller.cerrar_actividad(actividad_id)
+
+        assert actividad.cerrada_manualmente is True
