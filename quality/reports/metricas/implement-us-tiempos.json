@@ -1,0 +1,606 @@
+{
+  "summary": {
+    "n": 47,
+    "mean": 40.3,
+    "median": 35.4,
+    "stdev": 20.5,
+    "min": 12.2,
+    "max": 100.9,
+    "q1": 26.1,
+    "q3": 53.0,
+    "total_h": 31.6,
+    "min_id": "US-3.0.2",
+    "max_id": "US-2.1.2"
+  },
+  "us": [
+    {
+      "id": "US-1.1.0",
+      "title": "Administrador da de alta cuentas de usuario, crea una comisión y asigna docentes",
+      "points": 5,
+      "seconds": 4527,
+      "start": "2026-07-21T14:00:20.621753+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter1"
+    },
+    {
+      "id": "US-1.1.1",
+      "title": "Docente genera link de invitación para una comisión",
+      "points": 3,
+      "seconds": 3336,
+      "start": "2026-07-22T14:28:32.536554+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter1"
+    },
+    {
+      "id": "US-1.1.2",
+      "title": "Estudiante se registra con un link de invitación válido",
+      "points": 5,
+      "seconds": 1983,
+      "start": "2026-07-23T13:19:56.235121+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter1"
+    },
+    {
+      "id": "US-1.1.3",
+      "title": "Estudiante intenta registrarse con link vencido o inválido",
+      "points": 3,
+      "seconds": 923,
+      "start": "2026-07-23T19:03:55.128465+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter1"
+    },
+    {
+      "id": "US-1.1.4",
+      "title": "Docente, administrador y estudiante se autentican y reciben un JWT con su rol",
+      "points": 5,
+      "seconds": 1701,
+      "start": "2026-07-23T20:07:13.937415+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter1"
+    },
+    {
+      "id": "US-1.1.5",
+      "title": "El sistema restringe el acceso a funcionalidades según el rol del usuario autenticado",
+      "points": 5,
+      "seconds": 2121,
+      "start": "2026-07-24T11:37:04.862612+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter1"
+    },
+    {
+      "id": "US-1.1.6",
+      "title": "Infraestructura de frontend — routing, cliente API y manejo de sesión",
+      "points": 3,
+      "seconds": 2423,
+      "start": "2026-07-24T14:57:12.651355+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter2"
+    },
+    {
+      "id": "US-1.1.7",
+      "title": "Docente/Administrador/Estudiante inicia sesion desde la UI",
+      "points": 3,
+      "seconds": 1476,
+      "start": "2026-07-27T13:49:31.152546+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter2"
+    },
+    {
+      "id": "US-1.1.8",
+      "title": "Estudiante se registra desde la UI con link de invitación",
+      "points": 3,
+      "seconds": 1782,
+      "start": "2026-07-28T21:10:16.827824+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter2"
+    },
+    {
+      "id": "US-1.1.9",
+      "title": "Administrador da de alta un Docente desde la UI",
+      "points": 3,
+      "seconds": 1568,
+      "start": "2026-07-29T12:55:01.918646+00:00",
+      "inc": "Inc1",
+      "iter": "Inc1-Iter2"
+    },
+    {
+      "id": "US-2.1.1",
+      "title": "Docente da de alta una materia y su banco de preguntas",
+      "points": 3,
+      "seconds": 3046,
+      "start": "2026-08-02T19:39:26.851237+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.2",
+      "title": "Comisión referencia Materia por puerto (refactor técnico)",
+      "points": 3,
+      "seconds": 6052,
+      "start": "2026-08-05T14:00:21.666918+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.3",
+      "title": "Docente carga una pregunta de opción múltiple",
+      "points": 5,
+      "seconds": 2940,
+      "start": "2026-08-06T20:31:59.946057+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.4",
+      "title": "Docente carga una pregunta de Verdadero/Falso",
+      "points": 3,
+      "seconds": 3506,
+      "start": "2026-08-08T13:03:59.551321+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.5",
+      "title": "Docente edita una pregunta existente",
+      "points": 3,
+      "seconds": 2442,
+      "start": "2026-08-12T12:06:44.702999+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.6",
+      "title": "Docente elimina (baja lógica) una pregunta",
+      "points": 3,
+      "seconds": 2132,
+      "start": "2026-08-12T18:45:12.693403+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.7",
+      "title": "Docente filtra el banco por materia, unidad, tema, dificultad e importancia",
+      "points": 3,
+      "seconds": 1601,
+      "start": "2026-08-13T11:26:18.443852+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.8",
+      "title": "Infraestructura de frontend del Banco de Preguntas",
+      "points": 3,
+      "seconds": 1452,
+      "start": "2026-08-14T14:48:22.675773+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.9",
+      "title": "Docente ve el listado de materias y da de alta una nueva",
+      "points": 5,
+      "seconds": 2151,
+      "start": "2026-08-14T15:24:37.066740+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.10",
+      "title": "Docente ve y filtra el banco de preguntas de una materia",
+      "points": 3,
+      "seconds": 1325,
+      "start": "2026-08-16T18:34:56.809095+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.11",
+      "title": "Docente carga una pregunta eligiendo su tipo",
+      "points": 3,
+      "seconds": 2031,
+      "start": "2026-08-16T19:24:02.584500+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.12",
+      "title": "Docente edita una pregunta existente desde la UI",
+      "points": 3,
+      "seconds": 2462,
+      "start": "2026-08-16T21:08:45.158809+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.1.13",
+      "title": "Docente elimina una pregunta desde la UI, con confirmación previa",
+      "points": 2,
+      "seconds": 1009,
+      "start": "2026-08-17T12:19:41.892116+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter1"
+    },
+    {
+      "id": "US-2.2.1",
+      "title": "Bloqueo automático de cuenta por 3 intentos fallidos consecutivos de login",
+      "points": 3,
+      "seconds": 1524,
+      "start": "2026-08-19T13:24:45.265208+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.2",
+      "title": "Administrador ve el listado de cuentas, filtra por rol/estado/búsqueda",
+      "points": 3,
+      "seconds": 1910,
+      "start": "2026-08-19T18:39:31.032350+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.3",
+      "title": "Administrador ve el detalle de una cuenta",
+      "points": 2,
+      "seconds": 1612,
+      "start": "2026-08-19T20:56:05.031479+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.4",
+      "title": "Administrador resetea la contraseña de una cuenta",
+      "points": 2,
+      "seconds": 1685,
+      "start": "2026-08-20T10:54:31.921857+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.5",
+      "title": "Usuario autenticado cambia su propia contraseña",
+      "points": 2,
+      "seconds": 3990,
+      "start": "2026-08-20T13:12:47.055540+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.6",
+      "title": "Administrador ve y filtra el listado de cuentas (UI)",
+      "points": 3,
+      "seconds": 3238,
+      "start": "2026-08-20T14:30:10.606998+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.7",
+      "title": "Administrador ve el detalle de una cuenta y resetea/desbloquea (UI)",
+      "points": 3,
+      "seconds": 974,
+      "start": "2026-08-20T15:29:47.623112+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.8",
+      "title": "Cualquier usuario autenticado cambia su propia contraseña (UI)",
+      "points": 3,
+      "seconds": 4379,
+      "start": "2026-08-20T20:50:22.465243+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-2.2.9",
+      "title": "Login refleja el estado de cuenta bloqueada (UI)",
+      "points": 2,
+      "seconds": 2151,
+      "start": "2026-08-21T11:12:36.391486+00:00",
+      "inc": "Inc2",
+      "iter": "Inc2-Iter2"
+    },
+    {
+      "id": "US-ADJ-01",
+      "title": "Alinear visualmente Banco de Preguntas con el prototipo",
+      "points": 3,
+      "seconds": 3561,
+      "start": "2026-08-22T11:57:32.945105+00:00",
+      "inc": "SP-ADJ",
+      "iter": "SP-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-03",
+      "title": "Paginar el listado del banco de preguntas",
+      "points": 5,
+      "seconds": 5617,
+      "start": "2026-08-22T17:06:22.228754+00:00",
+      "inc": "SP-ADJ",
+      "iter": "SP-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-04",
+      "title": "Alinear visualmente Cuentas/Contraseñas con el prototipo",
+      "points": 3,
+      "seconds": 4827,
+      "start": "2026-08-22T18:57:43.948245+00:00",
+      "inc": "SP-ADJ",
+      "iter": "SP-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-05",
+      "title": "Paginar el listado de cuentas",
+      "points": 4,
+      "seconds": 3831,
+      "start": "2026-08-22T20:25:30.059880+00:00",
+      "inc": "SP-ADJ",
+      "iter": "SP-ADJ-01"
+    },
+    {
+      "id": "US-3.0.1",
+      "title": "Event storming BC Actividad Evaluativa",
+      "points": 3,
+      "seconds": 3177,
+      "start": "2026-08-25T11:04:57.413091+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter0"
+    },
+    {
+      "id": "US-3.0.2",
+      "title": "Wireframes del flujo de sesión de período abierto",
+      "points": 3,
+      "seconds": 729,
+      "start": "2026-08-26T10:36:24.091141+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter0"
+    },
+    {
+      "id": "US-3.1.1",
+      "title": "Infraestructura de Event Sourcing + CQRS del BC Actividad Evaluativa",
+      "points": 5,
+      "seconds": 1153,
+      "start": "2026-08-26T13:36:28.555906+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter1"
+    },
+    {
+      "id": "US-3.1.2",
+      "title": "Docente crea una actividad de período abierto",
+      "points": 5,
+      "seconds": 1237,
+      "start": "2026-08-26T18:59:55.751951+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter1"
+    },
+    {
+      "id": "US-3.1.3",
+      "title": "Estudiante inicia su evaluación",
+      "points": 5,
+      "seconds": 2564,
+      "start": "2026-08-26T19:36:14.038612+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter1"
+    },
+    {
+      "id": "US-3.2.1",
+      "title": "Estudiante confirma una respuesta (persistencia atómica)",
+      "points": 5,
+      "seconds": 1750,
+      "start": "2026-08-27T11:19:16.590018+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter2"
+    },
+    {
+      "id": "US-3.2.2",
+      "title": "Estudiante suspende y reanuda su evaluación",
+      "points": 3,
+      "seconds": 1663,
+      "start": "2026-08-27T14:53:44.609331+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter2"
+    },
+    {
+      "id": "US-3.2.3",
+      "title": "Estudiante finaliza su evaluación y ve la revisión completa",
+      "points": 5,
+      "seconds": 2347,
+      "start": "2026-08-27T20:15:59.340323+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter2"
+    },
+    {
+      "id": "US-3.2.4",
+      "title": "VerificadorDeVencimientos - suspension y finalizacion automaticas",
+      "points": 5,
+      "seconds": 2142,
+      "start": "2026-08-27T21:11:24.412602+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter2"
+    },
+    {
+      "id": "US-3.3.1",
+      "title": "Docente extiende o intenta acortar el plazo de una actividad vigente",
+      "points": 5,
+      "seconds": 2057,
+      "start": "2026-08-28T13:26:24.883499+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter3"
+    },
+    {
+      "id": "US-3.3.2",
+      "title": "Docente cierra una actividad manualmente antes de tiempo",
+      "points": 5,
+      "seconds": 1503,
+      "start": "2026-08-28T14:16:25.436987+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter3"
+    }
+  ],
+  "phases": [
+    {
+      "name": "Validación de Contexto",
+      "total_min": 57.3,
+      "n": 26,
+      "avg_min": 2.2
+    },
+    {
+      "name": "Escenarios BDD",
+      "total_min": 93.1,
+      "n": 44,
+      "avg_min": 2.12
+    },
+    {
+      "name": "Plan de Implementación",
+      "total_min": 197.1,
+      "n": 46,
+      "avg_min": 4.28
+    },
+    {
+      "name": "Implementación",
+      "total_min": 419.1,
+      "n": 43,
+      "avg_min": 9.75
+    },
+    {
+      "name": "Tests Unitarios",
+      "total_min": 148.0,
+      "n": 45,
+      "avg_min": 3.29
+    },
+    {
+      "name": "Tests de Integración",
+      "total_min": 92.3,
+      "n": 43,
+      "avg_min": 2.15
+    },
+    {
+      "name": "Validación BDD",
+      "total_min": 131.4,
+      "n": 44,
+      "avg_min": 2.99
+    },
+    {
+      "name": "Quality Gates",
+      "total_min": 224.2,
+      "n": 45,
+      "avg_min": 4.98
+    },
+    {
+      "name": "Documentación",
+      "total_min": 186.2,
+      "n": 42,
+      "avg_min": 4.43
+    },
+    {
+      "name": "Reporte Final",
+      "total_min": 36.4,
+      "n": 45,
+      "avg_min": 0.81
+    }
+  ],
+  "iterations": [
+    {
+      "iter": "Inc1-Iter1",
+      "inc": "Inc1",
+      "n": 6,
+      "mean": 40.5,
+      "median": 34.2,
+      "total": 243.2
+    },
+    {
+      "iter": "Inc1-Iter2",
+      "inc": "Inc1",
+      "n": 4,
+      "mean": 30.2,
+      "median": 27.9,
+      "total": 120.8
+    },
+    {
+      "iter": "Inc2-Iter1",
+      "inc": "Inc2",
+      "n": 13,
+      "mean": 41.2,
+      "median": 35.9,
+      "total": 535.8
+    },
+    {
+      "iter": "Inc2-Iter2",
+      "inc": "Inc2",
+      "n": 9,
+      "mean": 39.7,
+      "median": 31.8,
+      "total": 357.7
+    },
+    {
+      "iter": "Inc3-Iter0",
+      "inc": "Inc3",
+      "n": 2,
+      "mean": 32.6,
+      "median": 32.6,
+      "total": 65.1
+    },
+    {
+      "iter": "Inc3-Iter1",
+      "inc": "Inc3",
+      "n": 3,
+      "mean": 27.5,
+      "median": 20.6,
+      "total": 82.6
+    },
+    {
+      "iter": "Inc3-Iter2",
+      "inc": "Inc3",
+      "n": 4,
+      "mean": 32.9,
+      "median": 32.4,
+      "total": 131.7
+    },
+    {
+      "iter": "Inc3-Iter3",
+      "inc": "Inc3",
+      "n": 2,
+      "mean": 29.7,
+      "median": 29.7,
+      "total": 59.3
+    },
+    {
+      "iter": "SP-ADJ-01",
+      "inc": "SP-ADJ",
+      "n": 4,
+      "mean": 74.3,
+      "median": 72.2,
+      "total": 297.3
+    }
+  ],
+  "increments": [
+    {
+      "inc": "Inc1",
+      "n": 10,
+      "mean": 36.4,
+      "median": 31.4,
+      "total": 364.0
+    },
+    {
+      "inc": "Inc2",
+      "n": 22,
+      "mean": 40.6,
+      "median": 35.7,
+      "total": 893.5
+    },
+    {
+      "inc": "SP-ADJ",
+      "n": 4,
+      "mean": 74.3,
+      "median": 72.2,
+      "total": 297.3
+    },
+    {
+      "inc": "Inc3",
+      "n": 11,
+      "mean": 30.8,
+      "median": 29.2,
+      "total": 338.7
+    }
+  ]
+}
