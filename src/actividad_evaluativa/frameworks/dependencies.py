@@ -38,6 +38,7 @@ from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_contro
 from src.actividad_evaluativa.interface_adapters.controllers.revision_controller import (
     RevisionController,
 )
+from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
@@ -80,6 +81,9 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
     return ActividadesController(
         CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
         ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query),
+        CerrarActividadUseCase(
+            event_store, evaluacion_activa_query, FinalizarEvaluacionUseCase(event_store)
+        ),
     )
 
 

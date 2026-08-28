@@ -98,6 +98,15 @@ class ActividadEvaluativaPeriodoAbierto:
         if acorta and hay_evaluaciones_activas:
             raise NoSePuedeAcortarConEvaluacionesActivas(self.id)
 
+    def validar_para_cerrar(self) -> None:
+        """Valida INV-AE-04b antes de emitir `ActividadEvaluativaCerrada`.
+
+        Sin otra restricción: cerrar con `Evaluacion` activas es justamente el caso de uso
+        (Regla 3 del `VerificadorDeVencimientos`, cascada síncrona a cargo del Use Case).
+        """
+        if self.cerrada_manualmente:
+            raise ActividadYaCerrada(self.id)
+
 
 def _aplicar_evento(actividad: ActividadEvaluativaPeriodoAbierto, evento: EventoAlmacenado) -> None:
     """Aplica un evento del stream posterior a `ActividadEvaluativaCreada`, según su `event_type`.
@@ -107,3 +116,5 @@ def _aplicar_evento(actividad: ActividadEvaluativaPeriodoAbierto, evento: Evento
     """
     if evento.event_type == "PeriodoDisponibilidadModificado":
         actividad.fecha_cierre = datetime.fromisoformat(evento.payload["nueva_fecha_cierre"])
+    elif evento.event_type == "ActividadEvaluativaCerrada":
+        actividad.cerrada_manualmente = True

@@ -6,6 +6,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
     ActividadYaCerrada,
@@ -29,6 +32,19 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_control
 )
 
 router = APIRouter(prefix="/actividades", tags=["actividad_evaluativa"])
+
+
+def _a_response(actividad: ActividadEvaluativaPeriodoAbierto) -> ActividadResponse:
+    """Arma el `ActividadResponse` — extraído para no repetirlo en cada endpoint."""
+    return ActividadResponse(
+        id=actividad.id,
+        materia_id=actividad.materia_id,
+        fecha_apertura=actividad.fecha_apertura,
+        fecha_cierre=actividad.fecha_cierre,
+        cantidad_preguntas=actividad.cantidad_preguntas,
+        cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
+        cerrada_manualmente=actividad.cerrada_manualmente,
+    )
 
 
 @router.post(
@@ -57,15 +73,7 @@ async def crear_actividad(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return ActividadResponse(
-        id=actividad.id,
-        materia_id=actividad.materia_id,
-        fecha_apertura=actividad.fecha_apertura,
-        fecha_cierre=actividad.fecha_cierre,
-        cantidad_preguntas=actividad.cantidad_preguntas,
-        cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
-        cerrada_manualmente=actividad.cerrada_manualmente,
-    )
+    return _a_response(actividad)
 
 
 @router.patch(
@@ -94,12 +102,26 @@ async def modificar_periodo_disponibilidad(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return ActividadResponse(
-        id=actividad.id,
-        materia_id=actividad.materia_id,
-        fecha_apertura=actividad.fecha_apertura,
-        fecha_cierre=actividad.fecha_cierre,
-        cantidad_preguntas=actividad.cantidad_preguntas,
-        cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
-        cerrada_manualmente=actividad.cerrada_manualmente,
-    )
+    return _a_response(actividad)
+
+
+@router.post(
+    "/{actividad_id}/cerrar",
+    response_model=ActividadResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def cerrar_actividad(
+    actividad_id: UUID,
+    controller: ActividadesController = Depends(get_actividades_controller),
+) -> ActividadResponse:
+    """Cierra manualmente la actividad, finalizando en cascada sus evaluaciones activas (RF-11b)."""
+    try:
+        actividad = await controller.cerrar_actividad(actividad_id)
+    except ActividadNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except ActividadYaCerrada as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_response(actividad)

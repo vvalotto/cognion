@@ -112,6 +112,18 @@ def _evento_modificado(actividad_id, nueva_fecha_cierre: datetime) -> EventoAlma
     )
 
 
+def _evento_cerrada(actividad_id, sequence_number: int = 2) -> EventoAlmacenado:
+    return EventoAlmacenado(
+        sequence_number=sequence_number,
+        event_type="ActividadEvaluativaCerrada",
+        payload={
+            "actividad_id": str(actividad_id),
+            "ocurrido_en": "2026-01-02T00:00:00+00:00",
+        },
+        occurred_at=datetime.now(UTC),
+    )
+
+
 class TestActividadEvaluativaPeriodoAbiertoReconstruir:
     def test_reconstruye_desde_un_unico_evento(self):
         apertura, cierre = _fechas()
@@ -134,6 +146,17 @@ class TestActividadEvaluativaPeriodoAbiertoReconstruir:
 
         assert reconstruida.fecha_cierre == nueva_fecha_cierre
         assert reconstruida.fecha_apertura == apertura
+
+    def test_reconstruye_aplicando_actividad_evaluativa_cerrada(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        reconstruida = ActividadEvaluativaPeriodoAbierto.reconstruir(
+            [_evento_creada(actividad), _evento_cerrada(actividad.id)]
+        )
+
+        assert reconstruida.cerrada_manualmente is True
+        assert reconstruida.fecha_cierre == cierre
 
 
 class TestActividadEvaluativaPeriodoAbiertoValidarParaModificarPeriodo:
@@ -180,3 +203,19 @@ class TestActividadEvaluativaPeriodoAbiertoValidarParaModificarPeriodo:
             actividad.validar_para_modificar_periodo(
                 cierre + timedelta(days=1), hay_evaluaciones_activas=False
             )
+
+
+class TestActividadEvaluativaPeriodoAbiertoValidarParaCerrar:
+    def test_actividad_vigente_se_permite_cerrar(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        actividad.validar_para_cerrar()
+
+    def test_actividad_ya_cerrada_se_rechaza(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+        actividad.cerrada_manualmente = True
+
+        with pytest.raises(ActividadYaCerrada):
+            actividad.validar_para_cerrar()
