@@ -48,8 +48,19 @@ Ejecutar herramientas de análisis estático y validar que todas las métricas d
 >
 > ```bash
 > git diff --name-only --diff-filter=ACMR $(git merge-base develop HEAD) -- '*.py' | grep '^src/' > /tmp/archivos_modificados.txt
-> codeguard $(cat /tmp/archivos_modificados.txt) --format json > quality/reports/codeguard/{US_ID}-codeguard.json
+> codeguard $(cat /tmp/archivos_modificados.txt) --analysis-type full --format json > quality/reports/{US_ID}-codeguard.json
 > ```
+>
+> **`--analysis-type full` es obligatorio, no opcional.** Sin ese flag, `codeguard` usa el
+> default `pre-commit` — que por diseño solo ejecuta los checks con `priority <= 3`
+> (`Security`, `PEP8`, `Complexity`) y omite los otros 6 (`DeadCode`, `Maintainability`,
+> `Pylint`, `Spelling`, `Types`, `UnusedImports`) **sin ninguna señal de que fueron
+> omitidos** — el campo `summary.checks_executed` del JSON cuenta los checks *descubiertos*,
+> no los que corrieron (bug reportado en
+> [`vvalotto/software_limpio#71`](https://github.com/vvalotto/software_limpio/issues/71)).
+> El hook de pre-commit (`.pre-commit-config.yaml`) sí debe seguir en modo `pre-commit`
+> (por eso existe ese modo — rapidez en cada commit); Fase 7 no tiene esa restricción de
+> tiempo y necesita el reporte completo como evidencia de la US.
 >
 > El gate de **coverage** (`pytest --cov={COMPONENT_PATH}`, más abajo) no se acota — sigue
 > midiendo sobre el componente completo del BC, no solo los archivos modificados.
@@ -557,6 +568,7 @@ mkdir -p quality/reports
 
 Antes de avanzar a Fase 8, confirmá que:
 - [ ] `quality/reports/{US_ID}-quality.json` existe con estado `APROBADO`
+- [ ] `quality/reports/{US_ID}-codeguard.json` existe con los 9 checks presentes
 - [ ] Pylint ≥ umbral del perfil activo
 - [ ] CC ≤ umbral del perfil activo
 - [ ] Coverage ≥ umbral del perfil activo
@@ -571,6 +583,25 @@ ls quality/reports/{US_ID}-quality.json
 ```
 
 Si no existe, generalo con los valores reales obtenidos en los pasos anteriores (ver sección "Generar Reporte Consolidado").
+
+Confirmá también que el reporte de `codeguard` existe y **no es parcial** — es decir, que
+corrió en modo `full` y no cayó en el default `pre-commit` (ver nota más arriba):
+
+```bash
+python3 -c "
+import json
+d = json.load(open('quality/reports/{US_ID}-codeguard.json'))
+esperados = {'Security','PEP8','Complexity','DeadCode','Maintainability','Pylint','Spelling','Types','UnusedImports'}
+vistos = {r['check'] for r in d['results']}
+faltantes = esperados - vistos
+if faltantes:
+    raise SystemExit(f'Reporte parcial — faltan checks: {sorted(faltantes)}. Volvé a correr codeguard con --analysis-type full.')
+print('OK — 9/9 checks con resultados en el reporte.')
+"
+```
+
+Si falla, **no avances** — volvé a correr el comando de `codeguard` de la sección anterior con
+`--analysis-type full` explícito y regenerá el archivo.
 
 ---
 
