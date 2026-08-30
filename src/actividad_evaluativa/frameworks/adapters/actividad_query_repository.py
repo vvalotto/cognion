@@ -43,6 +43,32 @@ class SQLAlchemyActividadQueryRepository(ActividadQueryPort):
         conteos = await self._contar_evaluaciones({actividad.id for actividad in actividades})
         return [_a_resumen(actividad, conteos) for actividad in actividades]
 
+    async def obtener(self, actividad_id: UUID) -> ActividadResumen | None:
+        """Reconstruye una única actividad y le suma su conteo de evaluaciones (`US-3.4.4`)."""
+        actividad = await self._cargar_actividad(actividad_id)
+        if actividad is None:
+            return None
+        conteos = await self._contar_evaluaciones({actividad.id})
+        return _a_resumen(actividad, conteos)
+
+    async def _cargar_actividad(
+        self, actividad_id: UUID
+    ) -> ActividadEvaluativaPeriodoAbierto | None:
+        """Reconstruye el stream de una única actividad, o `None` si no tiene eventos."""
+        resultado = await self._session.execute(
+            select(EventoModel)
+            .where(
+                EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD,
+                EventoModel.aggregate_id == actividad_id,
+            )
+            .order_by(EventoModel.sequence_number)
+        )
+        modelos = resultado.scalars().all()
+        if not modelos:
+            return None
+        eventos = [_a_evento_almacenado(modelo) for modelo in modelos]
+        return ActividadEvaluativaPeriodoAbierto.reconstruir(eventos)
+
     async def _cargar_actividades_de_materia(
         self, materia_id: UUID
     ) -> list[ActividadEvaluativaPeriodoAbierto]:

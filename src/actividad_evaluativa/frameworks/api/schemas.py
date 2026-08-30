@@ -48,6 +48,7 @@ class ActividadResumenResponse(BaseModel):
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
     estado: str
+    cerrada_manualmente: bool
     cantidad_evaluaciones_activas: int
     cantidad_evaluaciones_finalizadas: int
 
