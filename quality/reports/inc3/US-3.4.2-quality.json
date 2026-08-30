@@ -1,0 +1,34 @@
+{
+  "us_id": "US-3.4.2",
+  "stack": "backend (Python/FastAPI, perfil clean-architecture-bc) + frontend (React/TypeScript)",
+  "resultados": {
+    "backend": {
+      "pylint": { "score": 9.59, "umbral_min": 8.0 },
+      "radon_cc": { "max_rank": "A", "detalle": "todos los métodos/funciones nuevos rank A (CC <= 5), umbral <= 10" },
+      "radon_mi": { "min_rank": "A", "umbral_min": 20 },
+      "pytest": {
+        "unit_integration_step_defs_inc3": { "tests": 293, "passed": 293, "failed": 0 },
+        "suite_completa": { "tests": 664, "passed": 664, "failed": 0 }
+      },
+      "coverage": {
+        "entities_use_cases_interface_adapters_pct": 100.0,
+        "umbral_min_pct": 95.0,
+        "nota": "frameworks/* excluido de coverage por config de proyecto (pyproject.toml, tool.coverage.run.omit)"
+      },
+      "mypy": { "errores": 0 }
+    },
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 3, "detalle": "warnings preexistentes, no introducidos por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": { "test_files": 30, "tests": 183, "passed": 183, "failed": 0 },
+      "coverage": {
+        "MateriasActividades_y_Actividades_pct": 100.0,
+        "global_statements_pct": 91.57,
+        "global_branches_pct": 81.88,
+        "global_lines_pct": 93.22,
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

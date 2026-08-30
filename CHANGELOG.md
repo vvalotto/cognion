@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-3.4.2] Docente ve sus materias y el listado de actividades de una materia — primera
+  pantalla real de la Iteración 4 del Incremento 3 (backend + frontend)
+  - Gap detectado y resuelto con Víctor: `titulo` (opcional, default `""`) agregado a
+    `ActividadEvaluativaPeriodoAbierto`/evento/Use Case/schemas — el prototipo/wireframe lo
+    pedían pero el dominio no lo tenía; opcional para no romper los fixtures de `US-3.1.2` a
+    `US-3.3.2`
+  - `ActividadQueryPort`/`ActividadResumen` (nuevo), `ListarActividadesUseCase`,
+    `SQLAlchemyActividadQueryRepository` (agrupa `events` en memoria, reutiliza
+    `ActividadEvaluativaPeriodoAbierto.reconstruir()`, cuenta evaluaciones activas y
+    finalizadas), `ActividadesQueryController` separado de `ActividadesController`
+    (command/query, mismo criterio ya aplicado 5 veces en el proyecto), `GET
+    /actividades?materia_id=` con estado derivado (`en_curso`/`programada`/`cerrada`)
+  - Frontend: `listarActividades()`, 3 variantes nuevas de `Badge`, pantallas
+    `MateriasActividades.tsx`/`Actividades.tsx` reemplazando los placeholders de `US-3.4.1`
+  - 293/293 tests nuevos del Incremento 3, 664/664 suite completa backend, 183/183 frontend,
+    quality gates APROBADO (pylint 9.59/10, CC rank A, coverage 100% backend / 91.57%
+    statements frontend)
 - [US-3.4.1] Infraestructura de frontend de Actividad Evaluativa — primera US de la Iteración
   4 del Incremento 3 (frontend), bloquea `US-3.4.2` a `US-3.4.7`
   - `actividad-evaluativa-api.ts`: cliente API tipado con las 9 funciones que envuelven los
