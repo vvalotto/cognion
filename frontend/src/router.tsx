@@ -15,6 +15,7 @@ import { CuentaDetalle } from "@/pages/CuentaDetalle"
 import { CuentaReseteada } from "@/pages/CuentaReseteada"
 import { Cuentas } from "@/pages/Cuentas"
 import { EditarPregunta } from "@/pages/EditarPregunta"
+import { EditarTituloActividad } from "@/pages/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
 import { ExtenderPlazo } from "@/pages/ExtenderPlazo"
 import { Login } from "@/pages/Login"
@@ -193,6 +194,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <ActividadDetalle />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/actividades/:actividadId/editar-titulo",
+        element: (
+          <RequireRole rol="docente">
+            <EditarTituloActividad />
           </RequireRole>
         ),
       },

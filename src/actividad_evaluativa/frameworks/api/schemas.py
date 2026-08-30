@@ -2,11 +2,22 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+
+def _a_utc_si_naive(dt: datetime) -> datetime:
+    """Asigna UTC a un datetime sin tzinfo (`<input type="datetime-local">` no manda offset).
+
+    Simplificación conocida (`US-3.4.8`): el navegador no manda el timezone real del
+    usuario, así que la hora local ingresada se trata como si fuera UTC — evita el
+    `TypeError` de comparar datetimes naive/aware sin rediseñar el manejo de timezone de
+    punta a punta.
+    """
+    return dt if dt.tzinfo is not None else dt.replace(tzinfo=UTC)
 
 
 class CrearActividadRequest(BaseModel):
@@ -18,6 +29,8 @@ class CrearActividadRequest(BaseModel):
     cantidad_preguntas: int = Field(..., ge=1)
     cantidad_intentos_permitidos: int = Field(..., ge=1)
     titulo: str = ""
+
+    _normalizar_fechas = field_validator("fecha_apertura", "fecha_cierre")(_a_utc_si_naive)
 
 
 class ActividadResponse(BaseModel):
@@ -57,6 +70,14 @@ class ModificarPeriodoDisponibilidadRequest(BaseModel):
     """Body de la request de modificación del período de disponibilidad (US-3.3.1, RF-11b)."""
 
     nueva_fecha_cierre: datetime
+
+    _normalizar_fecha = field_validator("nueva_fecha_cierre")(_a_utc_si_naive)
+
+
+class ModificarTituloRequest(BaseModel):
+    """Body de la request de edición de título de una actividad (`US-3.4.9`)."""
+
+    nuevo_titulo: str
 
 
 class IniciarEvaluacionRequest(BaseModel):

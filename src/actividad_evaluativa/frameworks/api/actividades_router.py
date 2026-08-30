@@ -25,6 +25,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     ActividadResumenResponse,
     CrearActividadRequest,
     ModificarPeriodoDisponibilidadRequest,
+    ModificarTituloRequest,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_actividades_controller,
@@ -174,6 +175,25 @@ async def modificar_periodo_disponibilidad(
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+
+    return _a_response(actividad)
+
+
+@router.patch(
+    "/{actividad_id}/titulo",
+    response_model=ActividadResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def modificar_titulo(
+    actividad_id: UUID,
+    body: ModificarTituloRequest,
+    controller: ActividadesController = Depends(get_actividades_controller),
+) -> ActividadResponse:
+    """Edita el título de una actividad, sin importar su estado (`US-3.4.9`)."""
+    try:
+        actividad = await controller.modificar_titulo(actividad_id, body.nuevo_titulo)
+    except ActividadNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
     return _a_response(actividad)
 

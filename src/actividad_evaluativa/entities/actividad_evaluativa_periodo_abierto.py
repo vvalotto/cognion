@@ -122,3 +122,5 @@ def _aplicar_evento(actividad: ActividadEvaluativaPeriodoAbierto, evento: Evento
         actividad.fecha_cierre = datetime.fromisoformat(evento.payload["nueva_fecha_cierre"])
     elif evento.event_type == "ActividadEvaluativaCerrada":
         actividad.cerrada_manualmente = True
+    elif evento.event_type == "TituloActividadModificado":
+        actividad.titulo = evento.payload["nuevo_titulo"]

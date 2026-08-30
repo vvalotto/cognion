@@ -97,7 +97,16 @@ export function ActividadDetalle() {
       >
         ‹ Volver a actividades
       </Button>
-      <h1 className="text-lg font-semibold">{tituloDeActividad(actividad)}</h1>
+      <div className="flex items-center gap-2">
+        <h1 className="text-lg font-semibold">{tituloDeActividad(actividad)}</h1>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(`/actividad-evaluativa/actividades/${actividad.id}/editar-titulo`)}
+        >
+          Editar título
+        </Button>
+      </div>
       <div className="mt-1">
         <Badge variant={VARIANTE_ESTADO[actividad.estado]}>{ETIQUETA_ESTADO[actividad.estado]}</Badge>
       </div>
