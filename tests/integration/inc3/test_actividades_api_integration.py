@@ -359,6 +359,68 @@ class TestListarActividadesAPIIntegration:
         assert response.status_code == 403
 
 
+class TestActividadesFechasNaiveAPIIntegration:
+    """Regresión `US-3.4.8`: `<input type="datetime-local">` manda fechas sin tzinfo.
+
+    Reproduce el escenario real de UAT en navegador — la fecha llega como
+    `"2026-08-30T17:00"`, sin offset, a diferencia de `_periodo()` (que siempre usa
+    `datetime.now(UTC).isoformat()`, aware).
+    """
+
+    async def test_lista_actividad_creada_con_fecha_naive(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+
+            crear = await client.post(
+                "/actividades",
+                json={
+                    "materia_id": materia_id,
+                    "fecha_apertura": "2026-08-30T17:00",
+                    "fecha_cierre": "2026-09-06T17:00",
+                    "cantidad_preguntas": 10,
+                    "cantidad_intentos_permitidos": 1,
+                },
+                headers=docente_headers,
+            )
+            assert crear.status_code == 201
+            actividad_id = crear.json()["id"]
+
+            response = await client.get(
+                "/actividades", params={"materia_id": materia_id}, headers=docente_headers
+            )
+
+        assert response.status_code == 200
+        assert response.json()[0]["id"] == actividad_id
+
+    async def test_modifica_periodo_con_nueva_fecha_cierre_naive(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            apertura, cierre = _periodo()
+
+            crear = await client.post(
+                "/actividades",
+                json={
+                    "materia_id": materia_id,
+                    "fecha_apertura": apertura,
+                    "fecha_cierre": cierre,
+                    "cantidad_preguntas": 10,
+                    "cantidad_intentos_permitidos": 1,
+                },
+                headers=docente_headers,
+            )
+            actividad_id = crear.json()["id"]
+
+            response = await client.patch(
+                f"/actividades/{actividad_id}/periodo",
+                json={"nueva_fecha_cierre": "2026-09-13T17:00"},
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 200
+
+
 class TestModificarTituloAPIIntegration:
     """Escenarios de `US-3.4.9` — edición de título de una actividad ya creada."""
 

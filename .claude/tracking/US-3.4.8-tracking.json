@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "us_id": "US-3.4.8",
+    "us_title": "Fix - datetimes naive/aware en actividades",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-30T20:05:58.467232+00:00",
+    "completed_at": "2026-08-30T20:25:59.020592+00:00",
+    "total_elapsed_seconds": 1200,
+    "effective_seconds": 1200,
+    "paused_seconds": 0
+  },
+  "phases": [],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 0,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
