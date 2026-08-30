@@ -6,6 +6,7 @@ export interface CrearActividadBody {
   fechaCierre: string
   cantidadPreguntas: number
   cantidadIntentosPermitidos: number
+  titulo?: string
 }
 
 export interface ActividadResponse {
@@ -16,6 +17,22 @@ export interface ActividadResponse {
   cantidadPreguntas: number
   cantidadIntentosPermitidos: number
   cerradaManualmente: boolean
+  titulo: string
+}
+
+export type EstadoActividad = "en_curso" | "programada" | "cerrada"
+
+export interface ActividadResumenResponse {
+  id: string
+  materiaId: string
+  titulo: string
+  fechaApertura: string
+  fechaCierre: string
+  cantidadPreguntas: number
+  cantidadIntentosPermitidos: number
+  estado: EstadoActividad
+  cantidadEvaluacionesActivas: number
+  cantidadEvaluacionesFinalizadas: number
 }
 
 export interface PreguntaAsignadaResponse {
@@ -65,6 +82,20 @@ interface ActividadApiResponse {
   cantidad_preguntas: number
   cantidad_intentos_permitidos: number
   cerrada_manualmente: boolean
+  titulo: string
+}
+
+interface ActividadResumenApiResponse {
+  id: string
+  materia_id: string
+  titulo: string
+  fecha_apertura: string
+  fecha_cierre: string
+  cantidad_preguntas: number
+  cantidad_intentos_permitidos: number
+  estado: EstadoActividad
+  cantidad_evaluaciones_activas: number
+  cantidad_evaluaciones_finalizadas: number
 }
 
 interface PreguntaAsignadaApiResponse {
@@ -115,6 +146,22 @@ function mapearActividad(actividad: ActividadApiResponse): ActividadResponse {
     cantidadPreguntas: actividad.cantidad_preguntas,
     cantidadIntentosPermitidos: actividad.cantidad_intentos_permitidos,
     cerradaManualmente: actividad.cerrada_manualmente,
+    titulo: actividad.titulo,
+  }
+}
+
+function mapearActividadResumen(resumen: ActividadResumenApiResponse): ActividadResumenResponse {
+  return {
+    id: resumen.id,
+    materiaId: resumen.materia_id,
+    titulo: resumen.titulo,
+    fechaApertura: resumen.fecha_apertura,
+    fechaCierre: resumen.fecha_cierre,
+    cantidadPreguntas: resumen.cantidad_preguntas,
+    cantidadIntentosPermitidos: resumen.cantidad_intentos_permitidos,
+    estado: resumen.estado,
+    cantidadEvaluacionesActivas: resumen.cantidad_evaluaciones_activas,
+    cantidadEvaluacionesFinalizadas: resumen.cantidad_evaluaciones_finalizadas,
   }
 }
 
@@ -161,9 +208,16 @@ export async function crearActividad(body: CrearActividadBody): Promise<Activida
       fecha_cierre: body.fechaCierre,
       cantidad_preguntas: body.cantidadPreguntas,
       cantidad_intentos_permitidos: body.cantidadIntentosPermitidos,
+      titulo: body.titulo,
     },
   })
   return mapearActividad(response)
+}
+
+export async function listarActividades(materiaId: string): Promise<ActividadResumenResponse[]> {
+  const params = new URLSearchParams({ materia_id: materiaId })
+  const response = await apiFetch<ActividadResumenApiResponse[]>(`/actividades?${params}`)
+  return response.map(mapearActividadResumen)
 }
 
 export async function modificarPeriodoDisponibilidad(

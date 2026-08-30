@@ -9,6 +9,7 @@ import {
   crearActividad,
   finalizarEvaluacion,
   iniciarEvaluacion,
+  listarActividades,
   modificarPeriodoDisponibilidad,
   obtenerRevision,
   reanudarEvaluacion,
@@ -31,6 +32,7 @@ const ACTIVIDAD_API = {
   cantidad_preguntas: 10,
   cantidad_intentos_permitidos: 1,
   cerrada_manualmente: false,
+  titulo: "",
 }
 
 const EVALUACION_API = {
@@ -82,7 +84,76 @@ describe("actividad-evaluativa-api", () => {
         cantidadPreguntas: 10,
         cantidadIntentosPermitidos: 1,
         cerradaManualmente: false,
+        titulo: "",
       })
+    })
+
+    it("incluye titulo en el body cuando se lo pasa", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(201, { ...ACTIVIDAD_API, titulo: "Parcial 1" }),
+      )
+
+      const actividad = await crearActividad({
+        materiaId: "m1",
+        fechaApertura: "2026-08-30T00:00:00Z",
+        fechaCierre: "2026-09-10T00:00:00Z",
+        cantidadPreguntas: 10,
+        cantidadIntentosPermitidos: 1,
+        titulo: "Parcial 1",
+      })
+
+      const [, init] = vi.mocked(fetch).mock.calls[0]
+      expect(JSON.parse(init?.body as string).titulo).toBe("Parcial 1")
+      expect(actividad.titulo).toBe("Parcial 1")
+    })
+  })
+
+  describe("listarActividades", () => {
+    it("hace GET /actividades con materia_id y mapea el resumen a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "a1",
+            materia_id: "m1",
+            titulo: "Parcial 1",
+            fecha_apertura: "2026-08-30T00:00:00Z",
+            fecha_cierre: "2026-09-10T00:00:00Z",
+            cantidad_preguntas: 10,
+            cantidad_intentos_permitidos: 1,
+            estado: "en_curso",
+            cantidad_evaluaciones_activas: 3,
+            cantidad_evaluaciones_finalizadas: 0,
+          },
+        ]),
+      )
+
+      const actividades = await listarActividades("m1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toContain("/actividades?materia_id=m1")
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(actividades).toEqual([
+        {
+          id: "a1",
+          materiaId: "m1",
+          titulo: "Parcial 1",
+          fechaApertura: "2026-08-30T00:00:00Z",
+          fechaCierre: "2026-09-10T00:00:00Z",
+          cantidadPreguntas: 10,
+          cantidadIntentosPermitidos: 1,
+          estado: "en_curso",
+          cantidadEvaluacionesActivas: 3,
+          cantidadEvaluacionesFinalizadas: 0,
+        },
+      ])
+    })
+
+    it("devuelve lista vacía si la materia no tiene actividades", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const actividades = await listarActividades("m1")
+
+      expect(actividades).toEqual([])
     })
   })
 

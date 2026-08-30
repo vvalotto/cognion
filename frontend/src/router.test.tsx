@@ -316,14 +316,73 @@ describe("router (integración)", () => {
     expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
   })
 
-  it("la ruta /actividad-evaluativa/materias renderiza el placeholder con sesión de docente", async () => {
+  it("la ruta /actividad-evaluativa/materias renderiza el listado de materias con sesión de docente", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, [
+        { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 1 },
+      ]),
+    )
     setSession({ token: "t", rol: "docente" })
     await router.navigate("/actividad-evaluativa/materias")
     render(<RouterProvider router={router} />)
 
+    expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
+    expect(await screen.findByText("Ingeniería de Software")).toBeInTheDocument()
+  })
+
+  it("la ruta /actividad-evaluativa/materias/:id/actividades renderiza el listado de actividades con sesión de docente", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 1 },
+        ]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, []))
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/actividad-evaluativa/materias/m1/actividades")
+    render(<RouterProvider router={router} />)
+
     expect(
-      await screen.findByText("Actividad Evaluativa — pendiente de pantalla propia"),
+      await screen.findByRole("heading", { name: "Actividades de período abierto" }),
     ).toBeInTheDocument()
+    expect(
+      await screen.findByText("Todavía no hay actividades creadas para esta materia."),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta .../actividades muestra una tarjeta por actividad con estado y fallback de título", async () => {
+    vi.mocked(fetch).mockReset()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 1 },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "a1",
+            materia_id: "m1",
+            titulo: "",
+            fecha_apertura: "2026-08-20T09:00:00Z",
+            fecha_cierre: "2026-08-27T23:59:00Z",
+            cantidad_preguntas: 10,
+            cantidad_intentos_permitidos: 1,
+            estado: "en_curso",
+            cantidad_evaluaciones_activas: 3,
+            cantidad_evaluaciones_finalizadas: 0,
+          },
+        ]),
+      )
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/actividad-evaluativa/materias/m1/actividades")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("En curso")).toBeInTheDocument()
+    expect(await screen.findByText("3 evaluaciones activas")).toBeInTheDocument()
+    expect(await screen.findByText(/^Actividad del /)).toBeInTheDocument()
   })
 
   it("la ruta /mis-actividades/materias muestra acceso denegado con sesión de rol distinto de estudiante", async () => {

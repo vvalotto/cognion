@@ -6,6 +6,7 @@ import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { ActividadEvaluativaPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
+import { Actividades } from "@/pages/Actividades"
 import { Banco } from "@/pages/Banco"
 import { CambiarPassword } from "@/pages/CambiarPassword"
 import { CuentaDetalle } from "@/pages/CuentaDetalle"
@@ -15,6 +16,7 @@ import { EditarPregunta } from "@/pages/EditarPregunta"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
+import { MateriasActividades } from "@/pages/MateriasActividades"
 import { NuevaMateria } from "@/pages/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/NuevaPreguntaTipo"
@@ -162,7 +164,7 @@ export const router = createBrowserRouter([
         path: "/actividad-evaluativa/materias",
         element: (
           <RequireRole rol="docente">
-            <ActividadEvaluativaPlaceholder />
+            <MateriasActividades />
           </RequireRole>
         ),
       },
@@ -170,7 +172,7 @@ export const router = createBrowserRouter([
         path: "/actividad-evaluativa/materias/:materiaId/actividades",
         element: (
           <RequireRole rol="docente">
-            <ActividadEvaluativaPlaceholder />
+            <Actividades />
           </RequireRole>
         ),
       },
