@@ -24,7 +24,7 @@
   - Frontend: oxlint 0 errores, `tsc --noEmit` 0 errores, cobertura Vitest de las pantallas nuevas (criterio ya usado en US-2.1.8 a US-3.4.2)
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-3.4.3-context.md
+- Contexto: docs/plans/inc3/US-3.4.3-context.md
 - BDD feature: tests/features/inc3/US-3.4.3-nueva-actividad.feature
 - Plan: docs/plans/inc3/US-3.4.3-plan.md
 - Reporte: docs/reports/inc3/US-3.4.3-report.md
