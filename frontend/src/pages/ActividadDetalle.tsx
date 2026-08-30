@@ -88,6 +88,15 @@ export function ActividadDetalle() {
           { label: tituloDeActividad(actividad) },
         ]}
       />
+      <Button
+        variant="outline"
+        className="mb-2"
+        onClick={() =>
+          navigate(`/actividad-evaluativa/materias/${actividad.materiaId}/actividades`)
+        }
+      >
+        ‹ Volver a actividades
+      </Button>
       <h1 className="text-lg font-semibold">{tituloDeActividad(actividad)}</h1>
       <div className="mt-1">
         <Badge variant={VARIANTE_ESTADO[actividad.estado]}>{ETIQUETA_ESTADO[actividad.estado]}</Badge>
