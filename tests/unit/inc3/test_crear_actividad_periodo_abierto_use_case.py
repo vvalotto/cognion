@@ -61,6 +61,26 @@ class TestCrearActividadPeriodoAbiertoUseCase:
         assert stream[0].event_type == "ActividadEvaluativaCreada"
         assert stream[0].payload["materia_id"] == str(materia_id)
         assert stream[0].payload["cantidad_preguntas"] == 10
+        assert stream[0].payload["titulo"] == ""
+
+    async def test_crea_actividad_con_titulo_explicito(self):
+        materia_id = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        actividad, evento = await use_case.execute(
+            materia_id, apertura, cierre, 10, 1, titulo="Parcial 1"
+        )
+
+        assert actividad.titulo == "Parcial 1"
+        assert evento.titulo == "Parcial 1"
 
     async def test_rechaza_preguntas_insuficientes(self):
         materia_id = uuid4()

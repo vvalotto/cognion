@@ -219,3 +219,64 @@ class TestActividadEvaluativaPeriodoAbiertoValidarParaCerrar:
 
         with pytest.raises(ActividadYaCerrada):
             actividad.validar_para_cerrar()
+
+
+class TestActividadEvaluativaPeriodoAbiertoTitulo:
+    def test_titulo_default_vacio(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(uuid4(), apertura, cierre, 10, 1)
+
+        assert actividad.titulo == ""
+
+    def test_titulo_explicito(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            uuid4(), apertura, cierre, 10, 1, titulo="Parcial 1"
+        )
+
+        assert actividad.titulo == "Parcial 1"
+
+    def test_reconstruir_sin_titulo_en_payload_default_vacio(self):
+        apertura, cierre = _fechas()
+        materia_id = uuid4()
+        actividad_id = uuid4()
+        evento = EventoAlmacenado(
+            sequence_number=0,
+            event_type="ActividadEvaluativaCreada",
+            payload={
+                "actividad_id": str(actividad_id),
+                "materia_id": str(materia_id),
+                "fecha_apertura": apertura.isoformat(),
+                "fecha_cierre": cierre.isoformat(),
+                "cantidad_preguntas": 10,
+                "cantidad_intentos_permitidos": 1,
+            },
+            occurred_at=apertura,
+        )
+
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir([evento])
+
+        assert actividad.titulo == ""
+
+    def test_reconstruir_con_titulo_en_payload(self):
+        apertura, cierre = _fechas()
+        materia_id = uuid4()
+        actividad_id = uuid4()
+        evento = EventoAlmacenado(
+            sequence_number=0,
+            event_type="ActividadEvaluativaCreada",
+            payload={
+                "actividad_id": str(actividad_id),
+                "materia_id": str(materia_id),
+                "fecha_apertura": apertura.isoformat(),
+                "fecha_cierre": cierre.isoformat(),
+                "cantidad_preguntas": 10,
+                "cantidad_intentos_permitidos": 1,
+                "titulo": "Repaso Unidad 4",
+            },
+            occurred_at=apertura,
+        )
+
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir([evento])
+
+        assert actividad.titulo == "Repaso Unidad 4"
