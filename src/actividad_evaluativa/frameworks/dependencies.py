@@ -57,6 +57,7 @@ from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import 
 from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
     ModificarTituloActividadUseCase,
 )
+from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
@@ -101,7 +102,10 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
 def get_actividades_query_controller(session: SessionDep) -> ActividadesQueryController:
     """Arma el `ActividadesQueryController` (consultas de solo lectura) con sus dependencias."""
     actividad_query = SQLAlchemyActividadQueryRepository(session)
-    return ActividadesQueryController(ListarActividadesUseCase(actividad_query))
+    return ActividadesQueryController(
+        ListarActividadesUseCase(actividad_query),
+        ObtenerActividadUseCase(actividad_query),
+    )
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

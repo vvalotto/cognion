@@ -80,6 +80,7 @@ def _a_resumen_response(resumen: ActividadResumen, ahora: datetime) -> Actividad
         cantidad_preguntas=resumen.cantidad_preguntas,
         cantidad_intentos_permitidos=resumen.cantidad_intentos_permitidos,
         estado=_estado_actividad(resumen, ahora),
+        cerrada_manualmente=resumen.cerrada_manualmente,
         cantidad_evaluaciones_activas=resumen.cantidad_evaluaciones_activas,
         cantidad_evaluaciones_finalizadas=resumen.cantidad_evaluaciones_finalizadas,
     )
@@ -98,6 +99,25 @@ async def listar_actividades(
     resumenes = await controller.listar_actividades(materia_id)
     ahora = datetime.now(UTC)
     return [_a_resumen_response(resumen, ahora) for resumen in resumenes]
+
+
+@router.get(
+    "/{actividad_id}",
+    response_model=ActividadResumenResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def obtener_actividad(
+    actividad_id: UUID,
+    controller: ActividadesQueryController = Depends(get_actividades_query_controller),
+) -> ActividadResumenResponse:
+    """Detalle de una actividad puntual, con estado derivado y conteos (`US-3.4.4`, RF-11b)."""
+    try:
+        resumen = await controller.obtener_actividad(actividad_id)
+    except ActividadNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    ahora = datetime.now(UTC)
+    return _a_resumen_response(resumen, ahora)
 
 
 @router.post(

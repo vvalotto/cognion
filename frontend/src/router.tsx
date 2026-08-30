@@ -7,14 +7,17 @@ import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
 import { ActividadEvaluativaPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
 import { Actividades } from "@/pages/Actividades"
+import { ActividadDetalle } from "@/pages/ActividadDetalle"
 import { Banco } from "@/pages/Banco"
 import { CambiarPassword } from "@/pages/CambiarPassword"
+import { CerrarActividad } from "@/pages/CerrarActividad"
 import { CuentaDetalle } from "@/pages/CuentaDetalle"
 import { CuentaReseteada } from "@/pages/CuentaReseteada"
 import { Cuentas } from "@/pages/Cuentas"
 import { EditarPregunta } from "@/pages/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
+import { ExtenderPlazo } from "@/pages/ExtenderPlazo"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { MateriasActividades } from "@/pages/MateriasActividades"
@@ -190,7 +193,7 @@ export const router = createBrowserRouter([
         path: "/actividad-evaluativa/actividades/:actividadId",
         element: (
           <RequireRole rol="docente">
-            <ActividadEvaluativaPlaceholder />
+            <ActividadDetalle />
           </RequireRole>
         ),
       },
@@ -206,7 +209,7 @@ export const router = createBrowserRouter([
         path: "/actividad-evaluativa/actividades/:actividadId/extender-plazo",
         element: (
           <RequireRole rol="docente">
-            <ActividadEvaluativaPlaceholder />
+            <ExtenderPlazo />
           </RequireRole>
         ),
       },
@@ -214,7 +217,7 @@ export const router = createBrowserRouter([
         path: "/actividad-evaluativa/actividades/:actividadId/cerrar",
         element: (
           <RequireRole rol="docente">
-            <ActividadEvaluativaPlaceholder />
+            <CerrarActividad />
           </RequireRole>
         ),
       },

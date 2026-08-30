@@ -32,12 +32,12 @@ function actividadResumen(titulo: string) {
 
 function mockCargaInicial(tituloActual = "Parcial 1") {
   vi.mocked(fetch)
+    .mockResolvedValueOnce(jsonResponse(200, actividadResumen(tituloActual)))
     .mockResolvedValueOnce(
       jsonResponse(200, [
         { id: MATERIA_ID, nombre: "Ingeniería de Software", banco_id: "banco-1", cantidad_preguntas_activas: 20 },
       ]),
     )
-    .mockResolvedValueOnce(jsonResponse(200, [actividadResumen(tituloActual)]))
 }
 
 function renderEditarTitulo() {

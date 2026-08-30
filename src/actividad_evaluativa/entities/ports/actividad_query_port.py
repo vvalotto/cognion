@@ -26,6 +26,9 @@ class ActividadResumen:
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool
+    """Distingue "cerrada por fecha vencida" de "cerrada manualmente" — el detalle de una
+    actividad (`US-3.4.4`) condiciona a este campo, no al `estado` derivado, la visibilidad de
+    "Extender plazo" / "Cerrar actividad ahora"."""
     cantidad_evaluaciones_activas: int
     cantidad_evaluaciones_finalizadas: int
 
@@ -40,3 +43,7 @@ class ActividadQueryPort(ABC):
         Lista vacía si la materia no tiene actividades (o no existe — esta consulta no valida
         que `materia_id` corresponda a una `Materia` real, semántica de lectura).
         """
+
+    @abstractmethod
+    async def obtener(self, actividad_id: UUID) -> ActividadResumen | None:
+        """Devuelve el resumen de `actividad_id`, o `None` si no existe (`US-3.4.4`)."""

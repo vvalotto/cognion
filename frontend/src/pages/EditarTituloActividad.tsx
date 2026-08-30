@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { listarActividades, modificarTitulo } from "@/lib/actividad-evaluativa-api"
+import {
+  obtenerActividad,
+  modificarTitulo,
+  type ActividadResumenResponse,
+} from "@/lib/actividad-evaluativa-api"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { ApiError } from "@/lib/api-client"
 
@@ -15,30 +19,35 @@ export function EditarTituloActividad() {
   const { actividadId } = useParams<{ actividadId: string }>()
   const navigate = useNavigate()
 
+  const [actividad, setActividad] = useState<ActividadResumenResponse | null>(null)
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
-  const [materiaId, setMateriaId] = useState<string | null>(null)
   const [titulo, setTitulo] = useState("")
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!actividadId) return
     let cancelado = false
-    listarMaterias().then(async (materias) => {
-      for (const m of materias) {
-        const actividades = await listarActividades(m.id)
-        const actividad = actividades.find((a) => a.id === actividadId)
-        if (actividad && !cancelado) {
-          setMateria(m)
-          setMateriaId(m.id)
-          setTitulo(actividad.titulo)
-          return
-        }
+    obtenerActividad(actividadId).then((resultado) => {
+      if (!cancelado) {
+        setActividad(resultado)
+        setTitulo(resultado.titulo)
       }
     })
     return () => {
       cancelado = true
     }
   }, [actividadId])
+
+  useEffect(() => {
+    if (!actividad) return
+    let cancelado = false
+    listarMaterias().then((materias) => {
+      if (!cancelado) setMateria(materias.find((m) => m.id === actividad.materiaId) ?? null)
+    })
+    return () => {
+      cancelado = true
+    }
+  }, [actividad])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -57,7 +66,7 @@ export function EditarTituloActividad() {
     void navigate(`/actividad-evaluativa/actividades/${actividadId}`)
   }
 
-  if (materia === null) {
+  if (actividad === null || materia === null) {
     return <p className="text-sm text-muted-foreground">Cargando…</p>
   }
 
@@ -68,11 +77,11 @@ export function EditarTituloActividad() {
           { label: "Mis materias", to: "/actividad-evaluativa/materias" },
           {
             label: materia.nombre,
-            to: `/actividad-evaluativa/materias/${materiaId}/actividades`,
+            to: `/actividad-evaluativa/materias/${actividad.materiaId}/actividades`,
           },
           {
             label: "Actividades",
-            to: `/actividad-evaluativa/materias/${materiaId}/actividades`,
+            to: `/actividad-evaluativa/materias/${actividad.materiaId}/actividades`,
           },
           { label: "Editar título" },
         ]}

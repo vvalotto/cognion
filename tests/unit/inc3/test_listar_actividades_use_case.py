@@ -17,6 +17,13 @@ class FakeActividadQueryPort(ActividadQueryPort):
     async def listar_por_materia(self, materia_id: UUID) -> list[ActividadResumen]:
         return self.resumenes.get(materia_id, [])
 
+    async def obtener(self, actividad_id: UUID) -> ActividadResumen | None:
+        for resumenes in self.resumenes.values():
+            for resumen in resumenes:
+                if resumen.id == actividad_id:
+                    return resumen
+        return None
+
 
 def _resumen(materia_id: UUID) -> ActividadResumen:
     apertura = datetime.now(UTC)
