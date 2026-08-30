@@ -95,7 +95,7 @@ Fuente: `quality/reports/inc3/US-3.4.3-quality.json`. Stack frontend — no apli
 - `frontend/src/pages/NuevaActividad.test.tsx` (nuevo, 5 tests)
 
 ### Documentación
-- `docs/plans/US-3.4.3-context.md`
+- `docs/plans/inc3/US-3.4.3-context.md`
 - `docs/plans/inc3/US-3.4.3-plan.md`
 - `docs/reports/inc3/US-3.4.3-report.md` (este archivo)
 - `quality/reports/inc3/US-3.4.3-quality.json`
