@@ -9,6 +9,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-3.4.1] Infraestructura de frontend de Actividad Evaluativa — primera US de la Iteración
+  4 del Incremento 3 (frontend), bloquea `US-3.4.2` a `US-3.4.7`
+  - `actividad-evaluativa-api.ts`: cliente API tipado con las 9 funciones que envuelven los
+    endpoints ya implementados en las Iteraciones 1-3 (`crearActividad`,
+    `modificarPeriodoDisponibilidad`, `cerrarActividad`, `iniciarEvaluacion`,
+    `registrarRespuesta`, `suspenderEvaluacion`, `reanudarEvaluacion`, `finalizarEvaluacion`,
+    `obtenerRevision`), reutiliza `apiFetch` (JWT/401/403 de `US-1.1.6`)
+  - 10 rutas nuevas en `router.tsx`: 6 bajo `/actividad-evaluativa/*` (rol `docente`) y 4 bajo
+    `/mis-actividades/*` (rol `estudiante`, primer uso de ese rol en `RequireRole`), todas con
+    `ActividadEvaluativaPlaceholder` hasta que `US-3.4.2` a `US-3.4.7` las reemplacen
+  - Sin gap de backend (a diferencia de `US-2.1.8`) — los 9 endpoints consumidos ya existían
+  - 178/178 tests frontend, oxlint 0 errores, `tsc --noEmit` 0 errores, cobertura global 94.01%
+
 ## [0.4.0] - 2026-08-23
 
 > Tag `v0.4.0` y merge `develop → main` ejecutados el 2026-08-24 (commit `e31ee67`), junto con
