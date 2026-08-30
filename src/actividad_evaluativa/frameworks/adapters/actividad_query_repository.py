@@ -62,9 +62,7 @@ class SQLAlchemyActividadQueryRepository(ActividadQueryPort):
                 actividades.append(actividad)
         return actividades
 
-    async def _contar_evaluaciones(
-        self, actividad_ids: set[UUID]
-    ) -> dict[UUID, tuple[int, int]]:
+    async def _contar_evaluaciones(self, actividad_ids: set[UUID]) -> dict[UUID, tuple[int, int]]:
         """Cuenta evaluaciones (activas, finalizadas) por `actividad_id`, agrupando en memoria."""
         if not actividad_ids:
             return {}
