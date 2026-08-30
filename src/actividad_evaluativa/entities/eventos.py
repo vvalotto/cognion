@@ -25,6 +25,7 @@ class ActividadEvaluativaCreada:
     fecha_cierre: datetime
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
+    titulo: str = ""
     ocurrido_en: datetime = field(default_factory=_ahora)
 
 

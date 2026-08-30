@@ -14,6 +14,9 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
+from src.actividad_evaluativa.frameworks.adapters.actividad_query_repository import (
+    SQLAlchemyActividadQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
 )
@@ -32,6 +35,9 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
+    ActividadesQueryController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
 )
@@ -44,6 +50,7 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 )
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
@@ -85,6 +92,12 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
             event_store, evaluacion_activa_query, FinalizarEvaluacionUseCase(event_store)
         ),
     )
+
+
+def get_actividades_query_controller(session: SessionDep) -> ActividadesQueryController:
+    """Arma el `ActividadesQueryController` (consultas de solo lectura) con sus dependencias."""
+    actividad_query = SQLAlchemyActividadQueryRepository(session)
+    return ActividadesQueryController(ListarActividadesUseCase(actividad_query))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:
