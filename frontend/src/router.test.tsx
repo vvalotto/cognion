@@ -307,4 +307,40 @@ describe("router (integración)", () => {
 
     expect(await screen.findByRole("heading", { name: "Contraseña reseteada" })).toBeInTheDocument()
   })
+
+  it("la ruta /actividad-evaluativa/materias muestra acceso denegado con sesión de rol distinto de docente", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/actividad-evaluativa/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /actividad-evaluativa/materias renderiza el placeholder con sesión de docente", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/actividad-evaluativa/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByText("Actividad Evaluativa — pendiente de pantalla propia"),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta /mis-actividades/materias muestra acceso denegado con sesión de rol distinto de estudiante", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/mis-actividades/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /mis-actividades/materias renderiza el placeholder con sesión de estudiante", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/mis-actividades/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByText("Actividad Evaluativa — pendiente de pantalla propia"),
+    ).toBeInTheDocument()
+  })
 })
