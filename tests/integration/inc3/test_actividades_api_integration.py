@@ -357,3 +357,95 @@ class TestListarActividadesAPIIntegration:
             )
 
         assert response.status_code == 403
+
+
+class TestObtenerActividadAPIIntegration:
+    """Escenarios de `tests/features/inc3/US-3.4.4-detalle-actividad.feature`."""
+
+    async def test_obtiene_el_detalle_con_conteos_y_estado(self, session, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            estudiante_headers = await _crear_estudiante(session)
+            apertura, cierre = _periodo()
+
+            crear = await client.post(
+                "/actividades",
+                json={
+                    "materia_id": materia_id,
+                    "fecha_apertura": apertura,
+                    "fecha_cierre": cierre,
+                    "cantidad_preguntas": 10,
+                    "cantidad_intentos_permitidos": 1,
+                    "titulo": "Parcial 1",
+                },
+                headers=docente_headers,
+            )
+            actividad_id = crear.json()["id"]
+            await client.post(
+                "/evaluaciones", json={"actividad_id": actividad_id}, headers=estudiante_headers
+            )
+
+            response = await client.get(f"/actividades/{actividad_id}", headers=docente_headers)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["id"] == actividad_id
+        assert data["titulo"] == "Parcial 1"
+        assert data["cantidad_preguntas"] == 10
+        assert data["cantidad_intentos_permitidos"] == 1
+        assert data["estado"] == "en_curso"
+        assert data["cerrada_manualmente"] is False
+        assert data["cantidad_evaluaciones_activas"] == 1
+        assert data["cantidad_evaluaciones_finalizadas"] == 0
+
+    async def test_detalle_de_actividad_cerrada_manualmente(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            apertura, cierre = _periodo()
+
+            crear = await client.post(
+                "/actividades",
+                json={
+                    "materia_id": materia_id,
+                    "fecha_apertura": apertura,
+                    "fecha_cierre": cierre,
+                    "cantidad_preguntas": 10,
+                    "cantidad_intentos_permitidos": 1,
+                },
+                headers=docente_headers,
+            )
+            actividad_id = crear.json()["id"]
+            await client.post(f"/actividades/{actividad_id}/cerrar", headers=docente_headers)
+
+            response = await client.get(f"/actividades/{actividad_id}", headers=docente_headers)
+
+        data = response.json()
+        assert data["estado"] == "cerrada"
+        assert data["cerrada_manualmente"] is True
+
+    async def test_rechazo_por_actividad_inexistente(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(
+                f"/actividades/{uuid.uuid4()}", headers=docente_headers
+            )
+
+        assert response.status_code == 404
+
+    async def test_rechazo_sin_autenticacion(self):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/actividades/{uuid.uuid4()}")
+
+        assert response.status_code == 401
+
+    async def test_rechazo_con_rol_insuficiente(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(
+                f"/actividades/{uuid.uuid4()}", headers=admin_headers
+            )
+
+        assert response.status_code == 403

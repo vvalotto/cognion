@@ -51,10 +51,10 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
-from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
+from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
