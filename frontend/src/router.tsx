@@ -17,6 +17,7 @@ import { EliminarPregunta } from "@/pages/EliminarPregunta"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { MateriasActividades } from "@/pages/MateriasActividades"
+import { NuevaActividad } from "@/pages/NuevaActividad"
 import { NuevaMateria } from "@/pages/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/NuevaPreguntaTipo"
@@ -180,7 +181,7 @@ export const router = createBrowserRouter([
         path: "/actividad-evaluativa/materias/:materiaId/actividades/nueva",
         element: (
           <RequireRole rol="docente">
-            <ActividadEvaluativaPlaceholder />
+            <NuevaActividad />
           </RequireRole>
         ),
       },
