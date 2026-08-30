@@ -10,6 +10,19 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-3.4.3] Docente crea una nueva actividad de período abierto — frontend puro, sin cambios
+  de backend (`POST /actividades` ya existía desde `US-3.1.2`)
+  - `NuevaActividad.tsx`: formulario con apertura/cierre/cantidad de preguntas/intentos
+    permitidos, sin campo de título (el prototipo `#doc-nueva-actividad` no lo incluye — la
+    materia es implícita por la navegación); hint dinámico con `cantidadPreguntasActivas` del
+    banco de la materia; validación de cliente de período (INV-AE-02) e intentos (INV-AE-03);
+    422 del backend (`PreguntasInsuficientes`, `PeriodoInvalido`, `CantidadIntentosInvalida`)
+    mostrado inline
+  - Reemplaza el placeholder de la ruta `/actividad-evaluativa/materias/:materiaId/actividades/nueva`
+    cableada desde `US-3.4.1`
+  - 5 tests nuevos (`NuevaActividad.test.tsx`), 188/188 suite completa frontend sin
+    regresiones, quality gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage
+    90.24% statements en el componente nuevo / 91.51% global)
 - [US-3.4.2] Docente ve sus materias y el listado de actividades de una materia — primera
   pantalla real de la Iteración 4 del Incremento 3 (backend + frontend)
   - Gap detectado y resuelto con Víctor: `titulo` (opcional, default `""`) agregado a
