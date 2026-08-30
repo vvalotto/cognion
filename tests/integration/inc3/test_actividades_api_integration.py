@@ -428,9 +428,7 @@ class TestObtenerActividadAPIIntegration:
     async def test_rechazo_por_actividad_inexistente(self, docente_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.get(
-                f"/actividades/{uuid.uuid4()}", headers=docente_headers
-            )
+            response = await client.get(f"/actividades/{uuid.uuid4()}", headers=docente_headers)
 
         assert response.status_code == 404
 
@@ -444,8 +442,6 @@ class TestObtenerActividadAPIIntegration:
     async def test_rechazo_con_rol_insuficiente(self, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.get(
-                f"/actividades/{uuid.uuid4()}", headers=admin_headers
-            )
+            response = await client.get(f"/actividades/{uuid.uuid4()}", headers=admin_headers)
 
         assert response.status_code == 403
