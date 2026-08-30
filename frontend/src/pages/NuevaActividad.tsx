@@ -16,6 +16,7 @@ export function NuevaActividad() {
   const navigate = useNavigate()
 
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
+  const [titulo, setTitulo] = useState("")
   const [fechaApertura, setFechaApertura] = useState("")
   const [fechaCierre, setFechaCierre] = useState("")
   const [cantidadPreguntas, setCantidadPreguntas] = useState(1)
@@ -49,6 +50,7 @@ export function NuevaActividad() {
     try {
       await crearActividad({
         materiaId,
+        titulo: titulo.trim(),
         fechaApertura,
         fechaCierre,
         cantidadPreguntas,
@@ -96,6 +98,16 @@ export function NuevaActividad() {
       <Card className="mt-4">
         <CardContent>
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="na-titulo">Título (opcional)</Label>
+              <Input
+                id="na-titulo"
+                type="text"
+                value={titulo}
+                onChange={(event) => setTitulo(event.target.value)}
+                placeholder="Ej: Parcial 1 — Unidades 1 a 3"
+              />
+            </div>
             <div className="flex gap-3">
               <div className="flex flex-1 flex-col gap-1.5">
                 <Label htmlFor="na-apertura">Apertura (fecha y hora)</Label>
