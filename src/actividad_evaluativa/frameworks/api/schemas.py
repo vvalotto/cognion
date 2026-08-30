@@ -17,6 +17,7 @@ class CrearActividadRequest(BaseModel):
     fecha_cierre: datetime
     cantidad_preguntas: int = Field(..., ge=1)
     cantidad_intentos_permitidos: int = Field(..., ge=1)
+    titulo: str = ""
 
 
 class ActividadResponse(BaseModel):
@@ -29,6 +30,26 @@ class ActividadResponse(BaseModel):
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool
+    titulo: str
+
+
+class ActividadResumenResponse(BaseModel):
+    """Resumen de una actividad para el listado por materia (`US-3.4.2`, RF-11).
+
+    `estado` es puramente derivado (fecha actual + `cerrada_manualmente`) — no persiste un
+    campo propio en el dominio.
+    """
+
+    id: UUID
+    materia_id: UUID
+    titulo: str
+    fecha_apertura: datetime
+    fecha_cierre: datetime
+    cantidad_preguntas: int
+    cantidad_intentos_permitidos: int
+    estado: str
+    cantidad_evaluaciones_activas: int
+    cantidad_evaluaciones_finalizadas: int
 
 
 class ModificarPeriodoDisponibilidadRequest(BaseModel):

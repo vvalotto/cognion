@@ -30,6 +30,7 @@ class ActividadEvaluativaPeriodoAbierto:
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool = field(default=False)
+    titulo: str = field(default="")
 
     @staticmethod
     def crear(
@@ -38,6 +39,7 @@ class ActividadEvaluativaPeriodoAbierto:
         fecha_cierre: datetime,
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
+        titulo: str = "",
     ) -> ActividadEvaluativaPeriodoAbierto:
         """Crea la actividad validando INV-AE-02/03.
 
@@ -57,6 +59,7 @@ class ActividadEvaluativaPeriodoAbierto:
             fecha_cierre=fecha_cierre,
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
+            titulo=titulo,
         )
 
     @staticmethod
@@ -77,6 +80,7 @@ class ActividadEvaluativaPeriodoAbierto:
             fecha_cierre=datetime.fromisoformat(payload["fecha_cierre"]),
             cantidad_preguntas=int(payload["cantidad_preguntas"]),
             cantidad_intentos_permitidos=int(payload["cantidad_intentos_permitidos"]),
+            titulo=payload.get("titulo", ""),
         )
         for evento in eventos[1:]:
             _aplicar_evento(actividad, evento)

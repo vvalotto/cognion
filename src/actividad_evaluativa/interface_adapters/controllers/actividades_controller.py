@@ -39,6 +39,7 @@ class ActividadesController:
         fecha_cierre: datetime,
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
+        titulo: str = "",
     ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
         """Delega la creación de la actividad en el caso de uso correspondiente."""
         return await self._crear_actividad.execute(
@@ -47,6 +48,7 @@ class ActividadesController:
             fecha_cierre,
             cantidad_preguntas,
             cantidad_intentos_permitidos,
+            titulo,
         )
 
     async def modificar_periodo_disponibilidad(

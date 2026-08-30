@@ -41,6 +41,7 @@ class CrearActividadPeriodoAbiertoUseCase:
         fecha_cierre: datetime,
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
+        titulo: str = "",
     ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
         """Crea la actividad validando INV-AE-01/02/03 y la persiste como primer evento del stream.
 
@@ -63,6 +64,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             fecha_cierre=fecha_cierre,
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
+            titulo=titulo,
         )
 
         evento = ActividadEvaluativaCreada(
@@ -72,6 +74,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             fecha_cierre=actividad.fecha_cierre,
             cantidad_preguntas=actividad.cantidad_preguntas,
             cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
+            titulo=actividad.titulo,
         )
 
         payload = {
@@ -81,6 +84,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             "fecha_cierre": evento.fecha_cierre.isoformat(),
             "cantidad_preguntas": evento.cantidad_preguntas,
             "cantidad_intentos_permitidos": evento.cantidad_intentos_permitidos,
+            "titulo": evento.titulo,
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
         await self._event_store.append(
