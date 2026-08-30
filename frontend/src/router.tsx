@@ -5,7 +5,7 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
-import { InicioPlaceholder } from "@/pages/_placeholders"
+import { ActividadEvaluativaPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
 import { Banco } from "@/pages/Banco"
 import { CambiarPassword } from "@/pages/CambiarPassword"
 import { CuentaDetalle } from "@/pages/CuentaDetalle"
@@ -155,6 +155,86 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="administrador">
             <CuentaReseteada />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/materias",
+        element: (
+          <RequireRole rol="docente">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/materias/:materiaId/actividades",
+        element: (
+          <RequireRole rol="docente">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/materias/:materiaId/actividades/nueva",
+        element: (
+          <RequireRole rol="docente">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/actividades/:actividadId",
+        element: (
+          <RequireRole rol="docente">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/actividades/:actividadId/extender-plazo",
+        element: (
+          <RequireRole rol="docente">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/actividades/:actividadId/cerrar",
+        element: (
+          <RequireRole rol="docente">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-actividades/materias",
+        element: (
+          <RequireRole rol="estudiante">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-actividades/materias/:materiaId/actividades",
+        element: (
+          <RequireRole rol="estudiante">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-actividades/actividades/:actividadId/rendir",
+        element: (
+          <RequireRole rol="estudiante">
+            <ActividadEvaluativaPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-actividades/evaluaciones/:evaluacionId/revision",
+        element: (
+          <RequireRole rol="estudiante">
+            <ActividadEvaluativaPlaceholder />
           </RequireRole>
         ),
       },
