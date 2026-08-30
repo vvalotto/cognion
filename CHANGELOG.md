@@ -10,6 +10,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-3.4.4] Docente ve el detalle de una actividad, extiende el plazo y la cierra manualmente
+  — backend + frontend
+  - Ajuste sobre la spec detectado en Fase 2: `ActividadResumen`/`ActividadResumenResponse`
+    (`US-3.4.2`) ya tenían todos los campos del detalle (preguntas, intentos, conteos) — se
+    reutilizan en vez de crear un `ActividadDetalle` redundante. Solo faltaba exponer
+    `cerrada_manualmente` en el borde de la API (schema + tipo TS), ya existía en el dominio.
+  - Backend: `ActividadQueryPort.obtener()` (nuevo), `ObtenerActividadUseCase` (lanza
+    `ActividadNoExiste` si no está, mismo patrón que `ObtenerCuentaUseCase`),
+    `ActividadesQueryController` con el use case nuevo inyectado, `GET /actividades/{id}`
+    (rol `docente`, 404 si no existe) — reutiliza `PATCH /periodo` (`US-3.3.1`) y
+    `POST /cerrar` (`US-3.3.2`) sin cambios
+  - Frontend: `obtenerActividad()`, pantallas `ActividadDetalle.tsx`, `ExtenderPlazo.tsx`,
+    `CerrarActividad.tsx` — reemplazan los 3 placeholders cableados desde `US-3.4.1`;
+    `CerrarActividad.tsx` sigue el mismo patrón visual que `EliminarPregunta.tsx`;
+    `ExtenderPlazo.tsx` muestra el 422 `NoSePuedeAcortarConEvaluacionesActivas` inline, mismo
+    criterio que `NuevaActividad.tsx`
+  - 6 tests unitarios + 5 integración + 4 BDD nuevos backend, 679/679 suite completa backend
+    sin regresiones; 11 tests nuevos frontend, 199/199 suite completa frontend; quality gates
+    APROBADO (pylint 9.84/10, CC máx 5, MI mín 54.63, coverage 100% backend / ~90-97% en las
+    pantallas nuevas, oxlint 0 errores, `tsc --noEmit` 0 errores)
 - [US-3.4.3] Docente crea una nueva actividad de período abierto — frontend puro, sin cambios
   de backend (`POST /actividades` ya existía desde `US-3.1.2`)
   - `NuevaActividad.tsx`: formulario con apertura/cierre/cantidad de preguntas/intentos
