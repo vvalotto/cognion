@@ -31,6 +31,7 @@ export interface ActividadResumenResponse {
   cantidadPreguntas: number
   cantidadIntentosPermitidos: number
   estado: EstadoActividad
+  cerradaManualmente: boolean
   cantidadEvaluacionesActivas: number
   cantidadEvaluacionesFinalizadas: number
 }
@@ -94,6 +95,7 @@ interface ActividadResumenApiResponse {
   cantidad_preguntas: number
   cantidad_intentos_permitidos: number
   estado: EstadoActividad
+  cerrada_manualmente: boolean
   cantidad_evaluaciones_activas: number
   cantidad_evaluaciones_finalizadas: number
 }
@@ -160,6 +162,7 @@ function mapearActividadResumen(resumen: ActividadResumenApiResponse): Actividad
     cantidadPreguntas: resumen.cantidad_preguntas,
     cantidadIntentosPermitidos: resumen.cantidad_intentos_permitidos,
     estado: resumen.estado,
+    cerradaManualmente: resumen.cerrada_manualmente,
     cantidadEvaluacionesActivas: resumen.cantidad_evaluaciones_activas,
     cantidadEvaluacionesFinalizadas: resumen.cantidad_evaluaciones_finalizadas,
   }
@@ -218,6 +221,11 @@ export async function listarActividades(materiaId: string): Promise<ActividadRes
   const params = new URLSearchParams({ materia_id: materiaId })
   const response = await apiFetch<ActividadResumenApiResponse[]>(`/actividades?${params}`)
   return response.map(mapearActividadResumen)
+}
+
+export async function obtenerActividad(actividadId: string): Promise<ActividadResumenResponse> {
+  const response = await apiFetch<ActividadResumenApiResponse>(`/actividades/${actividadId}`)
+  return mapearActividadResumen(response)
 }
 
 export async function modificarPeriodoDisponibilidad(
