@@ -231,6 +231,17 @@ export async function modificarPeriodoDisponibilidad(
   return mapearActividad(response)
 }
 
+export async function modificarTitulo(
+  actividadId: string,
+  nuevoTitulo: string,
+): Promise<ActividadResponse> {
+  const response = await apiFetch<ActividadApiResponse>(`/actividades/${actividadId}/titulo`, {
+    method: "PATCH",
+    body: { nuevo_titulo: nuevoTitulo },
+  })
+  return mapearActividad(response)
+}
+
 export async function cerrarActividad(actividadId: string): Promise<ActividadResponse> {
   const response = await apiFetch<ActividadApiResponse>(`/actividades/${actividadId}/cerrar`, {
     method: "POST",

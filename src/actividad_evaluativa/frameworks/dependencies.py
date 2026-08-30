@@ -54,6 +54,9 @@ from src.actividad_evaluativa.use_cases.listar_actividades import ListarActivida
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
+from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
+    ModificarTituloActividadUseCase,
+)
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
@@ -91,6 +94,7 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
         CerrarActividadUseCase(
             event_store, evaluacion_activa_query, FinalizarEvaluacionUseCase(event_store)
         ),
+        ModificarTituloActividadUseCase(event_store),
     )
 
 

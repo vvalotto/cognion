@@ -419,3 +419,96 @@ class TestActividadesFechasNaiveAPIIntegration:
             )
 
         assert response.status_code == 200
+
+
+class TestModificarTituloAPIIntegration:
+    """Escenarios de `US-3.4.9` — edición de título de una actividad ya creada."""
+
+    async def test_docente_edita_el_titulo(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            apertura, cierre = _periodo()
+
+            crear = await client.post(
+                "/actividades",
+                json={
+                    "materia_id": materia_id,
+                    "fecha_apertura": apertura,
+                    "fecha_cierre": cierre,
+                    "cantidad_preguntas": 10,
+                    "cantidad_intentos_permitidos": 1,
+                    "titulo": "Parcial 1",
+                },
+                headers=docente_headers,
+            )
+            actividad_id = crear.json()["id"]
+
+            response = await client.patch(
+                f"/actividades/{actividad_id}/titulo",
+                json={"nuevo_titulo": "Parcial 1 (final)"},
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 200
+        assert response.json()["titulo"] == "Parcial 1 (final)"
+
+    async def test_edita_el_titulo_de_una_actividad_cerrada(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            apertura, cierre = _periodo()
+
+            crear = await client.post(
+                "/actividades",
+                json={
+                    "materia_id": materia_id,
+                    "fecha_apertura": apertura,
+                    "fecha_cierre": cierre,
+                    "cantidad_preguntas": 10,
+                    "cantidad_intentos_permitidos": 1,
+                },
+                headers=docente_headers,
+            )
+            actividad_id = crear.json()["id"]
+            await client.post(f"/actividades/{actividad_id}/cerrar", headers=docente_headers)
+
+            response = await client.patch(
+                f"/actividades/{actividad_id}/titulo",
+                json={"nuevo_titulo": "Corregido post-cierre"},
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 200
+        assert response.json()["titulo"] == "Corregido post-cierre"
+
+    async def test_rechazo_por_actividad_inexistente(self, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/actividades/{uuid.uuid4()}/titulo",
+                json={"nuevo_titulo": "Título"},
+                headers=docente_headers,
+            )
+
+        assert response.status_code == 404
+
+    async def test_rechazo_sin_autenticacion(self):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/actividades/{uuid.uuid4()}/titulo", json={"nuevo_titulo": "Título"}
+            )
+
+        assert response.status_code == 401
+
+    async def test_rechazo_con_rol_insuficiente(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/actividades/{uuid.uuid4()}/titulo",
+                json={"nuevo_titulo": "Título"},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 403

@@ -14,6 +14,9 @@ from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEva
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
+from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
+    ModificarTituloActividadUseCase,
+)
 from tests.unit.inc3._fakes import (
     FakeEventStore,
     FakeMateriaConsultaPort,
@@ -35,6 +38,7 @@ def _controller(event_store: FakeEventStore | None = None) -> ActividadesControl
         CerrarActividadUseCase(
             event_store, FakeEvaluacionActivaQueryPort(), FinalizarEvaluacionUseCase(event_store)
         ),
+        ModificarTituloActividadUseCase(event_store),
     )
 
 
@@ -54,6 +58,7 @@ class TestActividadesController:
                 FakeEvaluacionActivaQueryPort(),
                 FinalizarEvaluacionUseCase(event_store),
             ),
+            ModificarTituloActividadUseCase(event_store),
         )
         apertura = datetime.now(UTC)
         cierre = apertura + timedelta(days=7)
@@ -89,3 +94,14 @@ class TestActividadesController:
         actividad = await controller.cerrar_actividad(actividad_id)
 
         assert actividad.cerrada_manualmente is True
+
+    async def test_modificar_titulo_delega_al_use_case(self):
+        event_store = FakeEventStore()
+        apertura = datetime.now(UTC)
+        cierre = apertura + timedelta(days=7)
+        actividad_id = await _crear_actividad(event_store, apertura, cierre)
+        controller = _controller(event_store)
+
+        actividad = await controller.modificar_titulo(actividad_id, "Parcial 1 (final)")
+
+        assert actividad.titulo == "Parcial 1 (final)"
