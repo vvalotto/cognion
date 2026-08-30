@@ -58,6 +58,12 @@ class ModificarPeriodoDisponibilidadRequest(BaseModel):
     nueva_fecha_cierre: datetime
 
 
+class ModificarTituloRequest(BaseModel):
+    """Body de la request de edición de título de una actividad (`US-3.4.9`)."""
+
+    nuevo_titulo: str
+
+
 class IniciarEvaluacionRequest(BaseModel):
     """Body de la request de inicio de evaluación — `estudiante_id` sale del JWT, no del body."""
 

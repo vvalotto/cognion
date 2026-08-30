@@ -16,6 +16,9 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
+from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
+    ModificarTituloActividadUseCase,
+)
 
 
 class ActividadesController:
@@ -26,11 +29,13 @@ class ActividadesController:
         crear_actividad: CrearActividadPeriodoAbiertoUseCase,
         modificar_periodo: ModificarPeriodoDisponibilidadUseCase,
         cerrar_actividad: CerrarActividadUseCase,
+        modificar_titulo: ModificarTituloActividadUseCase,
     ) -> None:
-        """Recibe los casos de uso de creación, modificación y cierre de actividades."""
+        """Recibe los casos de uso de creación, modificación, cierre y edición de título."""
         self._crear_actividad = crear_actividad
         self._modificar_periodo = modificar_periodo
         self._cerrar_actividad = cerrar_actividad
+        self._modificar_titulo = modificar_titulo
 
     async def crear_actividad(
         self,
@@ -60,3 +65,9 @@ class ActividadesController:
     async def cerrar_actividad(self, actividad_id: UUID) -> ActividadEvaluativaPeriodoAbierto:
         """Delega el cierre manual de la actividad en el caso de uso correspondiente (RF-11b)."""
         return await self._cerrar_actividad.execute(actividad_id)
+
+    async def modificar_titulo(
+        self, actividad_id: UUID, nuevo_titulo: str
+    ) -> ActividadEvaluativaPeriodoAbierto:
+        """Delega la edición del título en el caso de uso correspondiente (`US-3.4.9`)."""
+        return await self._modificar_titulo.execute(actividad_id, nuevo_titulo)

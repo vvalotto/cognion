@@ -43,6 +43,20 @@ class PeriodoDisponibilidadModificado:
 
 
 @dataclass(frozen=True)
+class TituloActividadModificado:
+    """Se editó `titulo` de una actividad (`US-3.4.9`).
+
+    Cuarto evento posible del stream de `ActividadEvaluativaPeriodoAbierto`. Sin invariantes
+    de dominio — a diferencia de `PeriodoDisponibilidadModificado`, se aplica sin importar si
+    la actividad ya está cerrada manualmente.
+    """
+
+    actividad_id: UUID
+    nuevo_titulo: str
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
 class ActividadEvaluativaCerrada:
     """Se cerró manualmente una actividad — terminal (INV-AE-04b, `US-3.3.2`).
 
