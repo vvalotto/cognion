@@ -1,0 +1,55 @@
+{
+  "us_id": "US-3.4.5",
+  "fecha": "2026-08-31T10:47:48",
+  "componente": "src/identidad, src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.81,
+    "cc_max": 5,
+    "cc_promedio": 1.44,
+    "mi_promedio": 83.2,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 13,
+    "errors": 2,
+    "warnings": 195,
+    "infos": 96,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 13},
+      "PEP8": {"errors": 0, "warnings": 2, "infos": 11},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 13},
+      "DeadCode": {"errors": 1, "warnings": 179, "infos": 1},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 13},
+      "Pylint": {"errors": 1, "warnings": 0, "infos": 12},
+      "Spelling": {"errors": 0, "warnings": 14, "infos": 7},
+      "Types": {"errors": 0, "warnings": 0, "infos": 13},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 13}
+    },
+    "reporte": "quality/reports/inc3/US-3.4.5-codeguard.json"
+  },
+  "frontend": {
+    "oxlint_errores": 0,
+    "tsc_noemit_errores": 0,
+    "vitest": "211/211 (10 nuevos: MisMaterias.test.tsx, MisActividades.test.tsx, FueraDePeriodo.test.tsx)",
+    "coverage_componentes_nuevos": {
+      "MisMaterias.tsx": "89.47%",
+      "MisActividades.tsx": "91.89%",
+      "FueraDePeriodo.tsx": "~100% (omitido de la tabla del reporter por cobertura completa)"
+    }
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "router.test.tsx tenía una aserción sobre el placeholder reemplazado en /mis-actividades/materias — actualizada para verificar el heading real de MisMaterias.tsx.",
+    "NuevaPreguntaOpcionMultiple.test.tsx tiene un timeout intermitente (5000ms) al correr la suite Vitest completa bajo --coverage (no falla en aislamiento, no toca archivos de esta US) — flaky preexistente de carga, no una regresión introducida.",
+    "DeadCode (vulture) reporta 179 warnings + 1 error, la enorme mayoría (60% de confianza) sobre clases Pydantic (schemas) y funciones de router FastAPI — falsos positivos esperables: vulture no reconoce el wiring por decorador/DI, mismo ruido que produciría cualquier archivo de schemas/router de este proyecto. El único error (parámetro `evaluacion_ids` de un método abstracto sin cuerpo) es el mismo patrón.",
+    "codeguard --analysis-type full reportó timeout intermitente (>10s) del check Pylint sobre 1-2 archivos en corridas sucesivas del mismo comando sin cambios de código — mismo patrón de flakiness ya documentado para el check Types/mypy en project_codeguard_mypy_timeout (software_limpio#70). El pylint standalone (fuente de verdad, sin límite de tiempo) corrió limpio sobre los 13 archivos: 9.81/10.",
+    "vulture y codespell no estaban instalados en el entorno de desarrollo — agregados como dev dependencies (`uv add --dev vulture codespell`) para poder correr codeguard en modo full con los 9 checks reales, en vez de placeholders 'not installed' contando como error.",
+    "Coverage 99% mide sobre `src/identidad` + `src/actividad_evaluativa` completos, excluyendo `frameworks/*` (omit ya configurado en pyproject.toml, [tool.coverage.run] — mismo criterio que el resto del proyecto: frameworks se valida por tests de integración, no por el gate de coverage). Los 4 componentes nuevos con lógica propia (2 use cases, 2 controllers) están al 100%."
+  ]
+}
