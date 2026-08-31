@@ -89,10 +89,10 @@ class TestObtenerRevisionEvaluacionUseCase:
         )
         pregunta_consulta = FakePreguntaConsultaPort()
         pregunta_consulta.detalles[pregunta_correcta] = DetalleCorreccionPregunta(
-            texto="¿Correcta?", contenido_correcto={"opcion_indice": 0}
+            texto="¿Correcta?", contenido_correcto={"opcion_indice": 0}, opciones=None
         )
         pregunta_consulta.detalles[pregunta_incorrecta] = DetalleCorreccionPregunta(
-            texto="¿Incorrecta?", contenido_correcto={"opcion_indice": 0}
+            texto="¿Incorrecta?", contenido_correcto={"opcion_indice": 0}, opciones=None
         )
         use_case = ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store)
 
@@ -122,7 +122,7 @@ class TestObtenerRevisionEvaluacionUseCase:
         )
         pregunta_consulta = FakePreguntaConsultaPort()
         pregunta_consulta.detalles[pregunta_id] = DetalleCorreccionPregunta(
-            texto="¿Sin responder?", contenido_correcto={"valor": True}
+            texto="¿Sin responder?", contenido_correcto={"valor": True}, opciones=None
         )
         use_case = ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store)
 
@@ -161,7 +161,7 @@ class TestObtenerRevisionEvaluacionUseCase:
         )
         pregunta_consulta = FakePreguntaConsultaPort()
         pregunta_consulta.detalles[pregunta_id] = DetalleCorreccionPregunta(
-            texto="¿Con reintento?", contenido_correcto={"opcion_indice": 0}
+            texto="¿Con reintento?", contenido_correcto={"opcion_indice": 0}, opciones=None
         )
         use_case = ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store)
 

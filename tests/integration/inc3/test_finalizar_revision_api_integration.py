@@ -50,6 +50,30 @@ async def _crear_materia(client: AsyncClient, headers: dict) -> tuple[str, str]:
     return creada.json()["id"], creada.json()["banco_id"]
 
 
+async def _cargar_opcion_multiple(
+    client: AsyncClient, headers: dict, banco_id: str, indice_correcto: int = 1
+) -> tuple[str, list[str]]:
+    opciones_texto = ["Incorrecta", "Correcta"]
+    opciones = [
+        {"texto": texto, "es_correcta": indice == indice_correcto}
+        for indice, texto in enumerate(opciones_texto)
+    ]
+    respuesta = await client.post(
+        "/preguntas/opcion-multiple",
+        json={
+            "banco_id": banco_id,
+            "texto": f"Pregunta OM {uuid.uuid4()}",
+            "opciones": opciones,
+            "unidad_tematica": "Unidad 1",
+            "tema": "Tema",
+            "dificultad": "medio",
+            "importancia": "alto",
+        },
+        headers=headers,
+    )
+    return respuesta.json()["id"], opciones_texto
+
+
 async def _cargar_verdadero_falso(
     client: AsyncClient, headers: dict, banco_id: str, respuesta_correcta: bool
 ) -> str:
@@ -396,3 +420,43 @@ class TestRevisionAPIIntegration:
             )
 
         assert response.status_code == 403
+
+    async def test_revision_de_opcion_multiple_expone_el_texto_de_las_opciones(
+        self, session, docente_headers
+    ):
+        """`US-3.4.7` — `contenido_propio`/`contenido_correcto` traen `opcion_indice`, y
+        `opciones` permite resolver su texto real sin conocer el tipo de pregunta."""
+        estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            pregunta_id, opciones_texto = await _cargar_opcion_multiple(
+                client, docente_headers, banco_id, indice_correcto=1
+            )
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 1, apertura, cierre
+            )
+            evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
+            await client.post(
+                f"/evaluaciones/{evaluacion['id']}/respuestas",
+                json={"pregunta_id": pregunta_id, "contenido": {"opcion_indice": 0}},
+                headers=estudiante_headers,
+            )
+            await client.post(
+                f"/evaluaciones/{evaluacion['id']}/finalizar", headers=estudiante_headers
+            )
+
+            response = await client.get(
+                f"/evaluaciones/{evaluacion['id']}/revision", headers=estudiante_headers
+            )
+
+        assert response.status_code == 200
+        fila = response.json()["detalle"][0]
+        assert fila["opciones"] == opciones_texto
+        assert fila["contenido_propio"] == {"opcion_indice": 0}
+        assert fila["es_correcta"] is False
+        assert fila["contenido_correcto"] == {"opcion_indice": 1}
+        assert opciones_texto[fila["contenido_propio"]["opcion_indice"]] == "Incorrecta"
+        assert opciones_texto[fila["contenido_correcto"]["opcion_indice"]] == "Correcta"
