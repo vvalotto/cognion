@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "us_id": "US-3.4.10",
+    "us_title": "Fix — IniciarEvaluacion no rechaza actividad cerrada manualmente",
+    "us_points": 1,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-31T19:45:28.567255+00:00",
+    "completed_at": "2026-08-31T19:58:18.144108+00:00",
+    "total_elapsed_seconds": 769,
+    "effective_seconds": 769,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-31T19:45:28.930919+00:00",
+      "completed_at": "2026-08-31T19:45:46.517033+00:00",
+      "elapsed_seconds": 17,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 1,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
