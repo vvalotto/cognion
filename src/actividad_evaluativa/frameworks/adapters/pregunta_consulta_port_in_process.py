@@ -87,6 +87,8 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
 
         Mismo criterio defensivo que `evaluar_correccion` ante `pregunta is None`. El shape de
         `contenido_correcto` replica el de `Respuesta.contenido` para cada tipo concreto.
+        `opciones` acompaña a `contenido_correcto` con el texto de cada opción, en el mismo
+        orden que `opcion_indice` — `None` para Verdadero/Falso (`US-3.4.7`).
         """
         pregunta = await self._pregunta_repositorio.obtener_por_id(pregunta_id)
         if pregunta is None:
@@ -97,11 +99,13 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
                 indice for indice, opcion in enumerate(pregunta.opciones) if opcion.es_correcta
             )
             contenido_correcto: dict[str, Any] = {"opcion_indice": indice_correcto}
+            opciones: list[str] | None = [opcion.texto for opcion in pregunta.opciones]
         else:
             contenido_correcto = {"valor": pregunta.respuesta_correcta}
+            opciones = None
 
         return DetalleCorreccionPregunta(
-            texto=pregunta.texto, contenido_correcto=contenido_correcto
+            texto=pregunta.texto, contenido_correcto=contenido_correcto, opciones=opciones
         )
 
     async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:

@@ -41,6 +41,7 @@ def _a_response(revision: RevisionEvaluacion) -> RevisionEvaluacionResponse:
                 contenido_propio=fila.contenido_propio,
                 es_correcta=fila.es_correcta,
                 contenido_correcto=fila.contenido_correcto,
+                opciones=fila.opciones,
             )
             for fila in revision.detalle
         ],

@@ -163,6 +163,7 @@ class DetallePreguntaRevisionResponse(BaseModel):
     contenido_propio: dict[str, Any] | None
     es_correcta: bool
     contenido_correcto: dict[str, Any] | None
+    opciones: list[str] | None
 
 
 class RevisionEvaluacionResponse(BaseModel):

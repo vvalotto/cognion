@@ -93,4 +93,5 @@ class ObtenerRevisionEvaluacionUseCase:
             contenido_propio=respuesta.contenido if respuesta is not None else None,
             es_correcta=es_correcta,
             contenido_correcto=(None if es_correcta else detalle_correccion.contenido_correcto),
+            opciones=detalle_correccion.opciones,
         )
