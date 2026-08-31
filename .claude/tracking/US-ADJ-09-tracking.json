@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "us_id": "US-3.4.8",
+    "us_id": "US-ADJ-09",
     "us_title": "Fix - datetimes naive/aware en actividades",
     "us_points": 2,
     "producto": "cognion",

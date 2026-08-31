@@ -38,7 +38,7 @@
 contenido de la respuesta como `{opcion_indice: N}` — sin el texto de la opción. El prototipo
 aprobado (`#est-revision`) muestra texto real ("Tu respuesta: Herencia múltiple obligatoria").
 Decisión: extender el backend en esta misma US para incluir el texto de las opciones, mismo
-criterio que gaps previos resueltos dentro de la propia US (`US-2.1.9`, `US-2.2.8`, `US-3.4.9`).
+criterio que gaps previos resueltos dentro de la propia US (`US-2.1.9`, `US-2.2.8`, `US-ADJ-10`).
 
 ## Componentes a Implementar
 

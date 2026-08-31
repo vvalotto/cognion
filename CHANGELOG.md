@@ -16,7 +16,7 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     `ContenidoPregunta.opciones`), poblado en `PreguntaConsultaPortInProcess.obtener_detalle_correccion()`
     y propagado por `DetallePreguntaRevision`/`DetallePreguntaRevisionResponse` hasta
     `GET /evaluaciones/{id}/revision`. Gap detectado en Fase 2, resuelto dentro de esta misma
-    US (mismo criterio que `US-2.1.9`/`US-2.2.8`/`US-3.4.9`): sin este campo, el detalle de
+    US (mismo criterio que `US-2.1.9`/`US-2.2.8`/`US-ADJ-10`): sin este campo, el detalle de
     opción múltiple solo traía `{opcion_indice: N}`, sin el texto real de la opción elegida —
     el prototipo aprobado (`#est-revision`) muestra el texto, no el índice
   - Frontend: `RevisionEvaluacion.tsx` (nueva, reemplaza el placeholder de `US-3.4.1` en

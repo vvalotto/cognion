@@ -438,7 +438,7 @@ completo:
 2026-08-30, PR [#179](https://github.com/vvalotto/cognion/pull/179), Issue #171 cerrado.
 **US-3.4.3** (Docente crea una nueva actividad de período abierto) cerrada 2026-08-30, PR
 [#180](https://github.com/vvalotto/cognion/pull/180), Issue #172 cerrado — el formulario
-original no pedía título (gap detectado recién en UAT, ver `US-3.4.9` más abajo).
+original no pedía título (gap detectado recién en UAT, ver `US-ADJ-10` más abajo).
 **US-3.4.4** (Docente ve el detalle de una actividad, extiende el plazo y la cierra
 manualmente) cerrada 2026-08-30, PR [#182](https://github.com/vvalotto/cognion/pull/182),
 Issue #173 cerrado: `GET /actividades/{id}` nuevo (`ObtenerActividadUseCase`), pantallas
@@ -455,7 +455,7 @@ hallazgos, todos resueltos en la misma sesión antes de mergear:
   contra `datetime.now(UTC)`, aware). Regresión ya mergeada en `US-3.4.2`, invisible a los tests
   automatizados porque arman las fechas con `datetime.now(UTC).isoformat()` en vez de simular
   el input real del navegador — mismo patrón que el gap de CORS de `US-1.1.6`/`1.1.7`.
-  **US-3.4.8** (fix — normalizar datetimes naive a UTC en el boundary de la API, Pydantic
+  **US-ADJ-09** (fix — normalizar datetimes naive a UTC en el boundary de la API, Pydantic
   `field_validator`), PR [#184](https://github.com/vvalotto/cognion/pull/184), Issue #183
   cerrado.
 - **Gap de UX, frontend-only** (track informal): el detalle de actividad solo tenía el
@@ -463,7 +463,7 @@ hallazgos, todos resueltos en la misma sesión antes de mergear:
   "‹ Volver a actividades", incluido en el mismo PR #182 de `US-3.4.4`.
 - **Gap de producto**: el formulario de "Nueva actividad" nunca pedía título (el wireframe
   aprobado tampoco lo incluía, aunque el listado sí espera mostrarlo) — fix del input en PR
-  [#185](https://github.com/vvalotto/cognion/pull/185) (`US-3.4.3`), y **US-3.4.9** (Docente
+  [#185](https://github.com/vvalotto/cognion/pull/185) (`US-3.4.3`), y **US-ADJ-10** (Docente
   edita el título de una actividad ya creada — no existía ningún endpoint para esto)
   implementada como US-IEDD nueva completa: comando `ModificarTituloActividad`, evento
   `TituloActividadModificado` (cuarto evento posible del stream, sin invariantes de dominio —

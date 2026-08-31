@@ -24,7 +24,7 @@ la respuesta como `{opcion_indice: N}` — sin el texto de la opción. El protot
 extender `DetalleCorreccionPregunta` con un campo `opciones: list[str] | None` (mismo criterio
 que `ContenidoPregunta.opciones`, ya usado por `US-3.4.6`) en vez de mostrar solo el índice en
 el frontend — mismo criterio de gaps previos resueltos dentro de la propia US (`US-2.1.9`,
-`US-2.2.8`, `US-3.4.9`). Plan completo y aprobado: `docs/plans/inc3/US-3.4.7-plan.md`.
+`US-2.2.8`, `US-ADJ-10`). Plan completo y aprobado: `docs/plans/inc3/US-3.4.7-plan.md`.
 
 ---
 

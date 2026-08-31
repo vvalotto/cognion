@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, field_validator
 def _a_utc_si_naive(dt: datetime) -> datetime:
     """Asigna UTC a un datetime sin tzinfo (`<input type="datetime-local">` no manda offset).
 
-    Simplificación conocida (`US-3.4.8`): el navegador no manda el timezone real del
+    Simplificación conocida (`US-ADJ-09`): el navegador no manda el timezone real del
     usuario, así que la hora local ingresada se trata como si fuera UTC — evita el
     `TypeError` de comparar datetimes naive/aware sin rediseñar el manejo de timezone de
     punta a punta.
@@ -87,7 +87,7 @@ class ModificarPeriodoDisponibilidadRequest(BaseModel):
 
 
 class ModificarTituloRequest(BaseModel):
-    """Body de la request de edición de título de una actividad (`US-3.4.9`)."""
+    """Body de la request de edición de título de una actividad (`US-ADJ-10`)."""
 
     nuevo_titulo: str
 
