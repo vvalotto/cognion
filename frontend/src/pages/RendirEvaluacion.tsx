@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
+  finalizarEvaluacion,
   iniciarEvaluacion,
   registrarRespuesta,
   suspenderEvaluacion,
@@ -79,6 +80,8 @@ export function RendirEvaluacion() {
     navigate(`/mis-actividades/actividades/${actividadId}/suspendida`)
   }
 
+  const esUltimaPregunta = indiceActual === cantidad - 1
+
   async function confirmarYSiguiente() {
     if (!seleccion) return
     setError(null)
@@ -91,6 +94,11 @@ export function RendirEvaluacion() {
       await registrarRespuesta(evaluacion!.id, preguntaActual.preguntaId, contenido)
       setRespondidas((prev) => new Set(prev).add(preguntaActual.preguntaId))
       setSeleccion(null)
+      if (esUltimaPregunta) {
+        await finalizarEvaluacion(evaluacion!.id)
+        navigate(`/mis-actividades/evaluaciones/${evaluacion!.id}/revision`)
+        return
+      }
       setIndiceActual((i) => Math.min(i + 1, cantidad - 1))
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -228,7 +236,7 @@ export function RendirEvaluacion() {
           Anterior
         </Button>
         <Button disabled={!seleccion || enviando} onClick={() => void confirmarYSiguiente()}>
-          Confirmar y siguiente
+          {esUltimaPregunta ? "Confirmar y finalizar" : "Confirmar y siguiente"}
         </Button>
       </div>
       <p className="mt-3 text-center text-xs text-muted-foreground">

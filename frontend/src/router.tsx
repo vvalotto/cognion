@@ -5,7 +5,7 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/AltaDocente"
 import { AltaDocenteExito } from "@/pages/AltaDocenteExito"
-import { ActividadEvaluativaPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
+import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Actividades } from "@/pages/Actividades"
 import { ActividadDetalle } from "@/pages/ActividadDetalle"
 import { Banco } from "@/pages/Banco"
@@ -35,6 +35,7 @@ import { RegistroError } from "@/pages/RegistroError"
 import { RegistroExito } from "@/pages/RegistroExito"
 import { RendirEvaluacion } from "@/pages/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/ResetearPassword"
+import { RevisionEvaluacion } from "@/pages/RevisionEvaluacion"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -270,7 +271,7 @@ export const router = createBrowserRouter([
         path: "/mis-actividades/evaluaciones/:evaluacionId/revision",
         element: (
           <RequireRole rol="estudiante">
-            <ActividadEvaluativaPlaceholder />
+            <RevisionEvaluacion />
           </RequireRole>
         ),
       },

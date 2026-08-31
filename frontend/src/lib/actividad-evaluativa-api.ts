@@ -80,6 +80,7 @@ export interface DetallePreguntaRevisionResponse {
   contenidoPropio: Record<string, unknown> | null
   esCorrecta: boolean
   contenidoCorrecto: Record<string, unknown> | null
+  opciones: string[] | null
 }
 
 export interface RevisionEvaluacionResponse {
@@ -157,6 +158,7 @@ interface DetallePreguntaRevisionApiResponse {
   contenido_propio: Record<string, unknown> | null
   es_correcta: boolean
   contenido_correcto: Record<string, unknown> | null
+  opciones: string[] | null
 }
 
 interface RevisionEvaluacionApiResponse {
@@ -239,6 +241,7 @@ function mapearRevision(revision: RevisionEvaluacionApiResponse): RevisionEvalua
       contenidoPropio: fila.contenido_propio,
       esCorrecta: fila.es_correcta,
       contenidoCorrecto: fila.contenido_correcto,
+      opciones: fila.opciones,
     })),
   }
 }
