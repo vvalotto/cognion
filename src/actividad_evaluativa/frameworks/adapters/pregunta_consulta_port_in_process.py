@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.errors import PreguntaNoAsignada
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
+    ContenidoPregunta,
     DetalleCorreccionPregunta,
     PreguntaConsultaPort,
 )
@@ -102,3 +103,20 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         return DetalleCorreccionPregunta(
             texto=pregunta.texto, contenido_correcto=contenido_correcto
         )
+
+    async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:
+        """Arma `ContenidoPregunta` con el texto y las opciones vigentes, sin la correcta.
+
+        Mismo criterio defensivo que `evaluar_correccion`/`obtener_detalle_correccion` ante
+        `pregunta is None`. `opciones` es `None` para Verdadero/Falso.
+        """
+        pregunta = await self._pregunta_repositorio.obtener_por_id(pregunta_id)
+        if pregunta is None:
+            raise PreguntaNoAsignada(None, pregunta_id)
+
+        if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
+            return ContenidoPregunta(
+                texto=pregunta.texto, opciones=[opcion.texto for opcion in pregunta.opciones]
+            )
+
+        return ContenidoPregunta(texto=pregunta.texto, opciones=None)
