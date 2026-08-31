@@ -66,6 +66,18 @@ class ActividadResumenResponse(BaseModel):
     cantidad_evaluaciones_finalizadas: int
 
 
+class ActividadVisibleResponse(BaseModel):
+    """Actividad con el `Badge` de estado desde la perspectiva del Estudiante (`US-3.4.5`)."""
+
+    id: UUID
+    materia_id: UUID
+    titulo: str
+    fecha_apertura: datetime
+    fecha_cierre: datetime
+    estado: str
+    evaluacion_id: UUID | None
+
+
 class ModificarPeriodoDisponibilidadRequest(BaseModel):
     """Body de la request de modificación del período de disponibilidad (US-3.3.1, RF-11b)."""
 

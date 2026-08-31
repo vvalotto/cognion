@@ -23,21 +23,29 @@ from src.actividad_evaluativa.entities.ports.actividad_query_port import Activid
 from src.actividad_evaluativa.frameworks.api.schemas import (
     ActividadResponse,
     ActividadResumenResponse,
+    ActividadVisibleResponse,
     CrearActividadRequest,
     ModificarPeriodoDisponibilidadRequest,
     ModificarTituloRequest,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_actividades_controller,
+    get_actividades_estudiante_controller,
     get_actividades_query_controller,
+    get_current_user,
     require_docente,
+    require_estudiante,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudiante_controller import (
+    ActividadesEstudianteController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
 )
+from src.shared.entities.jwt import JWTPayload
 
 router = APIRouter(prefix="/actividades", tags=["actividad_evaluativa"])
 
@@ -99,6 +107,36 @@ async def listar_actividades(
     resumenes = await controller.listar_actividades(materia_id)
     ahora = datetime.now(UTC)
     return [_a_resumen_response(resumen, ahora) for resumen in resumenes]
+
+
+@router.get(
+    "/mis-actividades",
+    response_model=list[ActividadVisibleResponse],
+    dependencies=[Depends(require_estudiante)],
+)
+async def listar_mis_actividades(
+    materia_id: UUID = Query(...),
+    usuario: JWTPayload = Depends(get_current_user),
+    controller: ActividadesEstudianteController = Depends(get_actividades_estudiante_controller),
+) -> list[ActividadVisibleResponse]:
+    """Actividades de una materia con el `Badge` de estado del Estudiante autenticado (`US-3.4.5`).
+
+    Registrada antes de `/{actividad_id}` — es una ruta literal, no debe resolverse como un
+    `actividad_id`.
+    """
+    visibles = await controller.listar_actividades_visibles(materia_id, usuario.usuario_id)
+    return [
+        ActividadVisibleResponse(
+            id=visible.id,
+            materia_id=visible.materia_id,
+            titulo=visible.titulo,
+            fecha_apertura=visible.fecha_apertura,
+            fecha_cierre=visible.fecha_cierre,
+            estado=visible.estado,
+            evaluacion_id=visible.evaluacion_id,
+        )
+        for visible in visibles
+    ]
 
 
 @router.get(

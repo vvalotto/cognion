@@ -23,6 +23,9 @@ from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_pr
 from src.actividad_evaluativa.frameworks.adapters.evaluacion_activa_query_repository import (
     SQLAlchemyEvaluacionActivaQueryRepository,
 )
+from src.actividad_evaluativa.frameworks.adapters.evaluacion_estudiante_query_repository import (
+    SQLAlchemyEvaluacionEstudianteQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_process import (
     MateriaConsultaPortInProcess,
 )
@@ -34,6 +37,9 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
 )
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudiante_controller import (
+    ActividadesEstudianteController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
@@ -51,6 +57,9 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
+from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
+    ListarActividadesVisiblesUseCase,
+)
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
@@ -105,6 +114,15 @@ def get_actividades_query_controller(session: SessionDep) -> ActividadesQueryCon
     return ActividadesQueryController(
         ListarActividadesUseCase(actividad_query),
         ObtenerActividadUseCase(actividad_query),
+    )
+
+
+def get_actividades_estudiante_controller(session: SessionDep) -> ActividadesEstudianteController:
+    """Arma el `ActividadesEstudianteController` con sus dependencias concretas (`US-3.4.5`)."""
+    actividad_query = SQLAlchemyActividadQueryRepository(session)
+    evaluacion_query = SQLAlchemyEvaluacionEstudianteQueryRepository(session)
+    return ActividadesEstudianteController(
+        ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
     )
 
 
