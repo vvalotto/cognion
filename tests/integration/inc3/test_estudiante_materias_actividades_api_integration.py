@@ -28,9 +28,7 @@ async def _crear_materia(client: AsyncClient, docente_headers: dict) -> str:
     return response.json()["id"]
 
 
-async def _crear_estudiante_de_materia(
-    session, materia_id: str
-) -> tuple[Usuario, dict[str, str]]:
+async def _crear_estudiante_de_materia(session, materia_id: str) -> tuple[Usuario, dict[str, str]]:
     """Crea un Estudiante cuya comisión referencia una materia real de Banco de Preguntas.
 
     A diferencia de `_crear_estudiante` de `test_evaluaciones_api_integration.py` (comisión con
@@ -129,9 +127,7 @@ class TestEstudianteMateriasAPIIntegration:
     async def test_rol_docente_no_autorizado(self, docente_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.get(
-                "/identidad/estudiante/materias", headers=docente_headers
-            )
+            response = await client.get("/identidad/estudiante/materias", headers=docente_headers)
 
         assert response.status_code == 403
 
