@@ -50,6 +50,10 @@ function renderRendirEvaluacion() {
           element={<p>Suspendida</p>}
         />
         <Route path="/mis-actividades/:actividadId/fuera-de-periodo" element={<p>Fuera de período</p>} />
+        <Route
+          path="/mis-actividades/evaluaciones/:evaluacionId/revision"
+          element={<p>Revisión</p>}
+        />
       </Routes>
     </MemoryRouter>,
   )
@@ -145,6 +149,38 @@ describe("RendirEvaluacion", () => {
     renderRendirEvaluacion()
 
     expect(await screen.findByText("Fuera de período")).toBeInTheDocument()
+  })
+
+  it("en la última pregunta el botón dice 'Confirmar y finalizar' y navega a la revisión", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, evaluacionBody({ preguntas_respondidas: ["p1"] })),
+    )
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 1")
+
+    expect(
+      screen.getByRole("button", { name: "Confirmar y finalizar" }),
+    ).toBeInTheDocument()
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, {
+        id: "resp-2",
+        pregunta_id: "p2",
+        numero_intento: 1,
+        confirmada_en: "2026-09-01T00:05:00+00:00",
+      }),
+    )
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, evaluacionBody({ estado: "Finalizada" })),
+    )
+
+    const user = userEvent.setup()
+    await user.click(screen.getByText("Opción A"))
+    await user.click(screen.getByRole("button", { name: "Confirmar y finalizar" }))
+
+    expect(await screen.findByText("Revisión")).toBeInTheDocument()
+    const llamadaFinalizar = vi.mocked(fetch).mock.calls.at(-1)
+    expect(llamadaFinalizar?.[0]).toContain(`/evaluaciones/${EVALUACION_ID}/finalizar`)
   })
 
   it("una pregunta de Verdadero/Falso muestra las dos opciones fijas", async () => {

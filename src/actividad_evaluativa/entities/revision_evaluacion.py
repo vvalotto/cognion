@@ -17,6 +17,9 @@ class DetallePreguntaRevision:
 
     `contenido_correcto` solo viene poblado si `not respondida or not es_correcta` — RF-13
     expone la respuesta correcta únicamente cuando el estudiante falló o no respondió.
+    `opciones` sigue el mismo criterio que `ContenidoPregunta.opciones` — `None` para
+    Verdadero/Falso, lista de textos para Opción Múltiple — para resolver el texto de
+    `contenido_propio`/`contenido_correcto` sin conocer el tipo concreto (`US-3.4.7`).
     """
 
     pregunta_id: UUID
@@ -26,6 +29,7 @@ class DetallePreguntaRevision:
     contenido_propio: dict[str, Any] | None
     es_correcta: bool
     contenido_correcto: dict[str, Any] | None
+    opciones: list[str] | None
 
 
 @dataclass(frozen=True)

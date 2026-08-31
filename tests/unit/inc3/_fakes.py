@@ -75,7 +75,8 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     async def obtener_detalle_correccion(self, pregunta_id: UUID) -> DetalleCorreccionPregunta:
         """Devuelve el detalle precargado para la pregunta, o uno vacío si no se precargó."""
         return self.detalles.get(
-            pregunta_id, DetalleCorreccionPregunta(texto="", contenido_correcto={})
+            pregunta_id,
+            DetalleCorreccionPregunta(texto="", contenido_correcto={}, opciones=None),
         )
 
     async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:

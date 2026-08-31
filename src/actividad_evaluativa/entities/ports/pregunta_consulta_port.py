@@ -32,11 +32,16 @@ class DetalleCorreccionPregunta:
 
     `contenido_correcto` tiene el mismo shape que `Respuesta.contenido` (`Evaluacion`), para
     que el llamador pueda comparar/mostrar ambos de forma uniforme sin conocer el tipo
-    concreto de la pregunta (`US-3.2.3`, RF-13).
+    concreto de la pregunta (`US-3.2.3`, RF-13). `opciones` sigue el mismo criterio que
+    `ContenidoPregunta.opciones` — `None` para Verdadero/Falso, lista de textos en el orden
+    original para Opción Múltiple — para que el llamador pueda resolver el texto de
+    `contenido_propio`/`contenido_correcto` (`{opcion_indice: N}`) sin conocer el tipo
+    concreto de la pregunta (`US-3.4.7`).
     """
 
     texto: str
     contenido_correcto: dict[str, Any]
+    opciones: list[str] | None
 
 
 class PreguntaConsultaPort(ABC):
@@ -69,7 +74,8 @@ class PreguntaConsultaPort(ABC):
 
         Usado por `ObtenerRevisionEvaluacion` (`US-3.2.3`) — a diferencia de
         `evaluar_correccion`, que solo informa `bool`, la revisión necesita mostrarle al
-        estudiante cuál era la respuesta correcta cuando falló o no respondió.
+        estudiante cuál era la respuesta correcta cuando falló o no respondió. `opciones`
+        permite además resolver el texto de la respuesta propia del estudiante (`US-3.4.7`).
         """
 
     @abstractmethod

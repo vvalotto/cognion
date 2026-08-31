@@ -10,6 +10,27 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-3.4.7] Estudiante finaliza su evaluación y ve la revisión completa, backend + frontend —
+  cierra completo el lado Estudiante de la Iteración 4 del Incremento 3
+  - Backend: `DetalleCorreccionPregunta` (+`opciones: list[str] | None`, mismo criterio que
+    `ContenidoPregunta.opciones`), poblado en `PreguntaConsultaPortInProcess.obtener_detalle_correccion()`
+    y propagado por `DetallePreguntaRevision`/`DetallePreguntaRevisionResponse` hasta
+    `GET /evaluaciones/{id}/revision`. Gap detectado en Fase 2, resuelto dentro de esta misma
+    US (mismo criterio que `US-2.1.9`/`US-2.2.8`/`US-3.4.9`): sin este campo, el detalle de
+    opción múltiple solo traía `{opcion_indice: N}`, sin el texto real de la opción elegida —
+    el prototipo aprobado (`#est-revision`) muestra el texto, no el índice
+  - Frontend: `RevisionEvaluacion.tsx` (nueva, reemplaza el placeholder de `US-3.4.1` en
+    `/mis-actividades/evaluaciones/:evaluacionId/revision`) — resumen + detalle por pregunta,
+    resolviendo el texto de la respuesta propia/correcta desde `opciones`/`valor` sin conocer
+    el tipo concreto de pregunta. `RendirEvaluacion.tsx`: el botón de la última pregunta pasa
+    a "Confirmar y finalizar" y dispara `finalizarEvaluacion` + navegación a la revisión —
+    decisión de diseño porque el prototipo no define un botón "Finalizar" separado. 2 variantes
+    nuevas en `Badge` (`revision-correcta`/`revision-incorrecta`). `ActividadEvaluativaPlaceholder`
+    eliminado de `_placeholders.tsx` (código obsoleto, sin más rutas que lo referencien)
+  - 1 test de integración + 3 escenarios BDD nuevos backend (749→752 tests backend con
+    regresiones existentes en verde), 5 tests nuevos frontend (226/226 suite completa);
+    quality gates APROBADO (pylint 9.59/10, CC máx 7, MI mín 54.63, coverage 99%, codeguard
+    9/9 checks full, mypy limpio sobre `src/` completo)
 - [US-3.4.6] Estudiante rinde su evaluación — responde, pausa y reanuda, backend + frontend
   - Backend: `PreguntaConsultaPort.obtener_contenido()` (nuevo, texto + opciones sin marcar
     cuál es correcta — `ContenidoPregunta`), implementado en `PreguntaConsultaPortInProcess`;
