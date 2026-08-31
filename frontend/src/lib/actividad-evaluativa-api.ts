@@ -51,6 +51,8 @@ export interface ActividadVisibleResponse {
 export interface PreguntaAsignadaResponse {
   preguntaId: string
   orden: number
+  enunciado: string
+  opciones: string[] | null
 }
 
 export interface EvaluacionResponse {
@@ -58,6 +60,7 @@ export interface EvaluacionResponse {
   actividadId: string
   estudianteId: string
   preguntasAsignadas: PreguntaAsignadaResponse[]
+  preguntasRespondidas: string[]
   estado: string
   iniciadaEn: string
 }
@@ -125,6 +128,8 @@ interface ActividadVisibleApiResponse {
 interface PreguntaAsignadaApiResponse {
   pregunta_id: string
   orden: number
+  enunciado: string
+  opciones: string[] | null
 }
 
 interface EvaluacionApiResponse {
@@ -132,6 +137,7 @@ interface EvaluacionApiResponse {
   actividad_id: string
   estudiante_id: string
   preguntas_asignadas: PreguntaAsignadaApiResponse[]
+  preguntas_respondidas: string[]
   estado: string
   iniciada_en: string
 }
@@ -210,7 +216,10 @@ function mapearEvaluacion(evaluacion: EvaluacionApiResponse): EvaluacionResponse
     preguntasAsignadas: evaluacion.preguntas_asignadas.map((p) => ({
       preguntaId: p.pregunta_id,
       orden: p.orden,
+      enunciado: p.enunciado,
+      opciones: p.opciones,
     })),
+    preguntasRespondidas: evaluacion.preguntas_respondidas,
     estado: evaluacion.estado,
     iniciadaEn: evaluacion.iniciada_en,
   }
