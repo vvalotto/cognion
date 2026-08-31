@@ -80,9 +80,9 @@ def _a_visible(
 
 
 def _estado_para(resumen: ActividadResumen, finalizada: bool, ahora: datetime) -> EstadoVisible:
-    """Deriva el `Badge` del Estudiante — solo 3 estados, fieles al prototipo aprobado
-    (`docs/design/ux/prototipos/actividad-evaluativa-periodo-abierto.html` `#est-actividades`).
+    """Deriva el `Badge` del Estudiante — solo 3 estados, fieles al prototipo aprobado.
 
+    Ver `docs/design/ux/prototipos/actividad-evaluativa-periodo-abierto.html` `#est-actividades`.
     `"finalizada"` si ya tiene una `Evaluacion` `Finalizada`; `"todavia_no_abrio"` con
     `fecha_apertura` futura; `"pendiente"` en cualquier otro caso — incluye tanto el período
     vigente como una actividad ya cerrada sin que el Estudiante haya rendido (ese caso se
