@@ -66,7 +66,7 @@ class IniciarEvaluacionUseCase:
         cantidad_preguntas = actividad.cantidad_preguntas
 
         ahora = datetime.now(UTC)
-        if ahora < fecha_apertura or ahora > fecha_cierre:
+        if ahora < fecha_apertura or ahora > fecha_cierre or actividad.cerrada_manualmente:
             raise FueraDePeriodo(actividad_id, ahora)
 
         evaluacion_id = Evaluacion.id_para(actividad_id, estudiante_id)

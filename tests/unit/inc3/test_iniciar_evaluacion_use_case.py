@@ -166,6 +166,36 @@ class TestIniciarEvaluacionUseCase:
         with pytest.raises(FueraDePeriodo):
             await use_case.execute(actividad_id, estudiante_id)
 
+    async def test_rechaza_actividad_cerrada_manualmente_aunque_este_dentro_de_la_ventana(self):
+        """US-3.4.10 — cerrar manualmente (US-3.3.2) debe bloquear también nuevos inicios,
+
+        no solo finalizar en cascada las Evaluacion EnCurso existentes.
+        """
+        materia_id, estudiante_id = uuid4(), uuid4()
+        event_store = FakeEventStore()
+        actividad_id = await _actividad_vigente(event_store, materia_id)
+        await event_store.append(
+            AGGREGATE_TYPE,
+            actividad_id,
+            1,
+            [
+                EventoParaAlmacenar(
+                    event_type="ActividadEvaluativaCerrada",
+                    payload={
+                        "actividad_id": str(actividad_id),
+                        "ocurrido_en": datetime.now(UTC).isoformat(),
+                    },
+                )
+            ],
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        estudiante_consulta.estudiantes.add(estudiante_id)
+        use_case = _use_case(estudiante_consulta, pregunta_consulta, event_store)
+
+        with pytest.raises(FueraDePeriodo):
+            await use_case.execute(actividad_id, estudiante_id)
+
     async def test_rechaza_despues_del_cierre(self):
         materia_id, estudiante_id = uuid4(), uuid4()
         event_store = FakeEventStore()
