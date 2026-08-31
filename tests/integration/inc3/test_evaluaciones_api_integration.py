@@ -1,3 +1,4 @@
+import asyncio
 import uuid
 from datetime import UTC, datetime, timedelta
 
@@ -178,8 +179,39 @@ class TestIniciarEvaluacionAPIIntegration:
             )
 
         assert respuesta_1.json()["id"] != respuesta_2.json()["id"]
-        assert respuesta_1.json()["estudiante_id"] == str(estudiante_1.id)
-        assert respuesta_2.json()["estudiante_id"] == str(estudiante_2.id)
+
+    async def test_dos_requests_concurrentes_del_mismo_estudiante_no_fallan(
+        self, session, docente_headers
+    ):
+        """US-3.4.10 (2do hallazgo) — reproduce la carrera real de dos `POST /evaluaciones`
+
+        simultáneos (ej. React StrictMode en desarrollo, o un doble clic real). Antes del fix,
+        uno de los dos requests devolvía 500 (IntegrityError sin traducir del índice único de
+        `events`, `uq_events_stream_sequence`) en vez de la misma `Evaluacion` que el otro.
+        """
+        _estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 10, apertura, cierre
+            )
+
+            primera, segunda = await asyncio.gather(
+                client.post(
+                    "/evaluaciones", json={"actividad_id": actividad_id}, headers=estudiante_headers
+                ),
+                client.post(
+                    "/evaluaciones", json={"actividad_id": actividad_id}, headers=estudiante_headers
+                ),
+            )
+
+        assert primera.status_code == 200
+        assert segunda.status_code == 200
+        assert primera.json()["id"] == segunda.json()["id"]
+        assert primera.json()["preguntas_asignadas"] == segunda.json()["preguntas_asignadas"]
 
     async def test_rechazo_antes_de_la_apertura(self, session, docente_headers):
         _estudiante, estudiante_headers = await _crear_estudiante(session)

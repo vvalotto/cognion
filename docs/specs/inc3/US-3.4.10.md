@@ -6,8 +6,26 @@
 **Agregado principal afectado**: `IniciarEvaluacionUseCase` (sin cambios de invariantes de
 dominio — `ActividadEvaluativaPeriodoAbierto.cerrada_manualmente` ya existe desde `US-3.3.2`)
 **Bounded Context**: Actividad Evaluativa
-**Origen**: hallazgo de UAT de cierre de la Iteración 4 (`smoke.sh` extendido contra el backend
-real), 2026-08-31. Issue [#192](https://github.com/vvalotto/cognion/issues/192).
+**Origen**: hallazgos de UAT de cierre de la Iteración 4, 2026-08-31. Issue
+[#192](https://github.com/vvalotto/cognion/issues/192) (1er hallazgo, PR
+[#193](https://github.com/vvalotto/cognion/pull/193), ya mergeado).
+
+## Alcance 2 — carrera real al iniciar evaluación (detectado en el recorrido manual, mismo día)
+
+El recorrido en navegador real (`design-iter4.md`) detectó un segundo bug, distinto del
+anterior pero en el mismo Use Case: `IniciarEvaluacionUseCase` no protegía la creación del
+primer evento contra una escritura concurrente genuina — dos `POST /evaluaciones` simultáneos
+del mismo Estudiante (reproducible con React StrictMode en desarrollo, o un doble clic real en
+producción) causaban que uno de los dos requests recibiera `500 Internal Server Error`
+(`IntegrityError` de Postgres sin traducir, violación de `uq_events_stream_sequence`) en vez de
+la misma `Evaluacion` que el otro — rompiendo la promesa de idempotencia de INV-AE-05/06 ante
+una carrera real, no solo secuencial.
+
+**Fix:** `SQLAlchemyEventStore.append()` traduce la violación real del índice único
+(`IntegrityError` al `commit`) en `ConcurrenciaOptimistaError` — el índice ya existía como
+respaldo documentado en su propio docstring, pero nunca se traducía. `IniciarEvaluacionUseCase`
+captura esa excepción al insertar el primer evento y relee el stream para devolver la
+`Evaluacion` que ganó la carrera, en vez de propagar el error.
 
 ---
 

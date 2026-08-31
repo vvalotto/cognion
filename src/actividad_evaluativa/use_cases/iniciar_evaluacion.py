@@ -11,6 +11,7 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto impo
 )
 from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
+    ConcurrenciaOptimistaError,
     EstudianteNoExiste,
     FueraDePeriodo,
 )
@@ -47,10 +48,12 @@ class IniciarEvaluacionUseCase:
         """Inicia la evaluación, o retoma la existente sin generar un set nuevo (INV-AE-05/06).
 
         Devuelve `(evaluacion, True)` si esta invocación creó una `Evaluacion` nueva, o
-        `(evaluacion, False)` si ya existía una `EnCurso` y se reutilizó tal cual. Levanta
-        `EstudianteNoExiste` si el actor no es un Estudiante válido, `ActividadNoExiste` si
-        `actividad_id` no tiene stream, `FueraDePeriodo` si `ahora` no está dentro de la ventana
-        vigente de la actividad (o está cerrada manualmente).
+        `(evaluacion, False)` si ya existía una `EnCurso` y se reutilizó tal cual — incluida la
+        `Evaluacion` creada por una invocación concurrente que ganó la carrera al insertar el
+        primer evento (`US-3.4.10`). Levanta `EstudianteNoExiste` si el actor no es un
+        Estudiante válido, `ActividadNoExiste` si `actividad_id` no tiene stream,
+        `FueraDePeriodo` si `ahora` no está dentro de la ventana vigente de la actividad (o está
+        cerrada manualmente).
         """
         if not await self._estudiante_consulta.existe(estudiante_id):
             raise EstudianteNoExiste(estudiante_id)
@@ -96,11 +99,21 @@ class IniciarEvaluacionUseCase:
             ],
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
-        await self._event_store.append(
-            AGGREGATE_TYPE_EVALUACION,
-            evaluacion.id,
-            0,
-            [EventoParaAlmacenar(event_type="EvaluacionIniciada", payload=payload)],
-        )
+        try:
+            await self._event_store.append(
+                AGGREGATE_TYPE_EVALUACION,
+                evaluacion.id,
+                0,
+                [EventoParaAlmacenar(event_type="EvaluacionIniciada", payload=payload)],
+            )
+        except ConcurrenciaOptimistaError:
+            # Otra invocación concurrente (mismo Estudiante, misma Actividad) ganó la carrera
+            # de insertar el primer evento -- releer y devolver esa Evaluacion en vez de
+            # propagar el error (INV-AE-05/06, idempotencia real ante escrituras concurrentes,
+            # no solo secuenciales).
+            eventos_evaluacion = await self._event_store.load(
+                AGGREGATE_TYPE_EVALUACION, evaluacion.id
+            )
+            return Evaluacion.reconstruir(eventos_evaluacion), False
 
         return evaluacion, True

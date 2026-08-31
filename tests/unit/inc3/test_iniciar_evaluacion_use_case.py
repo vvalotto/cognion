@@ -5,11 +5,15 @@ import pytest
 
 from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
+    ConcurrenciaOptimistaError,
     EstudianteNoExiste,
     FueraDePeriodo,
 )
 from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion
-from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
+from src.actividad_evaluativa.entities.ports.event_store_port import (
+    EventoAlmacenado,
+    EventoParaAlmacenar,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import AGGREGATE_TYPE
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import (
     AGGREGATE_TYPE_EVALUACION,
@@ -60,6 +64,35 @@ def _evento_actividad_creada(actividad_id, materia_id, apertura, cierre, cantida
             "ocurrido_en": apertura.isoformat(),
         },
     )
+
+
+class _EventStoreConCarreraSimulada(FakeEventStore):
+    """Simula que otra invocación concurrente gana la carrera al insertar el primer evento.
+
+    En el primer `append` sobre un stream `Evaluacion` nuevo (`expected_sequence_number == 0`),
+    inserta directamente un `EvaluacionIniciada` "ganador" (mismo `aggregate_id`, deterministic
+    por `Evaluacion.id_para`) y levanta `ConcurrenciaOptimistaError` para esa invocación —
+    mismo efecto observable que la violación real del índice único de Postgres (`US-3.4.10`).
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.evaluacion_ganadora_id: object | None = None
+
+    async def append(self, aggregate_type, aggregate_id, expected_sequence_number, events):
+        if aggregate_type == AGGREGATE_TYPE_EVALUACION and expected_sequence_number == 0:
+            self.evaluacion_ganadora_id = aggregate_id
+            clave = (aggregate_type, aggregate_id)
+            self._streams[clave] = [
+                EventoAlmacenado(
+                    sequence_number=1,
+                    event_type=events[0].event_type,
+                    payload=events[0].payload,
+                    occurred_at=datetime.now(UTC),
+                )
+            ]
+            raise ConcurrenciaOptimistaError(aggregate_type, aggregate_id, 0, 1)
+        await super().append(aggregate_type, aggregate_id, expected_sequence_number, events)
 
 
 class TestIniciarEvaluacionUseCase:
@@ -165,6 +198,28 @@ class TestIniciarEvaluacionUseCase:
 
         with pytest.raises(FueraDePeriodo):
             await use_case.execute(actividad_id, estudiante_id)
+
+    async def test_carrera_al_iniciar_devuelve_la_evaluacion_de_la_invocacion_que_gano(self):
+        """US-3.4.10 (2do hallazgo) — dos invocaciones concurrentes del mismo Estudiante sobre
+
+        la misma Actividad no deben fallar: la que pierde la carrera de `append` debe releer y
+        devolver la `Evaluacion` que ya quedó persistida, no propagar `ConcurrenciaOptimistaError`.
+        """
+        materia_id, estudiante_id = uuid4(), uuid4()
+        event_store = _EventStoreConCarreraSimulada()
+        actividad_id = await _actividad_vigente(event_store, materia_id, cantidad_preguntas=3)
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.ids_activas[materia_id] = [uuid4() for _ in range(10)]
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        estudiante_consulta.estudiantes.add(estudiante_id)
+        use_case = _use_case(estudiante_consulta, pregunta_consulta, event_store)
+
+        evaluacion, creada = await use_case.execute(actividad_id, estudiante_id)
+
+        assert creada is False
+        assert evaluacion.estado == EstadoEvaluacion.EN_CURSO
+        # La Evaluacion devuelta es la que "ganó" la carrera simulada, no la de esta invocación.
+        assert event_store.evaluacion_ganadora_id == evaluacion.id
 
     async def test_rechaza_actividad_cerrada_manualmente_aunque_este_dentro_de_la_ventana(self):
         """US-3.4.10 — cerrar manualmente (US-3.3.2) debe bloquear también nuevos inicios,
