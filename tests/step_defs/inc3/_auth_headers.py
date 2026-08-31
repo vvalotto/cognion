@@ -51,3 +51,33 @@ async def crear_estudiante() -> tuple[str, dict[str, str]]:
 
     jwt_vo = PyJWTIssuer().emitir(estudiante.id, TipoPerfil.ESTUDIANTE)
     return str(estudiante.id), {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
+async def crear_estudiante_de_materia(materia_id: str) -> tuple[str, dict[str, str]]:
+    """Como `crear_estudiante()`, pero con `Comision.materia_id` apuntando a una materia real.
+
+    `ListarMateriasDelEstudianteUseCase` (`US-3.4.5`) resuelve esa materia vía `MateriaPort` —
+    a diferencia de `IniciarEvaluacionUseCase`, no alcanza con un id aleatorio.
+    """
+    async with SessionLocal() as session:
+        hasher = BcryptPasswordHasher()
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+
+        admin = Usuario.crear(
+            "Admin",
+            f"admin.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("x"),
+            TipoPerfil.ADMINISTRADOR,
+        )
+        await usuario_repo.guardar(admin)
+        comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        estudiante = Usuario.crear_estudiante(
+            "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
+        )
+        await usuario_repo.guardar(estudiante)
+
+    jwt_vo = PyJWTIssuer().emitir(estudiante.id, TipoPerfil.ESTUDIANTE)
+    return str(estudiante.id), {"Authorization": f"Bearer {jwt_vo.token}"}

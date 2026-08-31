@@ -36,6 +36,18 @@ export interface ActividadResumenResponse {
   cantidadEvaluacionesFinalizadas: number
 }
 
+export type EstadoVisible = "pendiente" | "todavia_no_abrio" | "finalizada"
+
+export interface ActividadVisibleResponse {
+  id: string
+  materiaId: string
+  titulo: string
+  fechaApertura: string
+  fechaCierre: string
+  estado: EstadoVisible
+  evaluacionId: string | null
+}
+
 export interface PreguntaAsignadaResponse {
   preguntaId: string
   orden: number
@@ -98,6 +110,16 @@ interface ActividadResumenApiResponse {
   cerrada_manualmente: boolean
   cantidad_evaluaciones_activas: number
   cantidad_evaluaciones_finalizadas: number
+}
+
+interface ActividadVisibleApiResponse {
+  id: string
+  materia_id: string
+  titulo: string
+  fecha_apertura: string
+  fecha_cierre: string
+  estado: EstadoVisible
+  evaluacion_id: string | null
 }
 
 interface PreguntaAsignadaApiResponse {
@@ -168,6 +190,18 @@ function mapearActividadResumen(resumen: ActividadResumenApiResponse): Actividad
   }
 }
 
+function mapearActividadVisible(visible: ActividadVisibleApiResponse): ActividadVisibleResponse {
+  return {
+    id: visible.id,
+    materiaId: visible.materia_id,
+    titulo: visible.titulo,
+    fechaApertura: visible.fecha_apertura,
+    fechaCierre: visible.fecha_cierre,
+    estado: visible.estado,
+    evaluacionId: visible.evaluacion_id,
+  }
+}
+
 function mapearEvaluacion(evaluacion: EvaluacionApiResponse): EvaluacionResponse {
   return {
     id: evaluacion.id,
@@ -226,6 +260,16 @@ export async function listarActividades(materiaId: string): Promise<ActividadRes
 export async function obtenerActividad(actividadId: string): Promise<ActividadResumenResponse> {
   const response = await apiFetch<ActividadResumenApiResponse>(`/actividades/${actividadId}`)
   return mapearActividadResumen(response)
+}
+
+export async function listarActividadesVisibles(
+  materiaId: string,
+): Promise<ActividadVisibleResponse[]> {
+  const params = new URLSearchParams({ materia_id: materiaId })
+  const response = await apiFetch<ActividadVisibleApiResponse[]>(
+    `/actividades/mis-actividades?${params}`,
+  )
+  return response.map(mapearActividadVisible)
 }
 
 export async function modificarPeriodoDisponibilidad(

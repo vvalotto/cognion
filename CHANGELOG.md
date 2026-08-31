@@ -10,6 +10,34 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-3.4.5] Estudiante ve sus materias y las actividades disponibles — backend + frontend,
+  primer punto de entrada del Estudiante al frontend de Actividad Evaluativa
+  - Backend Identidad: `require_estudiante` (nuevo, hasta ahora solo existía en Actividad
+    Evaluativa), `ListarMateriasDelEstudianteUseCase` (resuelve `Estudiante.comision_id` →
+    `Comision.materia_id` → `MateriaPort`, reutilizado desde `US-2.1.2`), `EstudianteController`,
+    endpoint `GET /identidad/estudiante/materias`
+  - Backend Actividad Evaluativa: puerto nuevo y separado `EvaluacionEstudianteQueryPort`
+    (`existentes_finalizadas`, chequea solo el evento terminal `EvaluacionFinalizada` por
+    `aggregate_id` sin replay completo — no se ensancha `EvaluacionActivaQueryPort` de
+    `US-3.2.4`, mismo criterio command/query que evitó el CRITICAL de CBO en `US-2.1.2`/
+    `US-2.1.5`/`US-2.1.6`), `ListarActividadesVisiblesUseCase` (extiende
+    `ListarActividadesUseCase` de `US-3.4.2` con el `Badge` por-estudiante),
+    `ActividadesEstudianteController` (separado del controller de consulta docente),
+    `GET /actividades/mis-actividades` (rol `estudiante`, registrado antes de
+    `/{actividad_id}` para no chocar con esa ruta)
+  - Contradicción detectada contra el prototipo aprobado durante la implementación: el plan
+    original proponía 4 estados de `Badge` (agregando `"cerrada_sin_rendir"`); el prototipo
+    `actividad-evaluativa-periodo-abierto.html` (`#est-actividades`) solo define 3 — corregido
+    con Víctor, sin ese 4to estado (una actividad cerrada sin rendir se muestra como
+    "Pendiente de responder", mismo criterio que `EnCurso`/`Suspendida` no distinguidas; el
+    422 de `FueraDePeriodo` al intentar iniciar, `US-3.4.6`, resuelve ese caso)
+  - Frontend: `identidad-estudiante-api.ts` (nuevo), extensión de `actividad-evaluativa-api.ts`,
+    pantallas `MisMaterias.tsx`, `MisActividades.tsx`, `FueraDePeriodo.tsx` (reemplazan 2
+    placeholders de `US-3.4.1` + 1 ruta nueva), 3 variantes de `Badge` nuevas
+  - 11 tests unitarios + 6 integración + 5 BDD nuevos backend, 575+227+138 suites sin
+    regresiones; 10 tests nuevos frontend, 211/211 suite completa frontend; quality gates
+    APROBADO (pylint 9.81/10, CC máx 5, MI 83.2, coverage 99% backend / 89-92% en las
+    pantallas nuevas, oxlint 0 errores, `tsc --noEmit` 0 errores, codeguard 9/9 checks full)
 - [US-3.4.4] Docente ve el detalle de una actividad, extiende el plazo y la cierra manualmente
   — backend + frontend
   - Ajuste sobre la spec detectado en Fase 2: `ActividadResumen`/`ActividadResumenResponse`

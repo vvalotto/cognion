@@ -18,9 +18,12 @@ import { EditarPregunta } from "@/pages/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
 import { ExtenderPlazo } from "@/pages/ExtenderPlazo"
+import { FueraDePeriodo } from "@/pages/FueraDePeriodo"
 import { Login } from "@/pages/Login"
 import { Materias } from "@/pages/Materias"
 import { MateriasActividades } from "@/pages/MateriasActividades"
+import { MisActividades } from "@/pages/MisActividades"
+import { MisMaterias } from "@/pages/MisMaterias"
 import { NuevaActividad } from "@/pages/NuevaActividad"
 import { NuevaMateria } from "@/pages/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/NuevaPreguntaOpcionMultiple"
@@ -225,7 +228,7 @@ export const router = createBrowserRouter([
         path: "/mis-actividades/materias",
         element: (
           <RequireRole rol="estudiante">
-            <ActividadEvaluativaPlaceholder />
+            <MisMaterias />
           </RequireRole>
         ),
       },
@@ -233,7 +236,15 @@ export const router = createBrowserRouter([
         path: "/mis-actividades/materias/:materiaId/actividades",
         element: (
           <RequireRole rol="estudiante">
-            <ActividadEvaluativaPlaceholder />
+            <MisActividades />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-actividades/:actividadId/fuera-de-periodo",
+        element: (
+          <RequireRole rol="estudiante">
+            <FueraDePeriodo />
           </RequireRole>
         ),
       },
