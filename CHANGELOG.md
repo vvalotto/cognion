@@ -10,6 +10,25 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-3.4.6] Estudiante rinde su evaluación — responde, pausa y reanuda, backend + frontend
+  - Backend: `PreguntaConsultaPort.obtener_contenido()` (nuevo, texto + opciones sin marcar
+    cuál es correcta — `ContenidoPregunta`), implementado en `PreguntaConsultaPortInProcess`;
+    `PreguntaAsignadaResponse` (+`enunciado`/`opciones`) y `EvaluacionResponse`
+    (+`preguntas_respondidas`) ampliados; `_a_response()` del router pasa a `async` y se
+    enriquece vía una dependencia FastAPI nueva y separada (`get_pregunta_consulta_port`),
+    no como 6ª dependencia de `EvaluacionesController` — evita repetir el patrón de CRITICAL
+    de CBO ya visto varias veces en el proyecto. Desvío documentado respecto de la spec: el
+    enriquecimiento vive en el router, no en `IniciarEvaluacionUseCase` (que devuelve la
+    entidad de dominio pura, sin conocer texto de preguntas)
+  - Frontend: `RendirEvaluacion.tsx` (nueva, reemplaza el placeholder de `US-3.4.1`) y
+    `EvaluacionSuspendida.tsx` (nueva, ruta nueva) — reusan íntegro el cliente API existente
+    (`iniciarEvaluacion`, `registrarRespuesta`, `suspenderEvaluacion`, `reanudarEvaluacion`),
+    sin agregar endpoints. Reconexión idempotente vía `iniciarEvaluacion` en ambas pantallas
+  - 7 tests unitarios + 3 integración + 5 BDD nuevos backend, 355+230+71 suites sin
+    regresiones; 10 tests nuevos frontend, 221/221 suite completa frontend; quality gates
+    APROBADO (pylint 9.97/10, CC máx 5, MI mín 66.68, coverage 99.78%, codeguard 9/9 checks
+    full — primera corrida con vulture/codespell realmente en PATH, ver observaciones del
+    reporte de calidad)
 - [US-3.4.5] Estudiante ve sus materias y las actividades disponibles — backend + frontend,
   primer punto de entrada del Estudiante al frontend de Actividad Evaluativa
   - Backend Identidad: `require_estudiante` (nuevo, hasta ahora solo existía en Actividad
