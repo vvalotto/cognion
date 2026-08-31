@@ -51,8 +51,11 @@ cleanup() {
             AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%')
         )
     );
-    DELETE FROM events WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
-      AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%');
+    DELETE FROM events WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto' AND aggregate_id IN (
+      SELECT aggregate_id FROM events
+      WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto' AND event_type = 'ActividadEvaluativaCreada'
+        AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%')
+    );
     DELETE FROM invitacion WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
     DELETE FROM estudiante WHERE id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
     DELETE FROM comision_docentes WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
