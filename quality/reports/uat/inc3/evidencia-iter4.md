@@ -12,7 +12,7 @@
 ## Capa 1 — Tests automatizados
 
 - Backend: `pytest tests/unit tests/integration tests/step_defs` — **735/735** en verde tras
-  el fix final (735 = 733 antes de US-3.4.10 + 2 tests nuevos del fix de concurrencia). Sin
+  el fix final (735 = 733 antes de US-ADJ-11 + 2 tests nuevos del fix de concurrencia). Sin
   regresiones en ninguna suite del proyecto.
 - Frontend: `npx vitest run --no-file-parallelism` — **226/226** en verde (la corrida con
   paralelismo completo mostró flakes de contención de CPU en archivos no relacionados con esta
@@ -68,7 +68,7 @@ Ejecutado por la sesión (Claude Browser) contra `develop` con los dos fixes ya 
 
 Con la actividad ya cerrada manualmente por el Docente, un segundo Estudiante (sin
 `Evaluacion` previa) intentó iniciar: `POST /evaluaciones` → **422**, mensaje
-`"...no admite iniciar una evaluación en este momento"` — confirma el fix de `US-3.4.10` contra
+`"...no admite iniciar una evaluación en este momento"` — confirma el fix de `US-ADJ-11` contra
 el flujo real, no solo el test automatizado.
 
 ---
@@ -77,7 +77,7 @@ el flujo real, no solo el test automatizado.
 
 ### 🔴 Bloqueante — `IniciarEvaluacion` no rechazaba actividad cerrada manualmente
 
-Detectado extendiendo `smoke.sh`. **Resuelto en la misma sesión**: `US-3.4.10`, Issue
+Detectado extendiendo `smoke.sh`. **Resuelto en la misma sesión**: `US-ADJ-11`, Issue
 [#192](https://github.com/vvalotto/cognion/issues/192), PR
 [#193](https://github.com/vvalotto/cognion/pull/193) (mergeada). Verificado end-to-end en el
 recorrido manual (ver arriba).
@@ -86,7 +86,7 @@ recorrido manual (ver arriba).
 
 Detectado en el recorrido manual en navegador (React StrictMode dispara dos `POST
 /evaluaciones` concurrentes al montar `RendirEvaluacion.tsx`, dejando la pantalla colgada en
-"Cargando…"). **Resuelto en la misma sesión**, misma US-3.4.10 (ampliada), PR
+"Cargando…"). **Resuelto en la misma sesión**, misma US-ADJ-11 (ampliada), PR
 [#194](https://github.com/vvalotto/cognion/pull/194) (mergeada). Verificado con test de
 integración real (`asyncio.gather`) y con el recorrido manual repetido tras el fix.
 
@@ -96,7 +96,7 @@ integración real (`asyncio.gather`) y con el recorrido manual repetido tras el 
 Encontrado y corregido en el camino (mismo patrón en ambos: el `DELETE` solo borraba el evento
 que llevaba `materia_id`/`actividad_id` en el payload, dejando huérfanos los eventos
 posteriores del stream). No es un bug de producción — solo afectaba los datos de prueba del
-propio `smoke.sh`. Corregido junto con los fixes de `US-3.4.10` (mismas PRs).
+propio `smoke.sh`. Corregido junto con los fixes de `US-ADJ-11` (mismas PRs).
 
 ### ⚪ Estético — numeración de preguntas en la revisión empieza en 0
 

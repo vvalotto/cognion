@@ -14,7 +14,7 @@ import {
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { ApiError } from "@/lib/api-client"
 
-/** Formulario de edición de título de una actividad ya creada (`US-3.4.9`). */
+/** Formulario de edición de título de una actividad ya creada (`US-ADJ-10`). */
 export function EditarTituloActividad() {
   const { actividadId } = useParams<{ actividadId: string }>()
   const navigate = useNavigate()

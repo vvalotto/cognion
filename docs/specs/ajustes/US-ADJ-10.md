@@ -1,12 +1,17 @@
-# US-3.4.9: Docente edita el título de una actividad ya creada
+# US-ADJ-10: Docente edita el título de una actividad ya creada
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `INC-3.4`
+**Iteracion / Sprint**: `INC-3.4` (ajuste inmediato, corregido en la misma sesión de UAT —
+no forma parte de un `SP-ADJ` diferido)
 **Tipo**: `feat backend + frontend`
 **Agregado principal afectado**: `ActividadEvaluativaPeriodoAbierto` (nuevo evento, sin invariantes de dominio)
 **Bounded Context**: Actividad Evaluativa
 **Origen**: hallazgo de UAT manual en navegador real (docente: materias → actividades →
 detalle), 2026-08-30. Issue [#186](https://github.com/vvalotto/cognion/issues/186).
+**ID anterior**: `US-3.4.9` — renombrado a la convención `US-ADJ` el 2026-08-31 (decisión de
+Víctor: aunque es funcionalidad nueva y no una corrección, nace de un hallazgo de UAT igual que
+`US-ADJ-09`/`US-ADJ-11` — se trata igual por origen). Los commits/PRs históricos (#186, #187)
+referencian el ID anterior — no se reescribió el historial de git.
 
 ---
 

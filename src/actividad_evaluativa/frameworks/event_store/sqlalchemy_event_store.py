@@ -30,7 +30,7 @@ class SQLAlchemyEventStore(EventStorePort):
     hecho dentro de la misma transacción, no ve lo que otra transacción concurrente todavía no
     comiteó (TOCTOU). `append` traduce la violación de ese índice en `ConcurrenciaOptimistaError`
     al fallar el `commit`, para que el llamador la trate igual que el chequeo optimista de
-    lectura (`US-3.4.10`).
+    lectura (`US-ADJ-11`).
     """
 
     def __init__(self, session: AsyncSession) -> None:

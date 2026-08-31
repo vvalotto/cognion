@@ -4,7 +4,7 @@
 |-------|-------|
 | Incremento / Iteración | 3 / Iteración 4 (frontend, consume Iteraciones 1 a 3) |
 | Baseline | `BL-004` — se abre si este UAT aprueba. Cierra el DoD completo del Incremento 3. |
-| US cubiertas | `US-3.4.1` a `US-3.4.9` (backend ya cerrado en Iteraciones 1-3: `US-3.1.1` a `US-3.3.2`) |
+| US cubiertas | `US-3.4.1` a `US-ADJ-10` (backend ya cerrado en Iteraciones 1-3: `US-3.1.1` a `US-3.3.2`) |
 | Entorno | Propio |
 | Fecha diseño | 2026-08-31 |
 

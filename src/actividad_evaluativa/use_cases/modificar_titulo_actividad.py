@@ -1,4 +1,4 @@
-"""Caso de uso: Docente edita el título de una actividad ya creada (`US-3.4.9`)."""
+"""Caso de uso: Docente edita el título de una actividad ya creada (`US-ADJ-10`)."""
 
 from __future__ import annotations
 

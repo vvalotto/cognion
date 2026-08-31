@@ -72,7 +72,7 @@ class _EventStoreConCarreraSimulada(FakeEventStore):
     En el primer `append` sobre un stream `Evaluacion` nuevo (`expected_sequence_number == 0`),
     inserta directamente un `EvaluacionIniciada` "ganador" (mismo `aggregate_id`, deterministic
     por `Evaluacion.id_para`) y levanta `ConcurrenciaOptimistaError` para esa invocación —
-    mismo efecto observable que la violación real del índice único de Postgres (`US-3.4.10`).
+    mismo efecto observable que la violación real del índice único de Postgres (`US-ADJ-11`).
     """
 
     def __init__(self) -> None:
@@ -200,7 +200,7 @@ class TestIniciarEvaluacionUseCase:
             await use_case.execute(actividad_id, estudiante_id)
 
     async def test_carrera_al_iniciar_devuelve_la_evaluacion_de_la_invocacion_que_gano(self):
-        """US-3.4.10 (2do hallazgo) — dos invocaciones concurrentes del mismo Estudiante sobre
+        """US-ADJ-11 (2do hallazgo) — dos invocaciones concurrentes del mismo Estudiante sobre
 
         la misma Actividad no deben fallar: la que pierde la carrera de `append` debe releer y
         devolver la `Evaluacion` que ya quedó persistida, no propagar `ConcurrenciaOptimistaError`.
@@ -222,7 +222,7 @@ class TestIniciarEvaluacionUseCase:
         assert event_store.evaluacion_ganadora_id == evaluacion.id
 
     async def test_rechaza_actividad_cerrada_manualmente_aunque_este_dentro_de_la_ventana(self):
-        """US-3.4.10 — cerrar manualmente (US-3.3.2) debe bloquear también nuevos inicios,
+        """US-ADJ-11 — cerrar manualmente (US-3.3.2) debe bloquear también nuevos inicios,
 
         no solo finalizar en cascada las Evaluacion EnCurso existentes.
         """

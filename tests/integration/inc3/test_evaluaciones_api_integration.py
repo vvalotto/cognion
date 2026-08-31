@@ -183,7 +183,7 @@ class TestIniciarEvaluacionAPIIntegration:
     async def test_dos_requests_concurrentes_del_mismo_estudiante_no_fallan(
         self, session, docente_headers
     ):
-        """US-3.4.10 (2do hallazgo) — reproduce la carrera real de dos `POST /evaluaciones`
+        """US-ADJ-11 (2do hallazgo) — reproduce la carrera real de dos `POST /evaluaciones`
 
         simultáneos (ej. React StrictMode en desarrollo, o un doble clic real). Antes del fix,
         uno de los dos requests devolvía 500 (IntegrityError sin traducir del índice único de

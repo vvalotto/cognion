@@ -448,7 +448,7 @@ class TestObtenerActividadAPIIntegration:
 
 
 class TestActividadesFechasNaiveAPIIntegration:
-    """Regresión `US-3.4.8`: `<input type="datetime-local">` manda fechas sin tzinfo.
+    """Regresión `US-ADJ-09`: `<input type="datetime-local">` manda fechas sin tzinfo.
 
     Reproduce el escenario real de UAT en navegador — la fecha llega como
     `"2026-08-30T17:00"`, sin offset, a diferencia de `_periodo()` (que siempre usa
@@ -510,7 +510,7 @@ class TestActividadesFechasNaiveAPIIntegration:
 
 
 class TestModificarTituloAPIIntegration:
-    """Escenarios de `US-3.4.9` — edición de título de una actividad ya creada."""
+    """Escenarios de `US-ADJ-10` — edición de título de una actividad ya creada."""
 
     async def test_docente_edita_el_titulo(self, docente_headers):
         transport = ASGITransport(app=app)

@@ -227,7 +227,7 @@ async def modificar_titulo(
     body: ModificarTituloRequest,
     controller: ActividadesController = Depends(get_actividades_controller),
 ) -> ActividadResponse:
-    """Edita el título de una actividad, sin importar su estado (`US-3.4.9`)."""
+    """Edita el título de una actividad, sin importar su estado (`US-ADJ-10`)."""
     try:
         actividad = await controller.modificar_titulo(actividad_id, body.nuevo_titulo)
     except ActividadNoExiste as exc:

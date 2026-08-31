@@ -69,5 +69,5 @@ class ActividadesController:
     async def modificar_titulo(
         self, actividad_id: UUID, nuevo_titulo: str
     ) -> ActividadEvaluativaPeriodoAbierto:
-        """Delega la edición del título en el caso de uso correspondiente (`US-3.4.9`)."""
+        """Delega la edición del título en el caso de uso correspondiente (`US-ADJ-10`)."""
         return await self._modificar_titulo.execute(actividad_id, nuevo_titulo)

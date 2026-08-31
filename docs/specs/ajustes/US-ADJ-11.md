@@ -1,7 +1,8 @@
-# US-3.4.10: Fix — IniciarEvaluacion no rechaza actividad cerrada manualmente
+# US-ADJ-11: Fix — IniciarEvaluacion no rechaza actividad cerrada manualmente
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `INC-3.4`
+**Iteracion / Sprint**: `INC-3.4` (ajuste inmediato, corregido en la misma sesión de UAT —
+no forma parte de un `SP-ADJ` diferido)
 **Tipo**: `fix backend`
 **Agregado principal afectado**: `IniciarEvaluacionUseCase` (sin cambios de invariantes de
 dominio — `ActividadEvaluativaPeriodoAbierto.cerrada_manualmente` ya existe desde `US-3.3.2`)
@@ -9,6 +10,10 @@ dominio — `ActividadEvaluativaPeriodoAbierto.cerrada_manualmente` ya existe de
 **Origen**: hallazgos de UAT de cierre de la Iteración 4, 2026-08-31. Issue
 [#192](https://github.com/vvalotto/cognion/issues/192) (1er hallazgo, PR
 [#193](https://github.com/vvalotto/cognion/pull/193), ya mergeado).
+**ID anterior**: `US-3.4.10` — renombrado a la convención `US-ADJ` el 2026-08-31 (decisión de
+Víctor: los hallazgos de UAT corregidos como US-IEDD aparte, diferidos o no, se numeran como
+ajuste). Los commits/PRs históricos (#192, #193, #194) referencian el ID anterior — no se
+reescribió el historial de git.
 
 ## Alcance 2 — carrera real al iniciar evaluación (detectado en el recorrido manual, mismo día)
 
@@ -107,7 +112,7 @@ motivo, mismo criterio que `US-1.1.3`). Sin cambios de frontend, sin evento ni c
 ## Criterios de aceptacion
 
 ```gherkin
-Feature: IniciarEvaluacion rechaza actividad cerrada manualmente (US-3.4.10)
+Feature: IniciarEvaluacion rechaza actividad cerrada manualmente (US-ADJ-11)
 
   Scenario: Estudiante nuevo intenta iniciar sobre una actividad cerrada manualmente
     Given una ActividadEvaluativaPeriodoAbierto vigente por fecha pero cerrada_manualmente = true

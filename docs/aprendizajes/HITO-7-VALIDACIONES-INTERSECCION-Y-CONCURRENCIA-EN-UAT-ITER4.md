@@ -9,7 +9,7 @@
 | **Documento** | HITO-7 — dos hallazgos bloqueantes de naturaleza distinta en la misma UAT |
 | **Fecha** | 2026-08-31 |
 | **Incremento / contexto** | Incremento 3 (Actividad Evaluativa), UAT de cierre de la Iteración 4 — primer recorrido de punta a punta con frontend real (Docente + Estudiante) |
-| **Relacionado** | `US-3.1.3`, `US-3.3.2`, `US-3.4.10`, Issue [#192](https://github.com/vvalotto/cognion/issues/192), PRs [#193](https://github.com/vvalotto/cognion/pull/193)/[#194](https://github.com/vvalotto/cognion/pull/194), `quality/reports/uat/inc3/evidencia-iter4.md` |
+| **Relacionado** | `US-3.1.3`, `US-3.3.2`, `US-ADJ-11`, Issue [#192](https://github.com/vvalotto/cognion/issues/192), PRs [#193](https://github.com/vvalotto/cognion/pull/193)/[#194](https://github.com/vvalotto/cognion/pull/194), `quality/reports/uat/inc3/evidencia-iter4.md` |
 
 ---
 
@@ -52,7 +52,7 @@ no vuelven a poner a prueba `IniciarEvaluacion`, que ya estaba cerrada y aprobad
 
 ### Cómo se resolvió
 
-`US-3.4.10`, Issue #192, PR #193: una línea — agregar `or actividad.cerrada_manualmente` a la
+`US-ADJ-11`, Issue #192, PR #193: una línea — agregar `or actividad.cerrada_manualmente` a la
 condición que levanta `FueraDePeriodo`. Sin cambios de frontend (el 422 ya redirige a
 `#est-fuera-periodo` desde `US-3.4.5`). Test unitario nuevo + verificación end-to-end contra el
 backend real (`smoke.sh` y, después, el recorrido manual en navegador).
@@ -89,7 +89,7 @@ concurrencia dedicado, que nadie tenía motivo de escribir hasta que el síntoma
 
 ### Cómo se resolvió
 
-Misma US-3.4.10 (alcance ampliado), PR #194: `SQLAlchemyEventStore.append()` captura la
+Misma US-ADJ-11 (alcance ampliado), PR #194: `SQLAlchemyEventStore.append()` captura la
 `IntegrityError` del `commit()` y la traduce en `ConcurrenciaOptimistaError`;
 `IniciarEvaluacionUseCase` la captura al insertar el primer evento y relee el stream para
 devolver la `Evaluacion` que ganó la carrera, en vez de propagar el error. Verificado con un

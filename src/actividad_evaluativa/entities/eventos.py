@@ -44,7 +44,7 @@ class PeriodoDisponibilidadModificado:
 
 @dataclass(frozen=True)
 class TituloActividadModificado:
-    """Se editó `titulo` de una actividad (`US-3.4.9`).
+    """Se editó `titulo` de una actividad (`US-ADJ-10`).
 
     Cuarto evento posible del stream de `ActividadEvaluativaPeriodoAbierto`. Sin invariantes
     de dominio — a diferencia de `PeriodoDisponibilidadModificado`, se aplica sin importar si

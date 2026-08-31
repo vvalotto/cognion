@@ -1,12 +1,17 @@
-# US-3.4.8: Fix — comparación de datetimes naive/aware rompe listado y detalle de actividades
+# US-ADJ-09: Fix — comparación de datetimes naive/aware rompe listado y detalle de actividades
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `INC-3.4`
+**Iteracion / Sprint**: `INC-3.4` (ajuste inmediato, corregido en la misma sesión de UAT —
+no forma parte de un `SP-ADJ` diferido)
 **Tipo**: `fix backend`
 **Agregado principal afectado**: `ActividadEvaluativaPeriodoAbierto` (sin cambios de invariantes de dominio)
 **Bounded Context**: Actividad Evaluativa
 **Origen**: hallazgo de UAT manual en navegador real (docente: materias → actividades → nueva
 actividad → listado), 2026-08-30. Issue [#183](https://github.com/vvalotto/cognion/issues/183).
+**ID anterior**: `US-3.4.8` — renombrado a la convención `US-ADJ` el 2026-08-31 (decisión de
+Víctor: los hallazgos de UAT corregidos como US-IEDD aparte, diferidos o no, se numeran como
+ajuste). Los commits/PRs históricos (#183, #184) referencian el ID anterior — no se reescribió
+el historial de git.
 
 ---
 

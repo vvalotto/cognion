@@ -50,7 +50,7 @@ class IniciarEvaluacionUseCase:
         Devuelve `(evaluacion, True)` si esta invocación creó una `Evaluacion` nueva, o
         `(evaluacion, False)` si ya existía una `EnCurso` y se reutilizó tal cual — incluida la
         `Evaluacion` creada por una invocación concurrente que ganó la carrera al insertar el
-        primer evento (`US-3.4.10`). Levanta `EstudianteNoExiste` si el actor no es un
+        primer evento (`US-ADJ-11`). Levanta `EstudianteNoExiste` si el actor no es un
         Estudiante válido, `ActividadNoExiste` si `actividad_id` no tiene stream,
         `FueraDePeriodo` si `ahora` no está dentro de la ventana vigente de la actividad (o está
         cerrada manualmente).
