@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.errors import ConcurrenciaOptimistaError
@@ -24,8 +25,12 @@ class SQLAlchemyEventStore(EventStorePort):
     persistido antes de insertar — mismo criterio de "leer antes de escribir dentro de la
     propia transacción" que el resto de los repositorios del proyecto (ej.
     `SQLAlchemyMateriaRepository.guardar`, que verifica unicidad de nombre antes del insert).
-    El índice único de `EventoModel` (`uq_events_stream_sequence`) queda como respaldo ante
-    una escritura concurrente genuina entre dos transacciones distintas.
+    El índice único de `EventoModel` (`uq_events_stream_sequence`) es el respaldo real ante una
+    escritura concurrente genuina entre dos transacciones distintas — el chequeo de arriba,
+    hecho dentro de la misma transacción, no ve lo que otra transacción concurrente todavía no
+    comiteó (TOCTOU). `append` traduce la violación de ese índice en `ConcurrenciaOptimistaError`
+    al fallar el `commit`, para que el llamador la trate igual que el chequeo optimista de
+    lectura (`US-3.4.10`).
     """
 
     def __init__(self, session: AsyncSession) -> None:
@@ -58,7 +63,13 @@ class SQLAlchemyEventStore(EventStorePort):
                     occurred_at=ahora,
                 )
             )
-        await self._session.commit()
+        try:
+            await self._session.commit()
+        except IntegrityError as exc:
+            await self._session.rollback()
+            raise ConcurrenciaOptimistaError(
+                aggregate_type, aggregate_id, expected_sequence_number, ultimo_sequence_number
+            ) from exc
 
     async def load(self, aggregate_type: str, aggregate_id: UUID) -> list[EventoAlmacenado]:
         """Devuelve el stream completo de `(aggregate_type, aggregate_id)`, en orden."""
