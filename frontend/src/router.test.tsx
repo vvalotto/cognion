@@ -393,13 +393,11 @@ describe("router (integración)", () => {
     expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
   })
 
-  it("la ruta /mis-actividades/materias renderiza el placeholder con sesión de estudiante", async () => {
+  it("la ruta /mis-actividades/materias renderiza Mis materias con sesión de estudiante", async () => {
     setSession({ token: "t", rol: "estudiante" })
     await router.navigate("/mis-actividades/materias")
     render(<RouterProvider router={router} />)
 
-    expect(
-      await screen.findByText("Actividad Evaluativa — pendiente de pantalla propia"),
-    ).toBeInTheDocument()
+    expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
   })
 })

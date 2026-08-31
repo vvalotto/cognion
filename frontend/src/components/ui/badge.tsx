@@ -21,6 +21,9 @@ const badgeVariants = cva(
         "estado-en-curso": "bg-green-50 text-green-800",
         "estado-programada": "bg-amber-50 text-amber-800",
         "estado-cerrada": "bg-red-50 text-red-800",
+        "visible-pendiente": "bg-green-50 text-green-800",
+        "visible-todavia-no-abrio": "bg-amber-50 text-amber-800",
+        "visible-finalizada": "bg-blue-50 text-blue-800",
       },
     },
     defaultVariants: {
