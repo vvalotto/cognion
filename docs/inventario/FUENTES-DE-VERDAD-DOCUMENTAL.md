@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: jerarquía documental y autoridad por tema
-> Última actualización: 2026-08-25 (rev. /docs-audit)
+> Última actualización: 2026-08-31 (rev. /docs-audit)
 
 ## 1. Propósito
 
@@ -48,7 +48,7 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Diseño UX aprobado | `docs/design/ux/wireframes-*.md` + `docs/design/ux/prototipos/` | specs de US que tocan `frontend/` | Gate obligatorio antes de codear frontend — ver `CLAUDE.md`. |
 | Trazabilidad | `docs/traceability/matrix.md` | specs US-IEDD, baselines | Debe distinguir estados de madurez (backlog / en curso / cerrado). |
 | Especificaciones US-IEDD | `docs/specs/incN/` | `docs/traceability/matrix.md` | Fuente de especificación detallada; input de `/implement-us`. |
-| Especificaciones de ajuste (SP-ADJ) | `docs/specs/ajustes/US-ADJ-NN.md` | `docs/aprendizajes/HITO-*.md`, `docs/plans/PLAN-CM.md` §12 | US de ajuste sin incremento asignado todavía — se mueve a `docs/specs/incN/` (o se referencia desde ahí) cuando se decide en qué incremento se implementa. |
+| Especificaciones de ajuste (US-ADJ) | `docs/specs/ajustes/US-ADJ-NN.md` | `docs/aprendizajes/HITO-*.md`, `docs/plans/PLAN-CM.md` §14 | Hallazgos de UAT resueltos como US-IEDD aparte, diferidos (agrupados en un `SP-ADJ`, `PLAN-CM.md` §12) o resueltos de inmediato en la misma iteración — ver `PLAN-CM.md` §14. |
 | US candidatas / planes de incremento | `docs/plans/incN/` | `CLAUDE.md`, specs US-IEDD | Documento de trabajo — se marca cerrado una vez aprobadas las US. |
 | Aprendizajes metodológicos | `docs/aprendizajes/HITO-*.md` | baselines, `docs/iedd/` | Evidencia del ensayo IEDD; no se reescriben salvo corrección editorial. |
 | Reportes de cierre de US | `docs/reports/` | `docs/traceability/matrix.md` | Evidencia de cierre de `/implement-us`. |
