@@ -420,25 +420,72 @@ filtra los checks con `priority > 3` (`DeadCode`/`Maintainability`/`Pylint`/`Spe
 *descubiertos*, no los ejecutados — reportado upstream en
 [`vvalotto/software_limpio#71`](https://github.com/vvalotto/software_limpio/issues/71).
 Fix de proceso (sin backfill retroactivo, decisión explícita) en
-[PR #168](https://github.com/vvalotto/cognion/pull/168), rama `fix/codeguard-analysis-type-full`,
-**abierto, pendiente de merge**: `--analysis-type full` obligatorio en el comando de Fase 7
-(el hook de pre-commit sigue rápido, sin tocar), gate de verificación que bloquea Fase 7 si
-el reporte queda parcial, y desglose por check (`codeguard.checks` en `quality.json` + tabla
-"Detalle de CodeGuard" en `.claude/templates/reporting/implementation-report.md`) para que el
-reporte final de cada US muestre no solo el conteo agregado sino qué encontró cada uno de los
-9 checks. Aplica desde la próxima US que corra `/implement-us` — las 47 ya cerradas no se
-tocan.
+[PR #168](https://github.com/vvalotto/cognion/pull/168) mergeado a `develop` 2026-08-28:
+`--analysis-type full` obligatorio en el comando de Fase 7 (el hook de pre-commit sigue
+rápido, sin tocar), gate de verificación que bloquea Fase 7 si el reporte queda parcial, y
+desglose por check (`codeguard.checks` en `quality.json` + tabla "Detalle de CodeGuard" en
+`.claude/templates/reporting/implementation-report.md`) para que el reporte final de cada US
+muestre no solo el conteo agregado sino qué encontró cada uno de los 9 checks. Aplica desde la
+próxima US que corra `/implement-us` — las 47 ya cerradas no se tocan.
 
-**Próximo paso:** mergear PR #168 a `develop`, y luego continuar con la Iteración 4 del
-Incremento 3 — frontend, consume las Iteraciones 1 a 3 de una sola vez (`US-3.4.1` a
-`US-3.4.7`, `docs/plans/inc3/inc3-candidatas.md`). Gate de diseño UX obligatorio antes de
-tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
-(aprobado en `US-3.0.2`) antes de escribir código. Crear Issues y specs
-`docs/specs/inc3/US-3.4.*.md` antes de implementar.
+**Iteración 4 del Incremento 3 — frontend, en curso** (consume las Iteraciones 1 a 3 de una
+sola vez, `docs/plans/inc3/inc3-candidatas.md`). Lado Docente (`US-3.4.1` a `US-3.4.4`)
+completo:
+**US-3.4.1** (infraestructura de frontend: cliente API tipado con 9 funciones sobre
+`apiFetch`/`ApiError` de `US-1.1.6`, rutas placeholder) cerrada 2026-08-30, PR
+[#178](https://github.com/vvalotto/cognion/pull/178).
+**US-3.4.2** (Docente ve sus materias y el listado de actividades de una materia) cerrada
+2026-08-30, PR [#179](https://github.com/vvalotto/cognion/pull/179), Issue #171 cerrado.
+**US-3.4.3** (Docente crea una nueva actividad de período abierto) cerrada 2026-08-30, PR
+[#180](https://github.com/vvalotto/cognion/pull/180), Issue #172 cerrado — el formulario
+original no pedía título (gap detectado recién en UAT, ver `US-3.4.9` más abajo).
+**US-3.4.4** (Docente ve el detalle de una actividad, extiende el plazo y la cierra
+manualmente) cerrada 2026-08-30, PR [#182](https://github.com/vvalotto/cognion/pull/182),
+Issue #173 cerrado: `GET /actividades/{id}` nuevo (`ObtenerActividadUseCase`), pantallas
+`ActividadDetalle.tsx`/`ExtenderPlazo.tsx`/`CerrarActividad.tsx`. Cierra completo el lado
+Docente de la Iteración 4 — queda pendiente el lado Estudiante (`US-3.4.5` a `US-3.4.7`).
+
+**UAT manual de Víctor en navegador real (2026-08-30)** sobre el flujo de Docente recién
+cerrado (materias → actividades → nueva actividad → detalle → extender/cerrar) detectó tres
+hallazgos, todos resueltos en la misma sesión antes de mergear:
+- **Bug crítico** (toca `src/`, track formal): crear una actividad desde la UI real y listarla
+  rompía con `500` (el navegador lo reportaba como error de CORS, pero la causa real era
+  `TypeError: can't compare offset-naive and offset-aware datetimes` — `<input
+  type="datetime-local">` manda fechas sin offset de timezone, que `_estado_actividad` comparaba
+  contra `datetime.now(UTC)`, aware). Regresión ya mergeada en `US-3.4.2`, invisible a los tests
+  automatizados porque arman las fechas con `datetime.now(UTC).isoformat()` en vez de simular
+  el input real del navegador — mismo patrón que el gap de CORS de `US-1.1.6`/`1.1.7`.
+  **US-3.4.8** (fix — normalizar datetimes naive a UTC en el boundary de la API, Pydantic
+  `field_validator`), PR [#184](https://github.com/vvalotto/cognion/pull/184), Issue #183
+  cerrado.
+- **Gap de UX, frontend-only** (track informal): el detalle de actividad solo tenía el
+  breadcrumb (texto chico) como forma de volver al listado — se agregó un botón explícito
+  "‹ Volver a actividades", incluido en el mismo PR #182 de `US-3.4.4`.
+- **Gap de producto**: el formulario de "Nueva actividad" nunca pedía título (el wireframe
+  aprobado tampoco lo incluía, aunque el listado sí espera mostrarlo) — fix del input en PR
+  [#185](https://github.com/vvalotto/cognion/pull/185) (`US-3.4.3`), y **US-3.4.9** (Docente
+  edita el título de una actividad ya creada — no existía ningún endpoint para esto)
+  implementada como US-IEDD nueva completa: comando `ModificarTituloActividad`, evento
+  `TituloActividadModificado` (cuarto evento posible del stream, sin invariantes de dominio —
+  editable en cualquier estado, incluso cerrada), `PATCH /actividades/{id}/titulo`, pantalla
+  `EditarTituloActividad.tsx`. PR [#187](https://github.com/vvalotto/cognion/pull/187), Issue
+  #186 cerrado.
+
+Los 4 PRs (#182, #184, #185, #187) mergeados a `develop` en orden (185→184→187→182, el más
+chico primero) con CI en verde en cada uno, mismo criterio de "UAT en navegador real detecta lo
+que Vitest mockeado no ve" ya documentado en Identidad.
+
+**Próximo paso:** continuar la Iteración 4 con el lado Estudiante — `US-3.4.5` (materias y
+actividades disponibles, incluido "fuera de período"), `US-3.4.6` (rendir: responder, pausar,
+reanudar), `US-3.4.7` (finalizar y ver revisión completa). Gate de diseño UX obligatorio antes
+de tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
+(aprobado en `US-3.0.2`) antes de escribir código, ya con Issues y specs creados (`US-3.4.5` a
+`US-3.4.7`, Issues #174-#176).
 **Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
 (frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
 a fin, docente extiende el plazo de una sesión activa).
-**Branch activo:** `fix/codeguard-analysis-type-full` (PR #168 abierto contra `develop`).
+**Branch activo:** ninguna — `develop` sincronizado, próxima branch a abrir es
+`feature/US-3.4.5-...`.
 
 ---
 
