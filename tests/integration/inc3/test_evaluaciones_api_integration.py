@@ -260,7 +260,9 @@ class TestRendirEvaluacionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             nombre = f"Ingeniería de Software {uuid.uuid4()}"
-            creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers)
+            creada = await client.post(
+                "/materias", json={"nombre": nombre}, headers=docente_headers
+            )
             banco_id = creada.json()["banco_id"]
             materia_id = creada.json()["id"]
 
@@ -404,7 +406,5 @@ class TestRendirEvaluacionAPIIntegration:
 
         assert reanudada.status_code == 200
         assert reanudada.json()["estado"] == "EnCurso"
-        assert reanudada.json()["preguntas_respondidas"] == [
-            preguntas_asignadas[0]["pregunta_id"]
-        ]
+        assert reanudada.json()["preguntas_respondidas"] == [preguntas_asignadas[0]["pregunta_id"]]
         assert reanudada.json()["preguntas_asignadas"] == preguntas_asignadas

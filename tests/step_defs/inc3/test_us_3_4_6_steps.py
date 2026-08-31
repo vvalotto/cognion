@@ -49,7 +49,9 @@ def context():
     return {}
 
 
-async def _crear_materia_con_preguntas(cantidad_verdadero_falso: int, con_opcion_multiple: bool) -> str:
+async def _crear_materia_con_preguntas(
+    cantidad_verdadero_falso: int, con_opcion_multiple: bool
+) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post(
@@ -236,9 +238,7 @@ def consulta_contenido_pregunta_actual(context):
         _iniciar_evaluacion(context["evaluacion"]["actividad_id"], context["estudiante_headers"])
     )
     asignada = next(
-        p
-        for p in reconexion["preguntas_asignadas"]
-        if p["pregunta_id"] == context["pregunta_id"]
+        p for p in reconexion["preguntas_asignadas"] if p["pregunta_id"] == context["pregunta_id"]
     )
     context["asignada"] = asignada
 
@@ -266,7 +266,9 @@ def valida_retoma_con_3_respondidas(context):
 
 @then("no se genera un nuevo set de preguntas")
 def valida_mismo_set(context):
-    assert context["reconexion"]["preguntas_asignadas"] == context["evaluacion"]["preguntas_asignadas"]
+    assert (
+        context["reconexion"]["preguntas_asignadas"] == context["evaluacion"]["preguntas_asignadas"]
+    )
 
 
 @then("el sistema suspende la Evaluacion")
@@ -287,9 +289,10 @@ def valida_navega_a_suspendida(context):
 def valida_vuelve_a_rendir_en_el_mismo_punto(context):
     assert context["response"].status_code == 200
     assert context["response"].json()["estado"] == "EnCurso"
-    assert context["response"].json()["preguntas_asignadas"] == context["evaluacion"][
-        "preguntas_asignadas"
-    ]
+    assert (
+        context["response"].json()["preguntas_asignadas"]
+        == context["evaluacion"]["preguntas_asignadas"]
+    )
     assert (
         context["response"].json()["preguntas_respondidas"]
         == context["evaluacion"]["preguntas_respondidas"]
