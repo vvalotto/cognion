@@ -19,6 +19,7 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import (
     MateriaDTO,
 )
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
+    ContenidoPregunta,
     DetalleCorreccionPregunta,
     PreguntaConsultaPort,
 )
@@ -57,6 +58,7 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         self.ids_activas: dict[UUID, list[UUID]] = {}
         self.correcciones: dict[UUID, bool] = {}
         self.detalles: dict[UUID, DetalleCorreccionPregunta] = {}
+        self.contenidos: dict[UUID, ContenidoPregunta] = {}
 
     async def contar_activas_por_materia(self, materia_id: UUID) -> int:
         """Devuelve el conteo precargado para la materia, o 0 si no se precargó."""
@@ -75,6 +77,10 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         return self.detalles.get(
             pregunta_id, DetalleCorreccionPregunta(texto="", contenido_correcto={})
         )
+
+    async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:
+        """Devuelve el contenido precargado para la pregunta, o uno vacío si no se precargó."""
+        return self.contenidos.get(pregunta_id, ContenidoPregunta(texto="", opciones=None))
 
 
 class FakeEventStore(EventStorePort):

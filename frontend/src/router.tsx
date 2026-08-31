@@ -17,6 +17,7 @@ import { Cuentas } from "@/pages/Cuentas"
 import { EditarPregunta } from "@/pages/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/EliminarPregunta"
+import { EvaluacionSuspendida } from "@/pages/EvaluacionSuspendida"
 import { ExtenderPlazo } from "@/pages/ExtenderPlazo"
 import { FueraDePeriodo } from "@/pages/FueraDePeriodo"
 import { Login } from "@/pages/Login"
@@ -32,6 +33,7 @@ import { NuevaPreguntaVerdaderoFalso } from "@/pages/NuevaPreguntaVerdaderoFalso
 import { Registro } from "@/pages/Registro"
 import { RegistroError } from "@/pages/RegistroError"
 import { RegistroExito } from "@/pages/RegistroExito"
+import { RendirEvaluacion } from "@/pages/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/ResetearPassword"
 
 /**
@@ -252,7 +254,15 @@ export const router = createBrowserRouter([
         path: "/mis-actividades/actividades/:actividadId/rendir",
         element: (
           <RequireRole rol="estudiante">
-            <ActividadEvaluativaPlaceholder />
+            <RendirEvaluacion />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-actividades/actividades/:actividadId/suspendida",
+        element: (
+          <RequireRole rol="estudiante">
+            <EvaluacionSuspendida />
           </RequireRole>
         ),
       },

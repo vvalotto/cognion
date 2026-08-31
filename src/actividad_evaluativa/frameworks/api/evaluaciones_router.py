@@ -19,6 +19,7 @@ from src.actividad_evaluativa.entities.errors import (
     PreguntaNoAsignada,
 )
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion
+from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.frameworks.api.schemas import (
     EvaluacionResponse,
     IniciarEvaluacionRequest,
@@ -29,6 +30,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_current_user,
     get_evaluaciones_controller,
+    get_pregunta_consulta_port,
     require_estudiante,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
@@ -39,16 +41,37 @@ from src.shared.entities.jwt import JWTPayload
 router = APIRouter(prefix="/evaluaciones", tags=["actividad_evaluativa"])
 
 
-def _a_response(evaluacion: Evaluacion) -> EvaluacionResponse:
-    """Adapta una `Evaluacion` del dominio a `EvaluacionResponse` — reusado por los 3 endpoints."""
+async def _a_response(
+    evaluacion: Evaluacion, pregunta_consulta: PreguntaConsultaPort
+) -> EvaluacionResponse:
+    """Adapta una `Evaluacion` del dominio a `EvaluacionResponse` — reusado por los 4 endpoints.
+
+    Enriquece cada `PreguntaAsignada` con `enunciado`/`opciones` vía `PreguntaConsultaPort`
+    (`US-3.4.6`, sin la respuesta correcta) y deriva `preguntas_respondidas` de
+    `evaluacion.respuestas` — ids únicos, sin importar cuántos intentos tuvo cada una.
+    """
+    preguntas_asignadas = []
+    for p in evaluacion.preguntas_asignadas:
+        contenido = await pregunta_consulta.obtener_contenido(p.pregunta_id)
+        preguntas_asignadas.append(
+            PreguntaAsignadaResponse(
+                pregunta_id=p.pregunta_id,
+                orden=p.orden,
+                enunciado=contenido.texto,
+                opciones=contenido.opciones,
+            )
+        )
+
+    preguntas_respondidas = list(
+        dict.fromkeys(respuesta.pregunta_id for respuesta in evaluacion.respuestas)
+    )
+
     return EvaluacionResponse(
         id=evaluacion.id,
         actividad_id=evaluacion.actividad_id,
         estudiante_id=evaluacion.estudiante_id,
-        preguntas_asignadas=[
-            PreguntaAsignadaResponse(pregunta_id=p.pregunta_id, orden=p.orden)
-            for p in evaluacion.preguntas_asignadas
-        ],
+        preguntas_asignadas=preguntas_asignadas,
+        preguntas_respondidas=preguntas_respondidas,
         estado=evaluacion.estado.value,
         iniciada_en=evaluacion.iniciada_en,
     )
@@ -64,6 +87,7 @@ async def iniciar_evaluacion(
     body: IniciarEvaluacionRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: EvaluacionesController = Depends(get_evaluaciones_controller),
+    pregunta_consulta: PreguntaConsultaPort = Depends(get_pregunta_consulta_port),
 ) -> EvaluacionResponse:
     """Inicia la evaluación del Estudiante autenticado, o retoma la existente (INV-AE-05/06).
 
@@ -80,7 +104,7 @@ async def iniciar_evaluacion(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return _a_response(evaluacion)
+    return await _a_response(evaluacion, pregunta_consulta)
 
 
 @router.post(
@@ -133,6 +157,7 @@ async def suspender_evaluacion(
     evaluacion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: EvaluacionesController = Depends(get_evaluaciones_controller),
+    pregunta_consulta: PreguntaConsultaPort = Depends(get_pregunta_consulta_port),
 ) -> EvaluacionResponse:
     """Pausa explícitamente la evaluación del Estudiante autenticado (INV-AE-12).
 
@@ -147,7 +172,7 @@ async def suspender_evaluacion(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return _a_response(evaluacion)
+    return await _a_response(evaluacion, pregunta_consulta)
 
 
 @router.post(
@@ -160,6 +185,7 @@ async def reanudar_evaluacion(
     evaluacion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: EvaluacionesController = Depends(get_evaluaciones_controller),
+    pregunta_consulta: PreguntaConsultaPort = Depends(get_pregunta_consulta_port),
 ) -> EvaluacionResponse:
     """Reanuda explícitamente la evaluación suspendida del Estudiante autenticado (INV-AE-11).
 
@@ -174,7 +200,7 @@ async def reanudar_evaluacion(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return _a_response(evaluacion)
+    return await _a_response(evaluacion, pregunta_consulta)
 
 
 @router.post(
@@ -187,6 +213,7 @@ async def finalizar_evaluacion(
     evaluacion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: EvaluacionesController = Depends(get_evaluaciones_controller),
+    pregunta_consulta: PreguntaConsultaPort = Depends(get_pregunta_consulta_port),
 ) -> EvaluacionResponse:
     """Finaliza explícitamente la evaluación del Estudiante autenticado (RF-13).
 
@@ -201,4 +228,4 @@ async def finalizar_evaluacion(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return _a_response(evaluacion)
+    return await _a_response(evaluacion, pregunta_consulta)

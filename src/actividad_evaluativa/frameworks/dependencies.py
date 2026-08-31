@@ -14,6 +14,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
+from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.frameworks.adapters.actividad_query_repository import (
     SQLAlchemyActividadQueryRepository,
 )
@@ -153,6 +154,16 @@ def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
         ReanudarEvaluacionUseCase(event_store),
         FinalizarEvaluacionUseCase(event_store),
     )
+
+
+def get_pregunta_consulta_port(session: SessionDep) -> PreguntaConsultaPort:
+    """Provee `PreguntaConsultaPort` como dependencia FastAPI propia del router (`US-3.4.6`).
+
+    No se agrega como 6° dependencia de `EvaluacionesController` (que ya inyecta 5 Use Cases)
+    para no repetir el patrón de CRITICAL de CBO ya visto en incrementos anteriores — el
+    router la usa directamente para enriquecer `EvaluacionResponse`.
+    """
+    return PreguntaConsultaPortInProcess(session)
 
 
 def get_revision_controller(session: SessionDep) -> RevisionController:

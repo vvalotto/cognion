@@ -64,6 +64,24 @@ async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, canti
     return creada.json()["id"]
 
 
+async def _crear_pregunta_opcion_multiple(
+    client: AsyncClient, headers: dict, banco_id: str, texto: str, opciones: list[dict]
+) -> None:
+    await client.post(
+        "/preguntas/opcion-multiple",
+        json={
+            "banco_id": banco_id,
+            "texto": texto,
+            "opciones": opciones,
+            "unidad_tematica": "Unidad 1",
+            "tema": "Tema",
+            "dificultad": "medio",
+            "importancia": "alto",
+        },
+        headers=headers,
+    )
+
+
 async def _crear_actividad(
     client: AsyncClient,
     docente_headers: dict,
@@ -230,3 +248,163 @@ class TestIniciarEvaluacionAPIIntegration:
             )
 
         assert response.status_code == 403
+
+
+class TestRendirEvaluacionAPIIntegration:
+    """Escenarios de `tests/features/inc3/US-3.4.6-rendir-evaluacion.feature`."""
+
+    async def test_preguntas_asignadas_traen_enunciado_y_opciones_sin_marcar_la_correcta(
+        self, session, docente_headers
+    ):
+        estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            nombre = f"Ingeniería de Software {uuid.uuid4()}"
+            creada = await client.post(
+                "/materias", json={"nombre": nombre}, headers=docente_headers
+            )
+            banco_id = creada.json()["banco_id"]
+            materia_id = creada.json()["id"]
+
+            await _crear_pregunta_opcion_multiple(
+                client,
+                docente_headers,
+                banco_id,
+                "¿Cuál NO es un principio SOLID?",
+                [
+                    {"texto": "Responsabilidad única", "es_correcta": False},
+                    {"texto": "Herencia múltiple obligatoria", "es_correcta": True},
+                ],
+            )
+            await client.post(
+                "/preguntas/verdadero-falso",
+                json={
+                    "banco_id": banco_id,
+                    "texto": "Python es un lenguaje tipado dinámicamente.",
+                    "respuesta_correcta": True,
+                    "unidad_tematica": "Unidad 1",
+                    "tema": "Tema",
+                    "dificultad": "medio",
+                    "importancia": "alto",
+                },
+                headers=docente_headers,
+            )
+
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 2, apertura, cierre
+            )
+
+            response = await client.post(
+                "/evaluaciones",
+                json={"actividad_id": actividad_id},
+                headers=estudiante_headers,
+            )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["preguntas_respondidas"] == []
+        for asignada in data["preguntas_asignadas"]:
+            assert asignada["enunciado"]
+            if asignada["opciones"] is not None:
+                assert asignada["opciones"] == [
+                    "Responsabilidad única",
+                    "Herencia múltiple obligatoria",
+                ]
+                for texto_opcion in asignada["opciones"]:
+                    assert isinstance(texto_opcion, str)
+
+    async def test_confirmar_una_respuesta_la_refleja_en_preguntas_respondidas(
+        self, session, docente_headers
+    ):
+        _estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 5)
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 3, apertura, cierre
+            )
+
+            iniciada = await client.post(
+                "/evaluaciones",
+                json={"actividad_id": actividad_id},
+                headers=estudiante_headers,
+            )
+            evaluacion_id = iniciada.json()["id"]
+            primera_pregunta_id = iniciada.json()["preguntas_asignadas"][0]["pregunta_id"]
+
+            await client.post(
+                f"/evaluaciones/{evaluacion_id}/respuestas",
+                json={"pregunta_id": primera_pregunta_id, "contenido": {"valor": True}},
+                headers=estudiante_headers,
+            )
+
+            reconexion = await client.post(
+                "/evaluaciones",
+                json={"actividad_id": actividad_id},
+                headers=estudiante_headers,
+            )
+
+        assert reconexion.status_code == 200
+        assert reconexion.json()["preguntas_respondidas"] == [primera_pregunta_id]
+        assert reconexion.json()["estado"] == "EnCurso"
+
+    async def test_pausar_y_reanudar_conserva_el_set_y_las_respuestas(
+        self, session, docente_headers
+    ):
+        _estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 5)
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 3, apertura, cierre
+            )
+
+            iniciada = await client.post(
+                "/evaluaciones",
+                json={"actividad_id": actividad_id},
+                headers=estudiante_headers,
+            )
+            evaluacion_id = iniciada.json()["id"]
+            preguntas_asignadas = iniciada.json()["preguntas_asignadas"]
+
+            await client.post(
+                f"/evaluaciones/{evaluacion_id}/respuestas",
+                json={
+                    "pregunta_id": preguntas_asignadas[0]["pregunta_id"],
+                    "contenido": {"valor": True},
+                },
+                headers=estudiante_headers,
+            )
+
+            suspendida = await client.post(
+                f"/evaluaciones/{evaluacion_id}/suspender", headers=estudiante_headers
+            )
+
+            reingreso = await client.post(
+                "/evaluaciones",
+                json={"actividad_id": actividad_id},
+                headers=estudiante_headers,
+            )
+
+            reanudada = await client.post(
+                f"/evaluaciones/{evaluacion_id}/reanudar", headers=estudiante_headers
+            )
+
+        assert suspendida.status_code == 200
+        assert suspendida.json()["estado"] == "Suspendida"
+
+        assert reingreso.status_code == 200
+        assert reingreso.json()["estado"] == "Suspendida"
+        assert reingreso.json()["id"] == evaluacion_id
+        assert reingreso.json()["preguntas_asignadas"] == preguntas_asignadas
+
+        assert reanudada.status_code == 200
+        assert reanudada.json()["estado"] == "EnCurso"
+        assert reanudada.json()["preguntas_respondidas"] == [preguntas_asignadas[0]["pregunta_id"]]
+        assert reanudada.json()["preguntas_asignadas"] == preguntas_asignadas

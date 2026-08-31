@@ -14,6 +14,19 @@ from uuid import UUID
 
 
 @dataclass(frozen=True)
+class ContenidoPregunta:
+    """Texto y opciones de una `PreguntaPlantilla`, sin exponer la respuesta correcta.
+
+    `opciones` es `None` para Verdadero/Falso (no tiene lista de opciones) y una lista de
+    textos, en el orden original de la pregunta, para Opción Múltiple — sin marcar cuál es
+    correcta (INV-AE hot spot "sin feedback de corrección", `US-3.4.6`).
+    """
+
+    texto: str
+    opciones: list[str] | None
+
+
+@dataclass(frozen=True)
 class DetalleCorreccionPregunta:
     """Texto y respuesta correcta de una `PreguntaPlantilla` — insumo de la revisión.
 
@@ -57,4 +70,13 @@ class PreguntaConsultaPort(ABC):
         Usado por `ObtenerRevisionEvaluacion` (`US-3.2.3`) — a diferencia de
         `evaluar_correccion`, que solo informa `bool`, la revisión necesita mostrarle al
         estudiante cuál era la respuesta correcta cuando falló o no respondió.
+        """
+
+    @abstractmethod
+    async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:
+        """Devuelve el texto y las opciones vigentes de `pregunta_id`, sin la respuesta correcta.
+
+        Usado por `#est-rendir` (`US-3.4.6`) para renderizar la pregunta actual — a diferencia
+        de `obtener_detalle_correccion`, que sí expone qué opción es correcta y no debe
+        reusarse antes de que el estudiante finalice la evaluación.
         """
