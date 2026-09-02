@@ -112,12 +112,25 @@ class PreguntaAsignadaResponse(BaseModel):
     opciones: list[str] | None
 
 
+class RespuestaConfirmadaResponse(BaseModel):
+    """Contenido de la `Respuesta` vigente de una pregunta ya respondida (`US-ADJ-12`).
+
+    Expone la propia elección del Estudiante (para prellenar `#est-rendir` al revisitar una
+    pregunta ya respondida) — nunca `es_correcta`, mismo criterio de "sin feedback inmediato"
+    que `RespuestaResponse`.
+    """
+
+    pregunta_id: UUID
+    contenido: dict[str, Any]
+
+
 class EvaluacionResponse(BaseModel):
     """Representación de una `Evaluacion` devuelta por la API.
 
     `preguntas_respondidas` (`US-3.4.6`) trae los ids de `PreguntaAsignada` con al menos una
     `Respuesta` confirmada — insumo de los puntos de navegación (verde/azul/gris) de
-    `#est-rendir`.
+    `#est-rendir`. `respuestas_confirmadas` (`US-ADJ-12`) trae el contenido de la respuesta
+    vigente de cada una — insumo para prellenar la pantalla al revisitarla.
     """
 
     id: UUID
@@ -125,6 +138,7 @@ class EvaluacionResponse(BaseModel):
     estudiante_id: UUID
     preguntas_asignadas: list[PreguntaAsignadaResponse]
     preguntas_respondidas: list[UUID]
+    respuestas_confirmadas: list[RespuestaConfirmadaResponse]
     estado: str
     iniciada_en: datetime
 

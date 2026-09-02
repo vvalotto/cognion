@@ -55,12 +55,18 @@ export interface PreguntaAsignadaResponse {
   opciones: string[] | null
 }
 
+export interface RespuestaConfirmadaResponse {
+  preguntaId: string
+  contenido: Record<string, unknown>
+}
+
 export interface EvaluacionResponse {
   id: string
   actividadId: string
   estudianteId: string
   preguntasAsignadas: PreguntaAsignadaResponse[]
   preguntasRespondidas: string[]
+  respuestasConfirmadas: RespuestaConfirmadaResponse[]
   estado: string
   iniciadaEn: string
 }
@@ -133,12 +139,18 @@ interface PreguntaAsignadaApiResponse {
   opciones: string[] | null
 }
 
+interface RespuestaConfirmadaApiResponse {
+  pregunta_id: string
+  contenido: Record<string, unknown>
+}
+
 interface EvaluacionApiResponse {
   id: string
   actividad_id: string
   estudiante_id: string
   preguntas_asignadas: PreguntaAsignadaApiResponse[]
   preguntas_respondidas: string[]
+  respuestas_confirmadas: RespuestaConfirmadaApiResponse[]
   estado: string
   iniciada_en: string
 }
@@ -222,6 +234,10 @@ function mapearEvaluacion(evaluacion: EvaluacionApiResponse): EvaluacionResponse
       opciones: p.opciones,
     })),
     preguntasRespondidas: evaluacion.preguntas_respondidas,
+    respuestasConfirmadas: evaluacion.respuestas_confirmadas.map((r) => ({
+      preguntaId: r.pregunta_id,
+      contenido: r.contenido,
+    })),
     estado: evaluacion.estado,
     iniciadaEn: evaluacion.iniciada_en,
   }

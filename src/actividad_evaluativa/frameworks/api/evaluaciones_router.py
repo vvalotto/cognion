@@ -25,6 +25,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     IniciarEvaluacionRequest,
     PreguntaAsignadaResponse,
     RegistrarRespuestaRequest,
+    RespuestaConfirmadaResponse,
     RespuestaResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
@@ -49,6 +50,8 @@ async def _a_response(
     Enriquece cada `PreguntaAsignada` con `enunciado`/`opciones` vía `PreguntaConsultaPort`
     (`US-3.4.6`, sin la respuesta correcta) y deriva `preguntas_respondidas` de
     `evaluacion.respuestas` — ids únicos, sin importar cuántos intentos tuvo cada una.
+    `respuestas_confirmadas` (`US-ADJ-12`) trae el contenido de la respuesta vigente de cada
+    pregunta ya respondida, vía `respuesta_vigente_de` — nunca `es_correcta`.
     """
     preguntas_asignadas = []
     for p in evaluacion.preguntas_asignadas:
@@ -65,6 +68,13 @@ async def _a_response(
     preguntas_respondidas = list(
         dict.fromkeys(respuesta.pregunta_id for respuesta in evaluacion.respuestas)
     )
+    respuestas_confirmadas = []
+    for pregunta_id in preguntas_respondidas:
+        vigente = evaluacion.respuesta_vigente_de(pregunta_id)
+        if vigente is not None:
+            respuestas_confirmadas.append(
+                RespuestaConfirmadaResponse(pregunta_id=pregunta_id, contenido=vigente.contenido)
+            )
 
     return EvaluacionResponse(
         id=evaluacion.id,
@@ -72,6 +82,7 @@ async def _a_response(
         estudiante_id=evaluacion.estudiante_id,
         preguntas_asignadas=preguntas_asignadas,
         preguntas_respondidas=preguntas_respondidas,
+        respuestas_confirmadas=respuestas_confirmadas,
         estado=evaluacion.estado.value,
         iniciada_en=evaluacion.iniciada_en,
     )
