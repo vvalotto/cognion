@@ -33,8 +33,8 @@
   - `npx vitest run`: en verde, sin `unhandled rejection`
 
 ## Rutas de Artefactos
-- Contexto: `docs/plans/US-ADJ-20-context.md`
+- Contexto: `docs/plans/inc3-adj/US-ADJ-20-context.md`
 - BDD feature: N/A (skip_bdd)
-- Plan: `docs/plans/US-ADJ-20-plan.md`
-- Reporte: `docs/reports/US-ADJ-20-report.md`
-- Quality report: `quality/reports/US-ADJ-20-quality.json`
+- Plan: `docs/plans/inc3-adj/US-ADJ-20-plan.md`
+- Reporte: `docs/reports/inc3-adj/US-ADJ-20-report.md`
+- Quality report: `quality/reports/inc3-adj/US-ADJ-20-quality.json`
