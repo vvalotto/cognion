@@ -173,9 +173,7 @@ class TestAResponse:
             contenido={"valor": True},
             es_correcta=True,
         )
-        evaluacion = _evaluacion(
-            [PreguntaAsignada(pregunta_id=respuesta.pregunta_id, orden=0)]
-        )
+        evaluacion = _evaluacion([PreguntaAsignada(pregunta_id=respuesta.pregunta_id, orden=0)])
         evaluacion.respuestas.append(respuesta)
 
         response = await _a_response(evaluacion, FakePreguntaConsultaPort())
