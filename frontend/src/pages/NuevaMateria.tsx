@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -16,14 +16,23 @@ export function NuevaMateria() {
   const [nombre, setNombre] = useState("")
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
 
     try {
-      await crearMateria(nombre)
+      await crearMateria(nombre, controladorSubmitRef.current?.signal)
       void navigate("/materias")
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 409) {
         setError("Ya existe una materia con ese nombre.")
         return
