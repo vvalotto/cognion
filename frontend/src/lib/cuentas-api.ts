@@ -50,6 +50,7 @@ interface CuentaDetalleApiResponse {
 export async function listarCuentas(
   filtros: FiltrosCuentas = {},
   paginacion: PaginacionCuentas = { pagina: 1, tamanioPagina: 20 },
+  signal?: AbortSignal,
 ): Promise<CuentasPaginadas> {
   const params = new URLSearchParams()
   if (filtros.rol) params.set("rol", filtros.rol)
@@ -59,7 +60,7 @@ export async function listarCuentas(
   params.set("tamanio_pagina", String(paginacion.tamanioPagina))
 
   const query = params.toString()
-  return apiFetch<CuentasPaginadasApiResponse>(`/usuarios${query ? `?${query}` : ""}`)
+  return apiFetch<CuentasPaginadasApiResponse>(`/usuarios${query ? `?${query}` : ""}`, { signal })
 }
 
 function aCuentaDetalleResponse(datos: CuentaDetalleApiResponse): CuentaDetalleResponse {
@@ -74,18 +75,23 @@ function aCuentaDetalleResponse(datos: CuentaDetalleApiResponse): CuentaDetalleR
   }
 }
 
-export async function obtenerCuenta(id: string): Promise<CuentaDetalleResponse> {
-  const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}`)
+export async function obtenerCuenta(
+  id: string,
+  signal?: AbortSignal,
+): Promise<CuentaDetalleResponse> {
+  const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}`, { signal })
   return aCuentaDetalleResponse(datos)
 }
 
 export async function resetearPassword(
   id: string,
   passwordNueva: string,
+  signal?: AbortSignal,
 ): Promise<CuentaDetalleResponse> {
   const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}/resetear-password`, {
     method: "POST",
     body: { password_nueva: passwordNueva },
+    signal,
   })
   return aCuentaDetalleResponse(datos)
 }
@@ -123,12 +129,14 @@ function esDetalleCambiarPassword(detail: unknown): detail is CambiarPasswordErr
 export async function cambiarPassword(
   passwordActual: string,
   passwordNueva: string,
+  signal?: AbortSignal,
 ): Promise<void> {
   try {
     await apiFetch<void>("/usuarios/me/password", {
       method: "PUT",
       body: { password_actual: passwordActual, password_nueva: passwordNueva },
       handleUnauthorized: false,
+      signal,
     })
   } catch (err) {
     if (err instanceof ApiError && esDetalleCambiarPassword(err.detail)) {

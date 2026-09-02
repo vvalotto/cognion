@@ -21,24 +21,20 @@ export function EliminarPregunta() {
   const [pregunta, setPregunta] = useState<PreguntaResponse | null | undefined>(undefined)
 
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   useEffect(() => {
-    if (!materia) return
-    let cancelado = false
-    filtrarBanco(materia.bancoId).then((resultado) => {
-      if (!cancelado) setPregunta(resultado.preguntas.find((p) => p.id === preguntaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!materia) return undefined
+    const controller = new AbortController()
+    filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
+      .then((resultado) => setPregunta(resultado.preguntas.find((p) => p.id === preguntaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materia, preguntaId])
 
   async function handleEliminar() {

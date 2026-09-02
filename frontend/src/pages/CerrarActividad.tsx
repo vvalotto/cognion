@@ -21,14 +21,12 @@ export function CerrarActividad() {
   const [actividad, setActividad] = useState<ActividadResumenResponse | null>(null)
 
   useEffect(() => {
-    if (!actividadId) return
-    let cancelado = false
-    obtenerActividad(actividadId).then((resultado) => {
-      if (!cancelado) setActividad(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!actividadId) return undefined
+    const controller = new AbortController()
+    obtenerActividad(actividadId, controller.signal)
+      .then((resultado) => setActividad(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [actividadId])
 
   async function handleCerrar() {

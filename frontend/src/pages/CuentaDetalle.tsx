@@ -28,14 +28,12 @@ export function CuentaDetalle() {
   const [cuenta, setCuenta] = useState<CuentaDetalleResponse | null>(null)
 
   useEffect(() => {
-    if (!usuarioId) return
-    let cancelado = false
-    obtenerCuenta(usuarioId).then((resultado) => {
-      if (!cancelado) setCuenta(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!usuarioId) return undefined
+    const controller = new AbortController()
+    obtenerCuenta(usuarioId, controller.signal)
+      .then((resultado) => setCuenta(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [usuarioId])
 
   if (!cuenta) {

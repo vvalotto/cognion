@@ -47,25 +47,21 @@ export function ActividadDetalle() {
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
 
   useEffect(() => {
-    if (!actividadId) return
-    let cancelado = false
-    obtenerActividad(actividadId).then((resultado) => {
-      if (!cancelado) setActividad(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!actividadId) return undefined
+    const controller = new AbortController()
+    obtenerActividad(actividadId, controller.signal)
+      .then((resultado) => setActividad(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [actividadId])
 
   useEffect(() => {
-    if (!actividad) return
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === actividad.materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!actividad) return undefined
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === actividad.materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [actividad])
 
   if (actividad === null) {

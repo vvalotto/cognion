@@ -1,0 +1,37 @@
+{
+  "us_id": "US-ADJ-20",
+  "titulo": "AbortController en los fetch de useEffect/submit del frontend",
+  "stack": "frontend",
+  "backend_changes": false,
+  "gates": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_preexistentes": 4
+    },
+    "tsc_noemit": {
+      "errores": 0
+    },
+    "vitest": {
+      "test_files": 41,
+      "tests": 229,
+      "passed": 229,
+      "failed": 0,
+      "nota": "Corrido 8+ veces seguidas sin unhandled rejection tras el fix (ver observaciones). Bajo carga de máquina alta (subagentes/monitors en paralelo) reaparecen timeouts de 5000ms en tests de submit con muchos campos — confirmado como flakiness pre-existente en develop sin relación con este cambio (comparado con git stash del baseline bajo la misma carga)."
+    },
+    "coverage_global": {
+      "statements_pct": 90.34,
+      "branches_pct": 79.66,
+      "functions_pct": 86.03,
+      "lines_pct": 92.59,
+      "threshold_pct": 80,
+      "nota": "Branches por debajo del umbral (79.66% < 80%) — gap pre-existente documentado en US-ADJ-16 (77.89% antes de esta US), no en el alcance de US-ADJ-20. Los nuevos branches de `AbortController`/`signal.aborted` no están cubiertos por tests nuevos (fuera de alcance según el plan aprobado)."
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "Stack frontend puro — sin cambios en src/ (backend), no aplican pylint/CC/MI/coverage pytest. Objetivo de la US (eliminar el unhandled rejection intermitente) verificado por ausencia repetida en corridas de vitest, no por un test nuevo dedicado — según el plan aprobado, la suite existente corriendo estable es la evidencia de cierre.",
+  "observaciones": [
+    "739/739 tests de pytest (backend) sin regresiones — US frontend-only, no se esperaban cambios.",
+    "El mock de fetch en los tests (vi.fn() por archivo) no respeta AbortSignal — AbortController.abort() no cancela una promesa mockeada. El fix real para producción (fetch real SÍ respeta AbortSignal) quedó completo; para cerrar el residual de tests se agregó además un chequeo explícito de signal.aborted en cada catch de submit, que sí cubre el caso de un error o resolución tardía tras desmontar, independientemente de si el mock respeta abort o no.",
+    "US-ADJ-16 (cobertura de branches 77.89% → 80%) sigue pendiente, sin relación con esta US — no se amplía su alcance acá."
+  ]
+}

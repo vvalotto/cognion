@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router"
 
 import { Button } from "@/components/ui/button"
@@ -26,6 +26,14 @@ export function Registro() {
   const [confirmarPassword, setConfirmarPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
@@ -43,9 +51,11 @@ export function Registro() {
       const response = await apiFetch<RegistroResponse>("/identidad/registro", {
         method: "POST",
         body: { token, nombre, email, password },
+        signal: controladorSubmitRef.current?.signal,
       })
       void navigate("/registro/exito", { state: { materia: response.materia } })
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 422) {
         void navigate("/registro/error")
         return

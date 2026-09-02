@@ -179,16 +179,20 @@ function mapearPregunta(pregunta: PreguntaApiResponse): PreguntaResponse {
 
 /** Cliente API del BC Banco de Preguntas — reutiliza `apiFetch` (JWT/401/403 de `US-1.1.6`). */
 
-export async function crearMateria(nombre: string): Promise<MateriaResponse> {
+export async function crearMateria(
+  nombre: string,
+  signal?: AbortSignal,
+): Promise<MateriaResponse> {
   const response = await apiFetch<MateriaApiResponse>("/materias", {
     method: "POST",
     body: { nombre },
+    signal,
   })
   return { id: response.id, nombre: response.nombre, bancoId: response.banco_id }
 }
 
-export async function listarMaterias(): Promise<MateriaListItemResponse[]> {
-  const response = await apiFetch<MateriaListItemApiResponse[]>("/materias")
+export async function listarMaterias(signal?: AbortSignal): Promise<MateriaListItemResponse[]> {
+  const response = await apiFetch<MateriaListItemApiResponse[]>("/materias", { signal })
   return response.map((materia) => ({
     id: materia.id,
     nombre: materia.nombre,
@@ -201,6 +205,7 @@ export async function filtrarBanco(
   bancoId: string,
   filtros: FiltrosBanco = {},
   paginacion?: PaginacionBanco,
+  signal?: AbortSignal,
 ): Promise<PreguntasPaginadas> {
   const params = new URLSearchParams()
   if (filtros.unidad) params.set("unidad", filtros.unidad)
@@ -215,12 +220,14 @@ export async function filtrarBanco(
   const query = params.toString()
   const response = await apiFetch<PreguntasPaginadasApiResponse>(
     `/bancos/${bancoId}/preguntas${query ? `?${query}` : ""}`,
+    { signal },
   )
   return { preguntas: response.preguntas.map(mapearPregunta), total: response.total }
 }
 
 export async function cargarPreguntaOpcionMultiple(
   body: CargarPreguntaOpcionMultipleBody,
+  signal?: AbortSignal,
 ): Promise<PreguntaOpcionMultipleResponse> {
   const response = await apiFetch<PreguntaOpcionMultipleApiResponse>("/preguntas/opcion-multiple", {
     method: "POST",
@@ -233,12 +240,14 @@ export async function cargarPreguntaOpcionMultiple(
       dificultad: body.dificultad,
       importancia: body.importancia,
     },
+    signal,
   })
   return mapearPregunta(response) as PreguntaOpcionMultipleResponse
 }
 
 export async function cargarPreguntaVerdaderoFalso(
   body: CargarPreguntaVerdaderoFalsoBody,
+  signal?: AbortSignal,
 ): Promise<PreguntaVerdaderoFalsoResponse> {
   const response = await apiFetch<PreguntaVerdaderoFalsoApiResponse>("/preguntas/verdadero-falso", {
     method: "POST",
@@ -251,6 +260,7 @@ export async function cargarPreguntaVerdaderoFalso(
       dificultad: body.dificultad,
       importancia: body.importancia,
     },
+    signal,
   })
   return mapearPregunta(response) as PreguntaVerdaderoFalsoResponse
 }
@@ -258,6 +268,7 @@ export async function cargarPreguntaVerdaderoFalso(
 export async function editarPregunta(
   preguntaId: string,
   body: EditarPreguntaBody,
+  signal?: AbortSignal,
 ): Promise<PreguntaResponse> {
   const response = await apiFetch<PreguntaApiResponse>(`/preguntas/${preguntaId}`, {
     method: "PUT",
@@ -270,12 +281,13 @@ export async function editarPregunta(
       opciones: body.opciones?.map((o) => ({ texto: o.texto, es_correcta: o.esCorrecta })),
       respuesta_correcta: body.respuestaCorrecta,
     },
+    signal,
   })
   return mapearPregunta(response)
 }
 
-export async function eliminarPregunta(preguntaId: string): Promise<void> {
-  await apiFetch<void>(`/preguntas/${preguntaId}`, { method: "DELETE" })
+export async function eliminarPregunta(preguntaId: string, signal?: AbortSignal): Promise<void> {
+  await apiFetch<void>(`/preguntas/${preguntaId}`, { method: "DELETE", signal })
 }
 
 /** Valores únicos de unidad temática y tema ya usados en el banco — sugerencias de combobox (US-ADJ-02). */

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -26,6 +26,14 @@ export function CambiarPassword() {
   const [error, setError] = useState<string | null>(null)
   const [bloqueada, setBloqueada] = useState(false)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
+
   function limpiarCampos() {
     setPasswordActual("")
     setPasswordNueva("")
@@ -46,9 +54,10 @@ export function CambiarPassword() {
     }
 
     try {
-      await cambiarPassword(passwordActual, passwordNueva)
+      await cambiarPassword(passwordActual, passwordNueva, controladorSubmitRef.current?.signal)
       setEstado("exito")
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof CambiarPasswordError) {
         if (err.bloqueada) {
           setBloqueada(true)

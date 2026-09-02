@@ -17,13 +17,11 @@ export function MateriasActividades() {
   const [materias, setMaterias] = useState<MateriaListItemResponse[] | null>(null)
 
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((resultado) => {
-      if (!cancelado) setMaterias(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((resultado) => setMaterias(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [])
 
   return (

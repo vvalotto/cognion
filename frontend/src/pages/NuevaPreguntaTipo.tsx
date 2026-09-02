@@ -13,13 +13,11 @@ export function NuevaPreguntaTipo() {
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
 
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   return (

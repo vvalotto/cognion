@@ -52,48 +52,42 @@ export function Banco() {
   const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
 
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   useEffect(() => {
-    if (!materia) return
-    let cancelado = false
-    filtrarBanco(materia.bancoId).then((resultado) => {
-      if (cancelado) return
-      const { unidades, temas } = derivarSugerencias(resultado.preguntas)
-      setSugerenciasUnidad(unidades)
-      setSugerenciasTema(temas)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!materia) return undefined
+    const controller = new AbortController()
+    filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
+      .then((resultado) => {
+        const { unidades, temas } = derivarSugerencias(resultado.preguntas)
+        setSugerenciasUnidad(unidades)
+        setSugerenciasTema(temas)
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [materia])
 
   useEffect(() => {
-    if (!materia) return
-    let cancelado = false
+    if (!materia) return undefined
+    const controller = new AbortController()
     const filtros: FiltrosBanco = {
       unidad: unidad || undefined,
       tema: tema || undefined,
       dificultad: dificultad || undefined,
       importancia: importancia || undefined,
     }
-    filtrarBanco(materia.bancoId, filtros, { pagina, tamanioPagina: TAMANIO_PAGINA }).then(
-      (resultado) => {
-        if (cancelado) return
+    filtrarBanco(materia.bancoId, filtros, { pagina, tamanioPagina: TAMANIO_PAGINA }, controller.signal)
+      .then((resultado) => {
         setPreguntas(resultado.preguntas)
         setTotal(resultado.total)
-      },
-    )
-    return () => {
-      cancelado = true
-    }
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [materia, unidad, tema, dificultad, importancia, pagina])
 
   function limpiarFiltros() {

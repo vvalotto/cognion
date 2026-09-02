@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Logo } from "@/components/Logo"
@@ -37,6 +37,14 @@ export function Login() {
     return () => setOcultarMarca(false)
   }, [bloqueada, setOcultarMarca])
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(false)
@@ -45,10 +53,12 @@ export function Login() {
       const response = await apiFetch<LoginResponse>("/identidad/login", {
         method: "POST",
         body: { email, password },
+        signal: controladorSubmitRef.current?.signal,
       })
       setSession({ token: response.access_token, rol: response.rol })
       void navigate(RUTA_POST_LOGIN[response.rol])
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 403) {
         setBloqueada(true)
         return

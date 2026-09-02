@@ -49,7 +49,7 @@ export function Cuentas() {
   const [busqueda, setBusqueda] = useState("")
 
   useEffect(() => {
-    let cancelado = false
+    const controller = new AbortController()
     listarCuentas(
       {
         rol: rol || undefined,
@@ -57,14 +57,14 @@ export function Cuentas() {
         busqueda: busqueda || undefined,
       },
       { pagina, tamanioPagina: TAMANIO_PAGINA },
-    ).then((resultado) => {
-      if (cancelado) return
-      setCuentas(resultado.cuentas)
-      setTotal(resultado.total)
-    })
-    return () => {
-      cancelado = true
-    }
+      controller.signal,
+    )
+      .then((resultado) => {
+        setCuentas(resultado.cuentas)
+        setTotal(resultado.total)
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [rol, estado, busqueda, pagina])
 
   function limpiarFiltros() {

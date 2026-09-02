@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -23,15 +23,21 @@ export function NuevaActividad() {
   const [cantidadIntentos, setCantidadIntentos] = useState(1)
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -48,15 +54,19 @@ export function NuevaActividad() {
 
     if (!materiaId) return
     try {
-      await crearActividad({
-        materiaId,
-        titulo: titulo.trim(),
-        fechaApertura,
-        fechaCierre,
-        cantidadPreguntas,
-        cantidadIntentosPermitidos: cantidadIntentos,
-      })
+      await crearActividad(
+        {
+          materiaId,
+          titulo: titulo.trim(),
+          fechaApertura,
+          fechaCierre,
+          cantidadPreguntas,
+          cantidadIntentosPermitidos: cantidadIntentos,
+        },
+        controladorSubmitRef.current?.signal,
+      )
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 422) {
         setError(err.message)
         return

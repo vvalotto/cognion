@@ -45,24 +45,20 @@ export function MisActividades() {
   const [actividades, setActividades] = useState<ActividadVisibleResponse[] | null>(null)
 
   useEffect(() => {
-    let cancelado = false
-    listarMisMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMisMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   useEffect(() => {
-    if (!materiaId) return
-    let cancelado = false
-    listarActividadesVisibles(materiaId).then((resultado) => {
-      if (!cancelado) setActividades(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!materiaId) return undefined
+    const controller = new AbortController()
+    listarActividadesVisibles(materiaId, controller.signal)
+      .then((resultado) => setActividades(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   function irA(actividad: ActividadVisibleResponse) {
