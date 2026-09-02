@@ -74,7 +74,7 @@ rechace con `AbortError`. En producción, con `fetch` real, el abort además can
 | Coverage global frontend | 90.34% stmts, 92.59% lines, 79.66% branches | ≥80% stmts/lines | ⚠️ branches |
 | pytest backend | 739/739 passed | 100% pasan | ✅ (sin cambios esperados) |
 
-Fuente: `quality/reports/US-ADJ-20-quality.json`. Branches (79.66%) queda debajo del umbral de
+Fuente: `quality/reports/inc3-adj/US-ADJ-20-quality.json`. Branches (79.66%) queda debajo del umbral de
 80% — gap pre-existente de `US-ADJ-16` (77.89% antes de esta US, ya en la lista de candidatas
 del Incremento 3-ADJ), no en el alcance de `US-ADJ-20`.
 
@@ -84,7 +84,7 @@ del Incremento 3-ADJ), no en el alcance de `US-ADJ-20`.
 
 ## Tests
 
-Sin tests nuevos — según el plan aprobado (`docs/plans/US-ADJ-20-plan.md`), la evidencia de
+Sin tests nuevos — según el plan aprobado (`docs/plans/inc3-adj/US-ADJ-20-plan.md`), la evidencia de
 cierre es la suite Vitest existente (229 tests, 41 archivos) corriendo estable y repetidamente
 sin `unhandled rejection`, verificado en 8+ corridas consecutivas. Bajo carga alta de máquina
 (procesos en paralelo) reaparecen timeouts de 5000ms en tests de submit con muchos campos —
@@ -110,10 +110,10 @@ Sin BDD — clasificada como refactorización sin cambio de comportamiento obser
 ### Documentación
 - `docs/specs/ajustes/US-ADJ-20.md`
 - `docs/plans/inc3-adj/inc3-adj-candidatas.md` (fila nueva + criterio de cierre actualizado)
-- `docs/plans/US-ADJ-20-context.md`
-- `docs/plans/US-ADJ-20-plan.md`
-- `docs/reports/US-ADJ-20-report.md` (este archivo)
-- `quality/reports/US-ADJ-20-quality.json`
+- `docs/plans/inc3-adj/US-ADJ-20-context.md`
+- `docs/plans/inc3-adj/US-ADJ-20-plan.md`
+- `docs/reports/inc3-adj/US-ADJ-20-report.md` (este archivo)
+- `quality/reports/inc3-adj/US-ADJ-20-quality.json`
 
 ---
 
