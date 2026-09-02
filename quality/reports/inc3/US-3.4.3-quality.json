@@ -1,0 +1,36 @@
+{
+  "us_id": "US-3.4.3",
+  "titulo": "Docente crea una nueva actividad de período abierto",
+  "stack": "frontend",
+  "backend_changes": false,
+  "gates": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_preexistentes": 3
+    },
+    "tsc_noemit": {
+      "errores": 0
+    },
+    "vitest": {
+      "test_files": 31,
+      "tests": 188,
+      "passed": 188,
+      "failed": 0
+    },
+    "coverage_global": {
+      "statements_pct": 91.51,
+      "branches_pct": 81.61,
+      "functions_pct": 90.88,
+      "lines_pct": 93.17,
+      "threshold_pct": 80
+    },
+    "coverage_nueva_actividad_tsx": {
+      "statements_pct": 90.24,
+      "branches_pct": 76.19,
+      "functions_pct": 100,
+      "lines_pct": 92.1
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "Stack frontend puro — sin cambios en src/, no aplican pylint/CC/MI/coverage pytest (gates Python). Mismo criterio que US-3.4.1/US-3.4.2."
+}

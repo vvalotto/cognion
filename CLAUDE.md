@@ -22,9 +22,9 @@ Documentos de definición (no se modifican retroactivamente):
 ## Estado actual
 
 **Fase:** BL-002 (Incremento 1 — BC Identidad) cerrada el 2026-07-29 en desarrollo local
-(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` diferidos —
-mismo ítem abierto de infraestructura/Docker que el deploy de `BL-001`; se ejecutan cuando esa
-decisión se resuelva. BC Identidad completo: RF-01 (registro por
+(`.cm/baselines/BL-002-bc-identidad.md`). Merge `develop → main` y tag `v0.3.0` ejecutados el
+2026-08-24 junto con el cierre de `BL-003` (ver más abajo) — tag retroactivo sobre el commit
+real de cierre, `75e0de9`. BC Identidad completo: RF-01 (registro por
 invitación) y RF-02 (autenticación y RBAC por rol) implementados de punta a punta, backend
 (Iteración 1: `US-1.1.0` a `US-1.1.5`) y frontend (Iteración 2: `US-1.1.6` a `US-1.1.9`)
 integrados juntos, cumpliendo el criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7
@@ -270,12 +270,222 @@ Sin no conformidades nuevas. **Cierra completa la Iteración 2 del Incremento 2*
 mitad del Hito completa: el administrador resuelve problemas de cuentas sin depender del
 docente.
 
-**Próximo paso:** iteración de ajuste conjunta (`US-ADJ-01`/`US-ADJ-03`, ver decisión de
-secuencia arriba) antes de evaluar el cierre de baseline (`BL-003`) — la Baseline no cierra
-backend-only, mismo criterio que `BL-002`.
-**Baseline abierta:** ninguna. BL-003 se abre al cierre del Incremento 2 (ver
-`docs/plans/PLAN-CM.md` §7 para la numeración de baselines).
-**Branch activo:** `develop`.
+**Iteración de ajuste `SP-ADJ-01` cerrada 2026-08-23** (`US-ADJ-01`/`US-ADJ-03`/`US-ADJ-04`/
+`US-ADJ-05`): estilo visual alineado al prototipo aprobado (Banco de Preguntas y Cuentas) y
+paginación en ambos listados. **BL-003 (Incremento 2 — Banco de Preguntas + Gestión de
+Cuentas) cerrada el 2026-08-23** en desarrollo local
+(`.cm/baselines/BL-003-banco-preguntas-cuentas.md`), PR #122. Quedan 3 candidatas diferidas,
+fuera de esta baseline: `US-ADJ-06`/`07`/`08` (tocan `src/`, en cola para un próximo
+incremento).
+
+**Merge `develop → main` y tags de cierre ejecutados 2026-08-24**, a pedido explícito de
+Víctor, manteniendo un tag por baseline para coherencia de hitos: `v0.3.0` (`BL-002`, tag
+retroactivo sobre el commit real de cierre `75e0de9`) y `v0.4.0` (`BL-003`, commit `e31ee67`),
+ambos en un único merge commit (`a2a2aee`). El deploy real a un entorno (Fly.io/servidor
+FIUNER) sigue como decisión institucional pendiente, a evaluar hacia el final del desarrollo —
+sin relación con este merge; `cd.yml` en `main`/tags solo construye la imagen Docker
+(`build-and-deploy`), el `flyctl deploy` y el healthcheck post-deploy siguen comentados.
+
+Incremento 3 — Actividad Evaluativa, período abierto — en curso
+(`docs/plans/inc3/inc3-candidatas.md`). Primer Core Domain del sistema (`ARQ_v1.md`, driver 3)
+y primer BC con Event Sourcing + CQRS (`ADR-002`); BC renombrado de "Sesiones" a "Actividad
+Evaluativa" (`ADR-015`). Decisión 2026-08-24 (PR #135): los Incrementos 3 a 7 corren con datos
+de prueba/locales, no datos reales de estudiantes — el gate de infraestructura de producción no
+bloquea el arranque de este incremento.
+**Iteración 0 — Modelado cerrada 2026-08-25/26**: `US-3.0.1` (event storming, Issue #137,
+`docs/design/domain/BC-actividad-evaluativa-modelo.md`) y `US-3.0.2` (wireframes, Issue #138,
+`docs/design/ux/wireframes-actividad-evaluativa.md`) aprobadas por Víctor. Matriz de
+trazabilidad: RF-11, RF-11b, RF-12, RF-13 pasan de Planificado a Especificado.
+**Iteración 1 — RF-11/RF-12: creación de actividad y set aleatorio por estudiante, cerrada
+2026-08-26**, backend únicamente (el frontend de todo el incremento se difiere a la Iteración
+4 — cruza las 3 iteraciones de backend, a diferencia de Banco de Preguntas). **US-3.1.1**
+(técnica: infraestructura de Event Sourcing + CQRS, tabla `events` JSONB append/replay por
+stream, Unit of Work por Use Case `ADR-009`, concurrencia optimista por `sequence_number`),
+Issue #145. **US-3.1.2** (Docente crea una actividad de período abierto —
+`CrearActividadPeriodoAbierto`, evento `ActividadEvaluativaCreada`, INV-AE-01/02/03), Issue
+#146. **US-3.1.3** (Estudiante inicia su evaluación con set aleatorio de preguntas fijado
+desde el inicio, reconexión idempotente sin regenerar el set — `IniciarEvaluacion`, evento
+`EvaluacionIniciada`, INV-AE-05/06), Issue #147, PR #151 mergeado a `develop`: aggregate
+`Evaluacion`, adapter in-process hacia Identidad/Banco de Preguntas, fix de CBO
+(`IniciarEvaluacionUseCase` de 11 a 10, mismo patrón de CRITICAL en pre-push ya visto en
+Incremento 2). Specs en `docs/specs/inc3/US-3.1.1.md` a `US-3.1.3.md`, reportes en
+`docs/reports/inc3/`.
+**Cierre de Iteración 1 verificado 2026-08-26** (PR #152 mergeado a `develop`): DesignReviewer
+sobre `src/` completo (163 archivos) — 0 CRITICAL, 114 WARNING, `should_block: false`, 11
+hallazgos propios de Actividad Evaluativa, todos WARNING, mismo patrón ya aceptado en
+`US-3.1.2`. UAT Capa 1 (447/447 pytest, sin regresiones) y Capa 2 (`smoke.sh` extendido con el
+flujo de Actividad Evaluativa) en verde. **Revisión manual de Víctor validada 2026-08-26**
+(`tests/uat/inc3/guion_manual_iteracion1.sh`, sin frontend todavía — vía Swagger UI/HTTP
+directo): sin hallazgos de ninguna severidad — idempotencia exacta en la reconexión (mismo id,
+mismo set/orden), 422 en `FueraDePeriodo`, 403 por rol. Cierra completa la verificación de la
+Iteración 1 (Capa 1 + Capa 2 + DesignReviewer + revisión manual), pero **no** el RF-11/RF-12
+completos ni la matriz de trazabilidad — esos pasan a Validado recién cuando el flujo completo
+(backend + frontend, Iteración 4) cierre en UAT, mismo criterio que Identidad/Banco de
+Preguntas.
+
+**Iteración 2 del Incremento 3 — RNF Confiabilidad, RF-13, cerrada 2026-08-27** (backend
+únicamente, mismo criterio de diferir frontend a la Iteración 4 que en Iteración 1).
+**US-3.2.1** (Estudiante confirma una respuesta — persistencia atómica), PR
+[#155](https://github.com/vvalotto/cognion/pull/155) mergeado a `develop`: Entity `Respuesta`
+dentro de `Evaluacion.respuestas`, `Evaluacion.reconstruir()` reescrito para hacer replay real
+del stream completo (antes solo leía el primer evento), evento `RespuestaRegistrada`
+repetible, `RegistrarRespuestaUseCase`, endpoint `POST /evaluaciones/{id}/respuestas`
+(INV-AE-07/08/12). Fix de CBO en `Evaluacion` (11→10), mismo patrón de CRITICAL en pre-push ya
+visto en Incrementos 2 y en `US-3.1.3`.
+**US-3.2.2** (Estudiante suspende y reanuda su evaluación) cerrada 2026-08-27, PR
+[#157](https://github.com/vvalotto/cognion/pull/157) mergeado a `develop`, Issue
+[#156](https://github.com/vvalotto/cognion/issues/156):
+`Evaluacion.validar_para_suspender()`/`validar_para_reanudar()` (INV-AE-11/12, separación
+validación/mutación), `_aplicar_evento` como dispatch por `event_type` en `reconstruir()` (en
+vez de asumir que todo evento posterior al primero es `RespuestaRegistrada`), eventos
+`EvaluacionSuspendida`/`EvaluacionReanudada` (el primero con campo `actor`, reutilizado luego
+por `US-3.2.4`), endpoints `POST /evaluaciones/{id}/suspender` y `/reanudar`.
+**US-3.2.3** (Estudiante finaliza su evaluación y ve la revisión completa) cerrada 2026-08-27,
+PR [#160](https://github.com/vvalotto/cognion/pull/160) mergeado a `develop`, Issue
+[#158](https://github.com/vvalotto/cognion/issues/158):
+`Evaluacion.validar_para_finalizar()` (único rechazo: ya `Finalizada` — finalizar siempre debe
+poder hacerse, sin validación de período), `Evaluacion.respuesta_vigente_de(pregunta_id)`
+(INV-AE-09, `confirmada_en` más reciente por pregunta), evento `EvaluacionFinalizada` (mismo
+shape que `EvaluacionSuspendida`, con `actor`), endpoints `POST /evaluaciones/{id}/finalizar` y
+`GET /evaluaciones/{id}/revision`.
+**US-3.2.4** (`VerificadorDeVencimientos` — suspensión y finalización automáticas, técnica)
+cerrada 2026-08-27, PR [#161](https://github.com/vvalotto/cognion/pull/161) mergeado a
+`develop`, Issue [#159](https://github.com/vvalotto/cognion/issues/159),
+`docs/reports/inc3/US-3.2.4-report.md`: extiende `SuspenderEvaluacionUseCase`/
+`FinalizarEvaluacionUseCase` con `actor="sistema"` (no-op silencioso e idempotente sobre
+`EvaluacionYaSuspendida`/`EvaluacionYaFinalizada`) en vez de duplicar lógica —
+`VerificarVencimientosUseCase` orquesta Regla 1 (inactividad, umbral 15 min) y Regla 2
+(vencimiento de período) reutilizando ambos Use Case sin comando ni evento propio. Read model
+de evaluaciones activas (`EvaluacionActivaQueryPort`/`SQLAlchemyEvaluacionActivaQueryRepository`)
+implementado como query de lectura sobre la tabla `events` existente, no como proyección
+sincronizada — decisión confirmada con Víctor para evitar tocar Use Case ya cerrados; válida a
+esta escala (30-60 alumnos), documentada como reversible si el volumen cambia. Background task
+`asyncio` en el `lifespan` de FastAPI, cadencia 120s configurable
+(`verificador_vencimientos_cadencia_segundos`). 599/599 tests (unit + integration + BDD),
+quality gates APROBADO (pylint 9.74/10, CC máx 6, MI mín 67.11, coverage 100%). **Cierra
+completa la Iteración 2 del Incremento 3 (backend):** a partir de esta US ninguna `Evaluacion`
+puede quedar indefinidamente `EnCurso` sin actividad ni sobrevivir pasivamente al cierre del
+período de su actividad. Nota dejada para `US-3.3.1`: al implementar
+`ModificarPeriodoDisponibilidad`, la Regla 2 deberá reconstruir el stream completo de
+`ActividadEvaluativaPeriodoAbierto` en vez de leer solo el primer evento.
+
+**Iteración 3 del Incremento 3 — RF-11b, cerrada 2026-08-28** (backend únicamente, mismo
+criterio de diferir frontend a la Iteración 4).
+**US-3.3.1** (Docente extiende, o intenta acortar, el plazo de una actividad vigente) cerrada
+2026-08-28, PR [#165](https://github.com/vvalotto/cognion/pull/165) mergeado a `develop`, Issue
+[#163](https://github.com/vvalotto/cognion/issues/163):
+`ModificarPeriodoDisponibilidadUseCase`, evento `PeriodoDisponibilidadModificado` (segundo
+evento posible del stream de `ActividadEvaluativaPeriodoAbierto`, que hasta acá siempre tenía
+uno solo), primer `ActividadEvaluativaPeriodoAbierto.reconstruir()` real (mismo patrón de
+dispatch por `event_type` que `Evaluacion.reconstruir()`, `US-3.2.2`). Consecuencia obligatoria:
+los 4 Use Case que leían `eventos[0].payload` directamente (`IniciarEvaluacion`,
+`RegistrarRespuesta`, `ReanudarEvaluacion`, Regla 2 del `VerificadorDeVencimientos`) pasan a usar
+`reconstruir()`. Endpoint `PATCH /actividades/{id}/periodo` (rol `docente`). El escenario BDD de
+`ActividadYaCerrada` quedó diferido a `US-3.3.2` — su precondición (`cerrada_manualmente = true`)
+todavía no existía. 138/138 tests unit, 67/67 integration, 6/6 BDD del BC, quality gates
+APROBADO (pylint 9.71/10, CC máx 7, MI mín 60.40, coverage 100%).
+**US-3.3.2** (Docente cierra una actividad manualmente antes de tiempo) cerrada 2026-08-28, PR
+[#166](https://github.com/vvalotto/cognion/pull/166) mergeado a `develop`, Issue
+[#164](https://github.com/vvalotto/cognion/issues/164): `CerrarActividadUseCase` — tercer
+evento del stream (`ActividadEvaluativaCerrada`), `validar_para_cerrar()` (INV-AE-04b) —
+implementa la Regla 3 del `VerificadorDeVencimientos` como cascada síncrona dentro del propio
+Use Case, reutilizando `FinalizarEvaluacionUseCase` con `actor="sistema"` (mecanismo de
+`US-3.2.4`) sin cambios en ese Use Case. Endpoint `POST /actividades/{id}/cerrar` (rol
+`docente`, sin body). Verificó end-to-end el escenario BDD diferido de `US-3.3.1`
+(`ModificarPeriodoDisponibilidad` sobre actividad ya cerrada) sin requerir cambios de código
+adicionales. 147/147 tests unit, 74/74 integration, 6/6 BDD del BC, quality gates APROBADO
+(pylint 9.70/10, CC máx 7, MI mín 60.40, coverage 100%). **Cierra completa la Iteración 3 del
+Incremento 3 (backend)** — las Reglas 1, 2 y 3 del `VerificadorDeVencimientos` quedan
+implementadas sin desviaciones respecto de lo modelado en
+`BC-actividad-evaluativa-modelo.md` §6b.
+
+**Detectado durante la Iteración 3:** `tests/step_defs/inc3/test_us_3_2_1_steps.py::
+test_rechazo_fuera_del_período_vigente` falla de forma determinística en este entorno por una
+ventana de tiempo demasiado ajustada (~1s) entre la creación de la actividad y el
+`IniciarEvaluacion` vía HTTP en el propio setup del test — confirmado que no es una regresión de
+ninguna US de esta iteración (falla igual en `develop` limpio antes de estos cambios). Reportado
+como chip aparte (`task_471c8a04`), no bloquea el avance.
+
+**Sesión de métricas de proceso y fix de CodeGuard (2026-08-28), posterior al cierre de la
+Iteración 3:** análisis estadístico del tiempo de `/implement-us` sobre las 47 US
+implementadas hasta la fecha (media 40.3 min, mediana 35.4 min, sin correlación con story
+points — Pearson r=0.035; la iteración de ajuste `SP-ADJ-01` casi duplica el promedio de
+cualquier otra iteración), publicado como artifact y guardado en
+`quality/reports/metricas/implement-us-tiempos.{html,json}` (carpeta nueva). A partir de ahí,
+análisis estadístico de los reportes de CodeGuard detectó que solo 13/47 US tenían reporte
+guardado y que 10 de esos 13 estaban parciales (3 de 9 checks) sin ninguna señal de ello:
+`codeguard` sin `--analysis-type` explícito cae en el default `pre-commit`, que por diseño
+filtra los checks con `priority > 3` (`DeadCode`/`Maintainability`/`Pylint`/`Spelling`/
+`Types`/`UnusedImports`), y `summary.checks_executed` del JSON cuenta los checks
+*descubiertos*, no los ejecutados — reportado upstream en
+[`vvalotto/software_limpio#71`](https://github.com/vvalotto/software_limpio/issues/71).
+Fix de proceso (sin backfill retroactivo, decisión explícita) en
+[PR #168](https://github.com/vvalotto/cognion/pull/168) mergeado a `develop` 2026-08-28:
+`--analysis-type full` obligatorio en el comando de Fase 7 (el hook de pre-commit sigue
+rápido, sin tocar), gate de verificación que bloquea Fase 7 si el reporte queda parcial, y
+desglose por check (`codeguard.checks` en `quality.json` + tabla "Detalle de CodeGuard" en
+`.claude/templates/reporting/implementation-report.md`) para que el reporte final de cada US
+muestre no solo el conteo agregado sino qué encontró cada uno de los 9 checks. Aplica desde la
+próxima US que corra `/implement-us` — las 47 ya cerradas no se tocan.
+
+**Iteración 4 del Incremento 3 — frontend, en curso** (consume las Iteraciones 1 a 3 de una
+sola vez, `docs/plans/inc3/inc3-candidatas.md`). Lado Docente (`US-3.4.1` a `US-3.4.4`)
+completo:
+**US-3.4.1** (infraestructura de frontend: cliente API tipado con 9 funciones sobre
+`apiFetch`/`ApiError` de `US-1.1.6`, rutas placeholder) cerrada 2026-08-30, PR
+[#178](https://github.com/vvalotto/cognion/pull/178).
+**US-3.4.2** (Docente ve sus materias y el listado de actividades de una materia) cerrada
+2026-08-30, PR [#179](https://github.com/vvalotto/cognion/pull/179), Issue #171 cerrado.
+**US-3.4.3** (Docente crea una nueva actividad de período abierto) cerrada 2026-08-30, PR
+[#180](https://github.com/vvalotto/cognion/pull/180), Issue #172 cerrado — el formulario
+original no pedía título (gap detectado recién en UAT, ver `US-ADJ-10` más abajo).
+**US-3.4.4** (Docente ve el detalle de una actividad, extiende el plazo y la cierra
+manualmente) cerrada 2026-08-30, PR [#182](https://github.com/vvalotto/cognion/pull/182),
+Issue #173 cerrado: `GET /actividades/{id}` nuevo (`ObtenerActividadUseCase`), pantallas
+`ActividadDetalle.tsx`/`ExtenderPlazo.tsx`/`CerrarActividad.tsx`. Cierra completo el lado
+Docente de la Iteración 4 — queda pendiente el lado Estudiante (`US-3.4.5` a `US-3.4.7`).
+
+**UAT manual de Víctor en navegador real (2026-08-30)** sobre el flujo de Docente recién
+cerrado (materias → actividades → nueva actividad → detalle → extender/cerrar) detectó tres
+hallazgos, todos resueltos en la misma sesión antes de mergear:
+- **Bug crítico** (toca `src/`, track formal): crear una actividad desde la UI real y listarla
+  rompía con `500` (el navegador lo reportaba como error de CORS, pero la causa real era
+  `TypeError: can't compare offset-naive and offset-aware datetimes` — `<input
+  type="datetime-local">` manda fechas sin offset de timezone, que `_estado_actividad` comparaba
+  contra `datetime.now(UTC)`, aware). Regresión ya mergeada en `US-3.4.2`, invisible a los tests
+  automatizados porque arman las fechas con `datetime.now(UTC).isoformat()` en vez de simular
+  el input real del navegador — mismo patrón que el gap de CORS de `US-1.1.6`/`1.1.7`.
+  **US-ADJ-09** (fix — normalizar datetimes naive a UTC en el boundary de la API, Pydantic
+  `field_validator`), PR [#184](https://github.com/vvalotto/cognion/pull/184), Issue #183
+  cerrado.
+- **Gap de UX, frontend-only** (track informal): el detalle de actividad solo tenía el
+  breadcrumb (texto chico) como forma de volver al listado — se agregó un botón explícito
+  "‹ Volver a actividades", incluido en el mismo PR #182 de `US-3.4.4`.
+- **Gap de producto**: el formulario de "Nueva actividad" nunca pedía título (el wireframe
+  aprobado tampoco lo incluía, aunque el listado sí espera mostrarlo) — fix del input en PR
+  [#185](https://github.com/vvalotto/cognion/pull/185) (`US-3.4.3`), y **US-ADJ-10** (Docente
+  edita el título de una actividad ya creada — no existía ningún endpoint para esto)
+  implementada como US-IEDD nueva completa: comando `ModificarTituloActividad`, evento
+  `TituloActividadModificado` (cuarto evento posible del stream, sin invariantes de dominio —
+  editable en cualquier estado, incluso cerrada), `PATCH /actividades/{id}/titulo`, pantalla
+  `EditarTituloActividad.tsx`. PR [#187](https://github.com/vvalotto/cognion/pull/187), Issue
+  #186 cerrado.
+
+Los 4 PRs (#182, #184, #185, #187) mergeados a `develop` en orden (185→184→187→182, el más
+chico primero) con CI en verde en cada uno, mismo criterio de "UAT en navegador real detecta lo
+que Vitest mockeado no ve" ya documentado en Identidad.
+
+**Próximo paso:** continuar la Iteración 4 con el lado Estudiante — `US-3.4.5` (materias y
+actividades disponibles, incluido "fuera de período"), `US-3.4.6` (rendir: responder, pausar,
+reanudar), `US-3.4.7` (finalizar y ver revisión completa). Gate de diseño UX obligatorio antes
+de tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
+(aprobado en `US-3.0.2`) antes de escribir código, ya con Issues y specs creados (`US-3.4.5` a
+`US-3.4.7`, Issues #174-#176).
+**Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
+(frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
+a fin, docente extiende el plazo de una sesión activa).
+**Branch activo:** ninguna — `develop` sincronizado, próxima branch a abrir es
+`feature/US-3.4.5-...`.
 
 ---
 
@@ -482,7 +692,13 @@ Decidir el track **antes de codear**:
 
 - **Algoritmo de puntaje en modo en vivo** (RF-10): combina tiempo, corrección, dificultad e importancia. Se cierra como spike en Incremento 6, Iteración 0.
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
-- **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción pendiente de decisión institucional (nube vs. servidor FIUNER).
+- **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción
+  pendiente de decisión institucional (nube vs. servidor FIUNER) y del mecanismo de backup
+  asociado (`RNF_v1.md` Escenario 2 — mensual, retención 12 meses). Cambio de estrategia
+  2026-08-24 (`docs/rf/PLAN_v1.md` revisión 2026-08-24): los Incrementos 3 a 7 corren con datos
+  de prueba/locales, no datos reales de estudiantes — esta decisión se resuelve recién en la
+  última iteración antes de la prueba funcional de validación previa al despliegue real, no
+  antes del Incremento 3 como decía el plan original.
 - **Docker en el entorno de desarrollo local**: no instalado a la fecha (2026-07-16). Se
   usará más adelante en el proyecto — hasta entonces, PostgreSQL local corre vía Homebrew
   (ver `docs/rf/PLAN_v1.md` revisión 2026-07-16). El build de imagen Docker en CI/CD no se

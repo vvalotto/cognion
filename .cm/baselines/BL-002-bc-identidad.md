@@ -6,8 +6,8 @@
 | Fecha apertura | 2026-07-16 |
 | Fecha cierre | 2026-07-29 |
 | Git tag inicial | `v0.2.0` |
-| Git tag cierre | Pendiente — `merge develop → main` y tag `v0.3.0` diferidos (sin decisión de infraestructura/Docker en el entorno de desarrollo, mismo ítem abierto que el deploy de `BL-001`); se ejecuta cuando esa decisión se resuelva |
-| Estado | ✅ Completado (desarrollo local) — merge a `main` diferido |
+| Git tag cierre | `v0.3.0`, taggeado retroactivamente el 2026-08-24 sobre el commit `75e0de9` (cierre real de la baseline, 2026-07-29) al mergear `develop → main` junto con `BL-003`. El deploy real (Fly.io/servidor FIUNER) sigue como decisión institucional pendiente, independiente del merge a `main` — `cd.yml` solo construye la imagen Docker, sin desplegar. |
+| Estado | ✅ Completado — mergeado a `main` |
 | DoD | Un estudiante se registra vía link de invitación y queda asignado automáticamente a su comisión; un docente y un administrador se autentican y reciben un JWT con su rol correcto. Corre en el entorno local sobre la fundación técnica del Incremento 0 (`docs/plans/inc1/inc1-candidatas.md` §DoD del Incremento). Backend y frontend implementados e integrados juntos — criterio de cierre de baseline de `docs/plans/PLAN-CM.md` §7 (decisión 2026-07-24). |
 
 ---

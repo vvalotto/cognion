@@ -6,6 +6,16 @@
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-01, RF-02), `ADR-007` (JWT+RBAC), `ADR-012` (invitación),
 > `ADR-013` (expiración JWT), `ADR-014` (bcrypt).
+> Diagramas complementarios (estructura de aggregates + ciclo de vida de `Invitación` y de
+> `Usuario`/bloqueo, en Mermaid): `BC-identidad-modelo-diagramas.html`.
+> Event storming en línea de tiempo (comandos/eventos por actor, incluida la regla de bloqueo
+> INV-ID-10): `BC-identidad-modelo-event-storming.html`.
+>
+> **Actualizado 2026-08-26** para reflejar decisiones de implementación posteriores al
+> modelado, verificadas contra `src/identidad/`: `Comisión.materia` quedó resuelto como
+> `materia_id: UUID` vía `MateriaPort` (`US-2.1.2`) — este documento ya no lo trata como
+> pendiente. Se agregan también `Comisión.administrador_id` y la excepción
+> `CuentaBloqueadaError` de `IniciarSesion`, sin cambios de fondo en aggregates ni invariantes.
 
 ---
 
@@ -52,7 +62,7 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
 | `CrearUsuario(nombre, email, password, perfil)` | Administrador | `Usuario` + perfil (`Docente`/`Administrador`/`Estudiante`) — crea ambos, misma transacción | `UsuarioCreado` | `EmailYaRegistrado` |
 | `GenerarInvitacion(comision_id, docente_id)` | Docente | `Invitación` (crea) — valida contra `Comisión.docentes_asignados` | `InvitacionGenerada` | `DocenteNoAsignadoAComision` (INV-ID-08) |
 | `RegistrarEstudiante(token, nombre, email, password)` | Estudiante | `Invitación` (consulta) → `Usuario` + `Estudiante` (crea ambos, misma transacción) | `InvitacionAceptada`, `UsuarioRegistrado` | `InvitacionVencida`, `InvitacionInvalida`, `InvitacionYaUsada`, `EmailYaRegistrado` |
-| `IniciarSesion(email, password)` | Docente, Administrador, Estudiante | `Usuario` (consulta, incluye `perfil`) | `SesionIniciada` (JWT con claim `rol` derivado del tipo de `perfil`) | `CredencialesInvalidas` |
+| `IniciarSesion(email, password)` | Docente, Administrador, Estudiante | `Usuario` (consulta, incluye `perfil`) | `SesionIniciada` (JWT con claim `rol` derivado del tipo de `perfil`) | `CredencialesInvalidas`, `CuentaBloqueadaError` (cuenta ya bloqueada, INV-ID-10 — `US-2.2.1`) |
 
 **Diferidos — modelados, sin US en el Incremento 1** (RF-19 elicitado 2026-07-17, ver
 `docs/rf/RF_v1.md`; agrupados con RF-03 en el Incremento 2 — mismo mecanismo de desbloqueo):
@@ -163,8 +173,9 @@ por materia.
 | Atributo | Tipo | Notas |
 |---|---|---|
 | `id` | UUID | |
-| `materia` | string \| referencia | ver nota de alcance más abajo |
+| `materia_id` | UUID, referencia a `Materia` (BC Banco de Preguntas) | resuelto vía `MateriaPort` — sin import directo entre BCs, ver nota de alcance más abajo (`US-2.1.2`) |
 | `horario` | string/estructura | sin más detalle requerido por RF-01/RF-02 |
+| `administrador_id` | UUID, referencia a `Administrador` | quien creó la comisión (`CrearComision`) |
 | `docentes_asignados` | lista de referencias a `Docente` (`Usuario.id` con perfil `Docente`) | mutada por `AsignarDocenteAComision` |
 
 `estudiantes_inscriptos` **no** es estado propio de `Comisión` — es un read model derivado de
@@ -182,14 +193,16 @@ de un estudiante solo toca el aggregate `Usuario`.
 
 | Comando | Actor | Evento | Excepciones |
 |---|---|---|---|
-| `CrearComision(materia, horario, administrador_id)` | Administrador | `ComisionCreada` | — |
+| `CrearComision(materia_id, horario, administrador_id)` | Administrador | `ComisionCreada` | `MateriaNoExiste` (si `materia_id` no resuelve contra `MateriaPort`, `US-2.1.2`) |
 | `AsignarDocenteAComision(comision_id, docente_id)` | Administrador | `DocenteAsignado` | `UsuarioNoEsDocente` |
 
 **Nota de alcance — BC:** `Comisión` se modela dentro de BC Identidad porque es este BC el
 que necesita hacer cumplir INV-ID-08 y RF-01 (asignación automática de estudiante a
-comisión). Si más adelante otros BCs (Banco de Preguntas, Actividad Evaluativa) necesitan más
-que una referencia por id a la comisión, se expone por puerto (`entities/ports/`) — no se
-duplica el aggregate.
+comisión). Resuelto en `US-2.1.2`: `Comisión.materia_id` referencia la `Materia` de BC Banco
+de Preguntas a través de `MateriaPort` (`src/identidad/entities/ports/materia_port.py`),
+implementado por un adapter in-process (`MateriaPortInProcess`) — nunca por import directo
+entre BCs. Si más adelante otros BCs (Actividad Evaluativa) necesitan más que una referencia
+por id a la comisión, se expone por puerto propio — no se duplica el aggregate.
 
 ### Value Objects
 

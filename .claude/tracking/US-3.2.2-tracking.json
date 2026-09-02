@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "us_id": "US-3.2.2",
+    "us_title": "Estudiante suspende y reanuda su evaluación",
+    "us_points": 3,
+    "producto": "backend",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-27T14:53:44.609331+00:00",
+    "completed_at": "2026-08-27T15:21:28.309099+00:00",
+    "total_elapsed_seconds": 1663,
+    "effective_seconds": 1663,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-27T14:54:00.404558+00:00",
+      "completed_at": "2026-08-27T14:54:41.545540+00:00",
+      "elapsed_seconds": 41,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-27T14:54:49.737294+00:00",
+      "completed_at": "2026-08-27T14:55:26.370808+00:00",
+      "elapsed_seconds": 36,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-27T14:55:33.432464+00:00",
+      "completed_at": "2026-08-27T14:56:21.019515+00:00",
+      "elapsed_seconds": 47,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-27T14:56:28.527577+00:00",
+      "completed_at": "2026-08-27T15:00:45.743307+00:00",
+      "elapsed_seconds": 257,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "eventos",
+          "task_name": "Eventos EvaluacionSuspendida/EvaluacionReanudada",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-27T14:56:32.159520+00:00",
+          "completed_at": "2026-08-27T14:56:44.878501+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -4.8,
+          "file_created": "src/actividad_evaluativa/entities/eventos.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "errors",
+          "task_name": "Errores EvaluacionYaSuspendida/EvaluacionNoSuspendida",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-27T14:56:49.175762+00:00",
+          "completed_at": "2026-08-27T14:57:00.672834+00:00",
+          "elapsed_seconds": 11,
+          "actual_minutes": 0.18,
+          "variance_minutes": -4.82,
+          "file_created": "src/actividad_evaluativa/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "evaluacion",
+          "task_name": "Metodos validar_para_suspender/reanudar y reconstruir",
+          "task_type": "entities",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-27T14:57:04.175145+00:00",
+          "completed_at": "2026-08-27T14:57:49.102563+00:00",
+          "elapsed_seconds": 44,
+          "actual_minutes": 0.73,
+          "variance_minutes": -14.27,
+          "file_created": "src/actividad_evaluativa/entities/evaluacion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "suspender_uc",
+          "task_name": "SuspenderEvaluacionUseCase",
+          "task_type": "use_cases",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-27T14:57:52.515602+00:00",
+          "completed_at": "2026-08-27T14:58:14.279732+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -14.65,
+          "file_created": "src/actividad_evaluativa/use_cases/suspender_evaluacion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "reanudar_uc",
+          "task_name": "ReanudarEvaluacionUseCase",
+          "task_type": "use_cases",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-27T14:58:17.440786+00:00",
+          "completed_at": "2026-08-27T14:58:32.358191+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -14.77,
+          "file_created": "src/actividad_evaluativa/use_cases/reanudar_evaluacion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "controller",
+          "task_name": "Extender EvaluacionesController",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-27T14:58:35.609069+00:00",
+          "completed_at": "2026-08-27T14:58:53.674414+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -9.7,
+          "file_created": "src/actividad_evaluativa/interface_adapters/controllers/evaluaciones_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "dependencies",
+          "task_name": "Registrar SuspenderEvaluacionUseCase/ReanudarEvaluacionUseCase",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-27T14:58:57.832395+00:00",
+          "completed_at": "2026-08-27T14:59:16.918849+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -4.68,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "router",
+          "task_name": "Endpoints POST /suspender y /reanudar",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-27T14:59:20.334865+00:00",
+          "completed_at": "2026-08-27T15:00:12.491626+00:00",
+          "elapsed_seconds": 52,
+          "actual_minutes": 0.87,
+          "variance_minutes": -9.13,
+          "file_created": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-27T15:00:54.048370+00:00",
+      "completed_at": "2026-08-27T15:04:05.127047+00:00",
+      "elapsed_seconds": 191,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-27T15:04:13.502969+00:00",
+      "completed_at": "2026-08-27T15:08:00.667491+00:00",
+      "elapsed_seconds": 227,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-27T15:08:09.173338+00:00",
+      "completed_at": "2026-08-27T15:12:46.603291+00:00",
+      "elapsed_seconds": 277,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-27T15:12:55.082265+00:00",
+      "completed_at": "2026-08-27T15:18:12.509729+00:00",
+      "elapsed_seconds": 317,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-27T15:18:22.765484+00:00",
+      "completed_at": "2026-08-27T15:20:05.426831+00:00",
+      "elapsed_seconds": 102,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-27T15:20:26.664272+00:00",
+      "completed_at": "2026-08-27T15:21:28.191883+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 10,
+    "estimated_total_minutes": 80.0,
+    "actual_total_minutes": 3.18,
+    "variance_minutes": -76.82,
+    "variance_percent": -96.02
+  }
+}

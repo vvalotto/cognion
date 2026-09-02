@@ -1,0 +1,344 @@
+<title>Event Storming Banco de Preguntas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --paper: #edeff2;
+    --surface: #f7f8fa;
+    --ink: #1b222c;
+    --muted: #5b6472;
+    --line: #c8cfd9;
+    --line-soft: #d9dee5;
+    --accent: #9c6712;
+    --accent-soft: #f1e3cc;
+    --cmd: #5b8def;
+    --cmd-soft: #dce7fb;
+    --evt: #c98a2e;
+    --evt-soft: #f6e3c4;
+    --pol: #9b6fd1;
+    --pol-soft: #ece2f8;
+    --shadow: 0 1px 2px rgba(27, 34, 44, 0.06), 0 4px 14px rgba(27, 34, 44, 0.05);
+    --font-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161d;
+      --surface: #171c24;
+      --ink: #e7eaf0;
+      --muted: #8b94a3;
+      --line: #2a313c;
+      --line-soft: #232a33;
+      --accent: #e3a83f;
+      --accent-soft: #3a2f18;
+      --cmd: #7fa8f7;
+      --cmd-soft: #1c2740;
+      --evt: #e0a34f;
+      --evt-soft: #3a2c14;
+      --pol: #c19eea;
+      --pol-soft: #2c2440;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12161d;
+    --surface: #171c24;
+    --ink: #e7eaf0;
+    --muted: #8b94a3;
+    --line: #2a313c;
+    --line-soft: #232a33;
+    --accent: #e3a83f;
+    --accent-soft: #3a2f18;
+    --cmd: #7fa8f7;
+    --cmd-soft: #1c2740;
+    --evt: #e0a34f;
+    --evt-soft: #3a2c14;
+    --pol: #c19eea;
+    --pol-soft: #2c2440;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 3.5rem 1.75rem 6rem;
+  }
+
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--line-soft) 27px,
+      var(--line-soft) 28px
+    );
+    background-position: 0 4.4rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.12;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 66ch;
+    margin: 0 0 1.4rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .meta-row code {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.12rem 0.42rem;
+    color: var(--ink);
+  }
+
+  main { display: flex; flex-direction: column; gap: 2rem; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .legend .item { display: inline-flex; align-items: center; gap: 0.48rem; color: var(--muted); }
+  .legend .swatch { width: 13px; height: 13px; border-radius: 3px; flex: none; }
+  .legend .swatch.cmd { background: var(--cmd-soft); border: 1.5px solid var(--cmd); }
+  .legend .swatch.evt { background: var(--evt-soft); border: 1.5px solid var(--evt); }
+  .legend .swatch.pol { background: var(--pol-soft); border: 1.5px solid var(--pol); }
+  .legend .swatch.lane { background: none; border: 1.5px dashed var(--muted); }
+
+  figure {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  figure .diagram-wrap {
+    padding: 1.5rem 1.2rem 0.6rem;
+    overflow-x: auto;
+  }
+
+  figure .diagram-wrap pre.mermaid {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-width: 720px;
+  }
+
+  figcaption {
+    padding: 0.9rem 1.3rem 1.15rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  figcaption strong { color: var(--ink); font-weight: 600; }
+  figcaption code, .subtitle code, .lede code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+  }
+
+  section .lede {
+    color: var(--muted);
+    max-width: 70ch;
+    margin: 0 0 1.2rem;
+    font-size: 0.98rem;
+  }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 0.95rem 1.15rem;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+
+  .callout strong {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .callout code { font-family: var(--font-mono); font-size: 0.92em; }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+  }
+
+  ::selection { background: var(--accent-soft); }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span> BC Banco de Preguntas · Incremento 2 · Iteración 0 — Modelado</div>
+    <h1>Event storming, en línea de tiempo</h1>
+    <p class="subtitle">
+      La vista narrativa del modelo — un único actor (Docente), sin Policy ni disparadores
+      automáticos: cada comando lo emite una persona, en el momento en que decide hacerlo. Para
+      la estructura de aggregates y el ciclo de vida de <code>PreguntaPlantilla</code>, ver
+      <code>BC-banco-preguntas-modelo-diagramas.html</code>.
+    </p>
+    <div class="meta-row">
+      <span>Estado: <code>vigente</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-banco-preguntas-modelo.md</code> §2</span>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="legend">
+      <span class="item"><span class="swatch cmd"></span>Comando</span>
+      <span class="item"><span class="swatch evt"></span>Evento de dominio</span>
+      <span class="item"><span class="swatch pol"></span>Query — read model, sin evento</span>
+      <span class="item"><span class="swatch lane"></span>Carril = aggregate afectado</span>
+    </div>
+
+    <figure>
+      <div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TB
+    subgraph MATERIA["🧑‍🏫 Docente — sobre Materia + Banco"]
+        direction LR
+        C1["CrearMateria(nombre)\ncrea Materia y Banco juntos — US-2.1.1"] --> E1["MateriaCreada"]
+        C1 --> E1b["BancoCreado"]
+    end
+
+    subgraph PREGUNTA["🧑‍🏫 Docente — sobre PreguntaPlantilla"]
+        direction LR
+        C2["CargarPreguntaOpcionMultiple\nCargarPreguntaVerdaderoFalso"] --> E2["PreguntaCargada"]
+        E2 --> C3["EditarPregunta"] --> E3["PreguntaEditada"]
+        E3 --> C4["EliminarPregunta"] --> E4["PreguntaEliminada (baja lógica)"]
+    end
+
+    E1b -. banco_id habilita .-> C2
+
+    subgraph CONSULTA["🔍 Consultas — sin comando ni evento de dominio"]
+        direction LR
+        Q1{{"FiltrarBanco(materia_id, filtros?, página?)"}}
+        Q2{{"ListarMaterias()"}}
+    end
+
+    E2 -. read model .-> Q1
+    E1 -. read model .-> Q2
+
+    class C1,C2,C3,C4 cmd
+    class E1,E1b,E2,E3,E4 evt
+    class Q1,Q2 pol
+
+    classDef cmd fill:#dce7fb,stroke:#5b8def,color:#1b2a4a,stroke-width:1px
+    classDef evt fill:#f6e3c4,stroke:#c98a2e,color:#5a3a10,stroke-width:1px
+    classDef pol fill:#ece2f8,stroke:#9b6fd1,color:#3a2a52,stroke-width:1px
+</pre>
+      </div>
+      <figcaption>
+        <strong>Lo que hay que ver acá:</strong> <code>CrearMateria</code> es el único comando
+        que produce dos eventos — <code>MateriaCreada</code> y <code>BancoCreado</code> — porque
+        crea ambos aggregates en la misma operación (§4 del modelo escrito, corregido 2026-08-26
+        tras verificar contra el código: no existe un comando <code>CrearBanco</code> separado,
+        a diferencia de una versión anterior de este modelo). El carril de
+        <code>PreguntaPlantilla</code> es lineal solo por claridad narrativa — en la práctica
+        <code>EditarPregunta</code> y <code>EliminarPregunta</code> se ejecutan cualquier
+        cantidad de veces y en cualquier orden sobre preguntas ya cargadas, no una sola vez en
+        secuencia. Las dos consultas de la derecha no tienen comando ni evento de dominio —
+        leen directamente los read models que dejan los eventos de la izquierda.
+      </figcaption>
+    </figure>
+
+    <div class="callout">
+      <strong>Por qué no hay carril de Policy</strong>
+      A diferencia de <code>BC-actividad-evaluativa-modelo-event-storming.html</code> (que tiene
+      un <code>VerificadorDeVencimientos</code> reaccionando al paso del tiempo), este BC no
+      tiene ningún proceso en background ni regla que se dispare sola — cada evento es la
+      consecuencia directa e inmediata de un comando del Docente. Es, junto con la ausencia total
+      de excepciones cruzadas entre aggregates, la razón por la que este modelo no tuvo hot spots
+      de concurrencia ni de disparadores automáticos (§5 del modelo escrito).
+    </div>
+
+  </main>
+
+  <footer>
+    <span>Cognión — BC Banco de Preguntas</span>
+    <span>Modelado en sesión con Víctor, 2026-07-31 · Event storming agregado 2026-08-26</span>
+  </footer>
+
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: prefersDark ? "dark" : "default", securityLevel: "loose" });
+</script>

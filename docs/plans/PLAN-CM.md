@@ -654,6 +654,7 @@ Incremento (ver §7).
 | Branch de US | `feature/US-N.M.K-descripcion-corta` | `feature/US-2.3.1-registrar-respuesta` | kebab-case, máx. 4 palabras, español |
 | Branch incremento técnico | `feature/inc-N-descripcion-corta` | `feature/inc-0-fundacion-tecnica` | sin US-IEDD asociada |
 | Branch de fix | `fix/descripcion-corta` | `fix/invariante-actividad-evaluativa-nula` | — |
+| US-ADJ | `US-ADJ-NN` (numeración global, no por incremento) | `US-ADJ-09` | `docs/specs/ajustes/US-ADJ-NN.md` |
 | SP-ADJ | `SP-ADJ-NN` | `SP-ADJ-01` | `docs/plans/sp-adj-NN/` |
 | Wireframe UX | `wireframes-<pantalla-o-rol>.md` | `wireframes-docente-banco.md` | `docs/design/ux/` |
 | Prototipo UX | `prototipo-<pantalla-o-rol>.html` | `prototipo-docente-banco.html` | `docs/design/ux/prototipos/` |
@@ -663,6 +664,19 @@ Incremento (ver §7).
 
 **Nota sobre `SP-ADJ`:** el prefijo conserva "SP" por convención heredada (identifica el
 patrón, no una unidad de baseline) — no implica que Cognion tenga un nivel de Subproyecto.
+
+**Nota sobre `US-ADJ`:** una US-IEDD nace de un hallazgo de UAT (no de una candidata
+planificada de antemano en `PLAN_v1.md`/`incN-candidatas.md`) se numera bajo `US-ADJ-NN` en
+vez de `US-{incremento}.{iteración}.{secuencial}` — sea que se resuelva **de inmediato**, en la
+misma sesión de UAT que la detectó (caso más común, ver `US-ADJ-09`/`10`/`11`, Incremento 3), o
+que se **difiera** y agrupe en un `SP-ADJ` posterior (caso `US-ADJ-01` a `08`, Incremento 2).
+La numeración es única y global para todo el proyecto, independiente del incremento donde se
+detectó — evita colisiones entre incrementos y deja explícito, con solo mirar el ID, que el
+origen fue un hallazgo de UAT y no una historia planificada. Decisión tomada retroactivamente
+el 2026-08-31 (antes, `US-ADJ` se usaba solo para el caso diferido; los hallazgos resueltos de
+inmediato se numeraban como una US-IEDD más dentro de la iteración en curso, ej. el criterio
+usado originalmente para `US-3.4.8`/`US-3.4.9`/`US-3.4.10`, renombradas a `US-ADJ-09`/`10`/`11`
+ese mismo día).
 
 ---
 

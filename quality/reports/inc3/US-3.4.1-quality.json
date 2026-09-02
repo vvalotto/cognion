@@ -1,0 +1,27 @@
+{
+  "us_id": "US-3.4.1",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc3/US-3.4.1-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 3, "detalle": "warnings preexistentes (button.tsx, badge.tsx, AuthLayout.tsx), no introducidos por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 30,
+        "tests": 178,
+        "passed": 178,
+        "failed": 0
+      },
+      "coverage_actividad_evaluativa_api_y_router": {
+        "actividad-evaluativa-api.ts_statements_pct": 100.0,
+        "router.tsx_nuevas_rutas": "sin líneas sin cubrir (guard de rol + placeholder verificados para docente y estudiante)",
+        "global_statements_pct": 92.37,
+        "global_branches_pct": 84.41,
+        "global_lines_pct": 94.01,
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

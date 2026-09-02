@@ -1,0 +1,41 @@
+{
+  "us_id": "US-3.4.4",
+  "fecha": "2026-08-30T16:15:00-03:00",
+  "componente": "src/actividad_evaluativa (archivos backend tocados por la US)",
+  "metricas": {
+    "pylint": 9.84,
+    "cc_maximo": 5,
+    "mi_minimo": 54.63,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 7,
+    "errors": 16,
+    "warnings": 1,
+    "infos": 46,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 7 },
+      "PEP8": { "errors": 0, "warnings": 0, "infos": 7 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 7 },
+      "DeadCode": { "errors": 7, "warnings": 0, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 7 },
+      "Pylint": { "errors": 0, "warnings": 1, "infos": 6 },
+      "Spelling": { "errors": 7, "warnings": 0, "infos": 0 },
+      "Types": { "errors": 2, "warnings": 0, "infos": 5 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 7 }
+    },
+    "reporte": "quality/reports/inc3/US-3.4.4-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 16 'errors' de codeguard (DeadCode, Spelling, 2/7 de Types) son fallos de herramienta del entorno local, no hallazgos de código: 'vulture not installed' (7), 'codespell not installed' (7), y 2 timeouts de mypy (>10s sin cache) — mismo bug ya documentado en project_codeguard_mypy_timeout.md / vvalotto/software_limpio#70. mypy dedicado (fuente de verdad de tipos del proyecto, `mypy src/` completo) corrió limpio: 'Success: no issues found in 181 source files'.",
+    "pylint 9.84/10 sobre los archivos tocados; el único warning es duplicate-code entre ActividadResumen/ActividadResumenResponse — aceptado, es la reutilización deliberada decidida en Fase 2 en vez de crear un ActividadDetalle redundante.",
+    "Coverage 100% sobre entities/use_cases/interface_adapters de todo el BC Actividad Evaluativa (frameworks/* excluido del cómputo por diseño del proyecto, pyproject.toml [tool.coverage.run] omit)."
+  ]
+}
