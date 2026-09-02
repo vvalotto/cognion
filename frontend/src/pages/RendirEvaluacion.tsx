@@ -25,6 +25,32 @@ function primerIndicePendiente(evaluacion: EvaluacionResponse): number {
   return indice === -1 ? preguntas.length - 1 : indice
 }
 
+/** Traduce el `contenido` de una `Respuesta` confirmada de vuelta a `Seleccion` (`US-ADJ-12`). */
+function seleccionDeContenido(contenido: Record<string, unknown>): Seleccion | null {
+  if (typeof contenido.opcion_indice === "number") {
+    return { tipo: "opcion", indice: contenido.opcion_indice }
+  }
+  if (typeof contenido.valor === "boolean") {
+    return { tipo: "vf", valor: contenido.valor }
+  }
+  return null
+}
+
+function contenidoDeSeleccion(seleccion: Seleccion): Record<string, unknown> {
+  return seleccion.tipo === "opcion"
+    ? { opcion_indice: seleccion.indice }
+    : { valor: seleccion.valor }
+}
+
+function mapaDeRespuestasConfirmadas(evaluacion: EvaluacionResponse): Map<string, Seleccion> {
+  const mapa = new Map<string, Seleccion>()
+  for (const respuesta of evaluacion.respuestasConfirmadas) {
+    const seleccion = seleccionDeContenido(respuesta.contenido)
+    if (seleccion) mapa.set(respuesta.preguntaId, seleccion)
+  }
+  return mapa
+}
+
 /** Pantalla "Rendir evaluación" del Estudiante (`#est-rendir`, `US-3.4.6`). */
 export function RendirEvaluacion() {
   const { actividadId } = useParams<{ actividadId: string }>()
@@ -32,6 +58,9 @@ export function RendirEvaluacion() {
 
   const [evaluacion, setEvaluacion] = useState<EvaluacionResponse | null>(null)
   const [respondidas, setRespondidas] = useState<Set<string>>(new Set())
+  const [respuestasConfirmadas, setRespuestasConfirmadas] = useState<Map<string, Seleccion>>(
+    new Map(),
+  )
   const [indiceActual, setIndiceActual] = useState(0)
   const [seleccion, setSeleccion] = useState<Seleccion | null>(null)
   const [enviando, setEnviando] = useState(false)
@@ -48,9 +77,14 @@ export function RendirEvaluacion() {
           navigate(`/mis-actividades/actividades/${actividadId}/suspendida`, { replace: true })
           return
         }
+        const mapa = mapaDeRespuestasConfirmadas(resultado)
+        const indice = primerIndicePendiente(resultado)
+        const preguntaId = ordenarPreguntas(resultado)[indice]?.preguntaId
         setEvaluacion(resultado)
         setRespondidas(new Set(resultado.preguntasRespondidas))
-        setIndiceActual(primerIndicePendiente(resultado))
+        setRespuestasConfirmadas(mapa)
+        setIndiceActual(indice)
+        setSeleccion(preguntaId ? (mapa.get(preguntaId) ?? null) : null)
       })
       .catch((err) => {
         if (cancelado) return
@@ -81,25 +115,32 @@ export function RendirEvaluacion() {
   }
 
   const esUltimaPregunta = indiceActual === cantidad - 1
+  const preguntaYaRespondida = respondidas.has(preguntaActual.preguntaId)
+
+  function irA(indice: number) {
+    const pregunta = preguntas[indice]
+    setSeleccion(pregunta ? (respuestasConfirmadas.get(pregunta.preguntaId) ?? null) : null)
+    setError(null)
+    setIndiceActual(indice)
+  }
 
   async function confirmarYSiguiente() {
     if (!seleccion) return
     setError(null)
     setEnviando(true)
     try {
-      const contenido =
-        seleccion.tipo === "opcion"
-          ? { opcion_indice: seleccion.indice }
-          : { valor: seleccion.valor }
+      const contenido = contenidoDeSeleccion(seleccion)
       await registrarRespuesta(evaluacion!.id, preguntaActual.preguntaId, contenido)
       setRespondidas((prev) => new Set(prev).add(preguntaActual.preguntaId))
-      setSeleccion(null)
+      setRespuestasConfirmadas((prev) =>
+        new Map(prev).set(preguntaActual.preguntaId, seleccion),
+      )
       if (esUltimaPregunta) {
         await finalizarEvaluacion(evaluacion!.id)
         navigate(`/mis-actividades/evaluaciones/${evaluacion!.id}/revision`)
         return
       }
-      setIndiceActual((i) => Math.min(i + 1, cantidad - 1))
+      irA(indiceActual + 1)
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
         setError(err.message)
@@ -111,10 +152,21 @@ export function RendirEvaluacion() {
     }
   }
 
-  function irA(indice: number) {
-    setSeleccion(null)
-    setError(null)
-    setIndiceActual(indice)
+  /** Sobre una pregunta ya respondida el botón solo navega — nunca reintenta registrar
+   * (INV-AE-07/08 rechazaría con `IntentosAgotados`, `US-ADJ-12`). */
+  async function avanzarSinConfirmar() {
+    if (esUltimaPregunta) {
+      setError(null)
+      setEnviando(true)
+      try {
+        await finalizarEvaluacion(evaluacion!.id)
+        navigate(`/mis-actividades/evaluaciones/${evaluacion!.id}/revision`)
+      } finally {
+        setEnviando(false)
+      }
+      return
+    }
+    irA(indiceActual + 1)
   }
 
   return (
@@ -164,6 +216,7 @@ export function RendirEvaluacion() {
                   type="radio"
                   name={`pregunta-${preguntaActual.preguntaId}`}
                   checked={seleccion?.tipo === "opcion" && seleccion.indice === indice}
+                  disabled={preguntaYaRespondida}
                   onChange={() => setSeleccion({ tipo: "opcion", indice })}
                 />
                 {texto}
@@ -182,6 +235,7 @@ export function RendirEvaluacion() {
                   type="radio"
                   name={`pregunta-${preguntaActual.preguntaId}`}
                   checked={seleccion?.tipo === "vf" && seleccion.valor === true}
+                  disabled={preguntaYaRespondida}
                   onChange={() => setSeleccion({ tipo: "vf", valor: true })}
                 />
                 Verdadero
@@ -197,6 +251,7 @@ export function RendirEvaluacion() {
                   type="radio"
                   name={`pregunta-${preguntaActual.preguntaId}`}
                   checked={seleccion?.tipo === "vf" && seleccion.valor === false}
+                  disabled={preguntaYaRespondida}
                   onChange={() => setSeleccion({ tipo: "vf", valor: false })}
                 />
                 Falso
@@ -235,8 +290,19 @@ export function RendirEvaluacion() {
         >
           Anterior
         </Button>
-        <Button disabled={!seleccion || enviando} onClick={() => void confirmarYSiguiente()}>
-          {esUltimaPregunta ? "Confirmar y finalizar" : "Confirmar y siguiente"}
+        <Button
+          disabled={(!preguntaYaRespondida && !seleccion) || enviando}
+          onClick={() =>
+            void (preguntaYaRespondida ? avanzarSinConfirmar() : confirmarYSiguiente())
+          }
+        >
+          {preguntaYaRespondida
+            ? esUltimaPregunta
+              ? "Finalizar"
+              : "Siguiente"
+            : esUltimaPregunta
+              ? "Confirmar y finalizar"
+              : "Confirmar y siguiente"}
         </Button>
       </div>
       <p className="mt-3 text-center text-xs text-muted-foreground">

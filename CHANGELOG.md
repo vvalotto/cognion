@@ -9,6 +9,8 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-02
+
 ### Added
 - [US-3.4.7] Estudiante finaliza su evaluación y ve la revisión completa, backend + frontend —
   cierra completo el lado Estudiante de la Iteración 4 del Incremento 3
