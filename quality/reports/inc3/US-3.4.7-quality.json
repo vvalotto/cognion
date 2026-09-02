@@ -1,0 +1,49 @@
+{
+  "us_id": "US-3.4.7",
+  "fecha": "2026-08-31T12:40:00-03:00",
+  "componente": "src/actividad_evaluativa (BC completo) + frontend/src/pages/RevisionEvaluacion.tsx, RendirEvaluacion.tsx, frontend/src/lib/actividad-evaluativa-api.ts, frontend/src/router.tsx",
+  "metricas": {
+    "pylint": 9.59,
+    "cc_max": 7,
+    "mi_min": 54.63,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 6,
+    "errors": 6,
+    "warnings": 122,
+    "infos": 40,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 6 },
+      "PEP8": { "errors": 0, "warnings": 0, "infos": 6 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 6 },
+      "DeadCode": { "errors": 6, "warnings": 109, "infos": 1 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 6 },
+      "Pylint": { "errors": 0, "warnings": 0, "infos": 6 },
+      "Spelling": { "errors": 0, "warnings": 13, "infos": 0 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 5 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 6 }
+    },
+    "reporte": "quality/reports/inc3/US-3.4.7-codeguard.json"
+  },
+  "frontend": {
+    "tsc_noemit_errores": 0,
+    "vitest_tests": "226/226 (suite completa, incluye 4 tests nuevos de RevisionEvaluacion.tsx y 1 test nuevo de finalización en RendirEvaluacion.tsx)",
+    "oxlint": "no ejecutado en esta corrida manual — se ejecuta en pre-commit/CI"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 6 errors + 109 warnings de DeadCode son falsos positivos sistemáticos de vulture (60-100% de confianza) sobre parámetros de métodos abstractos ABC (PreguntaConsultaPort) y campos de dataclass/Pydantic — mismo patrón ya documentado y aceptado en US-3.4.6-quality.json. Ninguno es código muerto real: cada campo/método está ejercitado por los 732 tests que pasan (355 unit + 231 integration + 146 BDD).",
+    "Los 13 warnings de Spelling son falsos positivos de codespell (orientado a inglés) sobre palabras en español de los docstrings — mismo patrón ya visto en otras US del proyecto.",
+    "mypy dedicado (fuente de verdad de tipos del proyecto) corrió limpio sobre src/ completo: 'Success: no issues found in 189 source files'.",
+    "Coverage 99% sobre entities/use_cases/interface_adapters de todo el BC Actividad Evaluativa (frameworks/* excluido del cómputo por diseño del proyecto, pyproject.toml [tool.coverage.run] omit); las 2 líneas sin cubrir (actividad_evaluativa_periodo_abierto.py:125-126) son preexistentes, no tocadas por esta US.",
+    "tsc --noEmit: 0 errores en frontend/ tras los cambios de esta US (RevisionEvaluacion.tsx nueva, RendirEvaluacion.tsx con botón de finalización, router.tsx, actividad-evaluativa-api.ts, Badge.tsx con 2 variantes nuevas).",
+    "Suite completa backend en verde: 732 tests (355 unit + 231 integration + 146 BDD). Suite completa frontend en verde: 226 tests."
+  ]
+}

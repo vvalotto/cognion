@@ -17,6 +17,18 @@
 > este documento no se reescribe, "Sesión/Sesiones" en el texto original (Incrementos 3 y 6) se
 > lee con ese significado. No reescribe historia — ninguno de los dos incrementos se ejecutó
 > todavía.
+> Revisión 2026-08-24: cambio de estrategia de desarrollo (decisión de Víctor) — los
+> Incrementos 3 a 7 corren con datos de prueba/locales, no con datos reales de estudiantes en
+> producción. En consecuencia, el gate original de este documento ("los ítems abiertos del ARQ
+> —infraestructura de producción, backup— se resuelven antes del Incremento 3, porque ya hay
+> datos reales de estudiantes en juego a partir de ahí") ya no aplica en el Incremento 3: la
+> decisión de infraestructura de producción y el mecanismo de backup asociado se resuelven
+> recién en la última iteración antes de la prueba funcional de validación previa al despliegue
+> real (`docs/plans/PROCEDIMIENTO-UAT.md`), sea cual sea el incremento en que eso ocurra. El
+> texto original del Incremento 3 ("primer flujo de valor real") y del "Resumen de la
+> estrategia" sigue leyéndose como valor funcional real para docente/estudiante en desarrollo
+> local, no como datos reales de producción. No reescribe historia — ningún incremento del 3 al
+> 7 se ejecutó todavía.
 
 ---
 

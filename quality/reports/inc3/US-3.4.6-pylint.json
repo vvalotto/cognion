@@ -1,0 +1,15 @@
+[
+    {
+        "type": "convention",
+        "module": "src.actividad_evaluativa.frameworks.dependencies",
+        "obj": "",
+        "line": 42,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "symbol": "line-too-long",
+        "message": "Line too long (103/100)",
+        "message-id": "C0301"
+    }
+]

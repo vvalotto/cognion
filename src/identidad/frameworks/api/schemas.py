@@ -143,3 +143,10 @@ class LoginResponse(BaseModel):
     token_type: str = "bearer"
     rol: TipoPerfil
     expira_en: datetime
+
+
+class MateriaEstudianteResponse(BaseModel):
+    """Materia de la comisión del Estudiante autenticado, devuelta por la API (RF-11)."""
+
+    id: UUID
+    nombre: str

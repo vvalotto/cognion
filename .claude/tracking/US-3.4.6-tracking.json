@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "us_id": "US-3.4.6",
+    "us_title": "Estudiante rinde su evaluación — responde, pausa y reanuda",
+    "us_points": 8,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-31T14:29:50.347237+00:00",
+    "completed_at": "2026-08-31T15:03:23.222932+00:00",
+    "total_elapsed_seconds": 2012,
+    "effective_seconds": 2012,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-08-31T14:30:06.200957+00:00",
+      "completed_at": "2026-08-31T14:30:38.460868+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-31T14:30:43.929729+00:00",
+      "completed_at": "2026-08-31T14:31:08.520619+00:00",
+      "elapsed_seconds": 24,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-31T14:31:14.224157+00:00",
+      "completed_at": "2026-08-31T14:34:48.321634+00:00",
+      "elapsed_seconds": 214,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-31T14:34:52.916373+00:00",
+      "completed_at": "2026-08-31T14:39:23.998393+00:00",
+      "elapsed_seconds": 271,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Puerto — ContenidoPregunta + obtener_contenido",
+          "task_type": "entities",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-31T14:34:55.804721+00:00",
+          "completed_at": "2026-08-31T14:35:10.696578+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -9.77,
+          "file_created": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Adaptador — obtener_contenido",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-31T14:35:13.352138+00:00",
+          "completed_at": "2026-08-31T14:35:29.025422+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -9.75,
+          "file_created": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Schemas — ampliar PreguntaAsignadaResponse y EvaluacionResponse",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-31T14:35:31.382639+00:00",
+          "completed_at": "2026-08-31T14:35:41.629520+00:00",
+          "elapsed_seconds": 10,
+          "actual_minutes": 0.17,
+          "variance_minutes": -9.83,
+          "file_created": "src/actividad_evaluativa/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Dependency injection — get_pregunta_consulta_port",
+          "task_type": "frameworks",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-08-31T14:35:44.979375+00:00",
+          "completed_at": "2026-08-31T14:36:02.899672+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -7.72,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Router — _a_response async con contenido enriquecido",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-08-31T14:36:05.297183+00:00",
+          "completed_at": "2026-08-31T14:36:56.801906+00:00",
+          "elapsed_seconds": 51,
+          "actual_minutes": 0.85,
+          "variance_minutes": -14.15,
+          "file_created": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Cliente API — enunciado/opciones/preguntasRespondidas",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-31T14:36:59.625834+00:00",
+          "completed_at": "2026-08-31T14:37:24.634219+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -9.58,
+          "file_created": "frontend/src/lib/actividad-evaluativa-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Pantallas RendirEvaluacion + EvaluacionSuspendida + rutas",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-08-31T14:37:27.128546+00:00",
+          "completed_at": "2026-08-31T14:39:09.383761+00:00",
+          "elapsed_seconds": 102,
+          "actual_minutes": 1.7,
+          "variance_minutes": -28.3,
+          "file_created": "frontend/src/pages/RendirEvaluacion.tsx, frontend/src/pages/EvaluacionSuspendida.tsx, frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-31T14:39:30.021229+00:00",
+      "completed_at": "2026-08-31T14:42:49.271788+00:00",
+      "elapsed_seconds": 199,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-31T14:42:55.562189+00:00",
+      "completed_at": "2026-08-31T14:46:33.565751+00:00",
+      "elapsed_seconds": 218,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-31T14:46:40.520609+00:00",
+      "completed_at": "2026-08-31T14:48:53.344371+00:00",
+      "elapsed_seconds": 132,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-31T14:48:59.970404+00:00",
+      "completed_at": "2026-08-31T14:58:20.771629+00:00",
+      "elapsed_seconds": 560,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-31T14:58:42.873997+00:00",
+      "completed_at": "2026-08-31T15:02:17.785714+00:00",
+      "elapsed_seconds": 214,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-31T15:02:26.097180+00:00",
+      "completed_at": "2026-08-31T15:03:23.064692+00:00",
+      "elapsed_seconds": 56,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 7,
+    "completed_tasks": 7,
+    "total_phases": 10,
+    "estimated_total_minutes": 93.0,
+    "actual_total_minutes": 3.9,
+    "variance_minutes": -89.1,
+    "variance_percent": -95.81
+  }
+}

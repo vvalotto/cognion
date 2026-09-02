@@ -1,0 +1,26 @@
+{
+  "us_id": "US-3.2.1",
+  "fecha": "2026-08-27T00:00:00Z",
+  "componente": "src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.73,
+    "cc_max_funcion": 7,
+    "mi_min": 67.18,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard acotado a los 10 archivos modificados/agregados de la US (incluye el nuevo use_cases/registrar_respuesta.py, no detectado por git diff por ser untracked al momento de correr el gate): 0 errores, 0 advertencias tras corregir una línea >100 caracteres en entities/errors.py (mismo patrón ya visto en US-3.1.2/US-3.1.3) — quality/reports/inc3/US-3.2.1-codeguard.json.",
+    "pylint duplicate-code (R0801) entre eventos.py/schemas.py (mapeo de campos DTO/evento de ActividadEvaluativaCreada) y estudiante_consulta_port.py — mismo falso positivo ya aceptado en US-3.1.2/US-3.1.3, no afecta el score por debajo del umbral.",
+    "coverage 100% en entities/use_cases/interface_adapters (61 tests unitarios); frameworks/ excluido de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit), cubierto en cambio por 8 tests de integración HTTP (incluye verificación directa del event store para correción de opción múltiple y verdadero/falso) y 8 escenarios BDD.",
+    "Dos escenarios BDD (Rechazo sobre evaluación suspendida/finalizada) se validan a nivel de dominio (Evaluacion.validar_para_registrar_respuesta) en vez de HTTP end-to-end: SuspenderEvaluacion/FinalizarEvaluacion todavía no existen como comandos (llegan con US-3.2.2/US-3.2.3) por lo que no hay forma de alcanzar esos estados vía la API en esta iteración — el chequeo de INV-AE-12 en sí ya está probado con datos reales.",
+    "El escenario de persistencia atómica ante desconexión simulada no reinicia un proceso real (no es viable en un test automatizado) — verifica en cambio que el evento persiste vía una SessionLocal nueva e independiente de la que hizo el POST, y que el replay del stream reconstruye la Evaluacion correctamente; mismo criterio de verificación que tests/integration/inc3/test_event_store_integration.py.",
+    "pre-push gate (DesignReviewer) detectó CBOAnalyzer CRITICAL: CBO=11/10 en Evaluacion — mismo patrón recurrente que US-2.1.2/US-2.1.5/US-2.1.6/US-2.2.2/US-3.1.3, no cubierto por Fase 7. Corregido extrayendo validar_para_registrar_respuesta a una función de módulo (_validar_para_registrar_respuesta) que no acopla la clase a los 4 errores de dominio — CBO baja a 7/10, métricas re-verificadas tras el fix: pylint 9.73/10 (sin cambio), CC máx 7, coverage 100%, DesignReviewer 0 CRITICAL."
+  ]
+}

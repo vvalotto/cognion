@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-10",
+    "us_title": "Docente edita el titulo de una actividad ya creada",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-30T21:08:10.090779+00:00",
+    "completed_at": "2026-08-30T21:14:25.317975+00:00",
+    "total_elapsed_seconds": 375,
+    "effective_seconds": 375,
+    "paused_seconds": 0
+  },
+  "phases": [],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 0,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

@@ -15,6 +15,9 @@ from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
 from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
+from src.identidad.interface_adapters.controllers.estudiante_controller import (
+    EstudianteController,
+)
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
@@ -38,6 +41,9 @@ from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
+from src.identidad.use_cases.listar_materias_del_estudiante import (
+    ListarMateriasDelEstudianteUseCase,
+)
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
@@ -120,6 +126,16 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
     )
 
 
+def get_estudiante_controller(session: SessionDep) -> EstudianteController:
+    """Arma el `EstudianteController` con sus dependencias concretas."""
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    comision_repo = SQLAlchemyComisionRepository(session)
+    materia_port = MateriaPortInProcess(session)
+    return EstudianteController(
+        ListarMateriasDelEstudianteUseCase(usuario_repo, comision_repo, materia_port)
+    )
+
+
 def get_perfil_controller(session: SessionDep) -> PerfilController:
     """Arma el `PerfilController` con sus dependencias concretas."""
     usuario_repo = SQLAlchemyUsuarioRepository(session)
@@ -143,3 +159,6 @@ require_administrador = require_rol([TipoPerfil.ADMINISTRADOR], get_current_user
 
 require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 """Dependency que exige rol `docente` — endpoints de gestión de invitaciones (RF-02)."""
+
+require_estudiante = require_rol([TipoPerfil.ESTUDIANTE], get_current_user)
+"""Dependency que exige rol `estudiante` — endpoints de autoservicio del Estudiante (RF-11)."""
