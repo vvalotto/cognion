@@ -6,8 +6,8 @@
 | Fecha apertura | 2026-08-24 |
 | Fecha cierre | 2026-09-02 |
 | Git tag inicial | — (continúa desde `v0.4.0`, `BL-003`) |
-| Git tag cierre | Pendiente — merge `develop → main` diferido, decisión a confirmar con Víctor (mismo ítem abierto de infraestructura/Docker que `BL-001`/`BL-002`/`BL-003`) |
-| Estado | ✅ Completado en desarrollo local — merge a `main` pendiente |
+| Git tag cierre | `v0.5.0`, taggeado el 2026-09-02 al mergear `develop → main` (a pedido explícito de Víctor — a diferencia de `BL-001`/`BL-002`/`BL-003`, esta vez se resolvió el merge en el mismo cierre, no diferido) |
+| Estado | ✅ Completado — mergeado a `main` |
 | DoD | Un estudiante completa una evaluación de período abierto de principio a fin (incluida una desconexión simulada, sin pérdida de respuestas), y el docente extiende el plazo de una actividad activa o la cierra manualmente (`PLAN_v1.md`, Hito Incremento 3). Backend y frontend implementados e integrados juntos — mismo criterio de cierre de baseline que `BL-002`/`BL-003` (`docs/plans/PLAN-CM.md` §7). |
 
 ---
