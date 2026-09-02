@@ -22,6 +22,7 @@ function evaluacionBody(overrides?: Partial<Record<string, unknown>>) {
     estudiante_id: "est-1",
     preguntas_asignadas: [],
     preguntas_respondidas: ["p1", "p2", "p3"],
+    respuestas_confirmadas: [],
     estado: "Suspendida",
     iniciada_en: "2026-09-01T00:00:00+00:00",
     ...overrides,

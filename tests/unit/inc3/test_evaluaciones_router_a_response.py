@@ -111,6 +111,77 @@ class TestAResponse:
 
         assert response.preguntas_respondidas == [pregunta_id]
 
+    async def test_respuestas_confirmadas_vacia_sin_respuestas(self):
+        evaluacion = _evaluacion([PreguntaAsignada(pregunta_id=uuid4(), orden=0)])
+
+        response = await _a_response(evaluacion, FakePreguntaConsultaPort())
+
+        assert response.respuestas_confirmadas == []
+
+    async def test_respuestas_confirmadas_trae_el_contenido_de_la_vigente(self):
+        pregunta_id = uuid4()
+        evaluacion = _evaluacion([PreguntaAsignada(pregunta_id=pregunta_id, orden=0)])
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=pregunta_id,
+                numero_intento=1,
+                contenido={"opcion_indice": 0},
+                es_correcta=False,
+            )
+        )
+
+        response = await _a_response(evaluacion, FakePreguntaConsultaPort())
+
+        assert len(response.respuestas_confirmadas) == 1
+        confirmada = response.respuestas_confirmadas[0]
+        assert confirmada.pregunta_id == pregunta_id
+        assert confirmada.contenido == {"opcion_indice": 0}
+
+    async def test_respuestas_confirmadas_trae_solo_la_vigente_ante_reintentos(self):
+        pregunta_id = uuid4()
+        evaluacion = _evaluacion([PreguntaAsignada(pregunta_id=pregunta_id, orden=0)])
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=pregunta_id,
+                numero_intento=1,
+                contenido={"opcion_indice": 0},
+                es_correcta=False,
+            )
+        )
+        evaluacion.respuestas.append(
+            Respuesta(
+                id=uuid4(),
+                pregunta_id=pregunta_id,
+                numero_intento=2,
+                contenido={"opcion_indice": 1},
+                es_correcta=True,
+            )
+        )
+
+        response = await _a_response(evaluacion, FakePreguntaConsultaPort())
+
+        assert len(response.respuestas_confirmadas) == 1
+        assert response.respuestas_confirmadas[0].contenido == {"opcion_indice": 1}
+
+    async def test_respuestas_confirmadas_no_expone_es_correcta(self):
+        respuesta = Respuesta(
+            id=uuid4(),
+            pregunta_id=uuid4(),
+            numero_intento=1,
+            contenido={"valor": True},
+            es_correcta=True,
+        )
+        evaluacion = _evaluacion(
+            [PreguntaAsignada(pregunta_id=respuesta.pregunta_id, orden=0)]
+        )
+        evaluacion.respuestas.append(respuesta)
+
+        response = await _a_response(evaluacion, FakePreguntaConsultaPort())
+
+        assert not hasattr(response.respuestas_confirmadas[0], "es_correcta")
+
     async def test_preserva_el_resto_de_los_campos_de_evaluacion(self):
         pregunta_id = uuid4()
         evaluacion = _evaluacion([PreguntaAsignada(pregunta_id=pregunta_id, orden=0)])
