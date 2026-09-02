@@ -1,0 +1,44 @@
+{
+  "us_id": "US-3.4.6",
+  "fecha": "2026-08-31T12:05:00-03:00",
+  "componente": "src/actividad_evaluativa (archivos backend tocados por la US: entities/ports/pregunta_consulta_port.py, frameworks/adapters/pregunta_consulta_port_in_process.py, frameworks/api/evaluaciones_router.py, frameworks/api/schemas.py, frameworks/dependencies.py)",
+  "metricas": {
+    "pylint": 9.97,
+    "cc_maximo": 5,
+    "mi_minimo": 66.68,
+    "coverage": 99.78
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 5,
+    "errors": 6,
+    "warnings": 113,
+    "infos": 36,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 5 },
+      "PEP8": { "errors": 0, "warnings": 1, "infos": 4 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 5 },
+      "DeadCode": { "errors": 6, "warnings": 101, "infos": 1 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 5 },
+      "Pylint": { "errors": 0, "warnings": 0, "infos": 5 },
+      "Spelling": { "errors": 0, "warnings": 11, "infos": 1 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 5 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 5 }
+    },
+    "reporte": "quality/reports/inc3/US-3.4.6-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Primera US que corre codeguard con vulture/codespell realmente en PATH (fix de PATH manual en esta corrida) desde el fix de --analysis-type full de PR #168 — las corridas anteriores mostraban 'vulture/codespell not installed' en vez del resultado real. Los 6 errors + 101 warnings de DeadCode son falsos positivos sistemáticos de vulture (60% de confianza) sobre patrones que no entiende: parámetros de métodos abstractos ABC, campos de Pydantic BaseModel y dataclasses — se repiten sobre TODO el archivo, incluyendo clases preexistentes no tocadas por esta US (CrearActividadRequest, ActividadResponse, etc.). Nada de lo señalado es código muerto real: cada método/campo está ejercitado por los 354 tests que pasan. Vale la pena evaluar un whitelist de vulture a nivel de proyecto en una US técnica futura — no se resuelve acá para no mezclar alcance.",
+    "Los 11 warnings de Spelling son falsos positivos de codespell (orientado a inglés) sobre palabras en español de los docstrings ('Falso', 'hace', 'momento', 'inmutable', 'Responde') — mismo patrón ya visto en otras US del proyecto.",
+    "El único warning de PEP8 (E501, dependencies.py:42) es una línea de import preexistente de US-3.4.5, no tocada por esta US.",
+    "mypy dedicado (fuente de verdad de tipos del proyecto) corrió limpio sobre src/ completo: 'Success: no issues found in 189 source files'.",
+    "Coverage 99.78% sobre entities/use_cases/interface_adapters de todo el BC Actividad Evaluativa (frameworks/* excluido del cómputo por diseño del proyecto, pyproject.toml [tool.coverage.run] omit); las 2 líneas sin cubrir (actividad_evaluativa_periodo_abierto.py:125-126) son preexistentes, no tocadas por esta US.",
+    "Suite completa del BC en verde: 354 tests (unit + integration + BDD)."
+  ]
+}

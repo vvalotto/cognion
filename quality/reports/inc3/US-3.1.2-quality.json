@@ -1,0 +1,23 @@
+{
+  "us_id": "US-3.1.2",
+  "fecha": "2026-08-26T16:18:00Z",
+  "componente": "src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.59,
+    "cc_max_funcion": 4,
+    "mi_min": 72.33,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard sobre archivos modificados/agregados de la US: 0 errores, 0 warnings, 54 infos (quality/reports/inc3/US-3.1.2-codeguard.json).",
+    "coverage 100% en entities/use_cases/interface_adapters — frameworks/ excluido de coverage por convención del proyecto (pyproject.toml [tool.coverage.run] omit), cubierto en cambio por tests de integración HTTP (7 escenarios) y BDD (5 escenarios).",
+    "pylint duplicate-code (R0801) entre el mapeo de campos del router y del evento — mismo patrón aceptado en otros BCs (ej. materias_router), no afecta el score por debajo del umbral."
+  ]
+}

@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: jerarquía documental y autoridad por tema
-> Última actualización: 2026-08-17 (rev. /docs-audit)
+> Última actualización: 2026-08-31 (rev. /docs-audit)
 
 ## 1. Propósito
 
@@ -44,11 +44,11 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Arquitectura de referencia (decisión inicial) | `docs/rf/ARQ_v1.md` | `docs/architecture/`, `docs/adr/` | Histórico — arquitectura *vigente* vive en `docs/architecture/` una vez creada; hasta entonces, ARQ_v1 manda. |
 | Arquitectura vigente | `docs/architecture/` | `docs/adr/`, `docs/rf/ARQ_v1.md` (histórico una vez que `architecture/` tenga contenido) | Vista técnica principal, se actualiza por incremento. |
 | Decisiones arquitectónicas | `docs/adr/` | `docs/architecture/`, `docs/rf/ARQ_v1.md` | Los ADRs registran decisión y trade-offs; no se reescriben, se supersedan con un nuevo ADR. |
-| Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` | `docs/rf/RF_v1.md`, specs US-IEDD | Producto de la Iteración 0 — Modelado (`PLAN_v1.md`). Se actualiza con refactorings reales del agregado. |
+| Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` | `docs/rf/RF_v1.md`, specs US-IEDD, `docs/design/domain/BC-<bc>-modelo-*.html` (diagramas Mermaid complementarios, opcionales) | Producto de la Iteración 0 — Modelado (`PLAN_v1.md`). Se actualiza con refactorings reales del agregado. Los `.html` son visualización derivada del `.md` — ante conflicto, manda el `.md`. |
 | Diseño UX aprobado | `docs/design/ux/wireframes-*.md` + `docs/design/ux/prototipos/` | specs de US que tocan `frontend/` | Gate obligatorio antes de codear frontend — ver `CLAUDE.md`. |
 | Trazabilidad | `docs/traceability/matrix.md` | specs US-IEDD, baselines | Debe distinguir estados de madurez (backlog / en curso / cerrado). |
 | Especificaciones US-IEDD | `docs/specs/incN/` | `docs/traceability/matrix.md` | Fuente de especificación detallada; input de `/implement-us`. |
-| Especificaciones de ajuste (SP-ADJ) | `docs/specs/ajustes/US-ADJ-NN.md` | `docs/aprendizajes/HITO-*.md`, `docs/plans/PLAN-CM.md` §12 | US de ajuste sin incremento asignado todavía — se mueve a `docs/specs/incN/` (o se referencia desde ahí) cuando se decide en qué incremento se implementa. |
+| Especificaciones de ajuste (US-ADJ) | `docs/specs/ajustes/US-ADJ-NN.md` | `docs/aprendizajes/HITO-*.md`, `docs/plans/PLAN-CM.md` §14 | Hallazgos de UAT resueltos como US-IEDD aparte, diferidos (agrupados en un `SP-ADJ`, `PLAN-CM.md` §12) o resueltos de inmediato en la misma iteración — ver `PLAN-CM.md` §14. |
 | US candidatas / planes de incremento | `docs/plans/incN/` | `CLAUDE.md`, specs US-IEDD | Documento de trabajo — se marca cerrado una vez aprobadas las US. |
 | Aprendizajes metodológicos | `docs/aprendizajes/HITO-*.md` | baselines, `docs/iedd/` | Evidencia del ensayo IEDD; no se reescriben salvo corrección editorial. |
 | Reportes de cierre de US | `docs/reports/` | `docs/traceability/matrix.md` | Evidencia de cierre de `/implement-us`. |

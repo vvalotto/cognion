@@ -1,0 +1,256 @@
+{
+  "metadata": {
+    "us_id": "US-3.4.4",
+    "us_title": "Docente ve el detalle de una actividad, extiende el plazo y la cierra manualmente",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-30T18:49:54.719621+00:00",
+    "completed_at": "2026-08-30T19:23:59.430116+00:00",
+    "total_elapsed_seconds": 2044,
+    "effective_seconds": 2044,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Fase 0",
+      "started_at": "2026-08-30T18:49:57.755408+00:00",
+      "completed_at": "2026-08-30T18:50:37.485765+00:00",
+      "elapsed_seconds": 39,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-08-30T18:50:42.857883+00:00",
+      "completed_at": "2026-08-30T18:51:56.617104+00:00",
+      "elapsed_seconds": 73,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-08-30T18:52:01.400524+00:00",
+      "completed_at": "2026-08-30T18:57:20.858221+00:00",
+      "elapsed_seconds": 319,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-08-30T18:57:26.683734+00:00",
+      "completed_at": "2026-08-30T19:01:20.557575+00:00",
+      "elapsed_seconds": 233,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Puerto: obtener() en ActividadQueryPort",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-30T18:57:26.795434+00:00",
+          "completed_at": "2026-08-30T18:57:45.351299+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -4.7,
+          "file_created": "src/actividad_evaluativa/entities/ports/actividad_query_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Repository: implementar obtener()",
+          "task_type": "backend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-30T18:57:45.462213+00:00",
+          "completed_at": "2026-08-30T18:58:04.756541+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -9.68,
+          "file_created": "src/actividad_evaluativa/frameworks/adapters/actividad_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "UseCase: ObtenerActividadUseCase",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-30T18:58:04.865823+00:00",
+          "completed_at": "2026-08-30T18:58:13.312700+00:00",
+          "elapsed_seconds": 8,
+          "actual_minutes": 0.13,
+          "variance_minutes": -4.87,
+          "file_created": "src/actividad_evaluativa/use_cases/obtener_actividad.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Controller: ActividadesQueryController.obtener_actividad",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-30T18:58:13.422926+00:00",
+          "completed_at": "2026-08-30T18:58:23.347653+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -4.85,
+          "file_created": "src/actividad_evaluativa/interface_adapters/controllers/actividades_query_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "DI: wiring de ObtenerActividadUseCase",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-30T18:58:23.458886+00:00",
+          "completed_at": "2026-08-30T18:58:38.287517+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -4.77,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Schema + Router: GET /actividades/{id}",
+          "task_type": "backend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-30T18:58:38.397983+00:00",
+          "completed_at": "2026-08-30T18:59:02.148828+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -9.62,
+          "file_created": "src/actividad_evaluativa/frameworks/api/actividades_router.py,src/actividad_evaluativa/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Cliente API: obtenerActividad()",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-30T18:59:04.249574+00:00",
+          "completed_at": "2026-08-30T18:59:21.486002+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -4.72,
+          "file_created": "frontend/src/lib/actividad-evaluativa-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "Pantallas: ActividadDetalle, ExtenderPlazo, CerrarActividad",
+          "task_type": "frontend",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-30T18:59:21.597969+00:00",
+          "completed_at": "2026-08-30T19:00:05.726929+00:00",
+          "elapsed_seconds": 44,
+          "actual_minutes": 0.73,
+          "variance_minutes": -24.27,
+          "file_created": "frontend/src/pages/ActividadDetalle.tsx,frontend/src/pages/ExtenderPlazo.tsx,frontend/src/pages/CerrarActividad.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "Router: reemplazar placeholders",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-30T19:00:05.836026+00:00",
+          "completed_at": "2026-08-30T19:00:39.981938+00:00",
+          "elapsed_seconds": 34,
+          "actual_minutes": 0.57,
+          "variance_minutes": -4.43,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-30T19:01:27.184113+00:00",
+      "completed_at": "2026-08-30T19:04:19.419243+00:00",
+      "elapsed_seconds": 172,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-08-30T19:04:24.963929+00:00",
+      "completed_at": "2026-08-30T19:06:21.229993+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-08-30T19:06:27.278873+00:00",
+      "completed_at": "2026-08-30T19:09:38.226166+00:00",
+      "elapsed_seconds": 190,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-30T19:09:46.170281+00:00",
+      "completed_at": "2026-08-30T19:17:34.751283+00:00",
+      "elapsed_seconds": 468,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-08-30T19:17:46.134178+00:00",
+      "completed_at": "2026-08-30T19:23:00.886371+00:00",
+      "elapsed_seconds": 314,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-30T19:23:06.690938+00:00",
+      "completed_at": "2026-08-30T19:23:59.317455+00:00",
+      "elapsed_seconds": 52,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 9,
+    "completed_tasks": 9,
+    "total_phases": 10,
+    "estimated_total_minutes": 75.0,
+    "actual_total_minutes": 3.1,
+    "variance_minutes": -71.9,
+    "variance_percent": -95.87
+  }
+}
