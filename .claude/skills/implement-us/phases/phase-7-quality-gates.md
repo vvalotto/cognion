@@ -48,8 +48,19 @@ Ejecutar herramientas de análisis estático y validar que todas las métricas d
 >
 > ```bash
 > git diff --name-only --diff-filter=ACMR $(git merge-base develop HEAD) -- '*.py' | grep '^src/' > /tmp/archivos_modificados.txt
-> codeguard $(cat /tmp/archivos_modificados.txt) --format json > quality/reports/codeguard/{US_ID}-codeguard.json
+> codeguard $(cat /tmp/archivos_modificados.txt) --analysis-type full --format json > quality/reports/{US_ID}-codeguard.json
 > ```
+>
+> **`--analysis-type full` es obligatorio, no opcional.** Sin ese flag, `codeguard` usa el
+> default `pre-commit` — que por diseño solo ejecuta los checks con `priority <= 3`
+> (`Security`, `PEP8`, `Complexity`) y omite los otros 6 (`DeadCode`, `Maintainability`,
+> `Pylint`, `Spelling`, `Types`, `UnusedImports`) **sin ninguna señal de que fueron
+> omitidos** — el campo `summary.checks_executed` del JSON cuenta los checks *descubiertos*,
+> no los que corrieron (bug reportado en
+> [`vvalotto/software_limpio#71`](https://github.com/vvalotto/software_limpio/issues/71)).
+> El hook de pre-commit (`.pre-commit-config.yaml`) sí debe seguir en modo `pre-commit`
+> (por eso existe ese modo — rapidez en cada commit); Fase 7 no tiene esa restricción de
+> tiempo y necesita el reporte completo como evidencia de la US.
 >
 > El gate de **coverage** (`pytest --cov={COMPONENT_PATH}`, más abajo) no se acota — sigue
 > midiendo sobre el componente completo del BC, no solo los archivos modificados.
@@ -310,10 +321,33 @@ Crear archivo JSON con todas las métricas:
     "mi_min": "{MI_MIN}",
     "coverage_min": "{COVERAGE_MIN}"
   },
+  "codeguard": {
+    "archivos_analizados": 0,
+    "errors": 0,
+    "warnings": 0,
+    "infos": 0,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 0},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 0},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 0},
+      "DeadCode": {"errors": 0, "warnings": 0, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 0},
+      "Pylint": {"errors": 0, "warnings": 0, "infos": 0},
+      "Spelling": {"errors": 0, "warnings": 0, "infos": 0},
+      "Types": {"errors": 0, "warnings": 0, "infos": 0},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 0}
+    },
+    "reporte": "quality/reports/{US_ID}-codeguard.json"
+  },
   "estado": "APROBADO",
   "observaciones": []
 }
 ```
+
+> El desglose por check (`codeguard.checks`) se calcula a partir de `results` en
+> `{US_ID}-codeguard.json` — un check con los tres contadores en 0 significa que corrió y
+> no encontró nada que reportar, no que fue omitido (si fuera omitido, el gate de la
+> sección "Verificar reporte antes de cerrar" ya habría bloqueado el avance).
 
 **Script de generación (opcional):**
 
@@ -336,6 +370,32 @@ def leer_umbrales_perfil(config_path=".claude/skills/implement-us/config.json"):
         "coverage_min": qg["coverage"]["min_percent"]
     }
 
+def desglosar_codeguard(codeguard_report_path):
+    """Desglosar el reporte crudo de codeguard en conteos por check.
+
+    Requiere que codeguard_report_path haya sido generado con --analysis-type
+    full (ver comando de la sección anterior) — de lo contrario faltan checks
+    y el gate de verificación de esta fase ya lo habría rechazado antes de
+    llegar acá.
+    """
+    with open(codeguard_report_path) as f:
+        cg = json.load(f)
+
+    checks = {}
+    for r in cg["results"]:
+        entry = checks.setdefault(r["check"], {"errors": 0, "warnings": 0, "infos": 0})
+        clave = "infos" if r["severity"] == "info" else f"{r['severity']}s"
+        entry[clave] += 1
+
+    return {
+        "archivos_analizados": cg["summary"]["total_files"],
+        "errors": cg["summary"]["errors"],
+        "warnings": cg["summary"]["warnings"],
+        "infos": cg["summary"]["infos"],
+        "checks": checks,
+        "reporte": codeguard_report_path,
+    }
+
 def todas_metricas_pasan(metricas, umbrales):
     """Validar que todas las métricas superan los umbrales del perfil activo."""
     return (
@@ -356,6 +416,7 @@ def generar_reporte_quality(us_id, component_path, metricas):
         "componente": component_path,
         "metricas": metricas,
         "umbrales": umbrales,
+        "codeguard": desglosar_codeguard(f"quality/reports/{us_id}-codeguard.json"),
         "estado": estado,
         "observaciones": calcular_observaciones(metricas, umbrales)
     }
@@ -557,6 +618,7 @@ mkdir -p quality/reports
 
 Antes de avanzar a Fase 8, confirmá que:
 - [ ] `quality/reports/{US_ID}-quality.json` existe con estado `APROBADO`
+- [ ] `quality/reports/{US_ID}-codeguard.json` existe con los 9 checks presentes
 - [ ] Pylint ≥ umbral del perfil activo
 - [ ] CC ≤ umbral del perfil activo
 - [ ] Coverage ≥ umbral del perfil activo
@@ -571,6 +633,25 @@ ls quality/reports/{US_ID}-quality.json
 ```
 
 Si no existe, generalo con los valores reales obtenidos en los pasos anteriores (ver sección "Generar Reporte Consolidado").
+
+Confirmá también que el reporte de `codeguard` existe y **no es parcial** — es decir, que
+corrió en modo `full` y no cayó en el default `pre-commit` (ver nota más arriba):
+
+```bash
+python3 -c "
+import json
+d = json.load(open('quality/reports/{US_ID}-codeguard.json'))
+esperados = {'Security','PEP8','Complexity','DeadCode','Maintainability','Pylint','Spelling','Types','UnusedImports'}
+vistos = {r['check'] for r in d['results']}
+faltantes = esperados - vistos
+if faltantes:
+    raise SystemExit(f'Reporte parcial — faltan checks: {sorted(faltantes)}. Volvé a correr codeguard con --analysis-type full.')
+print('OK — 9/9 checks con resultados en el reporte.')
+"
+```
+
+Si falla, **no avances** — volvé a correr el comando de `codeguard` de la sección anterior con
+`--analysis-type full` explícito y regenerá el archivo.
 
 ---
 

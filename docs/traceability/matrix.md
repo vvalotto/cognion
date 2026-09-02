@@ -3,7 +3,22 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-08-23 — Cierre de `BL-003` (Incremento 2): backend y frontend de
+> Última actualización: 2026-09-02 — Cierre del Incremento 3 (Actividad Evaluativa, período
+> abierto): backend (Iteraciones 1 a 3) y frontend (Iteración 4) completos, UAT formal
+> aprobada (`quality/reports/uat/inc3/`, incluida la revisión manual de Víctor con el
+> checklist `guion-manual-iteracion4.md`, sin hallazgos abiertos — `US-ADJ-12` ya corregido).
+> **RF-11, RF-11b, RF-12 y RF-13 pasan a "Validado"**, referenciando
+> `.cm/baselines/BL-004-actividad-evaluativa.md`.
+>
+> 2026-08-26 — Cierre de la Iteración 0 (Modelado) del Incremento 3
+> (`US-3.0.1` event storming + `US-3.0.2` wireframes/prototipo del flujo de período abierto,
+> ambos aprobados por Víctor). RF-11, RF-11b, RF-12 y RF-13 pasan de Planificado a
+> **Especificado** — el modelo de dominio y la UX ya están aprobados aunque las US-IEDD de
+> feature de las Iteraciones 1 a 3 todavía no se escribieron. RNF-DISP-2 y RNF-CONF-1 (§4)
+> pasan también a Especificado, con su mecanismo concreto ya definido en
+> `docs/design/domain/BC-actividad-evaluativa-modelo.md`.
+>
+> 2026-08-23 — Cierre de `BL-003` (Incremento 2): backend y frontend de
 > ambas iteraciones (Banco de Preguntas + Cuentas), `SP-ADJ-01` y el ajuste UX en vivo del
 > 2026-08-23 completos, UAT formal aprobada (`quality/reports/uat/inc2/`, Iteración 1 e
 > Iteración 2), ArchitectAnalyst leído (`should_block: false`). **RF-03, RF-04, RF-05, RF-06 y
@@ -99,10 +114,10 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-08 | Actividad Evaluativa | 6 | — | Planificado |
 | RF-09 | Actividad Evaluativa | 6 | — | Planificado |
 | RF-10 | Actividad Evaluativa | 6 | — | Planificado |
-| RF-11 | Actividad Evaluativa | 3 | — | Planificado |
-| RF-11b | Actividad Evaluativa | 3 | — | Planificado |
-| RF-12 | Actividad Evaluativa | 3 | — | Planificado |
-| RF-13 | Actividad Evaluativa | 3 | — | Planificado |
+| RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.2 (backend); US-3.4.3 (frontend) | Validado |
+| RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
+| RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
+| RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1, US-3.2.2, US-3.2.3 (backend); US-3.4.7 (frontend) | Validado |
 | RF-14 | Notificaciones | 5 | — | Planificado |
 | RF-15 | Analytics | 4 | — | Planificado |
 | RF-16 | Analytics | 4 | — | Planificado |
@@ -228,13 +243,13 @@ tomada todavía (se marca "Sin ADR — pendiente", nunca se deja vacío sin expl
 |---|---|---|---|---|---|---|---|
 | RNF-REND-1 | Rendimiento | ADR-005 | Rendimiento, Escenario 1 | Actividad Evaluativa | 6 | Planificado | Medición server-side ≤100ms con hasta 60 clientes conectados |
 | RNF-DISP-1 | Disponibilidad | ADR-010 | Disponibilidad, Escenario 1 | Actividad Evaluativa / Infraestructura | 0 (healthcheck) → 6 (cancelación a los 5 min) | Planificado | Healthcheck expuesto (Inc 0) + comportamiento de cancelación verificado en UAT de Inc 6 |
-| RNF-DISP-2 | Disponibilidad | N/A — decisión de dominio (RF-11b), no arquitectónica | Disponibilidad, Escenario 2 | Actividad Evaluativa | 3 | Planificado | RF-11b (modificación de cierre en caliente) cubre el escenario |
-| RNF-CONF-1 | Confiabilidad | ADR-009, ADR-004 | Confiabilidad | Actividad Evaluativa | 3 | Planificado | Test de reconexión sin pérdida de respuestas confirmadas |
+| RNF-DISP-2 | Disponibilidad | N/A — decisión de dominio (RF-11b), no arquitectónica | Disponibilidad, Escenario 2 | Actividad Evaluativa | 3 | Validado | RF-11b (modificación de cierre en caliente) verificado en UAT — extender plazo con efecto inmediato y cierre manual, `BC-actividad-evaluativa-modelo.md` INV-AE-04 |
+| RNF-CONF-1 | Confiabilidad | ADR-009, ADR-004 | Confiabilidad | Actividad Evaluativa | 3 | Validado | Reconexión sin pérdida de respuestas confirmadas verificada en UAT (recarga de página en medio de la evaluación, `guion-manual-iteracion4.md` paso 9) — mecanismo `BC-actividad-evaluativa-modelo.md` INV-AE-09 (persistencia atómica) y wireframe `#est-rendir` |
 | RNF-SEG-1 | Seguridad | ADR-007 | Seguridad | Identidad (transversal a todos los BC) | 1 | Implementado | Revisión de API — RBAC + JWT validado en cada endpoint. Mecanismo concreto (roles derivados de `perfil`, JWT sin refresh/blacklist) definido en `docs/design/domain/BC-identidad-modelo.md` (US-1.0.1, aprobado 2026-07-17). `get_current_user`/`require_rol` (`US-1.1.5`) aplicados a los endpoints de `US-1.1.0`/`US-1.1.1`; revisión formal de API queda para el cierre de Incremento |
 | RNF-USA-1 | Usabilidad | ADR-011 | Usabilidad, Escenario 1 | Frontend (transversal) | Todos los incrementos con frontend | Planificado — gate cumplido para Incremento 1 | Gate UX de cada incremento — verificación de prototipo aprobado. Incremento 1: `docs/design/ux/wireframes-identidad.md` + prototipo aprobados (US-1.0.2, 2026-07-18). Estado global se mantiene "Planificado" hasta que cada incremento con frontend repita el gate |
 | RNF-USA-2 | Usabilidad | ADR-011 | Usabilidad, Escenario 2 | Frontend / Actividad Evaluativa en vivo | 6 | Planificado — ⚠️ ítem abierto, criterio a definir en diseño UX antes del Incremento 6 (ver `CLAUDE.md`) | Validación humana en dispositivo real (proyección en aula) |
 | RNF-MANT-1 | Mantenibilidad | ADR-001 | Mantenibilidad | Banco de preguntas | 2 | Planificado — ⚠️ depende del modelo polimórfico de tipos de pregunta, a resolver en la Iteración 0 — Modelado | Spike de incorporación de un tipo nuevo en ≤ 1 jornada |
-| RNF-OBS-1 | Observabilidad | ADR-002, ADR-010 | Observabilidad | Actividad Evaluativa | 3 | Planificado | Reconstrucción de una actividad evaluativa desde el event store, verificada en UAT |
+| RNF-OBS-1 | Observabilidad | ADR-002, ADR-010 | Observabilidad | Actividad Evaluativa | 3 | Validado | Reconstrucción de una actividad evaluativa desde el event store verificada en UAT — `Evaluacion.reconstruir()`/`ActividadEvaluativaPeriodoAbierto.reconstruir()` (replay completo del stream) se ejercitan en cada reconexión, pausa/reanudación, extensión de plazo y cierre del recorrido manual |
 | RNF-ADM-1 | Administrabilidad | ADR-008 | Administrabilidad, Escenario 1 | Infraestructura | 0 | Implementado | Pipeline de GitHub Actions ya integrado en `develop` (CI/CD + Docker) |
 | RNF-ADM-2 | Administrabilidad | Sin ADR — pendiente, no hay decisión de infraestructura de producción todavía | Administrabilidad, Escenario 2 | Infraestructura | Sin asignar | Planificado — ⚠️ ítem abierto, depende de la decisión de infraestructura de producción (ver `CLAUDE.md`) | Backup mensual verificado una vez resuelta la infraestructura definitiva |
 

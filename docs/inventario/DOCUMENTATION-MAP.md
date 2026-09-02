@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: navegación documental y jerarquía de lectura
-> Última actualización: 2026-07-20 (rev. /docs-audit — corrección de conteo de ADRs)
+> Última actualización: 2026-08-31 (rev. /docs-audit — redefinición de US-ADJ)
 
 ## 1. Propósito
 
@@ -51,10 +51,10 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 | Procedimiento de UAT | `docs/plans/PROCEDIMIENTO-UAT.md` | Gate obligatorio antes de merge a main. |
 | Checklist de instalación/entorno | `docs/plans/CHECKLIST-INSTALACION.md` | Pasos de setup del entorno local. |
 | Plan de incrementos | `docs/rf/PLAN_v1.md` | Los 7 incrementos y su orden por riesgo. |
-| Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
+| Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` (+ `-diagramas.html`/`-event-storming.html` opcionales) | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
 | Diseño UX aprobado | `docs/design/ux/` | Gate obligatorio antes de código en `frontend/`. |
 | Trazabilidad | `docs/traceability/matrix.md` | Relación RF → BC → incremento → US → estado. |
-| Specs de ajuste (SP-ADJ) | `docs/specs/ajustes/` | US-ADJ sin incremento asignado todavía — ver `PLAN-CM.md` §12. |
+| Specs de ajuste (US-ADJ) | `docs/specs/ajustes/` | Hallazgos de UAT, diferidos (`SP-ADJ`, `PLAN-CM.md` §12) o resueltos de inmediato en la misma iteración — ver `PLAN-CM.md` §14. |
 
 ---
 

@@ -1,0 +1,37 @@
+{
+  "us_id": "US-3.3.1",
+  "fecha": "2026-08-28",
+  "pylint": {
+    "score": 9.71,
+    "min_score": 8.0,
+    "aprobado": true
+  },
+  "complejidad_ciclomatica": {
+    "maximo_por_funcion": 7,
+    "max_permitido": 10,
+    "aprobado": true
+  },
+  "indice_mantenibilidad": {
+    "minimo_entre_archivos": 60.4,
+    "min_score": 20,
+    "aprobado": true
+  },
+  "cobertura": {
+    "entities_y_use_cases_pct": 100,
+    "min_percent": 95,
+    "aprobado": true
+  },
+  "mypy": {
+    "errores": 0,
+    "aprobado": true
+  },
+  "codeguard": {
+    "archivos_analizados": 12,
+    "errors": 0,
+    "warnings": 0,
+    "infos": 35,
+    "aprobado": true,
+    "reporte": "quality/reports/inc3/US-3.3.1-codeguard.json"
+  },
+  "estado_general": "APROBADO"
+}

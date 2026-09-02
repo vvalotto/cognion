@@ -1,0 +1,38 @@
+{
+  "us_id": "US-3.2.2",
+  "fecha": "2026-08-27T00:00:00",
+  "componente": "src/actividad_evaluativa",
+  "archivos_evaluados": [
+    "src/actividad_evaluativa/entities/errors.py",
+    "src/actividad_evaluativa/entities/evaluacion.py",
+    "src/actividad_evaluativa/entities/eventos.py",
+    "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+    "src/actividad_evaluativa/frameworks/dependencies.py",
+    "src/actividad_evaluativa/interface_adapters/controllers/evaluaciones_controller.py",
+    "src/actividad_evaluativa/use_cases/reanudar_evaluacion.py",
+    "src/actividad_evaluativa/use_cases/suspender_evaluacion.py"
+  ],
+  "metricas": {
+    "pylint": 9.89,
+    "cc_maximo": 6,
+    "mi_minimo": 63.08,
+    "coverage": 100.0,
+    "mypy_errores": 0,
+    "codeguard_errors": 0,
+    "codeguard_warnings": 0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "coverage medido sobre entities/use_cases/interface_adapters — frameworks/* excluido del gate por pyproject.toml [tool.coverage.run].omit (política del proyecto, no excepción de esta US)",
+    "pylint reporta 2 duplicate-code (R0801) entre SuspenderEvaluacionUseCase y ReanudarEvaluacionUseCase (construcción del payload/append) — no baja el score por debajo del umbral, mismo patrón ya aceptado entre IniciarEvaluacionUseCase/RegistrarRespuestaUseCase",
+    "CBO de EvaluacionesController pasa de 2 a 4 Use Case inyectados — no disparó CRITICAL en DesignReviewer (pre-push, ver más abajo)",
+    "525/525 tests (unit+integration+step_defs) en todo el proyecto, sin regresiones",
+    "mypy sobre src/ completo: 0 errores"
+  ]
+}

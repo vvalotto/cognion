@@ -47,6 +47,18 @@ Mapeá los valores obtenidos a los placeholders del template:
 
 No uses valores hardcodeados ni los reconstruyas de memoria. El `quality.json` es la fuente de verdad.
 
+Para la tabla "Detalle de CodeGuard" del template (`.claude/templates/reporting/implementation-report.md`),
+leé el desglose por check desde `quality.json → codeguard.checks`:
+
+```bash
+cat quality/reports/{US_ID}-quality.json | jq '.codeguard.checks'
+```
+
+Cada uno de los 9 checks (`Security`, `PEP8`, `Complexity`, `DeadCode`, `Maintainability`,
+`Pylint`, `Spelling`, `Types`, `UnusedImports`) tiene que tener una entrada — si falta alguno,
+Fase 7 no debería haber cerrado (ver su gate de verificación). No reportes esta tabla con
+placeholders sin completar.
+
 ---
 
 ## Acción
@@ -492,6 +504,7 @@ python scripts/generate_report.py {US_ID}
 Antes de cerrar el tracking, confirmá que:
 - [ ] `docs/reports/{US_ID}-report.md` existe en disco
 - [ ] El reporte incluye métricas reales de Fase 7
+- [ ] La tabla "Detalle de CodeGuard" incluye los 9 checks, sin placeholders sin completar
 - [ ] Reporte presentado en la conversación con ruta del archivo (`docs/reports/{US_ID}-report.md`)
 - [ ] Tracking de Fase 9 cerrado
 

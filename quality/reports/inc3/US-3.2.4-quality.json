@@ -1,0 +1,28 @@
+{
+  "us_id": "US-3.2.4",
+  "fecha": "2026-08-27T18:43:00-03:00",
+  "componente": "src/actividad_evaluativa (archivos modificados/agregados por US-3.2.4)",
+  "metricas": {
+    "pylint": 9.74,
+    "cc_promedio": 2.1,
+    "cc_maximo": 6,
+    "mi_promedio": 87.31,
+    "mi_minimo": 67.11,
+    "coverage": 100.0,
+    "mypy_errores": 0,
+    "codeguard_errores": 0,
+    "codeguard_warnings": 0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage 100% sobre entities/ y use_cases/ del BC (664 statements) — frameworks/ excluido del gate de coverage por configuración del proyecto ([tool.coverage.run] omit en pyproject.toml), mismo criterio que el resto de las US de Actividad Evaluativa.",
+    "CodeGuard reporta 2 hallazgos informativos (severidad info, no warning/error) de tipo Security B101 en evaluaciones_controller.py (uso de assert para narrowing de tipos ante mypy) — asserts que documentan una garantía de invariante del propio dominio (actor='estudiante' nunca devuelve None), no validación de datos externos; no se compila con -O en este proyecto.",
+    "Pylint 9.74/10 con una única observación de tipo duplicate-code entre suspender_evaluacion.py y finalizar_evaluacion.py (misma estructura de extensión con actor, deliberada — ver docs/specs/inc3/US-3.2.4.md, Decisión de diseño 1) — no baja el score por debajo del umbral."
+  ]
+}

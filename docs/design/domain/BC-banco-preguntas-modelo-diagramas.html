@@ -1,0 +1,454 @@
+<title>Modelo Banco de Preguntas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --paper: #edeff2;
+    --surface: #f7f8fa;
+    --ink: #1b222c;
+    --muted: #5b6472;
+    --line: #c8cfd9;
+    --line-soft: #d9dee5;
+    --accent: #9c6712;
+    --accent-ink: #ffffff;
+    --accent-soft: #f1e3cc;
+    --aggregate: #2e5c8a;
+    --aggregate-soft: #dbe6f0;
+    --entity: #9c6712;
+    --entity-soft: #f1e3cc;
+    --vo: #4a5568;
+    --vo-soft: #e2e5ea;
+    --external: #6b7280;
+    --shadow: 0 1px 2px rgba(27, 34, 44, 0.06), 0 4px 14px rgba(27, 34, 44, 0.05);
+    --font-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161d;
+      --surface: #171c24;
+      --ink: #e7eaf0;
+      --muted: #8b94a3;
+      --line: #2a313c;
+      --line-soft: #232a33;
+      --accent: #e3a83f;
+      --accent-ink: #1b222c;
+      --accent-soft: #3a2f18;
+      --aggregate: #7fb0e0;
+      --aggregate-soft: #1c2b3c;
+      --entity: #e3a83f;
+      --entity-soft: #3a2f18;
+      --vo: #aab2c0;
+      --vo-soft: #232a33;
+      --external: #9aa2b0;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12161d;
+    --surface: #171c24;
+    --ink: #e7eaf0;
+    --muted: #8b94a3;
+    --line: #2a313c;
+    --line-soft: #232a33;
+    --accent: #e3a83f;
+    --accent-ink: #1b222c;
+    --accent-soft: #3a2f18;
+    --aggregate: #7fb0e0;
+    --aggregate-soft: #1c2b3c;
+    --entity: #e3a83f;
+    --entity-soft: #3a2f18;
+    --vo: #aab2c0;
+    --vo-soft: #232a33;
+    --external: #9aa2b0;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 3.5rem 1.75rem 6rem;
+  }
+
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+    margin-bottom: 2.75rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--line-soft) 27px,
+      var(--line-soft) 28px
+    );
+    background-position: 0 4.4rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.12;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0 0 1.4rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .meta-row code {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.12rem 0.42rem;
+    color: var(--ink);
+  }
+
+  main { display: flex; flex-direction: column; gap: 3.2rem; }
+
+  section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  section h2 .num {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  section > .lede {
+    color: var(--muted);
+    max-width: 68ch;
+    margin: 0 0 1.3rem;
+    font-size: 0.98rem;
+  }
+
+  figure {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  figure .diagram-wrap {
+    padding: 1.4rem 1.2rem 0.6rem;
+    overflow-x: auto;
+  }
+
+  figure .diagram-wrap pre.mermaid {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-width: 480px;
+  }
+
+  figcaption {
+    padding: 0.85rem 1.3rem 1.1rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  figcaption strong { color: var(--ink); font-weight: 600; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    margin: 1.1rem 0 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .legend .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    color: var(--muted);
+  }
+
+  .legend .swatch {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    flex: none;
+  }
+
+  .swatch.aggregate { background: var(--aggregate); }
+  .swatch.entity { background: var(--entity); }
+  .swatch.vo { background: var(--vo); }
+  .swatch.external { background: var(--external); border: 1px dashed var(--muted); background: transparent; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+
+  .callout strong { font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  @media (min-width: 760px) {
+    .two-col { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+  }
+
+  footer a { color: var(--muted); }
+
+  ::selection { background: var(--accent-soft); }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span> BC Banco de Preguntas · Incremento 2 · Iteración 0 — Modelado</div>
+    <h1>Modelo de dominio, en diagramas</h1>
+    <p class="subtitle">
+      Complemento visual de <code>BC-banco-preguntas-modelo.md</code> — los tres aggregates
+      (<strong>Materia</strong>, <strong>Banco</strong>, <strong>PreguntaPlantilla</strong>), sus
+      relaciones, y el único ciclo de vida real del modelo: la baja lógica de una pregunta
+      (RF-04, RF-05, RF-06).
+    </p>
+    <div class="meta-row">
+      <span>Estado: <code>vigente</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-banco-preguntas-modelo.md</code></span>
+    </div>
+    <p class="subtitle" style="margin-top: 0.9rem;">
+      Actualizado 2026-08-26 tras verificar el modelo contra <code style="font-family: var(--font-mono);">src/banco_preguntas/</code>:
+      <code style="font-family: var(--font-mono);">CrearBanco</code> se fusionó en
+      <code style="font-family: var(--font-mono);">CrearMateria</code> (<code style="font-family: var(--font-mono);">US-2.1.1</code>),
+      y se agregan <code style="font-family: var(--font-mono);">fecha_creacion</code> y
+      <code style="font-family: var(--font-mono);">ListarMaterias</code>, ya implementados
+      (<code style="font-family: var(--font-mono);">US-ADJ-03</code>, <code style="font-family: var(--font-mono);">US-2.1.9</code>).
+    </p>
+  </header>
+
+  <main>
+
+    <section id="estructura">
+      <h2><span class="num">01</span> Estructura — tres aggregates encadenados por referencia</h2>
+      <p class="lede">
+        <code style="font-family: var(--font-mono);">Materia</code> → <code style="font-family: var(--font-mono);">Banco</code>
+        (1:1, INV-BP-01) → <code style="font-family: var(--font-mono);">PreguntaPlantilla</code> (1:N, sin
+        colección propia en <code style="font-family: var(--font-mono);">Banco</code> — §4 del modelo
+        escrito). Dos tipos concretos de pregunta, sin estructura de datos forzada en común
+        (RF-05).
+      </p>
+
+      <div class="legend">
+        <span class="item"><span class="swatch aggregate"></span>Aggregate Root</span>
+        <span class="item"><span class="swatch entity"></span>Entity</span>
+        <span class="item"><span class="swatch vo"></span>Value Object</span>
+        <span class="item"><span class="swatch external"></span>Externo, vía puerto (otro BC)</span>
+      </div>
+
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+classDiagram
+    class Materia {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        UUID id
+        string nombre — único
+    }
+
+    class Banco {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        UUID id
+        UUID materia_id
+    }
+
+    class PreguntaPlantillaOpcionMultiple {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        UUID id
+        UUID banco_id
+        string texto
+        list~Opcion~ opciones
+        string unidad_tematica
+        string tema
+        Dificultad dificultad
+        Importancia importancia
+        bool activa
+        datetime fecha_creacion
+    }
+
+    class PreguntaPlantillaVerdaderoFalso {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        UUID id
+        UUID banco_id
+        string texto
+        bool respuesta_correcta
+        string unidad_tematica
+        string tema
+        Dificultad dificultad
+        Importancia importancia
+        bool activa
+        datetime fecha_creacion
+    }
+
+    class Dificultad {
+        &lt;&lt;Value Object&gt;&gt;
+        Alto | Medio | Bajo
+    }
+
+    class Importancia {
+        &lt;&lt;Value Object&gt;&gt;
+        Alto | Medio | Bajo
+    }
+
+    class Comision {
+        &lt;&lt;externo — Identidad&gt;&gt;
+    }
+
+    Banco "1" ..> "1" Materia : materia_id — INV-BP-01
+    PreguntaPlantillaOpcionMultiple ..> Banco : banco_id
+    PreguntaPlantillaVerdaderoFalso ..> Banco : banco_id
+    PreguntaPlantillaOpcionMultiple ..> Dificultad : dificultad
+    PreguntaPlantillaOpcionMultiple ..> Importancia : importancia
+    PreguntaPlantillaVerdaderoFalso ..> Dificultad : dificultad
+    PreguntaPlantillaVerdaderoFalso ..> Importancia : importancia
+    Comision ..> Materia : materia_id, vía MateriaPort — US-2.1.2
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> <code style="font-family: var(--font-mono);">Banco</code> no
+          tiene colección propia de <code style="font-family: var(--font-mono);">PreguntaPlantilla</code> — cada
+          pregunta es un aggregate independiente que solo referencia <code style="font-family: var(--font-mono);">banco_id</code>,
+          para no cargar todo el banco al tocar una sola pregunta (§4/§5 punto 3 del modelo escrito).
+          <code style="font-family: var(--font-mono);">CrearMateria</code> crea la
+          <code style="font-family: var(--font-mono);">Materia</code> y su
+          <code style="font-family: var(--font-mono);">Banco</code> en la misma operación
+          (<code style="font-family: var(--font-mono);">US-2.1.1</code>) — no existe un comando
+          <code style="font-family: var(--font-mono);">CrearBanco</code> separado en la
+          implementación, aunque INV-BP-01 (1:1) sigue siendo la misma. La flecha punteada desde
+          <code style="font-family: var(--font-mono);">Comision</code> (BC Identidad) es la única
+          entrada externa al modelo — resuelta por <code style="font-family: var(--font-mono);">MateriaPort</code>,
+          nunca por import directo entre BCs.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="pregunta">
+      <h2><span class="num">02</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">PreguntaPlantilla</span></h2>
+      <div class="two-col">
+        <figure>
+          <div class="diagram-wrap">
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> Activa : CargarPreguntaOpcionMultiple\nCargarPreguntaVerdaderoFalso
+    Activa --> Activa : EditarPregunta\n(tipo no editable, reaplica INV-BP-02/03)
+    Activa --> Inactiva : EliminarPregunta\n(baja lógica, INV-BP-04)
+    Inactiva --> Inactiva : EliminarPregunta\n❌ PreguntaYaEliminada
+</pre>
+          </div>
+          <figcaption>
+            <strong>Lo que hay que ver acá:</strong> no hay borrado físico — <code style="font-family: var(--font-mono);">EliminarPregunta</code>
+            es terminal en los hechos (nada la reactiva en v1) pero técnicamente solo pone
+            <code style="font-family: var(--font-mono);">activa = false</code>. Una pregunta
+            <code style="font-family: var(--font-mono);">Inactiva</code> desaparece de
+            <code style="font-family: var(--font-mono);">FiltrarBanco</code> y de nuevas evaluaciones,
+            pero se preserva para no romper el historial de sesiones pasadas que ya la usaron.
+          </figcaption>
+        </figure>
+        <div class="callout">
+          <strong>Por qué no hay un ciclo de vida propio para Materia/Banco</strong>
+          Ninguno de los dos tiene estados — <code style="font-family: var(--font-mono);">Materia</code>
+          solo se crea (sin edición ni baja modelada) y <code style="font-family: var(--font-mono);">Banco</code>
+          es, en la práctica, poco más que el par <code style="font-family: var(--font-mono);">(id, materia_id)</code>
+          que ancla las preguntas de esa materia (§4 del modelo escrito) — su valor es dar
+          identidad estable, no acumular estado propio.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Cognión — BC Banco de Preguntas</span>
+    <span>Modelado en sesión con Víctor, 2026-07-31 · Diagramas agregados 2026-08-26</span>
+  </footer>
+
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: prefersDark ? "dark" : "default", securityLevel: "loose" });
+</script>

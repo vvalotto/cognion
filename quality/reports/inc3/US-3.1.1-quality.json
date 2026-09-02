@@ -1,0 +1,24 @@
+{
+  "us_id": "US-3.1.1",
+  "fecha": "2026-08-26T00:00:00Z",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.87,
+    "cc_max": 3,
+    "mi_min": 72.10,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard no está instalado en este entorno local — se usó pylint + radon directamente (las mismas herramientas que codeguard orquesta), acotado a los .py nuevos de src/actividad_evaluativa/.",
+    "Cobertura medida solo sobre entities/ (8 + 21 = 29 statements): frameworks/ está excluido del gate de coverage por [tool.coverage.run] omit en pyproject.toml (mismo criterio para todos los BCs). frameworks/ se valida con los 8 tests de integración contra la base local (tests/integration/inc3/), no por el gate de coverage.",
+    "Único warning de pylint: R0903 too-few-public-methods en EventoModel (clase ORM de datos pura) — mismo patrón preexistente y aceptado en MateriaModel/BancoModel/PreguntaPlantillaModel de Banco de Preguntas.",
+    "389/389 tests de la suite completa (unit + integration + step_defs) en verde, sin regresiones."
+  ]
+}
