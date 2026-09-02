@@ -40,6 +40,8 @@ const EVALUACION_API = {
   actividad_id: "a1",
   estudiante_id: "s1",
   preguntas_asignadas: [{ pregunta_id: "p1", orden: 1 }],
+  preguntas_respondidas: [],
+  respuestas_confirmadas: [],
   estado: "EnCurso",
   iniciada_en: "2026-08-30T10:00:00Z",
 }
@@ -205,6 +207,8 @@ describe("actividad-evaluativa-api", () => {
         actividadId: "a1",
         estudianteId: "s1",
         preguntasAsignadas: [{ preguntaId: "p1", orden: 1 }],
+        preguntasRespondidas: [],
+        respuestasConfirmadas: [],
         estado: "EnCurso",
         iniciadaEn: "2026-08-30T10:00:00Z",
       })

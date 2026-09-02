@@ -31,6 +31,7 @@ function evaluacionBody(overrides?: Partial<Record<string, unknown>>) {
     estudiante_id: "est-1",
     preguntas_asignadas: [preguntaOpcionMultiple("p1", 0), preguntaOpcionMultiple("p2", 1)],
     preguntas_respondidas: [],
+    respuestas_confirmadas: [],
     estado: "EnCurso",
     iniciada_en: "2026-09-01T00:00:00+00:00",
     ...overrides,
@@ -181,6 +182,88 @@ describe("RendirEvaluacion", () => {
     expect(await screen.findByText("Revisión")).toBeInTheDocument()
     const llamadaFinalizar = vi.mocked(fetch).mock.calls.at(-1)
     expect(llamadaFinalizar?.[0]).toContain(`/evaluaciones/${EVALUACION_ID}/finalizar`)
+  })
+
+  it("al volver a una pregunta ya respondida, muestra la selección confirmada y deshabilita los inputs", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(
+        200,
+        evaluacionBody({
+          preguntas_respondidas: ["p1"],
+          respuestas_confirmadas: [{ pregunta_id: "p1", contenido: { opcion_indice: 1 } }],
+        }),
+      ),
+    )
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 1")
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+
+    expect(await screen.findByText("Enunciado 0")).toBeInTheDocument()
+    const opcionB = screen.getByRole("radio", { name: "Opción B" })
+    expect(opcionB).toBeChecked()
+    expect(opcionB).toBeDisabled()
+    expect(screen.getByRole("radio", { name: "Opción A" })).toBeDisabled()
+  })
+
+  it("el botón sobre una pregunta ya respondida navega sin volver a registrar la respuesta", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(
+        200,
+        evaluacionBody({
+          preguntas_respondidas: ["p1"],
+          respuestas_confirmadas: [{ pregunta_id: "p1", contenido: { opcion_indice: 1 } }],
+        }),
+      ),
+    )
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 1")
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    await screen.findByText("Enunciado 0")
+
+    const llamadasAntes = vi.mocked(fetch).mock.calls.length
+    await user.click(screen.getByRole("button", { name: "Siguiente" }))
+
+    expect(await screen.findByText("Enunciado 1")).toBeInTheDocument()
+    expect(vi.mocked(fetch).mock.calls.length).toBe(llamadasAntes)
+  })
+
+  it("sobre la última pregunta ya respondida, el botón finaliza sin volver a registrar", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(
+        200,
+        evaluacionBody({
+          preguntas_respondidas: ["p1", "p2"],
+          respuestas_confirmadas: [
+            { pregunta_id: "p1", contenido: { opcion_indice: 0 } },
+            { pregunta_id: "p2", contenido: { opcion_indice: 1 } },
+          ],
+        }),
+      ),
+    )
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 1")
+
+    expect(screen.getByRole("button", { name: "Finalizar" })).toBeInTheDocument()
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, evaluacionBody({ estado: "Finalizada" })),
+    )
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Finalizar" }))
+
+    expect(await screen.findByText("Revisión")).toBeInTheDocument()
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
+    expect(ultimaLlamada?.[0]).toContain(`/evaluaciones/${EVALUACION_ID}/finalizar`)
+    expect(
+      vi.mocked(fetch).mock.calls.some((llamada) =>
+        String(llamada[0]).includes("/respuestas"),
+      ),
+    ).toBe(false)
   })
 
   it("una pregunta de Verdadero/Falso muestra las dos opciones fijas", async () => {
