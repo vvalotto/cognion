@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -26,16 +26,22 @@ export function ExtenderPlazo() {
   const [nuevaFechaCierre, setNuevaFechaCierre] = useState("")
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
   useEffect(() => {
-    if (!actividadId) return
-    let cancelado = false
-    obtenerActividad(actividadId).then((resultado) => {
-      if (!cancelado) setActividad(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!actividadId) return undefined
+    const controller = new AbortController()
+    obtenerActividad(actividadId, controller.signal)
+      .then((resultado) => setActividad(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [actividadId])
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -43,8 +49,13 @@ export function ExtenderPlazo() {
 
     if (!actividadId || !nuevaFechaCierre) return
     try {
-      await modificarPeriodoDisponibilidad(actividadId, nuevaFechaCierre)
+      await modificarPeriodoDisponibilidad(
+        actividadId,
+        nuevaFechaCierre,
+        controladorSubmitRef.current?.signal,
+      )
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 422) {
         setError(err.message)
         return

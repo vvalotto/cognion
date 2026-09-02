@@ -14,18 +14,17 @@ export function EvaluacionSuspendida() {
   const [cantidadRespondidas, setCantidadRespondidas] = useState(0)
 
   useEffect(() => {
-    if (!actividadId) return
-    let cancelado = false
+    if (!actividadId) return undefined
+    const controller = new AbortController()
 
-    iniciarEvaluacion(actividadId).then((resultado) => {
-      if (cancelado) return
-      setEvaluacionId(resultado.id)
-      setCantidadRespondidas(resultado.preguntasRespondidas.length)
-    })
+    iniciarEvaluacion(actividadId, controller.signal)
+      .then((resultado) => {
+        setEvaluacionId(resultado.id)
+        setCantidadRespondidas(resultado.preguntasRespondidas.length)
+      })
+      .catch(() => {})
 
-    return () => {
-      cancelado = true
-    }
+    return () => controller.abort()
   }, [actividadId])
 
   async function continuar() {

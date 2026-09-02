@@ -57,14 +57,12 @@ export function RevisionEvaluacion() {
   const [revision, setRevision] = useState<RevisionEvaluacionResponse | null>(null)
 
   useEffect(() => {
-    if (!evaluacionId) return
-    let cancelado = false
-    obtenerRevision(evaluacionId).then((resultado) => {
-      if (!cancelado) setRevision(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!evaluacionId) return undefined
+    const controller = new AbortController()
+    obtenerRevision(evaluacionId, controller.signal)
+      .then((resultado) => setRevision(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [evaluacionId])
 
   if (revision === null) {

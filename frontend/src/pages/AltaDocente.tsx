@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Button } from "@/components/ui/button"
@@ -23,6 +23,14 @@ export function AltaDocente() {
   const [confirmarPassword, setConfirmarPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
@@ -40,11 +48,13 @@ export function AltaDocente() {
       const response = await apiFetch<UsuarioResponse>("/usuarios", {
         method: "POST",
         body: { nombre, email, password, perfil: "docente" },
+        signal: controladorSubmitRef.current?.signal,
       })
       void navigate("/docentes/nuevo/exito", {
         state: { nombre: response.nombre, email: response.email },
       })
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 409) {
         setError("Ese email ya está registrado.")
         return

@@ -264,7 +264,10 @@ function mapearRevision(revision: RevisionEvaluacionApiResponse): RevisionEvalua
 
 /** Cliente API del BC Actividad Evaluativa — reutiliza `apiFetch` (JWT/401/403 de `US-1.1.6`). */
 
-export async function crearActividad(body: CrearActividadBody): Promise<ActividadResponse> {
+export async function crearActividad(
+  body: CrearActividadBody,
+  signal?: AbortSignal,
+): Promise<ActividadResponse> {
   const response = await apiFetch<ActividadApiResponse>("/actividades", {
     method: "POST",
     body: {
@@ -275,27 +278,40 @@ export async function crearActividad(body: CrearActividadBody): Promise<Activida
       cantidad_intentos_permitidos: body.cantidadIntentosPermitidos,
       titulo: body.titulo,
     },
+    signal,
   })
   return mapearActividad(response)
 }
 
-export async function listarActividades(materiaId: string): Promise<ActividadResumenResponse[]> {
+export async function listarActividades(
+  materiaId: string,
+  signal?: AbortSignal,
+): Promise<ActividadResumenResponse[]> {
   const params = new URLSearchParams({ materia_id: materiaId })
-  const response = await apiFetch<ActividadResumenApiResponse[]>(`/actividades?${params}`)
+  const response = await apiFetch<ActividadResumenApiResponse[]>(`/actividades?${params}`, {
+    signal,
+  })
   return response.map(mapearActividadResumen)
 }
 
-export async function obtenerActividad(actividadId: string): Promise<ActividadResumenResponse> {
-  const response = await apiFetch<ActividadResumenApiResponse>(`/actividades/${actividadId}`)
+export async function obtenerActividad(
+  actividadId: string,
+  signal?: AbortSignal,
+): Promise<ActividadResumenResponse> {
+  const response = await apiFetch<ActividadResumenApiResponse>(`/actividades/${actividadId}`, {
+    signal,
+  })
   return mapearActividadResumen(response)
 }
 
 export async function listarActividadesVisibles(
   materiaId: string,
+  signal?: AbortSignal,
 ): Promise<ActividadVisibleResponse[]> {
   const params = new URLSearchParams({ materia_id: materiaId })
   const response = await apiFetch<ActividadVisibleApiResponse[]>(
     `/actividades/mis-actividades?${params}`,
+    { signal },
   )
   return response.map(mapearActividadVisible)
 }
@@ -303,10 +319,12 @@ export async function listarActividadesVisibles(
 export async function modificarPeriodoDisponibilidad(
   actividadId: string,
   nuevaFechaCierre: string,
+  signal?: AbortSignal,
 ): Promise<ActividadResponse> {
   const response = await apiFetch<ActividadApiResponse>(`/actividades/${actividadId}/periodo`, {
     method: "PATCH",
     body: { nueva_fecha_cierre: nuevaFechaCierre },
+    signal,
   })
   return mapearActividad(response)
 }
@@ -314,25 +332,35 @@ export async function modificarPeriodoDisponibilidad(
 export async function modificarTitulo(
   actividadId: string,
   nuevoTitulo: string,
+  signal?: AbortSignal,
 ): Promise<ActividadResponse> {
   const response = await apiFetch<ActividadApiResponse>(`/actividades/${actividadId}/titulo`, {
     method: "PATCH",
     body: { nuevo_titulo: nuevoTitulo },
+    signal,
   })
   return mapearActividad(response)
 }
 
-export async function cerrarActividad(actividadId: string): Promise<ActividadResponse> {
+export async function cerrarActividad(
+  actividadId: string,
+  signal?: AbortSignal,
+): Promise<ActividadResponse> {
   const response = await apiFetch<ActividadApiResponse>(`/actividades/${actividadId}/cerrar`, {
     method: "POST",
+    signal,
   })
   return mapearActividad(response)
 }
 
-export async function iniciarEvaluacion(actividadId: string): Promise<EvaluacionResponse> {
+export async function iniciarEvaluacion(
+  actividadId: string,
+  signal?: AbortSignal,
+): Promise<EvaluacionResponse> {
   const response = await apiFetch<EvaluacionApiResponse>("/evaluaciones", {
     method: "POST",
     body: { actividad_id: actividadId },
+    signal,
   })
   return mapearEvaluacion(response)
 }
@@ -341,10 +369,11 @@ export async function registrarRespuesta(
   evaluacionId: string,
   preguntaId: string,
   contenido: Record<string, unknown>,
+  signal?: AbortSignal,
 ): Promise<RespuestaResponse> {
   const response = await apiFetch<RespuestaApiResponse>(
     `/evaluaciones/${evaluacionId}/respuestas`,
-    { method: "POST", body: { pregunta_id: preguntaId, contenido } },
+    { method: "POST", body: { pregunta_id: preguntaId, contenido }, signal },
   )
   return {
     id: response.id,
@@ -354,33 +383,46 @@ export async function registrarRespuesta(
   }
 }
 
-export async function suspenderEvaluacion(evaluacionId: string): Promise<EvaluacionResponse> {
+export async function suspenderEvaluacion(
+  evaluacionId: string,
+  signal?: AbortSignal,
+): Promise<EvaluacionResponse> {
   const response = await apiFetch<EvaluacionApiResponse>(
     `/evaluaciones/${evaluacionId}/suspender`,
-    { method: "POST" },
+    { method: "POST", signal },
   )
   return mapearEvaluacion(response)
 }
 
-export async function reanudarEvaluacion(evaluacionId: string): Promise<EvaluacionResponse> {
+export async function reanudarEvaluacion(
+  evaluacionId: string,
+  signal?: AbortSignal,
+): Promise<EvaluacionResponse> {
   const response = await apiFetch<EvaluacionApiResponse>(
     `/evaluaciones/${evaluacionId}/reanudar`,
-    { method: "POST" },
+    { method: "POST", signal },
   )
   return mapearEvaluacion(response)
 }
 
-export async function finalizarEvaluacion(evaluacionId: string): Promise<EvaluacionResponse> {
+export async function finalizarEvaluacion(
+  evaluacionId: string,
+  signal?: AbortSignal,
+): Promise<EvaluacionResponse> {
   const response = await apiFetch<EvaluacionApiResponse>(
     `/evaluaciones/${evaluacionId}/finalizar`,
-    { method: "POST" },
+    { method: "POST", signal },
   )
   return mapearEvaluacion(response)
 }
 
-export async function obtenerRevision(evaluacionId: string): Promise<RevisionEvaluacionResponse> {
+export async function obtenerRevision(
+  evaluacionId: string,
+  signal?: AbortSignal,
+): Promise<RevisionEvaluacionResponse> {
   const response = await apiFetch<RevisionEvaluacionApiResponse>(
     `/evaluaciones/${evaluacionId}/revision`,
+    { signal },
   )
   return mapearRevision(response)
 }

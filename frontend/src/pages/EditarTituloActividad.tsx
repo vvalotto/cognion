@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -24,30 +24,34 @@ export function EditarTituloActividad() {
   const [titulo, setTitulo] = useState("")
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
   useEffect(() => {
-    if (!actividadId) return
-    let cancelado = false
-    obtenerActividad(actividadId).then((resultado) => {
-      if (!cancelado) {
+    if (!actividadId) return undefined
+    const controller = new AbortController()
+    obtenerActividad(actividadId, controller.signal)
+      .then((resultado) => {
         setActividad(resultado)
         setTitulo(resultado.titulo)
-      }
-    })
-    return () => {
-      cancelado = true
-    }
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [actividadId])
 
   useEffect(() => {
-    if (!actividad) return
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === actividad.materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!actividad) return undefined
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === actividad.materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [actividad])
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -55,8 +59,9 @@ export function EditarTituloActividad() {
     if (!actividadId) return
 
     try {
-      await modificarTitulo(actividadId, titulo.trim())
+      await modificarTitulo(actividadId, titulo.trim(), controladorSubmitRef.current?.signal)
     } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 422) {
         setError(err.message)
         return
