@@ -9,7 +9,145 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-02
+
+### Added
+- [US-3.4.7] Estudiante finaliza su evaluación y ve la revisión completa, backend + frontend —
+  cierra completo el lado Estudiante de la Iteración 4 del Incremento 3
+  - Backend: `DetalleCorreccionPregunta` (+`opciones: list[str] | None`, mismo criterio que
+    `ContenidoPregunta.opciones`), poblado en `PreguntaConsultaPortInProcess.obtener_detalle_correccion()`
+    y propagado por `DetallePreguntaRevision`/`DetallePreguntaRevisionResponse` hasta
+    `GET /evaluaciones/{id}/revision`. Gap detectado en Fase 2, resuelto dentro de esta misma
+    US (mismo criterio que `US-2.1.9`/`US-2.2.8`/`US-ADJ-10`): sin este campo, el detalle de
+    opción múltiple solo traía `{opcion_indice: N}`, sin el texto real de la opción elegida —
+    el prototipo aprobado (`#est-revision`) muestra el texto, no el índice
+  - Frontend: `RevisionEvaluacion.tsx` (nueva, reemplaza el placeholder de `US-3.4.1` en
+    `/mis-actividades/evaluaciones/:evaluacionId/revision`) — resumen + detalle por pregunta,
+    resolviendo el texto de la respuesta propia/correcta desde `opciones`/`valor` sin conocer
+    el tipo concreto de pregunta. `RendirEvaluacion.tsx`: el botón de la última pregunta pasa
+    a "Confirmar y finalizar" y dispara `finalizarEvaluacion` + navegación a la revisión —
+    decisión de diseño porque el prototipo no define un botón "Finalizar" separado. 2 variantes
+    nuevas en `Badge` (`revision-correcta`/`revision-incorrecta`). `ActividadEvaluativaPlaceholder`
+    eliminado de `_placeholders.tsx` (código obsoleto, sin más rutas que lo referencien)
+  - 1 test de integración + 3 escenarios BDD nuevos backend (749→752 tests backend con
+    regresiones existentes en verde), 5 tests nuevos frontend (226/226 suite completa);
+    quality gates APROBADO (pylint 9.59/10, CC máx 7, MI mín 54.63, coverage 99%, codeguard
+    9/9 checks full, mypy limpio sobre `src/` completo)
+- [US-3.4.6] Estudiante rinde su evaluación — responde, pausa y reanuda, backend + frontend
+  - Backend: `PreguntaConsultaPort.obtener_contenido()` (nuevo, texto + opciones sin marcar
+    cuál es correcta — `ContenidoPregunta`), implementado en `PreguntaConsultaPortInProcess`;
+    `PreguntaAsignadaResponse` (+`enunciado`/`opciones`) y `EvaluacionResponse`
+    (+`preguntas_respondidas`) ampliados; `_a_response()` del router pasa a `async` y se
+    enriquece vía una dependencia FastAPI nueva y separada (`get_pregunta_consulta_port`),
+    no como 6ª dependencia de `EvaluacionesController` — evita repetir el patrón de CRITICAL
+    de CBO ya visto varias veces en el proyecto. Desvío documentado respecto de la spec: el
+    enriquecimiento vive en el router, no en `IniciarEvaluacionUseCase` (que devuelve la
+    entidad de dominio pura, sin conocer texto de preguntas)
+  - Frontend: `RendirEvaluacion.tsx` (nueva, reemplaza el placeholder de `US-3.4.1`) y
+    `EvaluacionSuspendida.tsx` (nueva, ruta nueva) — reusan íntegro el cliente API existente
+    (`iniciarEvaluacion`, `registrarRespuesta`, `suspenderEvaluacion`, `reanudarEvaluacion`),
+    sin agregar endpoints. Reconexión idempotente vía `iniciarEvaluacion` en ambas pantallas
+  - 7 tests unitarios + 3 integración + 5 BDD nuevos backend, 355+230+71 suites sin
+    regresiones; 10 tests nuevos frontend, 221/221 suite completa frontend; quality gates
+    APROBADO (pylint 9.97/10, CC máx 5, MI mín 66.68, coverage 99.78%, codeguard 9/9 checks
+    full — primera corrida con vulture/codespell realmente en PATH, ver observaciones del
+    reporte de calidad)
+- [US-3.4.5] Estudiante ve sus materias y las actividades disponibles — backend + frontend,
+  primer punto de entrada del Estudiante al frontend de Actividad Evaluativa
+  - Backend Identidad: `require_estudiante` (nuevo, hasta ahora solo existía en Actividad
+    Evaluativa), `ListarMateriasDelEstudianteUseCase` (resuelve `Estudiante.comision_id` →
+    `Comision.materia_id` → `MateriaPort`, reutilizado desde `US-2.1.2`), `EstudianteController`,
+    endpoint `GET /identidad/estudiante/materias`
+  - Backend Actividad Evaluativa: puerto nuevo y separado `EvaluacionEstudianteQueryPort`
+    (`existentes_finalizadas`, chequea solo el evento terminal `EvaluacionFinalizada` por
+    `aggregate_id` sin replay completo — no se ensancha `EvaluacionActivaQueryPort` de
+    `US-3.2.4`, mismo criterio command/query que evitó el CRITICAL de CBO en `US-2.1.2`/
+    `US-2.1.5`/`US-2.1.6`), `ListarActividadesVisiblesUseCase` (extiende
+    `ListarActividadesUseCase` de `US-3.4.2` con el `Badge` por-estudiante),
+    `ActividadesEstudianteController` (separado del controller de consulta docente),
+    `GET /actividades/mis-actividades` (rol `estudiante`, registrado antes de
+    `/{actividad_id}` para no chocar con esa ruta)
+  - Contradicción detectada contra el prototipo aprobado durante la implementación: el plan
+    original proponía 4 estados de `Badge` (agregando `"cerrada_sin_rendir"`); el prototipo
+    `actividad-evaluativa-periodo-abierto.html` (`#est-actividades`) solo define 3 — corregido
+    con Víctor, sin ese 4to estado (una actividad cerrada sin rendir se muestra como
+    "Pendiente de responder", mismo criterio que `EnCurso`/`Suspendida` no distinguidas; el
+    422 de `FueraDePeriodo` al intentar iniciar, `US-3.4.6`, resuelve ese caso)
+  - Frontend: `identidad-estudiante-api.ts` (nuevo), extensión de `actividad-evaluativa-api.ts`,
+    pantallas `MisMaterias.tsx`, `MisActividades.tsx`, `FueraDePeriodo.tsx` (reemplazan 2
+    placeholders de `US-3.4.1` + 1 ruta nueva), 3 variantes de `Badge` nuevas
+  - 11 tests unitarios + 6 integración + 5 BDD nuevos backend, 575+227+138 suites sin
+    regresiones; 10 tests nuevos frontend, 211/211 suite completa frontend; quality gates
+    APROBADO (pylint 9.81/10, CC máx 5, MI 83.2, coverage 99% backend / 89-92% en las
+    pantallas nuevas, oxlint 0 errores, `tsc --noEmit` 0 errores, codeguard 9/9 checks full)
+- [US-3.4.4] Docente ve el detalle de una actividad, extiende el plazo y la cierra manualmente
+  — backend + frontend
+  - Ajuste sobre la spec detectado en Fase 2: `ActividadResumen`/`ActividadResumenResponse`
+    (`US-3.4.2`) ya tenían todos los campos del detalle (preguntas, intentos, conteos) — se
+    reutilizan en vez de crear un `ActividadDetalle` redundante. Solo faltaba exponer
+    `cerrada_manualmente` en el borde de la API (schema + tipo TS), ya existía en el dominio.
+  - Backend: `ActividadQueryPort.obtener()` (nuevo), `ObtenerActividadUseCase` (lanza
+    `ActividadNoExiste` si no está, mismo patrón que `ObtenerCuentaUseCase`),
+    `ActividadesQueryController` con el use case nuevo inyectado, `GET /actividades/{id}`
+    (rol `docente`, 404 si no existe) — reutiliza `PATCH /periodo` (`US-3.3.1`) y
+    `POST /cerrar` (`US-3.3.2`) sin cambios
+  - Frontend: `obtenerActividad()`, pantallas `ActividadDetalle.tsx`, `ExtenderPlazo.tsx`,
+    `CerrarActividad.tsx` — reemplazan los 3 placeholders cableados desde `US-3.4.1`;
+    `CerrarActividad.tsx` sigue el mismo patrón visual que `EliminarPregunta.tsx`;
+    `ExtenderPlazo.tsx` muestra el 422 `NoSePuedeAcortarConEvaluacionesActivas` inline, mismo
+    criterio que `NuevaActividad.tsx`
+  - 6 tests unitarios + 5 integración + 4 BDD nuevos backend, 679/679 suite completa backend
+    sin regresiones; 11 tests nuevos frontend, 199/199 suite completa frontend; quality gates
+    APROBADO (pylint 9.84/10, CC máx 5, MI mín 54.63, coverage 100% backend / ~90-97% en las
+    pantallas nuevas, oxlint 0 errores, `tsc --noEmit` 0 errores)
+- [US-3.4.3] Docente crea una nueva actividad de período abierto — frontend puro, sin cambios
+  de backend (`POST /actividades` ya existía desde `US-3.1.2`)
+  - `NuevaActividad.tsx`: formulario con apertura/cierre/cantidad de preguntas/intentos
+    permitidos, sin campo de título (el prototipo `#doc-nueva-actividad` no lo incluye — la
+    materia es implícita por la navegación); hint dinámico con `cantidadPreguntasActivas` del
+    banco de la materia; validación de cliente de período (INV-AE-02) e intentos (INV-AE-03);
+    422 del backend (`PreguntasInsuficientes`, `PeriodoInvalido`, `CantidadIntentosInvalida`)
+    mostrado inline
+  - Reemplaza el placeholder de la ruta `/actividad-evaluativa/materias/:materiaId/actividades/nueva`
+    cableada desde `US-3.4.1`
+  - 5 tests nuevos (`NuevaActividad.test.tsx`), 188/188 suite completa frontend sin
+    regresiones, quality gates APROBADO (oxlint 0 errores, `tsc --noEmit` 0 errores, coverage
+    90.24% statements en el componente nuevo / 91.51% global)
+- [US-3.4.2] Docente ve sus materias y el listado de actividades de una materia — primera
+  pantalla real de la Iteración 4 del Incremento 3 (backend + frontend)
+  - Gap detectado y resuelto con Víctor: `titulo` (opcional, default `""`) agregado a
+    `ActividadEvaluativaPeriodoAbierto`/evento/Use Case/schemas — el prototipo/wireframe lo
+    pedían pero el dominio no lo tenía; opcional para no romper los fixtures de `US-3.1.2` a
+    `US-3.3.2`
+  - `ActividadQueryPort`/`ActividadResumen` (nuevo), `ListarActividadesUseCase`,
+    `SQLAlchemyActividadQueryRepository` (agrupa `events` en memoria, reutiliza
+    `ActividadEvaluativaPeriodoAbierto.reconstruir()`, cuenta evaluaciones activas y
+    finalizadas), `ActividadesQueryController` separado de `ActividadesController`
+    (command/query, mismo criterio ya aplicado 5 veces en el proyecto), `GET
+    /actividades?materia_id=` con estado derivado (`en_curso`/`programada`/`cerrada`)
+  - Frontend: `listarActividades()`, 3 variantes nuevas de `Badge`, pantallas
+    `MateriasActividades.tsx`/`Actividades.tsx` reemplazando los placeholders de `US-3.4.1`
+  - 293/293 tests nuevos del Incremento 3, 664/664 suite completa backend, 183/183 frontend,
+    quality gates APROBADO (pylint 9.59/10, CC rank A, coverage 100% backend / 91.57%
+    statements frontend)
+- [US-3.4.1] Infraestructura de frontend de Actividad Evaluativa — primera US de la Iteración
+  4 del Incremento 3 (frontend), bloquea `US-3.4.2` a `US-3.4.7`
+  - `actividad-evaluativa-api.ts`: cliente API tipado con las 9 funciones que envuelven los
+    endpoints ya implementados en las Iteraciones 1-3 (`crearActividad`,
+    `modificarPeriodoDisponibilidad`, `cerrarActividad`, `iniciarEvaluacion`,
+    `registrarRespuesta`, `suspenderEvaluacion`, `reanudarEvaluacion`, `finalizarEvaluacion`,
+    `obtenerRevision`), reutiliza `apiFetch` (JWT/401/403 de `US-1.1.6`)
+  - 10 rutas nuevas en `router.tsx`: 6 bajo `/actividad-evaluativa/*` (rol `docente`) y 4 bajo
+    `/mis-actividades/*` (rol `estudiante`, primer uso de ese rol en `RequireRole`), todas con
+    `ActividadEvaluativaPlaceholder` hasta que `US-3.4.2` a `US-3.4.7` las reemplacen
+  - Sin gap de backend (a diferencia de `US-2.1.8`) — los 9 endpoints consumidos ya existían
+  - 178/178 tests frontend, oxlint 0 errores, `tsc --noEmit` 0 errores, cobertura global 94.01%
+
 ## [0.4.0] - 2026-08-23
+
+> Tag `v0.4.0` y merge `develop → main` ejecutados el 2026-08-24 (commit `e31ee67`), junto con
+> `v0.3.0`, a pedido explícito de Víctor — deploy real a un entorno sigue pendiente de decisión
+> institucional, sin relación con este merge (`cd.yml` solo construye la imagen Docker).
 
 ### Added
 - **Ajuste UX en vivo post-`SP-ADJ-01`** (PRs #120/#121, sin US formal — track informal por
@@ -381,6 +519,10 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   proyecto verificados en verde tras el refactor.
 
 ## [0.3.0] - 2026-07-29
+
+> Tag `v0.3.0` taggeado retroactivamente el 2026-08-24 sobre el commit real de cierre
+> (`75e0de9`), junto con el merge `develop → main` que también cerró `v0.4.0` — ver nota en
+> `[0.4.0]`.
 
 ### Added
 - [US-1.1.9] Administrador da de alta un Docente desde la UI — BC Identidad

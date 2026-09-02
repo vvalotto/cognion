@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Actividad Evaluativa, Período Abierto (Incremento 3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Mismos tokens que identidad-cuentas-administracion.html y
+    banco-preguntas-carga-filtrado.html (paleta institucional UNER, tipografía
+    Roboto) — continuidad visual entre BCs e iteraciones.
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --warning: #b5791d;
+    --warning-bg: #fdf5e8;
+    --warning-border: #f0ddb3;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+  .proto-nav .sep { width: 1px; align-self: stretch; background: rgba(255,255,255,0.24); margin: 0 2px; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .app-body { padding: 28px 16px 60px; max-width: 900px; margin: 0 auto; }
+  .app-body.narrow { max-width: 560px; }
+  .breadcrumb { font-size: 12px; color: var(--muted-foreground); margin-bottom: 6px; }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .page-subtitle { font-size: 14px; color: var(--muted-foreground); margin: 0 0 24px; }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.outline { background: var(--background); color: var(--foreground); border: 1px solid var(--border); }
+  .btn.destructive { background: var(--destructive); color: #fff; }
+  .btn.accent { background: var(--accent); color: #fff; }
+  .btn.full { width: 100%; }
+  .btn.sm { padding: 6px 12px; font-size: 12px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .form-card, .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .result-card { max-width: 480px; margin: 40px auto 0; text-align: center; }
+
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+  }
+  .field .hint { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+  .field-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .field-row .field { flex: 1; min-width: 180px; }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  .center-icon { text-align: center; font-size: 40px; margin-bottom: 8px; }
+
+  .alert {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    text-align: left;
+  }
+  .alert.destructive { background: var(--destructive-bg); border-color: var(--destructive-border); color: #7f1d1d; }
+  .alert.success { background: var(--success-bg); border-color: var(--success-border); color: #14532d; }
+  .alert.warning { background: var(--warning-bg); border-color: var(--warning-border); color: #7a5210; }
+  .alert .icon { flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .alert .body strong { display: block; margin-bottom: 2px; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+
+  /* Cards de listado (US-ADJ-01) */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+    cursor: pointer;
+  }
+  .card:hover { border-color: var(--primary); }
+  .card .card-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .card .card-meta { font-size: 12px; color: var(--muted-foreground); margin-bottom: 10px; }
+  .card .card-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .badge.disponible { background: var(--success-bg); color: #14532d; }
+  .badge.pendiente { background: var(--warning-bg); color: #7a5210; }
+  .badge.fuera-periodo { background: var(--muted); color: var(--muted-foreground); }
+  .badge.finalizada { background: #eaf2f8; color: var(--primary-dark); }
+  .badge.suspendida { background: var(--warning-bg); color: #7a5210; }
+  .badge.cerrada { background: var(--destructive-bg); color: #7f1d1d; }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--muted-foreground); }
+  .detail-row .v { font-weight: 500; text-align: right; }
+
+  /* Toma del examen */
+  .progress-bar { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+  .progress-bar .fill { height: 100%; background: var(--accent); }
+  .progress-label { font-size: 12px; color: var(--muted-foreground); margin-bottom: 20px; display: flex; justify-content: space-between; }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+  }
+  .question-text { font-size: 16px; font-weight: 500; margin-bottom: 18px; }
+  .opcion-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 8px; cursor: pointer; font-size: 14px;
+  }
+  .opcion-row:hover { border-color: var(--primary); }
+  .opcion-row.selected { border-color: var(--primary); background: #eaf2f8; }
+  .opcion-row input[type="radio"] { flex-shrink: 0; width: 16px; height: 16px; accent-color: var(--accent); }
+  .opcion-row.correcta { border-color: var(--success); background: var(--success-bg); }
+  .opcion-row.incorrecta { border-color: var(--destructive); background: var(--destructive-bg); }
+  .opcion-row .resultado-icon { margin-left: auto; font-weight: 700; }
+
+  .exam-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 10px; flex-wrap: wrap; }
+  .exam-nav .dots { display: flex; gap: 6px; flex-wrap: wrap; }
+  .exam-nav .dot {
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--muted-foreground); background: var(--card);
+  }
+  .exam-nav .dot.respondida { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .exam-nav .dot.actual { border-color: var(--primary); color: var(--primary); font-weight: 700; }
+
+  .review-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .review-item .rq-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+  .review-item .rq-text { font-weight: 500; font-size: 14px; }
+  .review-item .rq-resp { font-size: 13px; margin: 4px 0; }
+  .review-item .rq-resp.ok { color: #14532d; }
+  .review-item .rq-resp.error { color: #7f1d1d; }
+  .review-item .rq-correcta { font-size: 13px; color: var(--muted-foreground); }
+
+  .summary-bar {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 20px;
+  }
+  .summary-bar .stat { text-align: center; }
+  .summary-bar .stat .n { font-size: 22px; font-weight: 700; }
+  .summary-bar .stat .l { font-size: 11px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
+  .summary-bar .stat.ok .n { color: var(--success); }
+  .summary-bar .stat.error .n { color: var(--destructive); }
+
+  @media (max-width: 560px) {
+    .detail-row { flex-direction: column; gap: 2px; }
+    .detail-row .v { text-align: left; }
+    .card-grid { grid-template-columns: 1fr; }
+    .field-row { flex-direction: column; gap: 0; }
+    .summary-bar { justify-content: space-around; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>Inc.3 It.0 — Prototipo:</strong>
+  <button data-target="doc-materias" class="active">1. Docente — Materias</button>
+  <button data-target="doc-actividades">2. Actividades</button>
+  <button data-target="doc-nueva-actividad">3. Nueva actividad</button>
+  <button data-target="doc-detalle-actividad">4. Detalle de actividad</button>
+  <button data-target="doc-extender-plazo">5. Extender plazo</button>
+  <button data-target="doc-cerrar-actividad">6. Cerrar actividad</button>
+  <span class="sep"></span>
+  <button data-target="est-materias">7. Estudiante — Materias</button>
+  <button data-target="est-actividades">8. Actividades</button>
+  <button data-target="est-fuera-periodo">9. Fuera de período</button>
+  <button data-target="est-rendir">10. Rendir evaluación</button>
+  <button data-target="est-suspendida">11. Evaluación suspendida</button>
+  <button data-target="est-revision">12. Revisión al finalizar</button>
+</nav>
+
+<!-- 1. DOCENTE — MIS MATERIAS -->
+<section class="screen active" id="doc-materias">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; <span class="current">Mis materias</span></div>
+    <h1 class="page-title">Mis materias</h1>
+    <p class="page-subtitle">Elegí una materia para ver y gestionar sus actividades de período abierto.</p>
+
+    <div class="card-grid">
+      <div class="card" onclick="go('doc-actividades')">
+        <div class="card-title">📘 Ingeniería de Software</div>
+        <div class="card-meta">Comisión A</div>
+        <div class="card-foot">
+          <span style="font-size:12px; color:var(--muted-foreground);">1 actividad en curso</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📘 Gestión de Proyectos</div>
+        <div class="card-meta">Comisión única</div>
+        <div class="card-foot">
+          <span style="font-size:12px; color:var(--muted-foreground);">0 actividades en curso</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ESTUDIANTE — MIS MATERIAS -->
+<section class="screen" id="est-materias">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; <span class="current">Mis materias</span></div>
+    <h1 class="page-title">Mis materias</h1>
+    <p class="page-subtitle">Materias de tu comisión — elegí una para ver sus actividades.</p>
+
+    <div class="card-grid">
+      <div class="card" onclick="go('est-actividades')">
+        <div class="card-title">📘 Ingeniería de Software</div>
+        <div class="card-meta">Comisión A</div>
+        <div class="card-foot">
+          <span class="badge disponible">1 pendiente</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📘 Gestión de Proyectos</div>
+        <div class="card-meta">Comisión única</div>
+        <div class="card-foot">
+          <span class="badge fuera-periodo">Sin actividades disponibles</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1. DOCENTE — LISTADO DE ACTIVIDADES -->
+<section class="screen" id="doc-actividades">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Actividades</span></div>
+    <div class="toolbar">
+      <div>
+        <h1 class="page-title" style="margin-bottom:2px;">Actividades de período abierto</h1>
+        <p class="page-subtitle" style="margin-bottom:0;">3 actividades</p>
+      </div>
+      <button class="btn" onclick="go('doc-nueva-actividad')">+ Nueva actividad</button>
+    </div>
+
+    <div class="card-grid">
+      <div class="card" onclick="go('doc-detalle-actividad')">
+        <div class="card-title">Parcial 1 — Unidades 1 a 3</div>
+        <div class="card-meta">Abre 20/09 09:00 · Cierra 27/09 23:59</div>
+        <div class="card-foot">
+          <span class="badge disponible">En curso</span>
+          <span style="font-size:12px; color:var(--muted-foreground);">18 evaluaciones activas</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Repaso Unidad 4</div>
+        <div class="card-meta">Abre 05/10 00:00 · Cierra 08/10 23:59</div>
+        <div class="card-foot">
+          <span class="badge pendiente">Programada</span>
+          <span style="font-size:12px; color:var(--muted-foreground);">0 evaluaciones</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Autoevaluación Unidad 1</div>
+        <div class="card-meta">Abre 01/08 00:00 · Cierra 10/08 23:59</div>
+        <div class="card-foot">
+          <span class="badge cerrada">Cerrada</span>
+          <span style="font-size:12px; color:var(--muted-foreground);">41 evaluaciones finalizadas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. DOCENTE — NUEVA ACTIVIDAD -->
+<section class="screen" id="doc-nueva-actividad">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; <span class="current">Nueva actividad</span></div>
+    <h1 class="page-title">Nueva actividad de período abierto</h1>
+    <p class="page-subtitle">Materia: Ingeniería de Software</p>
+
+    <div class="form-card">
+      <div class="field-row">
+        <div class="field">
+          <label>Apertura (fecha y hora)</label>
+          <input type="datetime-local" value="2026-09-20T09:00">
+        </div>
+        <div class="field">
+          <label>Cierre (fecha y hora)</label>
+          <input type="datetime-local" value="2026-09-27T23:59">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Cantidad de preguntas</label>
+          <input type="number" value="10" min="1">
+          <div class="hint">No puede superar la cantidad de preguntas activas del banco de la materia (68 disponibles)</div>
+        </div>
+        <div class="field">
+          <label>Intentos permitidos por pregunta</label>
+          <input type="number" value="1" min="1">
+          <div class="hint">Por defecto 1 — cuántas veces puede responder la misma pregunta</div>
+        </div>
+      </div>
+      <div class="hint" style="margin-bottom:16px;">Cada estudiante recibe un set aleatorio distinto, tomado del banco de preguntas de la materia.</div>
+      <div class="form-actions">
+        <button class="btn" onclick="go('doc-detalle-actividad')">Crear actividad</button>
+        <button class="btn outline" onclick="go('doc-actividades')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. DOCENTE — DETALLE DE ACTIVIDAD -->
+<section class="screen" id="doc-detalle-actividad">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; <span class="current">Parcial 1 — Unidades 1 a 3</span></div>
+    <h1 class="page-title">Parcial 1 — Unidades 1 a 3</h1>
+    <p class="page-subtitle"><span class="badge disponible">En curso</span></p>
+
+    <div class="form-card" style="margin-bottom:20px;">
+      <div class="detail-row"><span class="k">Apertura</span><span class="v">20/09/2026 09:00</span></div>
+      <div class="detail-row"><span class="k">Cierre</span><span class="v">27/09/2026 23:59</span></div>
+      <div class="detail-row"><span class="k">Cantidad de preguntas</span><span class="v">10</span></div>
+      <div class="detail-row"><span class="k">Intentos permitidos</span><span class="v">1</span></div>
+      <div class="detail-row"><span class="k">Evaluaciones activas</span><span class="v">18 (en curso o suspendidas)</span></div>
+      <div class="detail-row"><span class="k">Evaluaciones finalizadas</span><span class="v">6</span></div>
+    </div>
+
+    <div class="form-actions" style="margin-bottom:8px;">
+      <button class="btn outline full" onclick="go('doc-extender-plazo')">Extender plazo</button>
+    </div>
+    <div class="form-actions">
+      <button class="btn destructive full" onclick="go('doc-cerrar-actividad')">Cerrar actividad ahora</button>
+    </div>
+    <p class="field hint" style="text-align:center; margin-top:8px;">"Extender plazo" solo permite mover el cierre hacia adelante. Para acortarlo, no puede haber estudiantes con evaluaciones activas.</p>
+  </div>
+</section>
+
+<!-- 4. DOCENTE — EXTENDER PLAZO -->
+<section class="screen" id="doc-extender-plazo">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; Parcial 1 &nbsp;›&nbsp; <span class="current">Extender plazo</span></div>
+    <h1 class="page-title">Modificar período de disponibilidad</h1>
+    <p class="page-subtitle">Parcial 1 — Unidades 1 a 3</p>
+
+    <div class="form-card">
+      <div class="alert warning">
+        <span class="icon">ℹ</span>
+        <div class="body">
+          <strong>Tiene efecto inmediato</strong>
+          Los 18 estudiantes con evaluaciones en curso o suspendidas pueden seguir respondiendo hasta el nuevo cierre.
+        </div>
+      </div>
+      <div class="field">
+        <label>Cierre actual</label>
+        <input type="text" value="27/09/2026 23:59" disabled>
+      </div>
+      <div class="field">
+        <label>Nuevo cierre</label>
+        <input type="datetime-local" value="2026-09-29T23:59">
+        <div class="hint">Solo se puede acortar si no hay evaluaciones activas para esta actividad — no es el caso ahora (18 activas)</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn" onclick="go('doc-detalle-actividad')">Guardar nuevo cierre</button>
+        <button class="btn outline" onclick="go('doc-detalle-actividad')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. DOCENTE — CERRAR ACTIVIDAD -->
+<section class="screen" id="doc-cerrar-actividad">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; Parcial 1 &nbsp;›&nbsp; <span class="current">Cerrar actividad</span></div>
+    <h1 class="page-title">Cerrar actividad ahora</h1>
+    <p class="page-subtitle">Parcial 1 — Unidades 1 a 3</p>
+
+    <div class="form-card">
+      <div class="alert destructive">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Acción terminal, no se puede deshacer</strong>
+          Las 18 evaluaciones en curso o suspendidas se finalizan de inmediato, tal como están respondidas hasta ahora. No se puede volver a abrir esta actividad ni extender su plazo después.
+        </div>
+      </div>
+      <p style="font-size:13px; color:var(--muted-foreground); margin-bottom:20px;">Usalo cuando la actividad ya cumplió su propósito antes de lo previsto (ej. toda la clase ya respondió) — la mayoría de las actividades no necesita esta acción y simplemente llega a su fecha de cierre.</p>
+      <div class="form-actions">
+        <button class="btn destructive full" onclick="go('doc-detalle-actividad')">Sí, cerrar actividad ahora</button>
+      </div>
+      <div class="form-actions">
+        <button class="btn outline full" onclick="go('doc-detalle-actividad')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. ESTUDIANTE — LISTADO DE ACTIVIDADES -->
+<section class="screen" id="est-actividades">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Actividades</span></div>
+    <h1 class="page-title">Actividades de período abierto</h1>
+    <p class="page-subtitle">Comisión A</p>
+
+    <div class="card-grid">
+      <div class="card" onclick="go('est-rendir')">
+        <div class="card-title">Parcial 1 — Unidades 1 a 3</div>
+        <div class="card-meta">Disponible hasta el 27/09 23:59</div>
+        <div class="card-foot">
+          <span class="badge disponible">Pendiente de responder</span>
+        </div>
+      </div>
+      <div class="card" onclick="go('est-fuera-periodo')">
+        <div class="card-title">Repaso Unidad 4</div>
+        <div class="card-meta">Abre el 05/10 00:00</div>
+        <div class="card-foot">
+          <span class="badge fuera-periodo">Todavía no abrió</span>
+        </div>
+      </div>
+      <div class="card" onclick="go('est-revision')">
+        <div class="card-title">Autoevaluación Unidad 1</div>
+        <div class="card-meta">Finalizada el 09/08</div>
+        <div class="card-foot">
+          <span class="badge finalizada">Finalizada — ver revisión</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ESTUDIANTE — FUERA DE PERÍODO -->
+<section class="screen" id="est-fuera-periodo">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; <span class="current">Repaso Unidad 4</span></div>
+    <h1 class="page-title">Repaso Unidad 4</h1>
+
+    <div class="result-card">
+      <div class="center-icon" style="color: var(--muted-foreground);">🕒</div>
+      <h2 style="margin:0 0 8px; font-size:18px;">Todavía no está disponible</h2>
+      <p style="font-size:13px; color:var(--muted-foreground); margin-bottom:0;">Esta actividad abre el <strong>05/10/2026 a las 00:00</strong>. Volvé a entrar a partir de ese momento.</p>
+    </div>
+
+    <p style="font-size:12px; color:var(--muted-foreground); text-align:center; margin-top:16px;">
+      El mismo mensaje aparece si volvés a entrar <strong>después</strong> del cierre y nunca iniciaste la evaluación — en ese caso indica que el período ya terminó.
+    </p>
+  </div>
+</section>
+
+<!-- 8. ESTUDIANTE — RENDIR EVALUACIÓN -->
+<section class="screen" id="est-rendir">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><button class="btn outline sm" onclick="go('est-suspendida')">Pausar y salir</button></div>
+  </div>
+  <div class="app-body narrow">
+    <h1 class="page-title" style="margin-bottom:2px;">Parcial 1 — Unidades 1 a 3</h1>
+    <p class="page-subtitle">Pregunta 4 de 10</p>
+
+    <div class="progress-bar"><div class="fill" style="width:40%"></div></div>
+    <div class="progress-label"><span>3 respondidas</span><span>Cierra 27/09 23:59</span></div>
+
+    <div class="question-card">
+      <div class="question-text">¿Cuál de los siguientes NO es un principio SOLID?</div>
+      <label class="opcion-row"><input type="radio" name="q4"> Responsabilidad única</label>
+      <label class="opcion-row selected"><input type="radio" name="q4" checked> Herencia múltiple obligatoria</label>
+      <label class="opcion-row"><input type="radio" name="q4"> Inversión de dependencias</label>
+      <label class="opcion-row"><input type="radio" name="q4"> Sustitución de Liskov</label>
+    </div>
+
+    <div class="exam-nav">
+      <div class="dots">
+        <span class="dot respondida">1</span><span class="dot respondida">2</span><span class="dot respondida">3</span>
+        <span class="dot actual">4</span><span class="dot">5</span><span class="dot">6</span><span class="dot">7</span><span class="dot">8</span><span class="dot">9</span><span class="dot">10</span>
+      </div>
+    </div>
+    <div class="form-actions" style="margin-top:14px;">
+      <button class="btn outline">Anterior</button>
+      <button class="btn">Confirmar y siguiente</button>
+    </div>
+    <p class="field hint" style="text-align:center; margin-top:10px;">Cada respuesta se guarda apenas la confirmás — si se corta la conexión, no perdés lo ya respondido.</p>
+  </div>
+</section>
+
+<!-- 9. ESTUDIANTE — EVALUACIÓN SUSPENDIDA -->
+<section class="screen" id="est-suspendida">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <h1 class="page-title">Parcial 1 — Unidades 1 a 3</h1>
+
+    <div class="result-card">
+      <div class="center-icon" style="color: var(--warning);">⏸</div>
+      <h2 style="margin:0 0 8px; font-size:18px;">Evaluación en pausa</h2>
+      <p style="font-size:13px; color:var(--muted-foreground); margin-bottom:20px;">
+        Guardamos tus 3 respuestas. Tocá "Continuar" para retomar desde la pregunta 4 — el resto del set no cambia.
+      </p>
+      <button class="btn full" onclick="go('est-rendir')">Continuar</button>
+    </div>
+
+    <div class="alert warning" style="margin-top:16px;">
+      <span class="icon">ℹ</span>
+      <div class="body">
+        <strong>También pasa automáticamente</strong>
+        Si te quedás inactivo sin responder por un rato largo, el sistema pausa la evaluación por vos — no perdés nada, solo tenés que volver a tocar "Continuar".
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. ESTUDIANTE — REVISIÓN AL FINALIZAR -->
+<section class="screen" id="est-revision">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; <span class="current">Autoevaluación Unidad 1 — Revisión</span></div>
+    <h1 class="page-title" style="margin-bottom:2px;">Autoevaluación Unidad 1</h1>
+    <p class="page-subtitle">Finalizada el 09/08/2026 · Revisión completa</p>
+
+    <div class="summary-bar">
+      <div class="stat ok"><div class="n">7</div><div class="l">Correctas</div></div>
+      <div class="stat error"><div class="n">3</div><div class="l">Incorrectas</div></div>
+      <div class="stat"><div class="n">10</div><div class="l">Total</div></div>
+    </div>
+
+    <div class="review-item">
+      <div class="rq-head">
+        <div class="rq-text">1. ¿Cuál de los siguientes NO es un principio SOLID?</div>
+        <span class="badge disponible">Correcta</span>
+      </div>
+      <div class="rq-resp ok">Tu respuesta: Herencia múltiple obligatoria</div>
+    </div>
+
+    <div class="review-item">
+      <div class="rq-head">
+        <div class="rq-text">2. El patrón Repository pertenece a la capa de infraestructura.</div>
+        <span class="badge cerrada">Incorrecta</span>
+      </div>
+      <div class="rq-resp error">Tu respuesta: Verdadero</div>
+      <div class="rq-correcta">Respuesta correcta: Falso — el puerto vive en <code>entities</code>, solo la implementación concreta está en <code>frameworks</code>.</div>
+    </div>
+
+    <div class="review-item">
+      <div class="rq-head">
+        <div class="rq-text">3. ¿Qué principio establece que los módulos de alto nivel no deben depender de módulos de bajo nivel?</div>
+        <span class="badge disponible">Correcta</span>
+      </div>
+      <div class="rq-resp ok">Tu respuesta: Inversión de dependencias</div>
+    </div>
+
+    <p style="font-size:12px; color:var(--muted-foreground); text-align:center; margin-top:8px;">… resto de las 10 preguntas, mismo formato.</p>
+  </div>
+</section>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+</script>
+
+</body>
+</html>

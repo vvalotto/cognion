@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "us_id": "US-3.2.4",
+    "us_title": "VerificadorDeVencimientos - suspension y finalizacion automaticas",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-08-27T21:11:24.412602+00:00",
+    "completed_at": "2026-08-27T21:47:06.711705+00:00",
+    "total_elapsed_seconds": 2142,
+    "effective_seconds": 2142,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validacion de Contexto",
+      "started_at": "2026-08-27T21:11:42.564219+00:00",
+      "completed_at": "2026-08-27T21:17:21.587126+00:00",
+      "elapsed_seconds": 339,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generacion de Escenarios BDD",
+      "started_at": "2026-08-27T21:17:36.649180+00:00",
+      "completed_at": "2026-08-27T21:18:05.680365+00:00",
+      "elapsed_seconds": 29,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generacion del Plan de Implementacion",
+      "started_at": "2026-08-27T21:18:38.935741+00:00",
+      "completed_at": "2026-08-27T21:19:51.308024+00:00",
+      "elapsed_seconds": 72,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementacion Guiada por Tareas",
+      "started_at": "2026-08-27T21:19:59.308986+00:00",
+      "completed_at": "2026-08-27T21:27:04.177204+00:00",
+      "elapsed_seconds": 424,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "EvaluacionActivaQueryPort",
+          "task_type": "port",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-27T21:20:11.015868+00:00",
+          "completed_at": "2026-08-27T21:20:24.455907+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -9.78,
+          "file_created": "src/actividad_evaluativa/entities/ports/evaluacion_activa_query_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Extender SuspenderEvaluacionUseCase y FinalizarEvaluacionUseCase con actor",
+          "task_type": "use_case",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-27T21:20:28.171254+00:00",
+          "completed_at": "2026-08-27T21:22:31.015301+00:00",
+          "elapsed_seconds": 122,
+          "actual_minutes": 2.03,
+          "variance_minutes": -17.97,
+          "file_created": "suspender_evaluacion.py, finalizar_evaluacion.py, evaluaciones_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "VerificarVencimientosUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-27T21:22:31.403432+00:00",
+          "completed_at": "2026-08-27T21:23:12.480336+00:00",
+          "elapsed_seconds": 41,
+          "actual_minutes": 0.68,
+          "variance_minutes": -24.32,
+          "file_created": "src/actividad_evaluativa/use_cases/verificar_vencimientos.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "SQLAlchemyEvaluacionActivaQueryRepository",
+          "task_type": "repository",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-08-27T21:23:16.975873+00:00",
+          "completed_at": "2026-08-27T21:23:53.471605+00:00",
+          "elapsed_seconds": 36,
+          "actual_minutes": 0.6,
+          "variance_minutes": -24.4,
+          "file_created": "src/actividad_evaluativa/frameworks/adapters/evaluacion_activa_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Settings verificador de vencimientos",
+          "task_type": "config",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-08-27T21:23:57.308732+00:00",
+          "completed_at": "2026-08-27T21:24:06.765329+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -4.85,
+          "file_created": "src/settings.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "build_verificar_vencimientos_use_case factory",
+          "task_type": "dependencies",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-08-27T21:24:10.806343+00:00",
+          "completed_at": "2026-08-27T21:24:46.153325+00:00",
+          "elapsed_seconds": 35,
+          "actual_minutes": 0.58,
+          "variance_minutes": -9.42,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Background task del VerificadorDeVencimientos en app.py",
+          "task_type": "integration",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-08-27T21:24:50.330920+00:00",
+          "completed_at": "2026-08-27T21:26:51.752482+00:00",
+          "elapsed_seconds": 121,
+          "actual_minutes": 2.02,
+          "variance_minutes": -17.98,
+          "file_created": "src/app.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-08-27T21:27:13.725154+00:00",
+      "completed_at": "2026-08-27T21:31:19.107776+00:00",
+      "elapsed_seconds": 245,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integracion",
+      "started_at": "2026-08-27T21:31:41.775580+00:00",
+      "completed_at": "2026-08-27T21:34:35.013861+00:00",
+      "elapsed_seconds": 173,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validacion BDD",
+      "started_at": "2026-08-27T21:34:55.760290+00:00",
+      "completed_at": "2026-08-27T21:38:31.758447+00:00",
+      "elapsed_seconds": 215,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-08-27T21:38:41.138037+00:00",
+      "completed_at": "2026-08-27T21:44:11.712470+00:00",
+      "elapsed_seconds": 330,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualizacion de Documentacion",
+      "started_at": "2026-08-27T21:44:30.505424+00:00",
+      "completed_at": "2026-08-27T21:45:47.609600+00:00",
+      "elapsed_seconds": 77,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-08-27T21:45:57.318683+00:00",
+      "completed_at": "2026-08-27T21:47:06.512023+00:00",
+      "elapsed_seconds": 69,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 7,
+    "completed_tasks": 7,
+    "total_phases": 10,
+    "estimated_total_minutes": 115.0,
+    "actual_total_minutes": 6.28,
+    "variance_minutes": -108.72,
+    "variance_percent": -94.54
+  }
+}

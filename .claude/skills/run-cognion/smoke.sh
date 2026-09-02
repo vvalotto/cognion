@@ -9,9 +9,13 @@
 # de opción múltiple y de verdadero/falso, filtrado, edición y baja lógica),
 # el flujo de gestión de cuentas (US-2.2.1 a US-2.2.5: bloqueo automático tras
 # 3 intentos fallidos de login o de cambio de contraseña propio, listado/
-# detalle/reseteo de cuentas por Administrador, desbloqueo), verifica casos
-# de error (email duplicado -> 409, token vencido -> 422, opciones inválidas
-# -> 422), limpia los datos de prueba y baja el server.
+# detalle/reseteo de cuentas por Administrador, desbloqueo), el flujo de
+# Actividad Evaluativa período abierto (US-3.1.1 a US-3.1.3: docente crea una
+# actividad, estudiante inicia su evaluación con set aleatorio fijo, idempotencia
+# en reconexión, rechazo fuera de período), verifica casos de error (email
+# duplicado -> 409, token vencido -> 422, opciones inválidas -> 422, evaluación
+# fuera de período -> 422, rol insuficiente -> 403), limpia los datos de prueba
+# y baja el server.
 #
 # Uso: .claude/skills/run-cognion/smoke.sh   (desde la raíz del repo)
 set -euo pipefail
@@ -38,6 +42,20 @@ cleanup() {
   # comision y psql hace rollback de todo el bloque, aunque cada DELETE haya reportado éxito
   # — mismo gotcha documentado en run-cognion/SKILL.md).
   psql "$DB_URL" -q -c "
+    DELETE FROM events WHERE aggregate_type = 'Evaluacion' AND aggregate_id IN (
+      SELECT aggregate_id FROM events
+      WHERE aggregate_type = 'Evaluacion' AND event_type = 'EvaluacionIniciada'
+        AND payload->>'actividad_id' IN (
+          SELECT aggregate_id::text FROM events
+          WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
+            AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%')
+        )
+    );
+    DELETE FROM events WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto' AND aggregate_id IN (
+      SELECT aggregate_id FROM events
+      WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto' AND event_type = 'ActividadEvaluativaCreada'
+        AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${EMAIL_PREFIX}%')
+    );
     DELETE FROM invitacion WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
     DELETE FROM estudiante WHERE id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%');
     DELETE FROM comision_docentes WHERE comision_id IN (SELECT id FROM comision WHERE administrador_id IN (SELECT id FROM usuario WHERE email LIKE '${EMAIL_PREFIX}%'));
@@ -261,6 +279,151 @@ if [[ "$invitacion_code" == "201" ]]; then
     -H "Content-Type: application/json" -H "Authorization: Bearer ${estudiante_token}" \
     -d '{"password_actual":"Final123!","password_nueva":"UltimaOk123!"}')
   [[ "$code" == "204" ]] || { echo "FAIL: cambio de contraseña exitoso devolvió $code, esperado 204"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== Flujo de Actividad Evaluativa, período abierto (Incremento 3, Iteración 1) =="
+
+  echo "== POST /preguntas/verdadero-falso (banco propio de este flujo, todavía sin las preguntas del flujo de abajo) =="
+  curl -s -X POST "${BASE}/preguntas/verdadero-falso" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"banco_id\":\"${banco_id}\",\"texto\":\"El Paraná es el río más largo de Sudamérica.\",\"respuesta_correcta\":false,\"unidad_tematica\":\"Unidad 1\",\"tema\":\"Geografía\",\"dificultad\":\"medio\",\"importancia\":\"alto\"}" >/dev/null
+  curl -s -X POST "${BASE}/preguntas/verdadero-falso" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"banco_id\":\"${banco_id}\",\"texto\":\"PostgreSQL es una base de datos NoSQL.\",\"respuesta_correcta\":false,\"unidad_tematica\":\"Unidad 1\",\"tema\":\"Arquitectura\",\"dificultad\":\"medio\",\"importancia\":\"alto\"}" >/dev/null
+  echo "OK (2 preguntas activas — este bloque corre antes del flujo de banco de más abajo)"
+
+  echo "== POST /actividades (docente crea una actividad de período abierto, US-3.1.2) =="
+  fecha_apertura=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)-timedelta(minutes=1)).isoformat())")
+  fecha_cierre=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=7)).isoformat())")
+  actividad=$(curl -s -X POST "${BASE}/actividades" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"materia_id\":\"${materia_id}\",\"fecha_apertura\":\"${fecha_apertura}\",\"fecha_cierre\":\"${fecha_cierre}\",\"cantidad_preguntas\":2,\"cantidad_intentos_permitidos\":1}")
+  actividad_id=$(echo "$actividad" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  echo "OK (id=$actividad_id, vigente por 7 días)"
+
+  echo "== POST /evaluaciones (estudiante inicia su evaluación, US-3.1.3, RF-12) =="
+  evaluacion=$(curl -s -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  evaluacion_id=$(echo "$evaluacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  cantidad_asignadas=$(echo "$evaluacion" | python3 -c "import sys,json;print(len(json.load(sys.stdin)['preguntas_asignadas']))")
+  [[ "$cantidad_asignadas" == "2" ]] || { echo "FAIL: preguntas_asignadas tiene $cantidad_asignadas, esperado 2"; exit 1; }
+  echo "OK (id=$evaluacion_id, 2 preguntas asignadas)"
+
+  echo "== POST /evaluaciones de nuevo (reconexión — idempotente, INV-AE-05/06) =="
+  evaluacion_2=$(curl -s -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  evaluacion_2_id=$(echo "$evaluacion_2" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  [[ "$evaluacion_2_id" == "$evaluacion_id" ]] || { echo "FAIL: la reconexión devolvió una Evaluacion distinta ($evaluacion_2_id != $evaluacion_id)"; exit 1; }
+  set1=$(echo "$evaluacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['preguntas_asignadas'])")
+  set2=$(echo "$evaluacion_2" | python3 -c "import sys,json;print(json.load(sys.stdin)['preguntas_asignadas'])")
+  [[ "$set1" == "$set2" ]] || { echo "FAIL: el set de preguntas cambió entre reconexiones"; exit 1; }
+  echo "OK (misma Evaluacion, mismo set)"
+
+  echo "== POST /evaluaciones sobre una actividad con fecha_apertura futura (esperado 422, FueraDePeriodo) =="
+  apertura_futura=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=1)).isoformat())")
+  cierre_futuro=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=8)).isoformat())")
+  actividad_futura=$(curl -s -X POST "${BASE}/actividades" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"materia_id\":\"${materia_id}\",\"fecha_apertura\":\"${apertura_futura}\",\"fecha_cierre\":\"${cierre_futuro}\",\"cantidad_preguntas\":2,\"cantidad_intentos_permitidos\":1}")
+  actividad_futura_id=$(echo "$actividad_futura" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"actividad_id\":\"${actividad_futura_id}\"}")
+  [[ "$code" == "422" ]] || { echo "FAIL: iniciar evaluación antes de la apertura devolvió $code, esperado 422"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /evaluaciones con rol docente (esperado 403, RBAC) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  [[ "$code" == "403" ]] || { echo "FAIL: docente iniciando evaluación devolvió $code, esperado 403"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== Flujo de responder/pausar/reanudar/finalizar/revisión (Iteraciones 2 y 3, US-3.2.1 a US-3.3.2) =="
+
+  pregunta_1_id=$(echo "$evaluacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['preguntas_asignadas'][0]['pregunta_id'])")
+  pregunta_2_id=$(echo "$evaluacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['preguntas_asignadas'][1]['pregunta_id'])")
+
+  echo "== POST /evaluaciones/{id}/respuestas (1ra pregunta, US-3.2.1) =="
+  respuesta_1=$(curl -s -X POST "${BASE}/evaluaciones/${evaluacion_id}/respuestas" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"pregunta_id\":\"${pregunta_1_id}\",\"contenido\":{\"valor\":true}}")
+  echo "$respuesta_1" | grep -q '"pregunta_id"' || { echo "FAIL: registrar respuesta no devolvió una Respuesta"; echo "$respuesta_1"; exit 1; }
+  echo "OK (respuesta persistida de inmediato)"
+
+  echo "== POST /evaluaciones/{id}/suspender (pausa manual, US-3.2.2) =="
+  suspendida=$(curl -s -X POST "${BASE}/evaluaciones/${evaluacion_id}/suspender" \
+    -H "Authorization: Bearer ${estudiante_token}")
+  echo "$suspendida" | grep -q '"estado":"Suspendida"' || { echo "FAIL: suspender no dejó estado Suspendida"; echo "$suspendida"; exit 1; }
+  echo "OK (Suspendida)"
+
+  echo "== POST /evaluaciones/{id}/reanudar — retoma en el mismo punto (INV-AE-11/12) =="
+  reanudada=$(curl -s -X POST "${BASE}/evaluaciones/${evaluacion_id}/reanudar" \
+    -H "Authorization: Bearer ${estudiante_token}")
+  echo "$reanudada" | grep -q '"estado":"EnCurso"' || { echo "FAIL: reanudar no dejó estado EnCurso"; echo "$reanudada"; exit 1; }
+  echo "$reanudada" | grep -q "$pregunta_1_id" || { echo "FAIL: reanudar no conserva la respuesta ya confirmada"; exit 1; }
+  echo "OK (EnCurso, respuesta previa conservada)"
+
+  echo "== POST /evaluaciones/{id}/respuestas (2da y última pregunta) =="
+  curl -s -X POST "${BASE}/evaluaciones/${evaluacion_id}/respuestas" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante_token}" \
+    -d "{\"pregunta_id\":\"${pregunta_2_id}\",\"contenido\":{\"valor\":true}}" >/dev/null
+  echo "OK"
+
+  echo "== POST /evaluaciones/{id}/finalizar (US-3.2.3, RF-13) =="
+  finalizada=$(curl -s -X POST "${BASE}/evaluaciones/${evaluacion_id}/finalizar" \
+    -H "Authorization: Bearer ${estudiante_token}")
+  echo "$finalizada" | grep -q '"estado":"Finalizada"' || { echo "FAIL: finalizar no dejó estado Finalizada"; echo "$finalizada"; exit 1; }
+  echo "OK (Finalizada)"
+
+  echo "== GET /evaluaciones/{id}/revision — resumen + texto real de la respuesta (US-3.2.3, US-3.4.7) =="
+  revision=$(curl -s "${BASE}/evaluaciones/${evaluacion_id}/revision" -H "Authorization: Bearer ${estudiante_token}")
+  cantidad_preguntas_revision=$(echo "$revision" | python3 -c "import sys,json;print(json.load(sys.stdin)['cantidad_preguntas'])")
+  [[ "$cantidad_preguntas_revision" == "2" ]] || { echo "FAIL: revisión con $cantidad_preguntas_revision preguntas, esperado 2"; echo "$revision"; exit 1; }
+  echo "OK (2 preguntas en la revisión)"
+
+  echo "== POST /evaluaciones/{id}/finalizar de nuevo (esperado 422, ya Finalizada) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/evaluaciones/${evaluacion_id}/finalizar" \
+    -H "Authorization: Bearer ${estudiante_token}")
+  [[ "$code" == "422" ]] || { echo "FAIL: finalizar dos veces devolvió $code, esperado 422"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== PATCH /actividades/{id}/periodo — docente extiende el plazo (US-3.3.1, RF-11b) =="
+  nueva_fecha_cierre=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=14)).isoformat())")
+  extendida=$(curl -s -X PATCH "${BASE}/actividades/${actividad_id}/periodo" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"nueva_fecha_cierre\":\"${nueva_fecha_cierre}\"}")
+  echo "$extendida" | grep -q "$actividad_id" || { echo "FAIL: extender plazo no devolvió la actividad"; echo "$extendida"; exit 1; }
+  echo "OK (plazo extendido)"
+
+  echo "== POST /actividades/{id}/cerrar — cierre manual, finaliza en cascada (US-3.3.2) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/actividades/${actividad_id}/cerrar" \
+    -H "Authorization: Bearer ${docente_token}")
+  [[ "$code" == "200" ]] || { echo "FAIL: cerrar actividad devolvió $code, esperado 200"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== POST /evaluaciones sobre actividad ya cerrada, estudiante SIN Evaluacion previa (esperado 422) =="
+  # No reusar estudiante_token: ese estudiante ya tiene una Evaluacion Finalizada para
+  # actividad_id, e IniciarEvaluacion es idempotente para él (RF-13, devuelve 200 con la
+  # revisión disponible aunque el período ya cerró — no es el caso que este paso quiere
+  # verificar). Se registra un segundo estudiante, sin Evaluacion previa, para confirmar el
+  # rechazo real por actividad cerrada.
+  segunda_invitacion=$(curl -s -X POST "${BASE}/comisiones/${comision_id}/invitaciones" \
+    -H "Content-Type: application/json" -H "Authorization: Bearer ${docente_token}" \
+    -d "{\"docente_id\":\"${docente_id}\",\"email_destinatario\":\"${EMAIL_PREFIX}-estudiante2@fiuner.edu.ar\"}")
+  segunda_invitacion_id=$(echo "$segunda_invitacion" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+  segunda_invitacion_token=$(psql "$DB_URL" -t -A -c "SELECT token FROM invitacion WHERE id = '${segunda_invitacion_id}';")
+  curl -s -X POST "${BASE}/identidad/registro" -H "Content-Type: application/json" \
+    -d "{\"token\":\"${segunda_invitacion_token}\",\"nombre\":\"Smoke Estudiante 2\",\"email\":\"${EMAIL_PREFIX}-estudiante2@fiuner.edu.ar\",\"password\":\"Password123!\"}" >/dev/null
+  estudiante2_login=$(curl -s -X POST "${BASE}/identidad/login" -H "Content-Type: application/json" \
+    -d "{\"email\":\"${EMAIL_PREFIX}-estudiante2@fiuner.edu.ar\",\"password\":\"Password123!\"}")
+  estudiante2_token=$(echo "$estudiante2_login" | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${estudiante2_token}" \
+    -d "{\"actividad_id\":\"${actividad_id}\"}")
+  [[ "$code" == "422" ]] || { echo "FAIL: iniciar evaluación sobre actividad cerrada devolvió $code, esperado 422"; exit 1; }
   echo "OK ($code)"
 else
   echo "SKIPPED ($invitacion_code) — ver /tmp/cognion-smoke-invitacion.json y $LOG"

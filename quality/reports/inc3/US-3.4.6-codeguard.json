@@ -1,0 +1,3289 @@
+{
+  "summary": {
+    "total_files": 5,
+    "checks_executed": 9,
+    "elapsed_seconds": 39.81,
+    "timestamp": "2026-08-31T11:53:30.384798",
+    "total_issues": 155,
+    "errors": 6,
+    "warnings": 113,
+    "infos": 36
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'texto' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 25
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'opciones' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 26
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'texto' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 38
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'contenido_correcto' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 39
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PreguntaConsultaPort' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 42
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'contar_activas_por_materia' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 45
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 46
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_ids_activas_por_materia' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 49
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 50
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'evaluar_correccion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 57
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'contenido' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 58
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 58
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_detalle_correccion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 67
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_contenido' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 75
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 76
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 78.5 (grade A)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Falso' should be 'False'",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 20
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'hace' should be 'have'",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 53
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'momento' should be 'memento'",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 61
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'inmutable' should be 'immutable,'",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": 62
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PreguntaConsultaPortInProcess' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 31
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'contar_activas_por_materia' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 39
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_ids_activas_por_materia' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 52
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'evaluar_correccion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 64
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_detalle_correccion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 85
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_contenido' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 107
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 73.7 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Falso' should be 'False'",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": 111
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Responde' should be 'Respond,'",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": 94
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Responde' should be 'Respond,'",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": 124
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Responde' should be 'Respond,'",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": 164
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Responde' should be 'Respond,'",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": 192
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Responde' should be 'Respond,'",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": 220
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CrearActividadRequest' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 23
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 26
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 28
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 29
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 30
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 31
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ActividadResponse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 36
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 39
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 40
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 41
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 42
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 43
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cerrada_manualmente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 45
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 46
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ActividadResumenResponse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 49
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 56
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 57
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 58
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 59
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 60
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 61
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 62
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estado' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 63
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cerrada_manualmente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 64
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_evaluaciones_activas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 65
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_evaluaciones_finalizadas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ActividadVisibleResponse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 69
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 72
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 73
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 74
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 75
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 76
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estado' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 77
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 78
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ModificarPeriodoDisponibilidadRequest' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 81
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nueva_fecha_cierre' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 84
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ModificarTituloRequest' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 89
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nuevo_titulo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 92
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'IniciarEvaluacionRequest' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 95
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 98
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 109
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'orden' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 110
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'enunciado' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 111
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'opciones' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 112
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionResponse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 115
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 123
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 124
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 125
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'preguntas_asignadas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 126
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'preguntas_respondidas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 127
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estado' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 128
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'iniciada_en' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 129
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'RegistrarRespuestaRequest' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 132
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 135
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'contenido' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 136
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'RespuestaResponse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 139
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 146
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 147
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'numero_intento' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 148
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'confirmada_en' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 149
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 159
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'orden' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 160
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'texto' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 161
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'respondida' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 162
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'contenido_propio' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 163
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'es_correcta' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 164
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'contenido_correcto' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 165
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'RevisionEvaluacionResponse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 168
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 171
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 172
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_correctas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 173
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_incorrectas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 174
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'detalle' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 175
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 66.7 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Falso' should be 'False'",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": 106
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 42
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 91
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 96
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 112
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 121
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 138
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 141
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 145
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 159
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 169
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 176
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.88/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 50
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'contenido' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 76
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'texto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opciones' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'texto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 38
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido_correcto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaConsultaPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'contar_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_ids_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'evaluar_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_detalle_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_contenido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 75
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 20
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 53
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 61
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'inmutable' should be 'immutable,'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'contar_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_ids_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'evaluar_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 64
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_detalle_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 85
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_contenido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 107
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 111
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 94
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 124
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 164
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 192
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 220
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CrearActividadRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 43
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cerrada_manualmente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadResumenResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 56
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 59
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 61
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 63
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cerrada_manualmente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 64
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones_activas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 65
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones_finalizadas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadVisibleResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 72
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 73
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 74
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 76
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 78
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ModificarPeriodoDisponibilidadRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 81
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nueva_fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 84
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ModificarTituloRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 89
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nuevo_titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 92
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'IniciarEvaluacionRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 95
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 98
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 109
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'orden' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 110
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'enunciado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 111
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opciones' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 112
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 115
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 123
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 124
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 125
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'preguntas_asignadas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 126
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'preguntas_respondidas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 127
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 128
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'iniciada_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 129
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RegistrarRespuestaRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 132
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 135
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 136
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RespuestaResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 139
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 146
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 147
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'numero_intento' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 148
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'confirmada_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 149
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'orden' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 160
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'texto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 161
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'respondida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 162
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido_propio' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 163
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'es_correcta' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 164
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido_correcto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 165
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RevisionEvaluacionResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 168
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 171
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 172
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_correctas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 173
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_incorrectas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 174
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'detalle' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 175
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 106
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 91
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 96
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 112
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 121
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 138
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 141
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 145
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 169
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 176
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 78.5 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 73.7 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 66.7 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.88/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/pregunta_consulta_port_in_process.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'contar_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_ids_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'evaluar_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 64
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_detalle_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 85
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_contenido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 107
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 73.7 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": 111
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/pregunta_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "api/evaluaciones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 94
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 124
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 164
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 192
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Responde' should be 'Respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": 220
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py",
+        "line": null
+      }
+    ],
+    "api/schemas.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CrearActividadRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 43
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cerrada_manualmente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadResumenResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 56
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 59
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 61
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_intentos_permitidos' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 63
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cerrada_manualmente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 64
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones_activas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 65
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones_finalizadas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadVisibleResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 72
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 73
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 74
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 76
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 78
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ModificarPeriodoDisponibilidadRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 81
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nueva_fecha_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 84
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ModificarTituloRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 89
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nuevo_titulo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 92
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'IniciarEvaluacionRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 95
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 98
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 109
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'orden' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 110
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'enunciado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 111
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opciones' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 112
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 115
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 123
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 124
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 125
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'preguntas_asignadas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 126
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'preguntas_respondidas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 127
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 128
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'iniciada_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 129
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RegistrarRespuestaRequest' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 132
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 135
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 136
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RespuestaResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 139
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 146
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 147
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'numero_intento' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 148
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'confirmada_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 149
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'orden' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 160
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'texto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 161
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'respondida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 162
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido_propio' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 163
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'es_correcta' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 164
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido_correcto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 165
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RevisionEvaluacionResponse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 168
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 171
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_preguntas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 172
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_correctas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 173
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_incorrectas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 174
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'detalle' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 175
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 66.7 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": 106
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/schemas.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 42
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 91
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 96
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 112
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 121
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 138
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 141
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 145
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 169
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 176
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.88/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "ports/pregunta_consulta_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'texto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opciones' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'texto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 38
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'contenido_correcto' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaConsultaPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'contar_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_ids_activas_por_materia' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 50
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'evaluar_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'contenido' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_detalle_correccion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_contenido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 76
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 78.5 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 20
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 53
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 61
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'inmutable' should be 'immutable,'",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": 62
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/pregunta_consulta_port.py",
+        "line": null
+      }
+    ]
+  }
+}

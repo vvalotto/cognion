@@ -69,6 +69,8 @@
 | **Complejidad Ciclomática** | {CC_AVG} | ≤ 10 | {CC_STATUS} |
 | **Índice Mantenibilidad** | {MI_AVG} | > 20 | {MI_STATUS} |
 | **Coverage** | {COVERAGE}% | ≥ 95% | {COVERAGE_STATUS} |
+| **mypy** (`src/` completo) | {MYPY_ERRORS} errores | 0 errores | {MYPY_STATUS} |
+| **CodeGuard** (archivos modificados/agregados) | {CODEGUARD_ERRORS} errores, {CODEGUARD_WARNINGS} warnings | 0 CRITICAL | {CODEGUARD_STATUS} |
 
 ### Detalle de Pylint
 
@@ -81,6 +83,27 @@
 ```
 {COVERAGE_REPORT}
 ```
+
+### Detalle de CodeGuard
+
+> Requiere que el reporte se haya generado con `--analysis-type full` (ver Fase 7) — en
+> modo `pre-commit` (default de la CLI) solo corren 3 de los 9 checks, sin ninguna señal
+> de que los otros 6 fueron omitidos (`vvalotto/software_limpio#71`).
+
+| Check | Errors | Warnings | Infos |
+|-------|--------|----------|-------|
+| Security | {CG_SECURITY_ERR} | {CG_SECURITY_WARN} | {CG_SECURITY_INFO} |
+| PEP8 | {CG_PEP8_ERR} | {CG_PEP8_WARN} | {CG_PEP8_INFO} |
+| Complexity | {CG_COMPLEXITY_ERR} | {CG_COMPLEXITY_WARN} | {CG_COMPLEXITY_INFO} |
+| DeadCode | {CG_DEADCODE_ERR} | {CG_DEADCODE_WARN} | {CG_DEADCODE_INFO} |
+| Maintainability | {CG_MAINTAINABILITY_ERR} | {CG_MAINTAINABILITY_WARN} | {CG_MAINTAINABILITY_INFO} |
+| Pylint | {CG_PYLINT_ERR} | {CG_PYLINT_WARN} | {CG_PYLINT_INFO} |
+| Spelling | {CG_SPELLING_ERR} | {CG_SPELLING_WARN} | {CG_SPELLING_INFO} |
+| Types | {CG_TYPES_ERR} | {CG_TYPES_WARN} | {CG_TYPES_INFO} |
+| UnusedImports | {CG_UNUSEDIMPORTS_ERR} | {CG_UNUSEDIMPORTS_WARN} | {CG_UNUSEDIMPORTS_INFO} |
+
+Fuente: `quality/reports/{US_ID}-codeguard.json` → `quality.codeguard.checks` en
+`quality/reports/{US_ID}-quality.json`.
 
 ---
 

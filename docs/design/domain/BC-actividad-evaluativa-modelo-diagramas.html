@@ -1,0 +1,466 @@
+<title>Modelo Actividad Evaluativa</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --paper: #edeff2;
+    --surface: #f7f8fa;
+    --ink: #1b222c;
+    --muted: #5b6472;
+    --line: #c8cfd9;
+    --line-soft: #d9dee5;
+    --accent: #9c6712;
+    --accent-ink: #ffffff;
+    --accent-soft: #f1e3cc;
+    --aggregate: #2e5c8a;
+    --aggregate-soft: #dbe6f0;
+    --entity: #9c6712;
+    --entity-soft: #f1e3cc;
+    --vo: #4a5568;
+    --vo-soft: #e2e5ea;
+    --external: #6b7280;
+    --shadow: 0 1px 2px rgba(27, 34, 44, 0.06), 0 4px 14px rgba(27, 34, 44, 0.05);
+    --font-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161d;
+      --surface: #171c24;
+      --ink: #e7eaf0;
+      --muted: #8b94a3;
+      --line: #2a313c;
+      --line-soft: #232a33;
+      --accent: #e3a83f;
+      --accent-ink: #1b222c;
+      --accent-soft: #3a2f18;
+      --aggregate: #7fb0e0;
+      --aggregate-soft: #1c2b3c;
+      --entity: #e3a83f;
+      --entity-soft: #3a2f18;
+      --vo: #aab2c0;
+      --vo-soft: #232a33;
+      --external: #9aa2b0;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12161d;
+    --surface: #171c24;
+    --ink: #e7eaf0;
+    --muted: #8b94a3;
+    --line: #2a313c;
+    --line-soft: #232a33;
+    --accent: #e3a83f;
+    --accent-ink: #1b222c;
+    --accent-soft: #3a2f18;
+    --aggregate: #7fb0e0;
+    --aggregate-soft: #1c2b3c;
+    --entity: #e3a83f;
+    --entity-soft: #3a2f18;
+    --vo: #aab2c0;
+    --vo-soft: #232a33;
+    --external: #9aa2b0;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 3.5rem 1.75rem 6rem;
+  }
+
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+    margin-bottom: 2.75rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--line-soft) 27px,
+      var(--line-soft) 28px
+    );
+    background-position: 0 4.4rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.12;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0 0 1.4rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .meta-row code {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.12rem 0.42rem;
+    color: var(--ink);
+  }
+
+  main { display: flex; flex-direction: column; gap: 3.2rem; }
+
+  section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  section h2 .num {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  section > .lede {
+    color: var(--muted);
+    max-width: 68ch;
+    margin: 0 0 1.3rem;
+    font-size: 0.98rem;
+  }
+
+  figure {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  figure .diagram-wrap {
+    padding: 1.4rem 1.2rem 0.6rem;
+    overflow-x: auto;
+  }
+
+  figure .diagram-wrap pre.mermaid {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-width: 480px;
+  }
+
+  figcaption {
+    padding: 0.85rem 1.3rem 1.1rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  figcaption strong { color: var(--ink); font-weight: 600; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    margin: 1.1rem 0 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .legend .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    color: var(--muted);
+  }
+
+  .legend .swatch {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    flex: none;
+  }
+
+  .swatch.aggregate { background: var(--aggregate); }
+  .swatch.entity { background: var(--entity); }
+  .swatch.vo { background: var(--vo); }
+  .swatch.external { background: var(--external); border: 1px dashed var(--muted); background: transparent; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+
+  .callout strong { font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  @media (min-width: 760px) {
+    .two-col { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+  }
+
+  footer a { color: var(--muted); }
+
+  ::selection { background: var(--accent-soft); }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span> BC Actividad Evaluativa · Incremento 3 · Iteración 0 — Modelado</div>
+    <h1>Modelo de dominio, en diagramas</h1>
+    <p class="subtitle">
+      Complemento visual de <code>BC-actividad-evaluativa-modelo.md</code> — los dos aggregates,
+      sus relaciones a través de puertos, y el ciclo de vida de <strong>Evaluacion</strong>, con
+      sus disparadores manuales y automáticos. Alcance: exclusivamente período abierto
+      (RF-11, RF-11b, RF-12, RF-13).
+    </p>
+    <div class="meta-row">
+      <span>Estado: <code>borrador</code></span>
+      <span>Issue: <code>#137</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-actividad-evaluativa-modelo.md</code></span>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="estructura">
+      <h2><span class="num">01</span> Estructura — dos aggregates, sin invariante compartida en memoria</h2>
+      <p class="lede">
+        <code style="font-family: var(--font-mono);">ActividadEvaluativaPeriodoAbierto</code> (dueño: Docente) y
+        <code style="font-family: var(--font-mono);">Evaluacion</code> (dueño: Estudiante) son streams de eventos
+        independientes. <code style="font-family: var(--font-mono);">Respuesta</code> vive como colección de
+        primer nivel dentro de <code style="font-family: var(--font-mono);">Evaluacion</code> — no anidada bajo
+        <code style="font-family: var(--font-mono);">PreguntaAsignada</code> — porque cada confirmación es un hecho
+        irrepetible que conviene poder referenciar por su propio id, aunque por regla estricta de DDD sería un
+        Value Object individuado por <code style="font-family: var(--font-mono);">(pregunta_id, numero_intento)</code>.
+      </p>
+
+      <div class="legend">
+        <span class="item"><span class="swatch aggregate"></span>Aggregate Root</span>
+        <span class="item"><span class="swatch entity"></span>Entity</span>
+        <span class="item"><span class="swatch vo"></span>Value Object</span>
+        <span class="item"><span class="swatch external"></span>Externo, vía puerto (otro BC)</span>
+      </div>
+
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+classDiagram
+    class ActividadEvaluativaPeriodoAbierto {
+        &lt;&lt;Aggregate Root — Docente&gt;&gt;
+        UUID id
+        UUID materia_id
+        datetime fecha_apertura
+        datetime fecha_cierre
+        int cantidad_preguntas
+        int cantidad_intentos_permitidos
+        bool cerrada_manualmente
+    }
+
+    class Evaluacion {
+        &lt;&lt;Aggregate Root — Estudiante&gt;&gt;
+        UUID id
+        UUID actividad_id
+        UUID estudiante_id
+        Estado estado
+        datetime iniciada_en
+        datetime finalizada_en
+    }
+
+    class PreguntaAsignada {
+        &lt;&lt;Value Object&gt;&gt;
+        UUID pregunta_id
+        int orden
+    }
+
+    class Respuesta {
+        &lt;&lt;Entity&gt;&gt;
+        UUID id
+        UUID pregunta_id
+        int numero_intento
+        Contenido contenido
+        bool es_correcta
+        datetime confirmada_en
+    }
+
+    class Materia {
+        &lt;&lt;externo — Banco de Preguntas&gt;&gt;
+    }
+    class PreguntaPlantilla {
+        &lt;&lt;externo — Banco de Preguntas&gt;&gt;
+    }
+    class Usuario {
+        &lt;&lt;externo — Identidad&gt;&gt;
+    }
+
+    Evaluacion "1" *-- "N" PreguntaAsignada : preguntas_asignadas — fija al iniciar
+    Evaluacion "1" *-- "N" Respuesta : respuestas — solo se agregan
+    Respuesta ..> PreguntaAsignada : pregunta_id
+    Evaluacion ..> ActividadEvaluativaPeriodoAbierto : actividad_id — sin carga conjunta
+    ActividadEvaluativaPeriodoAbierto ..> Materia : materia_id, vía puerto
+    Evaluacion ..> Usuario : estudiante_id, vía puerto
+    PreguntaAsignada ..> PreguntaPlantilla : pregunta_id, vía puerto
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> la línea punteada entre <code style="font-family: var(--font-mono);">Evaluacion</code>
+          y <code style="font-family: var(--font-mono);">ActividadEvaluativaPeriodoAbierto</code> es una referencia,
+          no una carga conjunta — el único invariante cruzado (RF-11b) se resuelve contra un read model, nunca
+          cargando ambos aggregates juntos (§2, §6 del modelo escrito). Las tres clases marcadas "externo" cruzan
+          el límite de Bounded Context solo a través de un puerto propio (§7) — nunca por import directo.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="evaluacion">
+      <h2><span class="num">02</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">Evaluacion</span></h2>
+      <p class="lede">
+        Tres estados, dos disparadores humanos (Estudiante, Docente) y un proceso automático —
+        el <code style="font-family: var(--font-mono);">VerificadorDeVencimientos</code> (§6b del modelo escrito) —
+        que no es un aggregate: reacciona al paso del tiempo, no a un comando de un actor.
+      </p>
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> EnCurso : IniciarEvaluacion (Estudiante — arma el set fijo)
+    EnCurso --> EnCurso : RegistrarRespuesta (agrega una Respuesta)
+    EnCurso --> Suspendida : SuspenderEvaluacion (Estudiante)
+    EnCurso --> Suspendida : VerificadorDeVencimientos\ninactividad > umbral
+    Suspendida --> EnCurso : ReanudarEvaluacion (Estudiante, explícito)
+    EnCurso --> Finalizada : FinalizarEvaluacion (Estudiante)
+    EnCurso --> Finalizada : VerificadorDeVencimientos\nfecha_cierre vencida
+    Suspendida --> Finalizada : VerificadorDeVencimientos\nfecha_cierre vencida
+    EnCurso --> Finalizada : CerrarActividad (Docente — cascada inmediata)
+    Suspendida --> Finalizada : CerrarActividad (Docente — cascada inmediata)
+    Finalizada --> [*] : habilita revisión, RF-13
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> hay tres caminos distintos hacia
+          <code style="font-family: var(--font-mono);">Finalizada</code> — el estudiante decide, el reloj vence el
+          período, o el docente cierra antes de tiempo — y todos convergen en el mismo evento
+          (<code style="font-family: var(--font-mono);">EvaluacionFinalizada</code>), no en tres eventos distintos.
+          Reanudar es siempre explícito: ninguna acción del estudiante saca a una <code style="font-family: var(--font-mono);">Evaluacion</code>
+          de <code style="font-family: var(--font-mono);">Suspendida</code> salvo <code style="font-family: var(--font-mono);">ReanudarEvaluacion</code>.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="actividad">
+      <h2><span class="num">03</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">ActividadEvaluativaPeriodoAbierto</span></h2>
+      <div class="two-col">
+        <figure>
+          <div class="diagram-wrap">
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> Abierta : CrearActividadPeriodoAbierto
+    Abierta --> Abierta : ModificarPeriodoDisponibilidad\n(fecha_cierre pasada NO bloquea extender)
+    Abierta --> CerradaManualmente : CerrarActividad\n(Docente — opcional, terminal)
+    CerradaManualmente --> CerradaManualmente : ModificarPeriodoDisponibilidad\n❌ ActividadYaCerrada
+</pre>
+          </div>
+          <figcaption>
+            <strong>Lo que hay que ver acá:</strong> llegar a <code style="font-family: var(--font-mono);">fecha_cierre</code>
+            nunca es, por sí solo, un cambio de estado del aggregate — sigue <code style="font-family: var(--font-mono);">Abierta</code>
+            y admite extender (cubre la caída del sistema de RF-11b). El único camino a un estado
+            terminal que bloquea futuras modificaciones es la decisión deliberada del docente.
+          </figcaption>
+        </figure>
+        <div class="callout">
+          <strong>Por qué no hay un tercer estado "Vencida"</strong>
+          El vencimiento pasivo de <code style="font-family: var(--font-mono);">fecha_cierre</code> no es un estado
+          del aggregate — es una condición que lee el <code style="font-family: var(--font-mono);">VerificadorDeVencimientos</code>
+          (diagrama 02) para finalizar <code style="font-family: var(--font-mono);">Evaluacion</code> activas. La
+          actividad en sí sigue <code style="font-family: var(--font-mono);">Abierta</code> — solo
+          <code style="font-family: var(--font-mono);">CerrarActividad</code> la cierra de verdad.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Cognión — BC Actividad Evaluativa</span>
+    <span>Modelado en conversación con Víctor, 2026-08-25</span>
+  </footer>
+
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: prefersDark ? "dark" : "default", securityLevel: "loose" });
+</script>

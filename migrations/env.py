@@ -22,6 +22,9 @@ config.set_main_option("sqlalchemy.url", settings.database_url)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+from src.actividad_evaluativa.frameworks.db import (  # noqa: F401,E402
+    models as actividad_evaluativa_models,
+)
 from src.banco_preguntas.frameworks.db import models as banco_preguntas_models  # noqa: F401,E402
 from src.identidad.frameworks.db import models as identidad_models  # noqa: F401,E402
 
