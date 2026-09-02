@@ -22,20 +22,20 @@ export function MisMaterias() {
   const [materias, setMaterias] = useState<MateriaConResumen[] | null>(null)
 
   useEffect(() => {
-    let cancelado = false
-    listarMisMaterias().then(async (resultado) => {
-      const conResumen = await Promise.all(
-        resultado.map(async (materia) => {
-          const actividades = await listarActividadesVisibles(materia.id)
-          const cantidadPendientes = actividades.filter((a) => a.estado === "pendiente").length
-          return { ...materia, cantidadPendientes }
-        }),
-      )
-      if (!cancelado) setMaterias(conResumen)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMisMaterias(controller.signal)
+      .then(async (resultado) => {
+        const conResumen = await Promise.all(
+          resultado.map(async (materia) => {
+            const actividades = await listarActividadesVisibles(materia.id, controller.signal)
+            const cantidadPendientes = actividades.filter((a) => a.estado === "pendiente").length
+            return { ...materia, cantidadPendientes }
+          }),
+        )
+        setMaterias(conResumen)
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [])
 
   return (

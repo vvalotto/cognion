@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -18,16 +18,22 @@ export function ResetearPassword() {
   const [confirmacion, setConfirmacion] = useState("")
   const [error, setError] = useState<string | null>(null)
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
   useEffect(() => {
-    if (!usuarioId) return
-    let cancelado = false
-    obtenerCuenta(usuarioId).then((resultado) => {
-      if (!cancelado) setCuenta(resultado)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!usuarioId) return undefined
+    const controller = new AbortController()
+    obtenerCuenta(usuarioId, controller.signal)
+      .then((resultado) => setCuenta(resultado))
+      .catch(() => {})
+    return () => controller.abort()
   }, [usuarioId])
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -44,8 +50,13 @@ export function ResetearPassword() {
       return
     }
 
-    await resetearPassword(usuarioId, passwordNueva)
-    void navigate(`/cuentas/${usuarioId}/reseteada`, { state: { nombre: cuenta?.nombre } })
+    try {
+      await resetearPassword(usuarioId, passwordNueva, controladorSubmitRef.current?.signal)
+      void navigate(`/cuentas/${usuarioId}/reseteada`, { state: { nombre: cuenta?.nombre } })
+    } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
+      throw err
+    }
   }
 
   function handleCancelar() {

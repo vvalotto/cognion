@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -39,29 +39,34 @@ export function NuevaPreguntaVerdaderoFalso() {
   const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
   const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   useEffect(() => {
-    if (!materia) return
-    let cancelado = false
-    filtrarBanco(materia.bancoId).then((resultado) => {
-      if (cancelado) return
-      const { unidades, temas } = derivarSugerencias(resultado.preguntas)
-      setSugerenciasUnidad(unidades)
-      setSugerenciasTema(temas)
-    })
-    return () => {
-      cancelado = true
-    }
+    if (!materia) return undefined
+    const controller = new AbortController()
+    filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
+      .then((resultado) => {
+        const { unidades, temas } = derivarSugerencias(resultado.preguntas)
+        setSugerenciasUnidad(unidades)
+        setSugerenciasTema(temas)
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [materia])
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -73,16 +78,24 @@ export function NuevaPreguntaVerdaderoFalso() {
     }
 
     if (!materia) return
-    await cargarPreguntaVerdaderoFalso({
-      bancoId: materia.bancoId,
-      texto,
-      respuestaCorrecta,
-      unidadTematica,
-      tema,
-      dificultad,
-      importancia,
-    })
-    void navigate(`/materias/${materiaId}/banco`)
+    try {
+      await cargarPreguntaVerdaderoFalso(
+        {
+          bancoId: materia.bancoId,
+          texto,
+          respuestaCorrecta,
+          unidadTematica,
+          tema,
+          dificultad,
+          importancia,
+        },
+        controladorSubmitRef.current?.signal,
+      )
+      void navigate(`/materias/${materiaId}/banco`)
+    } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
+      throw err
+    }
   }
 
   if (materia === null) {

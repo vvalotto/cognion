@@ -67,12 +67,11 @@ export function RendirEvaluacion() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!actividadId) return
-    let cancelado = false
+    if (!actividadId) return undefined
+    const controller = new AbortController()
 
-    iniciarEvaluacion(actividadId)
+    iniciarEvaluacion(actividadId, controller.signal)
       .then((resultado) => {
-        if (cancelado) return
         if (resultado.estado === "Suspendida") {
           navigate(`/mis-actividades/actividades/${actividadId}/suspendida`, { replace: true })
           return
@@ -87,7 +86,7 @@ export function RendirEvaluacion() {
         setSeleccion(preguntaId ? (mapa.get(preguntaId) ?? null) : null)
       })
       .catch((err) => {
-        if (cancelado) return
+        if (controller.signal.aborted) return
         if (err instanceof ApiError && err.status === 422) {
           navigate(`/mis-actividades/${actividadId}/fuera-de-periodo`, { replace: true })
           return
@@ -95,9 +94,7 @@ export function RendirEvaluacion() {
         throw err
       })
 
-    return () => {
-      cancelado = true
-    }
+    return () => controller.abort()
   }, [actividadId, navigate])
 
   if (evaluacion === null) {

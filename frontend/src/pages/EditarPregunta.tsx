@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
@@ -51,43 +51,48 @@ export function EditarPregunta() {
   const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
   const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
 
+  const controladorSubmitRef = useRef<AbortController | null>(null)
+  if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
+
   useEffect(() => {
-    let cancelado = false
-    listarMaterias().then((materias) => {
-      if (!cancelado) setMateria(materias.find((m) => m.id === materiaId) ?? null)
-    })
-    return () => {
-      cancelado = true
-    }
+    const controller = new AbortController()
+    listarMaterias(controller.signal)
+      .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
   }, [materiaId])
 
   useEffect(() => {
-    if (!materia) return
-    let cancelado = false
-    filtrarBanco(materia.bancoId).then((resultado) => {
-      if (cancelado) return
-      const { unidades, temas } = derivarSugerencias(resultado.preguntas)
-      setSugerenciasUnidad(unidades)
-      setSugerenciasTema(temas)
-      const encontrada = resultado.preguntas.find((p) => p.id === preguntaId) ?? null
-      setPregunta(encontrada)
-      if (encontrada) {
-        setTexto(encontrada.texto)
-        setUnidadTematica(encontrada.unidadTematica)
-        setTema(encontrada.tema)
-        setDificultad(encontrada.dificultad)
-        setImportancia(encontrada.importancia)
-        if (esOpcionMultiple(encontrada) && "opciones" in encontrada) {
-          setOpciones(encontrada.opciones)
-        } else if ("respuestaCorrecta" in encontrada) {
-          setRespuestaCorrecta(encontrada.respuestaCorrecta)
+    if (!materia) return undefined
+    const controller = new AbortController()
+    filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
+      .then((resultado) => {
+        const { unidades, temas } = derivarSugerencias(resultado.preguntas)
+        setSugerenciasUnidad(unidades)
+        setSugerenciasTema(temas)
+        const encontrada = resultado.preguntas.find((p) => p.id === preguntaId) ?? null
+        setPregunta(encontrada)
+        if (encontrada) {
+          setTexto(encontrada.texto)
+          setUnidadTematica(encontrada.unidadTematica)
+          setTema(encontrada.tema)
+          setDificultad(encontrada.dificultad)
+          setImportancia(encontrada.importancia)
+          if (esOpcionMultiple(encontrada) && "opciones" in encontrada) {
+            setOpciones(encontrada.opciones)
+          } else if ("respuestaCorrecta" in encontrada) {
+            setRespuestaCorrecta(encontrada.respuestaCorrecta)
+          }
         }
-      }
-    })
-    return () => {
-      cancelado = true
-    }
+      })
+      .catch(() => {})
+    return () => controller.abort()
   }, [materia, preguntaId])
+
+  useEffect(() => {
+    const controller = controladorSubmitRef.current
+    return () => controller?.abort()
+  }, [])
 
   function actualizarOpcionTexto(indice: number, texto: string) {
     setOpciones((prev) => prev.map((o, i) => (i === indice ? { ...o, texto } : o)))
@@ -126,16 +131,25 @@ export function EditarPregunta() {
       return
     }
 
-    await editarPregunta(preguntaId, {
-      texto,
-      unidadTematica,
-      tema,
-      dificultad,
-      importancia,
-      opciones: esOM ? opciones : undefined,
-      respuestaCorrecta: esOM ? undefined : (respuestaCorrecta ?? undefined),
-    })
-    void navigate(`/materias/${materiaId}/banco`)
+    try {
+      await editarPregunta(
+        preguntaId,
+        {
+          texto,
+          unidadTematica,
+          tema,
+          dificultad,
+          importancia,
+          opciones: esOM ? opciones : undefined,
+          respuestaCorrecta: esOM ? undefined : (respuestaCorrecta ?? undefined),
+        },
+        controladorSubmitRef.current?.signal,
+      )
+      void navigate(`/materias/${materiaId}/banco`)
+    } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
+      throw err
+    }
   }
 
   if (materia === null || pregunta === undefined) {
