@@ -9,6 +9,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Fixed
+- [US-ADJ-13] Documentar "Zone of Pain" de ArchitectAnalyst como falso positivo aceptado +
+  limpiar claves inválidas de `[tool.architectanalyst]` en `pyproject.toml`
+  - `pyproject.toml`: eliminado `paths = ["src"]` (no existe en `ArchitectAnalystConfig`, el
+    CLI ya recibe el path por argumento posicional) y renombrado `history_db` → `db_path`
+    (campo real, mismo valor) — dejaban de emitir `[tool.architectanalyst] clave desconocida
+    ignorada` en cada corrida desde hacía 3 baselines
+  - `CLAUDE.md`: nota en Quality gates documentando los 5 críticos "Zone of Pain" de paquete
+    raíz de BC (`identidad`, `settings`, `shared`, `banco_preguntas`, `actividad_evaluativa`)
+    como falso positivo permanente — causa raíz estructural (cada BC es hoja del grafo de
+    dependencias por diseño), no resuelto por `analysis_depth` (probado: sube de 5 a 15
+    críticos)
+  - Sin cambio de comportamiento — las claves corregidas nunca tuvieron efecto real
+
 ## [0.5.0] - 2026-09-02
 
 ### Added
