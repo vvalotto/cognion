@@ -475,17 +475,56 @@ Los 4 PRs (#182, #184, #185, #187) mergeados a `develop` en orden (185→184→1
 chico primero) con CI en verde en cada uno, mismo criterio de "UAT en navegador real detecta lo
 que Vitest mockeado no ve" ya documentado en Identidad.
 
-**Próximo paso:** continuar la Iteración 4 con el lado Estudiante — `US-3.4.5` (materias y
-actividades disponibles, incluido "fuera de período"), `US-3.4.6` (rendir: responder, pausar,
-reanudar), `US-3.4.7` (finalizar y ver revisión completa). Gate de diseño UX obligatorio antes
-de tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
-(aprobado en `US-3.0.2`) antes de escribir código, ya con Issues y specs creados (`US-3.4.5` a
-`US-3.4.7`, Issues #174-#176).
+**Incremento 3-ADJ — Adecuación Técnica, insertado fuera de secuencia, en curso** (decisión de
+Víctor 2026-09-02: no renumerar los Incrementos 4-7 ya mapeados a RF — Milestone GitHub
+[Incremento 3-ADJ](https://github.com/vvalotto/cognion/milestone/10),
+`docs/plans/inc3-adj/inc3-adj-candidatas.md`). Se intercala antes de continuar la Iteración 4
+de Actividad Evaluativa (lado Estudiante). Deuda de tooling/arquitectura que las retros de
+`BL-002`/`BL-003`/`BL-004` venían señalando sin resolver, más hallazgos de la sesión del
+2026-09-02 (cobertura de branches del frontend, revisión puntual de `DesignReviewer src/`).
+Ninguna de estas US-IEDD tiene RF asociado ni mueve fila de la matriz de trazabilidad (mismo
+criterio que `US-1.1.0`/`US-2.1.2`); no hay UAT (nada visible para un usuario final). 8 US
+candidatas, specs completas en `docs/specs/ajustes/US-ADJ-13.md` a `US-ADJ-20.md`:
+- `US-ADJ-13` — documentar "Zone of Pain" de ArchitectAnalyst como falso positivo aceptado +
+  limpiar claves inválidas de `[tool.architectanalyst]`. **Pendiente.**
+- `US-ADJ-14` — reordenar `frontend/src/pages/` por BC. **Pendiente.**
+- `US-ADJ-15` — fix de `coverage_report_path` en `[tool.architectanalyst]` (ruta relativa mal
+  resuelta — fix ya verificado en la investigación previa, falta aplicarlo). **Pendiente.**
+- `US-ADJ-16` — subir cobertura de branches del frontend (77.89% → 80%). **Pendiente.**
+- `US-ADJ-17` — Value Object `MetadatosPregunta` (Data Clump/Primitive Obsession, Banco de
+  Preguntas — resuelve la mayoría de los 41 issues concentrados en 3 archivos). **Pendiente.**
+- `US-ADJ-18` — refactor `SQLAlchemyPreguntaRepository` (Feature Envy/Law of
+  Demeter/Long Method). **Pendiente.**
+- `US-ADJ-19` — `LayerViolationsAnalyzer` no detecta ninguna violación bajo ninguna config
+  probada — reportar upstream, documentar como no confiable. **Pendiente.**
+- **`US-ADJ-20`** (agregada durante la sesión, fuera de la lista original de 7 — detectada en
+  el triage de PRs de Dependabot) — `AbortController` en los 21 componentes de
+  `frontend/src/pages/` con fetch en `useEffect`/submit, elimina la condición de carrera
+  pre-existente detrás de un `unhandled rejection` intermitente en CI. **Cerrada 2026-09-02**,
+  PR [#206](https://github.com/vvalotto/cognion/pull/206) mergeado a `develop`,
+  `docs/reports/inc3-adj/US-ADJ-20-report.md`: 31 archivos modificados, 229/229 tests frontend
+  estables en 8+ corridas consecutivas sin el `unhandled rejection`, quality gates APROBADO.
+  Reubicación de artefactos a `docs/*/inc3-adj/` en PR
+  [#208](https://github.com/vvalotto/cognion/pull/208) (detectado por `/docs-audit`).
+
+**Criterio de cierre del Incremento 3-ADJ:** los 8 US-ADJ implementados, quality gates en verde,
+`ArchitectAnalyst`/`DesignReviewer` corridos de nuevo al final para confirmar mejoras
+(`US-ADJ-16`/`17`/`18`) y que `US-ADJ-13`/`15`/`19` quedaron correctamente documentados.
+Baseline propia a decidir con Víctor al cerrar (¿`BL-005` o se pliega a la apertura del
+Incremento 4?).
+
+**Próximo paso:** continuar el Incremento 3-ADJ con `US-ADJ-13` a `19` (7 pendientes de 8; orden
+sin fijar todavía). Recién al cerrarlo se retoma la Iteración 4 de Actividad Evaluativa con el
+lado Estudiante — `US-3.4.5` (materias y actividades disponibles, incluido "fuera de período"),
+`US-3.4.6` (rendir: responder, pausar, reanudar), `US-3.4.7` (finalizar y ver revisión
+completa), ya con Issues y specs creados (Issues #174-#176). Gate de diseño UX obligatorio antes
+de tocar `frontend/` para esas tres — verificar contra
+`docs/design/ux/wireframes-actividad-evaluativa.md` (aprobado en `US-3.0.2`) antes de escribir
+código.
 **Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
 (frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
 a fin, docente extiende el plazo de una sesión activa).
-**Branch activo:** ninguna — `develop` sincronizado, próxima branch a abrir es
-`feature/US-3.4.5-...`.
+**Branch activo:** ninguna — `develop` sincronizado.
 
 ---
 
