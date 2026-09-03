@@ -654,6 +654,13 @@ el merge es a la rama default.
   `use_cases`/`interface_adapters`/`frameworks` no tienen ninguna clase abstracta propia (los
   puertos viven solo en `entities/ports/`) y cada capa da D=1.00 CRITICAL por separado. Ninguna
   retro futura debe volver a proponer "recalibrar" sin revisar antes esta nota.
+- **Orden obligatorio al cerrar baseline: generar `coverage.json` antes de correr
+  `architectanalyst`** (`US-ADJ-15`): `CoverageAnalyzer` busca el reporte relativo al `PATH`
+  posicional del CLI (`src/` en este proyecto), no a la raíz del repo — con
+  `coverage_report_path = "../coverage.json"` (ya configurado) resuelve correctamente contra
+  `coverage.json` en la raíz, pero solo si ese archivo ya existe. Generarlo primero con
+  `pytest --cov=src --cov-report=json` desde la raíz; si no, `CoverageAnalyzer` reporta warning
+  de archivo no encontrado en vez del porcentaje real de cobertura.
 
 ---
 
