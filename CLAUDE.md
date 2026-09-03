@@ -642,18 +642,25 @@ el merge es a la rama default.
   (arriba, sobre `src/` completo, mismo comando que CI) es la fuente de verdad local para
   tipos — bloquea el commit si hay errores reales.
 - **"Zone of Pain" de `ArchitectAnalyst` — falso positivo aceptado permanentemente** (`US-ADJ-13`,
-  `docs/specs/ajustes/US-ADJ-13.md`): 5 críticos `DistanceAnalyzer` (D > 0.5), uno por cada
+  `docs/specs/ajustes/US-ADJ-13.md`; causa raíz **corregida** en `US-ADJ-19`,
+  `docs/specs/ajustes/US-ADJ-19.md`): 5 críticos `DistanceAnalyzer` (D > 0.5), uno por cada
   paquete raíz de BC (`identidad`, `settings`, `shared`, `banco_preguntas`,
   `actividad_evaluativa`), señalados sin acción en las retros de `BL-002`, `BL-003` y `BL-004`.
-  Causa raíz estructural, no un defecto de diseño real: cada BC es una hoja del grafo de
-  dependencias por diseño (`Ca=0` siempre, por la regla "sin imports directos entre BCs"), lo
-  que fija `Instability≈0`; como los puertos `ABC` (correctamente declarados en
-  `entities/ports/` en los 3 BCs) son una minoría chica frente al resto del código concreto de
-  cada BC, `Abstractness` también es bajo. Probado y descartado: `analysis_depth=2` (pensado
-  para separar capas) no lo resuelve — los críticos **suben de 5 a 15**, porque
-  `use_cases`/`interface_adapters`/`frameworks` no tienen ninguna clase abstracta propia (los
-  puertos viven solo en `entities/ports/`) y cada capa da D=1.00 CRITICAL por separado. Ninguna
-  retro futura debe volver a proponer "recalibrar" sin revisar antes esta nota.
+  **Causa raíz real (no la que documentaba `US-ADJ-13`):** un bug de `DependencyGraphBuilder`
+  (`quality_agents.architectanalyst`, reportado upstream en
+  [`vvalotto/software_limpio#77`](https://github.com/vvalotto/software_limpio/issues/77)) deja
+  `Ca=Ce=0` para **todos** los módulos del proyecto, no solo entre BCs — el builder normaliza el
+  prefijo `src.` al derivar nombres de módulo desde rutas de archivo, pero no aplica la misma
+  normalización a los imports extraídos del código fuente, y este proyecto importa siempre como
+  `from src.<bc>...`. Verificado con código real: el grafo de dependencias completo tiene 0
+  aristas. Con `Ca=Ce=0` universal, `Instability` queda forzado a 0 y `D = |A + I - 1|` colapsa
+  a `D ≈ 1 - A` — dispara CRITICAL en cualquier paquete con abstracción baja, sin relación real
+  con el acoplamiento del proyecto. La explicación anterior ("cada BC es hoja del grafo por
+  diseño arquitectónico") era una interpretación plausible pero incorrecta de un síntoma —
+  **la aceptación del falso positivo se mantiene** (no hay nada que arreglar en `src/`), pero
+  no por esa razón. Probado y descartado (válido igual, independiente de la causa real):
+  `analysis_depth=2` no lo resuelve — los críticos suben de 5 a 15. Ninguna retro futura debe
+  volver a proponer "recalibrar" sin revisar antes esta nota ni el Issue upstream.
 - **Orden obligatorio al cerrar baseline: generar `coverage.json` antes de correr
   `architectanalyst`** (`US-ADJ-15`): `CoverageAnalyzer` busca el reporte relativo al `PATH`
   posicional del CLI (`src/` en este proyecto), no a la raíz del repo — con
@@ -661,6 +668,18 @@ el merge es a la rama default.
   `coverage.json` en la raíz, pero solo si ese archivo ya existe. Generarlo primero con
   `pytest --cov=src --cov-report=json` desde la raíz; si no, `CoverageAnalyzer` reporta warning
   de archivo no encontrado en vez del porcentaje real de cobertura.
+- **`LayerViolationsAnalyzer` no es una fuente de verdad confiable actualmente** (`US-ADJ-19`,
+  `docs/specs/ajustes/US-ADJ-19.md`): se documenta como el único chequeo "siempre CRITICAL, no
+  configurable" de `ArchitectAnalyst`, pero nunca detecta ninguna violación bajo ninguna
+  configuración probada — mismo bug de `DependencyGraphBuilder` que explica la "Zone of Pain"
+  de arriba (`Ca=Ce=0` para todo el proyecto, ver esa nota).
+  [`vvalotto/software_limpio#77`](https://github.com/vvalotto/software_limpio/issues/77).
+  **La regla de imports entre capas (`entities → use_cases → interface_adapters → frameworks`,
+  ver "Arquitectura interna" más arriba) se sostiene por revisión de código humana/asistida, no
+  por este chequeo automatizado**, hasta que el bug se resuelva upstream. `pyproject.toml`
+  tiene `[tool.architectanalyst.layers]` en el formato correcto (nombre de capa → capas
+  permitidas) desde `US-ADJ-19`, listo para cuando el bug se corrija — aunque hoy no detecte
+  nada.
 
 ---
 

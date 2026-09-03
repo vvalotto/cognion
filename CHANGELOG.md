@@ -9,6 +9,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Fixed
+- [US-ADJ-19] `LayerViolationsAnalyzer` no confiable — causa raíz real encontrada (+ corrección
+  de `US-ADJ-13`)
+  - `pyproject.toml`: `[tool.architectanalyst.layers]` corregido al formato documentado
+    (nombre de capa → capas permitidas, no globs de ruta) — listo para cuando se resuelva el
+    bug upstream
+  - Issue [`vvalotto/software_limpio#77`](https://github.com/vvalotto/software_limpio/issues/77)
+    con la causa raíz real: `DependencyGraphBuilder` no normaliza el prefijo `src.` de los
+    imports extraídos del código fuente, mientras que sí lo quita de los nombres de módulo
+    derivados de rutas de archivo — en un proyecto que importa como `from src.<bc>...`,
+    ningún import interno se registra jamás. Verificado con código real: el grafo de
+    dependencias del proyecto tiene 0 aristas en total
+  - `CLAUDE.md`: documenta que `LayerViolationsAnalyzer` no es confiable (la regla de imports
+    entre capas se sostiene por revisión de código) y **corrige** la nota de `US-ADJ-13`
+    (Zone of Pain) — la causa raíz real no es "cada BC es hoja del grafo por diseño
+    arquitectónico" sino el mismo bug de `DependencyGraphBuilder`, que fuerza `Ca=Ce=0` para
+    todo el proyecto, no solo entre BCs. La aceptación del falso positivo se mantiene, cambia
+    la explicación técnica
+  - Sin código de producción — documentación + config + Issue externo
+
 ### Changed
 - [US-ADJ-18] Refactor `SQLAlchemyPreguntaRepository` (Feature Envy/Ley de Demeter/Long Method)
   - Mapeadores de entidad↔modelo extraídos como **funciones de módulo privadas** (no métodos)
