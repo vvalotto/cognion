@@ -7,6 +7,7 @@ from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import BancoNoExiste
 from src.banco_preguntas.entities.eventos import PreguntaCargada
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
@@ -23,12 +24,14 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
 
         pregunta, evento = await use_case.execute(
             banco_id=banco.id,
-            texto="El sol es una estrella.",
+            metadatos=MetadatosPregunta(
+                texto="El sol es una estrella.",
+                unidad_tematica="Unidad 1",
+                tema="Astronomía",
+                dificultad=Dificultad.MEDIO,
+                importancia=Importancia.ALTO,
+            ),
             respuesta_correcta=True,
-            unidad_tematica="Unidad 1",
-            tema="Astronomía",
-            dificultad=Dificultad.MEDIO,
-            importancia=Importancia.ALTO,
         )
 
         assert pregunta.banco_id == banco.id
@@ -47,12 +50,14 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
 
         pregunta, _evento = await use_case.execute(
             banco_id=banco.id,
-            texto="El sol es una estrella.",
+            metadatos=MetadatosPregunta(
+                texto="El sol es una estrella.",
+                unidad_tematica="Unidad 1",
+                tema="Astronomía",
+                dificultad=Dificultad.MEDIO,
+                importancia=Importancia.ALTO,
+            ),
             respuesta_correcta=False,
-            unidad_tematica="Unidad 1",
-            tema="Astronomía",
-            dificultad=Dificultad.MEDIO,
-            importancia=Importancia.ALTO,
         )
 
         assert pregunta.respuesta_correcta is False
@@ -65,12 +70,14 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
         with pytest.raises(BancoNoExiste):
             await use_case.execute(
                 banco_id=uuid.uuid4(),
-                texto="El sol es una estrella.",
+                metadatos=MetadatosPregunta(
+                    texto="El sol es una estrella.",
+                    unidad_tematica="Unidad 1",
+                    tema="Astronomía",
+                    dificultad=Dificultad.MEDIO,
+                    importancia=Importancia.ALTO,
+                ),
                 respuesta_correcta=True,
-                unidad_tematica="Unidad 1",
-                tema="Astronomía",
-                dificultad=Dificultad.MEDIO,
-                importancia=Importancia.ALTO,
             )
 
         assert len(pregunta_repo.preguntas) == 0

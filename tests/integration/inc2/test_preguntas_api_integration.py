@@ -6,6 +6,7 @@ from src.app import app
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -37,15 +38,17 @@ async def _pregunta_om_persistida(session, banco_id: uuid.UUID) -> PreguntaPlant
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
     pregunta = PreguntaPlantillaOpcionMultiple.crear(
         banco_id=banco_id,
-        texto="¿Cuál es la capital de Entre Ríos?",
+        metadatos=MetadatosPregunta(
+            texto="¿Cuál es la capital de Entre Ríos?",
+            unidad_tematica="Unidad 1",
+            tema="Arquitectura",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         opciones=[
             Opcion(texto="Paraná", es_correcta=True),
             Opcion(texto="Concordia", es_correcta=False),
         ],
-        unidad_tematica="Unidad 1",
-        tema="Arquitectura",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
     await pregunta_repo.guardar(pregunta)
     return pregunta
@@ -55,12 +58,14 @@ async def _pregunta_vf_persistida(session, banco_id: uuid.UUID) -> PreguntaPlant
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
     pregunta = PreguntaPlantillaVerdaderoFalso.crear(
         banco_id=banco_id,
-        texto="El sol es una estrella.",
+        metadatos=MetadatosPregunta(
+            texto="El sol es una estrella.",
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         respuesta_correcta=True,
-        unidad_tematica="Unidad 1",
-        tema="Astronomía",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
     await pregunta_repo.guardar(pregunta)
     return pregunta

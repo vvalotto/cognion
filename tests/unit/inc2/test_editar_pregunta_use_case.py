@@ -10,6 +10,7 @@ from src.banco_preguntas.entities.errors import (
 )
 from src.banco_preguntas.entities.eventos import PreguntaEditada
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
@@ -22,27 +23,31 @@ from tests.unit.inc2._fakes import FakePreguntaRepository
 def _pregunta_om() -> PreguntaPlantillaOpcionMultiple:
     return PreguntaPlantillaOpcionMultiple.crear(
         banco_id=uuid.uuid4(),
-        texto="¿Cuál es la capital de Entre Ríos?",
+        metadatos=MetadatosPregunta(
+            texto="¿Cuál es la capital de Entre Ríos?",
+            unidad_tematica="Unidad 1",
+            tema="Arquitectura",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         opciones=[
             Opcion(texto="Paraná", es_correcta=True),
             Opcion(texto="Concordia", es_correcta=False),
         ],
-        unidad_tematica="Unidad 1",
-        tema="Arquitectura",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
 
 
 def _pregunta_vf() -> PreguntaPlantillaVerdaderoFalso:
     return PreguntaPlantillaVerdaderoFalso.crear(
         banco_id=uuid.uuid4(),
-        texto="El sol es una estrella.",
+        metadatos=MetadatosPregunta(
+            texto="El sol es una estrella.",
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         respuesta_correcta=True,
-        unidad_tematica="Unidad 1",
-        tema="Astronomía",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
 
 
@@ -59,11 +64,13 @@ class TestEditarPreguntaUseCase:
 
         editada, evento = await use_case.execute(
             pregunta_id=pregunta.id,
-            texto="¿Cuál es la capital de la provincia de Entre Ríos?",
-            unidad_tematica="Unidad 2",
-            tema="Geografía",
-            dificultad=Dificultad.BAJO,
-            importancia=Importancia.MEDIO,
+            metadatos=MetadatosPregunta(
+                texto="¿Cuál es la capital de la provincia de Entre Ríos?",
+                unidad_tematica="Unidad 2",
+                tema="Geografía",
+                dificultad=Dificultad.BAJO,
+                importancia=Importancia.MEDIO,
+            ),
             opciones=nuevas_opciones,
         )
 
@@ -82,11 +89,13 @@ class TestEditarPreguntaUseCase:
 
         editada, evento = await use_case.execute(
             pregunta_id=pregunta.id,
-            texto="La luna es una estrella.",
-            unidad_tematica="Unidad 2",
-            tema="Geografía",
-            dificultad=Dificultad.BAJO,
-            importancia=Importancia.MEDIO,
+            metadatos=MetadatosPregunta(
+                texto="La luna es una estrella.",
+                unidad_tematica="Unidad 2",
+                tema="Geografía",
+                dificultad=Dificultad.BAJO,
+                importancia=Importancia.MEDIO,
+            ),
             respuesta_correcta=False,
         )
 
@@ -101,11 +110,13 @@ class TestEditarPreguntaUseCase:
         with pytest.raises(PreguntaNoExiste):
             await use_case.execute(
                 pregunta_id=uuid.uuid4(),
-                texto="texto",
-                unidad_tematica="Unidad 1",
-                tema="Tema",
-                dificultad=Dificultad.MEDIO,
-                importancia=Importancia.ALTO,
+                metadatos=MetadatosPregunta(
+                    texto="texto",
+                    unidad_tematica="Unidad 1",
+                    tema="Tema",
+                    dificultad=Dificultad.MEDIO,
+                    importancia=Importancia.ALTO,
+                ),
                 respuesta_correcta=True,
             )
 
@@ -118,11 +129,13 @@ class TestEditarPreguntaUseCase:
         with pytest.raises(OpcionesInvalidas):
             await use_case.execute(
                 pregunta_id=pregunta.id,
-                texto=pregunta.texto,
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad,
-                importancia=pregunta.importancia,
+                metadatos=MetadatosPregunta(
+                    texto=pregunta.texto,
+                    unidad_tematica=pregunta.unidad_tematica,
+                    tema=pregunta.tema,
+                    dificultad=pregunta.dificultad,
+                    importancia=pregunta.importancia,
+                ),
                 opciones=[
                     Opcion(texto="Paraná", es_correcta=False),
                     Opcion(texto="Concordia", es_correcta=False),
@@ -139,10 +152,12 @@ class TestEditarPreguntaUseCase:
         with pytest.raises(PreguntaInactiva):
             await use_case.execute(
                 pregunta_id=pregunta.id,
-                texto=pregunta.texto,
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad,
-                importancia=pregunta.importancia,
+                metadatos=MetadatosPregunta(
+                    texto=pregunta.texto,
+                    unidad_tematica=pregunta.unidad_tematica,
+                    tema=pregunta.tema,
+                    dificultad=pregunta.dificultad,
+                    importancia=pregunta.importancia,
+                ),
                 respuesta_correcta=pregunta.respuesta_correcta,
             )
