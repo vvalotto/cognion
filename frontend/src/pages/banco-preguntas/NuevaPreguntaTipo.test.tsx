@@ -71,4 +71,38 @@ describe("NuevaPreguntaTipo", () => {
 
     expect(await screen.findByText("Banco")).toBeInTheDocument()
   })
+
+  it("presionar Enter sobre 'Opción múltiple' navega igual que el click", async () => {
+    const user = userEvent.setup()
+    renderNuevaPreguntaTipo()
+
+    const card = screen.getByText("Opción múltiple").closest('[role="button"]') as HTMLElement
+    card.focus()
+    await user.keyboard("{Enter}")
+
+    expect(await screen.findByText("Formulario Opción múltiple")).toBeInTheDocument()
+  })
+
+  it("presionar Enter sobre 'Verdadero/Falso' navega igual que el click", async () => {
+    const user = userEvent.setup()
+    renderNuevaPreguntaTipo()
+
+    const card = screen.getByText("Verdadero / Falso").closest('[role="button"]') as HTMLElement
+    card.focus()
+    await user.keyboard("{Enter}")
+
+    expect(await screen.findByText("Formulario Verdadero/Falso")).toBeInTheDocument()
+  })
+
+  it("presionar una tecla distinta de Enter no navega", async () => {
+    const user = userEvent.setup()
+    renderNuevaPreguntaTipo()
+
+    const card = screen.getByText("Opción múltiple").closest('[role="button"]') as HTMLElement
+    card.focus()
+    await user.keyboard("a")
+
+    expect(screen.queryByText("Formulario Opción múltiple")).not.toBeInTheDocument()
+    expect(screen.getByText("¿Qué tipo de pregunta querés cargar?")).toBeInTheDocument()
+  })
 })
