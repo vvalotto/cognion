@@ -4,6 +4,7 @@ from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.eventos import PreguntaCargada
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.interface_adapters.controllers.preguntas_controller import (
     PreguntasController,
@@ -38,15 +39,17 @@ class TestPreguntasController:
 
         pregunta, evento = await controller.cargar_pregunta_opcion_multiple(
             banco_id=banco.id,
-            texto="¿Cuál es la capital de Entre Ríos?",
+            metadatos=MetadatosPregunta(
+                texto="¿Cuál es la capital de Entre Ríos?",
+                unidad_tematica="Unidad 1",
+                tema="Arquitectura",
+                dificultad=Dificultad.MEDIO,
+                importancia=Importancia.ALTO,
+            ),
             opciones=[
                 Opcion(texto="Paraná", es_correcta=True),
                 Opcion(texto="Concordia", es_correcta=False),
             ],
-            unidad_tematica="Unidad 1",
-            tema="Arquitectura",
-            dificultad=Dificultad.MEDIO,
-            importancia=Importancia.ALTO,
         )
 
         assert pregunta.banco_id == banco.id
@@ -61,12 +64,14 @@ class TestPreguntasController:
 
         pregunta, evento = await controller.cargar_pregunta_verdadero_falso(
             banco_id=banco.id,
-            texto="El sol es una estrella.",
+            metadatos=MetadatosPregunta(
+                texto="El sol es una estrella.",
+                unidad_tematica="Unidad 1",
+                tema="Astronomía",
+                dificultad=Dificultad.MEDIO,
+                importancia=Importancia.ALTO,
+            ),
             respuesta_correcta=True,
-            unidad_tematica="Unidad 1",
-            tema="Astronomía",
-            dificultad=Dificultad.MEDIO,
-            importancia=Importancia.ALTO,
         )
 
         assert pregunta.banco_id == banco.id
@@ -81,12 +86,14 @@ class TestPreguntasController:
         controller = _controller(banco_repo, pregunta_repo)
         pregunta, _evento = await controller.cargar_pregunta_verdadero_falso(
             banco_id=banco.id,
-            texto="El sol es una estrella.",
+            metadatos=MetadatosPregunta(
+                texto="El sol es una estrella.",
+                unidad_tematica="Unidad 1",
+                tema="Astronomía",
+                dificultad=Dificultad.MEDIO,
+                importancia=Importancia.ALTO,
+            ),
             respuesta_correcta=True,
-            unidad_tematica="Unidad 1",
-            tema="Astronomía",
-            dificultad=Dificultad.MEDIO,
-            importancia=Importancia.ALTO,
         )
 
         eliminada, _evento = await controller.eliminar_pregunta(pregunta_id=pregunta.id)

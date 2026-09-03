@@ -1,0 +1,34 @@
+{
+  "us_id": "US-ADJ-17",
+  "titulo": "Value Object MetadatosPregunta (Data Clump/Primitive Obsession, Banco de Preguntas)",
+  "stack": "backend",
+  "backend_changes": true,
+  "frontend_changes": false,
+  "gates": {
+    "pytest_completo": {
+      "passed": 739,
+      "failed": 0,
+      "nota": "Mismo conteo que antes del refactor — actualización de firma en tests existentes, sin tests nuevos ni eliminados."
+    },
+    "mypy": {
+      "errores": 0,
+      "archivos_analizados": 190
+    },
+    "designreviewer": {
+      "comando": "designreviewer src/ --config pyproject.toml",
+      "blocking_issues_antes_del_fix_cbo": 1,
+      "blocking_issues_final": 0,
+      "warnings_antes": 159,
+      "warnings_despues": 129,
+      "pregunta_plantilla_py_issues": 0,
+      "preguntas_controller_py_issues": 0,
+      "nota": "CRITICAL transitorio (CBO=11/10 en SQLAlchemyPreguntaRepository al sumar MetadatosPregunta como dependencia) corregido en la misma US moviendo la conversión str->enum a MetadatosPregunta.desde_valores_persistidos()."
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "Refactor backend sin cambio de comportamiento observable ni de contrato HTTP. Decisión de diseño no explícita en la spec: la entidad almacena metadatos: MetadatosPregunta con properties de solo lectura de compatibilidad (texto/unidad_tematica/tema/dificultad/importancia), evitando tocar 42 sitios de lectura en bancos_router.py/pregunta_repository.py que no estaban en el alcance de la spec. Aprobado por Víctor antes de continuar a Fase 4/5/7.",
+  "observaciones": [
+    "36 sitios de construcción (.crear()/.editar()) actualizados en 11 archivos de test (1429+ líneas) — misma cobertura, nueva firma, sin tests nuevos.",
+    "Fuera de alcance (según spec, para US-ADJ-18): persistencia sigue en columnas individuales, sin migración de schema; la gateway sigue con Ley de Demeter en guardar/actualizar (pregunta.dificultad.value)."
+  ]
+}

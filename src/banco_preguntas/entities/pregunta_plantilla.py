@@ -13,6 +13,7 @@ from src.banco_preguntas.entities.errors import (
     PreguntaYaEliminada,
 )
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 
 
@@ -37,46 +38,51 @@ class PreguntaPlantillaVerdaderoFalso:
 
     id: UUID
     banco_id: UUID
-    texto: str
+    metadatos: MetadatosPregunta
     respuesta_correcta: bool
-    unidad_tematica: str
-    tema: str
-    dificultad: Dificultad
-    importancia: Importancia
     activa: bool = field(default=True)
     fecha_creacion: datetime = field(default_factory=_ahora)
+
+    @property
+    def texto(self) -> str:
+        """Delegado a `metadatos.texto` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.texto
+
+    @property
+    def unidad_tematica(self) -> str:
+        """Delegado a `metadatos.unidad_tematica` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.unidad_tematica
+
+    @property
+    def tema(self) -> str:
+        """Delegado a `metadatos.tema` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.tema
+
+    @property
+    def dificultad(self) -> Dificultad:
+        """Delegado a `metadatos.dificultad` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.dificultad
+
+    @property
+    def importancia(self) -> Importancia:
+        """Delegado a `metadatos.importancia` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.importancia
 
     @staticmethod
     def crear(
         banco_id: UUID,
-        texto: str,
+        metadatos: MetadatosPregunta,
         respuesta_correcta: bool,
-        unidad_tematica: str,
-        tema: str,
-        dificultad: Dificultad,
-        importancia: Importancia,
     ) -> PreguntaPlantillaVerdaderoFalso:
         """Crea la pregunta — sin invariantes de negocio adicionales sobre `respuesta_correcta`."""
         return PreguntaPlantillaVerdaderoFalso(
             id=uuid4(),
             banco_id=banco_id,
-            texto=texto,
+            metadatos=metadatos,
             respuesta_correcta=respuesta_correcta,
-            unidad_tematica=unidad_tematica,
-            tema=tema,
-            dificultad=dificultad,
-            importancia=importancia,
         )
 
-    def editar(
-        self,
-        texto: str,
-        respuesta_correcta: bool,
-        unidad_tematica: str,
-        tema: str,
-        dificultad: Dificultad,
-        importancia: Importancia,
-    ) -> None:
+    def editar(self, metadatos: MetadatosPregunta, respuesta_correcta: bool) -> None:
         """Edita la pregunta in-place — sin invariantes adicionales sobre `respuesta_correcta`.
 
         Levanta `PreguntaInactiva` si `activa = false`.
@@ -84,12 +90,8 @@ class PreguntaPlantillaVerdaderoFalso:
         if not self.activa:
             raise PreguntaInactiva(self.id)
 
-        self.texto = texto
+        self.metadatos = metadatos
         self.respuesta_correcta = respuesta_correcta
-        self.unidad_tematica = unidad_tematica
-        self.tema = tema
-        self.dificultad = dificultad
-        self.importancia = importancia
 
     def eliminar(self) -> None:
         """Da de baja lógica la pregunta (INV-BP-04) — `activa` pasa a `False`.
@@ -108,24 +110,41 @@ class PreguntaPlantillaOpcionMultiple:
 
     id: UUID
     banco_id: UUID
-    texto: str
+    metadatos: MetadatosPregunta
     opciones: list[Opcion]
-    unidad_tematica: str
-    tema: str
-    dificultad: Dificultad
-    importancia: Importancia
     activa: bool = field(default=True)
     fecha_creacion: datetime = field(default_factory=_ahora)
+
+    @property
+    def texto(self) -> str:
+        """Delegado a `metadatos.texto` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.texto
+
+    @property
+    def unidad_tematica(self) -> str:
+        """Delegado a `metadatos.unidad_tematica` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.unidad_tematica
+
+    @property
+    def tema(self) -> str:
+        """Delegado a `metadatos.tema` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.tema
+
+    @property
+    def dificultad(self) -> Dificultad:
+        """Delegado a `metadatos.dificultad` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.dificultad
+
+    @property
+    def importancia(self) -> Importancia:
+        """Delegado a `metadatos.importancia` — compatibilidad de lectura (`US-ADJ-17`)."""
+        return self.metadatos.importancia
 
     @staticmethod
     def crear(
         banco_id: UUID,
-        texto: str,
+        metadatos: MetadatosPregunta,
         opciones: list[Opcion],
-        unidad_tematica: str,
-        tema: str,
-        dificultad: Dificultad,
-        importancia: Importancia,
     ) -> PreguntaPlantillaOpcionMultiple:
         """Crea la pregunta validando INV-BP-02/03; levanta `OpcionesInvalidas` si no se cumplen."""
         _validar_opciones(opciones)
@@ -133,23 +152,11 @@ class PreguntaPlantillaOpcionMultiple:
         return PreguntaPlantillaOpcionMultiple(
             id=uuid4(),
             banco_id=banco_id,
-            texto=texto,
+            metadatos=metadatos,
             opciones=opciones,
-            unidad_tematica=unidad_tematica,
-            tema=tema,
-            dificultad=dificultad,
-            importancia=importancia,
         )
 
-    def editar(
-        self,
-        texto: str,
-        opciones: list[Opcion],
-        unidad_tematica: str,
-        tema: str,
-        dificultad: Dificultad,
-        importancia: Importancia,
-    ) -> None:
+    def editar(self, metadatos: MetadatosPregunta, opciones: list[Opcion]) -> None:
         """Edita la pregunta in-place, reaplicando INV-BP-02/03.
 
         Levanta `PreguntaInactiva` si `activa = false`, `OpcionesInvalidas` si las opciones
@@ -160,12 +167,8 @@ class PreguntaPlantillaOpcionMultiple:
 
         _validar_opciones(opciones)
 
-        self.texto = texto
+        self.metadatos = metadatos
         self.opciones = opciones
-        self.unidad_tematica = unidad_tematica
-        self.tema = tema
-        self.dificultad = dificultad
-        self.importancia = importancia
 
     def eliminar(self) -> None:
         """Da de baja lógica la pregunta (INV-BP-04) — `activa` pasa a `False`.

@@ -7,6 +7,7 @@ from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import BancoNoExiste, OpcionesInvalidas
 from src.banco_preguntas.entities.eventos import PreguntaCargada
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
@@ -32,12 +33,14 @@ class TestCargarPreguntaOpcionMultipleUseCase:
 
         pregunta, evento = await use_case.execute(
             banco_id=banco.id,
-            texto="¿Cuál es la capital de Entre Ríos?",
+            metadatos=MetadatosPregunta(
+                texto="¿Cuál es la capital de Entre Ríos?",
+                unidad_tematica="Unidad 1",
+                tema="Arquitectura",
+                dificultad=Dificultad.MEDIO,
+                importancia=Importancia.ALTO,
+            ),
             opciones=_opciones_validas(),
-            unidad_tematica="Unidad 1",
-            tema="Arquitectura",
-            dificultad=Dificultad.MEDIO,
-            importancia=Importancia.ALTO,
         )
 
         assert pregunta.banco_id == banco.id
@@ -54,12 +57,14 @@ class TestCargarPreguntaOpcionMultipleUseCase:
         with pytest.raises(BancoNoExiste):
             await use_case.execute(
                 banco_id=uuid.uuid4(),
-                texto="¿Cuál es la capital de Entre Ríos?",
+                metadatos=MetadatosPregunta(
+                    texto="¿Cuál es la capital de Entre Ríos?",
+                    unidad_tematica="Unidad 1",
+                    tema="Arquitectura",
+                    dificultad=Dificultad.MEDIO,
+                    importancia=Importancia.ALTO,
+                ),
                 opciones=_opciones_validas(),
-                unidad_tematica="Unidad 1",
-                tema="Arquitectura",
-                dificultad=Dificultad.MEDIO,
-                importancia=Importancia.ALTO,
             )
 
         assert len(pregunta_repo.preguntas) == 0
@@ -74,12 +79,14 @@ class TestCargarPreguntaOpcionMultipleUseCase:
         with pytest.raises(OpcionesInvalidas):
             await use_case.execute(
                 banco_id=banco.id,
-                texto="¿Cuál es la capital de Entre Ríos?",
+                metadatos=MetadatosPregunta(
+                    texto="¿Cuál es la capital de Entre Ríos?",
+                    unidad_tematica="Unidad 1",
+                    tema="Arquitectura",
+                    dificultad=Dificultad.MEDIO,
+                    importancia=Importancia.ALTO,
+                ),
                 opciones=[Opcion(texto="Paraná", es_correcta=True)],
-                unidad_tematica="Unidad 1",
-                tema="Arquitectura",
-                dificultad=Dificultad.MEDIO,
-                importancia=Importancia.ALTO,
             )
 
         assert len(pregunta_repo.preguntas) == 0

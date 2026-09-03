@@ -9,6 +9,29 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Changed
+- [US-ADJ-17] Value Object `MetadatosPregunta` (Data Clump/Primitive Obsession, Banco de Preguntas)
+  - `entities/metadatos_pregunta.py` nuevo — agrupa `texto`, `unidad_tematica`, `tema`,
+    `dificultad`, `importancia` en un único VO, reemplazando el Data Clump que se repetía en
+    `entities/pregunta_plantilla.py` (14 issues de DesignReviewer) y
+    `interface_adapters/controllers/preguntas_controller.py` (12 issues) — ambos archivos
+    quedan en 0 issues tras el refactor (159 → 129 warnings totales del proyecto)
+  - `PreguntaPlantillaOpcionMultiple`/`PreguntaPlantillaVerdaderoFalso`: campo único
+    `metadatos: MetadatosPregunta` en vez de 5 campos sueltos, con `@property` de solo lectura
+    de compatibilidad (`texto`/`unidad_tematica`/`tema`/`dificultad`/`importancia`) — evita
+    tocar los 42 sitios de lectura en `bancos_router.py`/`pregunta_repository.py`
+  - 3 Use Case y `PreguntasController` reciben `metadatos: MetadatosPregunta` en vez de 5
+    parámetros sueltos; `preguntas_router.py` arma el VO desde el body del request antes de
+    invocar al controller — el contrato HTTP (JSON de request/response) no cambia
+  - Fix de CBO detectado en la misma US (`SQLAlchemyPreguntaRepository` 10→11/10 CRITICAL al
+    sumar `MetadatosPregunta` como dependencia nueva): `MetadatosPregunta.desde_valores_persistidos()`
+    centraliza la conversión `str → Dificultad/Importancia`, evitando que la gateway importe
+    esos dos tipos directamente
+  - Persistencia sin cambios (sigue en columnas individuales, sin migración de schema) —
+    limpieza completa de Ley de Demeter en la gateway queda para `US-ADJ-18`
+  - Sin cambio de comportamiento observable ni de contrato HTTP — 739/739 tests en verde,
+    mismo conteo que antes del refactor (actualización de firma en tests existentes)
+
 ### Added
 - [US-ADJ-16] Subir cobertura de branches del frontend por encima del umbral global (80%)
   - 3 tests nuevos en `NuevaPreguntaTipo.test.tsx` (interacción por teclado — `Enter` sobre
