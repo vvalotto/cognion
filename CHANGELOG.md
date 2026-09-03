@@ -10,6 +10,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Changed
+- [US-ADJ-18] Refactor `SQLAlchemyPreguntaRepository` (Feature Envy/Ley de Demeter/Long Method)
+  - Mapeadores de entidad↔modelo extraídos como **funciones de módulo privadas** (no métodos)
+    — `_modelo_desde_verdadero_falso`/`_modelo_desde_opcion_multiple`,
+    `_entidad_desde_modelo_verdadero_falso`/`_entidad_desde_modelo_opcion_multiple`,
+    `_a_entidad`, `_aplicar_pregunta_a_modelo`. `guardar`/`actualizar` quedan en 5-9 líneas
+  - `MetadatosPregunta.dificultad_valor`/`.importancia_valor` (+ properties equivalentes en
+    la entidad) resuelven la Ley de Demeter (`pregunta.dificultad.value`, profundidad 2 →
+    `pregunta.dificultad_valor`, profundidad 1)
+  - Decisión de diseño no anticipada por la spec: extraer los mapeadores como *métodos*
+    (como pedía literalmente la spec) disparaba un CRITICAL nuevo de `WMCAnalyzer` (cada
+    método nuevo suma complejidad base al WMC de la clase). Solución: funciones de módulo,
+    invisibles para `WMCAnalyzer`/`FeatureEnvyAnalyzer` (solo analizan `ast.ClassDef`)
+  - `pregunta_repository.py`: 15 → 3 issues de `DesignReviewer`, los 3 restantes son de
+    `filtrar()` (explícitamente fuera de alcance) — 0 issues en el código tocado, mejor que
+    el objetivo de la spec (≤2). WMC de la clase: 22 → 15
+  - `filtrar` (7 parámetros) sin tocar — fuera de alcance, queda anotado para una futura
+    continuación (`FiltroBanco`, mismo patrón que `MetadatosPregunta`)
+  - Sin cambio de comportamiento observable — 739/739 tests en verde, mismas aserciones de
+    integración
+
 - [US-ADJ-17] Value Object `MetadatosPregunta` (Data Clump/Primitive Obsession, Banco de Preguntas)
   - `entities/metadatos_pregunta.py` nuevo — agrupa `texto`, `unidad_tematica`, `tema`,
     `dificultad`, `importancia` en un único VO, reemplazando el Data Clump que se repetía en

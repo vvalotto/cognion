@@ -22,6 +22,117 @@ from src.banco_preguntas.frameworks.db.models import PreguntaPlantillaModel
 TIPO_OPCION_MULTIPLE = "opcion_multiple"
 TIPO_VERDADERO_FALSO = "verdadero_falso"
 
+# Los 4 mapeadores siguientes son funciones de módulo (no métodos) a propósito: su CC no
+# computa en el WMC de SQLAlchemyPreguntaRepository, y quedan cortos por tipo concreto en vez
+# de un único método con isinstance/tipo interno (US-ADJ-18).
+
+
+def _modelo_desde_verdadero_falso(
+    pregunta: PreguntaPlantillaVerdaderoFalso,
+) -> PreguntaPlantillaModel:
+    """Mapea una `PreguntaPlantillaVerdaderoFalso` al modelo SQLAlchemy."""
+    return PreguntaPlantillaModel(
+        id=pregunta.id,
+        banco_id=pregunta.banco_id,
+        tipo=TIPO_VERDADERO_FALSO,
+        texto=pregunta.texto,
+        opciones=None,
+        respuesta_correcta=pregunta.respuesta_correcta,
+        unidad_tematica=pregunta.unidad_tematica,
+        tema=pregunta.tema,
+        dificultad=pregunta.dificultad_valor,
+        importancia=pregunta.importancia_valor,
+        activa=pregunta.activa,
+        fecha_creacion=pregunta.fecha_creacion,
+    )
+
+
+def _modelo_desde_opcion_multiple(
+    pregunta: PreguntaPlantillaOpcionMultiple,
+) -> PreguntaPlantillaModel:
+    """Mapea una `PreguntaPlantillaOpcionMultiple` al modelo SQLAlchemy."""
+    opciones = [{"texto": o.texto, "es_correcta": o.es_correcta} for o in pregunta.opciones]
+    return PreguntaPlantillaModel(
+        id=pregunta.id,
+        banco_id=pregunta.banco_id,
+        tipo=TIPO_OPCION_MULTIPLE,
+        texto=pregunta.texto,
+        opciones=opciones,
+        respuesta_correcta=None,
+        unidad_tematica=pregunta.unidad_tematica,
+        tema=pregunta.tema,
+        dificultad=pregunta.dificultad_valor,
+        importancia=pregunta.importancia_valor,
+        activa=pregunta.activa,
+        fecha_creacion=pregunta.fecha_creacion,
+    )
+
+
+def _entidad_desde_modelo_verdadero_falso(
+    modelo: PreguntaPlantillaModel, metadatos: MetadatosPregunta
+) -> PreguntaPlantillaVerdaderoFalso:
+    """Mapea el modelo SQLAlchemy a `PreguntaPlantillaVerdaderoFalso` — ver nota de módulo."""
+    return PreguntaPlantillaVerdaderoFalso(
+        id=modelo.id,
+        banco_id=modelo.banco_id,
+        metadatos=metadatos,
+        respuesta_correcta=bool(modelo.respuesta_correcta),
+        activa=modelo.activa,
+        fecha_creacion=modelo.fecha_creacion,
+    )
+
+
+def _entidad_desde_modelo_opcion_multiple(
+    modelo: PreguntaPlantillaModel, metadatos: MetadatosPregunta
+) -> PreguntaPlantillaOpcionMultiple:
+    """Mapea el modelo SQLAlchemy a `PreguntaPlantillaOpcionMultiple` — ver nota de módulo."""
+    return PreguntaPlantillaOpcionMultiple(
+        id=modelo.id,
+        banco_id=modelo.banco_id,
+        metadatos=metadatos,
+        opciones=[
+            Opcion(texto=o["texto"], es_correcta=o["es_correcta"]) for o in (modelo.opciones or [])
+        ],
+        activa=modelo.activa,
+        fecha_creacion=modelo.fecha_creacion,
+    )
+
+
+def _a_entidad(
+    modelo: PreguntaPlantillaModel,
+) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso:
+    """Mapea una fila de `pregunta_plantilla` al aggregate concreto según su `tipo`."""
+    metadatos = MetadatosPregunta.desde_valores_persistidos(
+        texto=modelo.texto,
+        unidad_tematica=modelo.unidad_tematica,
+        tema=modelo.tema,
+        dificultad=modelo.dificultad,
+        importancia=modelo.importancia,
+    )
+    if modelo.tipo == TIPO_VERDADERO_FALSO:
+        return _entidad_desde_modelo_verdadero_falso(modelo, metadatos)
+    return _entidad_desde_modelo_opcion_multiple(modelo, metadatos)
+
+
+def _aplicar_pregunta_a_modelo(
+    modelo: PreguntaPlantillaModel,
+    pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso,
+) -> None:
+    """Copia los campos de `pregunta` al `modelo` ya persistido (mutación in-place)."""
+    modelo.texto = pregunta.texto
+    modelo.unidad_tematica = pregunta.unidad_tematica
+    modelo.tema = pregunta.tema
+    modelo.dificultad = pregunta.dificultad_valor
+    modelo.importancia = pregunta.importancia_valor
+    modelo.activa = pregunta.activa
+    if isinstance(pregunta, PreguntaPlantillaVerdaderoFalso):
+        modelo.respuesta_correcta = pregunta.respuesta_correcta
+    else:
+        modelo.opciones = [
+            {"texto": opcion.texto, "es_correcta": opcion.es_correcta}
+            for opcion in pregunta.opciones
+        ]
+
 
 class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
     """Persiste plantillas de pregunta usando SQLAlchemy async."""
@@ -35,38 +146,9 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
     ) -> None:
         """Guarda una pregunta nueva, mapeando al modelo según su tipo concreto."""
         if isinstance(pregunta, PreguntaPlantillaVerdaderoFalso):
-            modelo = PreguntaPlantillaModel(
-                id=pregunta.id,
-                banco_id=pregunta.banco_id,
-                tipo=TIPO_VERDADERO_FALSO,
-                texto=pregunta.texto,
-                opciones=None,
-                respuesta_correcta=pregunta.respuesta_correcta,
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad.value,
-                importancia=pregunta.importancia.value,
-                activa=pregunta.activa,
-                fecha_creacion=pregunta.fecha_creacion,
-            )
+            modelo = _modelo_desde_verdadero_falso(pregunta)
         else:
-            modelo = PreguntaPlantillaModel(
-                id=pregunta.id,
-                banco_id=pregunta.banco_id,
-                tipo=TIPO_OPCION_MULTIPLE,
-                texto=pregunta.texto,
-                opciones=[
-                    {"texto": opcion.texto, "es_correcta": opcion.es_correcta}
-                    for opcion in pregunta.opciones
-                ],
-                respuesta_correcta=None,
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad.value,
-                importancia=pregunta.importancia.value,
-                activa=pregunta.activa,
-                fecha_creacion=pregunta.fecha_creacion,
-            )
+            modelo = _modelo_desde_opcion_multiple(pregunta)
 
         self._session.add(modelo)
         await self._session.commit()
@@ -78,7 +160,7 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
         modelo = await self._session.get(PreguntaPlantillaModel, pregunta_id)
         if modelo is None:
             return None
-        return self._a_entidad(modelo)
+        return _a_entidad(modelo)
 
     async def filtrar(
         self,
@@ -120,43 +202,8 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
             query = query.limit(tamanio_pagina).offset((pagina - 1) * tamanio_pagina)
 
         resultado = await self._session.execute(query)
-        preguntas = [self._a_entidad(modelo) for modelo in resultado.scalars().all()]
+        preguntas = [_a_entidad(modelo) for modelo in resultado.scalars().all()]
         return ResultadoPaginadoPreguntas(preguntas=preguntas, total=total)
-
-    @staticmethod
-    def _a_entidad(
-        modelo: PreguntaPlantillaModel,
-    ) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso:
-        """Mapea una fila de `pregunta_plantilla` al aggregate concreto según su `tipo`."""
-        metadatos = MetadatosPregunta.desde_valores_persistidos(
-            texto=modelo.texto,
-            unidad_tematica=modelo.unidad_tematica,
-            tema=modelo.tema,
-            dificultad=modelo.dificultad,
-            importancia=modelo.importancia,
-        )
-
-        if modelo.tipo == TIPO_VERDADERO_FALSO:
-            return PreguntaPlantillaVerdaderoFalso(
-                id=modelo.id,
-                banco_id=modelo.banco_id,
-                metadatos=metadatos,
-                respuesta_correcta=bool(modelo.respuesta_correcta),
-                activa=modelo.activa,
-                fecha_creacion=modelo.fecha_creacion,
-            )
-
-        return PreguntaPlantillaOpcionMultiple(
-            id=modelo.id,
-            banco_id=modelo.banco_id,
-            metadatos=metadatos,
-            opciones=[
-                Opcion(texto=o["texto"], es_correcta=o["es_correcta"])
-                for o in (modelo.opciones or [])
-            ],
-            activa=modelo.activa,
-            fecha_creacion=modelo.fecha_creacion,
-        )
 
     async def actualizar(
         self, pregunta: PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso
@@ -165,19 +212,6 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
         modelo = await self._session.get(PreguntaPlantillaModel, pregunta.id)
         assert modelo is not None
 
-        modelo.texto = pregunta.texto
-        modelo.unidad_tematica = pregunta.unidad_tematica
-        modelo.tema = pregunta.tema
-        modelo.dificultad = pregunta.dificultad.value
-        modelo.importancia = pregunta.importancia.value
-        modelo.activa = pregunta.activa
-
-        if isinstance(pregunta, PreguntaPlantillaVerdaderoFalso):
-            modelo.respuesta_correcta = pregunta.respuesta_correcta
-        else:
-            modelo.opciones = [
-                {"texto": opcion.texto, "es_correcta": opcion.es_correcta}
-                for opcion in pregunta.opciones
-            ]
+        _aplicar_pregunta_a_modelo(modelo, pregunta)
 
         await self._session.commit()

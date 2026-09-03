@@ -68,6 +68,16 @@ class PreguntaPlantillaVerdaderoFalso:
         """Delegado a `metadatos.importancia` — compatibilidad de lectura (`US-ADJ-17`)."""
         return self.metadatos.importancia
 
+    @property
+    def dificultad_valor(self) -> str:
+        """Delegado a `metadatos.dificultad_valor` — profundidad 1 en la gateway (`US-ADJ-18`)."""
+        return self.metadatos.dificultad_valor
+
+    @property
+    def importancia_valor(self) -> str:
+        """Delegado a `metadatos.importancia_valor` — profundidad 1 en la gateway (`US-ADJ-18`)."""
+        return self.metadatos.importancia_valor
+
     @staticmethod
     def crear(
         banco_id: UUID,
@@ -139,6 +149,16 @@ class PreguntaPlantillaOpcionMultiple:
     def importancia(self) -> Importancia:
         """Delegado a `metadatos.importancia` — compatibilidad de lectura (`US-ADJ-17`)."""
         return self.metadatos.importancia
+
+    @property
+    def dificultad_valor(self) -> str:
+        """Delegado a `metadatos.dificultad_valor` — profundidad 1 en la gateway (`US-ADJ-18`)."""
+        return self.metadatos.dificultad_valor
+
+    @property
+    def importancia_valor(self) -> str:
+        """Delegado a `metadatos.importancia_valor` — profundidad 1 en la gateway (`US-ADJ-18`)."""
+        return self.metadatos.importancia_valor
 
     @staticmethod
     def crear(
