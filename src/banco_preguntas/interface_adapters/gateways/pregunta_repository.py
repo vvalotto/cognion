@@ -91,8 +91,7 @@ def _entidad_desde_modelo_opcion_multiple(
         banco_id=modelo.banco_id,
         metadatos=metadatos,
         opciones=[
-            Opcion(texto=o["texto"], es_correcta=o["es_correcta"])
-            for o in (modelo.opciones or [])
+            Opcion(texto=o["texto"], es_correcta=o["es_correcta"]) for o in (modelo.opciones or [])
         ],
         activa=modelo.activa,
         fecha_creacion=modelo.fecha_creacion,
