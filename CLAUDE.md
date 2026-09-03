@@ -475,11 +475,28 @@ Los 4 PRs (#182, #184, #185, #187) mergeados a `develop` en orden (185→184→1
 chico primero) con CI en verde en cada uno, mismo criterio de "UAT en navegador real detecta lo
 que Vitest mockeado no ve" ya documentado en Identidad.
 
-**Incremento 3-ADJ — Adecuación Técnica, insertado fuera de secuencia, en curso** (decisión de
-Víctor 2026-09-02: no renumerar los Incrementos 4-7 ya mapeados a RF — Milestone GitHub
+**Lado Estudiante de la Iteración 4 completado 2026-09-02** — `US-3.4.5` (Estudiante ve sus
+materias y las actividades disponibles, incluido "fuera de período"), PR
+[#189](https://github.com/vvalotto/cognion/pull/189); `US-3.4.6` (Estudiante rinde su
+evaluación — responde, pausa y reanuda), PR
+[#190](https://github.com/vvalotto/cognion/pull/190); `US-3.4.7` (Estudiante finaliza su
+evaluación y ve la revisión completa), PR
+[#191](https://github.com/vvalotto/cognion/pull/191). Cierra completa la Iteración 4
+(backend + frontend), el DoD del Incremento 3 (estudiante completa una evaluación de principio
+a fin, docente extiende el plazo de una actividad activa) y con ella `US-ADJ-12` (ajuste
+inmediato post-UAT: `RendirEvaluacion.tsx` prellena la respuesta confirmada y navega sin
+reintentar registrar sobre una pregunta ya respondida). **`BL-004` — Actividad Evaluativa
+(Incremento 3) cerrada 2026-09-02** (`.cm/baselines/BL-004-actividad-evaluativa.md`), merge
+`develop → main` y tag `v0.5.0` ejecutados en el mismo cierre (a diferencia de `BL-001` a
+`BL-003`, esta vez no quedó diferido). Matriz de trazabilidad: RF-11, RF-11b, RF-12, RF-13
+pasan a Validado.
+
+**Incremento 3-ADJ — Adecuación Técnica, insertado fuera de secuencia tras el cierre de
+`BL-004`, en curso** (decisión de Víctor 2026-09-02: no renumerar los Incrementos 4-7 ya
+mapeados a RF — Milestone GitHub
 [Incremento 3-ADJ](https://github.com/vvalotto/cognion/milestone/10),
-`docs/plans/inc3-adj/inc3-adj-candidatas.md`). Se intercala antes de continuar la Iteración 4
-de Actividad Evaluativa (lado Estudiante). Deuda de tooling/arquitectura que las retros de
+`docs/plans/inc3-adj/inc3-adj-candidatas.md`). Se intercala antes de arrancar el Incremento 4
+(sin candidatas ni Iteración 0 propia todavía). Deuda de tooling/arquitectura que las retros de
 `BL-002`/`BL-003`/`BL-004` venían señalando sin resolver, más hallazgos de la sesión del
 2026-09-02 (cobertura de branches del frontend, revisión puntual de `DesignReviewer src/`).
 Ninguna de estas US-IEDD tiene RF asociado ni mueve fila de la matriz de trazabilidad (mismo
@@ -513,17 +530,11 @@ candidatas, specs completas en `docs/specs/ajustes/US-ADJ-13.md` a `US-ADJ-20.md
 Baseline propia a decidir con Víctor al cerrar (¿`BL-005` o se pliega a la apertura del
 Incremento 4?).
 
-**Próximo paso:** continuar el Incremento 3-ADJ con `US-ADJ-13` a `19` (7 pendientes de 8; orden
-sin fijar todavía). Recién al cerrarlo se retoma la Iteración 4 de Actividad Evaluativa con el
-lado Estudiante — `US-3.4.5` (materias y actividades disponibles, incluido "fuera de período"),
-`US-3.4.6` (rendir: responder, pausar, reanudar), `US-3.4.7` (finalizar y ver revisión
-completa), ya con Issues y specs creados (Issues #174-#176). Gate de diseño UX obligatorio antes
-de tocar `frontend/` para esas tres — verificar contra
-`docs/design/ux/wireframes-actividad-evaluativa.md` (aprobado en `US-3.0.2`) antes de escribir
-código.
-**Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
-(frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
-a fin, docente extiende el plazo de una sesión activa).
+**Próximo paso:** continuar el Incremento 3-ADJ con `US-ADJ-13` a `19` (7 pendientes de 8;
+orden sin fijar todavía). Recién al cerrarlo arranca el Incremento 4 (sin candidatas ni
+Iteración 0 propia todavía — a definir con Víctor).
+**Baseline abierta:** ninguna — `BL-004` (Incremento 3) cerrada. El Incremento 3-ADJ decide su
+propia baseline (`BL-005` o plegado a la apertura del Incremento 4) recién al cerrarse.
 **Branch activo:** ninguna — `develop` sincronizado.
 
 ---
