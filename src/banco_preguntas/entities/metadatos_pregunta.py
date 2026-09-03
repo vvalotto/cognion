@@ -23,6 +23,16 @@ class MetadatosPregunta:
     dificultad: Dificultad
     importancia: Importancia
 
+    @property
+    def dificultad_valor(self) -> str:
+        """`.value` de `dificultad` ya resuelto — profundidad 1 en vez de 2 (`US-ADJ-18`)."""
+        return self.dificultad.value
+
+    @property
+    def importancia_valor(self) -> str:
+        """`.value` de `importancia` ya resuelto — profundidad 1 en vez de 2 (`US-ADJ-18`)."""
+        return self.importancia.value
+
     @classmethod
     def desde_valores_persistidos(
         cls,
