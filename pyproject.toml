@@ -141,8 +141,12 @@ paths = ["src"]
 db_path = "quality/reports/architectanalyst/history.db"
 coverage_report_path = "../coverage.json"
 
+# Formato real de LayersConfig.rules: nombre de capa -> lista de nombres de capa permitidos
+# (no globs de ruta). No detecta violaciones hoy por un bug de DependencyGraphBuilder
+# (vvalotto/software_limpio, Issue pendiente — CLAUDE.md, nota de US-ADJ-19) — se deja en el
+# formato correcto para cuando se resuelva upstream, en vez del formato inválido anterior.
 [tool.architectanalyst.layers]
-entities = ["src/*/entities"]
-use_cases = ["src/*/use_cases"]
-interface_adapters = ["src/*/interface_adapters"]
-frameworks = ["src/*/frameworks"]
+entities = []
+use_cases = ["entities"]
+interface_adapters = ["use_cases", "entities"]
+frameworks = ["interface_adapters", "use_cases", "entities"]
