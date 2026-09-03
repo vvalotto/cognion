@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-19",
+    "us_title": "LayerViolationsAnalyzer no detecta violaciones bajo ninguna config",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-03T14:41:33.743471+00:00",
+    "completed_at": "2026-09-03T14:53:08.277357+00:00",
+    "total_elapsed_seconds": 694,
+    "effective_seconds": 694,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-03T14:41:33.927013+00:00",
+      "completed_at": "2026-09-03T14:43:30.501528+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-03T14:43:49.850025+00:00",
+      "completed_at": "2026-09-03T14:44:03.951231+00:00",
+      "elapsed_seconds": 14,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-03T14:49:21.717867+00:00",
+      "completed_at": "2026-09-03T14:51:04.773807+00:00",
+      "elapsed_seconds": 103,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Corregir [tool.architectanalyst.layers]",
+          "task_type": "config",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-03T14:49:21.831599+00:00",
+          "completed_at": "2026-09-03T14:49:30.170127+00:00",
+          "elapsed_seconds": 8,
+          "actual_minutes": 0.13,
+          "variance_minutes": -4.87,
+          "file_created": "pyproject.toml",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Abrir Issue upstream software_limpio",
+          "task_type": "docs",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-03T14:49:40.770462+00:00",
+          "completed_at": "2026-09-03T14:50:21.008638+00:00",
+          "elapsed_seconds": 40,
+          "actual_minutes": 0.67,
+          "variance_minutes": -14.33,
+          "file_created": "Issue #77 en vvalotto/software_limpio",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Documentar en CLAUDE.md + corregir nota de US-ADJ-13",
+          "task_type": "docs",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-03T14:50:21.123735+00:00",
+          "completed_at": "2026-09-03T14:50:50.990873+00:00",
+          "elapsed_seconds": 29,
+          "actual_minutes": 0.48,
+          "variance_minutes": -14.52,
+          "file_created": "CLAUDE.md",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-03T14:52:11.477719+00:00",
+      "completed_at": "2026-09-03T14:52:42.414426+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-03T14:52:42.528107+00:00",
+      "completed_at": "2026-09-03T14:53:08.162371+00:00",
+      "elapsed_seconds": 25,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 5,
+    "estimated_total_minutes": 35.0,
+    "actual_total_minutes": 1.28,
+    "variance_minutes": -33.72,
+    "variance_percent": -96.33
+  }
+}
