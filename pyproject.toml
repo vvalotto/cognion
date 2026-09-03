@@ -139,6 +139,7 @@ paths = ["src"]
 
 [tool.architectanalyst]
 db_path = "quality/reports/architectanalyst/history.db"
+coverage_report_path = "../coverage.json"
 
 [tool.architectanalyst.layers]
 entities = ["src/*/entities"]

@@ -9,6 +9,17 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Fixed
+- [US-ADJ-15] Fix de `coverage_report_path` en `[tool.architectanalyst]`
+  - `pyproject.toml`: agregado `coverage_report_path = "../coverage.json"` — `CoverageAnalyzer`
+    resolvía el reporte relativo a `src/` (el `PATH` posicional del CLI), no a la raíz del
+    repo, y nunca encontraba `coverage.json` pese a que `pytest --cov` ya lo generaba
+    correctamente
+  - `CLAUDE.md`: nota operativa — generar `coverage.json` antes de correr `architectanalyst`
+    al cerrar una baseline
+  - Verificado con datos reales: `CoverageAnalyzer` pasa de warning a `info` con 98.9% de
+    cobertura real (antes: warning vacío en 3 baselines consecutivas)
+
 ### Changed
 - [US-ADJ-14] Reordenar `frontend/src/pages/` por Bounded Context
   - 33 pantallas movidas de un directorio plano a `pages/{identidad,cuentas,banco-preguntas,

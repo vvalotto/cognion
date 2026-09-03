@@ -1,0 +1,28 @@
+{
+  "us_id": "US-ADJ-15",
+  "titulo": "Fix de coverage_report_path en [tool.architectanalyst]",
+  "stack": "config (sin código de producción)",
+  "backend_changes": false,
+  "frontend_changes": false,
+  "gates": {
+    "pylint": { "nota": "N/A — sin código Python de producción tocado" },
+    "pytest_suite_completa": {
+      "comando": "pytest --cov=src --cov-report=json",
+      "passed": 739,
+      "failed": 0
+    },
+    "coverage_analyzer": {
+      "comando": "architectanalyst src/ --config pyproject.toml",
+      "severity_antes": "warning (archivo de cobertura no encontrado)",
+      "severity_despues": "info",
+      "cobertura_real_pct": 98.9,
+      "umbral_pct": 80.0
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "US de config de una línea, sin cambio de comportamiento del sistema — el fix ya estaba verificado antes de escribir la spec. Fases 1, 4, 5, 6 y 7 del skill omitidas (sin código de producción, sin tests).",
+  "observaciones": [
+    "coverage.json generado en la raíz del repo con pytest --cov=src --cov-report=json (739/739 tests) y descartado tras la verificación — ya está en .gitignore, no se commitea.",
+    "CoverageAnalyzer pasó de warning ('no se encontró el archivo de cobertura') a info con el porcentaje real (98.9%), confirmado con datos reales, no simulados."
+  ]
+}
