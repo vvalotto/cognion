@@ -9,6 +9,16 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Changed
+- [US-ADJ-14] Reordenar `frontend/src/pages/` por Bounded Context
+  - 33 pantallas movidas de un directorio plano a `pages/{identidad,cuentas,banco-preguntas,
+    actividad-evaluativa}/`, igual que la organización ya existente de `frontend/src/lib/` y
+    de `src/<bc>/` en el backend — `_placeholders.tsx` queda en la raíz (sigue con un
+    consumidor activo)
+  - 34 archivos con imports actualizados (`router.tsx`, `Login.tsx`, 32 tests)
+  - Refactor mecánico sin cambio de comportamiento: ninguna URL cambió, `vitest run` idéntico
+    al baseline (41 archivos / 229 tests), `tsc`/`oxlint` en verde
+
 ### Fixed
 - [US-ADJ-13] Documentar "Zone of Pain" de ArchitectAnalyst como falso positivo aceptado +
   limpiar claves inválidas de `[tool.architectanalyst]` en `pyproject.toml`

@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-14",
+    "us_title": "Reordenar frontend/src/pages/ por Bounded Context",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-03T12:12:33.286629+00:00",
+    "completed_at": "2026-09-03T12:27:39.977344+00:00",
+    "total_elapsed_seconds": 906,
+    "effective_seconds": 906,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-03T12:12:33.431497+00:00",
+      "completed_at": "2026-09-03T12:12:46.362891+00:00",
+      "elapsed_seconds": 12,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-03T12:12:46.514290+00:00",
+      "completed_at": "2026-09-03T12:14:04.425904+00:00",
+      "elapsed_seconds": 77,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-03T12:14:38.543033+00:00",
+      "completed_at": "2026-09-03T12:26:17.984676+00:00",
+      "elapsed_seconds": 699,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Mover pantallas a subcarpetas por BC",
+          "task_type": "refactor",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-03T12:14:38.664715+00:00",
+          "completed_at": "2026-09-03T12:24:18.554837+00:00",
+          "elapsed_seconds": 579,
+          "actual_minutes": 9.65,
+          "variance_minutes": -5.35,
+          "file_created": "frontend/src/pages/*",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Actualizar imports en router.tsx y páginas",
+          "task_type": "refactor",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-03T12:24:18.691827+00:00",
+          "completed_at": "2026-09-03T12:24:39.260281+00:00",
+          "elapsed_seconds": 20,
+          "actual_minutes": 0.33,
+          "variance_minutes": -14.67,
+          "file_created": "router.tsx + 32 tests + Login.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-03T12:26:33.778808+00:00",
+      "completed_at": "2026-09-03T12:26:43.677691+00:00",
+      "elapsed_seconds": 9,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-03T12:26:43.871723+00:00",
+      "completed_at": "2026-09-03T12:27:14.667991+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-03T12:27:16.903273+00:00",
+      "completed_at": "2026-09-03T12:27:39.800038+00:00",
+      "elapsed_seconds": 22,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "total_phases": 6,
+    "estimated_total_minutes": 30.0,
+    "actual_total_minutes": 9.98,
+    "variance_minutes": -20.02,
+    "variance_percent": -66.72
+  }
+}
