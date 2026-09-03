@@ -9,6 +9,13 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-ADJ-16] Subir cobertura de branches del frontend por encima del umbral global (80%)
+  - 3 tests nuevos en `NuevaPreguntaTipo.test.tsx` (interacción por teclado — `Enter` sobre
+    cada Card de selección de tipo, y una tecla no-`Enter` que no navega) — branches globales
+    de 79.66% (517/649) a 80.12% (520/649), cerrando exactamente el gap real medido
+  - Sin cambio de comportamiento — solo tests nuevos, ningún test existente modificado
+
 ### Fixed
 - [US-ADJ-15] Fix de `coverage_report_path` en `[tool.architectanalyst]`
   - `pyproject.toml`: agregado `coverage_report_path = "../coverage.json"` — `CoverageAnalyzer`

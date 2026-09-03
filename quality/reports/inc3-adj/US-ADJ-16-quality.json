@@ -1,0 +1,33 @@
+{
+  "us_id": "US-ADJ-16",
+  "titulo": "Subir cobertura de branches del frontend (77.89% a 80%)",
+  "stack": "frontend",
+  "backend_changes": false,
+  "gates": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_preexistentes": 4
+    },
+    "tsc_build_noemit": {
+      "errores": 0
+    },
+    "vitest_coverage": {
+      "test_files": 41,
+      "tests": 232,
+      "passed": 232,
+      "failed": 0,
+      "branches_pct_antes": 79.66,
+      "branches_pct_despues": 80.12,
+      "branches_cubiertas_antes": "517/649",
+      "branches_cubiertas_despues": "520/649",
+      "threshold_pct": 80,
+      "nota": "El baseline real medido al iniciar (79.66%) ya no coincidía con la tabla de la spec (77.89%, previa a US-ADJ-14/20) — el gap real era +3 branches, no el que sugería la spec original."
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "Solo se agregaron 3 tests de teclado a NuevaPreguntaTipo.test.tsx (Enter en cada Card + tecla no-Enter) — suficiente para cerrar el gap exacto medido. No fue necesario tocar el resto de la tabla de la spec (EvaluacionSuspendida, Actividades, Materias, MisMaterias) porque el gap real ya era mucho menor que el original.",
+  "observaciones": [
+    "Ningún test existente se modificó ni cambió su aserción — solo se agregaron 3 casos nuevos.",
+    "Statements/Functions/Lines subieron también de forma incidental (90.34→90.65%, 86.03→86.44%, 92.59→92.94%)."
+  ]
+}
