@@ -641,6 +641,19 @@ el merge es a la rama default.
   reportado: `vvalotto/software_limpio#70`. Mientras se corrige ahí, el hook `mypy` dedicado
   (arriba, sobre `src/` completo, mismo comando que CI) es la fuente de verdad local para
   tipos — bloquea el commit si hay errores reales.
+- **"Zone of Pain" de `ArchitectAnalyst` — falso positivo aceptado permanentemente** (`US-ADJ-13`,
+  `docs/specs/ajustes/US-ADJ-13.md`): 5 críticos `DistanceAnalyzer` (D > 0.5), uno por cada
+  paquete raíz de BC (`identidad`, `settings`, `shared`, `banco_preguntas`,
+  `actividad_evaluativa`), señalados sin acción en las retros de `BL-002`, `BL-003` y `BL-004`.
+  Causa raíz estructural, no un defecto de diseño real: cada BC es una hoja del grafo de
+  dependencias por diseño (`Ca=0` siempre, por la regla "sin imports directos entre BCs"), lo
+  que fija `Instability≈0`; como los puertos `ABC` (correctamente declarados en
+  `entities/ports/` en los 3 BCs) son una minoría chica frente al resto del código concreto de
+  cada BC, `Abstractness` también es bajo. Probado y descartado: `analysis_depth=2` (pensado
+  para separar capas) no lo resuelve — los críticos **suben de 5 a 15**, porque
+  `use_cases`/`interface_adapters`/`frameworks` no tienen ninguna clase abstracta propia (los
+  puertos viven solo en `entities/ports/`) y cada capa da D=1.00 CRITICAL por separado. Ninguna
+  retro futura debe volver a proponer "recalibrar" sin revisar antes esta nota.
 
 ---
 

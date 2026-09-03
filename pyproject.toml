@@ -138,8 +138,7 @@ max_god_object_methods = 15
 paths = ["src"]
 
 [tool.architectanalyst]
-paths = ["src"]
-history_db = "quality/reports/architectanalyst/history.db"
+db_path = "quality/reports/architectanalyst/history.db"
 
 [tool.architectanalyst.layers]
 entities = ["src/*/entities"]
