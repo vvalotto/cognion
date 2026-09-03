@@ -6,8 +6,8 @@ from src.app import app
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.importancia import Importancia
-from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.materia import Materia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
