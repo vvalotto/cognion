@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import BancoNoExiste
 from src.banco_preguntas.entities.eventos import PreguntaCargada
-from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaVerdaderoFalso
@@ -28,12 +27,8 @@ class CargarPreguntaVerdaderoFalsoUseCase:
     async def execute(
         self,
         banco_id: UUID,
-        texto: str,
+        metadatos: MetadatosPregunta,
         respuesta_correcta: bool,
-        unidad_tematica: str,
-        tema: str,
-        dificultad: Dificultad,
-        importancia: Importancia,
     ) -> tuple[PreguntaPlantillaVerdaderoFalso, PreguntaCargada]:
         """Valida que el `Banco` exista, crea y persiste la pregunta.
 
@@ -45,12 +40,8 @@ class CargarPreguntaVerdaderoFalsoUseCase:
 
         pregunta = PreguntaPlantillaVerdaderoFalso.crear(
             banco_id=banco_id,
-            texto=texto,
+            metadatos=metadatos,
             respuesta_correcta=respuesta_correcta,
-            unidad_tematica=unidad_tematica,
-            tema=tema,
-            dificultad=dificultad,
-            importancia=importancia,
         )
         await self._pregunta_repositorio.guardar(pregunta)
 

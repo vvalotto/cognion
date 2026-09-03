@@ -7,8 +7,7 @@ from uuid import UUID
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -129,16 +128,20 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
         modelo: PreguntaPlantillaModel,
     ) -> PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso:
         """Mapea una fila de `pregunta_plantilla` al aggregate concreto según su `tipo`."""
+        metadatos = MetadatosPregunta.desde_valores_persistidos(
+            texto=modelo.texto,
+            unidad_tematica=modelo.unidad_tematica,
+            tema=modelo.tema,
+            dificultad=modelo.dificultad,
+            importancia=modelo.importancia,
+        )
+
         if modelo.tipo == TIPO_VERDADERO_FALSO:
             return PreguntaPlantillaVerdaderoFalso(
                 id=modelo.id,
                 banco_id=modelo.banco_id,
-                texto=modelo.texto,
+                metadatos=metadatos,
                 respuesta_correcta=bool(modelo.respuesta_correcta),
-                unidad_tematica=modelo.unidad_tematica,
-                tema=modelo.tema,
-                dificultad=Dificultad(modelo.dificultad),
-                importancia=Importancia(modelo.importancia),
                 activa=modelo.activa,
                 fecha_creacion=modelo.fecha_creacion,
             )
@@ -146,15 +149,11 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
         return PreguntaPlantillaOpcionMultiple(
             id=modelo.id,
             banco_id=modelo.banco_id,
-            texto=modelo.texto,
+            metadatos=metadatos,
             opciones=[
                 Opcion(texto=o["texto"], es_correcta=o["es_correcta"])
                 for o in (modelo.opciones or [])
             ],
-            unidad_tematica=modelo.unidad_tematica,
-            tema=modelo.tema,
-            dificultad=Dificultad(modelo.dificultad),
-            importancia=Importancia(modelo.importancia),
             activa=modelo.activa,
             fecha_creacion=modelo.fecha_creacion,
         )

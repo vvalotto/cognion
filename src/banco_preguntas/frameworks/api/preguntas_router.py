@@ -13,6 +13,7 @@ from src.banco_preguntas.entities.errors import (
     PreguntaNoExiste,
     PreguntaYaEliminada,
 )
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.frameworks.api.schemas import (
@@ -47,12 +48,14 @@ async def cargar_pregunta_opcion_multiple(
     try:
         pregunta, _evento = await controller.cargar_pregunta_opcion_multiple(
             banco_id=body.banco_id,
-            texto=body.texto,
+            metadatos=MetadatosPregunta(
+                texto=body.texto,
+                unidad_tematica=body.unidad_tematica,
+                tema=body.tema,
+                dificultad=body.dificultad,
+                importancia=body.importancia,
+            ),
             opciones=[Opcion(texto=o.texto, es_correcta=o.es_correcta) for o in body.opciones],
-            unidad_tematica=body.unidad_tematica,
-            tema=body.tema,
-            dificultad=body.dificultad,
-            importancia=body.importancia,
         )
     except BancoNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
@@ -91,12 +94,14 @@ async def cargar_pregunta_verdadero_falso(
     try:
         pregunta, _evento = await controller.cargar_pregunta_verdadero_falso(
             banco_id=body.banco_id,
-            texto=body.texto,
+            metadatos=MetadatosPregunta(
+                texto=body.texto,
+                unidad_tematica=body.unidad_tematica,
+                tema=body.tema,
+                dificultad=body.dificultad,
+                importancia=body.importancia,
+            ),
             respuesta_correcta=body.respuesta_correcta,
-            unidad_tematica=body.unidad_tematica,
-            tema=body.tema,
-            dificultad=body.dificultad,
-            importancia=body.importancia,
         )
     except BancoNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
@@ -134,11 +139,13 @@ async def editar_pregunta(
     try:
         pregunta, _evento = await controller.editar_pregunta(
             pregunta_id=pregunta_id,
-            texto=body.texto,
-            unidad_tematica=body.unidad_tematica,
-            tema=body.tema,
-            dificultad=body.dificultad,
-            importancia=body.importancia,
+            metadatos=MetadatosPregunta(
+                texto=body.texto,
+                unidad_tematica=body.unidad_tematica,
+                tema=body.tema,
+                dificultad=body.dificultad,
+                importancia=body.importancia,
+            ),
             opciones=(
                 [Opcion(texto=o.texto, es_correcta=o.es_correcta) for o in body.opciones]
                 if body.opciones is not None

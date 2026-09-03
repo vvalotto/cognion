@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import PreguntaNoExiste
 from src.banco_preguntas.entities.eventos import PreguntaEditada
-from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -26,11 +25,7 @@ class EditarPreguntaUseCase:
     async def execute(
         self,
         pregunta_id: UUID,
-        texto: str,
-        unidad_tematica: str,
-        tema: str,
-        dificultad: Dificultad,
-        importancia: Importancia,
+        metadatos: MetadatosPregunta,
         opciones: list[Opcion] | None = None,
         respuesta_correcta: bool | None = None,
     ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, PreguntaEditada]:
@@ -44,23 +39,9 @@ class EditarPreguntaUseCase:
             raise PreguntaNoExiste(pregunta_id)
 
         if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
-            pregunta.editar(
-                texto=texto,
-                opciones=opciones or [],
-                unidad_tematica=unidad_tematica,
-                tema=tema,
-                dificultad=dificultad,
-                importancia=importancia,
-            )
+            pregunta.editar(metadatos=metadatos, opciones=opciones or [])
         else:
-            pregunta.editar(
-                texto=texto,
-                respuesta_correcta=bool(respuesta_correcta),
-                unidad_tematica=unidad_tematica,
-                tema=tema,
-                dificultad=dificultad,
-                importancia=importancia,
-            )
+            pregunta.editar(metadatos=metadatos, respuesta_correcta=bool(respuesta_correcta))
 
         await self._pregunta_repositorio.actualizar(pregunta)
 
