@@ -475,17 +475,43 @@ Los 4 PRs (#182, #184, #185, #187) mergeados a `develop` en orden (185→184→1
 chico primero) con CI en verde en cada uno, mismo criterio de "UAT en navegador real detecta lo
 que Vitest mockeado no ve" ya documentado en Identidad.
 
-**Próximo paso:** continuar la Iteración 4 con el lado Estudiante — `US-3.4.5` (materias y
-actividades disponibles, incluido "fuera de período"), `US-3.4.6` (rendir: responder, pausar,
-reanudar), `US-3.4.7` (finalizar y ver revisión completa). Gate de diseño UX obligatorio antes
-de tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
-(aprobado en `US-3.0.2`) antes de escribir código, ya con Issues y specs creados (`US-3.4.5` a
-`US-3.4.7`, Issues #174-#176).
-**Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
-(frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
-a fin, docente extiende el plazo de una sesión activa).
-**Branch activo:** ninguna — `develop` sincronizado, próxima branch a abrir es
-`feature/US-3.4.5-...`.
+**Lado Estudiante de la Iteración 4 completado 2026-09-02** — `US-3.4.5` (Estudiante ve sus
+materias y las actividades disponibles, incluido "fuera de período"), PR
+[#189](https://github.com/vvalotto/cognion/pull/189); `US-3.4.6` (Estudiante rinde su
+evaluación — responde, pausa y reanuda), PR
+[#190](https://github.com/vvalotto/cognion/pull/190); `US-3.4.7` (Estudiante finaliza su
+evaluación y ve la revisión completa), PR
+[#191](https://github.com/vvalotto/cognion/pull/191). Cierra completa la Iteración 4
+(backend + frontend), el DoD del Incremento 3 y con ella `US-ADJ-12` (ajuste inmediato
+post-UAT). **`BL-004` — Actividad Evaluativa (Incremento 3) cerrada 2026-09-02**
+(`.cm/baselines/BL-004-actividad-evaluativa.md`), merge `develop → main` y tag `v0.5.0`
+ejecutados en el mismo cierre. Matriz de trazabilidad: RF-11, RF-11b, RF-12, RF-13 pasan a
+Validado.
+
+**Incremento 3-ADJ — Adecuación Técnica, cerrado 2026-09-03** (insertado fuera de secuencia
+tras `BL-004`, decisión de Víctor 2026-09-02: no renumerar los Incrementos 4-7 ya mapeados a
+RF — Milestone GitHub
+[Incremento 3-ADJ](https://github.com/vvalotto/cognion/milestone/10),
+`docs/plans/inc3-adj/inc3-adj-candidatas.md`). Deuda de tooling/arquitectura que las retros de
+`BL-002`/`BL-003`/`BL-004` venían señalando sin resolver. Las 8 US-ADJ (`US-ADJ-13` a `20`)
+implementadas: falso positivo de `ArchitectAnalyst` documentado (`US-ADJ-13`), `pages/`
+reordenado por BC (`US-ADJ-14`), fix de `coverage_report_path` (`US-ADJ-15`), cobertura de
+branches del frontend por encima del umbral (`US-ADJ-16`), Value Object `MetadatosPregunta`
+(`US-ADJ-17`), refactor de `SQLAlchemyPreguntaRepository` (`US-ADJ-18`),
+`LayerViolationsAnalyzer` documentado como no confiable + corrección de la causa raíz de
+`US-ADJ-13` (`US-ADJ-19`), `AbortController` en fetch de `useEffect`/submit (`US-ADJ-20`).
+Detalle completo de cada una en la sección "Quality gates" más abajo. **`BL-005` — Incremento
+3-ADJ cerrada 2026-09-03** (`.cm/baselines/BL-005-incremento-3-adj-adecuacion-tecnica.md`):
+`DesignReviewer` 159→118 warnings, 0 CRITICAL; `ArchitectAnalyst` 5 CRITICAL (mismo "Zone of
+Pain" aceptado, causa raíz corregida); cobertura branches frontend 77.89%→80.12%; 739 tests
+backend / 232 frontend en verde. Sin UAT (deuda de tooling, nada visible para un usuario
+final). Sin RF asociado — no mueve fila de la matriz de trazabilidad. Merge `develop → main` y
+tag diferidos, a confirmar con Víctor (mismo ítem abierto que `BL-001` a `BL-004`).
+
+**Próximo paso:** arrancar el Incremento 4 — sin candidatas ni Iteración 0 propia todavía, a
+definir con Víctor.
+**Baseline abierta:** ninguna — `BL-005` (Incremento 3-ADJ) cerrada.
+**Branch activo:** ninguna — `develop` sincronizado.
 
 ---
 
