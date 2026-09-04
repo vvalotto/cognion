@@ -1,0 +1,45 @@
+{
+  "us_id": "US-4.1.2",
+  "fecha": "2026-09-04T12:52:00-03:00",
+  "componente": "src/analytics/",
+  "metricas": {
+    "pylint": 9.70,
+    "cc_promedio": 1.44,
+    "cc_maximo": 4,
+    "mi_promedio": 93.02,
+    "mi_minimo": 65.09,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 5,
+    "errors": 4,
+    "warnings": 21,
+    "infos": 36,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 5},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 5},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 5},
+      "DeadCode": {"errors": 0, "warnings": 21, "infos": 1},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 5},
+      "Pylint": {"errors": 2, "warnings": 0, "infos": 3},
+      "Spelling": {"errors": 0, "warnings": 0, "infos": 5},
+      "Types": {"errors": 0, "warnings": 0, "infos": 4},
+      "UnusedImports": {"errors": 2, "warnings": 0, "infos": 3}
+    },
+    "reporte": "quality/reports/inc4/US-4.1.2-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard corrió con `.venv/bin` antepuesto al PATH (mismo gap de entorno documentado en US-4.1.1-quality.json — el subprocess de codeguard no resuelve vulture/codespell del venv activo sin esto). Verificado con pylint directo contra los 5 archivos nuevos/modificados de esta US: 9.70/10, 0 errores reales — solo 2 R0903 (too-few-public-methods, mismo patrón aceptado en ObtenerDesempenoEstudianteUseCase/AnalyticsController, con un único método execute()/obtener_mi_desempeno) y 1 R0801 (duplicate-code) entre los campos de `EvaluacionDetalle` (use_cases) y `EvaluacionDetalleResponse` (schemas Pydantic) — duplicación intencional: el schema Pydantic de la capa frameworks no debe importar tipos de use_cases, mismo criterio de DTOs propios ya usado en el resto del proyecto.",
+    "Los 4 'errors' de codeguard.Pylint/UnusedImports son 'pylint execution timed out (>5-10s)' en analytics_router.py, dependencies.py y schemas.py — mismo bug de timeout en corrida en frío ya documentado (project_codeguard_mypy_timeout / CLAUDE.md), no errores reales de código. Los 21 warnings de DeadCode son falsos positivos de vulture por análisis archivo-por-archivo (campos de dataclass/Pydantic, la clase AnalyticsController y ObtenerDesempenoEstudianteUseCase, funciones de dependencies.py) — todos se usan desde otro archivo de la US (router, tests, composition root), mismo patrón ya aceptado en US-4.1.1.",
+    "Types (mypy) no tuvo timeout en esta corrida — la fuente de verdad local sigue siendo el hook mypy dedicado sobre src/ completo: 'Success: no issues found in 201 source files'.",
+    "Coverage 100% mide use_cases/ (36 stmts) + interface_adapters/controllers/ (8 stmts) + entities/ports/ (16 stmts, sin cambios en esta US) — frameworks/* (router, schemas, dependencies) está excluido del gate de coverage por pyproject.toml (mismo criterio que el resto del proyecto); ese código está cubierto por los 5 tests de integración reales contra Postgres (tests/integration/inc4/test_analytics_router.py) y los 5 escenarios BDD (tests/step_defs/inc4/test_us_4_1_2_steps.py), no contados en este porcentaje.",
+    "Suite completa del proyecto: 774 passed, 1 failed (tests/step_defs/inc3/test_us_3_2_1_steps.py::test_rechazo_fuera_del_período_vigente) — fallo preexistente y determinístico en este entorno, documentado en CLAUDE.md como no relacionado con ninguna US de la Iteración 3, confirmado que también falla en develop limpio antes de esta US. No es una regresión de US-4.1.2."
+  ]
+}

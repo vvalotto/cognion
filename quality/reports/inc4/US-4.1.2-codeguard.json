@@ -1,0 +1,1315 @@
+{
+  "summary": {
+    "total_files": 5,
+    "checks_executed": 9,
+    "elapsed_seconds": 61.84,
+    "timestamp": "2026-09-04T12:51:03.733297",
+    "total_issues": 61,
+    "errors": 4,
+    "warnings": 21,
+    "infos": 36
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "error",
+      "message": "pylint execution timed out (>5s)",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 37
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 60
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 14
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 15
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'finalizada_en' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 16
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_correctas' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 17
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_incorrectas' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 18
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'total_correctas' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 24
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'total_incorrectas' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 25
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'porcentaje_acierto' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 26
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_evaluaciones' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'DesempenoEstudianteResponse' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 30
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'evaluaciones' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 33
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'resumen' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": 34
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "error",
+      "message": "pylint execution timed out (>5s)",
+      "file": "src/analytics/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'AnalyticsController' is never used (60% confidence)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": 17
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_mi_desempeno' is never used (60% confidence)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": 24
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.75/10 (>= 8.0)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad_evaluaciones' is never used (60% confidence)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": 32
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'resumen' is never used (60% confidence)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": 40
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ObtenerDesempenoEstudianteUseCase' is never used (60% confidence)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": 43
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'execute' is never used (60% confidence)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": 54
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 65.1 (grade A)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.70/10 (>= 8.0)",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 37
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 14
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'finalizada_en' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_correctas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_incorrectas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 18
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'total_correctas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'total_incorrectas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'porcentaje_acierto' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'DesempenoEstudianteResponse' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluaciones' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'resumen' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'AnalyticsController' is never used (60% confidence)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_mi_desempeno' is never used (60% confidence)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'resumen' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ObtenerDesempenoEstudianteUseCase' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 43
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'execute' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 54
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.75/10 (>= 8.0)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 65.1 (grade A)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.70/10 (>= 8.0)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "api/analytics_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      }
+    ],
+    "api/schemas.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluacion_id' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 14
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'actividad_id' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'finalizada_en' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_correctas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_incorrectas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 18
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'total_correctas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'total_incorrectas' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'porcentaje_acierto' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'DesempenoEstudianteResponse' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'evaluaciones' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'resumen' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": 34
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/analytics/frameworks/api/schemas.py",
+        "line": null
+      }
+    ],
+    "controllers/analytics_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'AnalyticsController' is never used (60% confidence)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_mi_desempeno' is never used (60% confidence)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": 24
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.75/10 (>= 8.0)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 37
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 60
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "use_cases/obtener_desempeno_estudiante.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad_evaluaciones' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'resumen' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ObtenerDesempenoEstudianteUseCase' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 43
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'execute' is never used (60% confidence)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": 54
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 65.1 (grade A)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.70/10 (>= 8.0)",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "line": null
+      }
+    ]
+  }
+}
