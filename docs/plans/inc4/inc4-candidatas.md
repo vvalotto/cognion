@@ -57,15 +57,68 @@ RF-16, RF-17 pasan de *Planificado* a *Especificado* (`WORKFLOW-DESARROLLO.md` �
 
 ---
 
-## Iteración 1 y 2 — a completar al cerrar la Iteración 0
+## Iteración 1 — RF-15: Estudiante ve su desempeño
 
-Según `PLAN_v1.md`:
-- **Iteración 1:** RF-15 — vista de desempeño individual del estudiante.
-- **Iteración 2:** RF-16, RF-17 — seguimiento por alumno y por curso/tema (docente).
+A diferencia de Actividad Evaluativa, acá **no se difiere el frontend a una iteración
+separada** — cada iteración cierra su propio RF de punta a punta (backend + frontend), mismo
+criterio que Banco de Preguntas: el hito de esta iteración no cruza queries de otras
+iteraciones (a diferencia de Actividad Evaluativa, donde el hito de cierre sí cruzaba 3
+iteraciones de backend a la vez).
 
-El desglose en US-IEDD concretas (comandos/queries, endpoints, pantallas) se completa recién
-con el modelo y los wireframes aprobados en mano — mismo criterio que `inc2-candidatas.md`/
-`inc3-candidatas.md`.
+### Backend
+
+| US | Descripción | Query | Actor | Precondición → Postcondición |
+|---|---|---|---|---|
+| **US-4.1.1** *(técnica)* | Infraestructura del BC Analytics: `EvaluacionDesempenoConsultaPort` con un único método `listar_evaluaciones_finalizadas(estudiante_id, materia_id?)` (`BC-analytics-modelo.md` §5), adapter in-process que lee la tabla `events` de Actividad Evaluativa (streams `Evaluacion`), composition root `src/analytics/frameworks/dependencies.py`, router base `analytics_router.py` | — (sin query de negocio propia) | — | Ninguna (primer código del BC) → mecanismo de lectura del event store ajeno probado, listo para que US-4.1.2 lo use |
+| **US-4.1.2** | Estudiante consulta su propio desempeño en una materia — detalle por evaluación finalizada y resumen acumulado, ambos calculados a partir de la misma lectura (`BC-analytics-modelo.md` §6, hot spot 3: no hace falta una fuente separada para el acumulado) | `ObtenerDesempenoEstudianteUseCase` — compone `listar_evaluaciones_finalizadas(estudiante_id, materia_id)` y agrega en memoria | Estudiante (su propio `estudiante_id`, del token) | `Evaluacion` finalizadas del estudiante en la materia (puede ser ninguna) → lista de resultados por evaluación + resumen acumulado (correctas, incorrectas, % acierto, cantidad) |
+
+**Endpoint propuesto:** `GET /analytics/materias/{materia_id}/mi-desempeno` (rol `estudiante`) —
+a confirmar el path exacto en la spec de `US-4.1.2`.
+
+### Frontend
+
+| US | Descripción | Pantalla (`wireframes-analytics.md`) | Backend consumido | Depende de |
+|---|---|---|---|---|
+| **US-4.1.3** | Estudiante ve "Mi desempeño": selector de materia (reusa `GET /materias` del estudiante, `ListarMateriasDelEstudianteUseCase` ya existente — sin endpoint nuevo), resumen acumulado y detalle por evaluación | §2.0 `#est-desempeno` | `GET /analytics/materias/{materia_id}/mi-desempeno` (US-4.1.2) | US-4.1.2 |
+
+**Orden de implementación:** US-4.1.1 primero (bloquea el resto del BC) → US-4.1.2 → US-4.1.3.
+
+---
+
+## Iteración 2 — RF-16, RF-17: Desempeño por alumno y por tema (docente)
+
+### Backend
+
+| US | Descripción | Query | Actor | Precondición → Postcondición |
+|---|---|---|---|---|
+| **US-4.2.1** | Docente consulta el desempeño de un estudiante elegido — mismo detalle que ve el propio estudiante (RF-16) | Reutiliza `ObtenerDesempenoEstudianteUseCase` (US-4.1.2) sin cambios, invocado con el `estudiante_id` que el docente elige en vez del propio | Docente | `estudiante_id` existe (vía `EstudianteConsultaPort` o equivalente) → mismo resultado que US-4.1.2, para el estudiante elegido |
+| **US-4.2.2** *(técnica)* | `ComisionConsultaPort` (`BC-analytics-modelo.md` §5) — puerto **nuevo de punta a punta**: requiere agregar en BC Identidad la query que hoy no existe (examinado en el modelado — `ComisionRepositoryPort`/`UsuarioRepositoryPort` solo resuelven por `id`). Agrega `listar_comisiones_por_materia(materia_id)` y `listar_estudiantes(comision_id)` del lado de Identidad, expuestas como endpoints HTTP propios (para poblar los selectores del frontend, US-4.2.5) y como adapter in-process para Analytics | — (sin query de negocio propia en Analytics; nueva capacidad de consulta en Identidad) | — | Ninguna query de "comisiones de una materia" ni "estudiantes de una comisión" hoy → ambas disponibles, consumidas por Identidad (HTTP) y Analytics (in-process) |
+| **US-4.2.3** *(técnica)* | `PreguntaMetadatoConsultaPort` (`BC-analytics-modelo.md` §5) — adapter in-process hacia Banco de Preguntas, reusa `unidad_tematica`/`tema` ya expuestos por `MetadatosPregunta` (`US-ADJ-17`); sin endpoint HTTP propio, consumo interno de Analytics únicamente | — | — | Ninguna (dato ya existe en Banco de Preguntas) → `obtener_metadatos(pregunta_ids)` disponible para US-4.2.4 |
+| **US-4.2.4** | Docente consulta la tasa de error por unidad/tema de una materia, agregada a toda la materia o acotada a una comisión (RF-17) | `ObtenerTasaErrorPorTemaUseCase` — compone `listar_respuestas_vigentes_de_materia(materia_id, estudiante_ids?)` (extensión de `EvaluacionDesempenoConsultaPort`, segundo método del puerto, no implementado todavía en Iteración 1), `ComisionConsultaPort.listar_estudiantes` (si `comision_id` viene informado) y `PreguntaMetadatoConsultaPort.obtener_metadatos` | Docente | Materia con `Evaluacion` finalizadas (puede no haber ninguna) → lista de `(unidad_tematica, tema)` con cantidad de respuestas, incorrectas y tasa de error, ordenada descendente |
+
+**Endpoints propuestos:**
+`GET /analytics/materias/{materia_id}/estudiantes/{estudiante_id}/desempeno` (US-4.2.1, rol
+`docente`), `GET /materias/{materia_id}/comisiones` y `GET /comisiones/{comision_id}/estudiantes`
+(US-4.2.2, BC Identidad), `GET /analytics/materias/{materia_id}/tasa-error-por-tema?comision_id=`
+(US-4.2.4, rol `docente`) — a confirmar el path exacto en cada spec.
+
+**Hot spot de autorización — resuelto con Víctor (2026-09-04):** cualquier docente autenticado
+puede consultar el desempeño de cualquier estudiante — sin restringir a las comisiones que
+dicta. `US-4.2.1` solo exige rol `docente` (RBAC estándar, sin invariante adicional de
+pertenencia a comisión).
+
+### Frontend
+
+| US | Descripción | Pantalla (`wireframes-analytics.md`) | Backend consumido | Depende de |
+|---|---|---|---|---|
+| **US-4.2.5** | Docente ve "Desempeño por alumno": selectores en cascada materia → comisión → estudiante, reutiliza el componente visual de "Mi desempeño" (US-4.1.3) | §3.0 `#doc-desempeno-alumno` | `GET /materias/{materia_id}/comisiones`, `GET /comisiones/{comision_id}/estudiantes` (US-4.2.2), `GET /analytics/.../desempeno` (US-4.2.1) | US-4.2.1, US-4.2.2 |
+| **US-4.2.6** | Docente ve "Desempeño por tema": selector materia/comisión, listado de tasa de error por tema con barra coloreada | §3.1 `#doc-desempeno-tema` | `GET /materias/{materia_id}/comisiones` (US-4.2.2), `GET /analytics/.../tasa-error-por-tema` (US-4.2.4) | US-4.2.4 |
+
+**Orden de implementación:** US-4.2.2 y US-4.2.3 primero (infraestructura de puertos, sin
+dependencia entre sí — pueden ir en paralelo). US-4.2.1 no depende de ninguna de las dos (reusa
+el Use Case de Iteración 1) — puede implementarse en cualquier momento. US-4.2.4 depende de
+US-4.2.2 y US-4.2.3 juntas. US-4.2.5 depende de US-4.2.1 y US-4.2.2; US-4.2.6 depende de
+US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su backend.
 
 ---
 
@@ -81,9 +134,12 @@ con el modelo y los wireframes aprobados en mano — mismo criterio que `inc2-ca
 1. ~~Revisar esta propuesta de Iteración 0 con Víctor.~~ Hecho, alcance aprobado 2026-09-04.
 2. ~~Crear Milestone GitHub `Incremento 4 — Portal del estudiante y Analytics` + Issues para
    US-4.0.1 y US-4.0.2.~~ Hecho — Milestone #11, Issues #227 (US-4.0.1) y #228 (US-4.0.2).
-3. Ejecutar el diseño de read models (US-4.0.1) y los wireframes (US-4.0.2), con aprobación
-   explícita de Víctor en cada Issue.
-4. Completar este archivo con el detalle de las Iteraciones 1 y 2, mismo formato que
-   `inc3-candidatas.md`.
-5. Crear Issues y `docs/specs/inc4/US-4.M.K.md` por cada US aprobada.
-6. Implementar Iteración 1 → 2.
+3. ~~Ejecutar el diseño de read models (US-4.0.1) y los wireframes (US-4.0.2), con aprobación
+   explícita de Víctor en cada Issue.~~ Hecho.
+4. ~~Completar este archivo con el detalle de las Iteraciones 1 y 2.~~ Hecho — 2026-09-04.
+5. ~~Revisar esta tabla de candidatas con Víctor.~~ Hecho — hot spot de autorización de
+   `US-4.2.1` resuelto 2026-09-04 (cualquier docente consulta a cualquier estudiante). El
+   agrupamiento de la infraestructura de puertos en `US-4.1.1`/`US-4.2.2`/`US-4.2.3` y los
+   paths de endpoint quedan a confirmar en cada spec, no bloquean el arranque de la Iteración 1.
+6. Crear Issues (Milestone #11) y `docs/specs/inc4/US-4.M.K.md` por cada US aprobada.
+7. Implementar Iteración 1 → 2.
