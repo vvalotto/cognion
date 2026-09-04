@@ -1,11 +1,13 @@
 # Incremento 4 — Portal del estudiante y Analytics — US candidatas
 
-> Estado documental: **Iteración 0 — Modelado, en curso.** Alcance revisado y aprobado por
-> Víctor 2026-09-04. Milestone [`Incremento 4 — Portal del estudiante y Analytics`](https://github.com/vvalotto/cognion/milestone/11)
-> creado, Issues [#227](https://github.com/vvalotto/cognion/issues/227) (US-4.0.1) y
-> [#228](https://github.com/vvalotto/cognion/issues/228) (US-4.0.2) abiertos. El detalle de las
-> Iteraciones 1 y 2 se completa recién al cerrar la Iteración 0, contra el modelo y los
-> wireframes ya aprobados, no antes — mismo criterio que `inc2-candidatas.md`/`inc3-candidatas.md`.
+> Estado documental: **Iteración 0 — Modelado cerrada (2026-09-04).** `US-4.0.1` (modelo de
+> dominio, Issue [#227](https://github.com/vvalotto/cognion/issues/227)) y `US-4.0.2`
+> (wireframes, Issue [#228](https://github.com/vvalotto/cognion/issues/228)) aprobadas por
+> Víctor. Milestone [`Incremento 4 — Portal del estudiante y Analytics`](https://github.com/vvalotto/cognion/milestone/11).
+> Esta tabla ya puede usarse como base para elaborar las US-IEDD formales de las Iteraciones 1 y
+> 2 (`WORKFLOW-DESARROLLO.md` §3, paso 1) — revisarla contra el modelo y los wireframes
+> aprobados antes de crear Issues/specs, por si algo se ajustó respecto de lo anticipado acá —
+> mismo criterio que `inc2-candidatas.md`/`inc3-candidatas.md`.
 >
 > Fuente: `docs/rf/PLAN_v1.md` §Incremento 4, `docs/rf/RF_v1.md` (RF-15, RF-16, RF-17 — RF-18
 > queda fuera, es Incremento 7), `docs/rf/ARQ_v1.md` (Analytics = Supporting Subdomain, Read
@@ -51,7 +53,7 @@ pantallas dependen de qué datos expone cada read model (mismo orden que Increme
 Al cerrar la Iteración 0: actualizar `docs/traceability/matrix.md` §4 — los escenarios RF-15,
 RF-16, RF-17 pasan de *Planificado* a *Especificado* (`WORKFLOW-DESARROLLO.md` §3, paso 0e).
 
-US-4.0.1 → Issue #227 (abierto). US-4.0.2 → Issue #228 (abierto).
+~~US-4.0.1~~ Cerrada 2026-09-04, Issue #227. ~~US-4.0.2~~ Cerrada 2026-09-04, Issue #228.
 
 ---
 
