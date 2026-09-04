@@ -44,9 +44,7 @@ def get_evaluacion_desempeno_consulta_port(
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:
     """Arma el `AnalyticsController` con sus dependencias concretas."""
     evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
-    return AnalyticsController(
-        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta)
-    )
+    return AnalyticsController(ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

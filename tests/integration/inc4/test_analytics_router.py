@@ -91,7 +91,9 @@ async def _registrar_respuesta(
     return expected_seq + 1
 
 
-async def _finalizar_evaluacion(store: SQLAlchemyEventStore, evaluacion_id, expected_seq: int) -> int:
+async def _finalizar_evaluacion(
+    store: SQLAlchemyEventStore, evaluacion_id, expected_seq: int
+) -> int:
     await store.append(
         AGGREGATE_TYPE_EVALUACION,
         evaluacion_id,

@@ -83,9 +83,7 @@ class TestObtenerDesempenoEstudianteUseCase:
 
     @pytest.mark.asyncio
     async def test_sin_evaluaciones_finalizadas_devuelve_todo_en_cero(self):
-        use_case = ObtenerDesempenoEstudianteUseCase(
-            _EvaluacionDesempenoConsultaPortFake([])
-        )
+        use_case = ObtenerDesempenoEstudianteUseCase(_EvaluacionDesempenoConsultaPortFake([]))
 
         resultado = await use_case.execute(uuid4(), uuid4())
 

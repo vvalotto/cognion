@@ -150,12 +150,8 @@ def estudiante_con_dos_evaluaciones_finalizadas(context):
             store = SQLAlchemyEventStore(session)
             actividad_id = uuid4()
             await _crear_actividad(store, actividad_id, context["materia_id"])
-            await _crear_evaluacion_finalizada(
-                store, actividad_id, context["estudiante_id"], 8, 2
-            )
-            await _crear_evaluacion_finalizada(
-                store, actividad_id, context["estudiante_id"], 5, 3
-            )
+            await _crear_evaluacion_finalizada(store, actividad_id, context["estudiante_id"], 8, 2)
+            await _crear_evaluacion_finalizada(store, actividad_id, context["estudiante_id"], 5, 3)
 
     run_async(_setup())
 
@@ -175,9 +171,7 @@ def docente_autenticado(context):
     context["headers"] = _headers_docente()
 
 
-@given(
-    "un Estudiante A autenticado y un Estudiante B con evaluaciones finalizadas en la materia X"
-)
+@given("un Estudiante A autenticado y un Estudiante B con evaluaciones finalizadas en la materia X")
 def estudiante_a_y_estudiante_b_con_evaluaciones(context):
     estudiante_b = uuid4()
 
@@ -219,7 +213,7 @@ def estudiante_a_hace_get_materia_x(context):
     _get(context, context["materia_id"], _headers_estudiante(context["estudiante_id"]))
 
 
-@then("recibe 200 con 2 filas en \"evaluaciones\" ordenadas por finalizada_en descendente")
+@then('recibe 200 con 2 filas en "evaluaciones" ordenadas por finalizada_en descendente')
 def valida_200_con_dos_filas(context):
     response = context["response"]
     assert response.status_code == 200
@@ -227,7 +221,7 @@ def valida_200_con_dos_filas(context):
 
 
 @then(
-    "recibe el \"resumen\" acumulado correcto (total_correctas, total_incorrectas, "
+    'recibe el "resumen" acumulado correcto (total_correctas, total_incorrectas, '
     "porcentaje_acierto, cantidad_evaluaciones)"
 )
 def valida_resumen_acumulado(context):
@@ -240,14 +234,14 @@ def valida_resumen_acumulado(context):
     }
 
 
-@then("recibe 200 con \"evaluaciones\": []")
+@then('recibe 200 con "evaluaciones": []')
 def valida_200_evaluaciones_vacias(context):
     response = context["response"]
     assert response.status_code == 200
     assert response.json()["evaluaciones"] == []
 
 
-@then("recibe \"resumen\" en cero, sin dividir por cero en porcentaje_acierto")
+@then('recibe "resumen" en cero, sin dividir por cero en porcentaje_acierto')
 def valida_resumen_en_cero(context):
     resumen = context["response"].json()["resumen"]
     assert resumen == {
