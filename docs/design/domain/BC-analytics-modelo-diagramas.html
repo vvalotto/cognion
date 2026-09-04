@@ -1,0 +1,408 @@
+<title>Modelo Analytics</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --paper: #edeff2;
+    --surface: #f7f8fa;
+    --ink: #1b222c;
+    --muted: #5b6472;
+    --line: #c8cfd9;
+    --line-soft: #d9dee5;
+    --accent: #9c6712;
+    --accent-ink: #ffffff;
+    --accent-soft: #f1e3cc;
+    --port: #2e5c8a;
+    --port-soft: #dbe6f0;
+    --dto: #9c6712;
+    --dto-soft: #f1e3cc;
+    --usecase: #4a5568;
+    --usecase-soft: #e2e5ea;
+    --external: #6b7280;
+    --shadow: 0 1px 2px rgba(27, 34, 44, 0.06), 0 4px 14px rgba(27, 34, 44, 0.05);
+    --font-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161d;
+      --surface: #171c24;
+      --ink: #e7eaf0;
+      --muted: #8b94a3;
+      --line: #2a313c;
+      --line-soft: #232a33;
+      --accent: #e3a83f;
+      --accent-ink: #1b222c;
+      --accent-soft: #3a2f18;
+      --port: #7fb0e0;
+      --port-soft: #1c2b3c;
+      --dto: #e3a83f;
+      --dto-soft: #3a2f18;
+      --usecase: #aab2c0;
+      --usecase-soft: #232a33;
+      --external: #9aa2b0;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12161d;
+    --surface: #171c24;
+    --ink: #e7eaf0;
+    --muted: #8b94a3;
+    --line: #2a313c;
+    --line-soft: #232a33;
+    --accent: #e3a83f;
+    --accent-ink: #1b222c;
+    --accent-soft: #3a2f18;
+    --port: #7fb0e0;
+    --port-soft: #1c2b3c;
+    --dto: #e3a83f;
+    --dto-soft: #3a2f18;
+    --usecase: #aab2c0;
+    --usecase-soft: #232a33;
+    --external: #9aa2b0;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 3.5rem 1.75rem 6rem;
+  }
+
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+    margin-bottom: 2.75rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      var(--line-soft) 27px,
+      var(--line-soft) 28px
+    );
+    background-position: 0 4.4rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.12;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0 0 1.4rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .meta-row code {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.12rem 0.42rem;
+    color: var(--ink);
+  }
+
+  main { display: flex; flex-direction: column; gap: 3.2rem; }
+
+  section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  section h2 .num {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  section > .lede {
+    color: var(--muted);
+    max-width: 68ch;
+    margin: 0 0 1.3rem;
+    font-size: 0.98rem;
+  }
+
+  figure {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  figure .diagram-wrap {
+    padding: 1.4rem 1.2rem 0.6rem;
+    overflow-x: auto;
+  }
+
+  figure .diagram-wrap pre.mermaid {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-width: 480px;
+  }
+
+  figcaption {
+    padding: 0.85rem 1.3rem 1.1rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  figcaption strong { color: var(--ink); font-weight: 600; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    margin: 1.1rem 0 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .legend .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    color: var(--muted);
+  }
+
+  .legend .swatch {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    flex: none;
+  }
+
+  .swatch.port { background: var(--port); }
+  .swatch.dto { background: var(--dto); }
+  .swatch.usecase { background: var(--usecase); }
+  .swatch.external { background: var(--external); border: 1px dashed var(--muted); background: transparent; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+
+  .callout strong { font-family: var(--font-mono); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); display: block; margin-bottom: 0.3rem; }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+  }
+
+  footer a { color: var(--muted); }
+
+  ::selection { background: var(--accent-soft); }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow"><span class="dot"></span> BC Analytics · Incremento 4 · Iteración 0 — Modelado</div>
+    <h1>Modelo de dominio, en diagramas</h1>
+    <p class="subtitle">
+      Complemento visual de <code>BC-analytics-modelo.md</code> — sin aggregate propio, el
+      modelo se estructura en tres puertos de consulta angostos (uno por BC dueño) y las
+      queries que los componen. Ver <code>BC-analytics-modelo-event-storming.html</code> para
+      el flujo por actor.
+    </p>
+    <div class="meta-row">
+      <span>Estado: <code>borrador</code></span>
+      <span>Issue: <code>#227</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-analytics-modelo.md</code></span>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="puertos">
+      <h2><span class="num">01</span> Puertos de consulta — contratos y DTOs</h2>
+      <p class="lede">
+        Cada puerto es propio de Analytics (no se importa el contrato de otro BC, mismo
+        criterio que <code style="font-family: var(--font-mono);">MateriaPort</code> vs.
+        <code style="font-family: var(--font-mono);">MateriaConsultaPort</code>) y resuelve
+        exactamente una fuente — ninguno cruza dos BCs dueños a la vez.
+        <code style="font-family: var(--font-mono);">ComisionConsultaPort</code> es el único sin
+        implementación existente hoy en ningún lado.
+      </p>
+
+      <div class="legend">
+        <span class="item"><span class="swatch port"></span>Puerto (interface)</span>
+        <span class="item"><span class="swatch dto"></span>DTO de retorno</span>
+        <span class="item"><span class="swatch external"></span>Externo, dueño del dato (otro BC)</span>
+      </div>
+
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+classDiagram
+    class EvaluacionDesempenoConsultaPort {
+        &lt;&lt;Puerto — Actividad Evaluativa&gt;&gt;
+        listar_evaluaciones_finalizadas(estudiante_id, materia_id?) List~EvaluacionDesempenoResumen~
+        listar_respuestas_vigentes_de_materia(materia_id, estudiante_ids?) List~RespuestaVigenteResumen~
+    }
+
+    class EvaluacionDesempenoResumen {
+        &lt;&lt;DTO&gt;&gt;
+        UUID evaluacion_id
+        UUID actividad_id
+        UUID materia_id
+        datetime finalizada_en
+        int cantidad_correctas
+        int cantidad_incorrectas
+    }
+
+    class RespuestaVigenteResumen {
+        &lt;&lt;DTO&gt;&gt;
+        UUID pregunta_id
+        UUID estudiante_id
+        bool es_correcta
+    }
+
+    class PreguntaMetadatoConsultaPort {
+        &lt;&lt;Puerto — Banco de Preguntas&gt;&gt;
+        obtener_metadatos(pregunta_ids) Dict~UUID, MetadatoPreguntaResumen~
+    }
+
+    class MetadatoPreguntaResumen {
+        &lt;&lt;DTO&gt;&gt;
+        string unidad_tematica
+        string tema
+    }
+
+    class ComisionConsultaPort {
+        &lt;&lt;Puerto — Identidad, nuevo de punta a punta&gt;&gt;
+        listar_comisiones_por_materia(materia_id) List~ComisionResumen~
+        listar_estudiantes(comision_id) List~UUID~
+    }
+
+    class ComisionResumen {
+        &lt;&lt;DTO&gt;&gt;
+        UUID id
+    }
+
+    class events_ActividadEvaluativa {
+        &lt;&lt;externo — tabla events, streams Evaluacion / ActividadEvaluativaPeriodoAbierto&gt;&gt;
+    }
+    class PreguntaPlantilla {
+        &lt;&lt;externo — Banco de Preguntas&gt;&gt;
+    }
+    class Comision {
+        &lt;&lt;externo — Identidad&gt;&gt;
+    }
+
+    EvaluacionDesempenoConsultaPort ..> EvaluacionDesempenoResumen : devuelve
+    EvaluacionDesempenoConsultaPort ..> RespuestaVigenteResumen : devuelve
+    EvaluacionDesempenoConsultaPort --> events_ActividadEvaluativa : lee (adapter in-process)
+
+    PreguntaMetadatoConsultaPort ..> MetadatoPreguntaResumen : devuelve
+    PreguntaMetadatoConsultaPort --> PreguntaPlantilla : lee (adapter in-process)
+
+    ComisionConsultaPort ..> ComisionResumen : devuelve
+    ComisionConsultaPort --> Comision : lee (adapter in-process, a implementar)
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> ningún puerto expone el aggregate ni la
+          entidad del BC dueño — solo DTOs mínimos, armados por el propio adapter in-process al
+          leer la fuente. <code>EvaluacionDesempenoConsultaPort</code> es el único que ya tiene
+          dónde apoyarse del lado de la fuente (la tabla <code>events</code> ya existe, escrita
+          desde el Incremento 3); <code>ComisionConsultaPort</code> necesita que Identidad
+          agregue una consulta que hoy no tiene (§5 del modelo).
+        </figcaption>
+      </figure>
+    </section>
+
+    <div class="callout">
+      <strong>Por qué no hay diagrama de ciclo de vida</strong>
+      <code>BC-actividad-evaluativa-modelo-diagramas.html</code> incluye un
+      <code>stateDiagram</code> para <code>Evaluacion</code> porque ese aggregate tiene estados
+      (<code>EnCurso</code>/<code>Suspendida</code>/<code>Finalizada</code>) e invariantes de
+      transición. Analytics no tiene aggregate ni estado propio — no hay nada que transicione,
+      solo datos ya escritos por otro BC que se leen y agregan en el momento de cada consulta.
+    </div>
+
+  </main>
+
+  <footer>
+    <span>Cognión — BC Analytics</span>
+    <span>Modelado en conversación con Víctor, 2026-09-04</span>
+  </footer>
+
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: prefersDark ? "dark" : "default", securityLevel: "loose" });
+</script>
