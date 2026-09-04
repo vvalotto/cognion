@@ -111,7 +111,11 @@ async def _finalizar_evaluacion(store: SQLAlchemyEventStore, evaluacion_id, seq:
         AGGREGATE_TYPE_EVALUACION,
         evaluacion_id,
         seq,
-        [EventoParaAlmacenar("EvaluacionFinalizada", {"evaluacion_id": str(evaluacion_id), "actor": "estudiante"})],
+        [
+            EventoParaAlmacenar(
+                "EvaluacionFinalizada", {"evaluacion_id": str(evaluacion_id), "actor": "estudiante"}
+            )
+        ],
     )
     return seq + 1
 

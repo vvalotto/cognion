@@ -129,11 +129,17 @@ class TestListarEvaluacionesFinalizadas:
 
         assert len(resultado) == 2
         por_id = {r.evaluacion_id: r for r in resultado}
-        assert (por_id[evaluacion_1].cantidad_correctas, por_id[evaluacion_1].cantidad_incorrectas) == (
+        assert (
+            por_id[evaluacion_1].cantidad_correctas,
+            por_id[evaluacion_1].cantidad_incorrectas,
+        ) == (
             8,
             2,
         )
-        assert (por_id[evaluacion_2].cantidad_correctas, por_id[evaluacion_2].cantidad_incorrectas) == (
+        assert (
+            por_id[evaluacion_2].cantidad_correctas,
+            por_id[evaluacion_2].cantidad_incorrectas,
+        ) == (
             5,
             3,
         )

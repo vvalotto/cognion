@@ -60,9 +60,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
     async def _eventos_evaluacion_del_estudiante(
         self, estudiante_id: UUID
     ) -> list[list[EventoModel]]:
-        """Agrupa por stream los eventos de `Evaluacion` cuyo `EvaluacionIniciada` es del
-        Estudiante.
-        """
+        """Agrupa los eventos de `Evaluacion` por stream, del Estudiante indicado."""
         resultado = await self._session.execute(
             select(EventoModel)
             .where(EventoModel.aggregate_type == AGGREGATE_TYPE_EVALUACION)
@@ -89,8 +87,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
         if not actividad_ids:
             return {}
         resultado = await self._session.execute(
-            select(EventoModel)
-            .where(
+            select(EventoModel).where(
                 EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD,
                 EventoModel.aggregate_id.in_(actividad_ids),
                 EventoModel.sequence_number == 1,
