@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Portal de Desempeño / Analytics (Incremento 4)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Mismos tokens que actividad-evaluativa-periodo-abierto.html,
+    identidad-cuentas-administracion.html y banco-preguntas-carga-filtrado.html (paleta
+    institucional UNER, tipografía Roboto) — continuidad visual entre BCs e iteraciones.
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --warning: #b5791d;
+    --warning-bg: #fdf5e8;
+    --warning-border: #f0ddb3;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+  .proto-nav .sep { width: 1px; align-self: stretch; background: rgba(255,255,255,0.24); margin: 0 2px; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .app-body { padding: 28px 16px 60px; max-width: 900px; margin: 0 auto; }
+  .breadcrumb { font-size: 12px; color: var(--muted-foreground); margin-bottom: 6px; }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .page-subtitle { font-size: 14px; color: var(--muted-foreground); margin: 0 0 24px; }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.outline { background: var(--background); color: var(--foreground); border: 1px solid var(--border); }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .filters-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filters-row .field { min-width: 220px; margin-bottom: 0; }
+  .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .field select, .field input {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+  }
+  .field select:focus, .field input:focus { outline: 2px solid var(--ring); outline-offset: 1px; }
+
+  /* Cards de listado (US-ADJ-01) */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+  .card .card-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .card .card-meta { font-size: 12px; color: var(--muted-foreground); margin-bottom: 10px; }
+  .card .card-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .badge.ok { background: var(--success-bg); color: #14532d; }
+  .badge.warn { background: var(--warning-bg); color: #7a5210; }
+  .badge.error { background: var(--destructive-bg); color: #7f1d1d; }
+  .badge.neutro { background: var(--muted); color: var(--muted-foreground); }
+
+  /* Resumen acumulado (RF-15/RF-16) */
+  .summary-bar {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 20px;
+  }
+  .summary-bar .stat { text-align: center; }
+  .summary-bar .stat .n { font-size: 22px; font-weight: 700; }
+  .summary-bar .stat .l { font-size: 11px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
+  .summary-bar .stat.ok .n { color: var(--success); }
+  .summary-bar .stat.error .n { color: var(--destructive); }
+
+  /* Listado por evaluación (RF-15/RF-16) */
+  .eval-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .eval-item .ei-title { font-weight: 600; font-size: 14px; }
+  .eval-item .ei-meta { font-size: 12px; color: var(--muted-foreground); }
+  .eval-item .ei-result { display: flex; gap: 14px; align-items: center; }
+  .eval-item .ei-result .n-ok { color: var(--success); font-weight: 700; font-size: 14px; }
+  .eval-item .ei-result .n-error { color: var(--destructive); font-weight: 700; font-size: 14px; }
+
+  /* Tasa de error por tema (RF-17) */
+  .tema-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .tema-row .tr-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; gap: 10px; flex-wrap: wrap; }
+  .tema-row .tr-unidad { font-size: 11px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
+  .tema-row .tr-tema { font-weight: 600; font-size: 14px; }
+  .tema-row .tr-pct { font-weight: 700; font-size: 14px; }
+  .tema-row .tr-pct.alta { color: var(--destructive); }
+  .tema-row .tr-pct.media { color: var(--warning); }
+  .tema-row .tr-pct.baja { color: var(--success); }
+  .tema-row .tr-bar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+  .tema-row .tr-bar .fill { height: 100%; }
+  .tema-row .tr-bar .fill.alta { background: var(--destructive); }
+  .tema-row .tr-bar .fill.media { background: var(--warning); }
+  .tema-row .tr-bar .fill.baja { background: var(--success); }
+  .tema-row .tr-foot { font-size: 12px; color: var(--muted-foreground); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted-foreground);
+    font-size: 14px;
+  }
+
+  @media (max-width: 560px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .eval-item { flex-direction: column; align-items: flex-start; }
+    .filters-row .field { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>Inc.4 It.0 — Prototipo:</strong>
+  <button data-target="est-desempeno" class="active">1. Estudiante — Mi desempeño</button>
+  <button data-target="doc-desempeno-alumno">2. Docente — Desempeño por alumno</button>
+  <button data-target="doc-desempeno-tema">3. Docente — Desempeño por tema</button>
+</nav>
+
+<!-- 1. ESTUDIANTE — MI DESEMPEÑO (RF-15) -->
+<section class="screen active" id="est-desempeno">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Analytics &nbsp;›&nbsp; <span class="current">Mi desempeño</span></div>
+    <h1 class="page-title">Mi desempeño</h1>
+    <p class="page-subtitle">Historial de tus evaluaciones de período abierto en la materia elegida (RF-15).</p>
+
+    <div class="filters-row">
+      <div class="field">
+        <label>Materia</label>
+        <select>
+          <option>Ingeniería de Software</option>
+          <option>Gestión de Proyectos</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="summary-bar">
+      <div class="stat ok"><div class="n">34</div><div class="l">Correctas (acum.)</div></div>
+      <div class="stat error"><div class="n">11</div><div class="l">Incorrectas (acum.)</div></div>
+      <div class="stat"><div class="n">76%</div><div class="l">Acierto</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">Evaluaciones finalizadas</div></div>
+    </div>
+
+    <p class="page-subtitle" style="margin-bottom:10px;">Detalle por evaluación</p>
+
+    <div class="eval-item">
+      <div>
+        <div class="ei-title">Parcial 1 — Unidades 1 a 3</div>
+        <div class="ei-meta">Finalizada el 25/09 21:14</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">14 ✓</span>
+        <span class="n-error">3 ✗</span>
+      </div>
+    </div>
+
+    <div class="eval-item">
+      <div>
+        <div class="ei-title">Repaso Unidad 4</div>
+        <div class="ei-meta">Finalizada el 07/10 19:02</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">12 ✓</span>
+        <span class="n-error">5 ✗</span>
+      </div>
+    </div>
+
+    <div class="eval-item">
+      <div>
+        <div class="ei-title">Práctica Unidad 5</div>
+        <div class="ei-meta">Finalizada el 14/10 20:33</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">8 ✓</span>
+        <span class="n-error">3 ✗</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. DOCENTE — DESEMPEÑO POR ALUMNO (RF-16) -->
+<section class="screen" id="doc-desempeno-alumno">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Analytics &nbsp;›&nbsp; <span class="current">Desempeño por alumno</span></div>
+    <h1 class="page-title">Desempeño por alumno</h1>
+    <p class="page-subtitle">Elegí una comisión y un estudiante para ver su historial completo (RF-16) — mismo detalle que ve el propio estudiante en "Mi desempeño".</p>
+
+    <div class="filters-row">
+      <div class="field">
+        <label>Materia</label>
+        <select>
+          <option>Ingeniería de Software</option>
+          <option>Gestión de Proyectos</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Comisión</label>
+        <select>
+          <option>Comisión A</option>
+          <option>Comisión B</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Estudiante</label>
+        <select>
+          <option>María González</option>
+          <option>Juan Pérez</option>
+          <option>… resto de la comisión</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="summary-bar">
+      <div class="stat ok"><div class="n">34</div><div class="l">Correctas (acum.)</div></div>
+      <div class="stat error"><div class="n">11</div><div class="l">Incorrectas (acum.)</div></div>
+      <div class="stat"><div class="n">76%</div><div class="l">Acierto</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">Evaluaciones finalizadas</div></div>
+    </div>
+
+    <p class="page-subtitle" style="margin-bottom:10px;">Detalle por evaluación — María González</p>
+
+    <div class="eval-item">
+      <div>
+        <div class="ei-title">Parcial 1 — Unidades 1 a 3</div>
+        <div class="ei-meta">Finalizada el 25/09 21:14</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">14 ✓</span>
+        <span class="n-error">3 ✗</span>
+      </div>
+    </div>
+
+    <div class="eval-item">
+      <div>
+        <div class="ei-title">Repaso Unidad 4</div>
+        <div class="ei-meta">Finalizada el 07/10 19:02</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">12 ✓</span>
+        <span class="n-error">5 ✗</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. DOCENTE — DESEMPEÑO POR TEMA (RF-17) -->
+<section class="screen" id="doc-desempeno-tema">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Analytics &nbsp;›&nbsp; <span class="current">Desempeño por tema</span></div>
+    <h1 class="page-title">Desempeño por tema</h1>
+    <p class="page-subtitle">Tasa de error agregada por unidad y tema (RF-17) — de toda la materia, o acotada a una comisión.</p>
+
+    <div class="filters-row">
+      <div class="field">
+        <label>Materia</label>
+        <select>
+          <option>Ingeniería de Software</option>
+          <option>Gestión de Proyectos</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Comisión</label>
+        <select>
+          <option>Toda la materia</option>
+          <option>Comisión A</option>
+          <option>Comisión B</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tema-row">
+      <div class="tr-head">
+        <div>
+          <div class="tr-unidad">Unidad 3 — Principios SOLID</div>
+          <div class="tr-tema">Inversión de dependencias</div>
+        </div>
+        <div class="tr-pct alta">58%</div>
+      </div>
+      <div class="tr-bar"><div class="fill alta" style="width:58%"></div></div>
+      <div class="tr-foot">42 respuestas · 24 incorrectas</div>
+    </div>
+
+    <div class="tema-row">
+      <div class="tr-head">
+        <div>
+          <div class="tr-unidad">Unidad 2 — Arquitectura</div>
+          <div class="tr-tema">Bounded Contexts</div>
+        </div>
+        <div class="tr-pct media">31%</div>
+      </div>
+      <div class="tr-bar"><div class="fill media" style="width:31%"></div></div>
+      <div class="tr-foot">58 respuestas · 18 incorrectas</div>
+    </div>
+
+    <div class="tema-row">
+      <div class="tr-head">
+        <div>
+          <div class="tr-unidad">Unidad 1 — Fundamentos</div>
+          <div class="tr-tema">Ciclo de vida del software</div>
+        </div>
+        <div class="tr-pct baja">9%</div>
+      </div>
+      <div class="tr-bar"><div class="fill baja" style="width:9%"></div></div>
+      <div class="tr-foot">65 respuestas · 6 incorrectas</div>
+    </div>
+
+    <p style="font-size:12px; color:var(--muted-foreground); text-align:center; margin-top:8px;">… resto de los temas de la materia, mismo formato — ordenados por tasa de error descendente.</p>
+  </div>
+</section>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+</script>
+
+</body>
+</html>
