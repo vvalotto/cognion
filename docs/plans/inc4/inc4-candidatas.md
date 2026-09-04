@@ -83,6 +83,11 @@ a confirmar el path exacto en la spec de `US-4.1.2`.
 
 **Orden de implementación:** US-4.1.1 primero (bloquea el resto del BC) → US-4.1.2 → US-4.1.3.
 
+US-4.1.1 → Issue [#232](https://github.com/vvalotto/cognion/issues/232). US-4.1.2 → Issue
+[#233](https://github.com/vvalotto/cognion/issues/233). US-4.1.3 → Issue
+[#234](https://github.com/vvalotto/cognion/issues/234). Specs en `docs/specs/inc4/US-4.1.1.md`
+a `US-4.1.3.md`.
+
 ---
 
 ## Iteración 2 — RF-16, RF-17: Desempeño por alumno y por tema (docente)
@@ -141,5 +146,7 @@ US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su back
    `US-4.2.1` resuelto 2026-09-04 (cualquier docente consulta a cualquier estudiante). El
    agrupamiento de la infraestructura de puertos en `US-4.1.1`/`US-4.2.2`/`US-4.2.3` y los
    paths de endpoint quedan a confirmar en cada spec, no bloquean el arranque de la Iteración 1.
-6. Crear Issues (Milestone #11) y `docs/specs/inc4/US-4.M.K.md` por cada US aprobada.
-7. Implementar Iteración 1 → 2.
+6. ~~Crear Issues (Milestone #11) y `docs/specs/inc4/US-4.M.K.md` de la Iteración 1.~~ Hecho
+   2026-09-04 — Issues #232 (US-4.1.1), #233 (US-4.1.2), #234 (US-4.1.3).
+7. Implementar Iteración 1 (`/implement-us US-4.1.1` → `US-4.1.2` → `US-4.1.3`) → crear Issues/
+   specs de la Iteración 2 → implementar Iteración 2.
