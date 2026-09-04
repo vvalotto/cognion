@@ -17,6 +17,7 @@ from src.actividad_evaluativa.frameworks.api.revision_router import router as re
 from src.actividad_evaluativa.frameworks.dependencies import (
     build_verificar_vencimientos_use_case,
 )
+from src.analytics.frameworks.api.analytics_router import router as analytics_router
 from src.banco_preguntas.frameworks.api.bancos_router import router as bancos_router
 from src.banco_preguntas.frameworks.api.materias_router import router as materias_router
 from src.banco_preguntas.frameworks.api.preguntas_router import router as preguntas_router
@@ -84,6 +85,7 @@ app.include_router(bancos_router)
 app.include_router(actividades_router)
 app.include_router(evaluaciones_router)
 app.include_router(revision_router)
+app.include_router(analytics_router)
 
 
 @app.get("/health", tags=["infra"])
