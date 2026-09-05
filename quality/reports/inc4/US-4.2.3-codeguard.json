@@ -1,0 +1,828 @@
+{
+  "summary": {
+    "total_files": 3,
+    "checks_executed": 9,
+    "elapsed_seconds": 22.07,
+    "timestamp": "2026-09-05T17:43:16.731672",
+    "total_issues": 38,
+    "errors": 1,
+    "warnings": 14,
+    "infos": 23
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 54
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_estudiante_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 61
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_pregunta_metadato_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 75
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 84
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 98
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 101
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 67
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'unidad_tematica' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": 23
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'tema' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": 24
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PreguntaMetadatoConsultaPort' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_metadatos' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": 30
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_ids' is never used (100% confidence)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": 32
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PreguntaMetadatoConsultaPortInProcess' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_metadatos' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": 29
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 92.4 (grade A)",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.29/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_ids' is never used (100% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 32
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_estudiante_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 61
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_metadato_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 84
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 98
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 101
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'unidad_tematica' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'tema' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaMetadatoConsultaPort' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_metadatos' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaMetadatoConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_metadatos' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": 29
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 92.4 (grade A)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.29/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/pregunta_metadato_consulta_port_in_process.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaMetadatoConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_metadatos' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": 29
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 92.4 (grade A)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.29/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/adapters/pregunta_metadato_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_estudiante_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 61
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_metadato_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 84
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 98
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 101
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 67
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "ports/pregunta_metadato_consulta_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'unidad_tematica' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'tema' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaMetadatoConsultaPort' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_metadatos' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_ids' is never used (100% confidence)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": 32
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/entities/ports/pregunta_metadato_consulta_port.py",
+        "line": null
+      }
+    ]
+  }
+}
