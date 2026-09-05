@@ -1,5 +1,4 @@
-"""Router base del BC Analytics — endpoints de consulta de desempeño (`US-4.1.2`, `US-4.2.1`,
-`US-4.2.4`)."""
+"""Router base del BC Analytics — endpoints de consulta de desempeño (`US-4.1.2`, `US-4.2.1`, `US-4.2.4`)."""
 
 from __future__ import annotations
 

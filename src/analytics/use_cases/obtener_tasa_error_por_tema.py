@@ -46,17 +46,17 @@ class ObtenerTasaErrorPorTemaUseCase:
         self._comision_consulta = comision_consulta
         self._pregunta_metadato_consulta = pregunta_metadato_consulta
 
-    async def execute(
-        self, materia_id: UUID, comision_id: UUID | None
-    ) -> list[TasaErrorTema]:
+    async def execute(self, materia_id: UUID, comision_id: UUID | None) -> list[TasaErrorTema]:
         """Devuelve la tasa de error por tema, ordenada descendente (temas más problemáticos primero).
 
         `comision_id` que no pertenece a `materia_id` → `raise ComisionNoPerteneceAMateria`
         (el router lo mapea a 422). Sin `comision_id`, agrega toda la materia.
         """
         estudiante_ids = await self._resolver_estudiante_ids(materia_id, comision_id)
-        respuestas = await self._evaluacion_desempeno_consulta.listar_respuestas_vigentes_de_materia(
-            materia_id, estudiante_ids
+        respuestas = (
+            await self._evaluacion_desempeno_consulta.listar_respuestas_vigentes_de_materia(
+                materia_id, estudiante_ids
+            )
         )
         if not respuestas:
             return []

@@ -14,6 +14,4 @@ class ComisionNoPerteneceAMateria(Exception):
 
     def __init__(self, comision_id: UUID, materia_id: UUID) -> None:
         """Registra los ids involucrados para el mensaje de error (US-4.2.4)."""
-        super().__init__(
-            f"La comisión {comision_id} no pertenece a la materia {materia_id}."
-        )
+        super().__init__(f"La comisión {comision_id} no pertenece a la materia {materia_id}.")
