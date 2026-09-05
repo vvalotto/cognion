@@ -390,6 +390,33 @@ if [[ "$invitacion_code" == "201" ]]; then
   [[ "$code" == "422" ]] || { echo "FAIL: finalizar dos veces devolvió $code, esperado 422"; exit 1; }
   echo "OK ($code)"
 
+  echo "== Flujo de Analytics — desempeño del Estudiante (Incremento 4, Iteración 1, RF-15) =="
+
+  echo "== GET /analytics/materias/{materia_id}/mi-desempeno (estudiante, con una Evaluacion finalizada, US-4.1.2) =="
+  # pregunta_1_id/pregunta_2_id son las dos V/F sembradas más arriba, ambas con
+  # respuesta_correcta=false — el estudiante contestó "true" a las dos (línea de
+  # /respuestas de arriba), así que la evaluación finalizada debe leerse 0 correctas / 2
+  # incorrectas, sin depender del resultado real de la revisión (ya verificado arriba).
+  desempeno=$(curl -s "${BASE}/analytics/materias/${materia_id}/mi-desempeno" -H "Authorization: Bearer ${estudiante_token}")
+  echo "$desempeno" | grep -q "\"evaluacion_id\":\"${evaluacion_id}\"" || { echo "FAIL: la evaluación finalizada no aparece en el detalle"; echo "$desempeno"; exit 1; }
+  echo "$desempeno" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+assert d['resumen']['cantidad_evaluaciones'] == 1, d
+assert d['resumen']['total_correctas'] == 0, d
+assert d['resumen']['total_incorrectas'] == 2, d
+fila = d['evaluaciones'][0]
+assert fila['cantidad_correctas'] == 0, fila
+assert fila['cantidad_incorrectas'] == 2, fila
+"
+  [[ $? == 0 ]] || { echo "FAIL: resumen/detalle de desempeño no coincide con lo esperado"; echo "$desempeno"; exit 1; }
+  echo "OK (1 evaluación, 0 correctas, 2 incorrectas)"
+
+  echo "== GET /analytics/materias/{materia_id}/mi-desempeno con rol docente (esperado 403, RBAC) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}/analytics/materias/${materia_id}/mi-desempeno" -H "Authorization: Bearer ${docente_token}")
+  [[ "$code" == "403" ]] || { echo "FAIL: docente consultando su desempeño devolvió $code, esperado 403"; exit 1; }
+  echo "OK ($code)"
+
   echo "== PATCH /actividades/{id}/periodo — docente extiende el plazo (US-3.3.1, RF-11b) =="
   nueva_fecha_cierre=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=14)).isoformat())")
   extendida=$(curl -s -X PATCH "${BASE}/actividades/${actividad_id}/periodo" -H "Content-Type: application/json" \
@@ -425,6 +452,19 @@ if [[ "$invitacion_code" == "201" ]]; then
     -d "{\"actividad_id\":\"${actividad_id}\"}")
   [[ "$code" == "422" ]] || { echo "FAIL: iniciar evaluación sobre actividad cerrada devolvió $code, esperado 422"; exit 1; }
   echo "OK ($code)"
+
+  echo "== GET /analytics/materias/{materia_id}/mi-desempeno (estudiante2, sin Evaluacion finalizada) =="
+  desempeno_vacio=$(curl -s "${BASE}/analytics/materias/${materia_id}/mi-desempeno" -H "Authorization: Bearer ${estudiante2_token}")
+  echo "$desempeno_vacio" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+assert d['evaluaciones'] == [], d
+assert d['resumen']['cantidad_evaluaciones'] == 0, d
+assert d['resumen']['total_correctas'] == 0, d
+assert d['resumen']['total_incorrectas'] == 0, d
+"
+  [[ $? == 0 ]] || { echo "FAIL: desempeño sin evaluaciones no devolvió lista/resumen vacíos"; echo "$desempeno_vacio"; exit 1; }
+  echo "OK (lista vacía, resumen en cero)"
 else
   echo "SKIPPED ($invitacion_code) — ver /tmp/cognion-smoke-invitacion.json y $LOG"
   echo "SKIPPED — depende de la invitación anterior"
