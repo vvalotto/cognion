@@ -10,7 +10,7 @@ from uuid import uuid4
 from src.actividad_evaluativa.frameworks.db.models import EventoModel
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import RespuestaVigente
 from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
-    EvaluacionDesempenoConsultaPortInProcess,
+    _resumen_de_stream,
     _respuestas_vigentes_de_stream,
 )
 
@@ -111,11 +111,7 @@ class TestResumenDeStream:
                 occurred_at=datetime(2026, 1, 1, tzinfo=UTC),
             )
         ]
-        adapter = EvaluacionDesempenoConsultaPortInProcess(session=None)  # type: ignore[arg-type]
-
-        resumen = adapter._resumen_de_stream(  # pylint: disable=protected-access
-            eventos, {actividad_id: materia_id}
-        )
+        resumen = _resumen_de_stream(eventos, {actividad_id: materia_id})
 
         assert resumen is None
 
@@ -148,11 +144,7 @@ class TestResumenDeStream:
                 occurred_at=finalizada_en,
             ),
         ]
-        adapter = EvaluacionDesempenoConsultaPortInProcess(session=None)  # type: ignore[arg-type]
-
-        resumen = adapter._resumen_de_stream(  # pylint: disable=protected-access
-            eventos, {actividad_id: materia_id}
-        )
+        resumen = _resumen_de_stream(eventos, {actividad_id: materia_id})
 
         assert resumen is not None
         assert resumen.evaluacion_id == evaluacion_id

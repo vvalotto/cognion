@@ -55,7 +55,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
 
         resumenes = []
         for eventos in eventos_evaluacion:
-            resumen = self._resumen_de_stream(eventos, materia_por_actividad)
+            resumen = _resumen_de_stream(eventos, materia_por_actividad)
             if resumen is None:
                 continue
             if materia_id is not None and resumen.materia_id != materia_id:
@@ -124,30 +124,36 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
             for modelo in resultado.scalars().all()
         }
 
-    def _resumen_de_stream(
-        self, eventos: list[EventoModel], materia_por_actividad: dict[UUID, UUID]
-    ) -> EvaluacionDesempenoResumen | None:
-        """Deriva el resumen de un stream ya filtrado por Estudiante, o `None` si no finalizó."""
-        evento_finalizada = next(
-            (evento for evento in eventos if evento.event_type == EVENT_TYPE_FINALIZADA), None
-        )
-        if evento_finalizada is None:
-            return None
 
-        primero = eventos[0]
-        actividad_id = UUID(primero.payload["actividad_id"])
-        respuestas = _respuestas_vigentes_de_stream(eventos)
-        correctas = sum(1 for respuesta in respuestas if respuesta.es_correcta)
-        incorrectas = len(respuestas) - correctas
+def _resumen_de_stream(
+    eventos: list[EventoModel], materia_por_actividad: dict[UUID, UUID]
+) -> EvaluacionDesempenoResumen | None:
+    """Deriva el resumen de un stream ya filtrado por Estudiante, o `None` si no finalizó.
 
-        return EvaluacionDesempenoResumen(
-            evaluacion_id=primero.aggregate_id,
-            actividad_id=actividad_id,
-            materia_id=materia_por_actividad[actividad_id],
-            finalizada_en=evento_finalizada.occurred_at,
-            cantidad_correctas=correctas,
-            cantidad_incorrectas=incorrectas,
-        )
+    Función de módulo (no método) — no depende de estado de la instancia, mismo criterio que
+    `_stream_califica_para_materia`/`_respuestas_vigentes_de_stream` (mantener el WMC de
+    `EvaluacionDesempenoConsultaPortInProcess` bajo el umbral de `DesignReviewer`).
+    """
+    evento_finalizada = next(
+        (evento for evento in eventos if evento.event_type == EVENT_TYPE_FINALIZADA), None
+    )
+    if evento_finalizada is None:
+        return None
+
+    primero = eventos[0]
+    actividad_id = UUID(primero.payload["actividad_id"])
+    respuestas = _respuestas_vigentes_de_stream(eventos)
+    correctas = sum(1 for respuesta in respuestas if respuesta.es_correcta)
+    incorrectas = len(respuestas) - correctas
+
+    return EvaluacionDesempenoResumen(
+        evaluacion_id=primero.aggregate_id,
+        actividad_id=actividad_id,
+        materia_id=materia_por_actividad[actividad_id],
+        finalizada_en=evento_finalizada.occurred_at,
+        cantidad_correctas=correctas,
+        cantidad_incorrectas=incorrectas,
+    )
 
 
 def _stream_califica_para_materia(
