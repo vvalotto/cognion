@@ -23,6 +23,7 @@ import { FueraDePeriodo } from "@/pages/actividad-evaluativa/FueraDePeriodo"
 import { Login } from "@/pages/identidad/Login"
 import { Materias } from "@/pages/banco-preguntas/Materias"
 import { MateriasActividades } from "@/pages/actividad-evaluativa/MateriasActividades"
+import { MiDesempeno } from "@/pages/analytics/MiDesempeno"
 import { MisActividades } from "@/pages/actividad-evaluativa/MisActividades"
 import { MisMaterias } from "@/pages/actividad-evaluativa/MisMaterias"
 import { NuevaActividad } from "@/pages/actividad-evaluativa/NuevaActividad"
@@ -272,6 +273,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="estudiante">
             <RevisionEvaluacion />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/mi-desempeno",
+        element: (
+          <RequireRole rol="estudiante">
+            <MiDesempeno />
           </RequireRole>
         ),
       },
