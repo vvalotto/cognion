@@ -2,7 +2,9 @@
 
 Composition root del BC — arranca con el puerto de consulta al event store ajeno de Actividad
 Evaluativa (`US-4.1.1`). `US-4.1.2` agrega el primer controller y el RBAC de rol `estudiante`,
-mismo patrón que `src/actividad_evaluativa/frameworks/dependencies.py`.
+mismo patrón que `src/actividad_evaluativa/frameworks/dependencies.py`. `US-4.2.1` agrega el
+RBAC de rol `docente` y el puerto de consulta de `Usuario` (Identidad) para validar que el
+`estudiante_id` elegido existe.
 """
 
 from __future__ import annotations
@@ -12,8 +14,12 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
+)
+from src.analytics.frameworks.adapters.estudiante_consulta_port_in_process import (
+    EstudianteConsultaPortInProcess,
 )
 from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
     EvaluacionDesempenoConsultaPortInProcess,
@@ -41,6 +47,11 @@ def get_evaluacion_desempeno_consulta_port(
     return EvaluacionDesempenoConsultaPortInProcess(session)
 
 
+def get_estudiante_consulta_port(session: SessionDep) -> EstudianteConsultaPort:
+    """Provee el puerto de consulta de `Usuario`/Estudiante, cableado contra Identidad."""
+    return EstudianteConsultaPortInProcess(session)
+
+
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:
     """Arma el `AnalyticsController` con sus dependencias concretas."""
     evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
@@ -57,3 +68,7 @@ get_current_user = build_get_current_user(get_jwt_issuer())
 
 require_estudiante = require_rol([TipoPerfil.ESTUDIANTE], get_current_user)
 """Dependency que exige rol `estudiante` — consulta del propio desempeño (RF-02, RF-15)."""
+
+require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
+"""Dependency que exige rol `docente` — consulta del desempeño de un Estudiante elegido
+(RF-02, RF-16)."""

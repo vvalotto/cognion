@@ -1,0 +1,80 @@
+[
+    {
+        "type": "refactor",
+        "module": "src.analytics.use_cases.obtener_desempeno_estudiante",
+        "obj": "ObtenerDesempenoEstudianteUseCase",
+        "line": 43,
+        "column": 0,
+        "endLine": 43,
+        "endColumn": 39,
+        "path": "src/analytics/use_cases/obtener_desempeno_estudiante.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.analytics.frameworks.adapters.estudiante_consulta_port_in_process",
+        "obj": "EstudianteConsultaPortInProcess",
+        "line": 22,
+        "column": 0,
+        "endLine": 22,
+        "endColumn": 37,
+        "path": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process",
+        "obj": "EvaluacionDesempenoConsultaPortInProcess",
+        "line": 32,
+        "column": 0,
+        "endLine": 32,
+        "endColumn": 46,
+        "path": "src/analytics/frameworks/adapters/evaluacion_desempeno_consulta_port_in_process.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.analytics.entities.ports.evaluacion_desempeno_consulta_port",
+        "obj": "EvaluacionDesempenoConsultaPort",
+        "line": 32,
+        "column": 0,
+        "endLine": 32,
+        "endColumn": 37,
+        "path": "src/analytics/entities/ports/evaluacion_desempeno_consulta_port.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.analytics.entities.ports.estudiante_consulta_port",
+        "obj": "EstudianteConsultaPort",
+        "line": 16,
+        "column": 0,
+        "endLine": 16,
+        "endColumn": 28,
+        "path": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "symbol": "too-few-public-methods",
+        "message": "Too few public methods (1/2)",
+        "message-id": "R0903"
+    },
+    {
+        "type": "refactor",
+        "module": "src.analytics.entities.ports.estudiante_consulta_port",
+        "obj": "",
+        "line": 1,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "symbol": "duplicate-code",
+        "message": "Similar lines in 2 files\n==src.analytics.frameworks.api.schemas:[13:20]\n==src.analytics.use_cases.obtener_desempeno_estudiante:[17:24]\n    evaluacion_id: UUID\n    actividad_id: UUID\n    finalizada_en: datetime\n    cantidad_correctas: int\n    cantidad_incorrectas: int\n\n",
+        "message-id": "R0801"
+    }
+]
