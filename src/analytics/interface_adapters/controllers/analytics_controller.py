@@ -1,4 +1,4 @@
-"""Controller de la API del BC Analytics (`US-4.1.2`).
+"""Controller de la API del BC Analytics (`US-4.1.2`, `US-4.2.1`).
 
 Primer controller del BC — delega directo en el Use Case, mismo patrón mínimo que
 `ActividadesEstudianteController` (`src/actividad_evaluativa`).
@@ -25,4 +25,15 @@ class AnalyticsController:
         self, estudiante_id: UUID, materia_id: UUID
     ) -> DesempenoEstudiante:
         """Delega la obtención del desempeño en el Use Case correspondiente."""
+        return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)
+
+    async def obtener_desempeno_de_estudiante(
+        self, estudiante_id: UUID, materia_id: UUID
+    ) -> DesempenoEstudiante:
+        """Desempeño de un Estudiante elegido por el Docente (`US-4.2.1`, RF-16).
+
+        Mismo cálculo que `obtener_mi_desempeno` — el `estudiante_id` viene del path (elegido
+        por el Docente) en vez del token, la existencia del Estudiante ya fue validada en el
+        router antes de llegar acá.
+        """
         return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)

@@ -1,4 +1,4 @@
-"""Tests unitarios de `AnalyticsController` (US-4.1.2)."""
+"""Tests unitarios de `AnalyticsController` (US-4.1.2, US-4.2.1)."""
 
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -48,3 +48,39 @@ class TestAnalyticsController:
         assert len(resultado.evaluaciones) == 1
         assert resultado.resumen.total_correctas == 8
         assert resultado.resumen.total_incorrectas == 2
+
+    @pytest.mark.asyncio
+    async def test_obtener_desempeno_de_estudiante_delega_en_el_mismo_use_case(self):
+        """`obtener_desempeno_de_estudiante` (US-4.2.1) hace exactamente el mismo cálculo."""
+        resumen = EvaluacionDesempenoResumen(
+            evaluacion_id=uuid4(),
+            actividad_id=uuid4(),
+            materia_id=uuid4(),
+            finalizada_en=datetime(2026, 1, 1, tzinfo=UTC),
+            cantidad_correctas=8,
+            cantidad_incorrectas=2,
+        )
+        use_case = ObtenerDesempenoEstudianteUseCase(
+            _EvaluacionDesempenoConsultaPortFake([resumen])
+        )
+        controller = AnalyticsController(use_case)
+
+        resultado = await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4())
+
+        assert len(resultado.evaluaciones) == 1
+        assert resultado.resumen.total_correctas == 8
+        assert resultado.resumen.total_incorrectas == 2
+
+    @pytest.mark.asyncio
+    async def test_obtener_desempeno_de_estudiante_sin_evaluaciones_devuelve_resumen_en_cero(
+        self,
+    ):
+        use_case = ObtenerDesempenoEstudianteUseCase(_EvaluacionDesempenoConsultaPortFake([]))
+        controller = AnalyticsController(use_case)
+
+        resultado = await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4())
+
+        assert resultado.evaluaciones == []
+        assert resultado.resumen.total_correctas == 0
+        assert resultado.resumen.total_incorrectas == 0
+        assert resultado.resumen.porcentaje_acierto == 0
