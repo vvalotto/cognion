@@ -508,8 +508,67 @@ backend / 232 frontend en verde. Sin UAT (deuda de tooling, nada visible para un
 final). Sin RF asociado — no mueve fila de la matriz de trazabilidad. Merge `develop → main` y
 tag diferidos, a confirmar con Víctor (mismo ítem abierto que `BL-001` a `BL-004`).
 
-**Próximo paso:** arrancar el Incremento 4 — sin candidatas ni Iteración 0 propia todavía, a
-definir con Víctor.
+Incremento 4 — Portal del estudiante y Analytics, período abierto — en curso
+(`docs/plans/inc4/inc4-candidatas.md`, Milestone GitHub
+[Incremento 4](https://github.com/vvalotto/cognion/milestone/11)). Primer BC puramente de
+lectura del sistema (`ADR-002`) — Analytics no tiene comando ni evento propio, se proyecta
+sobre el event store de Actividad Evaluativa ya existente.
+**Iteración 0 — Modelado cerrada 2026-09-04**: `US-4.0.1` (read models, Issue #227,
+`docs/design/domain/BC-analytics-modelo.md`) y `US-4.0.2` (wireframes, Issue #228,
+`docs/design/ux/wireframes-analytics.md`) aprobadas por Víctor.
+**Iteración 1 — RF-15: Estudiante ve su desempeño, cerrada 2026-09-05** (backend + frontend
+juntos, mismo criterio que Banco de Preguntas — no se difiere el frontend a otra iteración).
+**US-4.1.1** (infraestructura técnica: `EvaluacionDesempenoConsultaPort`, adapter in-process
+que lee la tabla `events` de Actividad Evaluativa, composition root
+`src/analytics/frameworks/dependencies.py`), PR #236, Issue #232. **US-4.1.2** (Docente→
+Estudiante consulta su propio desempeño — `ObtenerDesempenoEstudianteUseCase`, compone
+`listar_evaluaciones_finalizadas` y agrega en memoria sin proyección materializada, mismo
+criterio que `US-3.2.4`), endpoint `GET /analytics/materias/{materia_id}/mi-desempeno` (rol
+`estudiante`), PR #237, Issue #233. **US-4.1.3** (pantalla "Mi desempeño": resumen acumulado +
+detalle por evaluación, selector de materia solo si el estudiante cursa más de una, reutiliza
+`listarMisMaterias()`/`listarActividadesVisibles()` ya existentes — sin backend nuevo), PR
+#238, Issue #234. 775/775 tests backend, 242/242 frontend, quality gates APROBADO en las 3 US.
+**UAT de cierre de la Iteración 1 ejecutada 2026-09-05**
+(`quality/reports/uat/inc4/design.md`/`evidencia.md`/`guion-manual-iteracion1.md`): Capa 1
+(775 pytest + 242 Vitest) y Capa 2 (`smoke.sh` extendido con el flujo de Analytics — detalle +
+resumen con datos reales, rechazo por rol, materia sin evaluaciones) en verde; recorrido
+manual con Víctor mirando el panel del navegador en vivo (Chrome vía Claude Browser), 7/7
+pasos del checklist más 2 verificaciones adicionales (pantallas del Docente coherentes,
+detalle por pregunta confirmado como fuera de alcance por diseño — vive en la revisión de
+Actividad Evaluativa, no se duplica en Analytics), sin hallazgos nuevos. **RF-15 pasa a
+Implementado** (no Validado todavía — ese estado espera al cierre de baseline del Incremento
+completo, con RF-16/RF-17 de la Iteración 2 también implementados).
+**Dos problemas reales detectados y corregidos durante la preparación de esta UAT, ninguno
+parte del alcance de `US-4.1.x`:**
+- 🔴 Los 5 formularios de submit sin `useEffect` propio introducidos por `US-ADJ-20`
+  (`Login.tsx`, `AltaDocente.tsx`, `CambiarPassword.tsx`, `Registro.tsx`, `NuevaMateria.tsx`)
+  no funcionaban en modo dev (`npm run dev`): el `AbortController` se creaba en el render y el
+  doble montaje de efectos de `StrictMode` lo abortaba antes de cualquier submit real — el
+  botón "Ingresar"/"Guardar" no hacía nada, sin error visible (el catch descarta el
+  `AbortError` en silencio). Invisible a Vitest porque el mock de `fetch` no interpreta
+  `AbortSignal` (mismo patrón de "UAT en navegador real detecta lo que Vitest mockeado no ve"
+  ya documentado en Identidad/Banco de Preguntas). Corregido moviendo la creación del
+  controller al `useEffect` (crea uno nuevo en cada montaje real en vez de reusar el del
+  render). Track informal, sin US-ADJ — fix directo sobre código ya en `develop`.
+- 🟡 `tests/uat/inc4/limpiar_uat.sh` y el mismo patrón preexistente en
+  `tests/uat/inc3/limpiar_uat.sh` dejaban huérfanos los eventos `RespuestaRegistrada`/
+  `Suspendida`/etc. de una `Evaluacion` al limpiar corridas anteriores — el `DELETE` filtraba
+  por `payload->>'actividad_id'` fila a fila, campo que solo trae `EvaluacionIniciada`.
+  Rompía cualquier consulta que agrupa eventos por `aggregate_id` asumiendo que el primero es
+  `EvaluacionIniciada` (`_contar_evaluaciones` de `actividad_query_repository.py`,
+  `VerificarVencimientosUseCase`), con un `KeyError` que el navegador reportaba como falso
+  error de CORS. Corregido en ambos scripts — el `DELETE` ahora borra el stream completo del
+  `aggregate_id` afectado, no fila por fila. Tooling de test, no código de producción.
+
+Detectado durante la Iteración 1, sin resolver todavía: el dominio actual liga a un Estudiante
+con una única comisión/materia (`estudiante.comision_id`, sin muchos-a-muchos) — el selector
+de materia de "Mi desempeño" (`US-4.1.3`) nunca se puede ejercitar con una cuenta real hasta
+que exista un mecanismo de multi-inscripción. No bloquea el DoD de RF-15 (el wireframe ya
+contemplaba "sin selector si cursa una sola materia"), pero es una limitación a tener en cuenta
+si se decide modelar esa capacidad más adelante.
+
+**Próximo paso:** Iteración 2 del Incremento 4 (RF-16, RF-17: desempeño por alumno y por tema,
+rol Docente) — `US-4.2.1` en adelante, `docs/plans/inc4/inc4-candidatas.md`.
 **Baseline abierta:** ninguna — `BL-005` (Incremento 3-ADJ) cerrada.
 **Branch activo:** ninguna — `develop` sincronizado.
 

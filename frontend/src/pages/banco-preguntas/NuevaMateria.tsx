@@ -20,8 +20,13 @@ export function NuevaMateria() {
   if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
 
   useEffect(() => {
-    const controller = controladorSubmitRef.current
-    return () => controller?.abort()
+    // Crea un controller nuevo en cada montaje real — en StrictMode (dev), React monta,
+    // desmonta y vuelve a montar el efecto para detectar cleanups faltantes; si el cleanup
+    // abortara el mismo controller creado en el render (arriba), el segundo montaje quedaría
+    // con la señal ya abortada y todo submit posterior se descartaría en silencio.
+    const controller = new AbortController()
+    controladorSubmitRef.current = controller
+    return () => controller.abort()
   }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {

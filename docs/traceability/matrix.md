@@ -3,7 +3,17 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-02 — Cierre del Incremento 3 (Actividad Evaluativa, período
+> Última actualización: 2026-09-05 — Cierre de la Iteración 1 del Incremento 4 (Analytics,
+> RF-15: Estudiante ve su desempeño), backend (`US-4.1.1`, `US-4.1.2`) y frontend (`US-4.1.3`)
+> juntos, mismo criterio que Banco de Preguntas (no se difiere el frontend a otra iteración).
+> UAT propia de la iteración aprobada con observaciones (`quality/reports/uat/inc4/`,
+> `guion-manual-iteracion1.md` — recorrido con Víctor mirando el navegador en vivo, sin
+> hallazgos sobre `US-4.1.x`). **RF-15 pasa de "Especificado" a "Implementado"** — no
+> "Validado" todavía: ese estado se reserva para el cierre de baseline del Incremento
+> completo (Iteraciones 1 y 2, RF-15/16/17 juntos), mismo criterio que RF-11/RF-11b/RF-12/RF-13
+> en el Incremento 3.
+>
+> 2026-09-02 — Cierre del Incremento 3 (Actividad Evaluativa, período
 > abierto): backend (Iteraciones 1 a 3) y frontend (Iteración 4) completos, UAT formal
 > aprobada (`quality/reports/uat/inc3/`, incluida la revisión manual de Víctor con el
 > checklist `guion-manual-iteracion4.md`, sin hallazgos abiertos — `US-ADJ-12` ya corregido).
@@ -119,7 +129,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
 | RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1, US-3.2.2, US-3.2.3 (backend); US-3.4.7 (frontend) | Validado |
 | RF-14 | Notificaciones | 5 | — | Planificado |
-| RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado) | Especificado |
+| RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend) | Implementado |
 | RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado) | Especificado |
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado) | Especificado |
 | RF-18 | Analytics | 7 | — | Planificado |
