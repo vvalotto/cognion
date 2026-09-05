@@ -11,9 +11,18 @@ from src.identidad.frameworks.api.schemas import (
     AsignarDocenteRequest,
     ComisionResponse,
     CrearComisionRequest,
+    EstudianteResumenResponse,
 )
-from src.identidad.frameworks.dependencies import get_comisiones_controller, require_administrador
+from src.identidad.frameworks.dependencies import (
+    get_comisiones_controller,
+    get_comisiones_query_controller,
+    require_administrador,
+    require_docente,
+)
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
+from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
+    ComisionesQueryController,
+)
 
 router = APIRouter(prefix="/comisiones", tags=["identidad"])
 
@@ -45,6 +54,24 @@ async def crear_comision(
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,
     )
+
+
+@router.get(
+    "/{comision_id}/estudiantes",
+    response_model=list[EstudianteResumenResponse],
+    dependencies=[Depends(require_docente)],
+)
+async def listar_estudiantes(
+    comision_id: UUID,
+    controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
+) -> list[EstudianteResumenResponse]:
+    """Estudiantes inscriptos en la comisión; 404 si `comision_id` no existe (`US-4.2.2`)."""
+    try:
+        estudiantes = await controller.listar_estudiantes(comision_id)
+    except ComisionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    return [EstudianteResumenResponse(id=e.id, nombre=e.nombre) for e in estudiantes]
 
 
 @router.post(
