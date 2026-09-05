@@ -32,3 +32,13 @@ class DesempenoEstudianteResponse(BaseModel):
 
     evaluaciones: list[EvaluacionDetalleResponse]
     resumen: ResumenDesempenoResponse
+
+
+class TasaErrorTemaResponse(BaseModel):
+    """Fila de `GET /analytics/materias/{materia_id}/tasa-error-por-tema` (RF-17)."""
+
+    unidad_tematica: str
+    tema: str
+    cantidad_respuestas: int
+    cantidad_incorrectas: int
+    tasa_error: float

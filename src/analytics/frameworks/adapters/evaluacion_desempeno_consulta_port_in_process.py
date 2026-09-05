@@ -20,6 +20,7 @@ from src.actividad_evaluativa.frameworks.db.models import EventoModel
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
+    RespuestaVigente,
 )
 
 AGGREGATE_TYPE_EVALUACION = "Evaluacion"
@@ -40,7 +41,12 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
         self, estudiante_id: UUID, materia_id: UUID | None
     ) -> list[EvaluacionDesempenoResumen]:
         """Ver `EvaluacionDesempenoConsultaPort.listar_evaluaciones_finalizadas`."""
-        eventos_evaluacion = await self._eventos_evaluacion_del_estudiante(estudiante_id)
+        streams = await self._todos_los_streams_evaluacion()
+        eventos_evaluacion = [
+            eventos
+            for eventos in streams
+            if eventos[0].payload["estudiante_id"] == str(estudiante_id)
+        ]
         if not eventos_evaluacion:
             return []
 
@@ -57,10 +63,33 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
             resumenes.append(resumen)
         return resumenes
 
-    async def _eventos_evaluacion_del_estudiante(
-        self, estudiante_id: UUID
-    ) -> list[list[EventoModel]]:
-        """Agrupa los eventos de `Evaluacion` por stream, del Estudiante indicado."""
+    async def listar_respuestas_vigentes_de_materia(
+        self, materia_id: UUID, estudiante_ids: list[UUID] | None
+    ) -> list[RespuestaVigente]:
+        """Ver `EvaluacionDesempenoConsultaPort.listar_respuestas_vigentes_de_materia`."""
+        streams = await self._todos_los_streams_evaluacion()
+        if not streams:
+            return []
+
+        actividad_ids = {UUID(eventos[0].payload["actividad_id"]) for eventos in streams}
+        materia_por_actividad = await self._materia_por_actividad(actividad_ids)
+        estudiante_ids_str = (
+            {str(estudiante_id) for estudiante_id in estudiante_ids}
+            if estudiante_ids is not None
+            else None
+        )
+
+        respuestas: list[RespuestaVigente] = []
+        for eventos in streams:
+            if not _stream_califica_para_materia(
+                eventos, materia_id, materia_por_actividad, estudiante_ids_str
+            ):
+                continue
+            respuestas.extend(_respuestas_vigentes_de_stream(eventos))
+        return respuestas
+
+    async def _todos_los_streams_evaluacion(self) -> list[list[EventoModel]]:
+        """Agrupa todos los eventos de `Evaluacion` por stream, ordenados dentro de cada uno."""
         resultado = await self._session.execute(
             select(EventoModel)
             .where(EventoModel.aggregate_type == AGGREGATE_TYPE_EVALUACION)
@@ -71,10 +100,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
         streams = []
         for _, grupo_iter in groupby(modelos, key=lambda modelo: modelo.aggregate_id):
             eventos = list(grupo_iter)
-            primero = eventos[0]
-            if primero.event_type != EVENT_TYPE_INICIADA:
-                continue
-            if primero.payload["estudiante_id"] != str(estudiante_id):
+            if eventos[0].event_type != EVENT_TYPE_INICIADA:
                 continue
             streams.append(eventos)
         return streams
@@ -110,7 +136,9 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
 
         primero = eventos[0]
         actividad_id = UUID(primero.payload["actividad_id"])
-        correctas, incorrectas = _contar_respuestas_vigentes(eventos)
+        respuestas = _respuestas_vigentes_de_stream(eventos)
+        correctas = sum(1 for respuesta in respuestas if respuesta.es_correcta)
+        incorrectas = len(respuestas) - correctas
 
         return EvaluacionDesempenoResumen(
             evaluacion_id=primero.aggregate_id,
@@ -122,18 +150,42 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
         )
 
 
-def _contar_respuestas_vigentes(eventos: list[EventoModel]) -> tuple[int, int]:
-    """Cuenta correctas/incorrectas quedándose con la última `RespuestaRegistrada` por pregunta.
+def _stream_califica_para_materia(
+    eventos: list[EventoModel],
+    materia_id: UUID,
+    materia_por_actividad: dict[UUID, UUID],
+    estudiante_ids_str: set[str] | None,
+) -> bool:
+    """Filtro de `listar_respuestas_vigentes_de_materia`: materia, estudiante y finalizada."""
+    primero = eventos[0]
+    actividad_id = UUID(primero.payload["actividad_id"])
+    if materia_por_actividad.get(actividad_id) != materia_id:
+        return False
+    if (
+        estudiante_ids_str is not None
+        and primero.payload["estudiante_id"] not in estudiante_ids_str
+    ):
+        return False
+    return any(evento.event_type == EVENT_TYPE_FINALIZADA for evento in eventos)
+
+
+def _respuestas_vigentes_de_stream(eventos: list[EventoModel]) -> list[RespuestaVigente]:
+    """Quedándose con la última `RespuestaRegistrada` por pregunta (INV-AE-09, respuesta vigente).
 
     `eventos` ya viene ordenado por `sequence_number` ascendente — el último evento visto para
-    cada `pregunta_id` es siempre el más reciente (INV-AE-09, respuesta vigente).
+    cada `pregunta_id` es siempre el más reciente. `estudiante_id` se resuelve del primer evento
+    del stream (`EvaluacionIniciada`), constante para todo el stream.
     """
+    estudiante_id = UUID(eventos[0].payload["estudiante_id"])
     es_correcta_por_pregunta: dict[str, bool] = {}
     for evento in eventos:
         if evento.event_type != EVENT_TYPE_RESPUESTA:
             continue
         es_correcta_por_pregunta[evento.payload["pregunta_id"]] = evento.payload["es_correcta"]
 
-    correctas = sum(1 for es_correcta in es_correcta_por_pregunta.values() if es_correcta)
-    incorrectas = len(es_correcta_por_pregunta) - correctas
-    return correctas, incorrectas
+    return [
+        RespuestaVigente(
+            pregunta_id=UUID(pregunta_id), estudiante_id=estudiante_id, es_correcta=es_correcta
+        )
+        for pregunta_id, es_correcta in es_correcta_por_pregunta.items()
+    ]
