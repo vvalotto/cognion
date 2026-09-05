@@ -3,7 +3,9 @@
 > Estado documental: **Iteración 0 — Modelado cerrada (2026-09-04).** `US-4.0.1` (modelo de
 > dominio, Issue [#227](https://github.com/vvalotto/cognion/issues/227)) y `US-4.0.2`
 > (wireframes, Issue [#228](https://github.com/vvalotto/cognion/issues/228)) aprobadas por
-> Víctor. Milestone [`Incremento 4 — Portal del estudiante y Analytics`](https://github.com/vvalotto/cognion/milestone/11).
+> Víctor. Milestone [`Incremento 4 — Portal del Estudiante y Analytics`](https://github.com/vvalotto/cognion/milestone/6)
+> (corregido 2026-09-05 — el link apuntaba al Milestone #11, un duplicado vacío sin Issues;
+> todos los Issues reales de este incremento usan el Milestone #6).
 > Esta tabla ya puede usarse como base para elaborar las US-IEDD formales de las Iteraciones 1 y
 > 2 (`WORKFLOW-DESARROLLO.md` §3, paso 1) — revisarla contra el modelo y los wireframes
 > aprobados antes de crear Issues/specs, por si algo se ajustó respecto de lo anticipado acá —
@@ -138,7 +140,8 @@ US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su back
 
 1. ~~Revisar esta propuesta de Iteración 0 con Víctor.~~ Hecho, alcance aprobado 2026-09-04.
 2. ~~Crear Milestone GitHub `Incremento 4 — Portal del estudiante y Analytics` + Issues para
-   US-4.0.1 y US-4.0.2.~~ Hecho — Milestone #11, Issues #227 (US-4.0.1) y #228 (US-4.0.2).
+   US-4.0.1 y US-4.0.2.~~ Hecho — Milestone #6, Issues #227 (US-4.0.1) y #228 (US-4.0.2)
+   (número de Milestone corregido 2026-09-05 — ver nota al inicio del documento).
 3. ~~Ejecutar el diseño de read models (US-4.0.1) y los wireframes (US-4.0.2), con aprobación
    explícita de Víctor en cada Issue.~~ Hecho.
 4. ~~Completar este archivo con el detalle de las Iteraciones 1 y 2.~~ Hecho — 2026-09-04.
@@ -146,7 +149,14 @@ US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su back
    `US-4.2.1` resuelto 2026-09-04 (cualquier docente consulta a cualquier estudiante). El
    agrupamiento de la infraestructura de puertos en `US-4.1.1`/`US-4.2.2`/`US-4.2.3` y los
    paths de endpoint quedan a confirmar en cada spec, no bloquean el arranque de la Iteración 1.
-6. ~~Crear Issues (Milestone #11) y `docs/specs/inc4/US-4.M.K.md` de la Iteración 1.~~ Hecho
+6. ~~Crear Issues (Milestone #6) y `docs/specs/inc4/US-4.M.K.md` de la Iteración 1.~~ Hecho
    2026-09-04 — Issues #232 (US-4.1.1), #233 (US-4.1.2), #234 (US-4.1.3).
-7. Implementar Iteración 1 (`/implement-us US-4.1.1` → `US-4.1.2` → `US-4.1.3`) → crear Issues/
-   specs de la Iteración 2 → implementar Iteración 2.
+7. ~~Implementar Iteración 1 (`/implement-us US-4.1.1` → `US-4.1.2` → `US-4.1.3`).~~ Hecho —
+   cerrada 2026-09-05 (UAT aprobada con observaciones, `quality/reports/uat/inc4/`, PR #239 con
+   los 2 fixes detectados en la UAT).
+8. ~~Crear Issues (Milestone #6) y `docs/specs/inc4/US-4.2.K.md` de la Iteración 2.~~ Hecho
+   2026-09-05 — Issues #240 (US-4.2.1), #241 (US-4.2.2), #242 (US-4.2.3), #243 (US-4.2.4),
+   #244 (US-4.2.5), #245 (US-4.2.6).
+9. Implementar Iteración 2. Orden: `US-4.2.2` y `US-4.2.3` primero (sin dependencia entre sí,
+   desbloquean `US-4.2.4`); `US-4.2.1` en cualquier momento; `US-4.2.4` tras `US-4.2.2`/
+   `US-4.2.3`; `US-4.2.5` tras `US-4.2.1`/`US-4.2.2`; `US-4.2.6` tras `US-4.2.4`.
