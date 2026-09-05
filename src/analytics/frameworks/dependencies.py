@@ -4,7 +4,8 @@ Composition root del BC — arranca con el puerto de consulta al event store aje
 Evaluativa (`US-4.1.1`). `US-4.1.2` agrega el primer controller y el RBAC de rol `estudiante`,
 mismo patrón que `src/actividad_evaluativa/frameworks/dependencies.py`. `US-4.2.1` agrega el
 RBAC de rol `docente` y el puerto de consulta de `Usuario` (Identidad) para validar que el
-`estudiante_id` elegido existe.
+`estudiante_id` elegido existe. `US-4.2.3` agrega el puerto de consulta de metadatos de
+pregunta (Banco de Preguntas), sin consumidor todavía.
 """
 
 from __future__ import annotations
@@ -19,6 +20,9 @@ from src.analytics.entities.ports.estudiante_consulta_port import EstudianteCons
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
 )
+from src.analytics.entities.ports.pregunta_metadato_consulta_port import (
+    PreguntaMetadatoConsultaPort,
+)
 from src.analytics.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
@@ -27,6 +31,9 @@ from src.analytics.frameworks.adapters.estudiante_consulta_port_in_process impor
 )
 from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
     EvaluacionDesempenoConsultaPortInProcess,
+)
+from src.analytics.frameworks.adapters.pregunta_metadato_consulta_port_in_process import (
+    PreguntaMetadatoConsultaPortInProcess,
 )
 from src.analytics.interface_adapters.controllers.analytics_controller import (
     AnalyticsController,
@@ -63,6 +70,15 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
     `listar_estudiantes` para acotar la consulta a una comisión).
     """
     return ComisionConsultaPortInProcess(session)
+
+
+def get_pregunta_metadato_consulta_port(session: SessionDep) -> PreguntaMetadatoConsultaPort:
+    """Provee el puerto de consulta de metadatos de pregunta, cableado contra Banco de Preguntas.
+
+    Sin consumidor todavía — lo cablea `US-4.2.4` (tasa de error por tema, necesita
+    `obtener_metadatos` para agrupar respuestas por unidad_tematica/tema).
+    """
+    return PreguntaMetadatoConsultaPortInProcess(session)
 
 
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:
