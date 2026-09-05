@@ -30,7 +30,9 @@ async def _crear_materia(client, docente_headers, nombre: str) -> str:
 
 class TestListarComisionesPorMateria:
     async def test_materia_con_comisiones(self, session, docente_headers, admin_headers):
-        admin = Usuario.crear("Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         await SQLAlchemyUsuarioRepository(session).guardar(admin)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -74,7 +76,9 @@ class TestListarEstudiantes:
     async def test_comision_con_estudiantes(self, session, admin_headers, docente_headers):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
-        admin = Usuario.crear("Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         await usuario_repo.guardar(admin)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
@@ -97,7 +101,9 @@ class TestListarEstudiantes:
     ):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
-        admin = Usuario.crear("Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         await usuario_repo.guardar(admin)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)

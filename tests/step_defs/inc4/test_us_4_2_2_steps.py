@@ -96,9 +96,7 @@ async def _crear_materia_con_comisiones(cantidad: int) -> tuple[uuid.UUID, list[
     async with SessionLocal() as session:
         admin = await _crear_admin(session)
         comision_repo = SQLAlchemyComisionRepository(session)
-        comisiones = [
-            Comision.crear(materia_id, f"horario {i}", admin.id) for i in range(cantidad)
-        ]
+        comisiones = [Comision.crear(materia_id, f"horario {i}", admin.id) for i in range(cantidad)]
         for comision in comisiones:
             await comision_repo.guardar(comision)
         return materia_id, comisiones
@@ -115,7 +113,10 @@ async def _crear_comision_con_estudiantes(cantidad: int) -> tuple[Comision, list
         estudiantes = []
         for i in range(cantidad):
             estudiante = Usuario.crear_estudiante(
-                f"Estudiante {i}", f"est.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
+                f"Estudiante {i}",
+                f"est.{uuid.uuid4()}@fiuner.edu.ar",
+                hasher.hash("x"),
+                comision.id,
             )
             await usuario_repo.guardar(estudiante)
             estudiantes.append(estudiante)

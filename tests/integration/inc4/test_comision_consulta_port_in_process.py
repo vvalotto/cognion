@@ -26,7 +26,9 @@ class TestComisionConsultaPortInProcess:
     async def test_listar_comisiones_por_materia_coincide_con_identidad(self, session):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
-        admin = Usuario.crear("Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         await usuario_repo.guardar(admin)
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
@@ -38,14 +40,14 @@ class TestComisionConsultaPortInProcess:
         analytics_port = ComisionConsultaPortInProcess(session)
         resultado = await analytics_port.listar_comisiones_por_materia(materia_id)
 
-        assert [(c.id, c.horario) for c in resultado] == [
-            (c.id, c.horario) for c in esperado
-        ]
+        assert [(c.id, c.horario) for c in resultado] == [(c.id, c.horario) for c in esperado]
 
     async def test_listar_estudiantes_coincide_con_identidad(self, session):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
-        admin = Usuario.crear("Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         await usuario_repo.guardar(admin)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
