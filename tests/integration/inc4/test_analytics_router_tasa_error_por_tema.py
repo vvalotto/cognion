@@ -157,9 +157,7 @@ async def _evaluacion_finalizada_con_respuesta(
 class TestAnalyticsRouterTasaErrorPorTema:
     """Escenarios de `tests/features/inc4/US-4.2.4-tasa-error-por-tema.feature`."""
 
-    async def test_materia_completa_sin_filtrar_por_comision(
-        self, session, docente_headers
-    ):
+    async def test_materia_completa_sin_filtrar_por_comision(self, session, docente_headers):
         materia_repo = SQLAlchemyMateriaRepository(session)
         banco_repo = SQLAlchemyBancoRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")

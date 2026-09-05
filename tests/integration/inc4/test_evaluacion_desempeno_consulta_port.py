@@ -143,9 +143,7 @@ class TestListarRespuestasVigentesDeMateria:
         seq = await _registrar_respuesta(store, evaluacion_b, seq, uuid4(), False)
         await _finalizar_evaluacion(store, evaluacion_b, seq)
 
-        resultado = await adapter.listar_respuestas_vigentes_de_materia(
-            materia_id, [estudiante_a]
-        )
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(materia_id, [estudiante_a])
 
         assert len(resultado) == 1
         assert resultado[0].es_correcta is True
