@@ -1,4 +1,4 @@
-"""Tests unitarios del puerto y DTO de `EvaluacionDesempenoConsultaPort` (US-4.1.1)."""
+"""Tests unitarios del puerto y DTO de `EvaluacionDesempenoConsultaPort` (US-4.1.1, US-4.2.4)."""
 
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -8,6 +8,7 @@ import pytest
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
+    RespuestaVigente,
 )
 
 
@@ -37,6 +38,24 @@ class TestEvaluacionDesempenoResumen:
 
         assert resumen.cantidad_correctas == 5
         assert resumen.cantidad_incorrectas == 3
+
+
+class TestRespuestaVigente:
+    def test_es_inmutable(self):
+        respuesta = RespuestaVigente(pregunta_id=uuid4(), estudiante_id=uuid4(), es_correcta=True)
+
+        with pytest.raises(AttributeError):
+            respuesta.es_correcta = False  # type: ignore[misc]
+
+    def test_conserva_los_valores_recibidos(self):
+        pregunta_id, estudiante_id = uuid4(), uuid4()
+        respuesta = RespuestaVigente(
+            pregunta_id=pregunta_id, estudiante_id=estudiante_id, es_correcta=False
+        )
+
+        assert respuesta.pregunta_id == pregunta_id
+        assert respuesta.estudiante_id == estudiante_id
+        assert respuesta.es_correcta is False
 
 
 class TestEvaluacionDesempenoConsultaPort:

@@ -25,6 +25,9 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
     ) -> list[EvaluacionDesempenoResumen]:
         return self._resumenes
 
+    async def listar_respuestas_vigentes_de_materia(self, materia_id, estudiante_ids):
+        raise NotImplementedError
+
 
 def _resumen(
     finalizada_en: datetime, correctas: int, incorrectas: int
@@ -104,6 +107,9 @@ class TestObtenerDesempenoEstudianteUseCase:
                 recibidos["estudiante_id"] = estudiante_id
                 recibidos["materia_id"] = materia_id
                 return []
+
+            async def listar_respuestas_vigentes_de_materia(self, materia_id, estudiante_ids):
+                raise NotImplementedError
 
         use_case = ObtenerDesempenoEstudianteUseCase(_PuertoQueRegistraLlamada())
         await use_case.execute(estudiante_id, materia_id)

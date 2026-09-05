@@ -1,4 +1,4 @@
-"""Router base del BC Analytics — endpoints de consulta de desempeño (`US-4.1.2`, `US-4.2.1`)."""
+"""Router base del BC Analytics — endpoints de consulta de desempeño (`US-4.1.2`, `US-4.2.1`, `US-4.2.4`)."""
 
 from __future__ import annotations
 
@@ -6,11 +6,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from src.analytics.entities.errors import ComisionNoPerteneceAMateria
 from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.frameworks.api.schemas import (
     DesempenoEstudianteResponse,
     EvaluacionDetalleResponse,
     ResumenDesempenoResponse,
+    TasaErrorTemaResponse,
 )
 from src.analytics.frameworks.dependencies import (
     get_analytics_controller,
@@ -96,3 +98,36 @@ async def obtener_desempeno_de_estudiante(
         )
     desempeno = await controller.obtener_desempeno_de_estudiante(estudiante_id, materia_id)
     return _a_response(desempeno)
+
+
+@router.get(
+    "/materias/{materia_id}/tasa-error-por-tema",
+    response_model=list[TasaErrorTemaResponse],
+    dependencies=[Depends(require_docente)],
+)
+async def obtener_tasa_error_por_tema(
+    materia_id: UUID,
+    comision_id: UUID | None = None,
+    controller: AnalyticsController = Depends(get_analytics_controller),
+) -> list[TasaErrorTemaResponse]:
+    """Tasa de error por unidad/tema de una materia, agregada o acotada a una comisión (RF-17).
+
+    Sin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`
+    → 422 (`ComisionNoPerteneceAMateria`).
+    """
+    try:
+        tasas = await controller.obtener_tasa_error_por_tema(materia_id, comision_id)
+    except ComisionNoPerteneceAMateria as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+    return [
+        TasaErrorTemaResponse(
+            unidad_tematica=tasa.unidad_tematica,
+            tema=tasa.tema,
+            cantidad_respuestas=tasa.cantidad_respuestas,
+            cantidad_incorrectas=tasa.cantidad_incorrectas,
+            tasa_error=tasa.tasa_error,
+        )
+        for tasa in tasas
+    ]

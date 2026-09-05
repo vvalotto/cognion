@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "us_id": "US-4.2.4",
+    "us_title": "Docente consulta la tasa de error por unidad/tema de una materia",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-05T21:04:27.096992+00:00",
+    "completed_at": "2026-09-05T22:08:18.048348+00:00",
+    "total_elapsed_seconds": 3830,
+    "effective_seconds": 3830,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-05T21:04:43.515667+00:00",
+      "completed_at": "2026-09-05T21:05:17.128563+00:00",
+      "elapsed_seconds": 33,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-05T21:05:22.010289+00:00",
+      "completed_at": "2026-09-05T21:08:22.989065+00:00",
+      "elapsed_seconds": 180,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-05T21:08:28.415448+00:00",
+      "completed_at": "2026-09-05T21:20:03.190922+00:00",
+      "elapsed_seconds": 694,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-05T21:20:08.781682+00:00",
+      "completed_at": "2026-09-05T21:24:03.885362+00:00",
+      "elapsed_seconds": 235,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task_001",
+          "task_name": "Errores de dominio",
+          "task_type": "infra",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-05T21:20:08.906110+00:00",
+          "completed_at": "2026-09-05T21:20:23.174996+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -4.77,
+          "file_created": "src/analytics/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_002",
+          "task_name": "Extension del Port de desempeno",
+          "task_type": "infra",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T21:20:28.642322+00:00",
+          "completed_at": "2026-09-05T21:20:40.805788+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -9.8,
+          "file_created": "src/analytics/entities/ports/evaluacion_desempeno_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_003",
+          "task_name": "Adapter in-process: metodo nuevo",
+          "task_type": "infra",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-05T21:20:56.006166+00:00",
+          "completed_at": "2026-09-05T21:21:22.470315+00:00",
+          "elapsed_seconds": 26,
+          "actual_minutes": 0.43,
+          "variance_minutes": -19.57,
+          "file_created": "src/analytics/frameworks/adapters/evaluacion_desempeno_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_004",
+          "task_name": "Use Case ObtenerTasaErrorPorTemaUseCase",
+          "task_type": "logic",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-05T21:21:26.731565+00:00",
+          "completed_at": "2026-09-05T21:21:44.152064+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -19.72,
+          "file_created": "src/analytics/use_cases/obtener_tasa_error_por_tema.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_005",
+          "task_name": "Extender AnalyticsController",
+          "task_type": "infra",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T21:21:49.778139+00:00",
+          "completed_at": "2026-09-05T21:22:13.584044+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -9.62,
+          "file_created": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_006",
+          "task_name": "TasaErrorTemaResponse schema",
+          "task_type": "infra",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-05T21:22:19.692307+00:00",
+          "completed_at": "2026-09-05T21:22:26.772350+00:00",
+          "elapsed_seconds": 7,
+          "actual_minutes": 0.12,
+          "variance_minutes": -4.88,
+          "file_created": "src/analytics/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_007",
+          "task_name": "Endpoint tasa-error-por-tema",
+          "task_type": "infra",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-05T21:22:31.432666+00:00",
+          "completed_at": "2026-09-05T21:23:02.281496+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -14.5,
+          "file_created": "src/analytics/frameworks/api/analytics_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "task_008",
+          "task_name": "Cablear ObtenerTasaErrorPorTemaUseCase en dependencies",
+          "task_type": "infra",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T21:23:08.197350+00:00",
+          "completed_at": "2026-09-05T21:23:54.073602+00:00",
+          "elapsed_seconds": 45,
+          "actual_minutes": 0.75,
+          "variance_minutes": -9.25,
+          "file_created": "src/analytics/frameworks/dependencies.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-05T21:24:10.074303+00:00",
+      "completed_at": "2026-09-05T21:26:41.325277+00:00",
+      "elapsed_seconds": 151,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integracion",
+      "started_at": "2026-09-05T21:26:47.819519+00:00",
+      "completed_at": "2026-09-05T21:37:58.872525+00:00",
+      "elapsed_seconds": 671,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validacion BDD",
+      "started_at": "2026-09-05T21:38:04.500073+00:00",
+      "completed_at": "2026-09-05T21:48:26.534025+00:00",
+      "elapsed_seconds": 622,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-05T21:48:37.714537+00:00",
+      "completed_at": "2026-09-05T22:01:07.816343+00:00",
+      "elapsed_seconds": 750,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualizacion de Documentacion",
+      "started_at": "2026-09-05T22:01:18.781502+00:00",
+      "completed_at": "2026-09-05T22:06:35.853089+00:00",
+      "elapsed_seconds": 317,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-05T22:06:41.857512+00:00",
+      "completed_at": "2026-09-05T22:08:17.854250+00:00",
+      "elapsed_seconds": 95,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 10,
+    "estimated_total_minutes": 95.0,
+    "actual_total_minutes": 2.9,
+    "variance_minutes": -92.1,
+    "variance_percent": -96.95
+  }
+}

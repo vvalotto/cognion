@@ -1,8 +1,9 @@
-"""Tests de integración de `EvaluacionDesempenoConsultaPortInProcess` (US-4.1.1).
+"""Tests de integración de `EvaluacionDesempenoConsultaPortInProcess` (US-4.1.1, US-4.2.4).
 
 Escribe eventos reales en la tabla `events` (vía `SQLAlchemyEventStore`, mismo event store
 que usa Actividad Evaluativa) y ejercita el algoritmo completo del adapter contra Postgres —
-mismos 5 escenarios que `tests/features/inc4/US-4.1.1-infra-consulta-analytics.feature`.
+mismos 5 escenarios que `tests/features/inc4/US-4.1.1-infra-consulta-analytics.feature`, más
+`listar_respuestas_vigentes_de_materia` (`US-4.2.4`).
 """
 
 from __future__ import annotations
@@ -100,6 +101,119 @@ async def _finalizar_evaluacion(
         ],
     )
     return expected_seq + 1
+
+
+class TestListarRespuestasVigentesDeMateria:
+    """Tests de `listar_respuestas_vigentes_de_materia` (US-4.2.4)."""
+
+    async def test_agrega_respuestas_de_toda_la_materia_sin_filtro_de_estudiante(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        estudiante_a, estudiante_b, materia_id, actividad_id = uuid4(), uuid4(), uuid4(), uuid4()
+        await _crear_actividad(store, actividad_id, materia_id)
+
+        evaluacion_a = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_a, actividad_id, estudiante_a)
+        seq = await _registrar_respuesta(store, evaluacion_a, seq, uuid4(), True)
+        await _finalizar_evaluacion(store, evaluacion_a, seq)
+
+        evaluacion_b = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_b, actividad_id, estudiante_b)
+        seq = await _registrar_respuesta(store, evaluacion_b, seq, uuid4(), False)
+        await _finalizar_evaluacion(store, evaluacion_b, seq)
+
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(materia_id, None)
+
+        assert len(resultado) == 2
+        assert {r.es_correcta for r in resultado} == {True, False}
+
+    async def test_acota_a_los_estudiante_ids_indicados(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        estudiante_a, estudiante_b, materia_id, actividad_id = uuid4(), uuid4(), uuid4(), uuid4()
+        await _crear_actividad(store, actividad_id, materia_id)
+
+        evaluacion_a = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_a, actividad_id, estudiante_a)
+        seq = await _registrar_respuesta(store, evaluacion_a, seq, uuid4(), True)
+        await _finalizar_evaluacion(store, evaluacion_a, seq)
+
+        evaluacion_b = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_b, actividad_id, estudiante_b)
+        seq = await _registrar_respuesta(store, evaluacion_b, seq, uuid4(), False)
+        await _finalizar_evaluacion(store, evaluacion_b, seq)
+
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(materia_id, [estudiante_a])
+
+        assert len(resultado) == 1
+        assert resultado[0].es_correcta is True
+
+    async def test_evaluacion_no_finalizada_no_aparece(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        estudiante_id, materia_id, actividad_id = uuid4(), uuid4(), uuid4()
+        await _crear_actividad(store, actividad_id, materia_id)
+
+        evaluacion_id = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_id, actividad_id, estudiante_id)
+        await _registrar_respuesta(store, evaluacion_id, seq, uuid4(), True)
+
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(materia_id, None)
+
+        assert resultado == []
+
+    async def test_reintento_cuenta_solo_la_respuesta_vigente(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        estudiante_id, materia_id, actividad_id = uuid4(), uuid4(), uuid4()
+        await _crear_actividad(store, actividad_id, materia_id)
+
+        evaluacion_id, pregunta_id = uuid4(), uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_id, actividad_id, estudiante_id)
+        seq = await _registrar_respuesta(
+            store, evaluacion_id, seq, pregunta_id, False, numero_intento=1
+        )
+        seq = await _registrar_respuesta(
+            store, evaluacion_id, seq, pregunta_id, True, numero_intento=2
+        )
+        await _finalizar_evaluacion(store, evaluacion_id, seq)
+
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(materia_id, None)
+
+        assert len(resultado) == 1
+        assert resultado[0].pregunta_id == pregunta_id
+        assert resultado[0].es_correcta is True
+
+    async def test_filtro_por_materia_excluye_otras_materias(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        estudiante_id = uuid4()
+        materia_x, materia_y = uuid4(), uuid4()
+        actividad_x, actividad_y = uuid4(), uuid4()
+        await _crear_actividad(store, actividad_x, materia_x)
+        await _crear_actividad(store, actividad_y, materia_y)
+
+        evaluacion_x = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_x, actividad_x, estudiante_id)
+        seq = await _registrar_respuesta(store, evaluacion_x, seq, uuid4(), True)
+        await _finalizar_evaluacion(store, evaluacion_x, seq)
+
+        evaluacion_y = uuid4()
+        seq = await _iniciar_evaluacion(store, evaluacion_y, actividad_y, estudiante_id)
+        seq = await _registrar_respuesta(store, evaluacion_y, seq, uuid4(), False)
+        await _finalizar_evaluacion(store, evaluacion_y, seq)
+
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(materia_x, None)
+
+        assert len(resultado) == 1
+        assert resultado[0].es_correcta is True
+
+    async def test_materia_sin_evaluaciones_finalizadas_devuelve_lista_vacia(self, session):
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+
+        resultado = await adapter.listar_respuestas_vigentes_de_materia(uuid4(), None)
+
+        assert resultado == []
 
 
 class TestListarEvaluacionesFinalizadas:

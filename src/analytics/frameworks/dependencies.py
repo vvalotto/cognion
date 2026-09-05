@@ -5,7 +5,8 @@ Evaluativa (`US-4.1.1`). `US-4.1.2` agrega el primer controller y el RBAC de rol
 mismo patrón que `src/actividad_evaluativa/frameworks/dependencies.py`. `US-4.2.1` agrega el
 RBAC de rol `docente` y el puerto de consulta de `Usuario` (Identidad) para validar que el
 `estudiante_id` elegido existe. `US-4.2.3` agrega el puerto de consulta de metadatos de
-pregunta (Banco de Preguntas), sin consumidor todavía.
+pregunta (Banco de Preguntas). `US-4.2.4` cablea el segundo Use Case del controller,
+componiendo los 3 puertos de consulta ya provistos.
 """
 
 from __future__ import annotations
@@ -41,6 +42,9 @@ from src.analytics.interface_adapters.controllers.analytics_controller import (
 from src.analytics.use_cases.obtener_desempeno_estudiante import (
     ObtenerDesempenoEstudianteUseCase,
 )
+from src.analytics.use_cases.obtener_tasa_error_por_tema import (
+    ObtenerTasaErrorPorTemaUseCase,
+)
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -64,27 +68,26 @@ def get_estudiante_consulta_port(session: SessionDep) -> EstudianteConsultaPort:
 
 
 def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
-    """Provee el puerto de consulta de `Comision`, cableado contra Identidad.
-
-    Sin consumidor todavía — lo cablea `US-4.2.4` (tasa de error por tema, necesita
-    `listar_estudiantes` para acotar la consulta a una comisión).
-    """
+    """Provee el puerto de consulta de `Comision`, cableado contra Identidad."""
     return ComisionConsultaPortInProcess(session)
 
 
 def get_pregunta_metadato_consulta_port(session: SessionDep) -> PreguntaMetadatoConsultaPort:
-    """Provee el puerto de consulta de metadatos de pregunta, cableado contra Banco de Preguntas.
-
-    Sin consumidor todavía — lo cablea `US-4.2.4` (tasa de error por tema, necesita
-    `obtener_metadatos` para agrupar respuestas por unidad_tematica/tema).
-    """
+    """Provee el puerto de consulta de metadatos de pregunta, cableado contra Banco de Preguntas."""
     return PreguntaMetadatoConsultaPortInProcess(session)
 
 
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:
     """Arma el `AnalyticsController` con sus dependencias concretas."""
     evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
-    return AnalyticsController(ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta))
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    pregunta_metadato_consulta = PreguntaMetadatoConsultaPortInProcess(session)
+    return AnalyticsController(
+        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerTasaErrorPorTemaUseCase(
+            evaluacion_desempeno_consulta, comision_consulta, pregunta_metadato_consulta
+        ),
+    )
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

@@ -29,6 +29,20 @@ class EvaluacionDesempenoResumen:
     cantidad_incorrectas: int
 
 
+@dataclass(frozen=True)
+class RespuestaVigente:
+    """Una respuesta vigente (INV-AE-09) de una `Evaluacion` finalizada de una materia.
+
+    `estudiante_id` viaja en la fila por fidelidad con `BC-analytics-modelo.md` §5, aunque
+    `ObtenerTasaErrorPorTemaUseCase` (`US-4.2.4`) no lo necesite hoy — agrega solo por
+    `pregunta_id` a nivel de materia/comisión.
+    """
+
+    pregunta_id: UUID
+    estudiante_id: UUID
+    es_correcta: bool
+
+
 class EvaluacionDesempenoConsultaPort(ABC):
     """Consulta de solo lectura: evaluaciones finalizadas de un estudiante, con su desempeño."""
 
@@ -41,4 +55,15 @@ class EvaluacionDesempenoConsultaPort(ABC):
         Sin `materia_id`, devuelve las de todas las materias. Una `Evaluacion` sin evento
         `EvaluacionFinalizada` nunca aparece en el resultado — Analytics solo reporta sobre
         evaluaciones terminadas.
+        """
+
+    @abstractmethod
+    async def listar_respuestas_vigentes_de_materia(
+        self, materia_id: UUID, estudiante_ids: list[UUID] | None
+    ) -> list[RespuestaVigente]:
+        """Devuelve las respuestas vigentes de toda `Evaluacion` finalizada de la materia.
+
+        `estudiante_ids` acota el agregado a esos estudiantes (comisión elegida); `None` agrega
+        todas las comisiones de la materia (`US-4.2.4`, RF-17). Materia sin `Evaluacion`
+        finalizadas → lista vacía.
         """
