@@ -10,8 +10,8 @@ from uuid import uuid4
 from src.actividad_evaluativa.frameworks.db.models import EventoModel
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import RespuestaVigente
 from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
-    _resumen_de_stream,
     _respuestas_vigentes_de_stream,
+    _resumen_de_stream,
 )
 
 
