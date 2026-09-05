@@ -1,0 +1,979 @@
+{
+  "summary": {
+    "total_files": 5,
+    "checks_executed": 9,
+    "elapsed_seconds": 37.38,
+    "timestamp": "2026-09-05T16:02:09.633062",
+    "total_issues": 45,
+    "errors": 10,
+    "warnings": 1,
+    "infos": 34
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 88.6 (grade A)",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.50/10 (< 8.0). Run 'pylint analytics_router.py' for details.",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/api/analytics_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.44/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 92.0 (grade A)",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.29/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.50/10 (< 8.0). Run 'pylint analytics_router.py' for details.",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 88.6 (grade A)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.44/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 92.0 (grade A)",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.29/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/estudiante_consulta_port_in_process.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 92.0 (grade A)",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.29/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "api/analytics_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 88.6 (grade A)",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.50/10 (< 8.0). Run 'pylint analytics_router.py' for details.",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/api/analytics_router.py",
+        "line": null
+      }
+    ],
+    "controllers/analytics_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.44/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "ports/estudiante_consulta_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/entities/ports/estudiante_consulta_port.py",
+        "line": null
+      }
+    ]
+  }
+}

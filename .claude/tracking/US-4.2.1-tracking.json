@@ -1,0 +1,191 @@
+{
+  "metadata": {
+    "us_id": "US-4.2.1",
+    "us_title": "Docente consulta el desempeño de un estudiante elegido",
+    "us_points": 2,
+    "producto": "analytics",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-05T18:37:54.361031+00:00",
+    "completed_at": "2026-09-05T19:14:24.240059+00:00",
+    "total_elapsed_seconds": 2189,
+    "effective_seconds": 2189,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-05T18:38:21.034346+00:00",
+      "completed_at": "2026-09-05T18:38:51.445204+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-05T18:39:02.212731+00:00",
+      "completed_at": "2026-09-05T18:39:27.007120+00:00",
+      "elapsed_seconds": 24,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-05T18:39:33.093061+00:00",
+      "completed_at": "2026-09-05T18:41:02.843383+00:00",
+      "elapsed_seconds": 89,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-05T18:41:09.224893+00:00",
+      "completed_at": "2026-09-05T18:43:45.790967+00:00",
+      "elapsed_seconds": 156,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Puerto EstudianteConsultaPort de Analytics",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-05T18:41:09.887009+00:00",
+          "completed_at": "2026-09-05T18:41:22.068558+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -4.8,
+          "file_created": "src/analytics/entities/ports/estudiante_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Adapter in-process EstudianteConsultaPort",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-05T18:41:22.767212+00:00",
+          "completed_at": "2026-09-05T18:41:47.514781+00:00",
+          "elapsed_seconds": 24,
+          "actual_minutes": 0.4,
+          "variance_minutes": -4.6,
+          "file_created": "src/analytics/frameworks/adapters/estudiante_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Método nuevo en AnalyticsController",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-05T18:41:48.130936+00:00",
+          "completed_at": "2026-09-05T18:42:04.789254+00:00",
+          "elapsed_seconds": 16,
+          "actual_minutes": 0.27,
+          "variance_minutes": -4.73,
+          "file_created": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Router + DI: endpoint docente y require_docente",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T18:42:05.940489+00:00",
+          "completed_at": "2026-09-05T18:43:19.174618+00:00",
+          "elapsed_seconds": 73,
+          "actual_minutes": 1.22,
+          "variance_minutes": -8.78,
+          "file_created": "src/analytics/frameworks/dependencies.py, src/analytics/frameworks/api/analytics_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-05T18:43:53.519697+00:00",
+      "completed_at": "2026-09-05T18:45:15.354228+00:00",
+      "elapsed_seconds": 81,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-05T18:46:24.868401+00:00",
+      "completed_at": "2026-09-05T18:52:37.513824+00:00",
+      "elapsed_seconds": 372,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-05T18:52:43.303924+00:00",
+      "completed_at": "2026-09-05T18:57:38.071929+00:00",
+      "elapsed_seconds": 294,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-05T18:57:45.342976+00:00",
+      "completed_at": "2026-09-05T19:11:59.062140+00:00",
+      "elapsed_seconds": 853,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-05T19:12:06.180439+00:00",
+      "completed_at": "2026-09-05T19:13:32.200161+00:00",
+      "elapsed_seconds": 86,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-05T19:13:41.030274+00:00",
+      "completed_at": "2026-09-05T19:14:23.911466+00:00",
+      "elapsed_seconds": 42,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 4,
+    "completed_tasks": 4,
+    "total_phases": 10,
+    "estimated_total_minutes": 25.0,
+    "actual_total_minutes": 2.08,
+    "variance_minutes": -22.92,
+    "variance_percent": -91.67
+  }
+}

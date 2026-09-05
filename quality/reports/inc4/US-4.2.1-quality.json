@@ -1,0 +1,46 @@
+{
+  "us_id": "US-4.2.1",
+  "fecha": "2026-09-05T16:05:00-03:00",
+  "componente": "src/analytics/",
+  "metricas": {
+    "pylint": 9.75,
+    "cc_promedio": 2.0,
+    "cc_maximo": 7,
+    "mi_promedio": 94.81,
+    "mi_minimo": 60.9,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 5,
+    "errors": 10,
+    "warnings": 1,
+    "infos": 34,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 5},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 5},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 5},
+      "DeadCode": {"errors": 5, "warnings": 0, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 5},
+      "Pylint": {"errors": 0, "warnings": 1, "infos": 4},
+      "Spelling": {"errors": 5, "warnings": 0, "infos": 0},
+      "Types": {"errors": 0, "warnings": 0, "infos": 5},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 5}
+    },
+    "reporte": "quality/reports/inc4/US-4.2.1-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 10 'errors' de codeguard son 'vulture not installed'/'codespell not installed' (DeadCode, Spelling) sobre los 5 archivos — el subprocess de codeguard no resuelve esas herramientas del venv activo, mismo gap de entorno ya documentado en US-4.1.1/US-4.1.2-quality.json. No son hallazgos de código.",
+    "El warning de Pylint de codeguard (7.50/10 en analytics_router.py) no usa la config del proyecto (.pylintrc/pyproject.toml) — verificado con pylint directo contra los 5 archivos nuevos/modificados de esta US: 9.75/10, 0 errores reales, solo 2 R0903 (too-few-public-methods) en el puerto y su adapter de un único método `existe()` — mismo patrón ya aceptado en ObtenerDesempenoEstudianteUseCase/AnalyticsController (US-4.1.2).",
+    "Types (mypy) no tuvo timeout en codeguard en esta corrida (5/5 infos, 0 errors) — confirmado además con el hook mypy dedicado sobre src/ completo: 'Success: no issues found in 203 source files'.",
+    "cc_maximo (7) y mi_minimo (60.9) corresponden a `EvaluacionDesempenoConsultaPortInProcess.listar_evaluaciones_finalizadas` y su archivo, código preexistente de US-4.1.1 no tocado por esta US — el código nuevo de US-4.2.1 tiene CC máximo 3 (EstudianteConsultaPortInProcess) y MI mínimo 88.63 (analytics_router.py).",
+    "Coverage 100% mide entities/ports/ (incluye el nuevo estudiante_consulta_port.py) + use_cases/ + interface_adapters/controllers/ (incluye el nuevo método obtener_desempeno_de_estudiante) — frameworks/* (router, dependencies, adapters) está excluido del gate de coverage por pyproject.toml (mismo criterio que el resto del proyecto); ese código está cubierto por los 5 tests de integración reales contra Postgres (tests/integration/inc4/test_analytics_router.py) y los 5 escenarios BDD (tests/step_defs/inc4/test_us_4_2_1_steps.py).",
+    "Suite completa del proyecto (unit + integration + step_defs): 786 passed, 1 failed (tests/step_defs/inc3/test_us_3_2_1_steps.py::test_rechazo_fuera_del_período_vigente) — fallo preexistente y determinístico en este entorno, documentado en CLAUDE.md como no relacionado con ninguna US de la Iteración 3 de Incremento 3, confirmado que también falla en develop limpio antes de esta US. No es una regresión de US-4.2.1."
+  ]
+}
