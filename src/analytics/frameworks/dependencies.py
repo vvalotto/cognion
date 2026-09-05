@@ -14,9 +14,13 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
+)
+from src.analytics.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
 )
 from src.analytics.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
@@ -50,6 +54,15 @@ def get_evaluacion_desempeno_consulta_port(
 def get_estudiante_consulta_port(session: SessionDep) -> EstudianteConsultaPort:
     """Provee el puerto de consulta de `Usuario`/Estudiante, cableado contra Identidad."""
     return EstudianteConsultaPortInProcess(session)
+
+
+def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
+    """Provee el puerto de consulta de `Comision`, cableado contra Identidad.
+
+    Sin consumidor todavía — lo cablea `US-4.2.4` (tasa de error por tema, necesita
+    `listar_estudiantes` para acotar la consulta a una comisión).
+    """
+    return ComisionConsultaPortInProcess(session)
 
 
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:

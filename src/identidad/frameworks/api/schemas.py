@@ -88,6 +88,20 @@ class ComisionResponse(BaseModel):
     docentes_asignados: list[UUID]
 
 
+class ComisionResumenResponse(BaseModel):
+    """Representación mínima de una comisión para selectores (`US-4.2.2`)."""
+
+    id: UUID
+    horario: str
+
+
+class EstudianteResumenResponse(BaseModel):
+    """Representación mínima de un Estudiante para selectores (`US-4.2.2`)."""
+
+    id: UUID
+    nombre: str
+
+
 class AsignarDocenteRequest(BaseModel):
     """Body de la request de asignación de un docente a una comisión."""
 
