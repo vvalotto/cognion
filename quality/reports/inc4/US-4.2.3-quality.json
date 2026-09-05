@@ -1,0 +1,44 @@
+{
+  "us_id": "US-4.2.3",
+  "fecha": "2026-09-05T17:45:00-03:00",
+  "componente": "src/analytics/",
+  "metricas": {
+    "pylint": 9.60,
+    "cc_promedio": 1.87,
+    "cc_maximo": 3,
+    "mi_promedio": 96.4,
+    "mi_minimo": 60.90,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 3,
+    "errors": 1,
+    "warnings": 14,
+    "infos": 23,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 3 },
+      "PEP8": { "errors": 0, "warnings": 0, "infos": 3 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 3 },
+      "DeadCode": { "errors": 1, "warnings": 13, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 3 },
+      "Pylint": { "errors": 0, "warnings": 0, "infos": 3 },
+      "Spelling": { "errors": 0, "warnings": 1, "infos": 2 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 3 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 3 }
+    },
+    "reporte": "quality/reports/inc4/US-4.2.3-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard corrió con `.venv/bin` antepuesto al PATH (vulture/codespell son dev deps declaradas en pyproject.toml, pero el subprocess de codeguard no resuelve el venv activo sin esto — mismo gap de entorno documentado en US-4.1.1). Con las herramientas reales: 1 'error' de DeadCode (vulture, 100% confidence) sobre el parámetro `pregunta_ids` del método abstracto `PreguntaMetadatoConsultaPort.obtener_metadatos` — falso positivo: vulture no reconoce que el parámetro de un método abstracto se usa en cada implementación concreta (mismo patrón aceptado en `EvaluacionDesempenoConsultaPort`/`ComisionConsultaPort`).",
+    "Los 13 warnings de DeadCode (variables del DTO `MetadatoPreguntaResumen`, la clase/método del Port, el adapter y su método) son falsos positivos de vulture por análisis archivo-por-archivo: se usan desde otros archivos de la US (composition root `dependencies.py`, tests unitarios/integración/BDD) o son la API pública que consumirá `US-4.2.4`. El warning de Spelling ('Comision'→'Commission') es una palabra en español mal interpretada por el diccionario en inglés de codespell, mismo patrón ya aceptado en el resto del proyecto (docstring preexistente de `comision_consulta_port.py`, no tocado por esta US).",
+    "Verificado con pylint contra el paquete completo (`pylint src/analytics/`): 9.60/10, sin errores reales — solo W2301 (unnecessary-ellipsis, convención del proyecto para stubs de método abstracto, mismo patrón que el resto de los Ports) y R0903 (too-few-public-methods en `PreguntaMetadatoConsultaPort`, mismo patrón ya aceptado en `EstudianteConsultaPort`/`ComisionConsultaPort`).",
+    "Coverage 100% mide solo `entities/ports/pregunta_metadato_consulta_port.py` (11 stmts) — `frameworks/*` está excluido del gate de coverage por `pyproject.toml` (mismo criterio que el resto del proyecto); el adapter en `frameworks/adapters/` está cubierto por 4 tests de integración reales contra PostgreSQL (`tests/integration/inc4/`) y 4 escenarios BDD (`tests/step_defs/inc4/`), no contados en este porcentaje."
+  ]
+}
