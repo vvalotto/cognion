@@ -1,0 +1,145 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-18",
+    "us_title": "Refactor SQLAlchemyPreguntaRepository (Feature Envy/Ley de Demeter/Long Method)",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-03T13:55:19.252670+00:00",
+    "completed_at": "2026-09-03T14:12:45.063087+00:00",
+    "total_elapsed_seconds": 1045,
+    "effective_seconds": 1045,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-03T13:55:19.381376+00:00",
+      "completed_at": "2026-09-03T13:55:34.965040+00:00",
+      "elapsed_seconds": 15,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-03T13:55:50.242686+00:00",
+      "completed_at": "2026-09-03T13:56:03.530479+00:00",
+      "elapsed_seconds": 13,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-03T13:56:21.283895+00:00",
+      "completed_at": "2026-09-03T13:57:45.628626+00:00",
+      "elapsed_seconds": 84,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "dificultad_valor/importancia_valor en MetadatosPregunta",
+          "task_type": "refactor",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-03T13:56:21.394328+00:00",
+          "completed_at": "2026-09-03T13:56:29.605103+00:00",
+          "elapsed_seconds": 8,
+          "actual_minutes": 0.13,
+          "variance_minutes": -4.87,
+          "file_created": "metadatos_pregunta.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T1b",
+          "task_name": "Exponer dificultad_valor/importancia_valor en la entidad",
+          "task_type": "refactor",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-03T13:56:29.718330+00:00",
+          "completed_at": "2026-09-03T13:56:45.552633+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -4.75,
+          "file_created": "pregunta_plantilla.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Mapeadores privados en pregunta_repository.py",
+          "task_type": "refactor",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-03T13:56:45.664746+00:00",
+          "completed_at": "2026-09-03T13:57:20.437023+00:00",
+          "elapsed_seconds": 34,
+          "actual_minutes": 0.57,
+          "variance_minutes": -19.43,
+          "file_created": "pregunta_repository.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-03T13:57:45.742059+00:00",
+      "completed_at": "2026-09-03T14:09:34.813587+00:00",
+      "elapsed_seconds": 709,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-03T14:09:41.274012+00:00",
+      "completed_at": "2026-09-03T14:10:53.884370+00:00",
+      "elapsed_seconds": 72,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-03T14:11:53.527695+00:00",
+      "completed_at": "2026-09-03T14:12:18.190023+00:00",
+      "elapsed_seconds": 24,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-03T14:12:18.304866+00:00",
+      "completed_at": "2026-09-03T14:12:44.950440+00:00",
+      "elapsed_seconds": 26,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 7,
+    "estimated_total_minutes": 30.0,
+    "actual_total_minutes": 0.95,
+    "variance_minutes": -29.05,
+    "variance_percent": -96.83
+  }
+}

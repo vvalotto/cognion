@@ -1,0 +1,44 @@
+{
+  "us_id": "US-4.1.1",
+  "fecha": "2026-09-04T11:35:00-03:00",
+  "componente": "src/analytics/",
+  "metricas": {
+    "pylint": 9.80,
+    "cc_promedio": 1.0,
+    "cc_maximo": 7,
+    "mi_promedio": 95.30,
+    "mi_minimo": 62.31,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 7,
+    "warnings": 15,
+    "infos": 56,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 8},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 8},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 8},
+      "DeadCode": {"errors": 2, "warnings": 13, "infos": 3},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 8},
+      "Pylint": {"errors": 4, "warnings": 0, "infos": 4},
+      "Spelling": {"errors": 0, "warnings": 2, "infos": 6},
+      "Types": {"errors": 0, "warnings": 0, "infos": 4},
+      "UnusedImports": {"errors": 1, "warnings": 0, "infos": 7}
+    },
+    "reporte": "quality/reports/inc4/US-4.1.1-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard corrió con `.venv/bin` antepuesto al PATH (vulture/codespell son dev deps declaradas en pyproject.toml desde US-3.4.5, pero el subprocess de codeguard no resuelve el venv activo sin esto — gap de entorno, no de código). Con las herramientas reales: 4 'errors' de Pylint (3 son 'Could not extract pylint score' en __init__.py vacíos, 2 son timeout de pylint >5-10s en corrida en frío — mismo patrón que el timeout de mypy documentado en project_codeguard_mypy_timeout) y 1 'error'/2 DeadCode de vulture sobre `EvaluacionDesempenoResumen`/`EvaluacionDesempenoConsultaPort` (100%/60% confidence, falso positivo por analizar el archivo aislado sin ver que se usan en el resto de `src/analytics/`, mismo patrón que el resto de DeadCode en warning). Verificado con pylint contra el paquete completo (`pylint src/analytics/ src/app.py`): 9.80/10, 0 errores reales, solo 2 R0903 (too-few-public-methods, mismo patrón aceptado en EvaluacionEstudianteQueryPort de US-3.4.5) y 1 W0718 preexistente en src/app.py:50 no tocado por esta US.",
+    "Los 13 warnings de DeadCode (variables del DTO, la clase/método del Port, el adapter, `router`, `get_evaluacion_desempeno_consulta_port`, `health`) son falsos positivos de vulture por análisis archivo-por-archivo: todos se usan desde otro archivo de la US (composition root, router de FastAPI, tests) o son la API pública que consumirá US-4.1.2. Los 2 warnings de Spelling ('hace'→'have', 'mata'→'meta,') son palabras en español mal interpretadas por el diccionario en inglés de codespell, mismo patrón ya visto en docstrings existentes del proyecto.",
+    "El check Types no tuvo timeout en esta corrida — la fuente de verdad local sigue siendo el hook mypy dedicado sobre src/ completo: 'Success: no issues found in 197 source files'.",
+    "Coverage 100% mide solo entities/ (16 stmts) — frameworks/* está excluido del gate de coverage por pyproject.toml (mismo criterio que el resto del proyecto); el adapter en frameworks/adapters/ está cubierto por 5 tests de integración reales contra Postgres (tests/integration/inc4/) y 6 tests unitarios de sus funciones puras (tests/unit/inc4/), no contados en este porcentaje."
+  ]
+}

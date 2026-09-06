@@ -3,6 +3,7 @@ import uuid
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.interface_adapters.controllers.bancos_controller import (
@@ -15,15 +16,17 @@ from tests.unit.inc2._fakes import FakeBancoRepository, FakePreguntaRepository
 def _pregunta_om(banco_id: uuid.UUID) -> PreguntaPlantillaOpcionMultiple:
     return PreguntaPlantillaOpcionMultiple.crear(
         banco_id=banco_id,
-        texto="¿Cuál es la capital de Entre Ríos?",
+        metadatos=MetadatosPregunta(
+            texto="¿Cuál es la capital de Entre Ríos?",
+            unidad_tematica="Unidad 1",
+            tema="Arquitectura",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         opciones=[
             Opcion(texto="Paraná", es_correcta=True),
             Opcion(texto="Concordia", es_correcta=False),
         ],
-        unidad_tematica="Unidad 1",
-        tema="Arquitectura",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
 
 

@@ -1,0 +1,34 @@
+{
+  "us_id": "US-4.2.5",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc4/US-4.2.5-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": {
+        "errores": 0,
+        "warnings": 5,
+        "detalle": "4 warnings preexistentes (AuthLayout.tsx, badge.tsx, button.tsx, RendirEvaluacion.test.tsx) + 1 nuevo en DesempenoResumenDetalle.tsx (react/only-export-components, por exportar armarFilas junto al componente — mismo patrón ya presente en button.tsx/badge.tsx, no bloqueante)"
+      },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "nota": "2 fallas intermitentes en archivos no tocados por esta US (NuevaPreguntaOpcionMultiple.test.tsx / ResetearPassword.test.tsx / NuevaActividad.test.tsx, según la corrida) al ejecutar la suite completa en paralelo — reproducido en 3 corridas con distinto archivo afectado cada vez, y las 3 pasan siempre en ejecución aislada; flakiness preexistente del entorno, no una regresión de US-4.2.5",
+        "tests_us_4_2_5": {
+          "test_files": 4,
+          "tests": 18,
+          "passed": 18,
+          "failed": 0
+        }
+      },
+      "coverage_paginas_y_clientes_nuevos": {
+        "DesempenoPorAlumno.tsx": { "statements_pct": 95.45, "branches_pct": 73.68, "functions_pct": 82.6, "lines_pct": 96.61 },
+        "DesempenoResumenDetalle.tsx": { "statements_pct": 100, "branches_pct": 83.33, "functions_pct": 100, "lines_pct": 100 },
+        "MiDesempeno.tsx": { "statements_pct": 100, "branches_pct": 89.47, "functions_pct": 91.66, "lines_pct": 100, "nota": "sin cambio de comportamiento tras el refactor — mismo % que antes de esta US" },
+        "analytics-api.ts": { "statements_pct": 100, "branches_pct": 100, "functions_pct": 100, "lines_pct": 100 },
+        "identidad-comisiones-api.ts": { "statements_pct": 100, "branches_pct": 100, "functions_pct": 100, "lines_pct": 100 },
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

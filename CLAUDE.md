@@ -475,17 +475,130 @@ Los 4 PRs (#182, #184, #185, #187) mergeados a `develop` en orden (185→184→1
 chico primero) con CI en verde en cada uno, mismo criterio de "UAT en navegador real detecta lo
 que Vitest mockeado no ve" ya documentado en Identidad.
 
-**Próximo paso:** continuar la Iteración 4 con el lado Estudiante — `US-3.4.5` (materias y
-actividades disponibles, incluido "fuera de período"), `US-3.4.6` (rendir: responder, pausar,
-reanudar), `US-3.4.7` (finalizar y ver revisión completa). Gate de diseño UX obligatorio antes
-de tocar `frontend/` — verificar contra `docs/design/ux/wireframes-actividad-evaluativa.md`
-(aprobado en `US-3.0.2`) antes de escribir código, ya con Issues y specs creados (`US-3.4.5` a
-`US-3.4.7`, Issues #174-#176).
-**Baseline abierta:** ninguna todavía para el Incremento 3 — se abre al cerrar la Iteración 4
-(frontend) con el DoD completo del incremento (estudiante completa una evaluación de principio
-a fin, docente extiende el plazo de una sesión activa).
-**Branch activo:** ninguna — `develop` sincronizado, próxima branch a abrir es
-`feature/US-3.4.5-...`.
+**Lado Estudiante de la Iteración 4 completado 2026-09-02** — `US-3.4.5` (Estudiante ve sus
+materias y las actividades disponibles, incluido "fuera de período"), PR
+[#189](https://github.com/vvalotto/cognion/pull/189); `US-3.4.6` (Estudiante rinde su
+evaluación — responde, pausa y reanuda), PR
+[#190](https://github.com/vvalotto/cognion/pull/190); `US-3.4.7` (Estudiante finaliza su
+evaluación y ve la revisión completa), PR
+[#191](https://github.com/vvalotto/cognion/pull/191). Cierra completa la Iteración 4
+(backend + frontend), el DoD del Incremento 3 y con ella `US-ADJ-12` (ajuste inmediato
+post-UAT). **`BL-004` — Actividad Evaluativa (Incremento 3) cerrada 2026-09-02**
+(`.cm/baselines/BL-004-actividad-evaluativa.md`), merge `develop → main` y tag `v0.5.0`
+ejecutados en el mismo cierre. Matriz de trazabilidad: RF-11, RF-11b, RF-12, RF-13 pasan a
+Validado.
+
+**Incremento 3-ADJ — Adecuación Técnica, cerrado 2026-09-03** (insertado fuera de secuencia
+tras `BL-004`, decisión de Víctor 2026-09-02: no renumerar los Incrementos 4-7 ya mapeados a
+RF — Milestone GitHub
+[Incremento 3-ADJ](https://github.com/vvalotto/cognion/milestone/10),
+`docs/plans/inc3-adj/inc3-adj-candidatas.md`). Deuda de tooling/arquitectura que las retros de
+`BL-002`/`BL-003`/`BL-004` venían señalando sin resolver. Las 8 US-ADJ (`US-ADJ-13` a `20`)
+implementadas: falso positivo de `ArchitectAnalyst` documentado (`US-ADJ-13`), `pages/`
+reordenado por BC (`US-ADJ-14`), fix de `coverage_report_path` (`US-ADJ-15`), cobertura de
+branches del frontend por encima del umbral (`US-ADJ-16`), Value Object `MetadatosPregunta`
+(`US-ADJ-17`), refactor de `SQLAlchemyPreguntaRepository` (`US-ADJ-18`),
+`LayerViolationsAnalyzer` documentado como no confiable + corrección de la causa raíz de
+`US-ADJ-13` (`US-ADJ-19`), `AbortController` en fetch de `useEffect`/submit (`US-ADJ-20`).
+Detalle completo de cada una en la sección "Quality gates" más abajo. **`BL-005` — Incremento
+3-ADJ cerrada 2026-09-03** (`.cm/baselines/BL-005-incremento-3-adj-adecuacion-tecnica.md`):
+`DesignReviewer` 159→118 warnings, 0 CRITICAL; `ArchitectAnalyst` 5 CRITICAL (mismo "Zone of
+Pain" aceptado, causa raíz corregida); cobertura branches frontend 77.89%→80.12%; 739 tests
+backend / 232 frontend en verde. Sin UAT (deuda de tooling, nada visible para un usuario
+final). Sin RF asociado — no mueve fila de la matriz de trazabilidad. Merge `develop → main` y
+tag diferidos, a confirmar con Víctor (mismo ítem abierto que `BL-001` a `BL-004`).
+
+Incremento 4 — Portal del estudiante y Analytics, período abierto — en curso
+(`docs/plans/inc4/inc4-candidatas.md`, Milestone GitHub
+[Incremento 4](https://github.com/vvalotto/cognion/milestone/11)). Primer BC puramente de
+lectura del sistema (`ADR-002`) — Analytics no tiene comando ni evento propio, se proyecta
+sobre el event store de Actividad Evaluativa ya existente.
+**Iteración 0 — Modelado cerrada 2026-09-04**: `US-4.0.1` (read models, Issue #227,
+`docs/design/domain/BC-analytics-modelo.md`) y `US-4.0.2` (wireframes, Issue #228,
+`docs/design/ux/wireframes-analytics.md`) aprobadas por Víctor.
+**Iteración 1 — RF-15: Estudiante ve su desempeño, cerrada 2026-09-05** (backend + frontend
+juntos, mismo criterio que Banco de Preguntas — no se difiere el frontend a otra iteración).
+**US-4.1.1** (infraestructura técnica: `EvaluacionDesempenoConsultaPort`, adapter in-process
+que lee la tabla `events` de Actividad Evaluativa, composition root
+`src/analytics/frameworks/dependencies.py`), PR #236, Issue #232. **US-4.1.2** (Docente→
+Estudiante consulta su propio desempeño — `ObtenerDesempenoEstudianteUseCase`, compone
+`listar_evaluaciones_finalizadas` y agrega en memoria sin proyección materializada, mismo
+criterio que `US-3.2.4`), endpoint `GET /analytics/materias/{materia_id}/mi-desempeno` (rol
+`estudiante`), PR #237, Issue #233. **US-4.1.3** (pantalla "Mi desempeño": resumen acumulado +
+detalle por evaluación, selector de materia solo si el estudiante cursa más de una, reutiliza
+`listarMisMaterias()`/`listarActividadesVisibles()` ya existentes — sin backend nuevo), PR
+#238, Issue #234. 775/775 tests backend, 242/242 frontend, quality gates APROBADO en las 3 US.
+**UAT de cierre de la Iteración 1 ejecutada 2026-09-05**
+(`quality/reports/uat/inc4/design.md`/`evidencia.md`/`guion-manual-iteracion1.md`): Capa 1
+(775 pytest + 242 Vitest) y Capa 2 (`smoke.sh` extendido con el flujo de Analytics — detalle +
+resumen con datos reales, rechazo por rol, materia sin evaluaciones) en verde; recorrido
+manual con Víctor mirando el panel del navegador en vivo (Chrome vía Claude Browser), 7/7
+pasos del checklist más 2 verificaciones adicionales (pantallas del Docente coherentes,
+detalle por pregunta confirmado como fuera de alcance por diseño — vive en la revisión de
+Actividad Evaluativa, no se duplica en Analytics), sin hallazgos nuevos. **RF-15 pasa a
+Implementado** (no Validado todavía — ese estado espera al cierre de baseline del Incremento
+completo, con RF-16/RF-17 de la Iteración 2 también implementados).
+**Dos problemas reales detectados y corregidos durante la preparación de esta UAT, ninguno
+parte del alcance de `US-4.1.x`:**
+- 🔴 Los 5 formularios de submit sin `useEffect` propio introducidos por `US-ADJ-20`
+  (`Login.tsx`, `AltaDocente.tsx`, `CambiarPassword.tsx`, `Registro.tsx`, `NuevaMateria.tsx`)
+  no funcionaban en modo dev (`npm run dev`): el `AbortController` se creaba en el render y el
+  doble montaje de efectos de `StrictMode` lo abortaba antes de cualquier submit real — el
+  botón "Ingresar"/"Guardar" no hacía nada, sin error visible (el catch descarta el
+  `AbortError` en silencio). Invisible a Vitest porque el mock de `fetch` no interpreta
+  `AbortSignal` (mismo patrón de "UAT en navegador real detecta lo que Vitest mockeado no ve"
+  ya documentado en Identidad/Banco de Preguntas). Corregido moviendo la creación del
+  controller al `useEffect` (crea uno nuevo en cada montaje real en vez de reusar el del
+  render). Track informal, sin US-ADJ — fix directo sobre código ya en `develop`.
+- 🟡 `tests/uat/inc4/limpiar_uat.sh` y el mismo patrón preexistente en
+  `tests/uat/inc3/limpiar_uat.sh` dejaban huérfanos los eventos `RespuestaRegistrada`/
+  `Suspendida`/etc. de una `Evaluacion` al limpiar corridas anteriores — el `DELETE` filtraba
+  por `payload->>'actividad_id'` fila a fila, campo que solo trae `EvaluacionIniciada`.
+  Rompía cualquier consulta que agrupa eventos por `aggregate_id` asumiendo que el primero es
+  `EvaluacionIniciada` (`_contar_evaluaciones` de `actividad_query_repository.py`,
+  `VerificarVencimientosUseCase`), con un `KeyError` que el navegador reportaba como falso
+  error de CORS. Corregido en ambos scripts — el `DELETE` ahora borra el stream completo del
+  `aggregate_id` afectado, no fila por fila. Tooling de test, no código de producción.
+
+Detectado durante la Iteración 1, sin resolver todavía: el dominio actual liga a un Estudiante
+con una única comisión/materia (`estudiante.comision_id`, sin muchos-a-muchos) — el selector
+de materia de "Mi desempeño" (`US-4.1.3`) nunca se puede ejercitar con una cuenta real hasta
+que exista un mecanismo de multi-inscripción. No bloquea el DoD de RF-15 (el wireframe ya
+contemplaba "sin selector si cursa una sola materia"), pero es una limitación a tener en cuenta
+si se decide modelar esa capacidad más adelante.
+
+**Iteración 2 del Incremento 4 — RF-16, RF-17: desempeño por alumno y por tema (rol Docente),
+cerrada 2026-09-06** (backend + frontend juntos, mismo criterio que la Iteración 1 — sin
+diferir el frontend). **US-4.2.1** (Docente consulta el desempeño de un estudiante elegido,
+reutiliza `ObtenerDesempenoEstudianteUseCase` de `US-4.1.2` sin cambios) e **Issue #240**.
+**US-4.2.2** (técnica: `ComisionConsultaPort` + endpoints nuevos en Identidad
+`GET /materias/{id}/comisiones` y `GET /comisiones/{id}/estudiantes`), **US-4.2.3** (técnica:
+`PreguntaMetadatoConsultaPort` in-process hacia Banco de Preguntas). **US-4.2.4** (Docente
+consulta la tasa de error por unidad/tema, agregada o por comisión,
+`ObtenerTasaErrorPorTemaUseCase`, endpoint `GET /analytics/materias/{id}/tasa-error-por-tema`).
+**US-4.2.5** (pantalla "Desempeño por alumno", `DesempenoPorAlumno.tsx`, extrae
+`DesempenoResumenDetalle.tsx` de `MiDesempeno.tsx` para reutilizar el mismo componente visual
+entre estudiante y docente) y **US-4.2.6** (pantalla "Desempeño por tema",
+`DesempenoPorTema.tsx`, listado `.tema-row` con severidad por color — ≥50% rojo, 20-49% ámbar,
+<20% verde — sin componente compartido con `US-4.2.5`, forma propia), ambas cerradas
+2026-09-06, `docs/reports/inc4/US-4.2.5-report.md`/`US-4.2.6-report.md`.
+**UAT de cierre de la Iteración 2 ejecutada 2026-09-06**
+(`quality/reports/uat/inc4/design-iteracion2.md`/`evidencia-iteracion2.md`): Capa 1 (851/852
+pytest — único fallo preexistente ya documentado en la Iteración 3 del Incremento 3, ajeno a
+esta iteración; 261/261 Vitest) sin regresiones; Capa 2 (`smoke.sh` extendido con el flujo de
+`US-4.2.1`/`4.2.2`/`4.2.4`) todos los pasos en verde; recorrido en navegador real (Claude
+Browser) con datos sembrados a propósito por `tests/uat/inc4/guion_manual_iteracion2.sh` (2
+estudiantes en la misma comisión con desempeño acumulado distinto, 3 temas con severidad
+alta/media/baja) — números y colores exactos, RBAC confirmado (Estudiante bloqueado por
+`RequireRole`) — y confirmado por Víctor sin hallazgos nuevos. **Cierra completa la Iteración 2
+del Incremento 4** — RF-16/RF-17 pasan a Implementado en `docs/traceability/matrix.md` (no
+Validado todavía: ese estado espera al cierre de baseline del Incremento 4 completo, junto con
+RF-15 de la Iteración 1).
+
+**Próximo paso:** evaluar el cierre de la baseline del Incremento 4 completo (Iteraciones 1 y
+2, RF-15/16/17 juntos) — `docs/plans/inc4/inc4-candidatas.md`.
+**Baseline abierta:** ninguna — `BL-005` (Incremento 3-ADJ) cerrada.
+**Branch activo:** ninguna — `develop` sincronizado.
 
 ---
 
@@ -641,6 +754,45 @@ el merge es a la rama default.
   reportado: `vvalotto/software_limpio#70`. Mientras se corrige ahí, el hook `mypy` dedicado
   (arriba, sobre `src/` completo, mismo comando que CI) es la fuente de verdad local para
   tipos — bloquea el commit si hay errores reales.
+- **"Zone of Pain" de `ArchitectAnalyst` — falso positivo aceptado permanentemente** (`US-ADJ-13`,
+  `docs/specs/ajustes/US-ADJ-13.md`; causa raíz **corregida** en `US-ADJ-19`,
+  `docs/specs/ajustes/US-ADJ-19.md`): 5 críticos `DistanceAnalyzer` (D > 0.5), uno por cada
+  paquete raíz de BC (`identidad`, `settings`, `shared`, `banco_preguntas`,
+  `actividad_evaluativa`), señalados sin acción en las retros de `BL-002`, `BL-003` y `BL-004`.
+  **Causa raíz real (no la que documentaba `US-ADJ-13`):** un bug de `DependencyGraphBuilder`
+  (`quality_agents.architectanalyst`, reportado upstream en
+  [`vvalotto/software_limpio#77`](https://github.com/vvalotto/software_limpio/issues/77)) deja
+  `Ca=Ce=0` para **todos** los módulos del proyecto, no solo entre BCs — el builder normaliza el
+  prefijo `src.` al derivar nombres de módulo desde rutas de archivo, pero no aplica la misma
+  normalización a los imports extraídos del código fuente, y este proyecto importa siempre como
+  `from src.<bc>...`. Verificado con código real: el grafo de dependencias completo tiene 0
+  aristas. Con `Ca=Ce=0` universal, `Instability` queda forzado a 0 y `D = |A + I - 1|` colapsa
+  a `D ≈ 1 - A` — dispara CRITICAL en cualquier paquete con abstracción baja, sin relación real
+  con el acoplamiento del proyecto. La explicación anterior ("cada BC es hoja del grafo por
+  diseño arquitectónico") era una interpretación plausible pero incorrecta de un síntoma —
+  **la aceptación del falso positivo se mantiene** (no hay nada que arreglar en `src/`), pero
+  no por esa razón. Probado y descartado (válido igual, independiente de la causa real):
+  `analysis_depth=2` no lo resuelve — los críticos suben de 5 a 15. Ninguna retro futura debe
+  volver a proponer "recalibrar" sin revisar antes esta nota ni el Issue upstream.
+- **Orden obligatorio al cerrar baseline: generar `coverage.json` antes de correr
+  `architectanalyst`** (`US-ADJ-15`): `CoverageAnalyzer` busca el reporte relativo al `PATH`
+  posicional del CLI (`src/` en este proyecto), no a la raíz del repo — con
+  `coverage_report_path = "../coverage.json"` (ya configurado) resuelve correctamente contra
+  `coverage.json` en la raíz, pero solo si ese archivo ya existe. Generarlo primero con
+  `pytest --cov=src --cov-report=json` desde la raíz; si no, `CoverageAnalyzer` reporta warning
+  de archivo no encontrado en vez del porcentaje real de cobertura.
+- **`LayerViolationsAnalyzer` no es una fuente de verdad confiable actualmente** (`US-ADJ-19`,
+  `docs/specs/ajustes/US-ADJ-19.md`): se documenta como el único chequeo "siempre CRITICAL, no
+  configurable" de `ArchitectAnalyst`, pero nunca detecta ninguna violación bajo ninguna
+  configuración probada — mismo bug de `DependencyGraphBuilder` que explica la "Zone of Pain"
+  de arriba (`Ca=Ce=0` para todo el proyecto, ver esa nota).
+  [`vvalotto/software_limpio#77`](https://github.com/vvalotto/software_limpio/issues/77).
+  **La regla de imports entre capas (`entities → use_cases → interface_adapters → frameworks`,
+  ver "Arquitectura interna" más arriba) se sostiene por revisión de código humana/asistida, no
+  por este chequeo automatizado**, hasta que el bug se resuelva upstream. `pyproject.toml`
+  tiene `[tool.architectanalyst.layers]` en el formato correcto (nombre de capa → capas
+  permitidas) desde `US-ADJ-19`, listo para cuando el bug se corrija — aunque hoy no detecte
+  nada.
 
 ---
 

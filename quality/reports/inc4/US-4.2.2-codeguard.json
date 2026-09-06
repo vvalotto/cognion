@@ -1,0 +1,4916 @@
+{
+  "summary": {
+    "total_files": 11,
+    "checks_executed": 9,
+    "elapsed_seconds": 87.76,
+    "timestamp": "2026-09-05T16:57:02.067479",
+    "total_issues": 232,
+    "errors": 5,
+    "warnings": 148,
+    "infos": 79
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 20
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'horario' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 21
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 28
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 29
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 32
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 35
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 36
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 40
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 41
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.67/10 (>= 8.0)",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 1
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 18
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": 33
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 25
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 29
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 47
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_estudiante_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 54
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 59
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 68
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 82
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 85
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": 60
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/analytics/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'health' is never used (60% confidence)",
+      "file": "src/app.py",
+      "line": 95
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'mata' should be 'meta,'",
+      "file": "src/app.py",
+      "line": 46
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 21
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionQueryPort' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 25
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 28
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 29
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 33
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 34
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.46/10 (>= 8.0)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 14
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 14
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 26
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 29
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 42
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 51
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 52
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 53
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 54
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 55
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'responde' should be 'respond,'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 88
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 90
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 99
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 100
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 101
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 102
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 103
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'ser' should be 'set'",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": 6
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CrearUsuarioRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 13
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 16
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 17
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'password' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 18
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 19
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'UsuarioResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 25
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 26
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 28
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 34
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 35
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 36
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 37
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'bloqueada' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 38
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CuentasPaginadasResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 41
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cuentas' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'total' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 45
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CuentaDetalleResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 48
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 51
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 52
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 53
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 54
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'bloqueada' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 55
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'creado_en' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 56
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 57
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ResetearPasswordRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 60
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'password_nueva' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 63
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CambiarPasswordRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'password_actual' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 69
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'password_nueva' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 70
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CrearComisionRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 73
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 76
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'horario' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 77
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'administrador_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 78
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 81
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 84
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 85
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'horario' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 86
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'administrador_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 87
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'docentes_asignados' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 88
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionResumenResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 91
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 94
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'horario' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 95
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EstudianteResumenResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 98
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 101
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 102
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'AsignarDocenteRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 105
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 108
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'GenerarInvitacionRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 111
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 114
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email_destinatario' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 115
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'InvitacionResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 118
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 121
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 122
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 123
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'expira_en' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 124
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'RegistrarEstudianteRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 127
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'token' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 130
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 131
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 132
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'password' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 133
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'RegistroResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 136
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 139
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 140
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 141
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 142
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'materia' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 143
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'LoginRequest' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 146
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 149
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'password' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 150
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'LoginResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 153
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'access_token' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 156
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'token_type' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 157
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'rol' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 158
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'expira_en' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 159
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'MateriaEstudianteResponse' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 162
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 165
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 166
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 46.7 (grade A)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'administrativo' should be 'administrative'",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": 32
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/schemas.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_usuarios_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 71
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comisiones_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 78
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comisiones_query_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 89
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_invitaciones_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 102
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_registro_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 112
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_cuentas_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 131
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_estudiante_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 143
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_perfil_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 153
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_auth_controller' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 160
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_administrador' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 171
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 174
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": 177
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionesQueryController' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": 19
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 84.1 (grade A)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comandos' should be 'commandos'",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": 3
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": 12
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": 12
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": 33
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SQLAlchemyComisionQueryRepository' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 15
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 41
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 79.8 (grade A)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 10
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 10
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 22
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 31
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 41
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 34
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 35
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 40
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 1
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 18
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 25
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_estudiante_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 59
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 82
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 85
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'health' is never used (60% confidence)",
+        "file": "src/app.py",
+        "line": 95
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'mata' should be 'meta,'",
+        "file": "src/app.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionQueryPort' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 33
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 26
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 29
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 42
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 51
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 52
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 53
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 54
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 55
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'responde' should be 'respond,'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 88
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 90
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 99
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 100
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 101
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 102
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 103
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": 6
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CrearUsuarioRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 13
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 18
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 19
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'UsuarioResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 35
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 37
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'bloqueada' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 38
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CuentasPaginadasResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cuentas' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'total' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CuentaDetalleResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 53
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'bloqueada' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 55
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'creado_en' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 56
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ResetearPasswordRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password_nueva' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 63
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CambiarPasswordRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password_actual' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password_nueva' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 70
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CrearComisionRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 73
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 76
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'administrador_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 78
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 81
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 84
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 85
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 86
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'administrador_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 87
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docentes_asignados' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 88
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionResumenResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 91
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 94
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 95
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EstudianteResumenResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 98
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 101
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 102
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'AsignarDocenteRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 105
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 108
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'GenerarInvitacionRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 111
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 114
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email_destinatario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 115
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'InvitacionResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 118
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 121
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 122
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 123
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'expira_en' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 124
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RegistrarEstudianteRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 127
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'token' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 130
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 131
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 132
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 133
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RegistroResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 136
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 139
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 140
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 141
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 142
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 143
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'LoginRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 146
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 149
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 150
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'LoginResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 153
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'access_token' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 156
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'token_type' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 157
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'rol' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 158
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'expira_en' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'MateriaEstudianteResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 162
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 165
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 166
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'administrativo' should be 'administrative'",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_usuarios_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 71
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comisiones_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 78
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comisiones_query_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 89
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_invitaciones_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 102
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_registro_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 112
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_cuentas_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 131
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_estudiante_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 143
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_perfil_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 153
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_auth_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 160
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_administrador' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 171
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 174
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 177
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionesQueryController' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 19
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comandos' should be 'commandos'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 3
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 12
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 12
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyComisionQueryRepository' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 41
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 10
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 10
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 22
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 31
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.67/10 (>= 8.0)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.46/10 (>= 8.0)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 46.7 (grade A)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 84.1 (grade A)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 79.8 (grade A)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/comision_consulta_port_in_process.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 25
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 29
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "api/comisiones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 42
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 51
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 52
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 53
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 54
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 55
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'responde' should be 'respond,'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 88
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 90
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 99
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 100
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 101
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 102
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 103
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      }
+    ],
+    "api/materias_comisiones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": 6
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      }
+    ],
+    "api/schemas.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CrearUsuarioRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 13
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 18
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 19
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'UsuarioResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 35
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 37
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'bloqueada' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 38
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CuentasPaginadasResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cuentas' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'total' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CuentaDetalleResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 53
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'perfil' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'bloqueada' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 55
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'creado_en' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 56
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ResetearPasswordRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password_nueva' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 63
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CambiarPasswordRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password_actual' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password_nueva' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 70
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CrearComisionRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 73
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 76
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'administrador_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 78
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 81
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 84
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 85
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 86
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'administrador_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 87
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docentes_asignados' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 88
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionResumenResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 91
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 94
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 95
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EstudianteResumenResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 98
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 101
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 102
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'AsignarDocenteRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 105
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 108
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'GenerarInvitacionRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 111
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 114
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email_destinatario' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 115
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'InvitacionResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 118
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 121
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 122
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'docente_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 123
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'expira_en' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 124
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RegistrarEstudianteRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 127
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'token' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 130
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 131
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 132
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 133
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RegistroResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 136
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 139
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 140
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 141
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'comision_id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 142
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'materia' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 143
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'LoginRequest' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 146
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 149
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'password' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 150
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'LoginResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 153
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'access_token' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 156
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'token_type' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 157
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'rol' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 158
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'expira_en' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'MateriaEstudianteResponse' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 162
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 165
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 166
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 46.7 (grade A)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'administrativo' should be 'administrative'",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": 32
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/schemas.py",
+        "line": null
+      }
+    ],
+    "controllers/comisiones_query_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionesQueryController' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 19
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 84.1 (grade A)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comandos' should be 'commandos'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 3
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 12
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 12
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": 33
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluacion_desempeno_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_estudiante_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 59
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_analytics_controller' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 82
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 85
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": 60
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_usuarios_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 71
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comisiones_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 78
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comisiones_query_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 89
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_invitaciones_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 102
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_registro_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 112
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_cuentas_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 131
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_estudiante_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 143
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_perfil_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 153
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_auth_controller' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 160
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_administrador' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 171
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 174
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": 177
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "gateways/comision_query_repository.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyComisionQueryRepository' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 41
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 79.8 (grade A)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 10
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 10
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 22
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 31
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      }
+    ],
+    "ports/comision_consulta_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'horario' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 35
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 41
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.67/10 (>= 8.0)",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 1
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 18
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": 33
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/analytics/entities/ports/comision_consulta_port.py",
+        "line": null
+      }
+    ],
+    "ports/comision_query_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionQueryPort' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 34
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.46/10 (>= 8.0)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 26
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 29
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      }
+    ],
+    "src/app.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'health' is never used (60% confidence)",
+        "file": "src/app.py",
+        "line": 95
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'mata' should be 'meta,'",
+        "file": "src/app.py",
+        "line": 46
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/app.py",
+        "line": null
+      }
+    ]
+  }
+}

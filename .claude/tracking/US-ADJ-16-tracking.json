@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-16",
+    "us_title": "Subir cobertura de branches del frontend (77.89% a 80%)",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-03T12:55:48.904503+00:00",
+    "completed_at": "2026-09-03T13:11:55.932809+00:00",
+    "total_elapsed_seconds": 967,
+    "effective_seconds": 967,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-03T12:55:49.247129+00:00",
+      "completed_at": "2026-09-03T12:58:41.874468+00:00",
+      "elapsed_seconds": 172,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-03T12:59:02.178090+00:00",
+      "completed_at": "2026-09-03T13:00:09.634799+00:00",
+      "elapsed_seconds": 67,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-03T13:00:24.187348+00:00",
+      "completed_at": "2026-09-03T13:04:29.486579+00:00",
+      "elapsed_seconds": 245,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Agregar tests de teclado a NuevaPreguntaTipo",
+          "task_type": "test",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-03T13:00:24.315439+00:00",
+          "completed_at": "2026-09-03T13:00:43.856404+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -9.68,
+          "file_created": "NuevaPreguntaTipo.test.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-03T13:11:02.688242+00:00",
+      "completed_at": "2026-09-03T13:11:23.112279+00:00",
+      "elapsed_seconds": 20,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-03T13:11:23.238193+00:00",
+      "completed_at": "2026-09-03T13:11:39.045635+00:00",
+      "elapsed_seconds": 15,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-03T13:11:39.162860+00:00",
+      "completed_at": "2026-09-03T13:11:55.817070+00:00",
+      "elapsed_seconds": 16,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 1,
+    "completed_tasks": 1,
+    "total_phases": 6,
+    "estimated_total_minutes": 10.0,
+    "actual_total_minutes": 0.32,
+    "variance_minutes": -9.68,
+    "variance_percent": -96.83
+  }
+}

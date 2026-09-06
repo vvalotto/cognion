@@ -400,4 +400,20 @@ describe("router (integración)", () => {
 
     expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
   })
+
+  it("la ruta /analytics/mi-desempeno muestra acceso denegado con sesión de rol distinto de estudiante", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/analytics/mi-desempeno")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /analytics/mi-desempeno renderiza Mi desempeño con sesión de estudiante", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/analytics/mi-desempeno")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Mi desempeño" })).toBeInTheDocument()
+  })
 })

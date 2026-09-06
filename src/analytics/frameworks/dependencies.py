@@ -1,0 +1,106 @@
+"""Proveedores de dependencias FastAPI (DI) del BC Analytics.
+
+Composition root del BC — arranca con el puerto de consulta al event store ajeno de Actividad
+Evaluativa (`US-4.1.1`). `US-4.1.2` agrega el primer controller y el RBAC de rol `estudiante`,
+mismo patrón que `src/actividad_evaluativa/frameworks/dependencies.py`. `US-4.2.1` agrega el
+RBAC de rol `docente` y el puerto de consulta de `Usuario` (Identidad) para validar que el
+`estudiante_id` elegido existe. `US-4.2.3` agrega el puerto de consulta de metadatos de
+pregunta (Banco de Preguntas). `US-4.2.4` cablea el segundo Use Case del controller,
+componiendo los 3 puertos de consulta ya provistos.
+"""
+
+from __future__ import annotations
+
+from typing import Annotated
+
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
+from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
+from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
+    EvaluacionDesempenoConsultaPort,
+)
+from src.analytics.entities.ports.pregunta_metadato_consulta_port import (
+    PreguntaMetadatoConsultaPort,
+)
+from src.analytics.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
+)
+from src.analytics.frameworks.adapters.estudiante_consulta_port_in_process import (
+    EstudianteConsultaPortInProcess,
+)
+from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
+    EvaluacionDesempenoConsultaPortInProcess,
+)
+from src.analytics.frameworks.adapters.pregunta_metadato_consulta_port_in_process import (
+    PreguntaMetadatoConsultaPortInProcess,
+)
+from src.analytics.interface_adapters.controllers.analytics_controller import (
+    AnalyticsController,
+)
+from src.analytics.use_cases.obtener_desempeno_estudiante import (
+    ObtenerDesempenoEstudianteUseCase,
+)
+from src.analytics.use_cases.obtener_tasa_error_por_tema import (
+    ObtenerTasaErrorPorTemaUseCase,
+)
+from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.frameworks.db import get_session
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from src.shared.interface_adapters.security.get_current_user import build_get_current_user
+from src.shared.interface_adapters.security.require_rol import require_rol
+
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+
+def get_evaluacion_desempeno_consulta_port(
+    session: SessionDep,
+) -> EvaluacionDesempenoConsultaPort:
+    """Provee el puerto de consulta de desempeño, cableado contra la sesión async compartida."""
+    return EvaluacionDesempenoConsultaPortInProcess(session)
+
+
+def get_estudiante_consulta_port(session: SessionDep) -> EstudianteConsultaPort:
+    """Provee el puerto de consulta de `Usuario`/Estudiante, cableado contra Identidad."""
+    return EstudianteConsultaPortInProcess(session)
+
+
+def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
+    """Provee el puerto de consulta de `Comision`, cableado contra Identidad."""
+    return ComisionConsultaPortInProcess(session)
+
+
+def get_pregunta_metadato_consulta_port(session: SessionDep) -> PreguntaMetadatoConsultaPort:
+    """Provee el puerto de consulta de metadatos de pregunta, cableado contra Banco de Preguntas."""
+    return PreguntaMetadatoConsultaPortInProcess(session)
+
+
+def get_analytics_controller(session: SessionDep) -> AnalyticsController:
+    """Arma el `AnalyticsController` con sus dependencias concretas."""
+    evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    pregunta_metadato_consulta = PreguntaMetadatoConsultaPortInProcess(session)
+    return AnalyticsController(
+        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerTasaErrorPorTemaUseCase(
+            evaluacion_desempeno_consulta, comision_consulta, pregunta_metadato_consulta
+        ),
+    )
+
+
+def get_jwt_issuer() -> JWTIssuerPort:
+    """Provee la implementación de emisor de JWT a usar."""
+    return PyJWTIssuer()
+
+
+get_current_user = build_get_current_user(get_jwt_issuer())
+"""Dependency FastAPI que resuelve el usuario autenticado a partir del JWT recibido."""
+
+require_estudiante = require_rol([TipoPerfil.ESTUDIANTE], get_current_user)
+"""Dependency que exige rol `estudiante` — consulta del propio desempeño (RF-02, RF-15)."""
+
+require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
+"""Dependency que exige rol `docente` — consulta del desempeño de un Estudiante elegido
+(RF-02, RF-16)."""

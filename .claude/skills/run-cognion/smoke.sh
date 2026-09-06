@@ -12,7 +12,9 @@
 # detalle/reseteo de cuentas por Administrador, desbloqueo), el flujo de
 # Actividad Evaluativa período abierto (US-3.1.1 a US-3.1.3: docente crea una
 # actividad, estudiante inicia su evaluación con set aleatorio fijo, idempotencia
-# en reconexión, rechazo fuera de período), verifica casos de error (email
+# en reconexión, rechazo fuera de período), el flujo de Analytics (US-4.1.1 a US-4.1.3:
+# desempeño del propio Estudiante; US-4.2.1/4.2.2/4.2.4: desempeño de un alumno elegido
+# y tasa de error por tema, ambos consultados por el Docente), verifica casos de error (email
 # duplicado -> 409, token vencido -> 422, opciones inválidas -> 422, evaluación
 # fuera de período -> 422, rol insuficiente -> 403), limpia los datos de prueba
 # y baja el server.
@@ -390,6 +392,93 @@ if [[ "$invitacion_code" == "201" ]]; then
   [[ "$code" == "422" ]] || { echo "FAIL: finalizar dos veces devolvió $code, esperado 422"; exit 1; }
   echo "OK ($code)"
 
+  echo "== Flujo de Analytics — desempeño del Estudiante (Incremento 4, Iteración 1, RF-15) =="
+
+  echo "== GET /analytics/materias/{materia_id}/mi-desempeno (estudiante, con una Evaluacion finalizada, US-4.1.2) =="
+  # pregunta_1_id/pregunta_2_id son las dos V/F sembradas más arriba, ambas con
+  # respuesta_correcta=false — el estudiante contestó "true" a las dos (línea de
+  # /respuestas de arriba), así que la evaluación finalizada debe leerse 0 correctas / 2
+  # incorrectas, sin depender del resultado real de la revisión (ya verificado arriba).
+  desempeno=$(curl -s "${BASE}/analytics/materias/${materia_id}/mi-desempeno" -H "Authorization: Bearer ${estudiante_token}")
+  echo "$desempeno" | grep -q "\"evaluacion_id\":\"${evaluacion_id}\"" || { echo "FAIL: la evaluación finalizada no aparece en el detalle"; echo "$desempeno"; exit 1; }
+  echo "$desempeno" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+assert d['resumen']['cantidad_evaluaciones'] == 1, d
+assert d['resumen']['total_correctas'] == 0, d
+assert d['resumen']['total_incorrectas'] == 2, d
+fila = d['evaluaciones'][0]
+assert fila['cantidad_correctas'] == 0, fila
+assert fila['cantidad_incorrectas'] == 2, fila
+"
+  [[ $? == 0 ]] || { echo "FAIL: resumen/detalle de desempeño no coincide con lo esperado"; echo "$desempeno"; exit 1; }
+  echo "OK (1 evaluación, 0 correctas, 2 incorrectas)"
+
+  echo "== GET /analytics/materias/{materia_id}/mi-desempeno con rol docente (esperado 403, RBAC) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}/analytics/materias/${materia_id}/mi-desempeno" -H "Authorization: Bearer ${docente_token}")
+  [[ "$code" == "403" ]] || { echo "FAIL: docente consultando su desempeño devolvió $code, esperado 403"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== Flujo de Analytics — desempeño por alumno y por tema (Incremento 4, Iteración 2, RF-16/RF-17) =="
+
+  echo "== GET /materias/{materia_id}/comisiones (docente, US-4.2.2) =="
+  comisiones_materia=$(curl -s "${BASE}/materias/${materia_id}/comisiones" -H "Authorization: Bearer ${docente_token}")
+  echo "$comisiones_materia" | grep -q "\"id\":\"${comision_id}\"" || { echo "FAIL: la comisión sembrada no aparece en /materias/{id}/comisiones"; echo "$comisiones_materia"; exit 1; }
+  echo "OK (comisión encontrada)"
+
+  echo "== GET /comisiones/{comision_id}/estudiantes (docente, US-4.2.2) =="
+  estudiantes_comision=$(curl -s "${BASE}/comisiones/${comision_id}/estudiantes" -H "Authorization: Bearer ${docente_token}")
+  echo "$estudiantes_comision" | grep -q "\"id\":\"${estudiante_id}\"" || { echo "FAIL: el estudiante sembrado no aparece en /comisiones/{id}/estudiantes"; echo "$estudiantes_comision"; exit 1; }
+  echo "OK (estudiante encontrado)"
+
+  echo "== GET /analytics/materias/{materia_id}/estudiantes/{estudiante_id}/desempeno (docente elige al estudiante, US-4.2.1, RF-16) =="
+  # Mismo estudiante y misma Evaluacion Finalizada que el chequeo de US-4.1.2 de arriba — debe
+  # ver exactamente lo mismo que vio el propio estudiante (0 correctas / 2 incorrectas), sin
+  # restricción de pertenencia a comisión (hot spot resuelto con Víctor, BC-analytics-modelo.md §4).
+  desempeno_docente=$(curl -s "${BASE}/analytics/materias/${materia_id}/estudiantes/${estudiante_id}/desempeno" -H "Authorization: Bearer ${docente_token}")
+  echo "$desempeno_docente" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+assert d['resumen']['cantidad_evaluaciones'] == 1, d
+assert d['resumen']['total_correctas'] == 0, d
+assert d['resumen']['total_incorrectas'] == 2, d
+"
+  [[ $? == 0 ]] || { echo "FAIL: desempeño por alumno (docente) no coincide con lo esperado"; echo "$desempeno_docente"; exit 1; }
+  echo "OK (0 correctas, 2 incorrectas, igual que la vista del propio estudiante)"
+
+  echo "== GET /analytics/materias/{materia_id}/estudiantes/{id}/desempeno con id inexistente (esperado 404) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}/analytics/materias/${materia_id}/estudiantes/00000000-0000-0000-0000-000000000000/desempeno" -H "Authorization: Bearer ${docente_token}")
+  [[ "$code" == "404" ]] || { echo "FAIL: estudiante inexistente devolvió $code, esperado 404"; exit 1; }
+  echo "OK ($code)"
+
+  echo "== GET /analytics/materias/{materia_id}/tasa-error-por-tema, toda la materia (docente, US-4.2.4, RF-17) =="
+  # pregunta_1_id (Unidad 1 / Geografía) y pregunta_2_id (Unidad 1 / Arquitectura), ambas
+  # contestadas incorrectamente por el estudiante (ver el flujo de arriba) -> 1 respuesta /
+  # 1 incorrecta / tasa_error=1.0 en cada tema.
+  tasas_materia=$(curl -s "${BASE}/analytics/materias/${materia_id}/tasa-error-por-tema" -H "Authorization: Bearer ${docente_token}")
+  echo "$tasas_materia" | python3 -c "
+import sys, json
+tasas = json.load(sys.stdin)
+por_tema = {t['tema']: t for t in tasas}
+assert 'Geografía' in por_tema, tasas
+assert 'Arquitectura' in por_tema, tasas
+assert por_tema['Geografía']['cantidad_respuestas'] == 1, tasas
+assert por_tema['Geografía']['cantidad_incorrectas'] == 1, tasas
+assert por_tema['Geografía']['tasa_error'] == 1.0, tasas
+"
+  [[ $? == 0 ]] || { echo "FAIL: tasa de error por tema no coincide con lo esperado"; echo "$tasas_materia"; exit 1; }
+  echo "OK (Geografía y Arquitectura con tasa_error=1.0, 1 respuesta cada uno)"
+
+  echo "== GET /analytics/materias/{materia_id}/tasa-error-por-tema?comision_id={id} (acotado a la comisión, US-4.2.4) =="
+  tasas_comision=$(curl -s "${BASE}/analytics/materias/${materia_id}/tasa-error-por-tema?comision_id=${comision_id}" -H "Authorization: Bearer ${docente_token}")
+  echo "$tasas_comision" | grep -q "\"tema\":\"Geograf" || { echo "FAIL: tasa de error por tema acotada a comisión no incluyó Geografía"; echo "$tasas_comision"; exit 1; }
+  echo "OK (misma tasa acotada a la comisión sembrada)"
+
+  echo "== GET /analytics/materias/{materia_id}/tasa-error-por-tema con rol estudiante (esperado 403, RBAC) =="
+  code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}/analytics/materias/${materia_id}/tasa-error-por-tema" -H "Authorization: Bearer ${estudiante_token}")
+  [[ "$code" == "403" ]] || { echo "FAIL: estudiante consultando tasa de error por tema devolvió $code, esperado 403"; exit 1; }
+  echo "OK ($code)"
+
   echo "== PATCH /actividades/{id}/periodo — docente extiende el plazo (US-3.3.1, RF-11b) =="
   nueva_fecha_cierre=$(python3 -c "from datetime import datetime,timedelta,timezone;print((datetime.now(timezone.utc)+timedelta(days=14)).isoformat())")
   extendida=$(curl -s -X PATCH "${BASE}/actividades/${actividad_id}/periodo" -H "Content-Type: application/json" \
@@ -425,6 +514,19 @@ if [[ "$invitacion_code" == "201" ]]; then
     -d "{\"actividad_id\":\"${actividad_id}\"}")
   [[ "$code" == "422" ]] || { echo "FAIL: iniciar evaluación sobre actividad cerrada devolvió $code, esperado 422"; exit 1; }
   echo "OK ($code)"
+
+  echo "== GET /analytics/materias/{materia_id}/mi-desempeno (estudiante2, sin Evaluacion finalizada) =="
+  desempeno_vacio=$(curl -s "${BASE}/analytics/materias/${materia_id}/mi-desempeno" -H "Authorization: Bearer ${estudiante2_token}")
+  echo "$desempeno_vacio" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+assert d['evaluaciones'] == [], d
+assert d['resumen']['cantidad_evaluaciones'] == 0, d
+assert d['resumen']['total_correctas'] == 0, d
+assert d['resumen']['total_incorrectas'] == 0, d
+"
+  [[ $? == 0 ]] || { echo "FAIL: desempeño sin evaluaciones no devolvió lista/resumen vacíos"; echo "$desempeno_vacio"; exit 1; }
+  echo "OK (lista vacía, resumen en cero)"
 else
   echo "SKIPPED ($invitacion_code) — ver /tmp/cognion-smoke-invitacion.json y $LOG"
   echo "SKIPPED — depende de la invitación anterior"

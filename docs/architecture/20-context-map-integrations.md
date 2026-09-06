@@ -34,6 +34,9 @@ propia Iteración 0 (ver `docs/architecture/README.md` — "no todas de una vez"
 | Actividad Evaluativa | Notificaciones | **Conformist** (acoplamiento directo, deuda técnica consciente) | El Use Case de Actividad Evaluativa llama directamente al Use Case de Notificaciones al abrir/cerrar una actividad de período abierto. | `ADR-006` |
 | Actividad Evaluativa | Analytics | **Customer-Supplier** vía event store compartido | Analytics proyecta read models leyendo directamente el event store (tabla `events`) de Actividad Evaluativa — sin pasar por un puerto de comandos, solo lectura. | `ADR-002` |
 | Actividad Evaluativa | Identidad (`Usuario`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-2.1.2`) | `IniciarEvaluacion` valida que el `estudiante_id` del JWT corresponde a un `Usuario` existente con rol Estudiante — más allá del rol ya validado por el JWT (RBAC). Actividad Evaluativa define `EstudianteConsultaPort` en `entities/ports/` y lo implementa en `frameworks/adapters/estudiante_consulta_port_in_process.py`, que invoca `SQLAlchemyUsuarioRepository.obtener_por_id()` de Identidad con la misma sesión de BD — sin FK de base entre esquemas de BCs. Resuelve la relación que quedaba "a definir en Incremento 3". | `docs/specs/inc3/US-3.1.3.md`, `ADR-006` |
+| Analytics | Identidad (`Usuario`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-3.1.3`) | El Docente elige un `estudiante_id` por la URL (no viene del JWT, a diferencia del resto de los endpoints de Analytics) — `obtener_desempeno_de_estudiante` valida que corresponde a un `Usuario` existente con rol Estudiante antes de invocar el Use Case (404 si no). Analytics define su propio `EstudianteConsultaPort` en `entities/ports/` (copia propia, sin importar el de Actividad Evaluativa) y lo implementa en `frameworks/adapters/estudiante_consulta_port_in_process.py`, mismo mecanismo que `Actividad Evaluativa | Identidad (Usuario)` de arriba. | `docs/specs/inc4/US-4.2.1.md`, `ADR-006` |
+| Analytics | Identidad (`Comision`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-4.2.1`) | Los selectores en cascada Materia → Comisión → Estudiante de `US-4.2.5`/`US-4.2.6` necesitan listar las comisiones de una materia y los estudiantes de una comisión — consulta nueva de punta a punta, no existía en Identidad. Identidad define `ComisionQueryPort` (separado de `ComisionRepositoryPort` por responsabilidad command/query, mismo criterio que `CuentaQueryPort`/`US-2.2.2`) y lo expone también como `GET /materias/{id}/comisiones`/`GET /comisiones/{id}/estudiantes`. Analytics define su propio `ComisionConsultaPort` (copia propia con DTOs propios) y lo implementa en `frameworks/adapters/comision_consulta_port_in_process.py`, invocando `SQLAlchemyComisionQueryRepository` de Identidad con la misma sesión de BD — sin FK de base entre esquemas de BCs. Consumido desde `US-4.2.4` (`ObtenerTasaErrorPorTemaUseCase`, acotar por comisión). | `docs/specs/inc4/US-4.2.2.md`, `ADR-006` |
+| Analytics | Banco de Preguntas (`PreguntaPlantilla`, metadatos) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-4.2.2`) | La tasa de error por unidad/tema (RF-17, `US-4.2.4`) necesita conocer `unidad_tematica`/`tema` de cada pregunta respondida — dato que no viaja en los eventos de Actividad Evaluativa (solo `pregunta_id`), resuelve la pregunta abierta de la sección "Relaciones pendientes de definir". Analytics define `PreguntaMetadatoConsultaPort` (copia propia, DTO `MetadatoPreguntaResumen`) en `entities/ports/` y lo implementa en `frameworks/adapters/pregunta_metadato_consulta_port_in_process.py`, consultando `PreguntaPlantillaModel` de Banco de Preguntas por lote (`WHERE id IN (...)`) con la misma sesión de BD — sin FK de base entre esquemas de BCs. Consumido desde `US-4.2.4` (`ObtenerTasaErrorPorTemaUseCase`, agrupa respuestas por `unidad_tematica`/`tema`). | `docs/specs/inc4/US-4.2.3.md`, `ADR-006` |
 | Identidad | (servicio externo SMTP) | — | BC Identidad envía el email de invitación con su propio adaptador SMTP, independiente del Servicio Email que usará Notificaciones. | `ADR-012` |
 
 ## Relaciones pendientes de definir
@@ -42,9 +45,6 @@ Estas relaciones existen conceptualmente (el módulo de arquitectura de `ARQ_v1.
 insinúa) pero **no están modeladas todavía** — se definen recién en la Iteración 0 del
 incremento que introduce el BC consumidor:
 
-- **Analytics → Banco de Preguntas**: si las métricas de desempeño por tema/unidad (RF-17)
-  necesitan cruzar datos de Analytics con metadatos del Banco de Preguntas, o si esos metadatos
-  ya viajan denormalizados en los eventos de Actividad Evaluativa. *A definir en Incremento 4.*
 - **Identidad → Banco de Preguntas** (RF-03, gestión de cuentas): si la gestión de cuentas del
   administrador necesita datos de otros BC o es enteramente interna a Identidad. *A definir en
   Incremento 2, cuando se modele RF-03.* (Nota: la relación Identidad → Banco de Preguntas para
@@ -85,6 +85,12 @@ flowchart LR
     event store compartido (ADR-002)"| analytics
     actividad -->|"Customer-Supplier
     EstudianteConsultaPort (US-3.1.3)"| identidad
+    analytics -->|"Customer-Supplier
+    EstudianteConsultaPort (US-4.2.1)"| identidad
+    analytics -->|"Customer-Supplier
+    ComisionConsultaPort (US-4.2.2)"| identidad
+    analytics -->|"Customer-Supplier
+    PreguntaMetadatoConsultaPort (US-4.2.3)"| banco
 
     identidad -->|"Adaptador SMTP propio
     (ADR-012)"| smtp
@@ -95,6 +101,10 @@ flowchart LR
 Se actualiza esta vista cada vez que un nuevo incremento modela un BC y define sus relaciones
 reales — no antes. Actualizada en `US-2.1.2` con la relación Identidad → Banco de Preguntas
 (`Materia`, vía `MateriaPort`); en `US-3.1.2` con Actividad Evaluativa → Banco de Preguntas; en
-`US-3.1.3` con Actividad Evaluativa → Identidad (`Usuario`, vía `EstudianteConsultaPort`) —
-resuelve la última relación que quedaba pendiente en esta vista. La próxima actualización
-esperada es al resolver Analytics → Banco de Preguntas (Incremento 4).
+`US-3.1.3` con Actividad Evaluativa → Identidad (`Usuario`, vía `EstudianteConsultaPort`); en
+`US-4.2.1` con Analytics → Identidad (`Usuario`, mismo mecanismo, puerto propio de Analytics);
+en `US-4.2.2` con Analytics → Identidad (`Comision`, vía `ComisionConsultaPort`, mismo
+mecanismo); en `US-4.2.3` con Analytics → Banco de Preguntas (`PreguntaPlantilla`, vía
+`PreguntaMetadatoConsultaPort`) — resuelve la última relación que quedaba "a definir". La
+próxima actualización esperada es cuando un incremento futuro introduzca un BC o una relación
+nueva.

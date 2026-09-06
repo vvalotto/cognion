@@ -1,0 +1,46 @@
+{
+  "us_id": "US-4.2.4",
+  "fecha": "2026-09-05T19:00:00-03:00",
+  "componente": "src/analytics/",
+  "metricas": {
+    "pylint": 9.64,
+    "cc_promedio": 2.13,
+    "cc_maximo": 9,
+    "mi_promedio": 93.92,
+    "mi_minimo": 52.54,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 9,
+    "warnings": 52,
+    "infos": 54,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 8 },
+      "PEP8": { "errors": 0, "warnings": 2, "infos": 7 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 8 },
+      "DeadCode": { "errors": 4, "warnings": 45, "infos": 1 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 8 },
+      "Pylint": { "errors": 2, "warnings": 0, "infos": 6 },
+      "Spelling": { "errors": 0, "warnings": 5, "infos": 4 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 7 },
+      "UnusedImports": { "errors": 3, "warnings": 0, "infos": 5 }
+    },
+    "reporte": "quality/reports/inc4/US-4.2.4-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard corrió con `.venv/bin` antepuesto al PATH (vulture/codespell son dev deps del venv, el subprocess de codeguard no las resuelve sin esto — mismo gap de entorno documentado en US-4.1.1/US-4.2.3). Con las herramientas reales: 4 'errors' de DeadCode (vulture, 100% confidence) sobre los parámetros de los dos métodos abstractos de `EvaluacionDesempenoConsultaPort` (`listar_evaluaciones_finalizadas`, `listar_respuestas_vigentes_de_materia`) — mismo falso positivo ya aceptado en `US-4.1.1`/`US-4.2.2`/`US-4.2.3`: vulture no reconoce que el parámetro de un método abstracto se usa en cada implementación concreta.",
+    "2 'errors' de Pylint y 3 de UnusedImports son `pylint execution timed out` en corrida en frío sobre `evaluacion_desempeno_consulta_port_in_process.py`, `analytics_router.py` y `schemas.py` — mismo bug de timeout de CodeGuard ya documentado en CLAUDE.md (`vvalotto/software_limpio#70`, ahí reportado para mypy pero el mecanismo de timeout de 10s/5s en frío es el mismo para el check de pylint embebido). Verificado con la fuente de verdad local: `pylint src/analytics/` completo → 9.64/10, sin errores reales — solo W2301 (unnecessary-ellipsis, convención del proyecto para stubs de método abstracto) y R0801/R0903 (duplicate-code entre schema Pydantic y su DTO de Use Case — mismo patrón ya aceptado en `EvaluacionDetalleResponse`/`EvaluacionDetalle`; too-few-public-methods en Ports de un solo método, mismo patrón que `EstudianteConsultaPort`).",
+    "CC inicial de `listar_respuestas_vigentes_de_materia` (adapter, `US-4.2.4`) fue 11/10 — CRITICAL. Corregido en la misma Fase 7 extrayendo el filtro de stream (materia + estudiante + finalizada) a la función pura `_stream_califica_para_materia`, sin cambiar el comportamiento (62/62 tests de la US siguen en verde tras el refactor). CC máx del BC baja a 9/10.",
+    "Coverage 100% mide `entities/`, `use_cases/` e `interface_adapters/` — `frameworks/*` excluido del gate por `pyproject.toml` (mismo criterio que el resto del proyecto). El adapter (`frameworks/adapters/evaluacion_desempeno_consulta_port_in_process.py`) y el endpoint (`frameworks/api/analytics_router.py`) están cubiertos por 12 tests de integración reales contra PostgreSQL y 6 escenarios BDD (`tests/step_defs/inc4/test_us_4_2_4_steps.py`), no contados en este porcentaje.",
+    "Suite completa sin regresiones: 400/400 tests unitarios, 275/275 tests de integración, 176/177 step_defs (el único fallo, `test_us_3_2_1_steps.py::test_rechazo_fuera_del_período_vigente`, es un flaky preexistente documentado en CLAUDE.md — ventana de tiempo ajustada en el propio setup del test, no relacionado con esta US).",
+    "Desviación de spec detectada y corregida en la misma Fase 7: la Fase 2 (plan) omitió `estudiante_id` en `RespuestaVigente`, aunque tanto `docs/specs/inc4/US-4.2.4.md` como `BC-analytics-modelo.md` §5 especifican la fila del puerto como `(pregunta_id, estudiante_id, es_correcta)`. Corregido agregando el campo al DTO y resolviéndolo del primer evento del stream (`EvaluacionIniciada`) en `_respuestas_vigentes_de_stream` — sin uso todavía en `ObtenerTasaErrorPorTemaUseCase` (agrega solo por `pregunta_id`), pero disponible para consumo futuro sin otra extensión del puerto. Métricas de calidad no cambiaron tras el fix (pylint 9.64/10, CC máx 9, coverage 100%)."
+  ]
+}

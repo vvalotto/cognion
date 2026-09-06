@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-15",
+    "us_title": "Fix de coverage_report_path en [tool.architectanalyst]",
+    "us_points": 1,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-03T12:34:48.083417+00:00",
+    "completed_at": "2026-09-03T12:41:52.007577+00:00",
+    "total_elapsed_seconds": 423,
+    "effective_seconds": 423,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-03T12:34:48.211721+00:00",
+      "completed_at": "2026-09-03T12:35:00.073881+00:00",
+      "elapsed_seconds": 11,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-03T12:35:00.193604+00:00",
+      "completed_at": "2026-09-03T12:35:09.333567+00:00",
+      "elapsed_seconds": 9,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-03T12:35:19.512294+00:00",
+      "completed_at": "2026-09-03T12:40:53.285666+00:00",
+      "elapsed_seconds": 333,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Agregar coverage_report_path a pyproject.toml",
+          "task_type": "config",
+          "estimated_minutes": 3.0,
+          "started_at": "2026-09-03T12:35:19.671110+00:00",
+          "completed_at": "2026-09-03T12:35:25.003973+00:00",
+          "elapsed_seconds": 5,
+          "actual_minutes": 0.08,
+          "variance_minutes": -2.92,
+          "file_created": "pyproject.toml",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Documentar orden coverage.json antes de architectanalyst en CLAUDE.md",
+          "task_type": "docs",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-03T12:35:28.730579+00:00",
+          "completed_at": "2026-09-03T12:35:40.337107+00:00",
+          "elapsed_seconds": 11,
+          "actual_minutes": 0.18,
+          "variance_minutes": -4.82,
+          "file_created": "CLAUDE.md",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Verificar CoverageAnalyzer con coverage.json real",
+          "task_type": "verify",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-03T12:35:40.458270+00:00",
+          "completed_at": "2026-09-03T12:40:41.749767+00:00",
+          "elapsed_seconds": 301,
+          "actual_minutes": 5.02,
+          "variance_minutes": 0.02,
+          "file_created": "verificación architectanalyst + coverage.json",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-03T12:41:10.838701+00:00",
+      "completed_at": "2026-09-03T12:41:34.963934+00:00",
+      "elapsed_seconds": 24,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-03T12:41:35.081424+00:00",
+      "completed_at": "2026-09-03T12:41:51.890369+00:00",
+      "elapsed_seconds": 16,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 5,
+    "estimated_total_minutes": 13.0,
+    "actual_total_minutes": 5.28,
+    "variance_minutes": -7.72,
+    "variance_percent": -59.36
+  }
+}

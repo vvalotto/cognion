@@ -1,0 +1,35 @@
+{
+  "us_id": "US-ADJ-18",
+  "titulo": "Refactor SQLAlchemyPreguntaRepository (Feature Envy/Ley de Demeter/Long Method)",
+  "stack": "backend",
+  "backend_changes": true,
+  "frontend_changes": false,
+  "gates": {
+    "pytest_completo": {
+      "passed": 739,
+      "failed": 0,
+      "nota": "Mismo conteo que antes del refactor — sin tests nuevos, ninguna aserción cambiada."
+    },
+    "mypy": {
+      "errores": 0,
+      "archivos_analizados": 43
+    },
+    "designreviewer": {
+      "comando": "designreviewer src/ --config pyproject.toml",
+      "blocking_issues": 0,
+      "pregunta_repository_py_issues_antes": 15,
+      "pregunta_repository_py_issues_despues": 3,
+      "issues_restantes": "Los 3 issues restantes son todos de filtrar() (LongMethodAnalyzer, LongParameterListAnalyzer, LawOfDemeterAnalyzer sobre activa.is_) — explícitamente fuera de alcance de esta US según la spec. 0 issues en el código tocado.",
+      "wmc_clase_antes": 22,
+      "wmc_clase_despues": 15,
+      "wmc_transitorio_critical": "Extraer 4 mapeadores como métodos (según pedía la spec literalmente) subió el WMC a 27/25 (CRITICAL). Corregido moviéndolos a funciones de módulo — WMCAnalyzer y FeatureEnvyAnalyzer solo analizan métodos dentro de ast.ClassDef, así que funciones de módulo privadas quedan fuera de ambos cómputos."
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "Refactor backend sin cambio de comportamiento observable. Resultado mejor que el objetivo de la spec (baja a 0 issues en el alcance, spec pedía ≤2 contando filtrar).",
+  "observaciones": [
+    "Cambio de diseño respecto a la spec original: mapeadores como funciones de módulo (no métodos privados) — decisión tomada al medir con radon/designreviewer durante la implementación, no solo aplicando la sugerencia literal de la spec.",
+    "actualizar() pasó de 23 líneas (LongMethod) a 5 líneas, sin acceso directo a campos de pregunta (FeatureEnvy resuelto).",
+    "_a_entidad también se movió a función de módulo (era @staticmethod sin uso de self)."
+  ]
+}

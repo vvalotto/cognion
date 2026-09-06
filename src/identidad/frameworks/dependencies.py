@@ -14,6 +14,9 @@ from src.identidad.frameworks.security.password_hasher import BcryptPasswordHash
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
+from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
+    ComisionesQueryController,
+)
 from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
 from src.identidad.interface_adapters.controllers.estudiante_controller import (
     EstudianteController,
@@ -24,6 +27,9 @@ from src.identidad.interface_adapters.controllers.invitaciones_controller import
 from src.identidad.interface_adapters.controllers.perfil_controller import PerfilController
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
+from src.identidad.interface_adapters.gateways.comision_query_repository import (
+    SQLAlchemyComisionQueryRepository,
+)
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
@@ -78,6 +84,14 @@ def get_comisiones_controller(session: SessionDep) -> ComisionesController:
         CrearComisionUseCase(comision_repo, materia_port),
         AsignarDocenteAComisionUseCase(comision_repo, usuario_repo),
     )
+
+
+def get_comisiones_query_controller(session: SessionDep) -> ComisionesQueryController:
+    """Arma el `ComisionesQueryController` con sus dependencias concretas."""
+    comision_query = SQLAlchemyComisionQueryRepository(session)
+    materia_port = MateriaPortInProcess(session)
+    comision_repo = SQLAlchemyComisionRepository(session)
+    return ComisionesQueryController(comision_query, materia_port, comision_repo)
 
 
 def get_notificador() -> NotificadorPort:

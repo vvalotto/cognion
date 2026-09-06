@@ -9,6 +9,7 @@ from src.banco_preguntas.entities.errors import (
     PreguntaYaEliminada,
 )
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
@@ -19,12 +20,14 @@ from src.banco_preguntas.entities.pregunta_plantilla import (
 def _crear(opciones: list[Opcion]) -> PreguntaPlantillaOpcionMultiple:
     return PreguntaPlantillaOpcionMultiple.crear(
         banco_id=uuid.uuid4(),
-        texto="¿Cuál es la capital de Entre Ríos?",
+        metadatos=MetadatosPregunta(
+            texto="¿Cuál es la capital de Entre Ríos?",
+            unidad_tematica="Unidad 1",
+            tema="Arquitectura",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         opciones=opciones,
-        unidad_tematica="Unidad 1",
-        tema="Arquitectura",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
 
 
@@ -83,12 +86,14 @@ class TestPreguntaPlantillaOpcionMultipleEditar:
         ]
 
         pregunta.editar(
-            texto="¿Cuál es la capital de la provincia de Entre Ríos?",
+            metadatos=MetadatosPregunta(
+                texto="¿Cuál es la capital de la provincia de Entre Ríos?",
+                unidad_tematica="Unidad 2",
+                tema="Geografía",
+                dificultad=Dificultad.BAJO,
+                importancia=Importancia.MEDIO,
+            ),
             opciones=nuevas_opciones,
-            unidad_tematica="Unidad 2",
-            tema="Geografía",
-            dificultad=Dificultad.BAJO,
-            importancia=Importancia.MEDIO,
         )
 
         assert pregunta.texto == "¿Cuál es la capital de la provincia de Entre Ríos?"
@@ -108,15 +113,17 @@ class TestPreguntaPlantillaOpcionMultipleEditar:
 
         with pytest.raises(OpcionesInvalidas):
             pregunta.editar(
-                texto=pregunta.texto,
+                metadatos=MetadatosPregunta(
+                    texto=pregunta.texto,
+                    unidad_tematica=pregunta.unidad_tematica,
+                    tema=pregunta.tema,
+                    dificultad=pregunta.dificultad,
+                    importancia=pregunta.importancia,
+                ),
                 opciones=[
                     Opcion(texto="Paraná", es_correcta=False),
                     Opcion(texto="Concordia", es_correcta=False),
                 ],
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad,
-                importancia=pregunta.importancia,
             )
 
     def test_rechaza_edicion_de_pregunta_inactiva(self):
@@ -130,12 +137,14 @@ class TestPreguntaPlantillaOpcionMultipleEditar:
 
         with pytest.raises(PreguntaInactiva):
             pregunta.editar(
-                texto=pregunta.texto,
+                metadatos=MetadatosPregunta(
+                    texto=pregunta.texto,
+                    unidad_tematica=pregunta.unidad_tematica,
+                    tema=pregunta.tema,
+                    dificultad=pregunta.dificultad,
+                    importancia=pregunta.importancia,
+                ),
                 opciones=pregunta.opciones,
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad,
-                importancia=pregunta.importancia,
             )
 
 
@@ -168,12 +177,14 @@ class TestPreguntaPlantillaOpcionMultipleEliminar:
 def _crear_vf(respuesta_correcta: bool) -> PreguntaPlantillaVerdaderoFalso:
     return PreguntaPlantillaVerdaderoFalso.crear(
         banco_id=uuid.uuid4(),
-        texto="El sol es una estrella.",
+        metadatos=MetadatosPregunta(
+            texto="El sol es una estrella.",
+            unidad_tematica="Unidad 1",
+            tema="Astronomía",
+            dificultad=Dificultad.MEDIO,
+            importancia=Importancia.ALTO,
+        ),
         respuesta_correcta=respuesta_correcta,
-        unidad_tematica="Unidad 1",
-        tema="Astronomía",
-        dificultad=Dificultad.MEDIO,
-        importancia=Importancia.ALTO,
     )
 
 
@@ -197,12 +208,14 @@ class TestPreguntaPlantillaVerdaderoFalsoEditar:
         pregunta = _crear_vf(True)
 
         pregunta.editar(
-            texto="La luna es una estrella.",
+            metadatos=MetadatosPregunta(
+                texto="La luna es una estrella.",
+                unidad_tematica="Unidad 2",
+                tema="Geografía",
+                dificultad=Dificultad.BAJO,
+                importancia=Importancia.MEDIO,
+            ),
             respuesta_correcta=False,
-            unidad_tematica="Unidad 2",
-            tema="Geografía",
-            dificultad=Dificultad.BAJO,
-            importancia=Importancia.MEDIO,
         )
 
         assert pregunta.texto == "La luna es una estrella."
@@ -218,12 +231,14 @@ class TestPreguntaPlantillaVerdaderoFalsoEditar:
 
         with pytest.raises(PreguntaInactiva):
             pregunta.editar(
-                texto=pregunta.texto,
+                metadatos=MetadatosPregunta(
+                    texto=pregunta.texto,
+                    unidad_tematica=pregunta.unidad_tematica,
+                    tema=pregunta.tema,
+                    dificultad=pregunta.dificultad,
+                    importancia=pregunta.importancia,
+                ),
                 respuesta_correcta=pregunta.respuesta_correcta,
-                unidad_tematica=pregunta.unidad_tematica,
-                tema=pregunta.tema,
-                dificultad=pregunta.dificultad,
-                importancia=pregunta.importancia,
             )
 
 

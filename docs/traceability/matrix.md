@@ -3,7 +3,42 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-02 — Cierre del Incremento 3 (Actividad Evaluativa, período
+> Última actualización: 2026-09-06 — Cierre del Incremento 4 completo (Portal del Estudiante y
+> Analytics, Iteraciones 1 y 2): backend y frontend integrados, UAT formal aprobada por
+> iteración sin hallazgos 🔴 Bloqueantes (`quality/reports/uat/inc4/design.md`/`evidencia.md` —
+> Iteración 1; `design-iteracion2.md`/`evidencia-iteracion2.md` — Iteración 2). **RF-15, RF-16
+> y RF-17 pasan de "Implementado" a "Validado"**, referenciando
+> `.cm/baselines/BL-006-portal-estudiante-analytics.md`.
+>
+> 2026-09-06 — Cierre de la Iteración 2 del Incremento 4 (Analytics,
+> RF-16: Docente ve el desempeño de un alumno elegido; RF-17: Docente ve la tasa de error por
+> tema), backend (`US-4.2.1` a `US-4.2.4`) y frontend (`US-4.2.5`, `US-4.2.6`) juntos, mismo
+> criterio que la Iteración 1. UAT propia de la iteración aprobada sin hallazgos
+> (`quality/reports/uat/inc4/design-iteracion2.md`, `evidencia-iteracion2.md` — Capa 1 (851/852
+> pytest, único fallo preexistente ajeno a esta iteración; 261/261 Vitest) y Capa 2 (`smoke.sh`
+> extendido) en verde, recorrido en navegador real con datos sembrados a propósito
+> (`guion_manual_iteracion2.sh`) confirmado por Víctor sin hallazgos nuevos). **RF-16/RF-17
+> pasan de "Especificado" a "Implementado"** — no "Validado" todavía: ese estado se reserva
+> para el cierre de baseline del Incremento 4 completo (Iteraciones 1 y 2, RF-15/16/17 juntos),
+> mismo criterio que RF-11/RF-11b/RF-12/RF-13 en el Incremento 3.
+>
+> 2026-09-05 — Arranque de la Iteración 2 del Incremento 4 (RF-16, RF-17:
+> desempeño por alumno y por tema, rol Docente). 6 US-IEDD creadas — Issues #240 a #245 (Milestone
+> "Incremento 4 — Portal del Estudiante y Analytics", #6) y specs `docs/specs/inc4/US-4.2.1.md`
+> a `US-4.2.6.md` — sin código todavía. RF-16/RF-17 pasan de "Especificado" (solo modelado) a
+> "Especificado" con sus US-IEDD de feature ya escritas, completando la columna US-IEDD.
+>
+> 2026-09-05 — Cierre de la Iteración 1 del Incremento 4 (Analytics,
+> RF-15: Estudiante ve su desempeño), backend (`US-4.1.1`, `US-4.1.2`) y frontend (`US-4.1.3`)
+> juntos, mismo criterio que Banco de Preguntas (no se difiere el frontend a otra iteración).
+> UAT propia de la iteración aprobada con observaciones (`quality/reports/uat/inc4/`,
+> `guion-manual-iteracion1.md` — recorrido con Víctor mirando el navegador en vivo, sin
+> hallazgos sobre `US-4.1.x`). **RF-15 pasa de "Especificado" a "Implementado"** — no
+> "Validado" todavía: ese estado se reserva para el cierre de baseline del Incremento
+> completo (Iteraciones 1 y 2, RF-15/16/17 juntos), mismo criterio que RF-11/RF-11b/RF-12/RF-13
+> en el Incremento 3.
+>
+> 2026-09-02 — Cierre del Incremento 3 (Actividad Evaluativa, período
 > abierto): backend (Iteraciones 1 a 3) y frontend (Iteración 4) completos, UAT formal
 > aprobada (`quality/reports/uat/inc3/`, incluida la revisión manual de Víctor con el
 > checklist `guion-manual-iteracion4.md`, sin hallazgos abiertos — `US-ADJ-12` ya corregido).
@@ -119,9 +154,9 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
 | RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1, US-3.2.2, US-3.2.3 (backend); US-3.4.7 (frontend) | Validado |
 | RF-14 | Notificaciones | 5 | — | Planificado |
-| RF-15 | Analytics | 4 | — | Planificado |
-| RF-16 | Analytics | 4 | — | Planificado |
-| RF-17 | Analytics | 4 | — | Planificado |
+| RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend) | Validado |
+| RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.1, US-4.2.2 (backend, cerradas); US-4.2.5 (frontend, cerrada) | Validado |
+| RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |
 | RF-18 | Analytics | 7 | — | Planificado |
 | RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Validado |
 

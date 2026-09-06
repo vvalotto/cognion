@@ -9,6 +9,156 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-06
+
+### Added
+- **Incremento 4 — Portal del Estudiante y Analytics** (RF-15, RF-16, RF-17), cierre de
+  baseline `BL-006`. Primer Bounded Context puramente de lectura del sistema: sin comando ni
+  evento propio, se proyecta por consulta directa sobre el event store de Actividad
+  Evaluativa (`ADR-002`), sin persistencia propia de escritura
+  - `src/analytics/` (BC completo): `EvaluacionDesempenoConsultaPort` (adapter in-process
+    sobre la tabla `events` de Actividad Evaluativa), `ComisionConsultaPort` y
+    `PreguntaMetadatoConsultaPort` (adapters in-process hacia Identidad y Banco de Preguntas),
+    `ObtenerDesempenoEstudianteUseCase` y `ObtenerTasaErrorPorTemaUseCase`, composition root
+    propio (`frameworks/dependencies.py`)
+  - [RF-15] Estudiante consulta su propio desempeño en una materia — resumen acumulado
+    (correctas/incorrectas/% acierto) y detalle por evaluación finalizada, agregados en
+    memoria sin proyección materializada (mismo criterio que `US-3.2.4`). Endpoint
+    `GET /analytics/materias/{materia_id}/mi-desempeno` (rol `estudiante`). Pantalla
+    "Mi desempeño" (`MiDesempeno.tsx`)
+  - [RF-16] Docente consulta el desempeño de un estudiante elegido — reutiliza el mismo Use
+    Case de RF-15 sin cambios, sin restricción de pertenencia a comisión (RBAC estándar,
+    decisión explícita). Endpoint
+    `GET /analytics/materias/{materia_id}/estudiantes/{estudiante_id}/desempeno`. Pantalla
+    "Desempeño por alumno" (`DesempenoPorAlumno.tsx`, reutiliza `DesempenoResumenDetalle.tsx`
+    extraído de `MiDesempeno.tsx`)
+  - [RF-17] Docente consulta la tasa de error por unidad/tema de una materia, agregada o
+    acotada a una comisión. Endpoint
+    `GET /analytics/materias/{materia_id}/tasa-error-por-tema`. Pantalla "Desempeño por tema"
+    (`DesempenoPorTema.tsx`, severidad por color: ≥50% rojo, 20-49% ámbar, <20% verde)
+  - `ComisionConsultaPort` en BC Identidad (query nueva de punta a punta):
+    `listar_comisiones_por_materia(materia_id)` y `listar_estudiantes(comision_id)`, endpoints
+    `GET /materias/{materia_id}/comisiones` y `GET /comisiones/{comision_id}/estudiantes` —
+    separados de `ComisionRepositoryPort` (command/query desde el diseño, evita el patrón de
+    CRITICAL de CBO ya visto en Incremento 2)
+  - Sin migraciones nuevas — Analytics no persiste nada propio
+  - 852/852 tests backend (99% cobertura), 261/261 tests frontend (91.34% statements / 80.47%
+    branches), quality gates APROBADO en las 9 US, UAT de cierre por iteración sin hallazgos
+    🔴 Bloqueantes. RF-15, RF-16 y RF-17 pasan a **Validado** en
+    `docs/traceability/matrix.md`
+  - Fix de sesión (no parte del alcance formal): `AbortController` creado en el render en 5
+    formularios de submit (introducidos por `US-ADJ-20`) se abortaba por el doble montaje de
+    `StrictMode` antes de cualquier submit real en modo dev — movido al `useEffect`; y
+    `tests/uat/{inc3,inc4}/limpiar_uat.sh` dejaban huérfanos eventos de `Evaluacion` al limpiar
+    corridas anteriores — `DELETE` ahora borra el stream completo por `aggregate_id`
+
+## [0.5.1] - 2026-09-03
+
+### Fixed
+- [US-ADJ-19] `LayerViolationsAnalyzer` no confiable — causa raíz real encontrada (+ corrección
+  de `US-ADJ-13`)
+  - `pyproject.toml`: `[tool.architectanalyst.layers]` corregido al formato documentado
+    (nombre de capa → capas permitidas, no globs de ruta) — listo para cuando se resuelva el
+    bug upstream
+  - Issue [`vvalotto/software_limpio#77`](https://github.com/vvalotto/software_limpio/issues/77)
+    con la causa raíz real: `DependencyGraphBuilder` no normaliza el prefijo `src.` de los
+    imports extraídos del código fuente, mientras que sí lo quita de los nombres de módulo
+    derivados de rutas de archivo — en un proyecto que importa como `from src.<bc>...`,
+    ningún import interno se registra jamás. Verificado con código real: el grafo de
+    dependencias del proyecto tiene 0 aristas en total
+  - `CLAUDE.md`: documenta que `LayerViolationsAnalyzer` no es confiable (la regla de imports
+    entre capas se sostiene por revisión de código) y **corrige** la nota de `US-ADJ-13`
+    (Zone of Pain) — la causa raíz real no es "cada BC es hoja del grafo por diseño
+    arquitectónico" sino el mismo bug de `DependencyGraphBuilder`, que fuerza `Ca=Ce=0` para
+    todo el proyecto, no solo entre BCs. La aceptación del falso positivo se mantiene, cambia
+    la explicación técnica
+  - Sin código de producción — documentación + config + Issue externo
+
+### Changed
+- [US-ADJ-18] Refactor `SQLAlchemyPreguntaRepository` (Feature Envy/Ley de Demeter/Long Method)
+  - Mapeadores de entidad↔modelo extraídos como **funciones de módulo privadas** (no métodos)
+    — `_modelo_desde_verdadero_falso`/`_modelo_desde_opcion_multiple`,
+    `_entidad_desde_modelo_verdadero_falso`/`_entidad_desde_modelo_opcion_multiple`,
+    `_a_entidad`, `_aplicar_pregunta_a_modelo`. `guardar`/`actualizar` quedan en 5-9 líneas
+  - `MetadatosPregunta.dificultad_valor`/`.importancia_valor` (+ properties equivalentes en
+    la entidad) resuelven la Ley de Demeter (`pregunta.dificultad.value`, profundidad 2 →
+    `pregunta.dificultad_valor`, profundidad 1)
+  - Decisión de diseño no anticipada por la spec: extraer los mapeadores como *métodos*
+    (como pedía literalmente la spec) disparaba un CRITICAL nuevo de `WMCAnalyzer` (cada
+    método nuevo suma complejidad base al WMC de la clase). Solución: funciones de módulo,
+    invisibles para `WMCAnalyzer`/`FeatureEnvyAnalyzer` (solo analizan `ast.ClassDef`)
+  - `pregunta_repository.py`: 15 → 3 issues de `DesignReviewer`, los 3 restantes son de
+    `filtrar()` (explícitamente fuera de alcance) — 0 issues en el código tocado, mejor que
+    el objetivo de la spec (≤2). WMC de la clase: 22 → 15
+  - `filtrar` (7 parámetros) sin tocar — fuera de alcance, queda anotado para una futura
+    continuación (`FiltroBanco`, mismo patrón que `MetadatosPregunta`)
+  - Sin cambio de comportamiento observable — 739/739 tests en verde, mismas aserciones de
+    integración
+
+- [US-ADJ-17] Value Object `MetadatosPregunta` (Data Clump/Primitive Obsession, Banco de Preguntas)
+  - `entities/metadatos_pregunta.py` nuevo — agrupa `texto`, `unidad_tematica`, `tema`,
+    `dificultad`, `importancia` en un único VO, reemplazando el Data Clump que se repetía en
+    `entities/pregunta_plantilla.py` (14 issues de DesignReviewer) y
+    `interface_adapters/controllers/preguntas_controller.py` (12 issues) — ambos archivos
+    quedan en 0 issues tras el refactor (159 → 129 warnings totales del proyecto)
+  - `PreguntaPlantillaOpcionMultiple`/`PreguntaPlantillaVerdaderoFalso`: campo único
+    `metadatos: MetadatosPregunta` en vez de 5 campos sueltos, con `@property` de solo lectura
+    de compatibilidad (`texto`/`unidad_tematica`/`tema`/`dificultad`/`importancia`) — evita
+    tocar los 42 sitios de lectura en `bancos_router.py`/`pregunta_repository.py`
+  - 3 Use Case y `PreguntasController` reciben `metadatos: MetadatosPregunta` en vez de 5
+    parámetros sueltos; `preguntas_router.py` arma el VO desde el body del request antes de
+    invocar al controller — el contrato HTTP (JSON de request/response) no cambia
+  - Fix de CBO detectado en la misma US (`SQLAlchemyPreguntaRepository` 10→11/10 CRITICAL al
+    sumar `MetadatosPregunta` como dependencia nueva): `MetadatosPregunta.desde_valores_persistidos()`
+    centraliza la conversión `str → Dificultad/Importancia`, evitando que la gateway importe
+    esos dos tipos directamente
+  - Persistencia sin cambios (sigue en columnas individuales, sin migración de schema) —
+    limpieza completa de Ley de Demeter en la gateway queda para `US-ADJ-18`
+  - Sin cambio de comportamiento observable ni de contrato HTTP — 739/739 tests en verde,
+    mismo conteo que antes del refactor (actualización de firma en tests existentes)
+
+### Added
+- [US-ADJ-16] Subir cobertura de branches del frontend por encima del umbral global (80%)
+  - 3 tests nuevos en `NuevaPreguntaTipo.test.tsx` (interacción por teclado — `Enter` sobre
+    cada Card de selección de tipo, y una tecla no-`Enter` que no navega) — branches globales
+    de 79.66% (517/649) a 80.12% (520/649), cerrando exactamente el gap real medido
+  - Sin cambio de comportamiento — solo tests nuevos, ningún test existente modificado
+
+### Fixed
+- [US-ADJ-15] Fix de `coverage_report_path` en `[tool.architectanalyst]`
+  - `pyproject.toml`: agregado `coverage_report_path = "../coverage.json"` — `CoverageAnalyzer`
+    resolvía el reporte relativo a `src/` (el `PATH` posicional del CLI), no a la raíz del
+    repo, y nunca encontraba `coverage.json` pese a que `pytest --cov` ya lo generaba
+    correctamente
+  - `CLAUDE.md`: nota operativa — generar `coverage.json` antes de correr `architectanalyst`
+    al cerrar una baseline
+  - Verificado con datos reales: `CoverageAnalyzer` pasa de warning a `info` con 98.9% de
+    cobertura real (antes: warning vacío en 3 baselines consecutivas)
+
+### Changed
+- [US-ADJ-14] Reordenar `frontend/src/pages/` por Bounded Context
+  - 33 pantallas movidas de un directorio plano a `pages/{identidad,cuentas,banco-preguntas,
+    actividad-evaluativa}/`, igual que la organización ya existente de `frontend/src/lib/` y
+    de `src/<bc>/` en el backend — `_placeholders.tsx` queda en la raíz (sigue con un
+    consumidor activo)
+  - 34 archivos con imports actualizados (`router.tsx`, `Login.tsx`, 32 tests)
+  - Refactor mecánico sin cambio de comportamiento: ninguna URL cambió, `vitest run` idéntico
+    al baseline (41 archivos / 229 tests), `tsc`/`oxlint` en verde
+
+### Fixed
+- [US-ADJ-13] Documentar "Zone of Pain" de ArchitectAnalyst como falso positivo aceptado +
+  limpiar claves inválidas de `[tool.architectanalyst]` en `pyproject.toml`
+  - `pyproject.toml`: eliminado `paths = ["src"]` (no existe en `ArchitectAnalystConfig`, el
+    CLI ya recibe el path por argumento posicional) y renombrado `history_db` → `db_path`
+    (campo real, mismo valor) — dejaban de emitir `[tool.architectanalyst] clave desconocida
+    ignorada` en cada corrida desde hacía 3 baselines
+  - `CLAUDE.md`: nota en Quality gates documentando los 5 críticos "Zone of Pain" de paquete
+    raíz de BC (`identidad`, `settings`, `shared`, `banco_preguntas`, `actividad_evaluativa`)
+    como falso positivo permanente — causa raíz estructural (cada BC es hoja del grafo de
+    dependencias por diseño), no resuelto por `analysis_depth` (probado: sube de 5 a 15
+    críticos)
+  - Sin cambio de comportamiento — las claves corregidas nunca tuvieron efecto real
+
 ## [0.5.0] - 2026-09-02
 
 ### Added

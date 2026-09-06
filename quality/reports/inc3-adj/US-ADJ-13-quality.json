@@ -1,0 +1,22 @@
+{
+  "us_id": "US-ADJ-13",
+  "titulo": "Documentar Zone of Pain de ArchitectAnalyst como falso positivo aceptado",
+  "stack": "documentación + config (sin código de producción)",
+  "backend_changes": false,
+  "frontend_changes": false,
+  "gates": {
+    "pylint": { "nota": "N/A — sin código Python de producción tocado" },
+    "coverage": { "nota": "N/A — sin tests, sin código de producción" },
+    "architectanalyst_config_valido": {
+      "comando": "architectanalyst src/ --config pyproject.toml",
+      "warning_clave_desconocida": false,
+      "nota": "Antes del fix emitía '[tool.architectanalyst] clave desconocida ignorada' por paths y por history_db. Tras el fix (paths eliminado, history_db renombrado a db_path) no aparece ningún warning."
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "US de documentación + corrección de config inválida, sin cambio de comportamiento (las claves corregidas nunca tuvieron efecto real en ArchitectAnalystConfig). No aplica pylint/CC/MI/coverage — Fases 1, 4, 5, 6 y 7 del skill se saltearon según lo aprobado en Fase 2 (docs/plans/inc3-adj/US-ADJ-13-context.md).",
+  "observaciones": [
+    "Los 5 críticos 'Zone of Pain' (identidad, settings, shared, banco_preguntas, actividad_evaluativa) siguen apareciendo tras el fix, como se espera — son el falso positivo que esta US documenta como aceptado, no algo a resolver.",
+    "TOML válido verificado con tomllib tras la edición de pyproject.toml."
+  ]
+}

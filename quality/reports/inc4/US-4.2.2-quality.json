@@ -1,0 +1,47 @@
+{
+  "us_id": "US-4.2.2",
+  "fecha": "2026-09-05T17:00:00-03:00",
+  "componente": "src/identidad/, src/analytics/",
+  "metricas": {
+    "pylint": 9.60,
+    "cc_promedio": 1.0,
+    "cc_maximo": 3,
+    "mi_promedio": 91.87,
+    "mi_minimo": 46.69,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 11,
+    "errors": 5,
+    "warnings": 148,
+    "infos": 79,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 11},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 11},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 11},
+      "DeadCode": {"errors": 4, "warnings": 115, "infos": 2},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 11},
+      "Pylint": {"errors": 1, "warnings": 0, "infos": 10},
+      "Spelling": {"errors": 0, "warnings": 33, "infos": 1},
+      "Types": {"errors": 0, "warnings": 0, "infos": 11},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 11}
+    },
+    "reporte": "quality/reports/inc4/US-4.2.2-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard corrió con `.venv/bin` antepuesto al PATH (vulture/codespell son dev deps declaradas en pyproject.toml, el subprocess de codeguard no resuelve el venv activo sin esto — gap de entorno ya documentado en US-4.1.1, no de código). Sin ese PATH: 4 'errors' DeadCode + 1 'error' Spelling extra por herramienta no encontrada, resueltos re-corriendo con el PATH correcto.",
+    "4 'errors' de DeadCode (vulture, 100% confidence) sobre las variables de firma de los métodos abstractos de `ComisionQueryPort`/`ComisionConsultaPort` (`materia_id`, `comision_id`) — falso positivo ya documentado en US-4.1.1 para el mismo patrón (`EvaluacionDesempenoConsultaPort`): vulture analiza los archivos de puertos aislados y no ve que los parámetros se usan en las implementaciones concretas (`SQLAlchemyComisionQueryRepository`, `ComisionConsultaPortInProcess`).",
+    "1 'error' de Pylint es timeout de codeguard (>10s) sobre `src/app.py` en corrida en frío — mismo patrón ya documentado en project_codeguard_mypy_timeout / US-4.1.1. Verificado con pylint directo contra `src/identidad/ src/analytics/ src/app.py`: 9.60/10, sin errores reales — solo `unnecessary-ellipsis` en los 2 puertos nuevos (mismo estilo que el resto de `entities/ports/*.py` del proyecto, cuerpo `...` tras el docstring) y 2 `duplicate-code` R0801 menores (el bloque except 404 de `comisiones_router.py` vs `invitaciones_router.py`, y el DTO de `analytics/frameworks/api/schemas.py` vs `use_cases/obtener_desempeno_estudiante.py` — preexistente, no introducido por esta US).",
+    "115 warnings de DeadCode son falsos positivos de vulture por análisis archivo-por-archivo sobre todo `src/identidad/`+`src/analytics/` (funciones/clases públicas usadas desde otros archivos de la US o consumidas recién en `US-4.2.4`/`US-4.2.5` — `get_comision_consulta_port` sin consumidor todavía, documentado como decisión de diseño). 33 warnings de Spelling son palabras en español mal interpretadas por el diccionario en inglés de codespell, mismo patrón aceptado en todo el proyecto.",
+    "El check Types no tuvo timeout en esta corrida — fuente de verdad local sigue siendo el hook mypy dedicado sobre src/ completo.",
+    "Coverage 100% mide solo los 4 archivos de esta US no excluidos por `[tool.coverage.run] omit = [\"src/*/frameworks/*\"]` (`comision_query_port.py`, `comisiones_query_controller.py`, `comision_query_repository.py`, `comision_consulta_port.py`) — los routers/dependencies/adapter in-process (`frameworks/*`) quedan fuera del gate por config del proyecto, cubiertos igual por 8 tests de integración reales contra PostgreSQL (`tests/integration/inc4/`) y 6 escenarios BDD (`tests/step_defs/inc4/test_us_4_2_2_steps.py`), no contados en este porcentaje.",
+    "Suite completa del proyecto (unit + integration + step_defs) verificada sin regresiones: 810/810 tests en verde tras agregar esta US."
+  ]
+}

@@ -6,6 +6,7 @@ from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import BancoNoExiste
 from src.banco_preguntas.entities.importancia import Importancia
+from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
@@ -24,15 +25,17 @@ def _pregunta_om(
 ) -> PreguntaPlantillaOpcionMultiple:
     return PreguntaPlantillaOpcionMultiple.crear(
         banco_id=banco_id,
-        texto="¿Cuál es la capital de Entre Ríos?",
+        metadatos=MetadatosPregunta(
+            texto="¿Cuál es la capital de Entre Ríos?",
+            unidad_tematica=unidad,
+            tema=tema,
+            dificultad=dificultad,
+            importancia=importancia,
+        ),
         opciones=[
             Opcion(texto="Paraná", es_correcta=True),
             Opcion(texto="Concordia", es_correcta=False),
         ],
-        unidad_tematica=unidad,
-        tema=tema,
-        dificultad=dificultad,
-        importancia=importancia,
     )
 
 
@@ -45,12 +48,14 @@ def _pregunta_vf(
 ) -> PreguntaPlantillaVerdaderoFalso:
     return PreguntaPlantillaVerdaderoFalso.crear(
         banco_id=banco_id,
-        texto="El sol es una estrella.",
+        metadatos=MetadatosPregunta(
+            texto="El sol es una estrella.",
+            unidad_tematica=unidad,
+            tema=tema,
+            dificultad=dificultad,
+            importancia=importancia,
+        ),
         respuesta_correcta=True,
-        unidad_tematica=unidad,
-        tema=tema,
-        dificultad=dificultad,
-        importancia=importancia,
     )
 
 

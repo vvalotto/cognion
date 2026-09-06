@@ -1,0 +1,30 @@
+{
+  "us_id": "US-ADJ-14",
+  "titulo": "Reordenar frontend/src/pages/ por Bounded Context",
+  "stack": "frontend",
+  "backend_changes": false,
+  "gates": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_preexistentes": 4,
+      "nota": "Mismos 4 warnings que antes del refactor — uno de ellos con path actualizado (pages/actividad-evaluativa/RendirEvaluacion.test.tsx)."
+    },
+    "tsc_build_noemit": {
+      "errores": 0
+    },
+    "vitest": {
+      "test_files": 41,
+      "tests": 229,
+      "passed": 229,
+      "failed": 0,
+      "nota": "Idéntico al baseline medido antes del refactor (41 archivos, 229 tests) — ningún test se perdió ni se duplicó en el movimiento."
+    }
+  },
+  "estado_general": "APROBADO",
+  "nota": "Refactor mecánico de organización de archivos (movimiento + imports), sin cambio de comportamiento. No aplica pylint/CC/MI/coverage pytest — sin cambios en src/ (backend).",
+  "observaciones": [
+    "33 pantallas movidas a 4 subcarpetas por BC (identidad, cuentas, banco-preguntas, actividad-evaluativa); _placeholders.tsx sin mover — sigue teniendo un consumidor (InicioPlaceholder en router.tsx).",
+    "34 archivos con imports actualizados (router.tsx, Login.tsx, 32 tests) vía script con mapeo nombre→BC, sin tocar manualmente cada import.",
+    "Ninguna URL de router.tsx cambió — solo los imports."
+  ]
+}

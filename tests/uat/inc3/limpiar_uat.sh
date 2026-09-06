@@ -8,10 +8,17 @@ PREFIX="${1:?Uso: limpiar_uat.sh <EMAIL_PREFIX> — ver el resumen que imprimió
 DB_URL="postgresql://user:password@localhost:5432/cognion"
 
 psql "$DB_URL" -q -c "
-  DELETE FROM events WHERE aggregate_type = 'Evaluacion' AND payload->>'actividad_id' IN (
-    SELECT aggregate_id::text FROM events
-    WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
-      AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${PREFIX}%')
+  -- Borra TODOS los eventos de cada stream de Evaluacion afectado (no solo las filas cuyo
+  -- propio payload trae actividad_id) — RespuestaRegistrada/Suspendida/etc. no llevan ese
+  -- campo, así que filtrar por payload fila a fila deja huérfanos el resto del stream (bug
+  -- detectado en la UAT de Analytics, Incremento 4 Iteración 1).
+  DELETE FROM events WHERE aggregate_type = 'Evaluacion' AND aggregate_id IN (
+    SELECT DISTINCT aggregate_id FROM events
+    WHERE aggregate_type = 'Evaluacion' AND payload->>'actividad_id' IN (
+      SELECT aggregate_id::text FROM events
+      WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
+        AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${PREFIX}%')
+    )
   );
   DELETE FROM events WHERE aggregate_type = 'ActividadEvaluativaPeriodoAbierto'
     AND payload->>'materia_id' IN (SELECT id::text FROM materia WHERE nombre LIKE '${PREFIX}%');

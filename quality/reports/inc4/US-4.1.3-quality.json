@@ -1,0 +1,25 @@
+{
+  "us_id": "US-4.1.3",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc4/US-4.1.3-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 3, "detalle": "warnings preexistentes (AuthLayout.tsx, badge.tsx, button.tsx, RendirEvaluacion.test.tsx), no introducidos por esta US" },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "test_files": 43,
+        "tests": 242,
+        "passed": 242,
+        "failed": 0
+      },
+      "coverage_paginas_nuevas": {
+        "MiDesempeno.tsx": { "statements_pct": 100, "branches_pct": 92, "functions_pct": 94.11 },
+        "analytics-api.ts": { "statements_pct": 100, "branches_pct": 100, "functions_pct": 100 },
+        "umbral_referencia_pct": 80
+      },
+      "coverage_global": { "statements_pct": 90.93, "branches_pct": 80.56, "functions_pct": 86.75, "lines_pct": 93.15 }
+    }
+  },
+  "estado": "APROBADO"
+}

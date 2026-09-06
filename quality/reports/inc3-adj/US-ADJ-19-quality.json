@@ -1,0 +1,23 @@
+{
+  "us_id": "US-ADJ-19",
+  "titulo": "LayerViolationsAnalyzer no detecta violaciones bajo ninguna configuración (+ corrección de causa raíz de US-ADJ-13)",
+  "stack": "documentación + config + Issue upstream (sin código de producción)",
+  "backend_changes": false,
+  "frontend_changes": false,
+  "gates": {
+    "pyproject_toml_valido": true,
+    "issue_upstream": {
+      "repo": "vvalotto/software_limpio",
+      "numero": 77,
+      "url": "https://github.com/vvalotto/software_limpio/issues/77",
+      "estado": "OPEN"
+    },
+    "claude_md_documentado": true
+  },
+  "estado_general": "APROBADO",
+  "nota": "US ampliada durante Fase 0 con aprobación de Víctor: la investigación encontró la causa raíz real (bug en DependencyGraphBuilder, no solo síntoma de LayerViolationsAnalyzer), que además corrige la explicación técnica documentada en US-ADJ-13 (Zone of Pain). Sin código de producción — documentación + config + Issue externo.",
+  "observaciones": [
+    "Verificado con código real (no solo inferido): graph.outgoing tiene 0 aristas para todo el proyecto — Ca=Ce=0 para absolutamente todos los módulos.",
+    "La aceptación del falso positivo de US-ADJ-13 se mantiene (no hay nada que arreglar en src/), pero la causa raíz documentada cambia de 'diseño arquitectónico' a 'bug de tooling'."
+  ]
+}

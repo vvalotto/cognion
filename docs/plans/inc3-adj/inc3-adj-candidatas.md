@@ -69,8 +69,9 @@ recalibración "obvia" iba a funcionar:
 | **US-ADJ-17** | Value Object `MetadatosPregunta` (Data Clump/Primitive Obsession, Banco de Preguntas) | Backend — `entities`/`use_cases`/`interface_adapters` de `banco_preguntas` | `DesignReviewer src/`, esta sesión |
 | **US-ADJ-18** | Refactor `SQLAlchemyPreguntaRepository` (Feature Envy/Law of Demeter/Long Method) | Backend — `interface_adapters/gateways` de `banco_preguntas` | `DesignReviewer src/`, esta sesión |
 | **US-ADJ-19** | `LayerViolationsAnalyzer` no detecta ninguna violación bajo ninguna config — reportar upstream, documentar como no confiable | Documentación (`CLAUDE.md`) + Issue upstream en `software_limpio` | Investigación de esta sesión |
+| **US-ADJ-20** | `AbortController` en los fetch de `useEffect`/submit del frontend (21 componentes) — elimina la condición de carrera detrás de un `unhandled rejection` intermitente en CI | Frontend — `pages/*.tsx` + `lib/*-api.ts` | Triage de PRs de Dependabot, esta sesión (flake confirmado en #126/#129) |
 
-Specs completas en `docs/specs/ajustes/US-ADJ-13.md` a `US-ADJ-19.md`.
+Specs completas en `docs/specs/ajustes/US-ADJ-13.md` a `US-ADJ-20.md`.
 
 ---
 
@@ -98,10 +99,12 @@ juntar `US-ADJ-17`/`18` ahora).
 
 ## Criterio de cierre de este incremento
 
-No hay UAT (nada de esto es visible para un usuario final) — el criterio de cierre es: los 7
+No hay UAT (nada de esto es visible para un usuario final) — el criterio de cierre es: los 8
 US-ADJ implementados, quality gates en verde (mismos de siempre: pytest/vitest, mypy, ruff,
 oxlint, tsc, DesignReviewer 0 CRITICAL), y `ArchitectAnalyst`/`DesignReviewer` corridos de
 nuevo al final para confirmar que los números mejoraron donde correspondía (`US-ADJ-16`,
 `US-ADJ-17`, `US-ADJ-18`) y que `US-ADJ-13`/`15`/`19` quedaron correctamente documentados.
+`US-ADJ-20` (agregada durante el triage de PRs de Dependabot, no en la lista original de 7) se
+verifica corriendo `npx vitest run` repetidamente sin que reaparezca el `unhandled rejection`.
 Baseline propia: a decidir con Víctor al cerrar (¿amerita `BL-005` o se pliega a la apertura
 del Incremento 4?).

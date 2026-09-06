@@ -17,6 +17,7 @@ from src.actividad_evaluativa.frameworks.api.revision_router import router as re
 from src.actividad_evaluativa.frameworks.dependencies import (
     build_verificar_vencimientos_use_case,
 )
+from src.analytics.frameworks.api.analytics_router import router as analytics_router
 from src.banco_preguntas.frameworks.api.bancos_router import router as bancos_router
 from src.banco_preguntas.frameworks.api.materias_router import router as materias_router
 from src.banco_preguntas.frameworks.api.preguntas_router import router as preguntas_router
@@ -25,6 +26,9 @@ from src.identidad.frameworks.api.comisiones_router import router as comisiones_
 from src.identidad.frameworks.api.cuentas_router import router as cuentas_router
 from src.identidad.frameworks.api.estudiante_router import router as estudiante_router
 from src.identidad.frameworks.api.invitaciones_router import router as invitaciones_router
+from src.identidad.frameworks.api.materias_comisiones_router import (
+    router as identidad_materias_comisiones_router,
+)
 from src.identidad.frameworks.api.perfil_router import router as perfil_router
 from src.identidad.frameworks.api.registro_router import router as registro_router
 from src.identidad.frameworks.api.usuarios_router import router as usuarios_router
@@ -74,6 +78,7 @@ app.include_router(usuarios_router)
 app.include_router(cuentas_router)
 app.include_router(perfil_router)
 app.include_router(comisiones_router)
+app.include_router(identidad_materias_comisiones_router)
 app.include_router(estudiante_router)
 app.include_router(invitaciones_router)
 app.include_router(registro_router)
@@ -84,6 +89,7 @@ app.include_router(bancos_router)
 app.include_router(actividades_router)
 app.include_router(evaluaciones_router)
 app.include_router(revision_router)
+app.include_router(analytics_router)
 
 
 @app.get("/health", tags=["infra"])

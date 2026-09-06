@@ -1,0 +1,323 @@
+{
+  "metadata": {
+    "us_id": "US-4.2.2",
+    "us_title": "ComisionConsultaPort - comisiones por materia y estudiantes por comision",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-05T19:27:26.359313+00:00",
+    "completed_at": "2026-09-05T20:04:56.227408+00:00",
+    "total_elapsed_seconds": 2249,
+    "effective_seconds": 2249,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-09-05T19:27:34.226753+00:00",
+      "completed_at": "2026-09-05T19:28:22.774777+00:00",
+      "elapsed_seconds": 48,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-05T19:28:29.319913+00:00",
+      "completed_at": "2026-09-05T19:29:04.168870+00:00",
+      "elapsed_seconds": 34,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-05T19:29:11.207304+00:00",
+      "completed_at": "2026-09-05T19:36:29.761166+00:00",
+      "elapsed_seconds": 438,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-05T19:36:37.520293+00:00",
+      "completed_at": "2026-09-05T19:41:46.415591+00:00",
+      "elapsed_seconds": 308,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "ComisionQueryPort",
+          "task_type": "entities",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T19:36:44.257346+00:00",
+          "completed_at": "2026-09-05T19:36:58.379612+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -9.77,
+          "file_created": "src/identidad/entities/ports/comision_query_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "SQLAlchemyComisionQueryRepository",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-05T19:37:04.620534+00:00",
+          "completed_at": "2026-09-05T19:37:50.012207+00:00",
+          "elapsed_seconds": 45,
+          "actual_minutes": 0.75,
+          "variance_minutes": -14.25,
+          "file_created": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "ComisionesQueryController",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-05T19:37:53.991345+00:00",
+          "completed_at": "2026-09-05T19:38:11.718562+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -14.72,
+          "file_created": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Schemas de respuesta",
+          "task_type": "frameworks",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-05T19:38:15.240788+00:00",
+          "completed_at": "2026-09-05T19:38:28.317842+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -7.78,
+          "file_created": "src/identidad/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "get_comisiones_query_controller",
+          "task_type": "frameworks",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-05T19:38:31.414841+00:00",
+          "completed_at": "2026-09-05T19:38:48.819541+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -7.72,
+          "file_created": "src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Router estudiantes por comision",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T19:38:52.131645+00:00",
+          "completed_at": "2026-09-05T19:39:22.749652+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -9.5,
+          "file_created": "src/identidad/frameworks/api/comisiones_router.py, src/identidad/frameworks/api/materias_comisiones_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Registrar router en app.py",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-05T19:39:25.760988+00:00",
+          "completed_at": "2026-09-05T19:40:15.487873+00:00",
+          "elapsed_seconds": 49,
+          "actual_minutes": 0.82,
+          "variance_minutes": -4.18,
+          "file_created": "src/app.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "ComisionConsultaPort (Analytics)",
+          "task_type": "entities",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-05T19:40:38.722947+00:00",
+          "completed_at": "2026-09-05T19:40:49.310496+00:00",
+          "elapsed_seconds": 10,
+          "actual_minutes": 0.17,
+          "variance_minutes": -9.83,
+          "file_created": "src/analytics/entities/ports/comision_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "ComisionConsultaPortInProcess",
+          "task_type": "frameworks",
+          "estimated_minutes": 12.0,
+          "started_at": "2026-09-05T19:40:52.868889+00:00",
+          "completed_at": "2026-09-05T19:41:05.612905+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -11.8,
+          "file_created": "src/analytics/frameworks/adapters/comision_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T10",
+          "task_name": "get_comision_consulta_port (Analytics)",
+          "task_type": "frameworks",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-05T19:41:08.796376+00:00",
+          "completed_at": "2026-09-05T19:41:25.531098+00:00",
+          "elapsed_seconds": 16,
+          "actual_minutes": 0.27,
+          "variance_minutes": -7.73,
+          "file_created": "src/analytics/frameworks/dependencies.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-05T19:41:55.473921+00:00",
+      "completed_at": "2026-09-05T19:43:00.724586+00:00",
+      "elapsed_seconds": 65,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T11",
+          "task_name": "Unit tests ComisionesQueryController",
+          "task_type": "tests",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-05T19:42:09.329882+00:00",
+          "completed_at": "2026-09-05T19:42:32.717131+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -14.62,
+          "file_created": "tests/unit/inc4/test_comisiones_query_controller.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-05T19:43:07.301132+00:00",
+      "completed_at": "2026-09-05T19:47:38.188707+00:00",
+      "elapsed_seconds": 270,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T12",
+          "task_name": "Integration tests SQLAlchemyComisionQueryRepository",
+          "task_type": "tests",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-05T19:43:41.632509+00:00",
+          "completed_at": "2026-09-05T19:44:12.741220+00:00",
+          "elapsed_seconds": 31,
+          "actual_minutes": 0.52,
+          "variance_minutes": -19.48,
+          "file_created": "tests/integration/inc4/test_comision_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T13",
+          "task_name": "Integration tests HTTP endpoints",
+          "task_type": "tests",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-09-05T19:44:15.718747+00:00",
+          "completed_at": "2026-09-05T19:44:55.560040+00:00",
+          "elapsed_seconds": 39,
+          "actual_minutes": 0.65,
+          "variance_minutes": -24.35,
+          "file_created": "tests/integration/inc4/test_comisiones_query_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T14",
+          "task_name": "Integration test ComisionConsultaPortInProcess",
+          "task_type": "tests",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-05T19:44:59.030193+00:00",
+          "completed_at": "2026-09-05T19:45:17.515736+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -14.7,
+          "file_created": "tests/integration/inc4/test_comision_consulta_port_in_process.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-05T19:47:44.768441+00:00",
+      "completed_at": "2026-09-05T19:49:09.786755+00:00",
+      "elapsed_seconds": 85,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-05T19:49:17.127489+00:00",
+      "completed_at": "2026-09-05T20:00:11.011079+00:00",
+      "elapsed_seconds": 653,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-05T20:00:24.666832+00:00",
+      "completed_at": "2026-09-05T20:03:55.348453+00:00",
+      "elapsed_seconds": 210,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-05T20:04:02.376537+00:00",
+      "completed_at": "2026-09-05T20:04:56.111440+00:00",
+      "elapsed_seconds": 53,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 14,
+    "completed_tasks": 14,
+    "total_phases": 10,
+    "estimated_total_minutes": 176.0,
+    "actual_total_minutes": 5.57,
+    "variance_minutes": -170.43,
+    "variance_percent": -96.84
+  }
+}
