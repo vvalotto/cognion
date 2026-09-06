@@ -9,6 +9,47 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- **Incremento 4 — Portal del Estudiante y Analytics** (RF-15, RF-16, RF-17), cierre de
+  baseline `BL-006`. Primer Bounded Context puramente de lectura del sistema: sin comando ni
+  evento propio, se proyecta por consulta directa sobre el event store de Actividad
+  Evaluativa (`ADR-002`), sin persistencia propia de escritura
+  - `src/analytics/` (BC completo): `EvaluacionDesempenoConsultaPort` (adapter in-process
+    sobre la tabla `events` de Actividad Evaluativa), `ComisionConsultaPort` y
+    `PreguntaMetadatoConsultaPort` (adapters in-process hacia Identidad y Banco de Preguntas),
+    `ObtenerDesempenoEstudianteUseCase` y `ObtenerTasaErrorPorTemaUseCase`, composition root
+    propio (`frameworks/dependencies.py`)
+  - [RF-15] Estudiante consulta su propio desempeño en una materia — resumen acumulado
+    (correctas/incorrectas/% acierto) y detalle por evaluación finalizada, agregados en
+    memoria sin proyección materializada (mismo criterio que `US-3.2.4`). Endpoint
+    `GET /analytics/materias/{materia_id}/mi-desempeno` (rol `estudiante`). Pantalla
+    "Mi desempeño" (`MiDesempeno.tsx`)
+  - [RF-16] Docente consulta el desempeño de un estudiante elegido — reutiliza el mismo Use
+    Case de RF-15 sin cambios, sin restricción de pertenencia a comisión (RBAC estándar,
+    decisión explícita). Endpoint
+    `GET /analytics/materias/{materia_id}/estudiantes/{estudiante_id}/desempeno`. Pantalla
+    "Desempeño por alumno" (`DesempenoPorAlumno.tsx`, reutiliza `DesempenoResumenDetalle.tsx`
+    extraído de `MiDesempeno.tsx`)
+  - [RF-17] Docente consulta la tasa de error por unidad/tema de una materia, agregada o
+    acotada a una comisión. Endpoint
+    `GET /analytics/materias/{materia_id}/tasa-error-por-tema`. Pantalla "Desempeño por tema"
+    (`DesempenoPorTema.tsx`, severidad por color: ≥50% rojo, 20-49% ámbar, <20% verde)
+  - `ComisionConsultaPort` en BC Identidad (query nueva de punta a punta):
+    `listar_comisiones_por_materia(materia_id)` y `listar_estudiantes(comision_id)`, endpoints
+    `GET /materias/{materia_id}/comisiones` y `GET /comisiones/{comision_id}/estudiantes` —
+    separados de `ComisionRepositoryPort` (command/query desde el diseño, evita el patrón de
+    CRITICAL de CBO ya visto en Incremento 2)
+  - Sin migraciones nuevas — Analytics no persiste nada propio
+  - 852/852 tests backend (99% cobertura), 261/261 tests frontend (91.34% statements / 80.47%
+    branches), quality gates APROBADO en las 9 US, UAT de cierre por iteración sin hallazgos
+    🔴 Bloqueantes. RF-15, RF-16 y RF-17 pasan a **Validado** en
+    `docs/traceability/matrix.md`
+  - Fix de sesión (no parte del alcance formal): `AbortController` creado en el render en 5
+    formularios de submit (introducidos por `US-ADJ-20`) se abortaba por el doble montaje de
+    `StrictMode` antes de cualquier submit real en modo dev — movido al `useEffect`; y
+    `tests/uat/{inc3,inc4}/limpiar_uat.sh` dejaban huérfanos eventos de `Evaluacion` al limpiar
+    corridas anteriores — `DELETE` ahora borra el stream completo por `aggregate_id`
+
 ### Fixed
 - [US-ADJ-19] `LayerViolationsAnalyzer` no confiable — causa raíz real encontrada (+ corrección
   de `US-ADJ-13`)
