@@ -567,8 +567,36 @@ que exista un mecanismo de multi-inscripción. No bloquea el DoD de RF-15 (el wi
 contemplaba "sin selector si cursa una sola materia"), pero es una limitación a tener en cuenta
 si se decide modelar esa capacidad más adelante.
 
-**Próximo paso:** Iteración 2 del Incremento 4 (RF-16, RF-17: desempeño por alumno y por tema,
-rol Docente) — `US-4.2.1` en adelante, `docs/plans/inc4/inc4-candidatas.md`.
+**Iteración 2 del Incremento 4 — RF-16, RF-17: desempeño por alumno y por tema (rol Docente),
+cerrada 2026-09-06** (backend + frontend juntos, mismo criterio que la Iteración 1 — sin
+diferir el frontend). **US-4.2.1** (Docente consulta el desempeño de un estudiante elegido,
+reutiliza `ObtenerDesempenoEstudianteUseCase` de `US-4.1.2` sin cambios) e **Issue #240**.
+**US-4.2.2** (técnica: `ComisionConsultaPort` + endpoints nuevos en Identidad
+`GET /materias/{id}/comisiones` y `GET /comisiones/{id}/estudiantes`), **US-4.2.3** (técnica:
+`PreguntaMetadatoConsultaPort` in-process hacia Banco de Preguntas). **US-4.2.4** (Docente
+consulta la tasa de error por unidad/tema, agregada o por comisión,
+`ObtenerTasaErrorPorTemaUseCase`, endpoint `GET /analytics/materias/{id}/tasa-error-por-tema`).
+**US-4.2.5** (pantalla "Desempeño por alumno", `DesempenoPorAlumno.tsx`, extrae
+`DesempenoResumenDetalle.tsx` de `MiDesempeno.tsx` para reutilizar el mismo componente visual
+entre estudiante y docente) y **US-4.2.6** (pantalla "Desempeño por tema",
+`DesempenoPorTema.tsx`, listado `.tema-row` con severidad por color — ≥50% rojo, 20-49% ámbar,
+<20% verde — sin componente compartido con `US-4.2.5`, forma propia), ambas cerradas
+2026-09-06, `docs/reports/inc4/US-4.2.5-report.md`/`US-4.2.6-report.md`.
+**UAT de cierre de la Iteración 2 ejecutada 2026-09-06**
+(`quality/reports/uat/inc4/design-iteracion2.md`/`evidencia-iteracion2.md`): Capa 1 (851/852
+pytest — único fallo preexistente ya documentado en la Iteración 3 del Incremento 3, ajeno a
+esta iteración; 261/261 Vitest) sin regresiones; Capa 2 (`smoke.sh` extendido con el flujo de
+`US-4.2.1`/`4.2.2`/`4.2.4`) todos los pasos en verde; recorrido en navegador real (Claude
+Browser) con datos sembrados a propósito por `tests/uat/inc4/guion_manual_iteracion2.sh` (2
+estudiantes en la misma comisión con desempeño acumulado distinto, 3 temas con severidad
+alta/media/baja) — números y colores exactos, RBAC confirmado (Estudiante bloqueado por
+`RequireRole`) — y confirmado por Víctor sin hallazgos nuevos. **Cierra completa la Iteración 2
+del Incremento 4** — RF-16/RF-17 pasan a Implementado en `docs/traceability/matrix.md` (no
+Validado todavía: ese estado espera al cierre de baseline del Incremento 4 completo, junto con
+RF-15 de la Iteración 1).
+
+**Próximo paso:** evaluar el cierre de la baseline del Incremento 4 completo (Iteraciones 1 y
+2, RF-15/16/17 juntos) — `docs/plans/inc4/inc4-candidatas.md`.
 **Baseline abierta:** ninguna — `BL-005` (Incremento 3-ADJ) cerrada.
 **Branch activo:** ninguna — `develop` sincronizado.
 
