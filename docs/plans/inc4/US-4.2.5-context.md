@@ -25,7 +25,7 @@
   - cobertura Vitest en archivos nuevos: sin umbral numérico fijo del perfil backend — se reporta el % real (histórico del proyecto: 83%-100% en pantallas nuevas)
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-4.2.5-context.md
+- Contexto: docs/plans/inc4/US-4.2.5-context.md
 - BDD feature: N/A (skip_bdd)
 - Plan: docs/plans/inc4/US-4.2.5-plan.md
 - Reporte: docs/reports/inc4/US-4.2.5-report.md
