@@ -15,6 +15,7 @@ import { CuentaDetalle } from "@/pages/cuentas/CuentaDetalle"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
 import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
+import { DesempenoPorTema } from "@/pages/analytics/DesempenoPorTema"
 import { EditarPregunta } from "@/pages/banco-preguntas/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/actividad-evaluativa/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/banco-preguntas/EliminarPregunta"
@@ -290,6 +291,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <DesempenoPorAlumno />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-tema",
+        element: (
+          <RequireRole rol="docente">
+            <DesempenoPorTema />
           </RequireRole>
         ),
       },
