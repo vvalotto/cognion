@@ -170,4 +170,11 @@ US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su back
    (opcional, default "Toda la materia"), listado `.tema-row` con severidad por color (≥50%
    rojo, 20-49% ámbar, <20% verde), sin componente compartido con `DesempenoPorAlumno` (forma
    propia). **Cierra completa la Iteración 2 del Incremento 4 (RF-16/RF-17, backend +
-   frontend)** — queda pendiente la UAT de cierre de iteración.
+   frontend)**. **UAT de cierre de la Iteración 2 aprobada 2026-09-06**
+   (`quality/reports/uat/inc4/design-iteracion2.md`, `evidencia-iteracion2.md`): Capa 1
+   (851/852 pytest, único fallo preexistente ajeno a esta iteración; 261/261 Vitest) y Capa 2
+   (`smoke.sh` extendido con `US-4.2.1`/`4.2.2`/`4.2.4`) en verde; recorrido en navegador real
+   con datos sembrados a propósito (`tests/uat/inc4/guion_manual_iteracion2.sh` — 2 estudiantes
+   en la misma comisión con desempeño distinto, 3 temas con severidad alta/media/baja)
+   confirmado por Víctor sin hallazgos. RF-16/RF-17 pasan a Implementado en
+   `docs/traceability/matrix.md`.
