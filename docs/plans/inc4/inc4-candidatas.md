@@ -157,6 +157,12 @@ US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su back
 8. ~~Crear Issues (Milestone #6) y `docs/specs/inc4/US-4.2.K.md` de la Iteración 2.~~ Hecho
    2026-09-05 — Issues #240 (US-4.2.1), #241 (US-4.2.2), #242 (US-4.2.3), #243 (US-4.2.4),
    #244 (US-4.2.5), #245 (US-4.2.6).
-9. Implementar Iteración 2. Orden: `US-4.2.2` y `US-4.2.3` primero (sin dependencia entre sí,
+9. ~~Implementar Iteración 2. Orden: `US-4.2.2` y `US-4.2.3` primero (sin dependencia entre sí,
    desbloquean `US-4.2.4`); `US-4.2.1` en cualquier momento; `US-4.2.4` tras `US-4.2.2`/
-   `US-4.2.3`; `US-4.2.5` tras `US-4.2.1`/`US-4.2.2`; `US-4.2.6` tras `US-4.2.4`.
+   `US-4.2.3`; `US-4.2.5` tras `US-4.2.1`/`US-4.2.2`; `US-4.2.6` tras `US-4.2.4`.~~
+   `US-4.2.1` a `US-4.2.4` (backend) cerradas. **US-4.2.5 (Docente ve "Desempeño por alumno")
+   cerrada 2026-09-06**, `docs/reports/inc4/US-4.2.5-report.md`: frontend puro, sin backend
+   nuevo — extrae `DesempenoResumenDetalle.tsx` de `MiDesempeno.tsx` (invariante del wireframe:
+   mismo componente visual para estudiante y docente), pantalla `DesempenoPorAlumno.tsx` con
+   selectores en cascada Materia → Comisión → Estudiante. Queda `US-4.2.6` (Desempeño por
+   tema) para cerrar la Iteración 2 completa.
