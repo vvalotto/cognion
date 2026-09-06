@@ -164,5 +164,10 @@ US-4.2.4 — ambas pantallas pueden avanzar en paralelo una vez resuelto su back
    cerrada 2026-09-06**, `docs/reports/inc4/US-4.2.5-report.md`: frontend puro, sin backend
    nuevo — extrae `DesempenoResumenDetalle.tsx` de `MiDesempeno.tsx` (invariante del wireframe:
    mismo componente visual para estudiante y docente), pantalla `DesempenoPorAlumno.tsx` con
-   selectores en cascada Materia → Comisión → Estudiante. Queda `US-4.2.6` (Desempeño por
-   tema) para cerrar la Iteración 2 completa.
+   selectores en cascada Materia → Comisión → Estudiante. **US-4.2.6 (Docente ve "Desempeño por
+   tema") cerrada 2026-09-06**, `docs/reports/inc4/US-4.2.6-report.md`: frontend puro, sin
+   backend nuevo — pantalla `DesempenoPorTema.tsx` con selectores Materia (siempre) → Comisión
+   (opcional, default "Toda la materia"), listado `.tema-row` con severidad por color (≥50%
+   rojo, 20-49% ámbar, <20% verde), sin componente compartido con `DesempenoPorAlumno` (forma
+   propia). **Cierra completa la Iteración 2 del Incremento 4 (RF-16/RF-17, backend +
+   frontend)** — queda pendiente la UAT de cierre de iteración.

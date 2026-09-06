@@ -1,0 +1,145 @@
+{
+  "metadata": {
+    "us_id": "US-4.2.6",
+    "us_title": "Docente ve Desempeño por tema",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-06T12:36:44.930380+00:00",
+    "completed_at": "2026-09-06T12:50:50.159242+00:00",
+    "total_elapsed_seconds": 845,
+    "effective_seconds": 845,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-06T12:36:56.462156+00:00",
+      "completed_at": "2026-09-06T12:37:30.678773+00:00",
+      "elapsed_seconds": 34,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-06T12:37:38.618807+00:00",
+      "completed_at": "2026-09-06T12:39:10.136048+00:00",
+      "elapsed_seconds": 91,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-06T12:39:10.329948+00:00",
+      "completed_at": "2026-09-06T12:40:19.158499+00:00",
+      "elapsed_seconds": 68,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Cliente API obtenerTasaErrorPorTema",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-06T12:39:14.403421+00:00",
+          "completed_at": "2026-09-06T12:39:32.446339+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -9.7,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Pantalla DesempenoPorTema.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-06T12:39:32.656566+00:00",
+          "completed_at": "2026-09-06T12:40:03.218506+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -19.5,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Ruta router.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-06T12:40:03.439452+00:00",
+          "completed_at": "2026-09-06T12:40:18.933893+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -4.75,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-06T12:40:26.738515+00:00",
+      "completed_at": "2026-09-06T12:43:10.083851+00:00",
+      "elapsed_seconds": 163,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-06T12:43:16.441163+00:00",
+      "completed_at": "2026-09-06T12:46:15.414718+00:00",
+      "elapsed_seconds": 178,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-06T12:46:19.125553+00:00",
+      "completed_at": "2026-09-06T12:50:46.168017+00:00",
+      "elapsed_seconds": 267,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-06T12:50:46.306342+00:00",
+      "completed_at": "2026-09-06T12:50:48.203969+00:00",
+      "elapsed_seconds": 1,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 7,
+    "estimated_total_minutes": 35.0,
+    "actual_total_minutes": 1.05,
+    "variance_minutes": -33.95,
+    "variance_percent": -97.0
+  }
+}

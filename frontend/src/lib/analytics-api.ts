@@ -20,6 +20,14 @@ export interface DesempenoEstudianteResponse {
   resumen: ResumenDesempenoResponse
 }
 
+export interface TasaErrorTemaResponse {
+  unidadTematica: string
+  tema: string
+  cantidadRespuestas: number
+  cantidadIncorrectas: number
+  tasaError: number
+}
+
 interface EvaluacionDesempenoApiResponse {
   evaluacion_id: string
   actividad_id: string
@@ -38,6 +46,14 @@ interface ResumenDesempenoApiResponse {
 interface DesempenoEstudianteApiResponse {
   evaluaciones: EvaluacionDesempenoApiResponse[]
   resumen: ResumenDesempenoApiResponse
+}
+
+interface TasaErrorTemaApiResponse {
+  unidad_tematica: string
+  tema: string
+  cantidad_respuestas: number
+  cantidad_incorrectas: number
+  tasa_error: number
 }
 
 function mapearDesempenoEstudiante(
@@ -83,4 +99,28 @@ export async function obtenerDesempenoDeEstudiante(
     { signal },
   )
   return mapearDesempenoEstudiante(response)
+}
+
+function mapearTasaErrorTema(response: TasaErrorTemaApiResponse): TasaErrorTemaResponse {
+  return {
+    unidadTematica: response.unidad_tematica,
+    tema: response.tema,
+    cantidadRespuestas: response.cantidad_respuestas,
+    cantidadIncorrectas: response.cantidad_incorrectas,
+    tasaError: response.tasa_error,
+  }
+}
+
+/** Cliente API de tasa de error por unidad/tema de una materia, agregada o por comisión (`US-4.2.4`, RF-17). */
+export async function obtenerTasaErrorPorTema(
+  materiaId: string,
+  comisionId?: string,
+  signal?: AbortSignal,
+): Promise<TasaErrorTemaResponse[]> {
+  const query = comisionId ? `?comision_id=${comisionId}` : ""
+  const response = await apiFetch<TasaErrorTemaApiResponse[]>(
+    `/analytics/materias/${materiaId}/tasa-error-por-tema${query}`,
+    { signal },
+  )
+  return response.map(mapearTasaErrorTema)
 }
