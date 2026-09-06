@@ -4,7 +4,11 @@ vi.mock("@/router", () => ({
   router: { navigate: vi.fn() },
 }))
 
-import { obtenerDesempenoDeEstudiante, obtenerMiDesempeno } from "@/lib/analytics-api"
+import {
+  obtenerDesempenoDeEstudiante,
+  obtenerMiDesempeno,
+  obtenerTasaErrorPorTema,
+} from "@/lib/analytics-api"
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -135,6 +139,58 @@ describe("analytics-api", () => {
       const desempeno = await obtenerDesempenoDeEstudiante("m1", "u2")
 
       expect(desempeno.evaluaciones).toEqual([])
+    })
+  })
+
+  describe("obtenerTasaErrorPorTema", () => {
+    it("hace GET /analytics/materias/{materiaId}/tasa-error-por-tema sin comision_id y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            unidad_tematica: "Unidad 3 — Principios SOLID",
+            tema: "Inversión de dependencias",
+            cantidad_respuestas: 42,
+            cantidad_incorrectas: 24,
+            tasa_error: 0.5714285714285714,
+          },
+        ]),
+      )
+
+      const tasas = await obtenerTasaErrorPorTema("m1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/tasa-error-por-tema",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(tasas).toEqual([
+        {
+          unidadTematica: "Unidad 3 — Principios SOLID",
+          tema: "Inversión de dependencias",
+          cantidadRespuestas: 42,
+          cantidadIncorrectas: 24,
+          tasaError: 0.5714285714285714,
+        },
+      ])
+    })
+
+    it("agrega comision_id a la query cuando se pasa", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      await obtenerTasaErrorPorTema("m1", "c1")
+
+      const [url] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/tasa-error-por-tema?comision_id=c1",
+      )
+    })
+
+    it("mapea una lista vacía (materia sin evaluaciones finalizadas)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const tasas = await obtenerTasaErrorPorTema("m1")
+
+      expect(tasas).toEqual([])
     })
   })
 })
