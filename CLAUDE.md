@@ -595,10 +595,24 @@ del Incremento 4** — RF-16/RF-17 pasan a Implementado en `docs/traceability/ma
 Validado todavía: ese estado espera al cierre de baseline del Incremento 4 completo, junto con
 RF-15 de la Iteración 1).
 
-**Próximo paso:** evaluar el cierre de la baseline del Incremento 4 completo (Iteraciones 1 y
-2, RF-15/16/17 juntos) — `docs/plans/inc4/inc4-candidatas.md`.
-**Baseline abierta:** ninguna — `BL-005` (Incremento 3-ADJ) cerrada.
-**Branch activo:** ninguna — `develop` sincronizado.
+**`BL-006` — Incremento 4, Portal del Estudiante y Analytics, cerrada 2026-09-06**
+(`.cm/baselines/BL-006-portal-estudiante-analytics.md`, PR #255/#256): `ArchitectAnalyst`
+(6 críticos, mismo "Zone of Pain" aceptado + `analytics` como sexto módulo del patrón) y
+`DesignReviewer` (0 CRITICAL, 131 advertencias) consolidados sobre `src/` completo; UAT de
+ambas iteraciones sin hallazgos 🔴 Bloqueantes; RF-15/16/17 pasan a **Validado** en
+`docs/traceability/matrix.md`. **Merge `develop → main` y tags ejecutados el mismo día**, a
+pedido explícito de Víctor: en vez de diferir otra vez (mismo ítem abierto desde `BL-001`),
+se mergearon `BL-005` (Incremento 3-ADJ, pendiente desde 2026-09-03) y `BL-006` juntas en un
+solo merge — `v0.5.1` (PATCH, incremento técnico fuera de `PLAN_v1.md`) tagueado sobre el
+commit real de cierre de `BL-005` (`ed4a0ff`), `v0.6.0` (MINOR, Incremento de `PLAN_v1.md`)
+sobre el merge commit (`5d9255e`). CD (build Docker) en verde en `main` y en ambos tags —
+`flyctl deploy`/healthcheck siguen comentados, sin impacto de infraestructura real. Milestone
+GitHub #6 cerrado. `CHANGELOG.md`: `[Unreleased]` dividido en `[0.5.1]` y `[0.6.0]`.
+
+**Próximo paso:** definir el alcance del Incremento 5 (`PLAN_v1.md`) — sin candidatas
+todavía.
+**Baseline abierta:** ninguna — `BL-006` cerrada.
+**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.0`).
 
 ---
 
