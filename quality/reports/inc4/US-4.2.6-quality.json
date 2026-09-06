@@ -1,0 +1,37 @@
+{
+  "us_id": "US-4.2.6",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc4/US-4.2.6-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": {
+        "errores": 0,
+        "warnings": 5,
+        "detalle": "5 warnings preexistentes (AuthLayout.tsx, DesempenoResumenDetalle.tsx, badge.tsx, button.tsx, RendirEvaluacion.test.tsx) — ninguno nuevo en los archivos de esta US"
+      },
+      "tsc_noemit": { "errores": 0 },
+      "vitest": {
+        "nota": "1 falla intermitente en NuevaPreguntaOpcionMultiple.test.tsx (timeout) y 1 más en NuevaPreguntaVerdaderoFalso.test.tsx al correr la suite completa con --coverage en paralelo — ninguno de los dos archivos tocado por esta US, ambos pasan siempre en ejecución aislada; mismo flakiness preexistente del entorno ya documentado en US-4.2.5-quality.json",
+        "tests_us_4_2_6": {
+          "test_files": 2,
+          "tests": 13,
+          "passed": 13,
+          "failed": 0
+        },
+        "suite_completa_aislando_los_2_flakes": {
+          "test_files": 46,
+          "tests": 261,
+          "passed": 261,
+          "failed": 0
+        }
+      },
+      "coverage_archivos_nuevos": {
+        "analytics-api.ts": { "statements_pct": 100, "branches_pct": 100, "functions_pct": 100, "lines_pct": 100, "nota": "cobertura del archivo completo, incluye obtenerTasaErrorPorTema nueva de esta US" },
+        "DesempenoPorTema.tsx": { "statements_pct": 94, "branches_pct": 81.48, "functions_pct": 82.35, "lines_pct": 95.34, "lineas_sin_cubrir": "77-78 (rama AbortError del catch de obtenerTasaErrorPorTema, mismo patrón no cubierto en pantallas análogas)" },
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}
