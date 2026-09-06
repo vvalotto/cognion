@@ -40,15 +40,9 @@ interface DesempenoEstudianteApiResponse {
   resumen: ResumenDesempenoApiResponse
 }
 
-/** Cliente API de consulta de desempeño del Estudiante en BC Analytics (`US-4.1.2`). */
-export async function obtenerMiDesempeno(
-  materiaId: string,
-  signal?: AbortSignal,
-): Promise<DesempenoEstudianteResponse> {
-  const response = await apiFetch<DesempenoEstudianteApiResponse>(
-    `/analytics/materias/${materiaId}/mi-desempeno`,
-    { signal },
-  )
+function mapearDesempenoEstudiante(
+  response: DesempenoEstudianteApiResponse,
+): DesempenoEstudianteResponse {
   return {
     evaluaciones: response.evaluaciones.map((e) => ({
       evaluacionId: e.evaluacion_id,
@@ -64,4 +58,29 @@ export async function obtenerMiDesempeno(
       cantidadEvaluaciones: response.resumen.cantidad_evaluaciones,
     },
   }
+}
+
+/** Cliente API de consulta de desempeño del Estudiante en BC Analytics (`US-4.1.2`). */
+export async function obtenerMiDesempeno(
+  materiaId: string,
+  signal?: AbortSignal,
+): Promise<DesempenoEstudianteResponse> {
+  const response = await apiFetch<DesempenoEstudianteApiResponse>(
+    `/analytics/materias/${materiaId}/mi-desempeno`,
+    { signal },
+  )
+  return mapearDesempenoEstudiante(response)
+}
+
+/** Cliente API de consulta del Docente al desempeño de un Estudiante elegido (`US-4.2.1`, RF-16). */
+export async function obtenerDesempenoDeEstudiante(
+  materiaId: string,
+  estudianteId: string,
+  signal?: AbortSignal,
+): Promise<DesempenoEstudianteResponse> {
+  const response = await apiFetch<DesempenoEstudianteApiResponse>(
+    `/analytics/materias/${materiaId}/estudiantes/${estudianteId}/desempeno`,
+    { signal },
+  )
+  return mapearDesempenoEstudiante(response)
 }
