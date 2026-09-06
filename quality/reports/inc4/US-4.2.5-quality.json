@@ -2,7 +2,7 @@
   "us_id": "US-4.2.5",
   "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
   "gates_adaptados": true,
-  "adaptacion_referencia": "docs/plans/US-4.2.5-context.md",
+  "adaptacion_referencia": "docs/plans/inc4/US-4.2.5-context.md",
   "resultados": {
     "frontend": {
       "oxlint": {

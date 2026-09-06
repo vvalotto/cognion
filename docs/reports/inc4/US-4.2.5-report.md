@@ -115,7 +115,7 @@ fuera del alcance de esta US corregirla.
 
 ### Documentación
 - `docs/specs/inc4/US-4.2.5.md` (ya existente, sin cambios de alcance)
-- `docs/plans/US-4.2.5-context.md`
+- `docs/plans/inc4/US-4.2.5-context.md`
 - `docs/plans/inc4/US-4.2.5-plan.md`
 - `docs/plans/inc4/inc4-candidatas.md` (marcado el cierre de esta US)
 - `docs/reports/inc4/US-4.2.5-report.md` (este archivo)
