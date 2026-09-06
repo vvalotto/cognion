@@ -5,9 +5,9 @@
 | Tipo | Incremento |
 | Fecha apertura | 2026-09-04 |
 | Fecha cierre | 2026-09-06 |
-| Git tag inicial | — (continúa desde `v0.5.0`, `BL-004`; `BL-005` no llegó a taguearse en `main`) |
-| Git tag cierre | Pendiente de decisión con Víctor — ver "Decisiones técnicas relevantes" |
-| Estado | ✅ Completado en `develop` — pendiente merge a `main` |
+| Git tag inicial | — (continúa desde `v0.5.0`, `BL-004`; `BL-005` no había llegado a taguearse en `main`) |
+| Git tag cierre | `v0.6.0` (MINOR — cierre de Incremento de `PLAN_v1.md`), tagueado en `main` el 2026-09-06 en el mismo merge `develop → main` que `v0.5.1` (`BL-005`) — decisión de Víctor: mergear ambas juntas en vez de diferir de nuevo |
+| Estado | ✅ Completado — mergeado a `main` |
 | DoD | Docente y estudiante tienen visibilidad de desempeño histórico basado en evaluaciones reales ya corridas en el Incremento 3 (`PLAN_v1.md`, Hito Incremento 4). Backend y frontend implementados e integrados juntos por iteración — mismo criterio de cierre que `BL-002`/`BL-003` (`docs/plans/PLAN-CM.md` §7), sin diferir el frontend a otra iteración. |
 
 ---
@@ -116,7 +116,7 @@ Dos problemas reales detectados y corregidos durante la preparación de la UAT d
 
 | Decisión | Contexto |
 |----------|----------|
-| Merge `develop → main` y tag diferidos otra vez — y ahora arrastrando `BL-005` sin taguear | `BL-005` (Incremento 3-ADJ) cerró en `develop` sin llegar a mergearse a `main` — el ítem de infraestructura/Docker lleva sin resolver desde `BL-001`. Esta baseline acumula el mismo pendiente: si se confirma el merge, `main` pasaría de `v0.5.0` directo a incluir `BL-005` + `BL-006` en un solo salto (dos tags, `v0.5.1`/`v0.6.0` o equivalente, a decidir con Víctor) — no se decide unilateralmente en esta sesión. |
+| Merge `develop → main` con `BL-005` + `BL-006` juntas, no diferido de nuevo | `BL-005` (Incremento 3-ADJ) había cerrado en `develop` sin mergearse a `main` — mismo ítem abierto de infraestructura/Docker desde `BL-001`. A diferencia de las 5 baselines anteriores, esta vez Víctor decidió no seguir acumulando: un único merge `develop → main`, dos tags sobre los commits reales de cierre de cada una (`v0.5.1` para `BL-005`, PATCH por ser incremento técnico fuera de `PLAN_v1.md`; `v0.6.0` para `BL-006`, MINOR por ser Incremento de `PLAN_v1.md`). El build de imagen Docker corre en ambos tags (`cd.yml`); el `flyctl deploy`/healthcheck siguen comentados — sin impacto de infraestructura real. |
 | Sin frontend diferido a otra iteración, a diferencia de Actividad Evaluativa | Mismo criterio que Banco de Preguntas — cada iteración cierra su propio RF de punta a punta porque no hay un modelo de dominio nuevo que estabilizar entre iteraciones (Analytics no tiene aggregate ni evento propio). |
 | `US-4.2.1` sin restricción de pertenencia a comisión | Hot spot de autorización resuelto con Víctor en la Iteración 0: cualquier docente autenticado puede consultar el desempeño de cualquier estudiante — RBAC estándar, sin invariante adicional. |
 | Selector de materia de "Mi desempeño" no ejercitable con una cuenta real | El dominio actual liga un Estudiante a una única comisión/materia — limitación detectada en la Iteración 1, no bloquea el DoD (el wireframe ya contemplaba "sin selector si cursa una sola materia"), pendiente si se decide modelar multi-inscripción. |
@@ -160,9 +160,9 @@ Dos problemas reales detectados y corregidos durante la preparación de la UAT d
 
 ### ¿Qué ajustar en el próximo incremento?
 
-- Resolver de una vez la decisión de merge `develop → main`/Docker antes de que se acumule una
-  tercera baseline sin taguear — el costo de un solo salto con `BL-005` + `BL-006` juntas ya es
-  mayor que mergear cada una en su momento.
+- Resuelto en el cierre de esta misma baseline: Víctor confirmó mergear `BL-005` + `BL-006`
+  juntas en vez de seguir difiriendo — evitar que se repita el patrón implica decidir el merge
+  a `main` en el momento de cada cierre, no dejarlo como "ítem abierto" recurrente.
 - Evaluar si el bug de `AbortController`/`StrictMode` amerita una US-ADJ formal en el próximo
   incremento técnico (mismo criterio que `US-ADJ-13`/`19`: un fix de sesión sin spec deja el
   hallazgo sin trazabilidad si se pierde el hilo de `CLAUDE.md`).

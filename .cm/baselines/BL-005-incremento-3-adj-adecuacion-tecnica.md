@@ -6,8 +6,8 @@
 | Fecha apertura | 2026-09-02 |
 | Fecha cierre | 2026-09-03 |
 | Git tag inicial | — (continúa desde `v0.5.0`, `BL-004`) |
-| Git tag cierre | Pendiente de decisión con Víctor (merge `develop → main` diferido, mismo criterio que `BL-001`/`BL-002`/`BL-003`) |
-| Estado | ✅ Completado en `develop` — pendiente merge a `main` |
+| Git tag cierre | `v0.5.1` (PATCH — incremento técnico fuera de `PLAN_v1.md`, `PLAN-CM.md` §11), tagueado en `main` el 2026-09-06 junto con el cierre de `BL-006` (Incremento 4), en un único merge `develop → main` — decisión de Víctor al cerrar `BL-006` |
+| Estado | ✅ Completado — mergeado a `main` |
 | DoD | Las 8 US-ADJ candidatas (`US-ADJ-13` a `20`) implementadas, quality gates en verde, `ArchitectAnalyst`/`DesignReviewer` corridos de nuevo confirmando mejoras donde correspondía (`docs/plans/inc3-adj/inc3-adj-candidatas.md` §"Criterio de cierre"). Sin UAT — deuda de tooling/arquitectura, nada visible para un usuario final. |
 
 ---

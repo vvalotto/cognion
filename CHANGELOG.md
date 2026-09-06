@@ -9,6 +9,8 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-06
+
 ### Added
 - **Incremento 4 — Portal del Estudiante y Analytics** (RF-15, RF-16, RF-17), cierre de
   baseline `BL-006`. Primer Bounded Context puramente de lectura del sistema: sin comando ni
@@ -49,6 +51,8 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     `StrictMode` antes de cualquier submit real en modo dev — movido al `useEffect`; y
     `tests/uat/{inc3,inc4}/limpiar_uat.sh` dejaban huérfanos eventos de `Evaluacion` al limpiar
     corridas anteriores — `DELETE` ahora borra el stream completo por `aggregate_id`
+
+## [0.5.1] - 2026-09-03
 
 ### Fixed
 - [US-ADJ-19] `LayerViolationsAnalyzer` no confiable — causa raíz real encontrada (+ corrección
