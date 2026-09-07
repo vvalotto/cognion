@@ -61,4 +61,28 @@ describe("AppLayout (integración)", () => {
 
     expect(screen.getByText("AD")).toBeInTheDocument()
   })
+
+  it("muestra el menú de navegación con sesión activa", () => {
+    setSession({ token: "t", rol: "administrador" })
+
+    renderAppLayout()
+
+    expect(screen.getByText("Comisiones")).toBeInTheDocument()
+    expect(screen.getByText("Cuentas")).toBeInTheDocument()
+  })
+
+  it("no muestra el menú de navegación sin sesión activa", () => {
+    renderAppLayout()
+
+    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+  })
+
+  it("muestra el menú correspondiente al rol Docente", () => {
+    setSession({ token: "t", rol: "docente" })
+
+    renderAppLayout()
+
+    expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
+    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+  })
 })
