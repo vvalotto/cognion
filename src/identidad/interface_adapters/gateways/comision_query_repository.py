@@ -21,11 +21,11 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         self._session = session
 
     async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
-        """Lista las comisiones de una materia, con sus docentes asignados. Materia sin
-        comisiones → lista vacía.
+        """Lista las comisiones de una materia, con sus docentes asignados.
 
-        Carga `docentes` con `selectinload` — necesario en SQLAlchemy async para evitar
-        `MissingGreenlet` al acceder a la relación fuera de la sesión (`US-ADJ-23`).
+        Materia sin comisiones → lista vacía. Carga `docentes` con `selectinload` —
+        necesario en SQLAlchemy async para evitar `MissingGreenlet` al acceder a la
+        relación fuera de la sesión (`US-ADJ-23`).
         """
         query = (
             select(ComisionModel)

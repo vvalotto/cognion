@@ -34,8 +34,10 @@ async def listar_comisiones_por_materia(
     materia_id: UUID,
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
 ) -> list[ComisionResumenResponse]:
-    """Comisiones de la materia, con sus docentes asignados; 404 si `materia_id` no existe
-    (`US-4.2.2`, `docentes_asignados` agregado en `US-ADJ-23`)."""
+    """Comisiones de la materia, con sus docentes asignados.
+
+    404 si `materia_id` no existe (`US-4.2.2`, `docentes_asignados` agregado en `US-ADJ-23`).
+    """
     try:
         comisiones = await controller.listar_comisiones_por_materia(materia_id)
     except MateriaNoExiste as exc:

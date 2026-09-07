@@ -50,8 +50,10 @@ async def crear_materia(
 async def listar_materias(
     controller: MateriasController = Depends(get_materias_controller),
 ) -> list[MateriaListItemResponse]:
-    """Lista todas las materias con la cantidad de preguntas activas de cada una — rol
-    `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3)."""
+    """Lista todas las materias con la cantidad de preguntas activas de cada una.
+
+    Rol `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3).
+    """
     materias = await controller.listar_materias()
     return [
         MateriaListItemResponse(
