@@ -98,26 +98,34 @@ desarrollo, no en producción ni en el entorno de test).
 
 ---
 
-## 4. Hallazgos 🟡 Observación
+## 4. Observaciones registradas durante la corrida — revisadas
 
-1. **UI no refresca sola tras "Asignar" Docente en el detalle de Comisión**
-   (`frontend/src/pages/identidad/ComisionDetalle.tsx`): el `POST
-   /comisiones/{id}/docentes` responde `200 OK` y el dato se persiste correctamente
-   (confirmado recargando la página), pero la sección "Docentes asignados" no se actualiza
-   sin un refresh manual. Frontend puro — track informal, no bloquea el guion. Queda
-   pendiente para una sesión de ajuste menor, no crítico para `BL-007`.
+Ambas se investigaron a fondo tras el cierre de la corrida. Ninguna requirió cambio de
+código: una era un falso positivo de la propia prueba, la otra era solo un orden de guion a
+corregir en este documento (ya reflejado en la tabla de §2 y en `design.md`).
 
-2. **Orden real de creación distinto al wireframe/diseño original:** el diseño de
-   `US-ADJ-31` (`docs/plans/inc4-adj/inc4-adj-candidatas.md`) listaba "Administrador crea
-   Comisión" antes de "Docente crea Materia y carga preguntas" — en la práctica, crear una
-   Comisión requiere elegir una Materia ya existente (`POST /comisiones` referencia
+1. **(Descartada — falso positivo) "UI no refresca sola tras Asignar Docente":** durante la
+   corrida original, el screenshot tomado inmediatamente después del clic en "Asignar" (sin
+   esperar la respuesta async) mostraba todavía "Sin docente asignado". Se sospechó un bug de
+   refetch en `frontend/src/pages/identidad/ComisionDetalle.tsx`. Reproducido de nuevo con una
+   segunda Comisión ("Martes y Jueves 10-12hs") esperando 1 segundo antes de leer la pantalla:
+   la UI actualiza correctamente y sin necesidad de recargar — `handleAsignar()` ya hace
+   `setComision(actualizada)` con la respuesta del `POST`, tal como está escrito en el código.
+   No era un bug: fue una carrera entre mi propio screenshot y la respuesta HTTP en la primera
+   corrida. Sin cambio de código.
+
+2. **(Corregida en la documentación) Orden real de creación distinto al guion original:** el
+   diseño de `US-ADJ-31` (`docs/plans/inc4-adj/inc4-adj-candidatas.md`) listaba "Administrador
+   crea Comisión" antes de "Docente crea Materia y carga preguntas" — en la práctica, crear
+   una Comisión requiere elegir una Materia ya existente (`POST /comisiones` referencia
    `materia_id`, `US-2.1.2`), así que la Materia debe existir primero. No es una
    inconsistencia de producto — el propio wireframe de "Nueva Comisión"
-   (`wireframes-portal-entrada.md` §3.2) ya muestra un selector de Materia obligatorio — fue
-   simplemente un supuesto de orden incorrecto en el guion original, corregido durante la
-   ejecución (ver tabla de §2, que refleja el orden real). No requiere cambio de código.
+   (`wireframes-portal-entrada.md` §3.2) ya muestra un selector de Materia obligatorio. Se
+   corrigió el orden en `design.md` (tabla del guion + nota explicativa) para que quede
+   documentado el orden real, sin tocar código.
 
-Ninguno de los dos hallazgos es 🔴 Bloqueante ni impidió completar el guion.
+Ningún hallazgo de esta corrida quedó pendiente de código — el único cambio de producto de
+esta US fue el fix de `AbortController` de §3.
 
 ---
 

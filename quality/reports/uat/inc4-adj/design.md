@@ -42,16 +42,16 @@ entorno propio (backend `uvicorn` + frontend `vite dev`).
 | # | Rol | Acción | Pantalla / ruta (por clic) |
 |---|-----|--------|------------------------------|
 | 1 | Administrador | Login | `/login` |
-| 2 | Administrador | Ve su Home, navega a Comisiones | `/` → menú → Comisiones |
-| 3 | Administrador | Elige/crea una Materia, crea una Comisión | `/comisiones` → `/comisiones/nueva` |
-| 4 | Administrador | Entra al detalle de la Comisión, asigna un Docente | `/comisiones/:id` |
-| 5 | Docente | Login (cuenta ya existente o alta previa) | `/login` |
-| 6 | Docente | Navega a Actividades → Ver Comisiones de su Materia | menú → Actividades → "Ver Comisiones" |
-| 7 | Docente | Entra a la Comisión asignada, genera el link de invitación | `/materias/:id/comisiones` → detalle |
-| 8 | Estudiante (nuevo) | Se registra con el link generado | `/registro?token=...` |
-| 9 | Docente | Crea una Materia nueva (Banco de Preguntas) | menú → Banco de Preguntas → Materias |
-| 10 | Docente | Carga 2 preguntas (1 opción múltiple, 1 V/F) | `/materias/:id/banco` → nueva pregunta |
-| 11 | Docente | Crea una actividad de período abierto sobre esa materia | menú → Actividades → nueva |
+| 2 | Administrador | Da de alta al Docente | `/` → menú → Docentes |
+| 3 | Docente | Login, crea una Materia nueva (Banco de Preguntas) | `/login` → menú → Banco de Preguntas → Materias |
+| 4 | Docente | Carga 2 preguntas (1 opción múltiple, 1 V/F) | `/materias/:id/banco` → nueva pregunta |
+| 5 | Docente | Crea una actividad de período abierto sobre esa materia | menú → Actividades → nueva |
+| 6 | Administrador | Login, ve su Home, navega a Comisiones | `/login` → `/` → menú → Comisiones |
+| 7 | Administrador | Crea una Comisión eligiendo la Materia ya creada | `/comisiones` → `/comisiones/nueva` |
+| 8 | Administrador | Entra al detalle de la Comisión, asigna al Docente | `/comisiones/:id` |
+| 9 | Docente | Login, navega a Actividades → Ver Comisiones de su Materia | `/login` → menú → Actividades → "Ver Comisiones" |
+| 10 | Docente | Entra a la Comisión asignada, genera el link de invitación | `/actividad-evaluativa/materias/:id/comisiones` → detalle |
+| 11 | Estudiante (nuevo) | Se registra con el link generado | `/registro?token=...` |
 | 12 | Estudiante | Login | `/login` |
 | 13 | Estudiante | Ve la actividad disponible, la inicia | Home Estudiante → Actividades |
 | 14 | Estudiante | Responde una pregunta, suspende la evaluación | pantalla de evaluación |
@@ -60,6 +60,13 @@ entorno propio (backend `uvicorn` + frontend `vite dev`).
 | 17 | Estudiante | Ve su propio desempeño (Analytics) | menú → Mi desempeño |
 | 18 | Docente | Ve el desempeño de ese alumno elegido | menú → Desempeño por alumno |
 | 19 | Docente | Ve la tasa de error por tema de la materia | menú → Desempeño por tema |
+
+**Nota sobre el orden (corregida tras la primera corrida, ver `evidencia.md` §4):** una
+Comisión referencia una Materia por `materia_id` (`US-2.1.2`) — el selector de "Nueva
+Comisión" la exige, así que la Materia (con su banco de preguntas y actividad) debe existir
+antes de que el Administrador pueda crear la Comisión. La tabla de arriba ya refleja el orden
+real ejecutado, no el orden originalmente propuesto en
+`docs/plans/inc4-adj/inc4-adj-candidatas.md`.
 
 ## Criterio de aceptación
 
