@@ -9,6 +9,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-ADJ-23] Administrador ve el listado de Comisiones de una Materia
+  - Pantalla `Comisiones.tsx` (rol `administrador`, ruta `/comisiones`): selector de Materia,
+    tabla con horario, Docentes asignados y cantidad de Estudiantes por Comisión
+  - Primera pieza del gap de `RF-01` detectado en `HITO-9` — el backend de
+    Comisiones/Invitaciones existe desde `US-1.1.1` (Incremento 1) pero nunca tuvo UI
+  - `GET /materias/{id}/comisiones` y `GET /comisiones/{id}/estudiantes` amplían su guard de
+    rol de `docente` únicamente a `docente` o `administrador` (`require_docente_o_administrador`
+    nuevo, `src/identidad/frameworks/dependencies.py`)
+  - `SQLAlchemyComisionQueryRepository.listar_comisiones_por_materia` deja de hardcodear
+    `docentes_asignados=[]` — carga la relación real con `selectinload`
+  - Gap adicional detectado en Fase 3 (verificación en navegador real): `GET /materias`
+    (Banco de Preguntas) también era `require_docente` únicamente y bloqueaba el selector de
+    Materia de esta misma pantalla — ampliado con el mismo patrón
+    (`src/banco_preguntas/frameworks/dependencies.py`)
+  - 867/867 tests backend (8 nuevos BDD + regresión), quality gates APROBADO (pylint 10.00/10,
+    CC máx 3, MI mín 55.67, coverage 99.1%)
+
 ## [0.6.0] - 2026-09-06
 
 ### Added
