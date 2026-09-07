@@ -10,6 +10,16 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-28] Home del Docente
+  - Pantalla `HomeDocente.tsx` reemplaza `InicioPlaceholder` para rol `docente` en `/` — 4
+    cards de acceso directo (Banco de Preguntas, Actividades, Desempeño por alumno,
+    Desempeño por tema)
+  - `Inicio.tsx` nuevo — despacha la ruta índice por `session.rol` (Estudiante/Administrador
+    siguen en `InicioPlaceholder` hasta `US-ADJ-29`/`30`)
+  - Gap de backend detectado en Fase 0 (decidido con Víctor): sin `GET /usuarios/me`, el
+    saludo del wireframe ("Hola, {nombre}") no se puede resolver — se usa un saludo genérico
+    ("Hola, Docente"), desvío documentado en `docs/specs/ajustes/US-ADJ-28.md`
+  - 315/315 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores)
 - [US-ADJ-27] Menú de navegación persistente en AppLayout
   - Componente `AppNav.tsx` nuevo, integrado en `AppLayout.tsx` debajo del header — ítems
     condicionados por `session.rol` (Docente: 5, Estudiante: 3, Administrador: 4), ítem de la
