@@ -670,17 +670,48 @@ relación, `NuevaPreguntaOpcionMultiple.test.tsx`), quality gates APROBADO. Deud
 introducida por esta US: el umbral global de cobertura de branches del frontend (80%) ya
 estaba roto en `develop` antes de este cambio (`Comisiones.tsx` de `US-ADJ-23` sin tests) —
 reportado como chip aparte (`task_ec36dcbe`).
-Siguen en la Iteración 1a: `US-ADJ-25` (Administrador asigna un Docente a una Comisión) y
-`US-ADJ-26` (Docente genera el link de invitación) — orden secuencial, una Comisión sin
-Docente asignado no sirve para generar invitación. Después, Iteración 1b (`US-ADJ-27` a `30`,
-menú de navegación persistente + homes por rol, frontend puro) e Iteración 2 (`US-ADJ-31`,
-UAT E2E consolidada que atraviesa los 4 BC en una sola corrida desde un login real). DoD del
-incremento: alta de Estudiante real de punta a punta desde la UI + navegación completa por
-clic para los 3 roles + guion de prueba del flujo completo del MVP, arrancando desde login
-real. Cierre previsto como `BL-007`.
+**US-ADJ-25** (Administrador asigna un Docente a una Comisión) cerrada 2026-09-07, PR
+[#280](https://github.com/vvalotto/cognion/pull/280) mergeado a `develop`, Issue
+[#270](https://github.com/vvalotto/cognion/issues/270) cerrado,
+`docs/reports/inc4-adj/US-ADJ-25-report.md`: gap de backend detectado en Fase 0 —
+no existía `GET /comisiones/{comision_id}` (la pantalla de detalle necesita horario +
+docentes asignados de una Comisión puntual sin conocer de antemano su `materia_id`) — resuelto
+con `ComisionesQueryController.obtener_comision()` nuevo (pass-through fino sobre
+`ComisionRepositoryPort.obtener_por_id()`, sin Use Case dedicado, mismo criterio que
+`listar_estudiantes`) y el guard `require_docente_o_administrador` ya existente. Pantalla
+`ComisionDetalle.tsx` reemplaza el placeholder de `US-ADJ-23` en `/comisiones/:comisionId`:
+alerta si no hay Docente asignado, select para asignar (reutiliza
+`AsignarDocenteAComisionUseCase` ya existente, idempotente), tabla de Estudiantes inscriptos.
+867/867 tests backend, quality gates APROBADO.
+**US-ADJ-26** (Docente genera el link de invitación de una Comisión) cerrada 2026-09-07, PR
+[#281](https://github.com/vvalotto/cognion/pull/281) mergeado a `develop`, Issue
+[#271](https://github.com/vvalotto/cognion/issues/271) cerrado,
+`docs/reports/inc4-adj/US-ADJ-26-report.md`: dos gaps de backend decididos con Víctor antes de
+codear — (1) `InvitacionResponse` no exponía el `token` (el endpoint `POST
+/comisiones/{id}/invitaciones`, `US-1.1.1`, estaba diseñado para enviarlo por email, no para
+mostrarlo en pantalla) — resuelto agregando `token` a la respuesta y volviendo
+`email_destinatario` opcional en `GenerarInvitacionRequest` (si se omite, el use case no envía
+email), sin invariante de dominio nueva; (2) no había forma de que el Docente listara sus
+propias Comisiones — resuelto navegando Materias → Comisiones de la materia
+(`GET /materias/{id}/comisiones`, ya accesible con rol `docente` desde `US-4.2.2`), sin
+endpoint nuevo. Pantallas `ComisionesDeMateria.tsx` y `ComisionDetalleDocente.tsx`
+(generar/copiar/regenerar link, tabla de estudiantes de solo lectura), entry point "Ver
+Comisiones" en `Actividades.tsx`. 892/892 tests backend (identidad), 291/291 frontend, quality
+gates APROBADO (pylint 9.57/10, CC máx 3, MI mín 60.84, coverage 99%). **Cierra completa la
+Iteración 1a del Incremento 4-ADJ** (`US-ADJ-23` a `26`) — el alta de un Estudiante real queda
+resuelta de punta a punta en la UI: Administrador crea Comisión y asigna Docente, Docente
+genera el link de invitación.
 
-**Próximo paso:** continuar la Iteración 1a del Incremento 4-ADJ con `US-ADJ-25`
-(Administrador asigna un Docente a una Comisión).
+Sigue la Iteración 1b (`US-ADJ-27` a `30`, menú de navegación persistente + homes por rol,
+frontend puro sobre rutas ya protegidas por `RequireRole` — no depende de la Iteración 1a) y
+después la Iteración 2 (`US-ADJ-31`, UAT E2E consolidada que atraviesa los 4 BC en una sola
+corrida desde un login real, sí depende de que 1a y 1b estén completas). DoD del incremento:
+alta de Estudiante real de punta a punta desde la UI (✅ completo desde `US-ADJ-26`) +
+navegación completa por clic para los 3 roles + guion de prueba del flujo completo del MVP,
+arrancando desde login real. Cierre previsto como `BL-007`.
+
+**Próximo paso:** iniciar la Iteración 1b del Incremento 4-ADJ con `US-ADJ-27` (Menú de
+navegación persistente en `AppLayout`).
 **Baseline abierta:** ninguna — `BL-006` cerrada, `BL-007` (Incremento 4-ADJ) pendiente de
 cierre.
 **Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.0`).
