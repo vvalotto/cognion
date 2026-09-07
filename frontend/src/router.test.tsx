@@ -468,4 +468,39 @@ describe("router (integración)", () => {
       expect(screen.queryByText("Banco de Preguntas")).not.toBeInTheDocument()
     })
   })
+
+  describe("Inicio (US-ADJ-28)", () => {
+    it("la ruta / renderiza la Home del Docente con sesión de docente", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByRole("heading", { name: "Hola, Docente" })).toBeInTheDocument()
+    })
+
+    it("la ruta / sigue mostrando el placeholder con sesión de estudiante", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(
+        await screen.findByText("Sesión iniciada — pendiente de pantalla propia"),
+      ).toBeInTheDocument()
+    })
+
+    it("Docente navega de la Home a Actividades por clic en la card", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Hola, Docente" })
+
+      const user = userEvent.setup()
+      // "Actividades" aparece dos veces: en el ítem del AppNav (US-ADJ-27) y en la card de
+      // la Home — la card es la segunda en el orden del DOM (AppNav se renderiza antes).
+      const [, cardActividades] = screen.getAllByText("Actividades")
+      await user.click(cardActividades)
+
+      expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
+    })
+  })
 })
