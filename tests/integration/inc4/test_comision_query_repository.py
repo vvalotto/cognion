@@ -31,6 +31,39 @@ class TestListarComisionesPorMateria:
 
         assert {c.id for c in resultado} == {comision_1.id, comision_2.id}
 
+    async def test_comision_sin_docente_devuelve_docentes_asignados_vacio(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear("Vic", "vic.query4@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        await usuario_repo.guardar(admin)
+        materia_id = uuid.uuid4()
+        comision = Comision.crear(materia_id, "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        resultado = await query_repo.listar_comisiones_por_materia(materia_id)
+
+        assert resultado[0].docentes_asignados == []
+
+    async def test_comision_con_docente_asignado_devuelve_su_id(self, session):
+        """`US-ADJ-23`: el gateway ya no hardcodea `docentes_asignados=[]`."""
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear("Vic", "vic.query5@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        docente = Usuario.crear("Doc", "doc.query5@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        materia_id = uuid.uuid4()
+        comision = Comision.crear(materia_id, "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        resultado = await query_repo.listar_comisiones_por_materia(materia_id)
+
+        assert resultado[0].docentes_asignados == [docente.id]
+
     async def test_materia_sin_comisiones_devuelve_lista_vacia(self, session):
         query_repo = SQLAlchemyComisionQueryRepository(session)
 

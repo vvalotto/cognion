@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { RouterProvider } from "react-router"
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -94,6 +95,22 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByRole("heading", { name: "Crear materia" })).toBeInTheDocument()
+  })
+
+  it("la ruta /comisiones/nueva muestra acceso denegado con sesión de rol distinto de administrador", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/comisiones/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /comisiones/nueva renderiza el formulario de alta con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/comisiones/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Crear comisión" })).toBeInTheDocument()
   })
 
   it("la ruta .../preguntas/:id/editar renderiza el formulario de edición con sesión de docente", async () => {
@@ -415,5 +432,115 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByRole("heading", { name: "Mi desempeño" })).toBeInTheDocument()
+  })
+
+  describe("AppNav — navegación real por clic (US-ADJ-27)", () => {
+    it("Docente navega de Mis materias a Banco de Preguntas por el menú", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/actividad-evaluativa/materias")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Mis materias" })
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "Banco de Preguntas" }))
+
+      expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
+    })
+
+    it("Administrador navega a Comisiones por el menú", async () => {
+      setSession({ token: "t", rol: "administrador" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "Comisiones" }))
+
+      expect(await screen.findByRole("heading", { name: "Comisiones" })).toBeInTheDocument()
+    })
+
+    it("Estudiante no ve ítems de menú de otros roles", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByRole("link", { name: "Mis Actividades" })).toBeInTheDocument()
+      expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+      expect(screen.queryByText("Banco de Preguntas")).not.toBeInTheDocument()
+    })
+  })
+
+  describe("Inicio (US-ADJ-28)", () => {
+    it("la ruta / renderiza la Home del Docente con sesión de docente", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByRole("heading", { name: "Hola, Docente" })).toBeInTheDocument()
+    })
+
+    it("la ruta / renderiza la Home del Estudiante con sesión de estudiante (US-ADJ-29)", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(
+        await screen.findByRole("heading", { name: "Hola, Estudiante" }),
+      ).toBeInTheDocument()
+    })
+
+    it("la ruta / renderiza la Home del Administrador con sesión de administrador (US-ADJ-30)", async () => {
+      setSession({ token: "t", rol: "administrador" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(
+        await screen.findByRole("heading", { name: "Hola, Administrador" }),
+      ).toBeInTheDocument()
+    })
+
+    it("Administrador navega de la Home a Cuentas por clic en la card", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch).mockResolvedValue(jsonResponse(200, { cuentas: [], total: 0 }))
+      setSession({ token: "t", rol: "administrador" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Hola, Administrador" })
+
+      const user = userEvent.setup()
+      // "Cuentas" aparece dos veces: en el ítem del AppNav y en la card de la Home.
+      const [, cardCuentas] = screen.getAllByText("Cuentas")
+      await user.click(cardCuentas)
+
+      expect(await screen.findByRole("heading", { name: "Cuentas" })).toBeInTheDocument()
+    })
+
+    it("Docente navega de la Home a Actividades por clic en la card", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Hola, Docente" })
+
+      const user = userEvent.setup()
+      // "Actividades" aparece dos veces: en el ítem del AppNav (US-ADJ-27) y en la card de
+      // la Home — la card es la segunda en el orden del DOM (AppNav se renderiza antes).
+      const [, cardActividades] = screen.getAllByText("Actividades")
+      await user.click(cardActividades)
+
+      expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
+    })
+
+    it("Estudiante navega de la Home a Mis Actividades por clic en la card", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Hola, Estudiante" })
+
+      const user = userEvent.setup()
+      // "Mis Actividades" aparece dos veces: en el ítem del AppNav y en la card de la Home.
+      const [, cardMisActividades] = screen.getAllByText("Mis Actividades")
+      await user.click(cardMisActividades)
+
+      expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
+    })
   })
 })

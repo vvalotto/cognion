@@ -44,4 +44,5 @@ async def generar_invitacion(
         comision_id=invitacion.comision_id,
         docente_id=invitacion.docente_id,
         expira_en=invitacion.expira_en,
+        token=invitacion.token,
     )

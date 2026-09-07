@@ -50,6 +50,23 @@ class TestGenerarInvitacionUseCase:
 
         assert notificador.enviados == [("estudiante@fiuner.edu.ar", invitacion.token)]
 
+    async def test_omite_email_cuando_no_se_indica_destinatario(self):
+        """`US-ADJ-26`: sin `email_destinatario`, no se envía email pero sí se genera el token."""
+        comision_repo = FakeComisionRepository()
+        invitacion_repo = FakeInvitacionRepository()
+        notificador = FakeNotificador()
+        docente_id = uuid.uuid4()
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
+        comision.asignar_docente(docente_id)
+        await comision_repo.guardar(comision)
+
+        use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
+        invitacion, evento = await use_case.execute(comision.id, docente_id, None)
+
+        assert invitacion.id in invitacion_repo.invitaciones
+        assert notificador.enviados == []
+        assert evento.token == invitacion.token
+
     async def test_rechaza_docente_no_asignado_a_la_comision(self):
         comision_repo = FakeComisionRepository()
         invitacion_repo = FakeInvitacionRepository()

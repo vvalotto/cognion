@@ -1,0 +1,32 @@
+{
+  "us_id": "US-ADJ-27",
+  "titulo": "Menú de navegación persistente en AppLayout",
+  "tipo": "frontend puro, sin cambios de backend",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 5
+    },
+    "tsc_noemit": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "304/304",
+      "archivos_nuevos_o_modificados": {
+        "AppNav.test.tsx": "7/7",
+        "AppLayout.test.tsx": "8/8 (incluye 3 casos nuevos)",
+        "router.test.tsx": "32/32 (incluye 3 casos nuevos de navegación real por clic)"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "AppNav.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" },
+      "AppLayout.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" }
+    },
+    "coverage_global_nota": "Umbral global de branches (80%, vite.config.ts) sigue roto: 79.81% tras esta US. Deuda preexistente ya reportada en US-ADJ-24 (78.51%->78.74%, chip task_ec36dcbe, Comisiones.tsx sin tests) — mejoró levemente por los tests nuevos de esta US pero sigue sin cerrar. Fuera de alcance de US-ADJ-27, ningún archivo tocado por esta US está por debajo de umbral."
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro"
+  },
+  "estado_general": "APROBADO"
+}

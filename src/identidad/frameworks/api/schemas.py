@@ -89,10 +89,15 @@ class ComisionResponse(BaseModel):
 
 
 class ComisionResumenResponse(BaseModel):
-    """Representación mínima de una comisión para selectores (`US-4.2.2`)."""
+    """Representación de una comisión para selectores.
+
+    También usada por el listado de gestión del Administrador (`docentes_asignados`,
+    `US-ADJ-23`) — antes solo (`US-4.2.2`).
+    """
 
     id: UUID
     horario: str
+    docentes_asignados: list[UUID]
 
 
 class EstudianteResumenResponse(BaseModel):
@@ -109,10 +114,14 @@ class AsignarDocenteRequest(BaseModel):
 
 
 class GenerarInvitacionRequest(BaseModel):
-    """Body de la request de generación de una invitación."""
+    """Body de la request de generación de una invitación.
+
+    `email_destinatario` es opcional desde `US-ADJ-26`: si no se envía, el use case omite el
+    envío de email y la invitación solo sirve para compartir el link manualmente.
+    """
 
     docente_id: UUID
-    email_destinatario: str = Field(..., min_length=3, max_length=255)
+    email_destinatario: str | None = Field(None, min_length=3, max_length=255)
 
 
 class InvitacionResponse(BaseModel):
@@ -122,6 +131,7 @@ class InvitacionResponse(BaseModel):
     comision_id: UUID
     docente_id: UUID
     expira_en: datetime
+    token: str
 
 
 class RegistrarEstudianteRequest(BaseModel):

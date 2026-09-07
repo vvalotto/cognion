@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Portal de Entrada (Incremento 4-ADJ)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Mismos tokens que analytics-portal-desempeno.html, actividad-evaluativa-periodo-abierto.html,
+    identidad-cuentas-administracion.html y banco-preguntas-carga-filtrado.html (paleta
+    institucional UNER, tipografía Roboto) — continuidad visual entre BCs e iteraciones.
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --warning: #b5791d;
+    --warning-bg: #fdf5e8;
+    --warning-border: #f0ddb3;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+  .proto-nav .sep { width: 1px; align-self: stretch; background: rgba(255,255,255,0.24); margin: 0 2px; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* Menú de navegación persistente (US-ADJ-27) — visible en toda pantalla post-login */
+  .app-nav {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .app-nav a {
+    display: inline-block;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+  }
+  .app-nav a:hover { color: var(--foreground); }
+  .app-nav a.current { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+
+  .app-body { padding: 28px 16px 60px; max-width: 900px; margin: 0 auto; }
+  .breadcrumb { font-size: 12px; color: var(--muted-foreground); margin-bottom: 6px; }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .page-subtitle { font-size: 14px; color: var(--muted-foreground); margin: 0 0 24px; }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.outline { background: var(--background); color: var(--foreground); border: 1px solid var(--border); }
+  .btn.sm { padding: 6px 10px; font-size: 12px; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .filters-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filters-row .field { min-width: 220px; margin-bottom: 0; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .field select, .field input {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+  }
+  .field select:focus, .field input:focus { outline: 2px solid var(--ring); outline-offset: 1px; }
+  .field .hint { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+
+  /* Cards de accesos directos del Home (US-ADJ-28/29/30) */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+    cursor: pointer;
+  }
+  .card:hover { border-color: var(--primary); }
+  .card .card-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .card .card-desc { font-size: 12px; color: var(--muted-foreground); }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .badge.ok { background: var(--success-bg); color: #14532d; }
+  .badge.warn { background: var(--warning-bg); color: #7a5210; }
+  .badge.neutro { background: var(--muted); color: var(--muted-foreground); }
+
+  /* Listado tabular (Comisiones, Estudiantes) */
+  table.data-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  table.data-table th, table.data-table td { text-align: left; padding: 12px 14px; font-size: 13px; border-bottom: 1px solid var(--border); }
+  table.data-table th { background: var(--muted); font-weight: 600; color: var(--muted-foreground); font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+  table.data-table tr:last-child td { border-bottom: none; }
+
+  .info-box {
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .link-box {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--success-bg); border: 1px solid var(--success-border);
+    border-radius: var(--radius); padding: 12px 16px; margin-top: 16px;
+  }
+  .link-box code { flex: 1; font-size: 12px; overflow-x: auto; white-space: nowrap; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted-foreground); font-size: 14px; }
+
+  @media (max-width: 560px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .filters-row .field { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>Inc.4-ADJ It.0 — Prototipo:</strong>
+  <button data-target="home-docente" class="active">1. Home Docente</button>
+  <button data-target="home-estudiante">2. Home Estudiante</button>
+  <button data-target="home-admin">3. Home Administrador</button>
+  <span class="sep"></span>
+  <button data-target="admin-comisiones">4. Admin — Comisiones</button>
+  <button data-target="admin-comision-nueva">5. Admin — Nueva Comisión</button>
+  <button data-target="admin-comision-detalle">6. Admin — Detalle Comisión</button>
+  <button data-target="docente-comision-detalle">7. Docente — Detalle Comisión</button>
+</nav>
+
+<!-- 1. HOME DOCENTE (US-ADJ-28) -->
+<section class="screen active" id="home-docente">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-nav">
+    <a class="current">Inicio</a>
+    <a>Banco de Preguntas</a>
+    <a>Actividades</a>
+    <a>Desempeño por alumno</a>
+    <a>Desempeño por tema</a>
+  </div>
+  <div class="app-body">
+    <h1 class="page-title">Hola, Víctor</h1>
+    <p class="page-subtitle">Accesos directos a las áreas del Docente.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">📚 Banco de Preguntas</div>
+        <div class="card-desc">Cargar, editar y filtrar preguntas por materia</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📝 Actividades</div>
+        <div class="card-desc">Crear y administrar actividades de evaluación</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Desempeño por alumno</div>
+        <div class="card-desc">Consultar el desempeño de un estudiante elegido</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 Desempeño por tema</div>
+        <div class="card-desc">Tasa de error por unidad/tema de una materia</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. HOME ESTUDIANTE (US-ADJ-29) -->
+<section class="screen" id="home-estudiante">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-nav">
+    <a class="current">Inicio</a>
+    <a>Mis Actividades</a>
+    <a>Mi Desempeño</a>
+  </div>
+  <div class="app-body">
+    <h1 class="page-title">Hola, María</h1>
+    <p class="page-subtitle">Accesos directos a tus áreas.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">📝 Mis Actividades</div>
+        <div class="card-desc">Ver y rendir las actividades disponibles</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Mi Desempeño</div>
+        <div class="card-desc">Ver el resultado acumulado de mis evaluaciones</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. HOME ADMINISTRADOR (US-ADJ-30) -->
+<section class="screen" id="home-admin">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">AD</span>Administrador</div>
+  </div>
+  <div class="app-nav">
+    <a class="current">Inicio</a>
+    <a>Comisiones</a>
+    <a>Docentes</a>
+    <a>Cuentas</a>
+  </div>
+  <div class="app-body">
+    <h1 class="page-title">Panel del Administrador</h1>
+    <p class="page-subtitle">Accesos directos a las tareas de gestión.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">🏫 Comisiones</div>
+        <div class="card-desc">Crear comisiones, asignar docentes y ver estudiantes inscriptos</div>
+      </div>
+      <div class="card">
+        <div class="card-title">👤 Alta de Docente</div>
+        <div class="card-desc">Crear una cuenta nueva de Docente</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔐 Cuentas</div>
+        <div class="card-desc">Ver, filtrar, resetear y desbloquear cuentas existentes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. ADMIN — LISTADO DE COMISIONES POR MATERIA (US-ADJ-23) -->
+<section class="screen" id="admin-comisiones">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">AD</span>Administrador</div>
+  </div>
+  <div class="app-nav">
+    <a>Inicio</a>
+    <a class="current">Comisiones</a>
+    <a>Docentes</a>
+    <a>Cuentas</a>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Comisiones &nbsp;›&nbsp; <span class="current">Ingeniería de Software</span></div>
+    <div class="toolbar">
+      <div>
+        <h1 class="page-title" style="margin-bottom:0;">Comisiones</h1>
+        <p class="page-subtitle" style="margin-bottom:0;">Comisiones de la materia elegida — horario, docentes asignados y estudiantes inscriptos.</p>
+      </div>
+      <button class="btn" onclick="go('admin-comision-nueva')">+ Nueva Comisión</button>
+    </div>
+
+    <div class="filters-row">
+      <div class="field">
+        <label>Materia</label>
+        <select>
+          <option>Ingeniería de Software</option>
+          <option>Gestión de Proyectos</option>
+        </select>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Horario</th><th>Docentes asignados</th><th>Estudiantes</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Lunes y Miércoles 18–20hs</td>
+          <td><span class="badge ok">Víctor Valotto</span></td>
+          <td>24</td>
+          <td><button class="btn outline sm" onclick="go('admin-comision-detalle')">Ver detalle</button></td>
+        </tr>
+        <tr>
+          <td>Martes y Jueves 20–22hs</td>
+          <td><span class="badge warn">Sin docente asignado</span></td>
+          <td>0</td>
+          <td><button class="btn outline sm" onclick="go('admin-comision-detalle')">Ver detalle</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 5. ADMIN — NUEVA COMISIÓN (US-ADJ-24) -->
+<section class="screen" id="admin-comision-nueva">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">AD</span>Administrador</div>
+  </div>
+  <div class="app-nav">
+    <a>Inicio</a>
+    <a class="current">Comisiones</a>
+    <a>Docentes</a>
+    <a>Cuentas</a>
+  </div>
+  <div class="app-body" style="max-width:520px;">
+    <div class="breadcrumb">Comisiones &nbsp;›&nbsp; <span class="current">Nueva Comisión</span></div>
+    <h1 class="page-title">Nueva Comisión</h1>
+    <p class="page-subtitle">Elegí la materia y el horario. Después podés asignarle un Docente.</p>
+
+    <div class="field">
+      <label>Materia</label>
+      <select>
+        <option>Ingeniería de Software</option>
+        <option>Gestión de Proyectos</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Horario</label>
+      <input type="text" placeholder="Ej: Lunes y Miércoles 18–20hs" />
+      <div class="hint">Texto libre — sin catálogo de horarios, mismo criterio que otros campos de texto libre del sistema.</div>
+    </div>
+
+    <button class="btn" onclick="go('admin-comision-detalle')">Crear Comisión</button>
+    <button class="btn outline" onclick="go('admin-comisiones')">Cancelar</button>
+  </div>
+</section>
+
+<!-- 6. ADMIN — DETALLE DE COMISIÓN, asignar Docente (US-ADJ-25) -->
+<section class="screen" id="admin-comision-detalle">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">AD</span>Administrador</div>
+  </div>
+  <div class="app-nav">
+    <a>Inicio</a>
+    <a class="current">Comisiones</a>
+    <a>Docentes</a>
+    <a>Cuentas</a>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Comisiones &nbsp;›&nbsp; <span class="current">Martes y Jueves 20–22hs</span></div>
+    <button class="btn outline sm" style="margin-bottom:16px;" onclick="go('admin-comisiones')">‹ Volver a Comisiones</button>
+    <h1 class="page-title">Ingeniería de Software — Martes y Jueves 20–22hs</h1>
+
+    <div class="info-box">
+      <strong>Sin Docente asignado.</strong> Hasta que se asigne un Docente, esta Comisión no
+      puede generar link de invitación para estudiantes.
+    </div>
+
+    <div class="field" style="max-width:340px;">
+      <label>Asignar Docente</label>
+      <select>
+        <option>Víctor Valotto</option>
+      </select>
+    </div>
+    <button class="btn">Asignar</button>
+
+    <p class="page-subtitle" style="margin-top:28px; margin-bottom:10px;">Estudiantes inscriptos (0)</p>
+    <div class="empty-state">Todavía no hay estudiantes inscriptos en esta Comisión.</div>
+  </div>
+</section>
+
+<!-- 7. DOCENTE — DETALLE DE COMISIÓN, generar invitación (US-ADJ-26) -->
+<section class="screen" id="docente-comision-detalle">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-nav">
+    <a>Inicio</a>
+    <a>Banco de Preguntas</a>
+    <a class="current">Actividades</a>
+    <a>Desempeño por alumno</a>
+    <a>Desempeño por tema</a>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Actividades &nbsp;›&nbsp; Comisiones &nbsp;›&nbsp; <span class="current">Lunes y Miércoles 18–20hs</span></div>
+    <button class="btn outline sm" style="margin-bottom:16px;" onclick="go('home-docente')">‹ Volver</button>
+    <h1 class="page-title">Ingeniería de Software — Lunes y Miércoles 18–20hs</h1>
+    <p class="page-subtitle">Generá el link para que un estudiante se registre y quede asignado automáticamente a esta Comisión (RF-01).</p>
+
+    <button class="btn" id="btn-generar-inv" onclick="generarInvitacion()">Generar link de invitación</button>
+
+    <div class="link-box" id="link-box" style="display:none;">
+      <code id="link-texto">https://cognion.fiuner.edu.ar/registro?token=a1b2c3d4-...</code>
+      <button class="btn sm">Copiar</button>
+    </div>
+    <p class="field hint" id="link-hint" style="display:none;">Válido por 7 días desde ahora. Cada link es de un solo uso.</p>
+
+    <p class="page-subtitle" style="margin-top:28px; margin-bottom:10px;">Estudiantes inscriptos (24)</p>
+    <table class="data-table">
+      <thead><tr><th>Nombre</th><th>Email</th></tr></thead>
+      <tbody>
+        <tr><td>María González</td><td>maria.gonzalez@alumnos.fiuner.edu.ar</td></tr>
+        <tr><td>Juan Pérez</td><td>juan.perez@alumnos.fiuner.edu.ar</td></tr>
+        <tr><td colspan="2" style="text-align:center; color:var(--muted-foreground);">… 22 estudiantes más</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+  function generarInvitacion() {
+    document.getElementById('link-box').style.display = 'flex';
+    document.getElementById('link-hint').style.display = 'block';
+    document.getElementById('btn-generar-inv').textContent = 'Generar un link nuevo';
+  }
+</script>
+
+</body>
+</html>

@@ -10,7 +10,11 @@ from src.banco_preguntas.frameworks.api.schemas import (
     MateriaListItemResponse,
     MateriaResponse,
 )
-from src.banco_preguntas.frameworks.dependencies import get_materias_controller, require_docente
+from src.banco_preguntas.frameworks.dependencies import (
+    get_materias_controller,
+    require_docente,
+    require_docente_o_administrador,
+)
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
@@ -41,12 +45,15 @@ async def crear_materia(
     "",
     response_model=list[MateriaListItemResponse],
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(require_docente)],
+    dependencies=[Depends(require_docente_o_administrador)],
 )
 async def listar_materias(
     controller: MateriasController = Depends(get_materias_controller),
 ) -> list[MateriaListItemResponse]:
-    """Lista todas las materias con la cantidad de preguntas activas de cada una."""
+    """Lista todas las materias con la cantidad de preguntas activas de cada una.
+
+    Rol `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3).
+    """
     materias = await controller.listar_materias()
     return [
         MateriaListItemResponse(

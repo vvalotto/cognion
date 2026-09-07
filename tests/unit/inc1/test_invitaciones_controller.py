@@ -33,3 +33,23 @@ class TestInvitacionesController:
 
         assert invitacion.docente_id == docente_id
         assert isinstance(evento, InvitacionGenerada)
+
+    async def test_generar_invitacion_sin_email_destinatario(self):
+        """`US-ADJ-26`: el controller propaga `email_destinatario=None` sin error."""
+        comision_repo = FakeComisionRepository()
+        invitacion_repo = FakeInvitacionRepository()
+        notificador = FakeNotificador()
+        docente_id = uuid.uuid4()
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
+        comision.asignar_docente(docente_id)
+        await comision_repo.guardar(comision)
+
+        controller = InvitacionesController(
+            GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
+        )
+
+        invitacion, evento = await controller.generar_invitacion(comision.id, docente_id, None)
+
+        assert invitacion.docente_id == docente_id
+        assert isinstance(evento, InvitacionGenerada)
+        assert notificador.enviados == []

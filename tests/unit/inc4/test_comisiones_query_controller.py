@@ -89,3 +89,29 @@ class TestListarEstudiantes:
 
         with pytest.raises(ComisionNoExiste):
             await controller.listar_estudiantes(uuid4())
+
+
+class TestObtenerComision:
+    """`US-ADJ-25`: consulta de lectura simple sobre `ComisionRepositoryPort`."""
+
+    @pytest.mark.asyncio
+    async def test_comision_existente(self):
+        comision_repo = FakeComisionRepository()
+        comision = Comision.crear(uuid4(), "lu 10-12", uuid4())
+        await comision_repo.guardar(comision)
+        controller = ComisionesQueryController(
+            _ComisionQueryPortFake(), FakeMateriaPort(), comision_repo
+        )
+
+        resultado = await controller.obtener_comision(comision.id)
+
+        assert resultado == comision
+
+    @pytest.mark.asyncio
+    async def test_comision_inexistente_levanta_error(self):
+        controller = ComisionesQueryController(
+            _ComisionQueryPortFake(), FakeMateriaPort(), FakeComisionRepository()
+        )
+
+        with pytest.raises(ComisionNoExiste):
+            await controller.obtener_comision(uuid4())

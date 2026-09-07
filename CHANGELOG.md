@@ -9,6 +9,106 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-09-07
+
+### Added
+- [US-ADJ-30] Home del Administrador
+  - Pantalla `HomeAdministrador.tsx` reemplaza `InicioPlaceholder` para rol `administrador`
+    en `/` — 3 cards de acceso directo (Comisiones, Alta de Docente, Cuentas)
+  - `Inicio.tsx` (`US-ADJ-28`/`29`) gana la rama `administrador` — cierra completa la
+    Iteración 1b, ningún rol depende ya de `InicioPlaceholder` en el flujo normal
+  - `Login.tsx`: `RUTA_POST_LOGIN.administrador` pasa de `/docentes/nuevo` a `/` (mismo
+    destino que Docente/Estudiante) — con los 3 roles apuntando a la misma ruta, la tabla
+    quedó redundante y se eliminó en favor de `navigate("/")` directo
+  - Mismo saludo genérico decidido en `US-ADJ-28`/`29` ("Hola, Administrador")
+  - 329/329 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores)
+- [US-ADJ-29] Home del Estudiante
+  - Pantalla `HomeEstudiante.tsx` reemplaza `InicioPlaceholder` para rol `estudiante` en `/`
+    — 2 cards de acceso directo (Mis Actividades, Mi Desempeño)
+  - `Inicio.tsx` (`US-ADJ-28`) gana la rama `estudiante` — solo Administrador sigue en
+    `InicioPlaceholder`, hasta `US-ADJ-30`
+  - Mismo saludo genérico decidido en `US-ADJ-28` ("Hola, Estudiante"), sin
+    `GET /usuarios/me`
+  - 322/322 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores)
+- [US-ADJ-28] Home del Docente
+  - Pantalla `HomeDocente.tsx` reemplaza `InicioPlaceholder` para rol `docente` en `/` — 4
+    cards de acceso directo (Banco de Preguntas, Actividades, Desempeño por alumno,
+    Desempeño por tema)
+  - `Inicio.tsx` nuevo — despacha la ruta índice por `session.rol` (Estudiante/Administrador
+    siguen en `InicioPlaceholder` hasta `US-ADJ-29`/`30`)
+  - Gap de backend detectado en Fase 0 (decidido con Víctor): sin `GET /usuarios/me`, el
+    saludo del wireframe ("Hola, {nombre}") no se puede resolver — se usa un saludo genérico
+    ("Hola, Docente"), desvío documentado en `docs/specs/ajustes/US-ADJ-28.md`
+  - 315/315 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores)
+- [US-ADJ-27] Menú de navegación persistente en AppLayout
+  - Componente `AppNav.tsx` nuevo, integrado en `AppLayout.tsx` debajo del header — ítems
+    condicionados por `session.rol` (Docente: 5, Estudiante: 3, Administrador: 4), ítem de la
+    sección actual resaltado
+  - Frontend puro sobre rutas ya protegidas por `RequireRole` (`US-1.1.9`), sin backend nuevo
+  - Abre la Iteración 1b del Incremento 4-ADJ (portal de entrada) — resuelve el gap señalado
+    en `HITO-9`: hasta ahora ninguna pantalla tenía navegación cruzada entre áreas
+  - 304/304 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores,
+    100% coverage en los archivos tocados)
+- [US-ADJ-26] Docente genera el link de invitación de una Comisión
+  - Pantallas nuevas del lado Docente (rol `docente`): `ComisionesDeMateria.tsx`
+    (`/actividad-evaluativa/materias/:materiaId/comisiones`) y `ComisionDetalleDocente.tsx`
+    (`/actividad-evaluativa/comisiones/:comisionId`) — botón "Generar link de invitación",
+    link visible con "Copiar" (`.../registro?token=...`), tabla de estudiantes inscriptos
+  - Entry point: botón "Ver Comisiones" en `Actividades.tsx` (Actividad Evaluativa)
+  - Backend — `POST /comisiones/{id}/invitaciones` (`US-1.1.1`) ampliado, sin Use Case nuevo:
+    `GenerarInvitacionRequest.email_destinatario` pasa a opcional (si se omite, no se envía
+    email) e `InvitacionResponse` gana el campo `token`
+  - `identidad-comisiones-api.ts`: `generarInvitacion(comisionId, docenteId)`
+  - Cierra la cadena Comisiones/Invitación de la Iteración 1a del Incremento 4-ADJ junto con
+    `US-ADJ-23`/`24`/`25`
+  - 892/892 tests backend (identidad), 291/291 tests frontend, quality gates APROBADO
+    (pylint 9.57/10, CC máx 3, MI mín 60.84, coverage 99%)
+- [US-ADJ-24] Administrador crea una Comisión
+  - Pantalla `NuevaComision.tsx` (rol `administrador`, ruta `/comisiones/nueva`) reemplaza el
+    placeholder dejado por `US-ADJ-23` — selector de Materia (preseleccionada si se llega con
+    `?materiaId=` desde el listado) + campo Horario, consume `POST /comisiones`
+  - `session.ts`: `obtenerUsuarioId()` — decodifica el claim `sub` del JWT de la sesión actual
+    para resolver `administrador_id` sin pedírselo al usuario en el formulario
+  - `identidad-comisiones-api.ts`: `crearComision(materiaId, horario)`
+  - Sin cambios de backend — `POST /comisiones` ya aceptaba rol `administrador` desde
+    `US-1.1.1`
+  - 273 tests frontend (272 en verde + 1 flake preexistente no relacionado), `tsc --noEmit` y
+    oxlint sin errores
+- [US-ADJ-23] Administrador ve el listado de Comisiones de una Materia
+  - Pantalla `Comisiones.tsx` (rol `administrador`, ruta `/comisiones`): selector de Materia,
+    tabla con horario, Docentes asignados y cantidad de Estudiantes por Comisión
+  - Primera pieza del gap de `RF-01` detectado en `HITO-9` — el backend de
+    Comisiones/Invitaciones existe desde `US-1.1.1` (Incremento 1) pero nunca tuvo UI
+  - `GET /materias/{id}/comisiones` y `GET /comisiones/{id}/estudiantes` amplían su guard de
+    rol de `docente` únicamente a `docente` o `administrador` (`require_docente_o_administrador`
+    nuevo, `src/identidad/frameworks/dependencies.py`)
+  - `SQLAlchemyComisionQueryRepository.listar_comisiones_por_materia` deja de hardcodear
+    `docentes_asignados=[]` — carga la relación real con `selectinload`
+  - Gap adicional detectado en Fase 3 (verificación en navegador real): `GET /materias`
+    (Banco de Preguntas) también era `require_docente` únicamente y bloqueaba el selector de
+    Materia de esta misma pantalla — ampliado con el mismo patrón
+    (`src/banco_preguntas/frameworks/dependencies.py`)
+  - 867/867 tests backend (8 nuevos BDD + regresión), quality gates APROBADO (pylint 10.00/10,
+    CC máx 3, MI mín 55.67, coverage 99.1%)
+
+### Fixed
+- [US-ADJ-31] Validación E2E consolidada del MVP — cierra completa la Iteración 2 del
+  Incremento 4-ADJ y con ella la baseline `BL-007`
+  - Guion E2E ejecutado en navegador real (sin seeds, arrancando desde el login real):
+    Administrador crea Comisión y asigna Docente → Docente genera invitación → Estudiante se
+    registra → Docente crea materia, carga preguntas, crea actividad → Estudiante rinde (con
+    pausa/reanudación), finaliza, ve revisión y su desempeño → Docente ve el desempeño del
+    alumno y la tasa de error por tema
+  - Detectó y corrigió un bug real: el fix de `AbortController`/`StrictMode` de `US-ADJ-20`
+    (`BL-006`) solo se había auditado contra 5 de los 12 formularios con el mismo patrón —
+    quedaban 7 sin corregir (`NuevaPreguntaOpcionMultiple.tsx`,
+    `NuevaPreguntaVerdaderoFalso.tsx`, `EditarPregunta.tsx`, `NuevaActividad.tsx`,
+    `ExtenderPlazo.tsx`, `EditarTituloActividad.tsx`, `ResetearPassword.tsx`), 3 de ellos
+    bloqueando directamente el guion. Corregidos con el mismo patrón ya validado
+  - 892/892 tests backend, 329/329 tests frontend, `tsc -b` y oxlint sin errores nuevos,
+    DesignReviewer 0 CRITICAL
+  - Evidencia: `quality/reports/uat/inc4-adj/design.md`/`evidencia.md`, confirmada por Víctor
+
 ## [0.6.0] - 2026-09-06
 
 ### Added

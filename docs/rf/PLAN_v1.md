@@ -29,6 +29,14 @@
 > estrategia" sigue leyéndose como valor funcional real para docente/estudiante en desarrollo
 > local, no como datos reales de producción. No reescribe historia — ningún incremento del 3 al
 > 7 se ejecutó todavía.
+> Revisión 2026-09-07: se inserta el **Incremento 4-ADJ — Portal de Entrada y Validación E2E**
+> entre el Incremento 4 (cerrado, `BL-006`) y el Incremento 5, fuera de la secuencia numérica
+> original — mismo criterio que `Incremento 3-ADJ` (decisión de Víctor 2026-09-02: no
+> renumerar los incrementos ya mapeados a RF). Origen: ninguno de los 18 RF de este documento
+> es dueño de la navegación de entrada del sistema (cómo llega un usuario autenticado a la
+> pantalla que necesita) — gap detectado por pregunta directa de Víctor, documentado en
+> `docs/aprendizajes/HITO-9-PORTAL-DE-ENTRADA-SIN-DUENO-DE-PRODUCTO.md`. No reescribe
+> historia — los Incrementos 5 a 7 no se ejecutaron todavía.
 
 ---
 
@@ -161,6 +169,32 @@ infraestructura de producción y backup de `ARQ_v1.md` deben resolverse antes de
 
 **Hito:** Docente y estudiante tienen visibilidad de desempeño histórico basado en sesiones
 reales ya corridas en el incremento anterior.
+
+---
+
+## Incremento 4-ADJ — Portal de Entrada y Validación E2E
+
+*(Insertado fuera de secuencia — revisión 2026-09-07. No mapea a ningún RF nuevo de este
+documento, pero su Iteración 1a completa la UI de `RF-01` (Registro de estudiante por
+invitación) — ya "Validado" desde `BL-002`, sin UI de Comisiones/invitación hasta ahora.
+Detalle completo en `docs/plans/inc4-adj/inc4-adj-candidatas.md`.)*
+
+| Iteración | Contenido |
+|---|---|
+| 0 | **Modelado (liviano):** mapa de navegación por rol + wireframes del portal de entrada — home de Docente, Estudiante y Administrador, más menú de navegación persistente condicionado por rol |
+| 1 | **1a:** Administrador crea Comisiones y asigna Docentes, Docente genera el link de invitación (cierra la UI de `RF-01`, toca `src/` — amplía el guard de rol de dos endpoints de consulta). **1b:** portal de entrada en sí — menú + 3 homes, frontend puro |
+| 2 | **Validación E2E del MVP:** guion consolidado que atraviesa los 4 BC en una sola corrida, arrancando desde un login real, incluida el alta real del Estudiante por UI |
+
+**Hito:** un Administrador puede dar de alta un Estudiante real de punta a punta desde la UI
+(Comisión → Docente asignado → invitación → registro); cualquier Docente, Estudiante o
+Administrador autenticado puede navegar, por clic, desde el login hasta cualquier función de
+su rol sin conocer ninguna URL de memoria; y existe al menos una prueba que valida el flujo
+completo del MVP en una sola corrida.
+
+*(Se secuencia antes de Notificaciones porque es el que efectivamente entrega un MVP
+demostrable — con Notificaciones el ciclo de la actividad de período abierto se completa, pero
+sin portal de entrada nadie externo a la sesión de desarrollo puede recorrer el sistema sin
+conocer las URLs de memoria.)*
 
 ---
 

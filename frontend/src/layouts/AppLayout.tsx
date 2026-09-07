@@ -1,5 +1,6 @@
 import { Outlet } from "react-router"
 
+import { AppNav } from "@/components/AppNav"
 import { Logo } from "@/components/Logo"
 import { TopStrip } from "@/components/TopStrip"
 import { getSession } from "@/lib/session"
@@ -25,6 +26,7 @@ export function AppLayout() {
           </div>
         )}
       </header>
+      {session && <AppNav rol={session.rol} />}
       <main className="mx-auto max-w-3xl p-6">
         <Outlet />
       </main>

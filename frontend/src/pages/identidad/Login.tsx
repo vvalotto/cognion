@@ -17,12 +17,6 @@ interface LoginResponse {
   expira_en: string
 }
 
-const RUTA_POST_LOGIN: Record<Rol, string> = {
-  administrador: "/docentes/nuevo",
-  docente: "/",
-  estudiante: "/",
-}
-
 /** Pantalla de login (§2.1/§2.2 `wireframes-identidad.md`) — consume `POST /identidad/login`. */
 export function Login() {
   const navigate = useNavigate()
@@ -61,7 +55,7 @@ export function Login() {
         signal: controladorSubmitRef.current?.signal,
       })
       setSession({ token: response.access_token, rol: response.rol })
-      void navigate(RUTA_POST_LOGIN[response.rol])
+      void navigate("/")
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 403) {

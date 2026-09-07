@@ -1,0 +1,143 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-27",
+    "us_title": "Menú de navegación persistente en AppLayout",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-07T19:41:41.803095+00:00",
+    "completed_at": "2026-09-07T19:52:58.058749+00:00",
+    "total_elapsed_seconds": 676,
+    "effective_seconds": 676,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-07T19:41:41.968788+00:00",
+      "completed_at": "2026-09-07T19:42:23.429433+00:00",
+      "elapsed_seconds": 41,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-07T19:42:26.337389+00:00",
+      "completed_at": "2026-09-07T19:44:35.967430+00:00",
+      "elapsed_seconds": 129,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-07T19:44:36.089592+00:00",
+      "completed_at": "2026-09-07T19:45:29.081939+00:00",
+      "elapsed_seconds": 52,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "1",
+          "task_name": "AppNav.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-07T19:44:42.994344+00:00",
+          "completed_at": "2026-09-07T19:44:53.229020+00:00",
+          "elapsed_seconds": 10,
+          "actual_minutes": 0.17,
+          "variance_minutes": -14.83,
+          "file_created": "frontend/src/components/AppNav.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "2",
+          "task_name": "Integrar AppNav en AppLayout",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T19:44:58.328552+00:00",
+          "completed_at": "2026-09-07T19:45:21.969031+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -4.62,
+          "file_created": "frontend/src/layouts/AppLayout.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-07T19:45:31.737728+00:00",
+      "completed_at": "2026-09-07T19:47:12.014216+00:00",
+      "elapsed_seconds": 100,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-07T19:47:16.733895+00:00",
+      "completed_at": "2026-09-07T19:48:56.933129+00:00",
+      "elapsed_seconds": 100,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-07T19:49:05.758408+00:00",
+      "completed_at": "2026-09-07T19:51:13.273863+00:00",
+      "elapsed_seconds": 127,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-07T19:51:16.935181+00:00",
+      "completed_at": "2026-09-07T19:52:23.177885+00:00",
+      "elapsed_seconds": 66,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-07T19:52:23.302763+00:00",
+      "completed_at": "2026-09-07T19:52:57.941361+00:00",
+      "elapsed_seconds": 34,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "total_phases": 8,
+    "estimated_total_minutes": 20.0,
+    "actual_total_minutes": 0.55,
+    "variance_minutes": -19.45,
+    "variance_percent": -97.25
+  }
+}

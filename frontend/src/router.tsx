@@ -4,13 +4,17 @@ import { RequireRole } from "@/components/RequireRole"
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/identidad/AltaDocente"
+import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
+import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
-import { InicioPlaceholder } from "@/pages/_placeholders"
+import { Inicio } from "@/pages/Inicio"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
 import { ActividadDetalle } from "@/pages/actividad-evaluativa/ActividadDetalle"
 import { Banco } from "@/pages/banco-preguntas/Banco"
 import { CambiarPassword } from "@/pages/identidad/CambiarPassword"
 import { CerrarActividad } from "@/pages/actividad-evaluativa/CerrarActividad"
+import { ComisionDetalleDocente } from "@/pages/actividad-evaluativa/ComisionDetalleDocente"
+import { ComisionesDeMateria } from "@/pages/actividad-evaluativa/ComisionesDeMateria"
 import { CuentaDetalle } from "@/pages/cuentas/CuentaDetalle"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
@@ -29,6 +33,7 @@ import { MiDesempeno } from "@/pages/analytics/MiDesempeno"
 import { MisActividades } from "@/pages/actividad-evaluativa/MisActividades"
 import { MisMaterias } from "@/pages/actividad-evaluativa/MisMaterias"
 import { NuevaActividad } from "@/pages/actividad-evaluativa/NuevaActividad"
+import { NuevaComision } from "@/pages/identidad/NuevaComision"
 import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
@@ -60,8 +65,32 @@ export const router = createBrowserRouter([
   {
     element: <AppLayout />,
     children: [
-      { index: true, element: <InicioPlaceholder /> },
+      { index: true, element: <Inicio /> },
       { path: "/mi-cuenta/cambiar-password", element: <CambiarPassword /> },
+      {
+        path: "/comisiones",
+        element: (
+          <RequireRole rol="administrador">
+            <Comisiones />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/comisiones/nueva",
+        element: (
+          <RequireRole rol="administrador">
+            <NuevaComision />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/comisiones/:comisionId",
+        element: (
+          <RequireRole rol="administrador">
+            <ComisionDetalle />
+          </RequireRole>
+        ),
+      },
       {
         path: "/docentes/nuevo",
         element: (
@@ -195,6 +224,22 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <NuevaActividad />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/materias/:materiaId/comisiones",
+        element: (
+          <RequireRole rol="docente">
+            <ComisionesDeMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/comisiones/:comisionId",
+        element: (
+          <RequireRole rol="docente">
+            <ComisionDetalleDocente />
           </RequireRole>
         ),
       },
