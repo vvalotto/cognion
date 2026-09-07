@@ -96,6 +96,22 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Crear materia" })).toBeInTheDocument()
   })
 
+  it("la ruta /comisiones/nueva muestra acceso denegado con sesión de rol distinto de administrador", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/comisiones/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /comisiones/nueva renderiza el formulario de alta con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
+    await router.navigate("/comisiones/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Crear comisión" })).toBeInTheDocument()
+  })
+
   it("la ruta .../preguntas/:id/editar renderiza el formulario de edición con sesión de docente", async () => {
     vi.mocked(fetch).mockReset()
     vi.mocked(fetch)
