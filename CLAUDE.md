@@ -609,9 +609,80 @@ sobre el merge commit (`5d9255e`). CD (build Docker) en verde en `main` y en amb
 `flyctl deploy`/healthcheck siguen comentados, sin impacto de infraestructura real. Milestone
 GitHub #6 cerrado. `CHANGELOG.md`: `[Unreleased]` dividido en `[0.5.1]` y `[0.6.0]`.
 
-**Próximo paso:** definir el alcance del Incremento 5 (`PLAN_v1.md`) — sin candidatas
-todavía.
-**Baseline abierta:** ninguna — `BL-006` cerrada.
+Incremento 4-ADJ — Portal de Entrada y Validación E2E, período abierto — en curso
+(`docs/plans/inc4-adj/inc4-adj-candidatas.md`, Milestone GitHub
+[Incremento 4-ADJ](https://github.com/vvalotto/cognion/milestone/12)). Insertado fuera de la
+secuencia numérica 0-7 de `PLAN_v1.md` (mismo criterio que `Incremento 3-ADJ`: no se
+renumeran los Incrementos 5-7 ya mapeados a RF). A diferencia de `Incremento 3-ADJ` (deuda de
+tooling/arquitectura), este es deuda de **producto**: origen en una pregunta directa de
+Víctor tras el cierre de `BL-006` ("¿a dónde va cada usuario una vez que se loguea?"), que
+reveló que Docente, Estudiante y Administrador caen en `InicioPlaceholder`
+(`frontend/src/pages/_placeholders.tsx`, sin resolver desde `US-1.1.7`, Incremento 1) — sin
+menú de navegación persistente en `AppLayout`, y sin que ninguna de las 4 rondas de UAT
+manual ya ejecutadas recorriera nunca el camino real login → función
+(`docs/aprendizajes/HITO-9-PORTAL-DE-ENTRADA-SIN-DUENO-DE-PRODUCTO.md`).
+**Ampliación de alcance 2026-09-07**: no existe ninguna pantalla para crear una Comisión ni
+para asignar un Docente a ella — el backend existe desde `US-1.1.1` (Incremento 1), pero la
+UI quedó explícitamente diferida "sin fecha" en la Iteración 2 de ese incremento y nunca se
+retomó. Sin esto, el alta de un Estudiante real (`RF-01`) está rota de punta a punta en la
+UI — bloquea la Validación E2E ya planeada (`US-ADJ-31`). Se agrega al mismo incremento (no
+uno nuevo) por cerrar un prerrequisito de una iteración ya adentro
+(`docs/design/domain/portal-entrada-modelo.md` §"Gap real detectado"). La mayoría de estas
+US-IEDD no tiene RF asociado (mismo criterio que `US-1.1.0`/`US-2.1.2`) — las de Comisiones e
+Invitación completan la UI de `RF-01` (ya Validado desde `BL-002`), sin mover fila de la
+matriz de trazabilidad.
+**Iteración 0 — Modelado cerrada 2026-09-07**: `US-ADJ-21` (mapa de navegación por rol,
+Issue #261, `docs/design/domain/portal-entrada-modelo.md`) y `US-ADJ-22` (wireframes +
+prototipo — portal de entrada y pantallas de Comisiones, Issue #262,
+`docs/design/ux/wireframes-portal-entrada.md` +
+`docs/design/ux/prototipos/portal-entrada.html`), ambas aprobadas por Víctor.
+**Iteración 1a — Alta de Estudiante y gestión de Comisiones, en curso** (backend + frontend
+juntos, mismo criterio que Banco de Preguntas/Cuentas — sin diferir frontend).
+**US-ADJ-23** (Administrador ve el listado de Comisiones de una Materia) cerrada 2026-09-07,
+Issue [#261](https://github.com/vvalotto/cognion/issues/261) del mapa de navegación como
+contexto, `docs/reports/inc4-adj/US-ADJ-23-report.md`: amplía el guard de rol de
+`GET /materias/{id}/comisiones` y `GET /comisiones/{id}/estudiantes` (antes solo `docente`,
+`require_docente_o_administrador` nuevo) y corrige `SQLAlchemyComisionQueryRepository`, que
+hardcodeaba `docentes_asignados=[]` en vez de cargarlos vía `selectinload`. **Gap adicional
+detectado en Fase 3** (verificación en navegador real contra backend real, no cubierto por el
+plan): `GET /materias` (Banco de Preguntas) también exigía rol `docente` únicamente y
+bloqueaba el propio selector de Materia de la pantalla — corregido con
+`require_docente_o_administrador` propio de ese BC, ya que cada BC arma su composition root
+sin compartir dependencias entre BCs. **Error propio detectado y corregido antes del PR:**
+`identidad-comisiones-api.ts` ya existía desde `US-4.2.5` (consumido por
+`DesempenoPorAlumno.tsx`/`DesempenoPorTema.tsx`) y se había sobreescrito sin detectarlo,
+renombrando sus tipos — invisible a `tsc --noEmit` sin `-b` porque el `tsconfig.json` raíz
+tiene `files: []` con solo `references`; el comando real (`tsc -b`, el que usa
+`npm run build`) sí lo detectó. Corregido manteniendo los nombres originales. 867/867 tests
+backend, 261/261 frontend, quality gates APROBADO (pylint 10.00/10, coverage 99.1%).
+**US-ADJ-24** (Administrador crea una Comisión) cerrada 2026-09-07, PR
+[#277](https://github.com/vvalotto/cognion/pull/277) mergeado a `develop` (fix de rutas de
+docs en PR [#278](https://github.com/vvalotto/cognion/pull/278)),
+`docs/reports/inc4-adj/US-ADJ-24-report.md`: frontend puro —
+`POST /comisiones` ya aceptaba rol `administrador` desde `US-1.1.1`, sin cambios de backend.
+Único componente técnico nuevo: `session.ts` gana `obtenerUsuarioId()` (decodifica el claim
+`sub` del JWT client-side, sin verificar firma — el backend ya la valida en cada request) para
+resolver `administrador_id`, campo que ningún helper anterior exponía a pesar de que varios
+formularios ya lo necesitaban. Pantalla `NuevaComision.tsx` reemplaza el placeholder de
+`/comisiones/nueva` dejado por `US-ADJ-23`, mismo patrón de `AbortController` en `useEffect`
+que `NuevaMateria.tsx` (`US-ADJ-20`). 272/273 tests frontend (1 flake preexistente sin
+relación, `NuevaPreguntaOpcionMultiple.test.tsx`), quality gates APROBADO. Deuda detectada, no
+introducida por esta US: el umbral global de cobertura de branches del frontend (80%) ya
+estaba roto en `develop` antes de este cambio (`Comisiones.tsx` de `US-ADJ-23` sin tests) —
+reportado como chip aparte (`task_ec36dcbe`).
+Siguen en la Iteración 1a: `US-ADJ-25` (Administrador asigna un Docente a una Comisión) y
+`US-ADJ-26` (Docente genera el link de invitación) — orden secuencial, una Comisión sin
+Docente asignado no sirve para generar invitación. Después, Iteración 1b (`US-ADJ-27` a `30`,
+menú de navegación persistente + homes por rol, frontend puro) e Iteración 2 (`US-ADJ-31`,
+UAT E2E consolidada que atraviesa los 4 BC en una sola corrida desde un login real). DoD del
+incremento: alta de Estudiante real de punta a punta desde la UI + navegación completa por
+clic para los 3 roles + guion de prueba del flujo completo del MVP, arrancando desde login
+real. Cierre previsto como `BL-007`.
+
+**Próximo paso:** continuar la Iteración 1a del Incremento 4-ADJ con `US-ADJ-25`
+(Administrador asigna un Docente a una Comisión).
+**Baseline abierta:** ninguna — `BL-006` cerrada, `BL-007` (Incremento 4-ADJ) pendiente de
+cierre.
 **Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.0`).
 
 ---
