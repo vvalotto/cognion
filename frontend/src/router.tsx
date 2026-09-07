@@ -4,9 +4,10 @@ import { RequireRole } from "@/components/RequireRole"
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/identidad/AltaDocente"
+import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
 import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
-import { ComisionPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
+import { InicioPlaceholder } from "@/pages/_placeholders"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
 import { ActividadDetalle } from "@/pages/actividad-evaluativa/ActividadDetalle"
 import { Banco } from "@/pages/banco-preguntas/Banco"
@@ -84,7 +85,7 @@ export const router = createBrowserRouter([
         path: "/comisiones/:comisionId",
         element: (
           <RequireRole rol="administrador">
-            <ComisionPlaceholder />
+            <ComisionDetalle />
           </RequireRole>
         ),
       },
