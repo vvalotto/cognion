@@ -9,6 +9,8 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-09-07
+
 ### Added
 - [US-ADJ-30] Home del Administrador
   - Pantalla `HomeAdministrador.tsx` reemplaza `InicioPlaceholder` para rol `administrador`
@@ -88,6 +90,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     (`src/banco_preguntas/frameworks/dependencies.py`)
   - 867/867 tests backend (8 nuevos BDD + regresión), quality gates APROBADO (pylint 10.00/10,
     CC máx 3, MI mín 55.67, coverage 99.1%)
+
+### Fixed
+- [US-ADJ-31] Validación E2E consolidada del MVP — cierra completa la Iteración 2 del
+  Incremento 4-ADJ y con ella la baseline `BL-007`
+  - Guion E2E ejecutado en navegador real (sin seeds, arrancando desde el login real):
+    Administrador crea Comisión y asigna Docente → Docente genera invitación → Estudiante se
+    registra → Docente crea materia, carga preguntas, crea actividad → Estudiante rinde (con
+    pausa/reanudación), finaliza, ve revisión y su desempeño → Docente ve el desempeño del
+    alumno y la tasa de error por tema
+  - Detectó y corrigió un bug real: el fix de `AbortController`/`StrictMode` de `US-ADJ-20`
+    (`BL-006`) solo se había auditado contra 5 de los 12 formularios con el mismo patrón —
+    quedaban 7 sin corregir (`NuevaPreguntaOpcionMultiple.tsx`,
+    `NuevaPreguntaVerdaderoFalso.tsx`, `EditarPregunta.tsx`, `NuevaActividad.tsx`,
+    `ExtenderPlazo.tsx`, `EditarTituloActividad.tsx`, `ResetearPassword.tsx`), 3 de ellos
+    bloqueando directamente el guion. Corregidos con el mismo patrón ya validado
+  - 892/892 tests backend, 329/329 tests frontend, `tsc -b` y oxlint sin errores nuevos,
+    DesignReviewer 0 CRITICAL
+  - Evidencia: `quality/reports/uat/inc4-adj/design.md`/`evidencia.md`, confirmada por Víctor
 
 ## [0.6.0] - 2026-09-06
 
