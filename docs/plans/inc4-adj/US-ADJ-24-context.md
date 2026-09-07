@@ -32,8 +32,8 @@
   - cobertura ≥ 95% (Vitest, sobre los archivos frontend nuevos/modificados)
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-ADJ-24-context.md
+- Contexto: docs/plans/inc4-adj/US-ADJ-24-context.md
 - BDD feature: N/A (skip_bdd)
-- Plan: docs/plans/US-ADJ-24-plan.md
+- Plan: docs/plans/inc4-adj/US-ADJ-24-plan.md
 - Reporte: docs/reports/inc4-adj/US-ADJ-24-report.md
 - Quality report: quality/reports/inc4-adj/US-ADJ-24-quality.json
