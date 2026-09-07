@@ -702,16 +702,38 @@ Iteración 1a del Incremento 4-ADJ** (`US-ADJ-23` a `26`) — el alta de un Estu
 resuelta de punta a punta en la UI: Administrador crea Comisión y asigna Docente, Docente
 genera el link de invitación.
 
-Sigue la Iteración 1b (`US-ADJ-27` a `30`, menú de navegación persistente + homes por rol,
-frontend puro sobre rutas ya protegidas por `RequireRole` — no depende de la Iteración 1a) y
-después la Iteración 2 (`US-ADJ-31`, UAT E2E consolidada que atraviesa los 4 BC en una sola
-corrida desde un login real, sí depende de que 1a y 1b estén completas). DoD del incremento:
-alta de Estudiante real de punta a punta desde la UI (✅ completo desde `US-ADJ-26`) +
-navegación completa por clic para los 3 roles + guion de prueba del flujo completo del MVP,
-arrancando desde login real. Cierre previsto como `BL-007`.
+Iteración 1b (`US-ADJ-27` a `30`, menú de navegación persistente + homes por rol, frontend
+puro sobre rutas ya protegidas por `RequireRole`) completa: **US-ADJ-27** (menú `AppNav.tsx`
+persistente en `AppLayout.tsx`, ítems condicionados por rol, resaltado de la sección actual)
+cerrada 2026-09-07, PR [#283](https://github.com/vvalotto/cognion/pull/283). **US-ADJ-28**
+(Home del Docente, `HomeDocente.tsx`, 4 cards) cerrada 2026-09-07, PR
+[#284](https://github.com/vvalotto/cognion/pull/284) — introduce `Inicio.tsx`, componente de
+despacho por rol para la ruta índice; gap de backend decidido con Víctor: sin
+`GET /usuarios/me`, el saludo del wireframe ("Hola, {nombre}") pasa a saludo genérico ("Hola,
+Docente"), sin agregar endpoint nuevo. **US-ADJ-29** (Home del Estudiante, `HomeEstudiante.tsx`,
+2 cards) cerrada 2026-09-07, PR [#285](https://github.com/vvalotto/cognion/pull/285) — reutiliza
+el mismo saludo genérico, sin gaps nuevos. **US-ADJ-30** (Home del Administrador,
+`HomeAdministrador.tsx`, 3 cards) cerrada 2026-09-07, PR
+[#286](https://github.com/vvalotto/cognion/pull/286): además de agregar la última rama de
+`Inicio.tsx`, corrige `RUTA_POST_LOGIN.administrador` en `Login.tsx` (`/docentes/nuevo` → `/`,
+mismo destino que Docente/Estudiante desde el login) — con los 3 roles apuntando a `/`, la
+tabla `RUTA_POST_LOGIN` quedó redundante y se eliminó en favor de `navigate("/")` directo.
+**Cierra completa la Iteración 1b** — ningún rol depende ya de `InicioPlaceholder` en el flujo
+normal de login; las 3 homes y el menú persistente forman el portal de entrada completo.
 
-**Próximo paso:** iniciar la Iteración 1b del Incremento 4-ADJ con `US-ADJ-27` (Menú de
-navegación persistente en `AppLayout`).
+Sigue la Iteración 2 (`US-ADJ-31`, UAT/Verificación — no genera código de producción): guion
+E2E consolidado que atraviesa los 4 BC en una sola corrida, arrancando desde un login real y
+navegando por clic (ya posible con 1a y 1b completas) — Administrador crea Comisión y asigna
+Docente → Docente genera el link de invitación → Estudiante se registra con ese link → Docente
+crea materia, carga preguntas, crea actividad → Estudiante rinde (con pausa/reanudación),
+finaliza y ve su revisión y su desempeño → Docente ve el desempeño del alumno y la tasa de
+error por tema. DoD del incremento: alta de Estudiante real de punta a punta desde la UI (✅
+completo desde `US-ADJ-26`) + navegación completa por clic para los 3 roles (✅ completo desde
+`US-ADJ-30`) + guion de prueba del flujo completo del MVP, arrancando desde login real (pendiente
+de `US-ADJ-31`). Cierre previsto como `BL-007`.
+
+**Próximo paso:** ejecutar `US-ADJ-31` — Validación E2E consolidada del MVP (Iteración 2, única
+US restante del Incremento 4-ADJ).
 **Baseline abierta:** ninguna — `BL-006` cerrada, `BL-007` (Incremento 4-ADJ) pendiente de
 cierre.
 **Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.0`).
