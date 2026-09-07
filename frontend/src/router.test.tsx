@@ -463,7 +463,7 @@ describe("router (integración)", () => {
       await router.navigate("/")
       render(<RouterProvider router={router} />)
 
-      expect(await screen.findByText("Mis Actividades")).toBeInTheDocument()
+      expect(await screen.findByRole("link", { name: "Mis Actividades" })).toBeInTheDocument()
       expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
       expect(screen.queryByText("Banco de Preguntas")).not.toBeInTheDocument()
     })
@@ -478,8 +478,18 @@ describe("router (integración)", () => {
       expect(await screen.findByRole("heading", { name: "Hola, Docente" })).toBeInTheDocument()
     })
 
-    it("la ruta / sigue mostrando el placeholder con sesión de estudiante", async () => {
+    it("la ruta / renderiza la Home del Estudiante con sesión de estudiante (US-ADJ-29)", async () => {
       setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(
+        await screen.findByRole("heading", { name: "Hola, Estudiante" }),
+      ).toBeInTheDocument()
+    })
+
+    it("la ruta / sigue mostrando el placeholder con sesión de administrador", async () => {
+      setSession({ token: "t", rol: "administrador" })
       await router.navigate("/")
       render(<RouterProvider router={router} />)
 
@@ -499,6 +509,20 @@ describe("router (integración)", () => {
       // la Home — la card es la segunda en el orden del DOM (AppNav se renderiza antes).
       const [, cardActividades] = screen.getAllByText("Actividades")
       await user.click(cardActividades)
+
+      expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
+    })
+
+    it("Estudiante navega de la Home a Mis Actividades por clic en la card", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Hola, Estudiante" })
+
+      const user = userEvent.setup()
+      // "Mis Actividades" aparece dos veces: en el ítem del AppNav y en la card de la Home.
+      const [, cardMisActividades] = screen.getAllByText("Mis Actividades")
+      await user.click(cardMisActividades)
 
       expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
     })
