@@ -14,7 +14,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.identidad.entities.errors import MateriaNoExiste
 from src.identidad.frameworks.api.schemas import ComisionResumenResponse
-from src.identidad.frameworks.dependencies import get_comisiones_query_controller, require_docente
+from src.identidad.frameworks.dependencies import (
+    get_comisiones_query_controller,
+    require_docente_o_administrador,
+)
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
 )
@@ -25,16 +28,20 @@ router = APIRouter(prefix="/materias", tags=["identidad"])
 @router.get(
     "/{materia_id}/comisiones",
     response_model=list[ComisionResumenResponse],
-    dependencies=[Depends(require_docente)],
+    dependencies=[Depends(require_docente_o_administrador)],
 )
 async def listar_comisiones_por_materia(
     materia_id: UUID,
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
 ) -> list[ComisionResumenResponse]:
-    """Comisiones de la materia; 404 si `materia_id` no existe (`US-4.2.2`)."""
+    """Comisiones de la materia, con sus docentes asignados; 404 si `materia_id` no existe
+    (`US-4.2.2`, `docentes_asignados` agregado en `US-ADJ-23`)."""
     try:
         comisiones = await controller.listar_comisiones_por_materia(materia_id)
     except MateriaNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
-    return [ComisionResumenResponse(id=c.id, horario=c.horario) for c in comisiones]
+    return [
+        ComisionResumenResponse(id=c.id, horario=c.horario, docentes_asignados=c.docentes_asignados)
+        for c in comisiones
+    ]

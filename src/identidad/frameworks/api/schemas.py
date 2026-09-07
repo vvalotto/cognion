@@ -89,10 +89,12 @@ class ComisionResponse(BaseModel):
 
 
 class ComisionResumenResponse(BaseModel):
-    """Representación mínima de una comisión para selectores (`US-4.2.2`)."""
+    """Representación de una comisión para selectores (`US-4.2.2`) y para el listado de
+    gestión del Administrador (`docentes_asignados`, `US-ADJ-23`)."""
 
     id: UUID
     horario: str
+    docentes_asignados: list[UUID]
 
 
 class EstudianteResumenResponse(BaseModel):

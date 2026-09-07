@@ -86,3 +86,10 @@ get_current_user = build_get_current_user(get_jwt_issuer())
 
 require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 """Dependency que exige rol `docente` — endpoints de gestión del banco de preguntas (RF-02)."""
+
+require_docente_o_administrador = require_rol(
+    [TipoPerfil.DOCENTE, TipoPerfil.ADMINISTRADOR], get_current_user
+)
+"""Dependency que exige rol `docente` o `administrador` — `GET /materias` lo necesita también
+para el Administrador (selector de la pantalla de Comisiones, `US-ADJ-23`, gap detectado en
+Fase 3: `GET /materias` era `require_docente` únicamente y bloqueaba la pantalla)."""

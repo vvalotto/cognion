@@ -6,6 +6,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
@@ -20,12 +21,17 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         self._session = session
 
     async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
-        """Lista las comisiones de una materia. Materia sin comisiones → lista vacía.
+        """Lista las comisiones de una materia, con sus docentes asignados. Materia sin
+        comisiones → lista vacía.
 
-        No carga los docentes asignados (`docentes_asignados=[]`) — esta consulta solo se
-        usa para poblar el selector de comisiones (id, horario), sin necesitar ese dato.
+        Carga `docentes` con `selectinload` — necesario en SQLAlchemy async para evitar
+        `MissingGreenlet` al acceder a la relación fuera de la sesión (`US-ADJ-23`).
         """
-        query = select(ComisionModel).where(ComisionModel.materia_id == materia_id)
+        query = (
+            select(ComisionModel)
+            .where(ComisionModel.materia_id == materia_id)
+            .options(selectinload(ComisionModel.docentes))
+        )
         resultado = await self._session.execute(query)
         return [
             Comision(
@@ -33,7 +39,7 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
                 materia_id=modelo.materia_id,
                 horario=modelo.horario,
                 administrador_id=modelo.administrador_id,
-                docentes_asignados=[],
+                docentes_asignados=[docente.id for docente in modelo.docentes],
             )
             for modelo in resultado.scalars().all()
         ]
