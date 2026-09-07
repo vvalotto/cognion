@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-25",
+    "us_title": "Administrador asigna un Docente a una Comisión",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-07T15:28:14.572664+00:00",
+    "completed_at": "2026-09-07T15:51:45.802032+00:00",
+    "total_elapsed_seconds": 1411,
+    "effective_seconds": 1411,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-07T15:30:10.005462+00:00",
+      "completed_at": "2026-09-07T15:31:11.156422+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-07T15:31:11.280373+00:00",
+      "completed_at": "2026-09-07T15:31:33.115251+00:00",
+      "elapsed_seconds": 21,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de Implementación",
+      "started_at": "2026-09-07T15:31:33.235705+00:00",
+      "completed_at": "2026-09-07T15:31:56.968086+00:00",
+      "elapsed_seconds": 23,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-09-07T15:31:57.088140+00:00",
+      "completed_at": "2026-09-07T15:33:31.144405+00:00",
+      "elapsed_seconds": 94,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "t1",
+          "task_name": "backend: obtener_comision + endpoint GET",
+          "task_type": "implementacion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T15:32:00.174036+00:00",
+          "completed_at": "2026-09-07T15:32:18.408154+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -4.7,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "t2",
+          "task_name": "frontend: cliente API obtenerComision/asignarDocente",
+          "task_type": "implementacion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T15:32:18.535371+00:00",
+          "completed_at": "2026-09-07T15:33:30.993558+00:00",
+          "elapsed_seconds": 72,
+          "actual_minutes": 1.2,
+          "variance_minutes": -3.8,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-07T15:33:31.276279+00:00",
+      "completed_at": "2026-09-07T15:36:09.535904+00:00",
+      "elapsed_seconds": 158,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-07T15:36:09.661567+00:00",
+      "completed_at": "2026-09-07T15:39:17.982504+00:00",
+      "elapsed_seconds": 188,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-07T15:39:18.360712+00:00",
+      "completed_at": "2026-09-07T15:49:10.153241+00:00",
+      "elapsed_seconds": 591,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-07T15:49:10.277568+00:00",
+      "completed_at": "2026-09-07T15:50:11.577896+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-07T15:50:11.733270+00:00",
+      "completed_at": "2026-09-07T15:51:35.475893+00:00",
+      "elapsed_seconds": 83,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-07T15:51:35.647286+00:00",
+      "completed_at": "2026-09-07T15:51:42.533770+00:00",
+      "elapsed_seconds": 6,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "total_phases": 10,
+    "estimated_total_minutes": 10.0,
+    "actual_total_minutes": 1.5,
+    "variance_minutes": -8.5,
+    "variance_percent": -85.0
+  }
+}
