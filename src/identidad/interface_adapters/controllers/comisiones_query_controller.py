@@ -41,3 +41,15 @@ class ComisionesQueryController:
         if await self._comision_repository.obtener_por_id(comision_id) is None:
             raise ComisionNoExiste(comision_id)
         return await self._comision_query.listar_estudiantes(comision_id)
+
+    async def obtener_comision(self, comision_id: UUID) -> Comision:
+        """Devuelve una comisión puntual; `ComisionNoExiste` si `comision_id` no existe.
+
+        Consulta de lectura simple (`US-ADJ-25`) — pass-through sobre
+        `ComisionRepositoryPort.obtener_por_id()`, ya inyectado para validar existencia en
+        `listar_estudiantes`, sin agregar un Use Case dedicado.
+        """
+        comision = await self._comision_repository.obtener_por_id(comision_id)
+        if comision is None:
+            raise ComisionNoExiste(comision_id)
+        return comision

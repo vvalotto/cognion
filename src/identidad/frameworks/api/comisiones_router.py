@@ -57,6 +57,30 @@ async def crear_comision(
 
 
 @router.get(
+    "/{comision_id}",
+    response_model=ComisionResponse,
+    dependencies=[Depends(require_docente_o_administrador)],
+)
+async def obtener_comision(
+    comision_id: UUID,
+    controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
+) -> ComisionResponse:
+    """Detalle de una comisión puntual; 404 si `comision_id` no existe (`US-ADJ-25`)."""
+    try:
+        comision = await controller.obtener_comision(comision_id)
+    except ComisionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    return ComisionResponse(
+        id=comision.id,
+        materia_id=comision.materia_id,
+        horario=comision.horario,
+        administrador_id=comision.administrador_id,
+        docentes_asignados=comision.docentes_asignados,
+    )
+
+
+@router.get(
     "/{comision_id}/estudiantes",
     response_model=list[EstudianteResumenResponse],
     dependencies=[Depends(require_docente_o_administrador)],
