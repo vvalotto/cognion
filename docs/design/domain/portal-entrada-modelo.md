@@ -1,12 +1,12 @@
 # Portal de Entrada — Mapa de Navegación por Rol
 
 > Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue [#261](https://github.com/vvalotto/cognion/issues/261) (US-4ADJ.0.1,
+> de cierre del Issue [#261](https://github.com/vvalotto/cognion/issues/261) (US-ADJ-21,
 > Iteración 0, Incremento 4-ADJ).**
 > No es un modelo de dominio — Portal de Entrada no es un BC, no tiene aggregate ni evento
 > propio. Es un mapa de **arquitectura de información**: qué accesos existen hoy por rol, cómo
 > se agrupan, con qué prioridad y con qué nombre — insumo para el wireframe visual de
-> `US-4ADJ.0.2`.
+> `US-ADJ-22`.
 > Origen: `docs/aprendizajes/HITO-9-PORTAL-DE-ENTRADA-SIN-DUENO-DE-PRODUCTO.md`.
 > Todos los accesos listados abajo son rutas **ya existentes**, protegidas por `RequireRole` —
 > este documento no propone ningún endpoint ni pantalla de contenido nuevos, solo cómo
@@ -108,7 +108,7 @@ logo + badge + los ítems de este menú.
 | **Docente** | 1. Banco de Preguntas (`/materias`) — 2. Actividades (`/actividad-evaluativa/materias`) — 3. Desempeño por alumno (`/analytics/desempeno-por-alumno`) — 4. Desempeño por tema (`/analytics/desempeno-por-tema`) |
 | **Estudiante** | 1. Mis Actividades (`/mis-actividades/materias`) — 2. Mi Desempeño (`/analytics/mi-desempeno`) |
 | **Administrador** | 1. Comisiones (`/comisiones`) — 2. Docentes (`/docentes/nuevo`) — 3. Cuentas (`/cuentas`) |
-| **Docente (adicional)** | La generación del link de invitación vive dentro del detalle de una Comisión, no como ítem de menú propio — el Docente llega ahí desde "Actividades" o desde una vista de sus Comisiones a confirmar en el wireframe (`US-4ADJ.0.2`) |
+| **Docente (adicional)** | La generación del link de invitación vive dentro del detalle de una Comisión, no como ítem de menú propio — el Docente llega ahí desde "Actividades" o desde una vista de sus Comisiones a confirmar en el wireframe (`US-ADJ-22`) |
 
 **Criterio de orden — confirmado con Víctor (2026-09-07):** para Docente, orden de "creación
 de contenido → ejecución → análisis" (Banco → Actividades → Desempeño por alumno → Desempeño
@@ -157,7 +157,7 @@ que ve el usuario, así que puede permitirse más contexto que un ítem de menú
 | Cuentas | `/cuentas` | Ver, filtrar, resetear y desbloquear cuentas existentes |
 
 **Nota:** hoy `RUTA_POST_LOGIN[administrador]` en `Login.tsx` salta directo a `/docentes/nuevo`
-sin pasar por un home — `US-4ADJ.1.4` lo cambia a `/` (home real), igual que Docente y
+sin pasar por un home — `US-ADJ-26` lo cambia a `/` (home real), igual que Docente y
 Estudiante, para que el Administrador también tenga un punto de partida navegable en vez de
 aterrizar siempre en la misma tarea.
 
@@ -167,7 +167,7 @@ aterrizar siempre en la misma tarea.
 
 - **Contenido nuevo** — este documento no agrega ninguna función; todas las rutas ya existen.
 - **Diseño visual** (colores, tipografía, layout de las tarjetas/menú) — corresponde al
-  wireframe de `US-4ADJ.0.2`, no a este mapa.
+  wireframe de `US-ADJ-22`, no a este mapa.
 - **Notificaciones o badges** en el menú (ej. "3 actividades por corregir") — no hay ningún
   read model para eso todavía; queda fuera hasta que exista una necesidad concreta.
 

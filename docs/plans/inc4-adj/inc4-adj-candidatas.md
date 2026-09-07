@@ -20,7 +20,7 @@
 > existe desde `US-1.1.1` (Incremento 1), pero la UI quedó explícitamente diferida "sin fecha"
 > en la Iteración 2 de ese incremento (`docs/traceability/matrix.md`, nota de `US-1.1.9`) y
 > nunca se retomó. Sin esto, el alta de un Estudiante real (`RF-01`) está rota de punta a punta
-> en la UI — bloquea directamente la Validación E2E ya planeada en `US-4ADJ.2.1`. Se agrega al
+> en la UI — bloquea directamente la Validación E2E ya planeada en `US-ADJ-31`. Se agrega al
 > mismo incremento (no uno nuevo) porque cierra un prerrequisito de una iteración que ya
 > estaba adentro. Detalle de las decisiones de diseño en
 > `docs/design/domain/portal-entrada-modelo.md` §"Gap real detectado".
@@ -61,15 +61,15 @@ explícitamente por Víctor en el comentario que cierra el Issue. Mismo patrón 
 
 | US | Tipo | Descripción | Postcondición (DoD) | Path del artefacto |
 |---|---|---|---|---|
-| **US-4ADJ.0.1** | Modelado | Mapa de navegación por rol: qué accesos aparecen en el menú persistente y en cada home (Docente: Materias/Banco de Preguntas, Actividades, Analytics por alumno/por tema; Estudiante: Mis Materias/Actividades, Mi Desempeño; Administrador: Alta de Docente, Gestión de Cuentas), agrupamiento, prioridad/orden y nomenclatura — sin diseño visual todavía | Víctor aprueba el mapa de navegación en el comentario de cierre del Issue | `docs/design/domain/portal-entrada-modelo.md` |
-| **US-4ADJ.0.2** | Modelado | Wireframes del portal de entrada sobre el mapa de `US-4ADJ.0.1`: home de Docente, home de Estudiante, home de Administrador, y menú de navegación persistente (visible en toda pantalla post-login vía `AppLayout`, no solo en el home) — condicionado por rol | Víctor aprueba wireframes/prototipo en el comentario de cierre del Issue | `docs/design/ux/wireframes-portal-entrada.md` + prototipo en `docs/design/ux/prototipos/` |
+| **US-ADJ-21** | Modelado | Mapa de navegación por rol: qué accesos aparecen en el menú persistente y en cada home (Docente: Materias/Banco de Preguntas, Actividades, Analytics por alumno/por tema; Estudiante: Mis Materias/Actividades, Mi Desempeño; Administrador: Alta de Docente, Gestión de Cuentas), agrupamiento, prioridad/orden y nomenclatura — sin diseño visual todavía | Víctor aprueba el mapa de navegación en el comentario de cierre del Issue | `docs/design/domain/portal-entrada-modelo.md` |
+| **US-ADJ-22** | Modelado | Wireframes del portal de entrada sobre el mapa de `US-ADJ-21`: home de Docente, home de Estudiante, home de Administrador, y menú de navegación persistente (visible en toda pantalla post-login vía `AppLayout`, no solo en el home) — condicionado por rol | Víctor aprueba wireframes/prototipo en el comentario de cierre del Issue | `docs/design/ux/wireframes-portal-entrada.md` + prototipo en `docs/design/ux/prototipos/` |
 
 **Nota para el diseño:** hoy, dentro de un mismo rol, tampoco hay navegación cruzada entre
 áreas top-level — p. ej. el Docente en `/materias` (Banco de Preguntas) no tiene forma de
 llegar a `/actividad-evaluativa/materias` (Actividad Evaluativa) sin escribir la URL. El menú
 persistente resuelve esto para todas las pantallas, no solo para el home.
 
-**Orden:** `US-4ADJ.0.1` antes que `US-4ADJ.0.2` — el wireframe visualiza el mapa de
+**Orden:** `US-ADJ-21` antes que `US-ADJ-22` — el wireframe visualiza el mapa de
 navegación ya aprobado, mismo orden que `US-4.0.1`→`US-4.0.2` en Incremento 4.
 
 ---
@@ -84,14 +84,14 @@ homes), frontend puro sobre rutas ya protegidas por `RequireRole` (`US-1.1.9`).
 
 | US | Descripción | Consume | Backend | Actor |
 |---|---|---|---|---|
-| **US-4ADJ.1.1** | Administrador ve el listado de Comisiones de una Materia (horario, Docentes asignados, cantidad de Estudiantes inscriptos) | `GET /materias/{id}/comisiones`, `GET /comisiones/{id}/estudiantes` | **Amplía el guard de rol** de ambos endpoints — hoy `require_docente` únicamente (`US-4.2.2`), agregar `administrador` | Administrador |
-| **US-4ADJ.1.2** | Administrador crea una Comisión (elige Materia + horario) | `POST /comisiones` (ya acepta rol `administrador`) | Sin cambios | Administrador |
-| **US-4ADJ.1.3** | Administrador asigna un Docente a una Comisión (selecciona de la lista de usuarios rol `docente`) | `GET /usuarios?rol=docente` (`US-2.2.2`), `POST /comisiones/{id}/docentes` (ya acepta rol `administrador`) | Sin cambios | Administrador |
-| **US-4ADJ.1.4** | Docente genera el link de invitación de una Comisión donde está asignado | `POST /comisiones/{id}/invitaciones` (ya acepta rol `docente`, `US-1.1.1`) | Sin cambios | Docente |
+| **US-ADJ-23** | Administrador ve el listado de Comisiones de una Materia (horario, Docentes asignados, cantidad de Estudiantes inscriptos) | `GET /materias/{id}/comisiones`, `GET /comisiones/{id}/estudiantes` | **Amplía el guard de rol** de ambos endpoints — hoy `require_docente` únicamente (`US-4.2.2`), agregar `administrador` | Administrador |
+| **US-ADJ-24** | Administrador crea una Comisión (elige Materia + horario) | `POST /comisiones` (ya acepta rol `administrador`) | Sin cambios | Administrador |
+| **US-ADJ-25** | Administrador asigna un Docente a una Comisión (selecciona de la lista de usuarios rol `docente`) | `GET /usuarios?rol=docente` (`US-2.2.2`), `POST /comisiones/{id}/docentes` (ya acepta rol `administrador`) | Sin cambios | Administrador |
+| **US-ADJ-26** | Docente genera el link de invitación de una Comisión donde está asignado | `POST /comisiones/{id}/invitaciones` (ya acepta rol `docente`, `US-1.1.1`) | Sin cambios | Docente |
 
-**Orden:** `US-4ADJ.1.1` primero (amplía el guard de rol, ambas pantallas de Administrador lo
-necesitan) → `US-4ADJ.1.2` → `US-4ADJ.1.3` (una Comisión sin Docente asignado no sirve para
-generar invitación) → `US-4ADJ.1.4` en cualquier momento después de que exista al menos una
+**Orden:** `US-ADJ-23` primero (amplía el guard de rol, ambas pantallas de Administrador lo
+necesitan) → `US-ADJ-24` → `US-ADJ-25` (una Comisión sin Docente asignado no sirve para
+generar invitación) → `US-ADJ-26` en cualquier momento después de que exista al menos una
 Comisión con Docente asignado.
 
 ### 1b — Portal de entrada (menú + homes)
@@ -101,14 +101,14 @@ nuevo.
 
 | US | Descripción | Reemplaza / consume | Actor |
 |---|---|---|---|
-| **US-4ADJ.1.5** | Menú de navegación persistente en `AppLayout` — enlaces condicionados por rol (`session.rol`), visible en toda pantalla post-login | `AppLayout.tsx` (hoy sin navegación, solo header con logo/badge) | Docente, Estudiante, Administrador |
-| **US-4ADJ.1.6** | Home del Docente — accesos directos a Banco de Preguntas, Actividades, Analytics | Reemplaza `InicioPlaceholder` para rol `docente` | Docente |
-| **US-4ADJ.1.7** | Home del Estudiante — accesos directos a Mis Actividades, Mi Desempeño | Reemplaza `InicioPlaceholder` para rol `estudiante` | Estudiante |
-| **US-4ADJ.1.8** | Home del Administrador — accesos directos a Comisiones, Alta de Docente, Gestión de Cuentas | `RUTA_POST_LOGIN[administrador]` pasa de `/docentes/nuevo` directo a `/` (home real, mismo patrón que Docente/Estudiante) | Administrador |
+| **US-ADJ-27** | Menú de navegación persistente en `AppLayout` — enlaces condicionados por rol (`session.rol`), visible en toda pantalla post-login | `AppLayout.tsx` (hoy sin navegación, solo header con logo/badge) | Docente, Estudiante, Administrador |
+| **US-ADJ-28** | Home del Docente — accesos directos a Banco de Preguntas, Actividades, Analytics | Reemplaza `InicioPlaceholder` para rol `docente` | Docente |
+| **US-ADJ-29** | Home del Estudiante — accesos directos a Mis Actividades, Mi Desempeño | Reemplaza `InicioPlaceholder` para rol `estudiante` | Estudiante |
+| **US-ADJ-30** | Home del Administrador — accesos directos a Comisiones, Alta de Docente, Gestión de Cuentas | `RUTA_POST_LOGIN[administrador]` pasa de `/docentes/nuevo` directo a `/` (home real, mismo patrón que Docente/Estudiante) | Administrador |
 
-**Orden:** `US-4ADJ.1.5` primero (el menú depende del wireframe de navegación, pero ninguna de
+**Orden:** `US-ADJ-27` primero (el menú depende del wireframe de navegación, pero ninguna de
 las 3 US de home depende de las otras 2 — pueden ir en paralelo después). Las 3 homes sí
-dependen de `US-4ADJ.1.5` si el wireframe integra menú + contenido de home en una sola
+dependen de `US-ADJ-27` si el wireframe integra menú + contenido de home en una sola
 pantalla (a confirmar en el wireframe de la Iteración 0). `1b` no depende de `1a` para
 implementarse (son pantallas distintas), pero la Validación E2E de la Iteración 2 sí necesita
 `1a` completa.
@@ -122,7 +122,7 @@ ejecutado sin hallazgos 🔴 Bloqueantes, confirmado por Víctor.
 
 | US | Tipo | Descripción | Postcondición (DoD) |
 |---|---|---|---|
-| **US-4ADJ.2.1** | UAT/Verificación | Guion E2E consolidado que atraviesa los 4 BC en una sola corrida, **arrancando desde un login real y navegando por clic** (no URLs tipeadas, mismo gap señalado en `HITO-9` L-9.2), **incluida el alta real del Estudiante por UI** (mismo gap cerrado en la Iteración 1a — hasta ahora toda UAT sembraba la Comisión/invitación por script): Administrador crea una Comisión y asigna un Docente → Docente genera el link de invitación → Estudiante se registra con ese link; Docente crea materia → carga preguntas (opción múltiple y V/F) → crea actividad de período abierto; Estudiante inicia sesión → rinde la evaluación (con pausa/reanudación) → finaliza y ve su revisión → ve su propio desempeño (Analytics); Docente ve el desempeño de ese alumno y la tasa de error por tema | Guion ejecutado en navegador real (Claude Browser o Chrome), sin hallazgos 🔴 Bloqueantes, evidencia guardada en `quality/reports/uat/inc4-adj/`, confirmado por Víctor |
+| **US-ADJ-31** | UAT/Verificación | Guion E2E consolidado que atraviesa los 4 BC en una sola corrida, **arrancando desde un login real y navegando por clic** (no URLs tipeadas, mismo gap señalado en `HITO-9` L-9.2), **incluida el alta real del Estudiante por UI** (mismo gap cerrado en la Iteración 1a — hasta ahora toda UAT sembraba la Comisión/invitación por script): Administrador crea una Comisión y asigna un Docente → Docente genera el link de invitación → Estudiante se registra con ese link; Docente crea materia → carga preguntas (opción múltiple y V/F) → crea actividad de período abierto; Estudiante inicia sesión → rinde la evaluación (con pausa/reanudación) → finaliza y ve su revisión → ve su propio desempeño (Analytics); Docente ve el desempeño de ese alumno y la tasa de error por tema | Guion ejecutado en navegador real (Claude Browser o Chrome), sin hallazgos 🔴 Bloqueantes, evidencia guardada en `quality/reports/uat/inc4-adj/`, confirmado por Víctor |
 
 Este guion es, en los hechos, la primera UAT del proyecto que ejercita el **camino completo**
 del MVP (crear contenido → rendir → revisar → analizar) en una sola corrida — hasta ahora cada
@@ -146,18 +146,18 @@ sola corrida, arrancando desde el login real.
 1. ~~Revisar esta propuesta de candidatas con Víctor.~~ Hecho — 2026-09-07, incluida la
    ampliación de alcance de Comisiones/Invitación.
 2. ~~Crear Milestone GitHub `Incremento 4-ADJ — Portal de Entrada y Validación E2E` + Issues
-   para `US-4ADJ.0.1` y `US-4ADJ.0.2`.~~ Hecho — Milestone
+   para `US-ADJ-21` y `US-ADJ-22`.~~ Hecho — Milestone
    [#12](https://github.com/vvalotto/cognion/milestone/12), Issues
-   [#261](https://github.com/vvalotto/cognion/issues/261) (`US-4ADJ.0.1`) y
-   [#262](https://github.com/vvalotto/cognion/issues/262) (`US-4ADJ.0.2`).
-3. Ejecutar el mapa de navegación (`US-4ADJ.0.1`, ya redactado en
+   [#261](https://github.com/vvalotto/cognion/issues/261) (`US-ADJ-21`) y
+   [#262](https://github.com/vvalotto/cognion/issues/262) (`US-ADJ-22`).
+3. Ejecutar el mapa de navegación (`US-ADJ-21`, ya redactado en
    `docs/design/domain/portal-entrada-modelo.md`, incluida la ampliación de Comisiones) y los
-   wireframes (`US-4ADJ.0.2`), cada uno con aprobación explícita de Víctor.
-4. Crear Issues y `docs/specs/inc4-adj/US-4ADJ.1.K.md` de la Iteración 1 (1a: `1.1` a `1.4`;
-   1b: `1.5` a `1.8`).
-5. Implementar Iteración 1a (`US-4ADJ.1.1` → `1.2` → `1.3` → `1.4`, orden secuencial) y
-   luego/en paralelo Iteración 1b (`US-4ADJ.1.5` primero, `1.6`/`1.7`/`1.8` en cualquier orden
+   wireframes (`US-ADJ-22`), cada uno con aprobación explícita de Víctor.
+4. Crear Issues y `docs/specs/ajustes/US-ADJ-NN.md` de la Iteración 1 (1a: `US-ADJ-23` a `26`;
+   1b: `US-ADJ-27` a `30`).
+5. Implementar Iteración 1a (`US-ADJ-23` → `24` → `25` → `26`, orden secuencial) y
+   luego/en paralelo Iteración 1b (`US-ADJ-27` primero, `28`/`29`/`30` en cualquier orden
    entre sí).
-6. Crear Issue y spec de `US-4ADJ.2.1`, ejecutar la UAT E2E consolidada (requiere 1a y 1b
+6. Crear Issue y spec de `US-ADJ-31`, ejecutar la UAT E2E consolidada (requiere 1a y 1b
    completas).
 7. Cerrar baseline (`BL-007`) siguiendo `WORKFLOW-DESARROLLO.md` §7.
