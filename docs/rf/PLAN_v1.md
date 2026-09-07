@@ -174,18 +174,22 @@ reales ya corridas en el incremento anterior.
 
 ## Incremento 4-ADJ — Portal de Entrada y Validación E2E
 
-*(Insertado fuera de secuencia — revisión 2026-09-07. No mapea a ningún RF de este documento;
-detalle completo en `docs/plans/inc4-adj/inc4-adj-candidatas.md`.)*
+*(Insertado fuera de secuencia — revisión 2026-09-07. No mapea a ningún RF nuevo de este
+documento, pero su Iteración 1a completa la UI de `RF-01` (Registro de estudiante por
+invitación) — ya "Validado" desde `BL-002`, sin UI de Comisiones/invitación hasta ahora.
+Detalle completo en `docs/plans/inc4-adj/inc4-adj-candidatas.md`.)*
 
 | Iteración | Contenido |
 |---|---|
-| 0 | **Modelado (liviano):** wireframes del portal de entrada — home de Docente, Estudiante y Administrador, más menú de navegación persistente condicionado por rol |
-| 1 | Implementación de las 4 pantallas (menú + 3 homes), frontend puro, sin backend nuevo |
-| 2 | **Validación E2E del MVP:** guion consolidado que atraviesa Identidad → Banco de Preguntas → Actividad Evaluativa → Analytics en una sola corrida, arrancando desde un login real |
+| 0 | **Modelado (liviano):** mapa de navegación por rol + wireframes del portal de entrada — home de Docente, Estudiante y Administrador, más menú de navegación persistente condicionado por rol |
+| 1 | **1a:** Administrador crea Comisiones y asigna Docentes, Docente genera el link de invitación (cierra la UI de `RF-01`, toca `src/` — amplía el guard de rol de dos endpoints de consulta). **1b:** portal de entrada en sí — menú + 3 homes, frontend puro |
+| 2 | **Validación E2E del MVP:** guion consolidado que atraviesa los 4 BC en una sola corrida, arrancando desde un login real, incluida el alta real del Estudiante por UI |
 
-**Hito:** cualquier Docente, Estudiante o Administrador autenticado puede navegar, por clic,
-desde el login hasta cualquier función de su rol sin conocer ninguna URL de memoria; y existe
-al menos una prueba que valida el flujo completo del MVP en una sola corrida.
+**Hito:** un Administrador puede dar de alta un Estudiante real de punta a punta desde la UI
+(Comisión → Docente asignado → invitación → registro); cualquier Docente, Estudiante o
+Administrador autenticado puede navegar, por clic, desde el login hasta cualquier función de
+su rol sin conocer ninguna URL de memoria; y existe al menos una prueba que valida el flujo
+completo del MVP en una sola corrida.
 
 *(Se secuencia antes de Notificaciones porque es el que efectivamente entrega un MVP
 demostrable — con Notificaciones el ciclo de la actividad de período abierto se completa, pero
