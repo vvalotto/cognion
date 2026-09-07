@@ -10,6 +10,14 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-29] Home del Estudiante
+  - Pantalla `HomeEstudiante.tsx` reemplaza `InicioPlaceholder` para rol `estudiante` en `/`
+    — 2 cards de acceso directo (Mis Actividades, Mi Desempeño)
+  - `Inicio.tsx` (`US-ADJ-28`) gana la rama `estudiante` — solo Administrador sigue en
+    `InicioPlaceholder`, hasta `US-ADJ-30`
+  - Mismo saludo genérico decidido en `US-ADJ-28` ("Hola, Estudiante"), sin
+    `GET /usuarios/me`
+  - 322/322 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores)
 - [US-ADJ-28] Home del Docente
   - Pantalla `HomeDocente.tsx` reemplaza `InicioPlaceholder` para rol `docente` en `/` — 4
     cards de acceso directo (Banco de Preguntas, Actividades, Desempeño por alumno,

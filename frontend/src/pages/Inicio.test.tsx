@@ -27,12 +27,12 @@ describe("Inicio", () => {
     expect(screen.getByRole("heading", { name: "Hola, Docente" })).toBeInTheDocument()
   })
 
-  it("Estudiante sigue viendo el placeholder", () => {
+  it("Estudiante ve HomeEstudiante", () => {
     setSession({ token: "t", rol: "estudiante" })
 
     renderInicio()
 
-    expect(screen.getByText("Sesión iniciada — pendiente de pantalla propia")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Hola, Estudiante" })).toBeInTheDocument()
   })
 
   it("Administrador sigue viendo el placeholder", () => {
