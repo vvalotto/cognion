@@ -77,9 +77,7 @@ class TestListarComisionesPorMateria:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
 
-            response = await client.get(
-                f"/materias/{materia_id}/comisiones", headers=admin_headers
-            )
+            response = await client.get(f"/materias/{materia_id}/comisiones", headers=admin_headers)
 
         assert response.status_code == 200
 
@@ -106,9 +104,7 @@ class TestListarComisionesPorMateria:
             comision.asignar_docente(docente.id)
             await comision_repo.actualizar(comision)
 
-            response = await client.get(
-                f"/materias/{materia_id}/comisiones", headers=admin_headers
-            )
+            response = await client.get(f"/materias/{materia_id}/comisiones", headers=admin_headers)
 
         assert response.status_code == 200
         assert response.json()[0]["docentes_asignados"] == [str(docente.id)]
