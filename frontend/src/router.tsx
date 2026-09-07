@@ -4,8 +4,9 @@ import { RequireRole } from "@/components/RequireRole"
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/identidad/AltaDocente"
+import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
-import { InicioPlaceholder } from "@/pages/_placeholders"
+import { ComisionPlaceholder, InicioPlaceholder } from "@/pages/_placeholders"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
 import { ActividadDetalle } from "@/pages/actividad-evaluativa/ActividadDetalle"
 import { Banco } from "@/pages/banco-preguntas/Banco"
@@ -62,6 +63,30 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <InicioPlaceholder /> },
       { path: "/mi-cuenta/cambiar-password", element: <CambiarPassword /> },
+      {
+        path: "/comisiones",
+        element: (
+          <RequireRole rol="administrador">
+            <Comisiones />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/comisiones/nueva",
+        element: (
+          <RequireRole rol="administrador">
+            <ComisionPlaceholder />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/comisiones/:comisionId",
+        element: (
+          <RequireRole rol="administrador">
+            <ComisionPlaceholder />
+          </RequireRole>
+        ),
+      },
       {
         path: "/docentes/nuevo",
         element: (
