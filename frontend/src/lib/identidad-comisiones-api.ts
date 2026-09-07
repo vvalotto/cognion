@@ -116,3 +116,41 @@ export async function asignarDocente(
   )
   return mapearDetalle(response)
 }
+
+export interface InvitacionResponse {
+  id: string
+  comisionId: string
+  docenteId: string
+  expiraEn: string
+  token: string
+}
+
+interface InvitacionApiResponse {
+  id: string
+  comision_id: string
+  docente_id: string
+  expira_en: string
+  token: string
+}
+
+/**
+ * Genera una invitación para que el Docente comparta el link manualmente (`US-ADJ-26`) — sin
+ * `email_destinatario`, el backend omite el envío de email y solo devuelve el `token`.
+ */
+export async function generarInvitacion(
+  comisionId: string,
+  docenteId: string,
+  signal?: AbortSignal,
+): Promise<InvitacionResponse> {
+  const response = await apiFetch<InvitacionApiResponse>(
+    `/comisiones/${comisionId}/invitaciones`,
+    { method: "POST", body: { docente_id: docenteId }, signal },
+  )
+  return {
+    id: response.id,
+    comisionId: response.comision_id,
+    docenteId: response.docente_id,
+    expiraEn: response.expira_en,
+    token: response.token,
+  }
+}

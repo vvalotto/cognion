@@ -120,6 +120,125 @@ class TestInvitacionesAPIIntegration:
         assert data["docente_id"] == docente_id
         assert "expira_en" in data
 
+    async def test_genera_invitacion_sin_email_destinatario_devuelve_token(
+        self, admin_headers, docente_headers
+    ):
+        """`US-ADJ-26`: sin `email_destinatario` no se envía email, pero sí se devuelve el token."""
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+
+            admin_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Admin",
+                    "email": "admin3.inv@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "administrador",
+                },
+                headers=admin_headers,
+            )
+            admin_id = admin_resp.json()["id"]
+
+            docente_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Ana Docente",
+                    "email": "docente4.inv@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            docente_id = docente_resp.json()["id"]
+
+            comision_resp = await client.post(
+                "/comisiones",
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
+                headers=admin_headers,
+            )
+            comision_id = comision_resp.json()["id"]
+
+            await client.post(
+                f"/comisiones/{comision_id}/docentes",
+                json={"docente_id": docente_id},
+                headers=admin_headers,
+            )
+
+            primera = await client.post(
+                f"/comisiones/{comision_id}/invitaciones",
+                json={"docente_id": docente_id},
+                headers=docente_headers,
+            )
+            segunda = await client.post(
+                f"/comisiones/{comision_id}/invitaciones",
+                json={"docente_id": docente_id},
+                headers=docente_headers,
+            )
+
+        assert primera.status_code == 201
+        assert primera.json()["token"]
+        assert segunda.status_code == 201
+        assert segunda.json()["token"] != primera.json()["token"]
+
+    async def test_administrador_no_puede_generar_invitacion(self, admin_headers, docente_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+
+            admin_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Admin",
+                    "email": "admin4.inv@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "administrador",
+                },
+                headers=admin_headers,
+            )
+            admin_id = admin_resp.json()["id"]
+
+            docente_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Ana Docente",
+                    "email": "docente5.inv@fiuner.edu.ar",
+                    "password": "claveSegura1",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            docente_id = docente_resp.json()["id"]
+
+            comision_resp = await client.post(
+                "/comisiones",
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
+                headers=admin_headers,
+            )
+            comision_id = comision_resp.json()["id"]
+
+            await client.post(
+                f"/comisiones/{comision_id}/docentes",
+                json={"docente_id": docente_id},
+                headers=admin_headers,
+            )
+
+            response = await client.post(
+                f"/comisiones/{comision_id}/invitaciones",
+                json={"docente_id": docente_id},
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 403
+
     async def test_docente_no_asignado_devuelve_422(
         self, fake_smtp_server, admin_headers, docente_headers
     ):

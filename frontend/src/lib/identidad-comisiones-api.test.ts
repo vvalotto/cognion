@@ -7,6 +7,7 @@ vi.mock("@/router", () => ({
 import {
   asignarDocente,
   crearComision,
+  generarInvitacion,
   listarComisionesPorMateria,
   listarEstudiantesDeComision,
   obtenerComision,
@@ -159,6 +160,34 @@ describe("identidad-comisiones-api", () => {
       expect(init?.method).toBe("POST")
       expect(JSON.parse(init?.body as string)).toEqual({ docente_id: "d1" })
       expect(comision.docentesAsignados).toEqual(["d1"])
+    })
+  })
+
+  describe("generarInvitacion", () => {
+    it("hace POST /comisiones/{id}/invitaciones con docente_id, sin email_destinatario, y mapea el token", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(201, {
+          id: "i1",
+          comision_id: "c1",
+          docente_id: "d1",
+          expira_en: "2026-09-14T00:00:00Z",
+          token: "tok-123",
+        }),
+      )
+
+      const invitacion = await generarInvitacion("c1", "d1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toContain("/comisiones/c1/invitaciones")
+      expect(init?.method).toBe("POST")
+      expect(JSON.parse(init?.body as string)).toEqual({ docente_id: "d1" })
+      expect(invitacion).toEqual({
+        id: "i1",
+        comisionId: "c1",
+        docenteId: "d1",
+        expiraEn: "2026-09-14T00:00:00Z",
+        token: "tok-123",
+      })
     })
   })
 })

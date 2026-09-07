@@ -28,12 +28,14 @@ class GenerarInvitacionUseCase:
         self._notificador = notificador
 
     async def execute(
-        self, comision_id: UUID, docente_id: UUID, email_destinatario: str
+        self, comision_id: UUID, docente_id: UUID, email_destinatario: str | None
     ) -> tuple[Invitacion, InvitacionGenerada]:
-        """Genera y persiste la invitación, envía el email y devuelve el evento emitido.
+        """Genera y persiste la invitación, envía el email si corresponde, y devuelve el evento.
 
         Lanza `ComisionNoExiste` si la comisión no existe, y `DocenteNoAsignadoAComision`
-        si el docente no está en `Comision.docentes_asignados` (INV-ID-08).
+        si el docente no está en `Comision.docentes_asignados` (INV-ID-08). Si
+        `email_destinatario` es `None` (`US-ADJ-26`, Docente generando un link para copiar
+        manualmente), omite el envío de email — la invitación se genera igual.
         """
         comision = await self._comision_repositorio.obtener_por_id(comision_id)
         if comision is None:
@@ -43,7 +45,8 @@ class GenerarInvitacionUseCase:
 
         invitacion = Invitacion.crear(comision_id, docente_id)
         await self._invitacion_repositorio.guardar(invitacion)
-        await self._notificador.enviar_invitacion(email_destinatario, invitacion.token)
+        if email_destinatario is not None:
+            await self._notificador.enviar_invitacion(email_destinatario, invitacion.token)
 
         evento = InvitacionGenerada(
             invitacion_id=invitacion.id,

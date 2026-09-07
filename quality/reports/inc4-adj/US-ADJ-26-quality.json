@@ -1,0 +1,42 @@
+{
+  "us_id": "US-ADJ-26",
+  "fecha": "2026-09-07T15:55:00Z",
+  "componente": "src/identidad (frameworks/api/invitaciones_router.py, frameworks/api/schemas.py, interface_adapters/controllers/invitaciones_controller.py, use_cases/generar_invitacion.py)",
+  "metricas": {
+    "pylint": 9.57,
+    "cc_promedio": 3,
+    "mi_promedio": 84.32,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 4,
+    "errors": 10,
+    "warnings": 2,
+    "infos": 24,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 4 },
+      "PEP8": { "errors": 0, "warnings": 0, "infos": 4 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 4 },
+      "DeadCode": { "errors": 4, "warnings": 0, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 4 },
+      "Pylint": { "errors": 0, "warnings": 2, "infos": 2 },
+      "Spelling": { "errors": 4, "warnings": 0, "infos": 0 },
+      "Types": { "errors": 2, "warnings": 0, "infos": 2 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 4 }
+    },
+    "reporte": "quality/reports/inc4-adj/US-ADJ-26-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "DeadCode (4 errores) y Spelling (4 errores) de CodeGuard son 'vulture not installed'/'codespell not installed' — herramientas no instaladas en el entorno, no hallazgos reales sobre el código.",
+    "Types (2 errores, en invitaciones_router.py y schemas.py) son 'mypy execution timed out (>10s)' — bug conocido de CodeGuard sin --cache-dir, documentado en CLAUDE.md y vvalotto/software_limpio#70. El hook mypy dedicado sobre src/ completo (fuente de verdad local) corrió limpio: 'Success: no issues found in 213 source files'.",
+    "Pylint (warning, 6.88/10 y 7.24/10 por archivo en CodeGuard) es un falso negativo del análisis aislado por archivo sin el contexto completo del paquete — pylint corrido correctamente con --rcfile=pyproject.toml sobre los 4 archivos juntos da 10.00/10, y sobre src/identidad completo da 9.57/10 (bien por encima del umbral 8.0). Métrica reportada arriba (9.57) usa esta corrida completa, no la de CodeGuard.",
+    "Coverage medido sobre src/identidad completo (882 statements, 99%) — los 4 archivos tocados por esta US están al 100%. El 1% faltante es deuda preexistente no relacionada (cuenta_query_repository.py líneas 73-89, invitacion_repository.py línea 41, usuario_repository.py línea 77)."
+  ]
+}
