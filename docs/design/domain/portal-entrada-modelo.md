@@ -86,13 +86,14 @@ hoy exigen rol `docente` (`require_docente`, construidos para el selector de Ana
 guard de rol a `administrador` además de `docente`), no es frontend puro como se asumió al
 abrir este incremento.
 
-**Hallazgo de nomenclatura (a resolver en `US-4ADJ.0.2` o antes):** tanto `/materias`
-(Docente, Banco de Preguntas) como `/actividad-evaluativa/materias` (Docente, Actividad
-Evaluativa) usan la palabra "materias" en su título de pantalla ("Materias" / "Mis materias")
-para conceptos distintos — la primera es el banco de preguntas de una materia, la segunda es
-el listado de actividades de una materia. En un menú persistente con las dos visibles a la vez
-para el mismo rol, esa ambigüedad es real y hay que resolverla con nombres de menú distintos
-(ver §4).
+**Hallazgo de nomenclatura — resuelto con Víctor (2026-09-07):** tanto `/materias` (Docente,
+Banco de Preguntas) como `/actividad-evaluativa/materias` (Docente, Actividad Evaluativa) usan
+la palabra "materias" en su título de pantalla ("Materias" / "Mis materias") para conceptos
+distintos — la primera es el banco de preguntas de una materia, la segunda es el listado de
+actividades de una materia. En un menú persistente con las dos visibles a la vez para el mismo
+rol, esa ambigüedad era real. **Decisión: "Banco de Preguntas" y "Actividades" como nombres de
+menú, sin la palabra "materias" en ninguno de los dos** — elimina la ambigüedad de raíz (ver
+§3).
 
 ---
 
@@ -109,17 +110,19 @@ logo + badge + los ítems de este menú.
 | **Administrador** | 1. Comisiones (`/comisiones`) — 2. Docentes (`/docentes/nuevo`) — 3. Cuentas (`/cuentas`) |
 | **Docente (adicional)** | La generación del link de invitación vive dentro del detalle de una Comisión, no como ítem de menú propio — el Docente llega ahí desde "Actividades" o desde una vista de sus Comisiones a confirmar en el wireframe (`US-4ADJ.0.2`) |
 
-**Criterio de orden:** para Docente, orden de "creación de contenido → ejecución → análisis"
-(Banco → Actividades → Analytics), mismo orden causal que el flujo real de uso (primero se
-carga el banco, después se crean actividades sobre él, al final se analiza el resultado). Para
+**Criterio de orden — confirmado con Víctor (2026-09-07):** para Docente, orden de "creación
+de contenido → ejecución → análisis" (Banco → Actividades → Desempeño por alumno → Desempeño
+por tema), mismo orden causal que el flujo real de uso (primero se carga el banco, después se
+crean actividades sobre él, al final se analiza el resultado). Para
 Estudiante, orden de uso (primero rinde, después consulta desempeño). Para Administrador,
 orden causal del ciclo de alta (Comisiones → Docentes → Cuentas): antes de poder invitar
 estudiantes hace falta una Comisión con un Docente asignado; alta de Docente y gestión de
 Cuentas son tareas de mantenimiento recurrente, después de ese paso inicial.
 
-**Decisión abierta para Víctor:** ¿"Banco de Preguntas" y "Actividades" van sueltos en el menú
-(como arriba) o agrupados bajo un único ítem "Materias" con submenú? El wireframe de
-`US-4ADJ.0.2` puede explorar ambas — este mapa no fuerza una sola opción.
+**Agrupamiento — resuelto con Víctor (2026-09-07):** "Banco de Preguntas" y "Actividades" van
+**sueltos** en el menú (como en la tabla de arriba), no agrupados bajo un ítem "Materias" con
+submenú — dos ítems independientes, cada uno lleva a su propio listado de materias, sin
+jerarquía ni clic extra.
 
 ---
 
