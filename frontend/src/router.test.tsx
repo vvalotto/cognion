@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { RouterProvider } from "react-router"
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -431,5 +432,40 @@ describe("router (integración)", () => {
     render(<RouterProvider router={router} />)
 
     expect(await screen.findByRole("heading", { name: "Mi desempeño" })).toBeInTheDocument()
+  })
+
+  describe("AppNav — navegación real por clic (US-ADJ-27)", () => {
+    it("Docente navega de Mis materias a Banco de Preguntas por el menú", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/actividad-evaluativa/materias")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Mis materias" })
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "Banco de Preguntas" }))
+
+      expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
+    })
+
+    it("Administrador navega a Comisiones por el menú", async () => {
+      setSession({ token: "t", rol: "administrador" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "Comisiones" }))
+
+      expect(await screen.findByRole("heading", { name: "Comisiones" })).toBeInTheDocument()
+    })
+
+    it("Estudiante no ve ítems de menú de otros roles", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Mis Actividades")).toBeInTheDocument()
+      expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+      expect(screen.queryByText("Banco de Preguntas")).not.toBeInTheDocument()
+    })
   })
 })
