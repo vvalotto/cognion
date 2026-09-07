@@ -10,6 +10,17 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-24] Administrador crea una Comisión
+  - Pantalla `NuevaComision.tsx` (rol `administrador`, ruta `/comisiones/nueva`) reemplaza el
+    placeholder dejado por `US-ADJ-23` — selector de Materia (preseleccionada si se llega con
+    `?materiaId=` desde el listado) + campo Horario, consume `POST /comisiones`
+  - `session.ts`: `obtenerUsuarioId()` — decodifica el claim `sub` del JWT de la sesión actual
+    para resolver `administrador_id` sin pedírselo al usuario en el formulario
+  - `identidad-comisiones-api.ts`: `crearComision(materiaId, horario)`
+  - Sin cambios de backend — `POST /comisiones` ya aceptaba rol `administrador` desde
+    `US-1.1.1`
+  - 273 tests frontend (272 en verde + 1 flake preexistente no relacionado), `tsc --noEmit` y
+    oxlint sin errores
 - [US-ADJ-23] Administrador ve el listado de Comisiones de una Materia
   - Pantalla `Comisiones.tsx` (rol `administrador`, ruta `/comisiones`): selector de Materia,
     tabla con horario, Docentes asignados y cantidad de Estudiantes por Comisión
