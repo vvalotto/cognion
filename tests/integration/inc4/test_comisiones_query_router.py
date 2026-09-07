@@ -200,3 +200,86 @@ class TestListarEstudiantes:
             )
 
         assert response.status_code == 403
+
+
+class TestObtenerComision:
+    """`US-ADJ-25`: detalle de una comisión puntual, sin conocer su `materia_id`."""
+
+    async def test_comision_sin_docente_asignado(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        await usuario_repo.guardar(admin)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/comisiones/{comision.id}", headers=admin_headers)
+
+        assert response.status_code == 200
+        assert response.json()["docentes_asignados"] == []
+
+    async def test_comision_con_docente_asignado(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/comisiones/{comision.id}", headers=admin_headers)
+
+        assert response.status_code == 200
+        assert response.json()["docentes_asignados"] == [str(docente.id)]
+
+    async def test_comision_inexistente_devuelve_404(self, admin_headers):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/comisiones/{uuid.uuid4()}", headers=admin_headers)
+
+        assert response.status_code == 404
+
+    async def test_docente_tiene_acceso(self, session, admin_headers, docente_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        await usuario_repo.guardar(admin)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/comisiones/{comision.id}", headers=docente_headers)
+
+        assert response.status_code == 200
+
+    async def test_estudiante_no_tiene_acceso(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        await usuario_repo.guardar(admin)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/comisiones/{comision.id}", headers=_headers_estudiante())
+
+        assert response.status_code == 403

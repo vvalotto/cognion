@@ -1,0 +1,27 @@
+{
+  "us_id": "US-ADJ-25",
+  "fecha": "2026-09-07",
+  "backend": {
+    "pylint": {
+      "comisiones_query_controller.py": "10.00/10",
+      "comisiones_router.py": "8.57/10"
+    },
+    "cyclomatic_complexity_max": 3,
+    "maintainability_index_min": 83.8,
+    "mypy_src_completo": "0 errores",
+    "coverage_comisiones_query_controller": "100%",
+    "tests_backend_suite_completa": "882/882 (sin regresiones)",
+    "codeguard": {
+      "checks_executed": 9,
+      "errors": 7,
+      "warnings": 0,
+      "infos": 11,
+      "nota": "Los 7 errors son timeouts de bandit/mypy (10s, sin --cache-dir) y herramientas no instaladas (vulture, codespell) — mismo patrón documentado en CLAUDE.md (software_limpio#70). pylint directo y mypy directo (fuente de verdad local) están limpios."
+    }
+  },
+  "frontend": {
+    "oxlint": "0 errores (5 warnings preexistentes, no relacionados)",
+    "tsc_b": "0 errores",
+    "vitest_suite_completa": "282/282 (sin regresiones)"
+  }
+}

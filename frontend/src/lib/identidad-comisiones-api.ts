@@ -70,3 +70,49 @@ export async function crearComision(
     signal,
   })
 }
+
+export interface ComisionDetalleResponse {
+  id: string
+  horario: string
+  docentesAsignados: string[]
+}
+
+interface ComisionDetalleApiResponse {
+  id: string
+  materia_id: string
+  horario: string
+  administrador_id: string
+  docentes_asignados: string[]
+}
+
+function mapearDetalle(response: ComisionDetalleApiResponse): ComisionDetalleResponse {
+  return {
+    id: response.id,
+    horario: response.horario,
+    docentesAsignados: response.docentes_asignados,
+  }
+}
+
+/** Detalle de una comisión puntual (`US-ADJ-25`) — horario + docentes asignados. */
+export async function obtenerComision(
+  comisionId: string,
+  signal?: AbortSignal,
+): Promise<ComisionDetalleResponse> {
+  const response = await apiFetch<ComisionDetalleApiResponse>(`/comisiones/${comisionId}`, {
+    signal,
+  })
+  return mapearDetalle(response)
+}
+
+/** Asigna un Docente a una comisión (`US-ADJ-25`) — idempotente del lado del backend. */
+export async function asignarDocente(
+  comisionId: string,
+  docenteId: string,
+  signal?: AbortSignal,
+): Promise<ComisionDetalleResponse> {
+  const response = await apiFetch<ComisionDetalleApiResponse>(
+    `/comisiones/${comisionId}/docentes`,
+    { method: "POST", body: { docente_id: docenteId }, signal },
+  )
+  return mapearDetalle(response)
+}
