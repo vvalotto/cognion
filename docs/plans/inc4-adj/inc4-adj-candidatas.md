@@ -74,6 +74,9 @@ navegación ya aprobado, mismo orden que `US-4.0.1`→`US-4.0.2` en Incremento 4
 
 ~~US-ADJ-21~~ Cerrada 2026-09-07, Issue [#261](https://github.com/vvalotto/cognion/issues/261)
 — mapa de navegación aprobado por Víctor, `docs/design/domain/portal-entrada-modelo.md`.
+~~US-ADJ-22~~ Cerrada 2026-09-07, Issue [#262](https://github.com/vvalotto/cognion/issues/262)
+— wireframes y prototipo aprobados por Víctor, `docs/design/ux/wireframes-portal-entrada.md` +
+`docs/design/ux/prototipos/portal-entrada.html`. **Cierra completa la Iteración 0.**
 
 ---
 

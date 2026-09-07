@@ -1,8 +1,8 @@
 # Portal de Entrada — Wireframes (Incremento 4-ADJ)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue [#262](https://github.com/vvalotto/cognion/issues/262) (US-ADJ-22,
-> Iteración 0, Incremento 4-ADJ).**
+> Estado documental: **aprobado por Víctor — 2026-09-07, comentario de cierre del Issue
+> [#262](https://github.com/vvalotto/cognion/issues/262) (US-ADJ-22, Iteración 0, Incremento
+> 4-ADJ).**
 > Alcance: portal de entrada (menú de navegación persistente + home por rol, `US-ADJ-27` a
 > `30`) y pantallas de Comisiones (`US-ADJ-23` a `26`) — gate UX obligatorio para las 8 US de
 > la Iteración 1, ninguna se implementa sin este documento aprobado.
