@@ -41,17 +41,24 @@ conocer las URLs de memoria.
 
 ## Iteración 0 — Modelado (liviano)
 
-Una única US-IEDD **tipo `Modelado`** (`WORKFLOW-DESARROLLO.md` §1, §2) — DoD = artefacto
-aprobado explícitamente por Víctor en el comentario que cierra el Issue.
+Dos US-IEDD **tipo `Modelado`** (`WORKFLOW-DESARROLLO.md` §1, §2) — DoD = artefacto aprobado
+explícitamente por Víctor en el comentario que cierra el Issue. Mismo patrón que
+`US-4.0.1`/`US-4.0.2` (Incremento 4): primero el modelo, después el wireframe que lo visualiza
+— acá no hay BC ni aggregate nuevo, así que el "modelo" es de **arquitectura de información**
+(qué accesos existen, cómo se agrupan, con qué prioridad), no de dominio.
 
 | US | Tipo | Descripción | Postcondición (DoD) | Path del artefacto |
 |---|---|---|---|---|
-| **US-4ADJ.0.1** | Modelado | Wireframes del portal de entrada: home de Docente (accesos a Materias/Banco de Preguntas, Actividades, Analytics por alumno/por tema), home de Estudiante (accesos a Mis Materias/Actividades, Mi Desempeño), home de Administrador (accesos a Alta de Docente, Gestión de Cuentas), y menú de navegación persistente (visible en toda pantalla post-login vía `AppLayout`, no solo en el home) — condicionado por rol | Víctor aprueba wireframes/prototipo en el comentario de cierre del Issue | `docs/design/ux/wireframes-portal-entrada.md` + prototipo en `docs/design/ux/prototipos/` |
+| **US-4ADJ.0.1** | Modelado | Mapa de navegación por rol: qué accesos aparecen en el menú persistente y en cada home (Docente: Materias/Banco de Preguntas, Actividades, Analytics por alumno/por tema; Estudiante: Mis Materias/Actividades, Mi Desempeño; Administrador: Alta de Docente, Gestión de Cuentas), agrupamiento, prioridad/orden y nomenclatura — sin diseño visual todavía | Víctor aprueba el mapa de navegación en el comentario de cierre del Issue | `docs/design/domain/portal-entrada-modelo.md` |
+| **US-4ADJ.0.2** | Modelado | Wireframes del portal de entrada sobre el mapa de `US-4ADJ.0.1`: home de Docente, home de Estudiante, home de Administrador, y menú de navegación persistente (visible en toda pantalla post-login vía `AppLayout`, no solo en el home) — condicionado por rol | Víctor aprueba wireframes/prototipo en el comentario de cierre del Issue | `docs/design/ux/wireframes-portal-entrada.md` + prototipo en `docs/design/ux/prototipos/` |
 
 **Nota para el diseño:** hoy, dentro de un mismo rol, tampoco hay navegación cruzada entre
 áreas top-level — p. ej. el Docente en `/materias` (Banco de Preguntas) no tiene forma de
 llegar a `/actividad-evaluativa/materias` (Actividad Evaluativa) sin escribir la URL. El menú
 persistente resuelve esto para todas las pantallas, no solo para el home.
+
+**Orden:** `US-4ADJ.0.1` antes que `US-4ADJ.0.2` — el wireframe visualiza el mapa de
+navegación ya aprobado, mismo orden que `US-4.0.1`→`US-4.0.2` en Incremento 4.
 
 ---
 
@@ -102,8 +109,9 @@ analizar) en una sola corrida, arrancando desde el login real.
 
 1. Revisar esta propuesta de candidatas con Víctor.
 2. Crear Milestone GitHub `Incremento 4-ADJ — Portal de Entrada y Validación E2E` + Issues para
-   `US-4ADJ.0.1`.
-3. Ejecutar el diseño de wireframes (`US-4ADJ.0.1`), con aprobación explícita de Víctor.
+   `US-4ADJ.0.1` y `US-4ADJ.0.2`.
+3. Ejecutar el mapa de navegación (`US-4ADJ.0.1`) y los wireframes (`US-4ADJ.0.2`), cada uno
+   con aprobación explícita de Víctor.
 4. Crear Issues y `docs/specs/inc4-adj/US-4ADJ.1.K.md` de la Iteración 1.
 5. Implementar Iteración 1 (`US-4ADJ.1.1` → `1.2`/`1.3`/`1.4`, estas últimas en cualquier
    orden entre sí).
