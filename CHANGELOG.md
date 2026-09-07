@@ -10,6 +10,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-26] Docente genera el link de invitación de una Comisión
+  - Pantallas nuevas del lado Docente (rol `docente`): `ComisionesDeMateria.tsx`
+    (`/actividad-evaluativa/materias/:materiaId/comisiones`) y `ComisionDetalleDocente.tsx`
+    (`/actividad-evaluativa/comisiones/:comisionId`) — botón "Generar link de invitación",
+    link visible con "Copiar" (`.../registro?token=...`), tabla de estudiantes inscriptos
+  - Entry point: botón "Ver Comisiones" en `Actividades.tsx` (Actividad Evaluativa)
+  - Backend — `POST /comisiones/{id}/invitaciones` (`US-1.1.1`) ampliado, sin Use Case nuevo:
+    `GenerarInvitacionRequest.email_destinatario` pasa a opcional (si se omite, no se envía
+    email) e `InvitacionResponse` gana el campo `token`
+  - `identidad-comisiones-api.ts`: `generarInvitacion(comisionId, docenteId)`
+  - Cierra la cadena Comisiones/Invitación de la Iteración 1a del Incremento 4-ADJ junto con
+    `US-ADJ-23`/`24`/`25`
+  - 892/892 tests backend (identidad), 291/291 tests frontend, quality gates APROBADO
+    (pylint 9.57/10, CC máx 3, MI mín 60.84, coverage 99%)
 - [US-ADJ-24] Administrador crea una Comisión
   - Pantalla `NuevaComision.tsx` (rol `administrador`, ruta `/comisiones/nueva`) reemplaza el
     placeholder dejado por `US-ADJ-23` — selector de Materia (preseleccionada si se llega con
