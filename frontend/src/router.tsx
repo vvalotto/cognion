@@ -30,6 +30,7 @@ import { MiDesempeno } from "@/pages/analytics/MiDesempeno"
 import { MisActividades } from "@/pages/actividad-evaluativa/MisActividades"
 import { MisMaterias } from "@/pages/actividad-evaluativa/MisMaterias"
 import { NuevaActividad } from "@/pages/actividad-evaluativa/NuevaActividad"
+import { NuevaComision } from "@/pages/identidad/NuevaComision"
 import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
         path: "/comisiones/nueva",
         element: (
           <RequireRole rol="administrador">
-            <ComisionPlaceholder />
+            <NuevaComision />
           </RequireRole>
         ),
       },

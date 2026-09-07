@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api-client"
+import { obtenerUsuarioId } from "@/lib/session"
 
 export interface ComisionResumenResponse {
   id: string
@@ -42,6 +43,30 @@ export async function listarEstudiantesDeComision(
   signal?: AbortSignal,
 ): Promise<EstudianteResumenResponse[]> {
   return apiFetch<EstudianteResumenResponse[]>(`/comisiones/${comisionId}/estudiantes`, {
+    signal,
+  })
+}
+
+interface ComisionResponse {
+  id: string
+}
+
+/**
+ * Crea una comisión (`US-ADJ-24`) — `administrador_id` se resuelve del JWT de la sesión
+ * actual, sin pedírselo al usuario en el formulario.
+ */
+export async function crearComision(
+  materiaId: string,
+  horario: string,
+  signal?: AbortSignal,
+): Promise<ComisionResponse> {
+  return apiFetch<ComisionResponse>("/comisiones", {
+    method: "POST",
+    body: {
+      materia_id: materiaId,
+      horario,
+      administrador_id: obtenerUsuarioId(),
+    },
     signal,
   })
 }
