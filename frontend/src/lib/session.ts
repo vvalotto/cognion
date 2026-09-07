@@ -24,3 +24,31 @@ export function setSession(session: Session): void {
 export function clearSession(): void {
   localStorage.removeItem(STORAGE_KEY)
 }
+
+/**
+ * Decodifica el claim `sub` (id de usuario) del JWT de la sesión actual.
+ *
+ * No verifica la firma — el backend ya la valida en cada request; el cliente solo necesita
+ * leer el payload para completar campos como `administrador_id` en formularios (`US-ADJ-24`).
+ */
+export function obtenerUsuarioId(): string | null {
+  const session = getSession()
+  if (!session) return null
+
+  const partes = session.token.split(".")
+  if (partes.length !== 3) return null
+
+  try {
+    const payloadBase64 = partes[1].replace(/-/g, "+").replace(/_/g, "/")
+    const payloadJson = decodeURIComponent(
+      atob(payloadBase64)
+        .split("")
+        .map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0"))
+        .join(""),
+    )
+    const payload = JSON.parse(payloadJson) as { sub?: string }
+    return payload.sub ?? null
+  } catch {
+    return null
+  }
+}

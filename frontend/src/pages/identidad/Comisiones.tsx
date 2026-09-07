@@ -74,7 +74,9 @@ export function Comisiones() {
             Horario, docentes asignados y estudiantes inscriptos por comisión.
           </p>
         </div>
-        <Button onClick={() => navigate("/comisiones/nueva")}>+ Nueva Comisión</Button>
+        <Button onClick={() => navigate(`/comisiones/nueva?materiaId=${materiaId}`)}>
+          + Nueva Comisión
+        </Button>
       </div>
 
       <div className="mt-4">
