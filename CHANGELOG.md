@@ -10,6 +10,16 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-30] Home del Administrador
+  - Pantalla `HomeAdministrador.tsx` reemplaza `InicioPlaceholder` para rol `administrador`
+    en `/` — 3 cards de acceso directo (Comisiones, Alta de Docente, Cuentas)
+  - `Inicio.tsx` (`US-ADJ-28`/`29`) gana la rama `administrador` — cierra completa la
+    Iteración 1b, ningún rol depende ya de `InicioPlaceholder` en el flujo normal
+  - `Login.tsx`: `RUTA_POST_LOGIN.administrador` pasa de `/docentes/nuevo` a `/` (mismo
+    destino que Docente/Estudiante) — con los 3 roles apuntando a la misma ruta, la tabla
+    quedó redundante y se eliminó en favor de `navigate("/")` directo
+  - Mismo saludo genérico decidido en `US-ADJ-28`/`29` ("Hola, Administrador")
+  - 329/329 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores)
 - [US-ADJ-29] Home del Estudiante
   - Pantalla `HomeEstudiante.tsx` reemplaza `InicioPlaceholder` para rol `estudiante` en `/`
     — 2 cards de acceso directo (Mis Actividades, Mi Desempeño)

@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-30",
+    "us_title": "Home del Administrador",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-07T20:58:36.299524+00:00",
+    "completed_at": "2026-09-07T21:12:34.993474+00:00",
+    "total_elapsed_seconds": 838,
+    "effective_seconds": 838,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-07T20:58:36.501902+00:00",
+      "completed_at": "2026-09-07T20:58:47.489896+00:00",
+      "elapsed_seconds": 10,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-07T20:58:47.619500+00:00",
+      "completed_at": "2026-09-07T21:04:12.190734+00:00",
+      "elapsed_seconds": 324,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-07T21:04:12.324587+00:00",
+      "completed_at": "2026-09-07T21:05:56.667762+00:00",
+      "elapsed_seconds": 104,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "1",
+          "task_name": "HomeAdministrador.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-07T21:04:12.446841+00:00",
+          "completed_at": "2026-09-07T21:04:22.334992+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -9.85,
+          "file_created": "frontend/src/pages/HomeAdministrador.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "2",
+          "task_name": "rama administrador en Inicio.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T21:04:27.388931+00:00",
+          "completed_at": "2026-09-07T21:05:00.841627+00:00",
+          "elapsed_seconds": 33,
+          "actual_minutes": 0.55,
+          "variance_minutes": -4.45,
+          "file_created": "frontend/src/pages/Inicio.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "3",
+          "task_name": "RUTA_POST_LOGIN.administrador en Login.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T21:05:06.742628+00:00",
+          "completed_at": "2026-09-07T21:05:40.327004+00:00",
+          "elapsed_seconds": 33,
+          "actual_minutes": 0.55,
+          "variance_minutes": -4.45,
+          "file_created": "frontend/src/pages/identidad/Login.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-07T21:05:56.801327+00:00",
+      "completed_at": "2026-09-07T21:09:36.588454+00:00",
+      "elapsed_seconds": 219,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-07T21:09:36.714169+00:00",
+      "completed_at": "2026-09-07T21:09:50.132939+00:00",
+      "elapsed_seconds": 13,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-07T21:09:54.074968+00:00",
+      "completed_at": "2026-09-07T21:11:26.632585+00:00",
+      "elapsed_seconds": 92,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-07T21:11:29.765494+00:00",
+      "completed_at": "2026-09-07T21:11:58.636219+00:00",
+      "elapsed_seconds": 28,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-07T21:11:58.760227+00:00",
+      "completed_at": "2026-09-07T21:12:34.873300+00:00",
+      "elapsed_seconds": 36,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 8,
+    "estimated_total_minutes": 20.0,
+    "actual_total_minutes": 1.25,
+    "variance_minutes": -18.75,
+    "variance_percent": -93.75
+  }
+}

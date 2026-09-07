@@ -488,14 +488,30 @@ describe("router (integración)", () => {
       ).toBeInTheDocument()
     })
 
-    it("la ruta / sigue mostrando el placeholder con sesión de administrador", async () => {
+    it("la ruta / renderiza la Home del Administrador con sesión de administrador (US-ADJ-30)", async () => {
       setSession({ token: "t", rol: "administrador" })
       await router.navigate("/")
       render(<RouterProvider router={router} />)
 
       expect(
-        await screen.findByText("Sesión iniciada — pendiente de pantalla propia"),
+        await screen.findByRole("heading", { name: "Hola, Administrador" }),
       ).toBeInTheDocument()
+    })
+
+    it("Administrador navega de la Home a Cuentas por clic en la card", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch).mockResolvedValue(jsonResponse(200, { cuentas: [], total: 0 }))
+      setSession({ token: "t", rol: "administrador" })
+      await router.navigate("/")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Hola, Administrador" })
+
+      const user = userEvent.setup()
+      // "Cuentas" aparece dos veces: en el ítem del AppNav y en la card de la Home.
+      const [, cardCuentas] = screen.getAllByText("Cuentas")
+      await user.click(cardCuentas)
+
+      expect(await screen.findByRole("heading", { name: "Cuentas" })).toBeInTheDocument()
     })
 
     it("Docente navega de la Home a Actividades por clic en la card", async () => {
