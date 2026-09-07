@@ -13,6 +13,8 @@ import { ActividadDetalle } from "@/pages/actividad-evaluativa/ActividadDetalle"
 import { Banco } from "@/pages/banco-preguntas/Banco"
 import { CambiarPassword } from "@/pages/identidad/CambiarPassword"
 import { CerrarActividad } from "@/pages/actividad-evaluativa/CerrarActividad"
+import { ComisionDetalleDocente } from "@/pages/actividad-evaluativa/ComisionDetalleDocente"
+import { ComisionesDeMateria } from "@/pages/actividad-evaluativa/ComisionesDeMateria"
 import { CuentaDetalle } from "@/pages/cuentas/CuentaDetalle"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
@@ -222,6 +224,22 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <NuevaActividad />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/materias/:materiaId/comisiones",
+        element: (
+          <RequireRole rol="docente">
+            <ComisionesDeMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/comisiones/:comisionId",
+        element: (
+          <RequireRole rol="docente">
+            <ComisionDetalleDocente />
           </RequireRole>
         ),
       },

@@ -90,11 +90,19 @@ export function Actividades() {
             </p>
           )}
         </div>
-        <Button
-          onClick={() => navigate(`/actividad-evaluativa/materias/${materiaId}/actividades/nueva`)}
-        >
-          + Nueva actividad
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/actividad-evaluativa/materias/${materiaId}/comisiones`)}
+          >
+            Ver Comisiones
+          </Button>
+          <Button
+            onClick={() => navigate(`/actividad-evaluativa/materias/${materiaId}/actividades/nueva`)}
+          >
+            + Nueva actividad
+          </Button>
+        </div>
       </div>
 
       {actividades === null ? (
