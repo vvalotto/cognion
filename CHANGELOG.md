@@ -10,6 +10,15 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-27] Menú de navegación persistente en AppLayout
+  - Componente `AppNav.tsx` nuevo, integrado en `AppLayout.tsx` debajo del header — ítems
+    condicionados por `session.rol` (Docente: 5, Estudiante: 3, Administrador: 4), ítem de la
+    sección actual resaltado
+  - Frontend puro sobre rutas ya protegidas por `RequireRole` (`US-1.1.9`), sin backend nuevo
+  - Abre la Iteración 1b del Incremento 4-ADJ (portal de entrada) — resuelve el gap señalado
+    en `HITO-9`: hasta ahora ninguna pantalla tenía navegación cruzada entre áreas
+  - 304/304 tests frontend, quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores,
+    100% coverage en los archivos tocados)
 - [US-ADJ-26] Docente genera el link de invitación de una Comisión
   - Pantallas nuevas del lado Docente (rol `docente`): `ComisionesDeMateria.tsx`
     (`/actividad-evaluativa/materias/:materiaId/comisiones`) y `ComisionDetalleDocente.tsx`
