@@ -3,6 +3,8 @@ import uuid
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 
 class TestMateriasAPIIntegration:
@@ -100,9 +102,20 @@ class TestListarMateriasAPIIntegration:
 
         assert response.status_code == 401
 
-    async def test_rechazo_con_rol_insuficiente(self, admin_headers):
+    async def test_administrador_tiene_acceso(self, admin_headers):
+        """`US-ADJ-23`: el Administrador necesita listar Materias para la pantalla de
+        Comisiones — antes rechazado, ahora `require_docente_o_administrador`."""
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get("/materias", headers=admin_headers)
+
+        assert response.status_code == 200
+
+    async def test_rechazo_con_rol_insuficiente(self):
+        jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ESTUDIANTE)
+        headers = {"Authorization": f"Bearer {jwt_vo.token}"}
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get("/materias", headers=headers)
 
         assert response.status_code == 403

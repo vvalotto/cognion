@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-23",
+    "us_title": "Administrador ve el listado de Comisiones de una Materia",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-07T13:38:17.154077+00:00",
+    "completed_at": "2026-09-07T14:05:56.627838+00:00",
+    "total_elapsed_seconds": 1659,
+    "effective_seconds": 1659,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-07T13:38:28.854108+00:00",
+      "completed_at": "2026-09-07T13:39:30.696949+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-07T13:39:38.325782+00:00",
+      "completed_at": "2026-09-07T13:40:20.578829+00:00",
+      "elapsed_seconds": 42,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-07T13:40:31.772088+00:00",
+      "completed_at": "2026-09-07T13:41:13.926178+00:00",
+      "elapsed_seconds": 42,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-07T13:41:20.216777+00:00",
+      "completed_at": "2026-09-07T13:48:26.199629+00:00",
+      "elapsed_seconds": 425,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Gateway: cargar docentes_asignados real",
+          "task_type": "backend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-07T13:41:20.334970+00:00",
+          "completed_at": "2026-09-07T13:41:43.590972+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -9.62,
+          "file_created": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Dependency require_docente_o_administrador",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T13:41:43.712251+00:00",
+          "completed_at": "2026-09-07T13:41:57.147946+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -4.78,
+          "file_created": "src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Aplicar dependency a los 2 routers",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-07T13:41:57.270419+00:00",
+          "completed_at": "2026-09-07T13:42:44.025621+00:00",
+          "elapsed_seconds": 46,
+          "actual_minutes": 0.77,
+          "variance_minutes": -4.23,
+          "file_created": "src/identidad/frameworks/api/materias_comisiones_router.py, comisiones_router.py, schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Cliente API identidad-comisiones-api.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-07T13:43:18.054073+00:00",
+          "completed_at": "2026-09-07T13:43:38.545218+00:00",
+          "elapsed_seconds": 20,
+          "actual_minutes": 0.33,
+          "variance_minutes": -14.67,
+          "file_created": "frontend/src/lib/identidad-comisiones-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Pantalla Comisiones.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-09-07T13:43:38.672276+00:00",
+          "completed_at": "2026-09-07T13:44:53.845395+00:00",
+          "elapsed_seconds": 75,
+          "actual_minutes": 1.25,
+          "variance_minutes": -28.75,
+          "file_created": "frontend/src/pages/identidad/Comisiones.tsx, _placeholders.tsx, router.tsx, badge.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Verificación manual contra el prototipo",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-07T13:44:53.965494+00:00",
+          "completed_at": "2026-09-07T13:48:26.074780+00:00",
+          "elapsed_seconds": 212,
+          "actual_minutes": 3.53,
+          "variance_minutes": -6.47,
+          "file_created": "frontend + backend verificados en navegador real",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-07T13:48:42.999581+00:00",
+      "completed_at": "2026-09-07T13:48:47.792191+00:00",
+      "elapsed_seconds": 4,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-07T13:48:56.496255+00:00",
+      "completed_at": "2026-09-07T13:54:39.166662+00:00",
+      "elapsed_seconds": 342,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-07T13:54:45.781713+00:00",
+      "completed_at": "2026-09-07T13:55:33.474679+00:00",
+      "elapsed_seconds": 47,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-07T13:55:46.435028+00:00",
+      "completed_at": "2026-09-07T14:03:47.147421+00:00",
+      "elapsed_seconds": 480,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-07T14:04:15.109823+00:00",
+      "completed_at": "2026-09-07T14:04:47.815103+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-07T14:04:53.363651+00:00",
+      "completed_at": "2026-09-07T14:05:53.741066+00:00",
+      "elapsed_seconds": 60,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 6,
+    "completed_tasks": 6,
+    "total_phases": 10,
+    "estimated_total_minutes": 75.0,
+    "actual_total_minutes": 6.48,
+    "variance_minutes": -68.52,
+    "variance_percent": -91.36
+  }
+}

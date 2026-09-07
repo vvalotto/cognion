@@ -174,5 +174,12 @@ require_administrador = require_rol([TipoPerfil.ADMINISTRADOR], get_current_user
 require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 """Dependency que exige rol `docente` — endpoints de gestión de invitaciones (RF-02)."""
 
+require_docente_o_administrador = require_rol(
+    [TipoPerfil.DOCENTE, TipoPerfil.ADMINISTRADOR], get_current_user
+)
+"""Dependency que exige rol `docente` o `administrador` — consultas de Comisiones que ambos
+roles necesitan (selector de Analytics del Docente, gestión de Comisiones del Administrador,
+`US-ADJ-23`)."""
+
 require_estudiante = require_rol([TipoPerfil.ESTUDIANTE], get_current_user)
 """Dependency que exige rol `estudiante` — endpoints de autoservicio del Estudiante (RF-11)."""

@@ -3,6 +3,13 @@ import { apiFetch } from "@/lib/api-client"
 export interface ComisionResumenResponse {
   id: string
   horario: string
+  docentesAsignados: string[]
+}
+
+interface ComisionResumenApiResponse {
+  id: string
+  horario: string
+  docentes_asignados: string[]
 }
 
 export interface EstudianteResumenResponse {
@@ -10,12 +17,24 @@ export interface EstudianteResumenResponse {
   nombre: string
 }
 
-/** Cliente API de consulta de comisiones/estudiantes por el Docente en BC Identidad (`US-4.2.2`). */
+/**
+ * Cliente API de consulta de comisiones/estudiantes (`US-4.2.2`, consumido por
+ * Docente/Analytics) — `docentesAsignados` agregado en `US-ADJ-23` para la pantalla de
+ * Comisiones del Administrador.
+ */
 export async function listarComisionesPorMateria(
   materiaId: string,
   signal?: AbortSignal,
 ): Promise<ComisionResumenResponse[]> {
-  return apiFetch<ComisionResumenResponse[]>(`/materias/${materiaId}/comisiones`, { signal })
+  const response = await apiFetch<ComisionResumenApiResponse[]>(
+    `/materias/${materiaId}/comisiones`,
+    { signal },
+  )
+  return response.map((comision) => ({
+    id: comision.id,
+    horario: comision.horario,
+    docentesAsignados: comision.docentes_asignados,
+  }))
 }
 
 export async function listarEstudiantesDeComision(
