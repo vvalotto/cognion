@@ -72,6 +72,9 @@ persistente resuelve esto para todas las pantallas, no solo para el home.
 **Orden:** `US-ADJ-21` antes que `US-ADJ-22` — el wireframe visualiza el mapa de
 navegación ya aprobado, mismo orden que `US-4.0.1`→`US-4.0.2` en Incremento 4.
 
+~~US-ADJ-21~~ Cerrada 2026-09-07, Issue [#261](https://github.com/vvalotto/cognion/issues/261)
+— mapa de navegación aprobado por Víctor, `docs/design/domain/portal-entrada-modelo.md`.
+
 ---
 
 ## Iteración 1 — Implementación

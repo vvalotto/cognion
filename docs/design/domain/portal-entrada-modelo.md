@@ -1,8 +1,8 @@
 # Portal de Entrada — Mapa de Navegación por Rol
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue [#261](https://github.com/vvalotto/cognion/issues/261) (US-ADJ-21,
-> Iteración 0, Incremento 4-ADJ).**
+> Estado documental: **aprobado por Víctor — 2026-09-07, comentario de cierre del Issue
+> [#261](https://github.com/vvalotto/cognion/issues/261) (US-ADJ-21, Iteración 0, Incremento
+> 4-ADJ).**
 > No es un modelo de dominio — Portal de Entrada no es un BC, no tiene aggregate ni evento
 > propio. Es un mapa de **arquitectura de información**: qué accesos existen hoy por rol, cómo
 > se agrupan, con qué prioridad y con qué nombre — insumo para el wireframe visual de
