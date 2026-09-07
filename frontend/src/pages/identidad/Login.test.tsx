@@ -49,7 +49,7 @@ describe("Login", () => {
     cleanup()
   })
 
-  it("login exitoso guarda el JWT y redirige a /docentes/nuevo para administrador", async () => {
+  it("login exitoso guarda el JWT y redirige a / para administrador (US-ADJ-30)", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(200, {
         access_token: "token-admin",
@@ -61,7 +61,7 @@ describe("Login", () => {
     renderLogin()
     await completarFormulario("admin@fiuner.edu.ar", "Docente#2026")
 
-    expect(await screen.findByText("Alta de Docente")).toBeInTheDocument()
+    expect(await screen.findByText("Inicio")).toBeInTheDocument()
     expect(getSession()).toEqual({ token: "token-admin", rol: "administrador" })
   })
 

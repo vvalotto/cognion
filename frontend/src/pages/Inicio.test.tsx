@@ -35,9 +35,15 @@ describe("Inicio", () => {
     expect(screen.getByRole("heading", { name: "Hola, Estudiante" })).toBeInTheDocument()
   })
 
-  it("Administrador sigue viendo el placeholder", () => {
+  it("Administrador ve HomeAdministrador", () => {
     setSession({ token: "t", rol: "administrador" })
 
+    renderInicio()
+
+    expect(screen.getByRole("heading", { name: "Hola, Administrador" })).toBeInTheDocument()
+  })
+
+  it("sin rol reconocido muestra el placeholder (fallback defensivo)", () => {
     renderInicio()
 
     expect(screen.getByText("Sesión iniciada — pendiente de pantalla propia")).toBeInTheDocument()
