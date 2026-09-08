@@ -47,12 +47,14 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         )
 
     async def actualizar(self, comision: Comision) -> None:
-        """Guarda los docentes nuevos asignados a una comisión existente."""
+        """Guarda `horario` y los docentes nuevos asignados a una comisión existente."""
         modelo = await self._session.get(
             ComisionModel, comision.id, options=[selectinload(ComisionModel.docentes)]
         )
         if modelo is None:
             raise ValueError(f"Comisión '{comision.id}' no existe.")
+
+        modelo.horario = comision.horario
 
         ids_actuales = {docente.id for docente in modelo.docentes}
         for docente_id in comision.docentes_asignados:

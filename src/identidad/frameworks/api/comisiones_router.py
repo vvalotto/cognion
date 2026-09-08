@@ -11,6 +11,7 @@ from src.identidad.frameworks.api.schemas import (
     AsignarDocenteRequest,
     ComisionResponse,
     CrearComisionRequest,
+    EditarComisionRequest,
     EstudianteResumenResponse,
 )
 from src.identidad.frameworks.dependencies import (
@@ -96,6 +97,31 @@ async def listar_estudiantes(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
     return [EstudianteResumenResponse(id=e.id, nombre=e.nombre) for e in estudiantes]
+
+
+@router.patch(
+    "/{comision_id}",
+    response_model=ComisionResponse,
+    dependencies=[Depends(require_administrador)],
+)
+async def editar_comision(
+    comision_id: UUID,
+    body: EditarComisionRequest,
+    controller: ComisionesController = Depends(get_comisiones_controller),
+) -> ComisionResponse:
+    """Corrige el horario de una comisión existente; 404 si no existe."""
+    try:
+        comision = await controller.editar_comision(comision_id, body.horario)
+    except ComisionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    return ComisionResponse(
+        id=comision.id,
+        materia_id=comision.materia_id,
+        horario=comision.horario,
+        administrador_id=comision.administrador_id,
+        docentes_asignados=comision.docentes_asignados,
+    )
 
 
 @router.post(

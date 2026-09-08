@@ -117,6 +117,20 @@ export async function asignarDocente(
   return mapearDetalle(response)
 }
 
+/** Corrige el horario de una comisión existente. */
+export async function editarComision(
+  comisionId: string,
+  horario: string,
+  signal?: AbortSignal,
+): Promise<ComisionDetalleResponse> {
+  const response = await apiFetch<ComisionDetalleApiResponse>(`/comisiones/${comisionId}`, {
+    method: "PATCH",
+    body: { horario },
+    signal,
+  })
+  return mapearDetalle(response)
+}
+
 export interface InvitacionResponse {
   id: string
   comisionId: string

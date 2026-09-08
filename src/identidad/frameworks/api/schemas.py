@@ -120,6 +120,12 @@ class AsignarDocenteRequest(BaseModel):
     docente_id: UUID
 
 
+class EditarComisionRequest(BaseModel):
+    """Body de la request de corrección del horario de una comisión existente."""
+
+    horario: str = Field(..., min_length=1, max_length=200)
+
+
 class GenerarInvitacionRequest(BaseModel):
     """Body de la request de generación de una invitación.
 

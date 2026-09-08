@@ -143,7 +143,7 @@ export function Comisiones() {
                     )}
                   </td>
                   <td className="py-3 pr-4">{conteoEstudiantes[comision.id] ?? "…"}</td>
-                  <td className="py-3 pr-4">
+                  <td className="flex gap-2 py-3 pr-4">
                     <Button
                       type="button"
                       variant="outline"
@@ -151,6 +151,14 @@ export function Comisiones() {
                       onClick={() => navigate(`/comisiones/${comision.id}`)}
                     >
                       Ver detalle
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/comisiones/${comision.id}/editar`)}
+                    >
+                      Editar
                     </Button>
                   </td>
                 </tr>

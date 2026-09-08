@@ -44,6 +44,7 @@ from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteACo
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
+from src.identidad.use_cases.editar_comision import EditarComisionUseCase
 from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
@@ -84,6 +85,7 @@ def get_comisiones_controller(session: SessionDep) -> ComisionesController:
     return ComisionesController(
         CrearComisionUseCase(comision_repo, materia_port),
         AsignarDocenteAComisionUseCase(comision_repo, usuario_repo),
+        EditarComisionUseCase(comision_repo),
     )
 
 

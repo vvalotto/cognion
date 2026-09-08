@@ -30,3 +30,7 @@ class Comision:
         """Agrega un docente a la comisión si todavía no está asignado."""
         if docente_id not in self.docentes_asignados:
             self.docentes_asignados.append(docente_id)
+
+    def cambiar_horario(self, horario: str) -> None:
+        """Corrige el horario de la comisión (típicamente, un error de tipeo al crearla)."""
+        self.horario = horario
