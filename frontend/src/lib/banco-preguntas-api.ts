@@ -191,6 +191,18 @@ export async function crearMateria(
   return { id: response.id, nombre: response.nombre, bancoId: response.banco_id }
 }
 
+export async function editarMateria(
+  materiaId: string,
+  nombre: string,
+  signal?: AbortSignal,
+): Promise<{ id: string; nombre: string }> {
+  return apiFetch<{ id: string; nombre: string }>(`/materias/${materiaId}`, {
+    method: "PATCH",
+    body: { nombre },
+    signal,
+  })
+}
+
 export async function listarMaterias(signal?: AbortSignal): Promise<MateriaListItemResponse[]> {
   const response = await apiFetch<MateriaListItemApiResponse[]>("/materias", { signal })
   return response.map((materia) => ({

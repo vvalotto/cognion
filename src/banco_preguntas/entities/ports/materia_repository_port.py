@@ -16,6 +16,10 @@ class MateriaRepositoryPort(ABC):
         """Guarda una materia nueva."""
 
     @abstractmethod
+    async def actualizar(self, materia: Materia) -> None:
+        """Guarda cambios sobre una materia existente (por ahora, solo el nombre)."""
+
+    @abstractmethod
     async def obtener_por_nombre(self, nombre: str) -> Materia | None:
         """Busca una materia por nombre, o `None` si no existe (INV-BP-00)."""
 

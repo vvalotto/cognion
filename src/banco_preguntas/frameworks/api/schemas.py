@@ -16,12 +16,25 @@ class CrearMateriaRequest(BaseModel):
     nombre: str = Field(..., min_length=1, max_length=200)
 
 
+class EditarMateriaRequest(BaseModel):
+    """Body de la request de corrección del nombre de una materia existente."""
+
+    nombre: str = Field(..., min_length=1, max_length=200)
+
+
 class MateriaResponse(BaseModel):
     """Representación de una materia (y su banco) devuelta por la API."""
 
     id: UUID
     nombre: str
     banco_id: UUID
+
+
+class MateriaBasicaResponse(BaseModel):
+    """Representación de una materia sin su banco (alcanza para la edición de nombre)."""
+
+    id: UUID
+    nombre: str
 
 
 class MateriaListItemResponse(BaseModel):

@@ -24,6 +24,14 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
         self._session.add(MateriaModel(id=materia.id, nombre=materia.nombre))
         await self._session.commit()
 
+    async def actualizar(self, materia: Materia) -> None:
+        """Guarda cambios sobre una materia existente (por ahora, solo el nombre)."""
+        modelo = await self._session.get(MateriaModel, materia.id)
+        if modelo is None:
+            return
+        modelo.nombre = materia.nombre
+        await self._session.commit()
+
     async def obtener_por_nombre(self, nombre: str) -> Materia | None:
         """Busca una materia por nombre, o `None` si no existe (INV-BP-00)."""
         resultado = await self._session.execute(

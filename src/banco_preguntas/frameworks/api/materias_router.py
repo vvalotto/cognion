@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.banco_preguntas.entities.errors import MateriaYaExiste
+from src.banco_preguntas.entities.errors import MateriaNoExiste, MateriaYaExiste
 from src.banco_preguntas.frameworks.api.schemas import (
     CrearMateriaRequest,
+    EditarMateriaRequest,
+    MateriaBasicaResponse,
     MateriaListItemResponse,
     MateriaResponse,
 )
@@ -42,6 +46,32 @@ async def crear_materia(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
 
     return MateriaResponse(id=materia.id, nombre=materia.nombre, banco_id=banco.id)
+
+
+@router.patch(
+    "/{materia_id}",
+    response_model=MateriaBasicaResponse,
+    dependencies=[Depends(require_docente_o_administrador)],
+)
+async def editar_materia(
+    materia_id: UUID,
+    body: EditarMateriaRequest,
+    controller: MateriasController = Depends(get_materias_controller),
+) -> MateriaBasicaResponse:
+    """Corrige el nombre de una materia existente.
+
+    Rol `docente` o `administrador` — hallazgo de la prueba manual E2E: no existía forma de
+    corregir un nombre cargado con error de tipeo, para ningún rol. Responde 404 si la
+    materia no existe, 409 si el nombre nuevo ya pertenece a otra.
+    """
+    try:
+        materia = await controller.editar_materia(materia_id, body.nombre)
+    except MateriaNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaYaExiste as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+
+    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre)
 
 
 @router.get(

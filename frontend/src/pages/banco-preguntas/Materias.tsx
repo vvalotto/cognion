@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 
@@ -35,12 +36,23 @@ export function Materias() {
               key={materia.id}
               role="button"
               tabIndex={0}
-              className="cursor-pointer p-5 transition-colors hover:border-primary"
+              className="relative cursor-pointer p-5 transition-colors hover:border-primary"
               onClick={() => navigate(`/materias/${materia.id}/banco`)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") navigate(`/materias/${materia.id}/banco`)
               }}
             >
+              <Button
+                type="button"
+                variant="outline"
+                className="absolute right-2 top-2 h-7 px-2 text-xs"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/materias/${materia.id}/editar`)
+                }}
+              >
+                Editar
+              </Button>
               <p className="mb-2 text-xl">📘</p>
               <p className="font-semibold">{materia.nombre}</p>
               <p className="mt-1 text-xs text-muted-foreground">

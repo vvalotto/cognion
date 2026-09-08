@@ -35,6 +35,7 @@ import { MisActividades } from "@/pages/actividad-evaluativa/MisActividades"
 import { MisMaterias } from "@/pages/actividad-evaluativa/MisMaterias"
 import { NuevaActividad } from "@/pages/actividad-evaluativa/NuevaActividad"
 import { NuevaComision } from "@/pages/identidad/NuevaComision"
+import { EditarMateria } from "@/pages/banco-preguntas/EditarMateria"
 import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
@@ -121,6 +122,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol={["docente", "administrador"]}>
             <NuevaMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/editar",
+        element: (
+          <RequireRole rol={["docente", "administrador"]}>
+            <EditarMateria />
           </RequireRole>
         ),
       },

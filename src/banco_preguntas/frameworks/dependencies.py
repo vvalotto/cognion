@@ -32,6 +32,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
+from src.banco_preguntas.use_cases.editar_materia import EditarMateriaUseCase
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
@@ -54,6 +55,7 @@ def get_materias_controller(session: SessionDep) -> MateriasController:
     return MateriasController(
         CrearMateriaUseCase(materia_repo, banco_repo),
         ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+        EditarMateriaUseCase(materia_repo),
     )
 
 
