@@ -5,16 +5,19 @@ import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
+import { getSession } from "@/lib/session"
 
 /**
  * Pantalla de listado de materias (§2.1 `wireframes-banco-preguntas.md`) — consume
- * `GET /materias`. Tabla con acciones explícitas por fila ("Ver banco" / "Editar"), mismo
- * patrón que `Cuentas.tsx` — reemplaza la grilla de cards anterior, que mezclaba "entrar al
- * banco" y "editar el nombre" como dos destinos distintos sobre el mismo elemento clickeable.
+ * `GET /materias`. Tabla con acciones explícitas por fila, mismo patrón que `Cuentas.tsx`.
+ *
+ * El Administrador no gestiona el banco de preguntas (`Banco.tsx` sigue siendo exclusivo
+ * del Docente) — ve "Ver" (detalle de solo lectura, `VerMateria.tsx`) en vez de "Ver banco".
  */
 export function Materias() {
   const navigate = useNavigate()
   const [materias, setMaterias] = useState<MateriaListItemResponse[] | null>(null)
+  const esDocente = getSession()?.rol === "docente"
 
   useEffect(() => {
     const controller = new AbortController()
@@ -60,40 +63,56 @@ export function Materias() {
                 </td>
               </tr>
             ) : (
-              materias.map((materia) => (
-                <tr
-                  key={materia.id}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-accent"
-                  onClick={() => navigate(`/materias/${materia.id}/banco`)}
-                >
-                  <td className="py-3 pr-4 pl-4">{materia.nombre}</td>
-                  <td className="py-3 pr-4">{materia.cantidadPreguntasActivas}</td>
-                  <td className="flex gap-2 py-3 pr-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        navigate(`/materias/${materia.id}/banco`)
-                      }}
-                    >
-                      Ver banco
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        navigate(`/materias/${materia.id}/editar`)
-                      }}
-                    >
-                      Editar
-                    </Button>
-                  </td>
-                </tr>
-              ))
+              materias.map((materia) => {
+                const rutaVer = esDocente
+                  ? `/materias/${materia.id}/banco`
+                  : `/materias/${materia.id}/ver`
+                return (
+                  <tr
+                    key={materia.id}
+                    className="cursor-pointer border-b border-border last:border-0 hover:bg-accent"
+                    onClick={() => navigate(rutaVer)}
+                  >
+                    <td className="py-3 pr-4 pl-4">{materia.nombre}</td>
+                    <td className="py-3 pr-4">{materia.cantidadPreguntasActivas}</td>
+                    <td className="flex gap-2 py-3 pr-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(rutaVer)
+                        }}
+                      >
+                        {esDocente ? "Ver banco" : "Ver"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/materias/${materia.id}/editar`)
+                        }}
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/materias/${materia.id}/eliminar`)
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              })
             )}
           </tbody>
         </table>

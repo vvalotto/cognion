@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.banco_preguntas.entities.errors import MateriaNoExiste, MateriaYaExiste
 from src.banco_preguntas.frameworks.api.schemas import (
@@ -71,7 +71,32 @@ async def editar_materia(
     except MateriaYaExiste as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
 
-    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre)
+    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)
+
+
+@router.delete(
+    "/{materia_id}",
+    response_model=None,
+    dependencies=[Depends(require_docente_o_administrador)],
+)
+async def eliminar_materia(
+    materia_id: UUID,
+    controller: MateriasController = Depends(get_materias_controller),
+) -> MateriaBasicaResponse | Response:
+    """Borra la materia, o la deshabilita si tiene preguntas cargadas o comisiones asociadas.
+
+    204 si se borró físicamente (borra también su banco vacío); 200 con la materia
+    (`activa=false`) si se deshabilitó. 404 si la materia no existe.
+    """
+    try:
+        materia = await controller.eliminar_materia(materia_id)
+    except MateriaNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    if materia is None:
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)
 
 
 @router.get(

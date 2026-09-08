@@ -203,6 +203,15 @@ export async function editarMateria(
   })
 }
 
+/**
+ * Elimina una materia, o la deshabilita si tiene preguntas cargadas o comisiones asociadas
+ * (200 en ese caso; 204 sin cuerpo si se borró físicamente) — de cualquier forma, deja de
+ * aparecer en el listado.
+ */
+export async function eliminarMateria(materiaId: string, signal?: AbortSignal): Promise<void> {
+  await apiFetch<void>(`/materias/${materiaId}`, { method: "DELETE", signal })
+}
+
 export async function listarMaterias(signal?: AbortSignal): Promise<MateriaListItemResponse[]> {
   const response = await apiFetch<MateriaListItemApiResponse[]>("/materias", { signal })
   return response.map((materia) => ({

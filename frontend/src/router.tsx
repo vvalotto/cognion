@@ -38,6 +38,8 @@ import { MisMaterias } from "@/pages/actividad-evaluativa/MisMaterias"
 import { NuevaActividad } from "@/pages/actividad-evaluativa/NuevaActividad"
 import { NuevaComision } from "@/pages/identidad/NuevaComision"
 import { EditarMateria } from "@/pages/banco-preguntas/EditarMateria"
+import { EliminarMateria } from "@/pages/banco-preguntas/EliminarMateria"
+import { VerMateria } from "@/pages/banco-preguntas/VerMateria"
 import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
@@ -148,6 +150,22 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol={["docente", "administrador"]}>
             <EditarMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/ver",
+        element: (
+          <RequireRole rol={["docente", "administrador"]}>
+            <VerMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/eliminar",
+        element: (
+          <RequireRole rol={["docente", "administrador"]}>
+            <EliminarMateria />
           </RequireRole>
         ),
       },

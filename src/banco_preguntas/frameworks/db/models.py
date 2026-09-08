@@ -23,6 +23,7 @@ class MateriaModel(Base):
         PGUUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     nombre: Mapped[str] = mapped_column(String(200), nullable=False, unique=True)
+    activa: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
 
 class BancoModel(Base):

@@ -31,10 +31,11 @@ class MateriaResponse(BaseModel):
 
 
 class MateriaBasicaResponse(BaseModel):
-    """Representación de una materia sin su banco (alcanza para la edición de nombre)."""
+    """Representación de una materia sin su banco (alcanza para edición y baja)."""
 
     id: UUID
     nombre: str
+    activa: bool
 
 
 class MateriaListItemResponse(BaseModel):

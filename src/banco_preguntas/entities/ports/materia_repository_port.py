@@ -17,7 +17,11 @@ class MateriaRepositoryPort(ABC):
 
     @abstractmethod
     async def actualizar(self, materia: Materia) -> None:
-        """Guarda cambios sobre una materia existente (por ahora, solo el nombre)."""
+        """Guarda cambios sobre una materia existente (nombre y `activa`)."""
+
+    @abstractmethod
+    async def eliminar(self, materia_id: UUID) -> None:
+        """Borra físicamente una materia sin preguntas ni comisiones asociadas."""
 
     @abstractmethod
     async def obtener_por_nombre(self, nombre: str) -> Materia | None:

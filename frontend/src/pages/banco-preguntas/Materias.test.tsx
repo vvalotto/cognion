@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { Materias } from "@/pages/banco-preguntas/Materias"
+import { clearSession, setSession } from "@/lib/session"
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -20,6 +21,7 @@ function renderMaterias() {
         <Route path="/materias/nueva" element={<p>Nueva materia</p>} />
         <Route path="/materias/:materiaId/banco" element={<p>Banco de la materia</p>} />
         <Route path="/materias/:materiaId/editar" element={<p>Editar materia</p>} />
+        <Route path="/materias/:materiaId/ver" element={<p>Ver materia</p>} />
       </Routes>
     </MemoryRouter>,
   )
@@ -33,10 +35,12 @@ const materiasResponse = [
 describe("Materias", () => {
   beforeEach(() => {
     vi.stubGlobal("fetch", vi.fn())
+    setSession({ token: "t", rol: "docente" })
   })
 
   afterEach(() => {
     vi.unstubAllGlobals()
+    clearSession()
     cleanup()
   })
 
@@ -59,7 +63,7 @@ describe("Materias", () => {
     expect(await screen.findByText("Todavía no hay materias creadas.")).toBeInTheDocument()
   })
 
-  it("hacer clic en una fila navega al banco de esa materia", async () => {
+  it("Docente: hacer clic en una fila navega al banco de esa materia", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
     const user = userEvent.setup()
 
@@ -71,7 +75,7 @@ describe("Materias", () => {
     expect(await screen.findByText("Banco de la materia")).toBeInTheDocument()
   })
 
-  it("el botón 'Ver banco' navega al banco sin duplicar la navegación de la fila", async () => {
+  it("Docente: el botón 'Ver banco' navega al banco sin duplicar la navegación de la fila", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
     const user = userEvent.setup()
 
@@ -81,6 +85,20 @@ describe("Materias", () => {
     await user.click(screen.getAllByRole("button", { name: "Ver banco" })[0])
 
     expect(await screen.findByText("Banco de la materia")).toBeInTheDocument()
+  })
+
+  it("Administrador: la fila y el botón 'Ver' navegan al detalle de solo lectura, no al banco", async () => {
+    setSession({ token: "t", rol: "administrador" })
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
+    const user = userEvent.setup()
+
+    renderMaterias()
+    await screen.findByText("Ingeniería de Software")
+
+    expect(screen.queryByRole("button", { name: "Ver banco" })).not.toBeInTheDocument()
+    await user.click(screen.getAllByRole("button", { name: "Ver" })[0])
+
+    expect(await screen.findByText("Ver materia")).toBeInTheDocument()
   })
 
   it("el botón 'Editar' navega a la edición del nombre sin disparar la navegación de la fila", async () => {

@@ -12,6 +12,7 @@ class Materia:
 
     id: UUID
     nombre: str
+    activa: bool = True
 
     @staticmethod
     def crear(nombre: str) -> Materia:
@@ -25,3 +26,7 @@ class Materia:
         repositorio (INV-BP-00).
         """
         self.nombre = nombre
+
+    def deshabilitar(self) -> None:
+        """Da de baja lógica la materia (tiene preguntas o comisiones, no se puede borrar)."""
+        self.activa = False
