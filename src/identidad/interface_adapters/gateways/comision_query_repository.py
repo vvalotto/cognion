@@ -40,9 +40,7 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         if not incluir_inactivas:
             condiciones.append(ComisionModel.activa.is_(True))
         query = (
-            select(ComisionModel)
-            .where(*condiciones)
-            .options(selectinload(ComisionModel.docentes))
+            select(ComisionModel).where(*condiciones).options(selectinload(ComisionModel.docentes))
         )
         resultado = await self._session.execute(query)
         return [

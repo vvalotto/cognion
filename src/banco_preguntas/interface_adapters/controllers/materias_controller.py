@@ -36,7 +36,9 @@ class MateriasController:
         """Delega la creación de la materia y su banco en el caso de uso correspondiente."""
         return await self._crear_materia.execute(nombre)
 
-    async def listar_materias(self, incluir_inactivas: bool = False) -> list[tuple[Materia, Banco, int]]:
+    async def listar_materias(
+        self, incluir_inactivas: bool = False
+    ) -> list[tuple[Materia, Banco, int]]:
         """Delega el listado de materias (con conteo de preguntas activas) en el caso de uso."""
         return await self._listar_materias.execute(incluir_inactivas)
 
