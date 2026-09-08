@@ -56,6 +56,7 @@ class Usuario:
     intentos_fallidos_login: int = 0
     intentos_fallidos_password: int = 0
     creado_en: datetime = field(default_factory=_ahora)
+    deshabilitada: bool = False
 
     @property
     def tipo_perfil(self) -> TipoPerfil:
@@ -108,6 +109,15 @@ class Usuario:
         """
         self.nombre = nombre
         self.email = email
+
+    def deshabilitar(self) -> None:
+        """Da de baja lógica la cuenta (tiene datos asociados, no se puede borrar).
+
+        Distinto de `bloqueada` (automático, por intentos fallidos de login/cambio de
+        contraseña) — `deshabilitada` es una decisión manual del Administrador, con su
+        propio campo, y no se revierte con un reseteo de contraseña.
+        """
+        self.deshabilitada = True
 
     def resetear_password(self, password_hash_nuevo: str) -> bool:
         """Fija `password_hash_nuevo` y desbloquea la cuenta si estaba bloqueada.

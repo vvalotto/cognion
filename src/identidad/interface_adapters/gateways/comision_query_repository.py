@@ -10,7 +10,12 @@ from sqlalchemy.orm import selectinload
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
-from src.identidad.frameworks.db.models import ComisionModel, EstudianteModel, UsuarioModel
+from src.identidad.frameworks.db.models import (
+    ComisionModel,
+    EstudianteModel,
+    UsuarioModel,
+    comision_docentes,
+)
 
 
 class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
@@ -57,3 +62,23 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
             EstudianteResumen(id=modelo.id, nombre=modelo.nombre)
             for modelo in resultado.scalars().all()
         ]
+
+    async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
+        """Indica si el docente está asignado a alguna comisión (activa o no)."""
+        query = (
+            select(comision_docentes.c.comision_id)
+            .where(comision_docentes.c.docente_id == docente_id)
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None
+
+    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
+        """Indica si el administrador creó alguna comisión (activa o no)."""
+        query = (
+            select(ComisionModel.id)
+            .where(ComisionModel.administrador_id == administrador_id)
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None

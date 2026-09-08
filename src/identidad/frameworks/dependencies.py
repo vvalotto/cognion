@@ -9,6 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.frameworks.adapters.evaluacion_consulta_port_in_process import (
+    EvaluacionConsultaPortInProcess,
+)
 from src.identidad.frameworks.adapters.materia_port_in_process import MateriaPortInProcess
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
@@ -47,6 +50,7 @@ from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.editar_comision import EditarComisionUseCase
 from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.eliminar_comision import EliminarComisionUseCase
+from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
@@ -138,12 +142,15 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
     """Arma el `CuentasController` con sus dependencias concretas."""
     cuenta_query = SQLAlchemyCuentaQueryRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
+    comision_query = SQLAlchemyComisionQueryRepository(session)
+    evaluacion_consulta = EvaluacionConsultaPortInProcess(session)
     hasher = get_password_hasher()
     return CuentasController(
         ListarCuentasUseCase(cuenta_query),
         ObtenerCuentaUseCase(usuario_repo),
         ResetearPasswordUseCase(usuario_repo, hasher),
         EditarCuentaUseCase(usuario_repo),
+        EliminarCuentaUseCase(usuario_repo, comision_query, evaluacion_consulta),
     )
 
 

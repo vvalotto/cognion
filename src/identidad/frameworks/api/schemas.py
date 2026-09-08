@@ -55,6 +55,7 @@ class CuentaDetalleResponse(BaseModel):
     bloqueada: bool
     creado_en: datetime
     comision_id: UUID | None
+    deshabilitada: bool
 
 
 class ResetearPasswordRequest(BaseModel):

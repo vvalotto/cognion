@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.identidad.entities.errors import EmailYaRegistrado, PasswordDemasiadoCorta, UsuarioNoExiste
 from src.identidad.entities.usuario import Estudiante, Usuario
@@ -126,6 +126,31 @@ async def editar_cuenta(
     return _a_detalle_response(usuario)
 
 
+@router.delete(
+    "/{usuario_id}",
+    response_model=None,
+    dependencies=[Depends(require_administrador)],
+)
+async def eliminar_cuenta(
+    usuario_id: UUID,
+    controller: CuentasController = Depends(get_cuentas_controller),
+) -> CuentaDetalleResponse | Response:
+    """Borra la cuenta, o la deshabilita si tiene datos asociados (Comisiones, evaluaciones).
+
+    204 si se borró físicamente; 200 con la cuenta (`deshabilitada=true`) si se deshabilitó.
+    404 si la cuenta no existe.
+    """
+    try:
+        usuario = await controller.eliminar_cuenta(usuario_id)
+    except UsuarioNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    if usuario is None:
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    return _a_detalle_response(usuario)
+
+
 def _a_detalle_response(usuario: Usuario) -> CuentaDetalleResponse:
     """Arma el `CuentaDetalleResponse` a partir de un `Usuario`, resolviendo `comision_id`."""
     comision_id = usuario.perfil.comision_id if isinstance(usuario.perfil, Estudiante) else None
@@ -137,4 +162,5 @@ def _a_detalle_response(usuario: Usuario) -> CuentaDetalleResponse:
         bloqueada=usuario.bloqueada,
         creado_en=usuario.creado_en,
         comision_id=comision_id,
+        deshabilitada=usuario.deshabilitada,
     )

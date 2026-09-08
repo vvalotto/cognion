@@ -51,7 +51,7 @@ class SQLAlchemyCuentaQueryRepository(CuentaQueryPort):
         Devuelve la página pedida, ordenada por `creado_en` (desempate por `id`), junto con
         el `total` de cuentas que matchean los filtros, sin paginar.
         """
-        filtros: list[ColumnElement[bool]] = []
+        filtros: list[ColumnElement[bool]] = [UsuarioModel.deshabilitada.is_(False)]
         joins: list[type[AdministradorModel | DocenteModel | EstudianteModel]] = []
         if rol is not None:
             model_cls = _MODEL_POR_ROL[rol]

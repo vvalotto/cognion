@@ -7,6 +7,7 @@ from uuid import UUID
 from src.identidad.entities.resultado_paginado_cuentas import ResultadoPaginadoCuentas
 from src.identidad.entities.usuario import Usuario
 from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
+from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
@@ -22,12 +23,14 @@ class CuentasController:
         obtener_cuenta: ObtenerCuentaUseCase,
         resetear_password: ResetearPasswordUseCase,
         editar_cuenta: EditarCuentaUseCase,
+        eliminar_cuenta: EliminarCuentaUseCase,
     ) -> None:
-        """Recibe los casos de uso de listado, detalle, reseteo y edición de cuentas a usar."""
+        """Recibe los casos de uso de listado, detalle, reseteo, edición y baja de cuentas."""
         self._listar_cuentas = listar_cuentas
         self._obtener_cuenta = obtener_cuenta
         self._resetear_password = resetear_password
         self._editar_cuenta = editar_cuenta
+        self._eliminar_cuenta = eliminar_cuenta
 
     async def listar_cuentas(
         self,
@@ -59,3 +62,7 @@ class CuentasController:
     async def editar_cuenta(self, usuario_id: UUID, nombre: str, email: str) -> Usuario:
         """Delega la corrección de nombre/email de una cuenta en el caso de uso correspondiente."""
         return await self._editar_cuenta.execute(usuario_id, nombre, email)
+
+    async def eliminar_cuenta(self, usuario_id: UUID) -> Usuario | None:
+        """Delega la baja (física o lógica) de una cuenta en el caso de uso correspondiente."""
+        return await self._eliminar_cuenta.execute(usuario_id)
