@@ -54,7 +54,8 @@ class TestMateriasAPIIntegration:
 
     async def test_administrador_crea_materia_nueva(self, admin_headers):
         """Hallazgo de la prueba manual E2E: sin ninguna Materia creada, el Administrador
-        no tenía forma de crear la Comisión que la referencia — `require_docente_o_administrador`."""
+        no tenía forma de crear la Comisión que la referencia — `require_docente_o_administrador`.
+        """
         nombre = f"Gestión de Proyectos {uuid.uuid4()}"
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
