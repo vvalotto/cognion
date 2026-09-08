@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.identidad.entities.errors import ComisionNoExiste, MateriaNoExiste, UsuarioNoEsDocente
 from src.identidad.frameworks.api.schemas import (
@@ -54,6 +54,7 @@ async def crear_comision(
         horario=comision.horario,
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,
+        activa=comision.activa,
     )
 
 
@@ -78,6 +79,7 @@ async def obtener_comision(
         horario=comision.horario,
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,
+        activa=comision.activa,
     )
 
 
@@ -121,6 +123,39 @@ async def editar_comision(
         horario=comision.horario,
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,
+        activa=comision.activa,
+    )
+
+
+@router.delete(
+    "/{comision_id}",
+    response_model=None,
+    dependencies=[Depends(require_administrador)],
+)
+async def eliminar_comision(
+    comision_id: UUID,
+    controller: ComisionesController = Depends(get_comisiones_controller),
+) -> ComisionResponse | Response:
+    """Borra la comisión, o la deshabilita si tiene estudiantes inscriptos.
+
+    204 si se borró físicamente; 200 con la comisión (`activa=false`) si se deshabilitó.
+    404 si la comisión no existe.
+    """
+    try:
+        comision = await controller.eliminar_comision(comision_id)
+    except ComisionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    if comision is None:
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    return ComisionResponse(
+        id=comision.id,
+        materia_id=comision.materia_id,
+        horario=comision.horario,
+        administrador_id=comision.administrador_id,
+        docentes_asignados=comision.docentes_asignados,
+        activa=comision.activa,
     )
 
 
@@ -151,4 +186,5 @@ async def asignar_docente(
         horario=comision.horario,
         administrador_id=comision.administrador_id,
         docentes_asignados=comision.docentes_asignados,
+        activa=comision.activa,
     )

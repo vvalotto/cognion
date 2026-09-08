@@ -6,6 +6,7 @@ import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/identidad/AltaDocente"
 import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
 import { EditarComision } from "@/pages/identidad/EditarComision"
+import { EliminarComision } from "@/pages/identidad/EliminarComision"
 import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
@@ -99,6 +100,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="administrador">
             <EditarComision />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/comisiones/:comisionId/eliminar",
+        element: (
+          <RequireRole rol="administrador">
+            <EliminarComision />
           </RequireRole>
         ),
       },

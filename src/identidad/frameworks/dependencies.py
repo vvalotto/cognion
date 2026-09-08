@@ -46,6 +46,7 @@ from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.editar_comision import EditarComisionUseCase
 from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
+from src.identidad.use_cases.eliminar_comision import EliminarComisionUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
@@ -82,10 +83,12 @@ def get_comisiones_controller(session: SessionDep) -> ComisionesController:
     comision_repo = SQLAlchemyComisionRepository(session)
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     materia_port = MateriaPortInProcess(session)
+    comision_query = SQLAlchemyComisionQueryRepository(session)
     return ComisionesController(
         CrearComisionUseCase(comision_repo, materia_port),
         AsignarDocenteAComisionUseCase(comision_repo, usuario_repo),
         EditarComisionUseCase(comision_repo),
+        EliminarComisionUseCase(comision_repo, comision_query),
     )
 
 

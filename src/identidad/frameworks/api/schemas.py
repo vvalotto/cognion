@@ -93,6 +93,7 @@ class ComisionResponse(BaseModel):
     horario: str
     administrador_id: UUID
     docentes_asignados: list[UUID]
+    activa: bool
 
 
 class ComisionResumenResponse(BaseModel):

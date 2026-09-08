@@ -9,6 +9,7 @@ from src.identidad.entities.eventos import ComisionCreada, DocenteAsignado
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.editar_comision import EditarComisionUseCase
+from src.identidad.use_cases.eliminar_comision import EliminarComisionUseCase
 
 
 class ComisionesController:
@@ -19,11 +20,13 @@ class ComisionesController:
         crear_comision: CrearComisionUseCase,
         asignar_docente: AsignarDocenteAComisionUseCase,
         editar_comision: EditarComisionUseCase,
+        eliminar_comision: EliminarComisionUseCase,
     ) -> None:
-        """Recibe los casos de uso de creación, asignación de docente y edición."""
+        """Recibe los casos de uso de creación, asignación de docente, edición y baja."""
         self._crear_comision = crear_comision
         self._asignar_docente = asignar_docente
         self._editar_comision = editar_comision
+        self._eliminar_comision = eliminar_comision
 
     async def crear_comision(
         self, materia_id: UUID, horario: str, administrador_id: UUID
@@ -40,3 +43,7 @@ class ComisionesController:
     async def editar_comision(self, comision_id: UUID, horario: str) -> Comision:
         """Delega la corrección del horario en el caso de uso correspondiente."""
         return await self._editar_comision.execute(comision_id, horario)
+
+    async def eliminar_comision(self, comision_id: UUID) -> Comision | None:
+        """Delega la baja (física o lógica) de una comisión en el caso de uso correspondiente."""
+        return await self._eliminar_comision.execute(comision_id)

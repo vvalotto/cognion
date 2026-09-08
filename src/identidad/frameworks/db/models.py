@@ -82,6 +82,7 @@ class ComisionModel(Base):
     administrador_id: Mapped[uuid.UUID] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("administrador.id"), nullable=False
     )
+    activa: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     docentes: Mapped[list[DocenteModel]] = relationship(secondary=comision_docentes)
 
 

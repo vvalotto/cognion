@@ -160,6 +160,14 @@ export function Comisiones() {
                     >
                       Editar
                     </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/comisiones/${comision.id}/eliminar`)}
+                    >
+                      Eliminar
+                    </Button>
                   </td>
                 </tr>
               ))

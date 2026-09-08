@@ -29,7 +29,7 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         """
         query = (
             select(ComisionModel)
-            .where(ComisionModel.materia_id == materia_id)
+            .where(ComisionModel.materia_id == materia_id, ComisionModel.activa.is_(True))
             .options(selectinload(ComisionModel.docentes))
         )
         resultado = await self._session.execute(query)
@@ -40,6 +40,7 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
                 horario=modelo.horario,
                 administrador_id=modelo.administrador_id,
                 docentes_asignados=[docente.id for docente in modelo.docentes],
+                activa=modelo.activa,
             )
             for modelo in resultado.scalars().all()
         ]

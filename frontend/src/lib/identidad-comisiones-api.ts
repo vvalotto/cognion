@@ -118,6 +118,15 @@ export async function asignarDocente(
 }
 
 /** Corrige el horario de una comisión existente. */
+/**
+ * Elimina una comisión, o la deshabilita si tiene estudiantes inscriptos (respuesta 200 en
+ * ese caso; 204 sin cuerpo si se borró físicamente — de cualquier forma, deja de aparecer
+ * en el listado).
+ */
+export async function eliminarComision(comisionId: string, signal?: AbortSignal): Promise<void> {
+  await apiFetch<void>(`/comisiones/${comisionId}`, { method: "DELETE", signal })
+}
+
 export async function editarComision(
   comisionId: string,
   horario: string,
