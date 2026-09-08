@@ -6,12 +6,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.identidad.entities.errors import PasswordDemasiadoCorta, UsuarioNoExiste
+from src.identidad.entities.errors import EmailYaRegistrado, PasswordDemasiadoCorta, UsuarioNoExiste
 from src.identidad.entities.usuario import Estudiante, Usuario
 from src.identidad.frameworks.api.schemas import (
     CuentaDetalleResponse,
     CuentaResponse,
     CuentasPaginadasResponse,
+    EditarCuentaRequest,
     ResetearPasswordRequest,
 )
 from src.identidad.frameworks.dependencies import get_cuentas_controller, require_administrador
@@ -97,6 +98,30 @@ async def resetear_password(
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+
+    return _a_detalle_response(usuario)
+
+
+@router.patch(
+    "/{usuario_id}",
+    response_model=CuentaDetalleResponse,
+    dependencies=[Depends(require_administrador)],
+)
+async def editar_cuenta(
+    usuario_id: UUID,
+    body: EditarCuentaRequest,
+    controller: CuentasController = Depends(get_cuentas_controller),
+) -> CuentaDetalleResponse:
+    """Corrige nombre/email de una cuenta existente — no toca password, bloqueo ni perfil.
+
+    Responde 404 si la cuenta no existe, 409 si el email nuevo ya pertenece a otra cuenta.
+    """
+    try:
+        usuario = await controller.editar_cuenta(usuario_id, body.nombre, body.email)
+    except UsuarioNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except EmailYaRegistrado as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
 
     return _a_detalle_response(usuario)
 

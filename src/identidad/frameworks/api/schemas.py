@@ -63,6 +63,13 @@ class ResetearPasswordRequest(BaseModel):
     password_nueva: str = Field(..., min_length=8)
 
 
+class EditarCuentaRequest(BaseModel):
+    """Body de la request de corrección de nombre/email de una cuenta existente."""
+
+    nombre: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=1)
+
+
 class CambiarPasswordRequest(BaseModel):
     """Body de la request de cambio de la propia contraseña (`US-2.2.5`)."""
 

@@ -83,6 +83,20 @@ export async function obtenerCuenta(
   return aCuentaDetalleResponse(datos)
 }
 
+export async function editarCuenta(
+  id: string,
+  nombre: string,
+  email: string,
+  signal?: AbortSignal,
+): Promise<CuentaDetalleResponse> {
+  const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}`, {
+    method: "PATCH",
+    body: { nombre, email },
+    signal,
+  })
+  return aCuentaDetalleResponse(datos)
+}
+
 export async function resetearPassword(
   id: string,
   passwordNueva: string,

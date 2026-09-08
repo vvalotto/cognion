@@ -102,8 +102,15 @@ export function CuentaDetalle() {
       </Card>
 
       <Button
-        variant="destructive-solid"
+        variant="outline"
         className="mt-4 w-full"
+        onClick={() => navigate(`/cuentas/${cuenta.id}/editar`)}
+      >
+        Editar datos de la cuenta
+      </Button>
+      <Button
+        variant="destructive-solid"
+        className="mt-2 w-full"
         onClick={() => navigate(`/cuentas/${cuenta.id}/resetear-password`)}
       >
         Resetear contraseña y desbloquear

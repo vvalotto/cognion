@@ -71,10 +71,12 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         await self._session.commit()
 
     async def actualizar(self, usuario: Usuario) -> None:
-        """Guarda `password_hash`, `bloqueada` y los contadores de intentos fallidos."""
+        """Guarda `nombre`, `email`, `password_hash`, `bloqueada` y los contadores de fallos."""
         usuario_model = await self._session.get(UsuarioModel, usuario.id)
         if usuario_model is None:
             return
+        usuario_model.nombre = usuario.nombre
+        usuario_model.email = usuario.email
         usuario_model.password_hash = usuario.password_hash
         usuario_model.bloqueada = usuario.bloqueada
         usuario_model.intentos_fallidos_login = usuario.intentos_fallidos_login

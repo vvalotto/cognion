@@ -16,6 +16,7 @@ import { CerrarActividad } from "@/pages/actividad-evaluativa/CerrarActividad"
 import { ComisionDetalleDocente } from "@/pages/actividad-evaluativa/ComisionDetalleDocente"
 import { ComisionesDeMateria } from "@/pages/actividad-evaluativa/ComisionesDeMateria"
 import { CuentaDetalle } from "@/pages/cuentas/CuentaDetalle"
+import { EditarCuenta } from "@/pages/cuentas/EditarCuenta"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
 import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
@@ -184,6 +185,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="administrador">
             <CuentaDetalle />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/cuentas/:usuarioId/editar",
+        element: (
+          <RequireRole rol="administrador">
+            <EditarCuenta />
           </RequireRole>
         ),
       },

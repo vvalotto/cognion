@@ -44,6 +44,7 @@ from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteACo
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
+from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
@@ -137,6 +138,7 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
         ListarCuentasUseCase(cuenta_query),
         ObtenerCuentaUseCase(usuario_repo),
         ResetearPasswordUseCase(usuario_repo, hasher),
+        EditarCuentaUseCase(usuario_repo),
     )
 
 
