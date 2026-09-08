@@ -14,6 +14,7 @@ export interface MateriaListItemResponse {
   nombre: string
   bancoId: string
   cantidadPreguntasActivas: number
+  activa: boolean
 }
 
 export interface Opcion {
@@ -106,6 +107,7 @@ interface MateriaListItemApiResponse {
   nombre: string
   banco_id: string
   cantidad_preguntas_activas: number
+  activa: boolean
 }
 
 interface OpcionApiSchema {
@@ -212,14 +214,34 @@ export async function eliminarMateria(materiaId: string, signal?: AbortSignal): 
   await apiFetch<void>(`/materias/${materiaId}`, { method: "DELETE", signal })
 }
 
-export async function listarMaterias(signal?: AbortSignal): Promise<MateriaListItemResponse[]> {
-  const response = await apiFetch<MateriaListItemApiResponse[]>("/materias", { signal })
+/**
+ * Lista las materias activas; con `incluirInactivas: true` también trae las deshabilitadas
+ * — lo usa la pantalla de gestión de Materias, que permite reactivarlas.
+ */
+export async function listarMaterias(
+  signal?: AbortSignal,
+  incluirInactivas = false,
+): Promise<MateriaListItemResponse[]> {
+  const query = incluirInactivas ? "?incluir_inactivas=true" : ""
+  const response = await apiFetch<MateriaListItemApiResponse[]>(`/materias${query}`, { signal })
   return response.map((materia) => ({
     id: materia.id,
     nombre: materia.nombre,
     bancoId: materia.banco_id,
     cantidadPreguntasActivas: materia.cantidad_preguntas_activas,
+    activa: materia.activa,
   }))
+}
+
+/** Reactiva una materia deshabilitada. */
+export async function activarMateria(
+  materiaId: string,
+  signal?: AbortSignal,
+): Promise<{ id: string; nombre: string; activa: boolean }> {
+  return apiFetch<{ id: string; nombre: string; activa: boolean }>(
+    `/materias/${materiaId}/activar`,
+    { method: "POST", signal },
+  )
 }
 
 export async function filtrarBanco(

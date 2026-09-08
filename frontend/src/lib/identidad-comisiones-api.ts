@@ -5,12 +5,14 @@ export interface ComisionResumenResponse {
   id: string
   horario: string
   docentesAsignados: string[]
+  activa: boolean
 }
 
 interface ComisionResumenApiResponse {
   id: string
   horario: string
   docentes_asignados: string[]
+  activa: boolean
 }
 
 export interface EstudianteResumenResponse {
@@ -23,19 +25,39 @@ export interface EstudianteResumenResponse {
  * Docente/Analytics) — `docentesAsignados` agregado en `US-ADJ-23` para la pantalla de
  * Comisiones del Administrador.
  */
+/**
+ * Lista las comisiones activas de una materia; con `incluirInactivas: true` también trae
+ * las deshabilitadas — lo usa la pantalla de gestión de Comisiones, que permite
+ * reactivarlas.
+ */
 export async function listarComisionesPorMateria(
   materiaId: string,
   signal?: AbortSignal,
+  incluirInactivas = false,
 ): Promise<ComisionResumenResponse[]> {
+  const query = incluirInactivas ? "?incluir_inactivas=true" : ""
   const response = await apiFetch<ComisionResumenApiResponse[]>(
-    `/materias/${materiaId}/comisiones`,
+    `/materias/${materiaId}/comisiones${query}`,
     { signal },
   )
   return response.map((comision) => ({
     id: comision.id,
     horario: comision.horario,
     docentesAsignados: comision.docentes_asignados,
+    activa: comision.activa,
   }))
+}
+
+/** Reactiva una comisión deshabilitada. */
+export async function activarComision(
+  comisionId: string,
+  signal?: AbortSignal,
+): Promise<ComisionDetalleResponse> {
+  const response = await apiFetch<ComisionDetalleApiResponse>(
+    `/comisiones/${comisionId}/activar`,
+    { method: "POST", signal },
+  )
+  return mapearDetalle(response)
 }
 
 export async function listarEstudiantesDeComision(
@@ -75,6 +97,7 @@ export interface ComisionDetalleResponse {
   id: string
   horario: string
   docentesAsignados: string[]
+  activa: boolean
 }
 
 interface ComisionDetalleApiResponse {
@@ -83,12 +106,14 @@ interface ComisionDetalleApiResponse {
   horario: string
   administrador_id: string
   docentes_asignados: string[]
+  activa: boolean
 }
 
 function mapearDetalle(response: ComisionDetalleApiResponse): ComisionDetalleResponse {
   return {
     id: response.id,
     horario: response.horario,
+    activa: response.activa,
     docentesAsignados: response.docentes_asignados,
   }
 }

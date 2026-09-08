@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
-import { listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-api"
+import { activarCuenta, listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-api"
 import type { Rol } from "@/lib/session"
 
 const TAMANIO_PAGINA = 20
@@ -15,14 +15,17 @@ const TAMANIO_PAGINA = 20
 const ETIQUETA_ESTADO: Record<Estado, string> = {
   activa: "Activa",
   bloqueada: "Bloqueada",
+  inactiva: "Inactiva",
 }
 
-const VARIANTE_ESTADO: Record<Estado, "estado-activa" | "estado-bloqueada"> = {
+const VARIANTE_ESTADO: Record<Estado, "estado-activa" | "estado-bloqueada" | "estado-inactiva"> = {
   activa: "estado-activa",
   bloqueada: "estado-bloqueada",
+  inactiva: "estado-inactiva",
 }
 
 function estadoDe(cuenta: CuentaResponse): Estado {
+  if (cuenta.deshabilitada) return "inactiva"
   return cuenta.bloqueada ? "bloqueada" : "activa"
 }
 
@@ -47,6 +50,7 @@ export function Cuentas() {
       },
       { pagina, tamanioPagina: TAMANIO_PAGINA },
       controller.signal,
+      true,
     )
       .then((resultado) => {
         setCuentas(resultado.cuentas)
@@ -61,6 +65,13 @@ export function Cuentas() {
     setEstado("")
     setBusqueda("")
     setPagina(1)
+  }
+
+  async function handleActivar(id: string) {
+    await activarCuenta(id)
+    setCuentas(
+      (actual) => actual?.map((c) => (c.id === id ? { ...c, deshabilitada: false } : c)) ?? actual,
+    )
   }
 
   const totalPaginas = Math.ceil(total / TAMANIO_PAGINA)
@@ -123,6 +134,7 @@ export function Cuentas() {
               <option value="">Todos</option>
               <option value="activa">Activa</option>
               <option value="bloqueada">Bloqueada</option>
+              <option value="inactiva">Inactiva</option>
             </select>
           </div>
           <div>
@@ -204,17 +216,31 @@ export function Cuentas() {
                       >
                         Ver
                       </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/cuentas/${cuenta.id}/eliminar`)
-                        }}
-                      >
-                        Eliminar
-                      </Button>
+                      {cuenta.deshabilitada ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            void handleActivar(cuenta.id)
+                          }}
+                        >
+                          Activar
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            navigate(`/cuentas/${cuenta.id}/eliminar`)
+                          }}
+                        >
+                          Eliminar
+                        </Button>
+                      )}
                     </div>
                   </td>
                 </tr>

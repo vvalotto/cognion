@@ -28,8 +28,20 @@ function renderMaterias() {
 }
 
 const materiasResponse = [
-  { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 3 },
-  { id: "m2", nombre: "Gestión de Proyectos", banco_id: "b2", cantidad_preguntas_activas: 1 },
+  {
+    id: "m1",
+    nombre: "Ingeniería de Software",
+    banco_id: "b1",
+    cantidad_preguntas_activas: 3,
+    activa: true,
+  },
+  {
+    id: "m2",
+    nombre: "Gestión de Proyectos",
+    banco_id: "b2",
+    cantidad_preguntas_activas: 1,
+    activa: true,
+  },
 ]
 
 describe("Materias", () => {
@@ -111,6 +123,30 @@ describe("Materias", () => {
     await user.click(screen.getAllByRole("button", { name: "Editar" })[0])
 
     expect(await screen.findByText("Editar materia")).toBeInTheDocument()
+  })
+
+  it("una materia inactiva muestra 'Activar' en vez de 'Editar'/'Eliminar', y al activarla pasa a 'Activa'", async () => {
+    const inactivaResponse = [
+      { id: "m3", nombre: "Materia Retirada", banco_id: "b3", cantidad_preguntas_activas: 0, activa: false },
+    ]
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, inactivaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, { id: "m3", nombre: "Materia Retirada", activa: true }))
+    const user = userEvent.setup()
+
+    renderMaterias()
+    await screen.findByText("Materia Retirada")
+
+    expect(screen.getByText("Inactiva")).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Editar" })).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Eliminar" })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "Activar" }))
+
+    expect(await screen.findByText("Activa")).toBeInTheDocument()
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
+    expect(String(ultimaLlamada?.[0])).toMatch(/\/materias\/m3\/activar$/)
+    expect(ultimaLlamada?.[1]?.method).toBe("POST")
   })
 
   it("'+ Nueva materia' navega al formulario de alta", async () => {

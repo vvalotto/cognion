@@ -6,7 +6,7 @@ import { RolBadge } from "@/components/RolBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
+import { activarCuenta, obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
 
 /** Pantalla de detalle de cuenta (§2.2 `wireframes-cuentas-administracion.md`). */
 export function CuentaDetalle() {
@@ -23,6 +23,12 @@ export function CuentaDetalle() {
       .catch(() => {})
     return () => controller.abort()
   }, [usuarioId])
+
+  async function handleActivar() {
+    if (!cuenta) return
+    const actualizada = await activarCuenta(cuenta.id)
+    setCuenta(actualizada)
+  }
 
   if (!cuenta) {
     return <p className="text-sm text-muted-foreground">Cargando…</p>
@@ -71,9 +77,13 @@ export function CuentaDetalle() {
           <div className="flex items-center justify-between py-2.5">
             <dt className="text-muted-foreground">Estado</dt>
             <dd>
-              <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
-                {cuenta.bloqueada ? "Bloqueada" : "Activa"}
-              </Badge>
+              {cuenta.deshabilitada ? (
+                <Badge variant="estado-inactiva">Inactiva</Badge>
+              ) : (
+                <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
+                  {cuenta.bloqueada ? "Bloqueada" : "Activa"}
+                </Badge>
+              )}
             </dd>
           </div>
           {cuenta.perfil === "estudiante" && cuenta.comisionId && (
@@ -89,31 +99,39 @@ export function CuentaDetalle() {
         </dl>
       </Card>
 
-      <Button
-        variant="outline"
-        className="mt-4 w-full"
-        onClick={() => navigate(`/cuentas/${cuenta.id}/editar`)}
-      >
-        Editar datos de la cuenta
-      </Button>
-      <Button
-        variant="destructive-solid"
-        className="mt-2 w-full"
-        onClick={() => navigate(`/cuentas/${cuenta.id}/resetear-password`)}
-      >
-        Resetear contraseña y desbloquear
-      </Button>
-      <p className="mt-2 text-center text-sm text-muted-foreground">
-        Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear"
-        separada.
-      </p>
-      <Button
-        variant="destructive-solid"
-        className="mt-2 w-full"
-        onClick={() => navigate(`/cuentas/${cuenta.id}/eliminar`)}
-      >
-        Eliminar cuenta
-      </Button>
+      {cuenta.deshabilitada ? (
+        <Button variant="outline" className="mt-4 w-full" onClick={() => void handleActivar()}>
+          Activar cuenta
+        </Button>
+      ) : (
+        <>
+          <Button
+            variant="outline"
+            className="mt-4 w-full"
+            onClick={() => navigate(`/cuentas/${cuenta.id}/editar`)}
+          >
+            Editar datos de la cuenta
+          </Button>
+          <Button
+            variant="destructive-solid"
+            className="mt-2 w-full"
+            onClick={() => navigate(`/cuentas/${cuenta.id}/resetear-password`)}
+          >
+            Resetear contraseña y desbloquear
+          </Button>
+          <p className="mt-2 text-center text-sm text-muted-foreground">
+            Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear"
+            separada.
+          </p>
+          <Button
+            variant="destructive-solid"
+            className="mt-2 w-full"
+            onClick={() => navigate(`/cuentas/${cuenta.id}/eliminar`)}
+          >
+            Eliminar cuenta
+          </Button>
+        </>
+      )}
     </div>
   )
 }

@@ -2,9 +2,14 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
+import {
+  activarMateria,
+  listarMaterias,
+  type MateriaListItemResponse,
+} from "@/lib/banco-preguntas-api"
 import { getSession } from "@/lib/session"
 
 /**
@@ -21,11 +26,19 @@ export function Materias() {
 
   useEffect(() => {
     const controller = new AbortController()
-    listarMaterias(controller.signal)
+    listarMaterias(controller.signal, true)
       .then((resultado) => setMaterias(resultado))
       .catch(() => {})
     return () => controller.abort()
   }, [])
+
+  async function handleActivar(materiaId: string) {
+    await activarMateria(materiaId)
+    setMaterias(
+      (actual) =>
+        actual?.map((m) => (m.id === materiaId ? { ...m, activa: true } : m)) ?? actual,
+    )
+  }
 
   return (
     <div>
@@ -46,19 +59,20 @@ export function Materias() {
             <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
               <th className="py-2 pr-4 pl-4">Nombre</th>
               <th className="py-2 pr-4">Preguntas activas</th>
+              <th className="py-2 pr-4">Estado</th>
               <th className="py-2 pr-4"></th>
             </tr>
           </thead>
           <tbody>
             {materias === null ? (
               <tr>
-                <td colSpan={3} className="py-4 pl-4 text-muted-foreground">
+                <td colSpan={4} className="py-4 pl-4 text-muted-foreground">
                   Cargando…
                 </td>
               </tr>
             ) : materias.length === 0 ? (
               <tr>
-                <td colSpan={3} className="py-4 pl-4 text-muted-foreground">
+                <td colSpan={4} className="py-4 pl-4 text-muted-foreground">
                   Todavía no hay materias creadas.
                 </td>
               </tr>
@@ -75,6 +89,11 @@ export function Materias() {
                   >
                     <td className="py-3 pr-4 pl-4">{materia.nombre}</td>
                     <td className="py-3 pr-4">{materia.cantidadPreguntasActivas}</td>
+                    <td className="py-3 pr-4">
+                      <Badge variant={materia.activa ? "estado-activa" : "estado-inactiva"}>
+                        {materia.activa ? "Activa" : "Inactiva"}
+                      </Badge>
+                    </td>
                     <td className="flex gap-2 py-3 pr-4">
                       <Button
                         type="button"
@@ -87,28 +106,44 @@ export function Materias() {
                       >
                         {esDocente ? "Ver banco" : "Ver"}
                       </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/materias/${materia.id}/editar`)
-                        }}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/materias/${materia.id}/eliminar`)
-                        }}
-                      >
-                        Eliminar
-                      </Button>
+                      {materia.activa ? (
+                        <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigate(`/materias/${materia.id}/editar`)
+                            }}
+                          >
+                            Editar
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigate(`/materias/${materia.id}/eliminar`)
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            void handleActivar(materia.id)
+                          }}
+                        >
+                          Activar
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 )

@@ -12,7 +12,13 @@ function jsonResponse(status: number, body: unknown): Response {
 }
 
 const materiasResponse = [
-  { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 3 },
+  {
+    id: "m1",
+    nombre: "Ingeniería de Software",
+    banco_id: "b1",
+    cantidad_preguntas_activas: 3,
+    activa: true,
+  },
 ]
 
 function renderVerMateria() {
@@ -42,6 +48,7 @@ describe("VerMateria", () => {
 
     expect(await screen.findByRole("heading", { name: "Ingeniería de Software" })).toBeInTheDocument()
     expect(screen.getByText("3")).toBeInTheDocument()
+    expect(screen.getByText("Activa")).toBeInTheDocument()
     expect(screen.queryByRole("button")).not.toBeInTheDocument()
   })
 })
