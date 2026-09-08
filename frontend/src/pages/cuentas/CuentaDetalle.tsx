@@ -119,6 +119,13 @@ export function CuentaDetalle() {
         Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear"
         separada.
       </p>
+      <Button
+        variant="destructive-solid"
+        className="mt-2 w-full"
+        onClick={() => navigate(`/cuentas/${cuenta.id}/eliminar`)}
+      >
+        Eliminar cuenta
+      </Button>
     </div>
   )
 }

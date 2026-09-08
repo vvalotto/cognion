@@ -205,17 +205,30 @@ export function Cuentas() {
                     </Badge>
                   </td>
                   <td className="py-3 pr-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        navigate(`/cuentas/${cuenta.id}`)
-                      }}
-                    >
-                      Ver
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/cuentas/${cuenta.id}`)
+                        }}
+                      >
+                        Ver
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/cuentas/${cuenta.id}/eliminar`)
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))

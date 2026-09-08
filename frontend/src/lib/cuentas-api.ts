@@ -35,6 +35,7 @@ interface CuentasPaginadasApiResponse {
 export interface CuentaDetalleResponse extends CuentaResponse {
   creadoEn: string
   comisionId: string | null
+  deshabilitada: boolean
 }
 
 interface CuentaDetalleApiResponse {
@@ -45,6 +46,7 @@ interface CuentaDetalleApiResponse {
   bloqueada: boolean
   creado_en: string
   comision_id: string | null
+  deshabilitada: boolean
 }
 
 export async function listarCuentas(
@@ -72,6 +74,7 @@ function aCuentaDetalleResponse(datos: CuentaDetalleApiResponse): CuentaDetalleR
     bloqueada: datos.bloqueada,
     creadoEn: datos.creado_en,
     comisionId: datos.comision_id,
+    deshabilitada: datos.deshabilitada,
   }
 }
 
@@ -95,6 +98,15 @@ export async function editarCuenta(
     signal,
   })
   return aCuentaDetalleResponse(datos)
+}
+
+/**
+ * Elimina una cuenta, o la deshabilita si tiene datos asociados (Comisiones asignadas o
+ * creadas, evaluaciones rendidas) — 200 en ese caso, 204 sin cuerpo si se borró físicamente.
+ * De cualquier forma, deja de aparecer en el listado.
+ */
+export async function eliminarCuenta(id: string, signal?: AbortSignal): Promise<void> {
+  await apiFetch<void>(`/usuarios/${id}`, { method: "DELETE", signal })
 }
 
 export async function resetearPassword(
