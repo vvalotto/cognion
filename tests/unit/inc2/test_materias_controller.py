@@ -25,9 +25,7 @@ def _controller(materia_repo=None, banco_repo=None, pregunta_repo=None):
         CrearMateriaUseCase(materia_repo, banco_repo),
         ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
         EditarMateriaUseCase(materia_repo),
-        EliminarMateriaUseCase(
-            materia_repo, banco_repo, pregunta_repo, FakeComisionConsultaPort()
-        ),
+        EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, FakeComisionConsultaPort()),
         ActivarMateriaUseCase(materia_repo),
     )
 

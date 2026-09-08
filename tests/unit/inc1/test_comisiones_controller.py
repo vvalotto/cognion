@@ -19,7 +19,11 @@ from tests.unit.inc1._fakes import (
 )
 
 
-def _controller(comision_repo: FakeComisionRepository, usuario_repo: FakeUsuarioRepository, materia_port: FakeMateriaPort) -> ComisionesController:
+def _controller(
+    comision_repo: FakeComisionRepository,
+    usuario_repo: FakeUsuarioRepository,
+    materia_port: FakeMateriaPort,
+) -> ComisionesController:
     comision_query = FakeComisionQueryRepository()
     return ComisionesController(
         CrearComisionUseCase(comision_repo, materia_port),
