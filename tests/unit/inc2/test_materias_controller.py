@@ -4,10 +4,14 @@ from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
+from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
+from src.banco_preguntas.use_cases.editar_materia import EditarMateriaUseCase
+from src.banco_preguntas.use_cases.eliminar_materia import EliminarMateriaUseCase
 from src.banco_preguntas.use_cases.listar_materias import ListarMateriasUseCase
 from tests.unit.inc2._fakes import (
     FakeBancoRepository,
+    FakeComisionConsultaPort,
     FakeMateriaRepository,
     FakePreguntaRepository,
 )
@@ -20,6 +24,11 @@ def _controller(materia_repo=None, banco_repo=None, pregunta_repo=None):
     return MateriasController(
         CrearMateriaUseCase(materia_repo, banco_repo),
         ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+        EditarMateriaUseCase(materia_repo),
+        EliminarMateriaUseCase(
+            materia_repo, banco_repo, pregunta_repo, FakeComisionConsultaPort()
+        ),
+        ActivarMateriaUseCase(materia_repo),
     )
 
 
