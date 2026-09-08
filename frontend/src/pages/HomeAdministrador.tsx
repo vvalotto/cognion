@@ -11,10 +11,10 @@ interface CardAcceso {
 
 const CARDS: CardAcceso[] = [
   {
-    icono: "🏫",
-    titulo: "Comisiones",
-    descripcion: "Ver, crear y asignar Docentes a Comisiones",
-    to: "/comisiones",
+    icono: "👤",
+    titulo: "Alta de Docente",
+    descripcion: "Dar de alta un nuevo Docente en el sistema",
+    to: "/docentes/nuevo",
   },
   {
     icono: "📘",
@@ -23,10 +23,10 @@ const CARDS: CardAcceso[] = [
     to: "/materias",
   },
   {
-    icono: "👤",
-    titulo: "Alta de Docente",
-    descripcion: "Dar de alta un nuevo Docente en el sistema",
-    to: "/docentes/nuevo",
+    icono: "🏫",
+    titulo: "Comisiones",
+    descripcion: "Ver, crear y asignar Docentes a Comisiones",
+    to: "/comisiones",
   },
   {
     icono: "🔐",
