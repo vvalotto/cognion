@@ -48,13 +48,9 @@ class EliminarCuentaUseCase:
                 usuario_id
             )
         elif isinstance(usuario.perfil, Estudiante):
-            tiene_datos_asociados = await self._evaluacion_consulta.tiene_evaluaciones(
-                usuario_id
-            )
+            tiene_datos_asociados = await self._evaluacion_consulta.tiene_evaluaciones(usuario_id)
         elif isinstance(usuario.perfil, Administrador):
-            tiene_datos_asociados = await self._comision_query.tiene_comisiones_creadas(
-                usuario_id
-            )
+            tiene_datos_asociados = await self._comision_query.tiene_comisiones_creadas(usuario_id)
 
         if tiene_datos_asociados:
             usuario.deshabilitar()
