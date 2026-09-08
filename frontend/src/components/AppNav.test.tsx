@@ -39,15 +39,14 @@ describe("AppNav", () => {
     expect(screen.getAllByRole("link")).toHaveLength(3)
   })
 
-  it("Administrador ve sus 5 ítems", () => {
+  it("Administrador ve sus 4 ítems", () => {
     renderAppNav("administrador")
 
     expect(screen.getByText("Inicio")).toBeInTheDocument()
     expect(screen.getByText("Comisiones")).toBeInTheDocument()
     expect(screen.getByText("Materias")).toBeInTheDocument()
-    expect(screen.getByText("Docentes")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
-    expect(screen.getAllByRole("link")).toHaveLength(5)
+    expect(screen.getAllByRole("link")).toHaveLength(4)
   })
 
   it("marca el ítem de la sección actual como activo", () => {
@@ -73,7 +72,6 @@ describe("AppNav", () => {
     renderAppNav("administrador")
 
     expect(screen.getByText("Comisiones")).toHaveAttribute("href", "/comisiones")
-    expect(screen.getByText("Docentes")).toHaveAttribute("href", "/docentes/nuevo")
     expect(screen.getByText("Cuentas")).toHaveAttribute("href", "/cuentas")
   })
 })
