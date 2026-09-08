@@ -1,0 +1,1769 @@
+[
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Ciclo de vida del proyecto",
+    "tema": "Fases del proyecto",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuáles son las etapas del ciclo de vida del proyecto?",
+    "opciones": [
+      "Iniciación, prueba, construir y evaluar",
+      "Iniciación, Planificación, Ejecución, Evaluación",
+      "Análisis, Planificación, Ejecución, Evaluación",
+      "Iniciación, construir y evaluar"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Ciclo de vida del proyecto",
+    "tema": "Fases del proyecto",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué etapa es esta? \"La parte principal de una fase es el contrato del proyecto, que asegura a los patrocinadores, explica el cronograma del proyecto, describe las bases del proyecto y inicia las acciones hacia el resultado\".",
+    "opciones": [
+      "Planificación",
+      "Evaluación",
+      "Iniciación",
+      "Ejecución"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Ciclo de vida del proyecto",
+    "tema": "Modelos de ciclo de vida (predictivo/adaptativo)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es la definición de un ciclo de vida de proyecto adaptativo en contraste con un ciclo de vida predictivo?",
+    "opciones": [
+      "Un ciclo de vida del proyecto donde los riesgos y los costos se controlan mediante una planificación detallada de consideraciones conocidas",
+      "Un ciclo de vida del proyecto que se divide en fases.",
+      "Un ciclo de vida del proyecto que es iterativo o incremental"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Ciclo de vida del proyecto",
+    "tema": "Modelos de ciclo de vida (predictivo/adaptativo)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué metodología de gestión de proyectos se adapta mejor a un entorno donde existe un alto nivel de incertidumbre e incógnitas?",
+    "opciones": [
+      "Ciclo de vida de incremental",
+      "Ciclo de vida predictivo",
+      "Ciclo de vida adaptativo"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Ciclo de vida del proyecto",
+    "tema": "Modelos de ciclo de vida (predictivo/adaptativo)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué ciclo de vida del proyecto incluye el alcance del proyecto, el tiempo y el costo necesarios para entregar dicho alcance y se determinan tan pronto como sea posible en el ciclo de vida del proyecto?",
+    "opciones": [
+      "Ciclo de vida predictivo",
+      "Ciclo de vida iterativo e incremental",
+      "Ciclo de Vida Adaptativo"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Metodologías de desarrollo de software",
+    "tema": "Selección de metodología según el contexto",
+    "tipo": "opcion_multiple",
+    "texto": "Usted es Gerente de un proyecto y dirige la planificación del proyecto que apunta a mejorar el registro de cursos y sistema de pago para un sistema de una universidad pública importante, este dominio es nuevo para usted y para su organización. Una de sus tareas es seleccionar el modelo de ciclo de vida que es más apropiado para las circunstancias del proyecto. Entre los siguientes cuatro modelos de ciclos de vida, ¿cuál posibilitaría que su organización obtuviera una realimentación continua mientras se entrega el sistema por módulos en etapas?",
+    "opciones": [
+      "Cascada",
+      "Iterativo",
+      "Incremental",
+      "Ágil Basado en el flujo"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Metodologías de desarrollo de software",
+    "tema": "Selección de metodología según el contexto",
+    "tipo": "opcion_multiple",
+    "texto": "Un equipo de desarrollo de software está empezando un proyecto que tiene importantes riesgos tecnológicos. Para hacer frente a esto, se lleva a cabo el análisis de requerimientos, diseño, construcción, integración y pruebas de las partes más riesgosas del sistema. Este es un ejemplo de cuál de los siguientes modelos de ciclo de vida de desarrollo de software?",
+    "opciones": [
+      "Ágil basado en iteraciones.",
+      "Cascada.",
+      "Incremental.",
+      "Prototipado."
+    ],
+    "indice_correcta": 0,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Metodologías de desarrollo de software",
+    "tema": "Selección de metodología según el contexto",
+    "tipo": "opcion_multiple",
+    "texto": "La Compañía lnsurePro desarrolla software para soportar la industria de seguros y actualmente tiene varios productos en fase de desarrollo. Para el desarrollo de software, la empresa lnsurePro sigue uno de los siguientes tipos de enfoques de desarrollo, según las características del proyecto de software: Cascada, Scrum, Prototipo y Programación Extrema (XP). Para una nueva aplicación para soporte de clientes se propone permitir a los clientes ver el estado de los reclamos on-line. Para el desarrollo se espera que dure por lo menos seis meses, dependiendo de las requerimientos finales, recursos, la financiación, etc. En la actualidad, la mayoría de los requisitos son conocidos, pero el Departamento de Servicio al Cliente todavía está inseguro de los requerimientos definitivos en algunas zonas, y está esperando para ver las pantallas iniciales del nuevo sistema basado en la Web antes de cerrar los requerimientos. La gerencia ha hecho hincapié en que los riesgos deben reducirse al mínimo, que el proyecto debe ser entregado a tiempo, y que hay flexibilidad en la funcionalidad que deben ser entregada. ¿Cuál de los enfoques de desarrollo que se enumeran a continuación sería el más adecuado para  que la Compañía InsurePro pueda alcanzar sus objetivos?",
+    "opciones": [
+      "Prototipación.",
+      "Scrum",
+      "Cascada",
+      "Programación Extrema"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Metodologías de desarrollo de software",
+    "tema": "Selección de metodología según el contexto",
+    "tipo": "opcion_multiple",
+    "texto": "Usted es Ingeniero de Requerimientos trabajando en un proyecto para desarrollar un nuevo juego de carreras para un sistema de video juegos muy popular. Las características del juego están basadas en ploteo de una película que se va a estrenar cuyos derechos de uso han sido licenciados a la compañía. La fecha de liberación del juego coincide con la fecha de estreno de la película. Su empresa tiene experiencia en el desarrollo de juegos educacionales, pero es nueva en esta rama de la industria. Para ganar parte del mercado, varios estudiantes recién graduados han sido incorporados a la empresa. ¿Cuál de las siguientes afirmaciones NO es un argumento para la utilización del Modelo de Cascada?",
+    "opciones": [
+      "Los requerimientos funcionales y no funcionales del juego están bien definidos",
+      "Versiones subsecuentes del juego no son necesarias, solo una versión será liberada",
+      "El modelo de cascada representa de la mejor manera el proceso de resolución de problemas para el desarrollo de software",
+      "La codificación puede comenzar después que las características, maquetas y gráficos del juego están completamente diseñados"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Liderazgo y equipos",
+    "tema": "Liderazgo servicial y motivación",
+    "tipo": "opcion_multiple",
+    "texto": "El gerente general de la organización ha decidido recortar los viáticos destinados a los almuerzos de todos los desarrolladores para hacer frente a problemas financieros. Los miembros de su equipo han decidido realizar menor cantidad de puntos de historia en respuesta a la medida tomada por el gerente. ¿Qué podría hacer en esta situación en su rol de líder servicial?",
+    "opciones": [
+      "Buscar un reemplazo del equipo con personas que estén dispuestas a trabajar, aunque no les cubran los viáticos para el almuerzo.",
+      "Reunir a los miembros del equipo para que propongan alternativas de solución sin retrasar el proyecto.",
+      "Explicarle al gerente que esa decisión retrasará el proyecto, por lo que es necesario que vuelvan los viáticos para los miembros de su equipo.",
+      "Buscar otras fuentes de financiación para cubrir los viáticos de su equipo."
+    ],
+    "indice_correcta": 1,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Liderazgo y equipos",
+    "tema": "Liderazgo servicial y motivación",
+    "tipo": "opcion_multiple",
+    "texto": "La motivación de los miembros del equipo del proyecto a desempeñar su labor, puede ser extrínseca o intrínseca. Dentro de las motivaciones intrínsecas podemos encontrar:",
+    "opciones": [
+      "Programa de incentivos",
+      "Desarrollo personal y relacionamiento",
+      "Vacaciones y obra social",
+      "Salario"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Liderazgo y equipos",
+    "tema": "Dirección de proyectos",
+    "tipo": "opcion_multiple",
+    "texto": "En la dirección de proyectos:",
+    "opciones": [
+      "Las actividades se enfocan en las personas.",
+      "Las actividades se centran en cumplir los objetivos de los proyectos, tener procesos eficaces, planificar, coordinar, medir y supervisar el trabajo, entre otros.",
+      "abarca influenciar, motivar, escuchar, habilitar y otras actividades que tienen que ver con el equipo de proyecto"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "EDT y cronograma",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de las siguientes es la forma preferida de \"fragmentar\" un proyecto para crear una estructura de desglose del trabajo?",
+    "opciones": [
+      "Desglose de actividad.",
+      "Desglose funcional.",
+      "Desglose físico."
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "EDT y cronograma",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el primer paso para desarrollar un cronograma de proyecto?",
+    "opciones": [
+      "Asignar recursos",
+      "Comprender el alcance del proyecto",
+      "Visualizar el calendario",
+      "Realizar la estructura de desglose de tareas"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "EDT y cronograma",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué beneficio principal proporciona un diagrama de Gantt sobre una lista de tareas?",
+    "opciones": [
+      "Una representación visual del cronograma del proyecto.",
+      "La capacidad de asignar fechas de inicio y finalización a las tareas.",
+      "La capacidad de asignar recursos a cada tarea.",
+      "Una lista de todas las tareas requeridas para completar el proyecto."
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "EDT y cronograma",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué explicación describe mejor lo que significa el término \"crashing\" en un proyecto?",
+    "opciones": [
+      "Abandonar un proyecto cuando se ha excedido el presupuesto más de un 20%.",
+      "Inyectar más fondos en un proyecto.",
+      "Reducir los lapsos de tiempo en actividades críticas para completar el proyecto en menos tiempo.",
+      "Fracaso de un proyecto debido a la incompetencia del director del proyecto."
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "Ruta crítica",
+    "tipo": "verdadero_falso",
+    "texto": "Solo los retrasos en las tareas del camino crítico pueden retrasar un proyecto en su conjunto.",
+    "respuesta_correcta": true,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "Ruta crítica",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué es una ruta crítica?",
+    "opciones": [
+      "La ruta que representa el tiempo más corto en el que se podría terminar un proyecto.",
+      "Es la secuencia de tareas de mayor riesgo técnico",
+      "Es conjunto de tareas que tienen más probabilidades de atrasarse."
+    ],
+    "indice_correcta": 0,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estimación ágil",
+    "tema": "Técnicas de estimación",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de los siguientes NO es un propósito de la estimación ágil?",
+    "opciones": [
+      "Ayuda al equipo a decidir mejor qué historias de usuario se eligen para la iteración.",
+      "Faculta a la gerencia para hacer las estimaciones.",
+      "Proporciona estimaciones más precisas.",
+      "Se puede combinar con métricas que involucren el desempeño del equipo para permitir que se realicen proyecciones."
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estimación ágil",
+    "tema": "Técnicas de estimación",
+    "tipo": "opcion_multiple",
+    "texto": "El Planing-Poker es una de las técnicas de estimación utilizadas en la metodología Scrum. ¿En cuál de las siguientes técnicas de estimación se basa el póquer de planificación?",
+    "opciones": [
+      "Opinión experta",
+      "Triangulación",
+      "Analogía",
+      "Desagregación"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estimación ágil",
+    "tema": "Técnicas de estimación",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué es lo que hace únicas a las estimaciones time-boxing  que las diferencian de otros enfoques de estimación de proyectos?",
+    "opciones": [
+      "La estimación del cuadro de tiempo establece un tiempo mínimo y máximo para una tarea o actividad, colocando esa actividad en un \"cuadro\".",
+      "La estimación del cuadro de tiempo equilibra los tres lados del triángulo de gestión de proyectos, el alcance, el cronograma y los recursos.",
+      "El horario es fijo y el alcance es variable"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estimación ágil",
+    "tema": "Técnicas de estimación",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué tipo de proyecto es más probable que utilice estimaciones time-boxing?",
+    "opciones": [
+      "Proyectos con uso extensivo de proveedores o vendedores externos",
+      "Un proyecto con hitos rígidos",
+      "Proyecto urgente o de crisis"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estimación ágil",
+    "tema": "Técnicas de estimación",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el impacto de un cambio de recurso en una estimación en un entorno ágil time-boxing?",
+    "opciones": [
+      "El tiempo se modifica para adaptarse a la disponibilidad del nuevo recurso.",
+      "El tiempo permanece igual, pero el alcance puede cambiar.",
+      "El tiempo y el alcance se modifican para reequilibrar el triángulo de gestión de proyectos."
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Planificación y cronograma",
+    "tema": "EDT y cronograma",
+    "tipo": "verdadero_falso",
+    "texto": "Al construir la Estructura de Desglose de Trabajo (EDT) se deben tener en cuenta los tiempos y la secuencia de las tareas.",
+    "respuesta_correcta": false,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Requisitos",
+    "tema": "Elicitación de requisitos",
+    "tipo": "verdadero_falso",
+    "texto": "En la recolección o elicitación de requisitos se utilizan otras técnicas además las entrevistas con interesados o grupos focales.",
+    "respuesta_correcta": true,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Requisitos",
+    "tema": "Elicitación de requisitos",
+    "tipo": "verdadero_falso",
+    "texto": "La entrega de valor de los entregables depende del enfoque del desarrollo, puede ser durante el proyecto o hacia el final de este.",
+    "respuesta_correcta": true,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Requisitos",
+    "tema": "Elicitación de requisitos",
+    "tipo": "verdadero_falso",
+    "texto": "Los requisitos de un proyecto solo pueden recolectarse/elicitarse en la planificación inicial.",
+    "respuesta_correcta": false,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estructuras organizacionales",
+    "tema": "Tipos de estructura organizacional",
+    "tipo": "opcion_multiple",
+    "texto": "¿En cuál de estructuras siguientes no es necesario que el Gerente de Proyecto esté con asignación dedicadas a tiempo completo?",
+    "opciones": [
+      "Funcional.",
+      "Matricial Fuerte.",
+      "Por Proyecto."
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Estructuras organizacionales",
+    "tema": "Tipos de estructura organizacional",
+    "tipo": "opcion_multiple",
+    "texto": "¿En que caso se entiende que el personal asignado a un proyecto tiene una dedicación exclusiva al mismo?",
+    "opciones": [
+      "Funcional.",
+      "Matricial Moderada.",
+      "Por Proyecto."
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Roles y responsabilidades",
+    "tema": "Matriz RACI",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué significa RACI?",
+    "opciones": [
+      "Responsable-Analista-Consultor-Informado",
+      "Responsable-Aprobador-Colaborado-Informado",
+      "Responsable-Aprobador-Consultor-Informante",
+      "Responsable-Aprobador-Consultor-Informado"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Roles y responsabilidades",
+    "tema": "Matriz RACI",
+    "tipo": "opcion_multiple",
+    "texto": "En la matriz la RACI, las columnas identifican:",
+    "opciones": [
+      "Los roles del proyecto",
+      "Pueden ser roles del proyecto o las personas",
+      "Las personas más importantes",
+      "Los roles que tienen más actividades"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Roles y responsabilidades",
+    "tema": "Roles de Scrum",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de las siguientes responsabilidades NO es relevante NI caracteriza a un líder servicial?.",
+    "opciones": [
+      "Resolver los impedimentos",
+      "Capacitar en agilidad",
+      "Asignar las tareas a las personas",
+      "Facilitar las conversaciones"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Roles y responsabilidades",
+    "tema": "Roles de Scrum",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de las siguientes NO es una responsabilidad de los miembros de un equipo de SCRUM?",
+    "opciones": [
+      "Planificar el iteración (Sprint)",
+      "Ordenar los elementos del Product Backlog.",
+      "Adherir a la Definición de Terminado",
+      "Hacerse cargo del trabajo en el sprint"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Roles y responsabilidades",
+    "tema": "Roles de Scrum",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de las siguientes NO es una responsabilidad del dueño del producto?",
+    "opciones": [
+      "Crear y comunicar claramente los elementos del Product Backlog;",
+      "Priorizar los elementos del Product Backlog.",
+      "Es el representante de los destinatarios finales del producto.",
+      "Eliminar las barreras entre los interesados y los miembros del equipo."
+    ],
+    "indice_correcta": 3,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Roles y responsabilidades",
+    "tema": "Roles de Scrum",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de las siguientes NO es una responsabilidad del Scrum Master?",
+    "opciones": [
+      "Asegurarse de que todos los eventos del Scrum se lleven a cabo..",
+      "Planificar el iteración (Sprint)",
+      "Liderar, capacitar y guiar a la organización en su adopción de Scrum.",
+      "Guiar a los miembros del equipo en ser autogestionados y multifuncionales."
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Interesados y comunicación",
+    "tema": "Gestión de interesados y comunicaciones",
+    "tipo": "opcion_multiple",
+    "texto": "El análisis de interesados es:",
+    "opciones": [
+      "Una técnica de información que permite conocer cuántos interesados se han identificado a lo largo del proyecto.",
+      "Una técnica sistemática de recopilación y análisis de información cuantitativa y cualitativa para determinar qué intereses deben ser tomados en cuenta a lo largo del proyecto.",
+      "Una herramienta que sirve para asegurar la identificación y un listado exhaustivo de los interesados.",
+      "Una herramienta que identifica cómo el proyecto afectará a los interesados."
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Interesados y comunicación",
+    "tema": "Gestión de interesados y comunicaciones",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de las siguientes alternativas NO es un ejemplo de una Habilidad Blanda que debe aplicar el Director del Proyecto para el involucramiento de los interesados?",
+    "opciones": [
+      "Escuchar de manera activa",
+      "Influir sobre las personas para apoyar el proyecto",
+      "Habilidades interpersonales",
+      "Gestión de conflictos"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Gestión de Proyectos",
+    "unidad_tematica": "Interesados y comunicación",
+    "tema": "Gestión de interesados y comunicaciones",
+    "tipo": "opcion_multiple",
+    "texto": "Usted está trabajando como director de proyecto en el proceso de planificar las comunicaciones de un proyecto de desarrollo de un producto médico innovador. El principal motivo por el cual usted creará un plan de gestión de las comunicaciones será:",
+    "opciones": [
+      "Comunicarse con todos los interesados.",
+      "Definir la cantidad de canales de comunicación.",
+      "Establecer la tecnología de comunicación a ser utilizada.",
+      "Establecer la frecuencia de las comunicaciones."
+    ],
+    "indice_correcta": 0,
+    "dificultad": "alto",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "¿ Cuál es el principal objetivo del principio KISS en el desarrollo de software?",
+    "opciones": [
+      "Reutilizar la mayor cantidad posible de código",
+      "Aumentar la complejidad del sistema para hacerlo más robusto",
+      "Mantener el diseño lo más simple posible",
+      "Agregar funcionalidades anticipadas para mayor versatilidad"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué práctica va en contra del principio DRY (Don't Repeat Yourself)?",
+    "opciones": [
+      "Refactorizar código repetido",
+      "Usar funciones reutilizables",
+      "Duplicar consultas SQL en diferentes partes del sistema",
+      "Centralizar configuraciones"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "Según el principio YAGNI (You Aren’t Gonna Need It), ¿cuál es la mejor práctica?",
+    "opciones": [
+      "Preparar el sistema para cualquier funcionalidad futura",
+      "Codificar solo lo que se necesita en el momento",
+      "Incluir opciones de configuración para todos los casos posibles",
+      "Estimar requisitos futuros y codificarlos por adelantado"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el espíritu de la Regla del Boy Scout en programación?",
+    "opciones": [
+      "Ignorar problemas menores si no son críticos",
+      "No tocar código que ya funciona",
+      "Dejar el código mejor de lo que se encontró",
+      "Comentar cada línea de código modificada"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué situación rompe el principio de Separación de Preocupaciones?",
+    "opciones": [
+      "Tener una capa de acceso a datos separada de la lógica de negocio",
+      "Dividir la lógica del sistema en módulos específicos",
+      "Incluir configuraciones de entorno directamente en el código",
+      "Delegar la validación de datos a una función externa"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué recomienda la Ley de Demeter?",
+    "opciones": [
+      "Usar el menor número posible de clases",
+      "Comentar todas las funciones públicas",
+      "Acceder solo a colaboradores directos de un objeto",
+      "Escribir funciones con múltiples niveles de llamadas"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios de diseño",
+    "tema": "Principios generales (KISS, DRY, YAGNI...)",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es una buena práctica para nombrar elementos en el código?",
+    "opciones": [
+      "Usar abreviaciones siempre que sea posible",
+      "Usar una sola palabra por concepto",
+      "Nombrar funciones con sustantivos",
+      "Nombrar atributos con verbos"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué porcentaje del esfuerzo total en el ciclo de vida del software ocurre en el desarrollo inicial?",
+    "opciones": [
+      "50%",
+      "80%",
+      "20%–30%",
+      "10%–15%"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es la principal razón por la que el software se degrada con el tiempo?",
+    "opciones": [
+      "Falta de documentación al inicio",
+      "Obsolescencia del hardware",
+      "Acumulación de soluciones improvisadas y parches",
+      "Cambios en el equipo de desarrollo"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué postula la Ley del Crecimiento Continuo de Lehman?",
+    "opciones": [
+      "El software debe ser reciclado periódicamente",
+      "El software se vuelve más ligero con el tiempo",
+      "Cada cambio en el software aumenta su tamaño",
+      "La calidad mejora automáticamente con las actualizaciones"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es un síntoma típico de un sistema con fragilidad?",
+    "opciones": [
+      "Requiere pruebas manuales intensivas",
+      "Fallas aparecen lejos del módulo modificado",
+      "Los desarrolladores necesitan permisos especiales",
+      "Las funcionalidades se vuelven obsoletas"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué define mejor a la deuda técnica según el documento?",
+    "opciones": [
+      "Bugs no corregidos por falta de tiempo",
+      "Mala programación deliberada",
+      "Atajos técnicos que permiten avanzar pero generan costos futuros",
+      "Falta de capacitación en el equipo"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es una consecuencia directa de no gestionar la deuda técnica?",
+    "opciones": [
+      "Pérdida de usuarios",
+      "Aumento de la velocidad del sistema",
+      "Aumento exponencial de tiempo y costos de mantenimiento",
+      "Eliminación automática del código innecesario"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Deuda técnica",
+    "tema": "Deuda técnica y leyes de Lehman",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de los siguientes NO es un síntoma descrito por Robert C. Martin como indicador de mal diseño?",
+    "opciones": [
+      "Rigidez",
+      "Fragilidad",
+      "Volatilidad",
+      "Viscosidad"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Cohesión",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué define una alta cohesión en un módulo de software?",
+    "opciones": [
+      "Tener muchas líneas de código sin relación clara",
+      "Agrupar elementos con propósitos diferentes",
+      "Que todos sus elementos estén orientados a una única función específica",
+      "Compartir datos globales entre elementos"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Cohesión",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el tipo más bajo de cohesión según el documento?",
+    "opciones": [
+      "Lógica",
+      "Coincidental",
+      "Temporal",
+      "Secuencial"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Cohesión",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué caracteriza a la cohesión temporal?",
+    "opciones": [
+      "Las tareas están agrupadas por una categoría lógica",
+      "Las tareas se ejecutan en un orden específico",
+      "Las tareas se ejecutan aproximadamente al mismo tiempo",
+      "Las tareas comparten una estructura de datos común"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Cohesión",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es la diferencia entre cohesión secuencial y procedural?",
+    "opciones": [
+      "En la secuencial las tareas comparten datos, en la procedural no",
+      "En la procedural hay secuencia, pero sin uso de resultados anteriores",
+      "En la secuencial no importa el orden de ejecución",
+      "En la procedural se agrupan tareas sin ningún criterio"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Cohesión",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué tipo de cohesión implica que todos los métodos operan sobre los mismos datos?",
+    "opciones": [
+      "Lógica",
+      "Comunicacional",
+      "Temporal",
+      "Coincidental"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Acoplamiento",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué tipo de acoplamiento es el más deseable en diseño de software?",
+    "opciones": [
+      "Por control",
+      "Común",
+      "Por contenido",
+      "De mensajes"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Acoplamiento",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué caracteriza al acoplamiento por estampado?",
+    "opciones": [
+      "Los módulos intercambian datos específicos y necesarios",
+      "Un módulo controla el flujo de otro",
+      "Se pasan estructuras completas aunque se usen parcialmente",
+      "Múltiples módulos comparten variables globales"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Acoplamiento",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el principal problema del acoplamiento por contenido?",
+    "opciones": [
+      "Es difícil de implementar",
+      "Exige muchos recursos computacionales",
+      "Un módulo accede directamente al contenido interno de otro",
+      "No permite el uso de estructuras de datos"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Acoplamiento",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué tipo de acoplamiento se da cuando se usan recursos como bases de datos o protocolos externos?",
+    "opciones": [
+      "Por control",
+      "Externo",
+      "Común",
+      "De datos"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Cohesión y acoplamiento",
+    "tema": "Acoplamiento",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué diferencia al acoplamiento de datos del acoplamiento por control?",
+    "opciones": [
+      "En el de datos no se pasan argumentos",
+      "En el por control se envían banderas que afectan el comportamiento",
+      "En el de datos se usan estructuras globales",
+      "En el por control no hay intercambio de información"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Ocultamiento de información",
+    "tema": "Ocultamiento de información",
+    "tipo": "opcion_multiple",
+    "texto": "¿Quién introdujo formalmente el concepto de ocultamiento de la información?",
+    "opciones": [
+      "Alan Turing",
+      "Robert C. Martin",
+      "Ward Cunningham",
+      "David L. Parnas"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Ocultamiento de información",
+    "tema": "Ocultamiento de información",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el objetivo principal del ocultamiento de información en diseño de software?",
+    "opciones": [
+      "Evitar usar estructuras complejas",
+      "Minimizar la cantidad de código compartido entre módulos",
+      "Exponer todos los detalles para facilitar la comprensión",
+      "Reducir el alcance del impacto ante cambios en el sistema"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Ocultamiento de información",
+    "tema": "Ocultamiento de información",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué representa un “secreto de diseño”?",
+    "opciones": [
+      "Código que contiene claves de acceso",
+      "Una decisión susceptible de cambiar en el futuro",
+      "Una variable local no documentada",
+      "Un error intencionalmente oculto"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Ocultamiento de información",
+    "tema": "Ocultamiento de información",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué estructuras de datos son ejemplos clásicos de ocultamiento de información?",
+    "opciones": [
+      "Arrays y diccionarios",
+      "JSON y XML",
+      "Pilas y colas",
+      "Árboles y grafos"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Ocultamiento de información",
+    "tema": "Ocultamiento de información",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué rol cumplen las interfaces públicas en este contexto?",
+    "opciones": [
+      "Permiten a los usuarios modificar directamente la lógica interna",
+      "Son puntos de interacción que deben ocultarse totalmente",
+      "Representan las decisiones de diseño que deben ser estables y expuestas",
+      "Son detalles internos que deben cambiar con frecuencia"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios SOLID",
+    "tema": "SOLID",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué representa cada letra en el acrónimo SOLID?",
+    "opciones": [
+      "Seguridad, Orden, Lógica, Integración, Documentación",
+      "Sencillez, Organización, Libertad, Independencia, Desarrollo",
+      "Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion",
+      "Structure, Operation, Layering, Inheritance, Design"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios SOLID",
+    "tema": "SOLID",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué implica aplicar correctamente el Principio de Responsabilidad Única (SRP)?",
+    "opciones": [
+      "Cada función debe manejar múltiples tareas relacionadas",
+      "Cada clase debe tener una única razón para cambiar",
+      "Todas las responsabilidades deben estar en un solo módulo",
+      "Las clases deben tener más de siete métodos"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios SOLID",
+    "tema": "SOLID",
+    "tipo": "opcion_multiple",
+    "texto": "Según el Principio de Abierto/Cerrado (OCP), ¿cuál es la mejor práctica?",
+    "opciones": [
+      "Reescribir el código existente para adaptarlo a nuevos requerimientos",
+      "Agregar nuevas funcionalidades sin modificar el código existente",
+      "Usar estructuras de datos globales para facilitar el acceso",
+      "Limitar el uso de clases abstractas"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios SOLID",
+    "tema": "SOLID",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es la esencia del Principio de Sustitución de Liskov (LSP)?",
+    "opciones": [
+      "Evitar el uso de herencia",
+      "Todas las subclases deben extender varias clases base",
+      "Las subclases deben poder sustituir a sus clases base sin alterar el comportamiento",
+      "Heredar siempre garantiza compatibilidad de comportamiento"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios SOLID",
+    "tema": "SOLID",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué afirma el Principio de Inversión de Dependencia (DIP)?",
+    "opciones": [
+      "El código debe depender de implementaciones específicas",
+      "Los módulos de alto nivel deben controlar a los de bajo nivel",
+      "Las abstracciones deben depender de los detalles concretos",
+      "Ambos módulos, de alto y bajo nivel, deben depender de abstracciones"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Principios SOLID",
+    "tema": "SOLID",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué problema puede causar una interfaz \"gorda\", según el Principio de Segregación de Interfaces (ISP)?",
+    "opciones": [
+      "Reduce el rendimiento del sistema",
+      "Aumenta la cohesión entre módulos",
+      "Obliga a implementar métodos innecesarios",
+      "Genera duplicación de código"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué significa UX en el contexto del desarrollo de software?",
+    "opciones": [
+      "User Experience",
+      "User Exchange",
+      "Universal Experience",
+      "Unified Exchange"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es uno de los beneficios de una buena UX mencionados en el documento?",
+    "opciones": [
+      "Reduce la necesidad de soporte técnico",
+      "Aumenta la retención de usuarios",
+      "Disminuye los costos de producción",
+      "Aumenta la cantidad de características del producto"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué se refiere al diseño centrado en el usuario?",
+    "opciones": [
+      "Diseñar productos solo para usuarios avanzados",
+      "Utilizar las tecnologías más avanzadas",
+      "Diseñar solo para dispositivos móviles",
+      "Poner las necesidades y preferencias de los usuarios finales en el centro de cada decisión de diseño"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el primer principio del diseño centrado en el usuario?",
+    "opciones": [
+      "Diseño iterativo",
+      "Investigación del usuario",
+      "Diseño inclusivo",
+      "Colaboración multidisciplinaria"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué implica el diseño iterativo?",
+    "opciones": [
+      "Hacer un solo prototipo final",
+      "Solo centrarse en la estética",
+      "Esbozar, prototipar, probar y aprender en cada ciclo",
+      "Ignorar la retroalimentación del usuario"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué busca el diseño inclusivo?",
+    "opciones": [
+      "Crear productos solo para usuarios jóvenes",
+      "Limitar el uso del producto a una región específica",
+      "Enfocarse en la eficiencia sobre la usabilidad",
+      "Asegurar que los productos sean accesibles y usables para personas con todas las habilidades, capacidades, edades y orígenes"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué significa la realimentación en el contexto del diseño UX?",
+    "opciones": [
+      "Ignorar la opinión de los usuarios",
+      "Hacer actividades de evolución continua y escuchar la respuesta de los usuarios",
+      "Solo implementar cambios anualmente",
+      "No hacer cambios después del lanzamiento"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué asegura la colaboración multidisciplinaria en el diseño UX?",
+    "opciones": [
+      "Enriquecer el diseño con diferentes visiones, perspectivas, habilidades y capacidades",
+      "Mantener el proyecto dentro del presupuesto",
+      "Reducir el tiempo de desarrollo",
+      "Hacer el diseño más simple"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué se entiende por modelos mentales en el diseño de interacción?",
+    "opciones": [
+      "Las expectativas y suposiciones que los usuarios tienen sobre cómo debería funcionar algo",
+      "Las características técnicas del producto",
+      "Los costos de producción del software",
+      "Las métricas de rendimiento del producto"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué teoría sugiere agrupar visualmente elementos similares?",
+    "opciones": [
+      "Teoría de la afinidad de atributos",
+      "Teoría del diseño centrado en el usuario",
+      "Teoría de la interacción",
+      "Teoría de la realimentación"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué se refiere al costo de interacción?",
+    "opciones": [
+      "El costo económico de desarrollar una aplicación",
+      "El esfuerzo mental y físico necesario para completar una tarea determinada",
+      "El tiempo necesario para aprender a usar una aplicación",
+      "El esfuerzo necesario para comercializar una aplicación"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "**¿Qué sugiere el efecto Zegarnik en el diseño UX?**",
+    "opciones": [
+      "Recordamos mejor las tareas incompletas que las completadas",
+      "Olvidamos rápidamente las tareas incompletas",
+      "Completamos las tareas más rápido si son complejas",
+      "Las tareas simples son las más recordadas"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el impacto del color azul según la psicología del color?",
+    "opciones": [
+      "Transmite urgencia",
+      "Transmite confianza y calma",
+      "Transmite peligro",
+      "Transmite tristeza"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué refleja la teoría de la Gestalt?",
+    "opciones": [
+      "Que los colores tienen poco impacto en la UX",
+      "Que las interfaces deben ser monocromáticas",
+      "Que la simplicidad es clave en el diseño UX",
+      "Que el todo es más que la suma de sus partes"
+    ],
+    "indice_correcta": 3,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué representa la pirámide de Maslow en el contexto de UX?",
+    "opciones": [
+      "Un modelo de relaciones entre las necesidades humanas",
+      "Un conjunto de reglas de diseño",
+      "Un método para evaluar el rendimiento del software",
+      "Un estándar de calidad para aplicaciones"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué principio sugiere que valoramos más lo que percibimos como limitado?",
+    "opciones": [
+      "El principio de iteración",
+      "El principio de accesibilidad",
+      "El principio de escasez",
+      "El principio de realimentación"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué normativa asegura que las interfaces sean utilizables por personas con diversas capacidades?",
+    "opciones": [
+      "ISO 9000",
+      "WCAG",
+      "Material Design",
+      "Directrices de Interfaz Humana de Apple"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "**¿Qué se busca con el diseño web responsivo?",
+    "opciones": [
+      "Que las interfaces funcionen bien solo en dispositivos móviles",
+      "Que las interfaces funcionen bien en una amplia variedad de dispositivos y tamaños de pantalla",
+      "Que las interfaces sean lo más simples posibles",
+      "Que las interfaces sean solo visualmente atractivas"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué significa minimizar la carga cognitiva en el diseño UX?",
+    "opciones": [
+      "Simplificar el código del software",
+      "Reducir el esfuerzo mental necesario para usar una aplicación",
+      "Aumentar la cantidad de funciones disponibles",
+      "Hacer el diseño más colorido"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Fundamentos de UX",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué principio se aplica cuando se ofrecen respuestas claras y oportunas en una aplicación?",
+    "opciones": [
+      "El principio de la realimentación",
+      "El principio de la escasez",
+      "El principio de diseño iterativo",
+      "El principio de accesibilidad"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "Qué principio de Nielsen se refiere a mantener a los usuarios informados sobre el estado del sistema?",
+    "opciones": [
+      "Consistencia y estándares",
+      "Visibilidad del estado del sistema",
+      "Control y libertad del usuario",
+      "Prevención de errores"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué principio de Nielsen sugiere usar palabras y frases familiares para el usuario?",
+    "opciones": [
+      "Flexibilidad y eficiencia en el uso",
+      "Diseño estético y minimalista",
+      "Coincidencia entre el sistema y el mundo real",
+      "Ayuda y documentación"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué debe ofrecer un sistema para permitir al usuario corregir errores fácilmente?",
+    "opciones": [
+      "Documentación extensa",
+      "Opciones de deshacer y rehacer",
+      "Interfaces complejas",
+      "Proceso de corrección manual"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué principio de Nielsen se refiere a utilizar términos y estilos consistentes en una aplicación?",
+    "opciones": [
+      "Prevención de errores",
+      "Reconocer en lugar de recordar",
+      "Consistencia y estándares",
+      "Flexibilidad y eficiencia en el uso"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué estrategia se sugiere para minimizar la carga de memoria del usuario?",
+    "opciones": [
+      "Hacer que los usuarios memoricen información importante",
+      "Mantener objetos y acciones visibles",
+      "Utilizar colores vibrantes para destacar",
+      "Eliminar ayudas visuales"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué principio se enfoca en prevenir errores en lugar de corregirlos?",
+    "opciones": [
+      "Flexibilidad y eficiencia en el uso",
+      "Prevención de errores",
+      "Ayuda y documentación",
+      "Consistencia y estándares"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué describe mejor la creación de personas en el diseño de UX?",
+    "opciones": [
+      "Perfiles ficticios basados en usuarios ideales",
+      "Diagramas de flujo de tareas",
+      "Listas de funcionalidades del producto",
+      "Documentos técnicos detallados"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el propósito principal de un mapa de viaje de usuario?",
+    "opciones": [
+      "Visualizar la estructura técnica de la aplicación",
+      "Mostrar la experiencia completa del usuario con el producto",
+      "Documentar errores técnicos",
+      "Listar características del producto"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué herramienta de diseño se usa para representar la estructura básica de una página web o aplicación?",
+    "opciones": [
+      "Bocetos (wireframes)",
+      "Prototipos de alta fidelidad",
+      "Documentación técnica",
+      "Manuales de usuario"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué se logra con la creación de prototipos en el diseño de UX?",
+    "opciones": [
+      "Simular la interactividad del producto final",
+      "Crear la versión definitiva del producto",
+      "Diseñar exclusivamente el estilo visual",
+      "Eliminar la necesidad de pruebas de usabilidad"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál de los siguientes no es un beneficio de los prototipos?",
+    "opciones": [
+      "Facilitar pruebas de usabilidad",
+      "Identificar problemas de interacción",
+      "Eliminar la necesidad de feedback del usuario",
+      "Optimizar la comunicación dentro del equipo"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué técnica de prueba de usabilidad analiza hacia dónde miran los usuarios en la pantalla?",
+    "opciones": [
+      "Pruebas remotas",
+      "Eye Tracking (seguimiento ocular)",
+      "Card Sorting",
+      "Pruebas A-B"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el propósito de las pruebas A-B en usabilidad?",
+    "opciones": [
+      "Comparar dos versiones de una misma página",
+      "Crear perfiles de usuario detallados",
+      "Documentar la estructura de navegación",
+      "Proporcionar ayuda y documentación"
+    ],
+    "indice_correcta": 0,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué es esencial para cualquier diseñador de experiencia de usuario según el documento?",
+    "opciones": [
+      "Crear códigos de programación",
+      "Realizar bocetos y prototipos",
+      "Escribir documentación técnica",
+      "Desarrollar diagramas de flujo de trabajo"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es el primer paso para diseñar una experiencia de usuario efectiva?",
+    "opciones": [
+      "Crear prototipos de alta fidelidad",
+      "Entender a los usuarios",
+      "Realizar pruebas A-B",
+      "Diseñar la interfaz visual"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué debe hacer la ayuda y documentación de un sistema?",
+    "opciones": [
+      "Ser extensa y detallada",
+      "Ser fácil de buscar y centrada en la tarea del usuario",
+      "Incluir información técnica avanzada",
+      "Eliminar la necesidad de pruebas de usabilidad"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "bajo",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Qué técnica de pruebas de usabilidad ayuda a entender cómo los usuarios categorizan la información?",
+    "opciones": [
+      "Eye Tracking",
+      "Pruebas remotas",
+      "Card Sorting",
+      "Pruebas A-B"
+    ],
+    "indice_correcta": 2,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es una ventaja de utilizar prototipos en el diseño de UX?",
+    "opciones": [
+      "Reducir la necesidad de comunicación dentro del equipo",
+      "Permitir iterar rápidamente sobre ideas",
+      "Eliminar la necesidad de pruebas de usabilidad",
+      "Aumentar la complejidad del diseño"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "Qué principio de Nielsen se enfoca en que las interfaces no deben contener información irrelevante?",
+    "opciones": [
+      "Consistencia y estándares",
+      "Diseño estético y minimalista",
+      "Coincidencia entre el sistema y el mundo real",
+      "Prevención de errores"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  },
+  {
+    "materia": "Ingeniería de Software",
+    "unidad_tematica": "Experiencia de Usuario (UX)",
+    "tema": "Heurísticas de Nielsen y prototipado",
+    "tipo": "opcion_multiple",
+    "texto": "¿Cuál es un ejemplo de flexibilidad y eficiencia en el uso según los principios de Nielsen?",
+    "opciones": [
+      "Utilizar colores consistentes en la interfaz",
+      "Ofrecer atajos para usuarios expertos",
+      "Proveer una barra de progreso en tareas",
+      "Mantener la documentación extensa"
+    ],
+    "indice_correcta": 1,
+    "dificultad": "medio",
+    "importancia": "medio"
+  }
+]
