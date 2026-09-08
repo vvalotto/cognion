@@ -163,7 +163,9 @@ def parse_bold_marks(path: Path, materia: str, unidad: str, tema: str) -> list[d
         nonlocal actual_texto, actual_opciones, actual_correcta
         if actual_texto and actual_opciones:
             correcta = actual_correcta if actual_correcta is not None else 0
-            preguntas.append(armar_om(materia, unidad, tema, actual_texto, actual_opciones, correcta))
+            preguntas.append(
+                armar_om(materia, unidad, tema, actual_texto, actual_opciones, correcta)
+            )
         actual_texto, actual_opciones, actual_correcta = None, [], None
 
     for p in d.paragraphs:

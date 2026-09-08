@@ -154,12 +154,18 @@ def crear_comision(admin_token: str, admin_id: str, materia_id: str, horario: st
     return comision["id"]
 
 
-def asignar_docente(admin_token: str, comision_id: str, docente_email: str, docente_password: str) -> None:
+def asignar_docente(
+    admin_token: str, comision_id: str, docente_email: str, docente_password: str
+) -> None:
     docente_id = usuario_id_de(login(docente_email, docente_password))
-    api("POST", f"/comisiones/{comision_id}/docentes", {"docente_id": docente_id}, token=admin_token)
+    api(
+        "POST", f"/comisiones/{comision_id}/docentes", {"docente_id": docente_id}, token=admin_token
+    )
 
 
-def generar_invitacion(docente_token: str, comision_id: str, docente_email: str, docente_password: str) -> str:
+def generar_invitacion(
+    docente_token: str, comision_id: str, docente_email: str, docente_password: str
+) -> str:
     docente_id = usuario_id_de(login(docente_email, docente_password))
     resp = api(
         "POST",
@@ -221,26 +227,37 @@ def main() -> None:
     resumen_estudiantes: list[dict] = []
     for c in config["comisiones"]:
         materia_info = materias_por_nombre[c["materia"]]
-        comision_id = crear_comision(admin_token, admin_id, materia_info["materia_id"], c["horario"])
+        comision_id = crear_comision(
+            admin_token, admin_id, materia_info["materia_id"], c["horario"]
+        )
         docente_cfg = next(d for d in config["docentes"] if d["email"] == c["docente_email"])
         asignar_docente(admin_token, comision_id, docente_cfg["email"], docente_cfg["password"])
         docente_token = docente_tokens[docente_cfg["email"]]
         print(f"  Comisión '{c['horario']}' ({c['materia']}): id={comision_id}, docente asignado")
 
         for est in c["estudiantes"]:
-            inv_token = generar_invitacion(docente_token, comision_id, docente_cfg["email"], docente_cfg["password"])
+            inv_token = generar_invitacion(
+                docente_token, comision_id, docente_cfg["email"], docente_cfg["password"]
+            )
             registrar_estudiante(
                 inv_token, est["nombre"], est["email"], config["password_estudiante"]
             )
             resumen_estudiantes.append(
-                {"nombre": est["nombre"], "email": est["email"], "comision": c["horario"], "materia": c["materia"]}
+                {
+                    "nombre": est["nombre"],
+                    "email": est["email"],
+                    "comision": c["horario"],
+                    "materia": c["materia"],
+                }
             )
         print(f"    {len(c['estudiantes'])} estudiantes registrados")
 
     print("\n" + "=" * 70)
     print("SIEMBRA COMPLETA — credenciales para la prueba manual")
     print("=" * 70)
-    print(f"\nAdministrador: {config['administrador']['email']} / {config['administrador']['password']}")
+    print(
+        f"\nAdministrador: {config['administrador']['email']} / {config['administrador']['password']}"
+    )
     for d in config["docentes"]:
         print(f"Docente ({', '.join(d['materias'])}): {d['email']} / {d['password']}")
     print(f"\nContraseña de todos los Estudiantes: {config['password_estudiante']}")
