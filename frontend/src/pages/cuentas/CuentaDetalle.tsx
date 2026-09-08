@@ -2,23 +2,11 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { RolBadge } from "@/components/RolBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
-import type { Rol } from "@/lib/session"
-
-const ETIQUETA_ROL: Record<Rol, string> = {
-  administrador: "Administrador",
-  docente: "Docente",
-  estudiante: "Estudiante",
-}
-
-const VARIANTE_ROL: Record<Rol, "rol-docente" | "rol-estudiante" | "rol-admin"> = {
-  docente: "rol-docente",
-  estudiante: "rol-estudiante",
-  administrador: "rol-admin",
-}
 
 /** Pantalla de detalle de cuenta (§2.2 `wireframes-cuentas-administracion.md`). */
 export function CuentaDetalle() {
@@ -77,7 +65,7 @@ export function CuentaDetalle() {
           <div className="flex items-center justify-between py-2.5">
             <dt className="text-muted-foreground">Rol</dt>
             <dd>
-              <Badge variant={VARIANTE_ROL[cuenta.perfil]}>{ETIQUETA_ROL[cuenta.perfil]}</Badge>
+              <RolBadge rol={cuenta.perfil} />
             </dd>
           </div>
           <div className="flex items-center justify-between py-2.5">

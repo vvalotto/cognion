@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { RolBadge } from "@/components/RolBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,18 +11,6 @@ import { listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-a
 import type { Rol } from "@/lib/session"
 
 const TAMANIO_PAGINA = 20
-
-const ETIQUETA_ROL: Record<Rol, string> = {
-  administrador: "Administrador",
-  docente: "Docente",
-  estudiante: "Estudiante",
-}
-
-const VARIANTE_ROL: Record<Rol, "rol-docente" | "rol-estudiante" | "rol-admin"> = {
-  docente: "rol-docente",
-  estudiante: "rol-estudiante",
-  administrador: "rol-admin",
-}
 
 const ETIQUETA_ESTADO: Record<Estado, string> = {
   activa: "Activa",
@@ -195,9 +184,7 @@ export function Cuentas() {
                   <td className="py-3 pr-4 pl-4">{cuenta.nombre}</td>
                   <td className="py-3 pr-4">{cuenta.email}</td>
                   <td className="py-3 pr-4">
-                    <Badge variant={VARIANTE_ROL[cuenta.perfil]}>
-                      {ETIQUETA_ROL[cuenta.perfil]}
-                    </Badge>
+                    <RolBadge rol={cuenta.perfil} />
                   </td>
                   <td className="py-3 pr-4">
                     <Badge variant={VARIANTE_ESTADO[estadoDe(cuenta)]}>
