@@ -110,7 +110,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias",
         element: (
-          <RequireRole rol="docente">
+          <RequireRole rol={["docente", "administrador"]}>
             <Materias />
           </RequireRole>
         ),
@@ -118,7 +118,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/nueva",
         element: (
-          <RequireRole rol="docente">
+          <RequireRole rol={["docente", "administrador"]}>
             <NuevaMateria />
           </RequireRole>
         ),

@@ -17,6 +17,12 @@ const CARDS: CardAcceso[] = [
     to: "/comisiones",
   },
   {
+    icono: "📘",
+    titulo: "Materias",
+    descripcion: "Ver y dar de alta Materias",
+    to: "/materias",
+  },
+  {
     icono: "👤",
     titulo: "Alta de Docente",
     descripcion: "Dar de alta un nuevo Docente en el sistema",

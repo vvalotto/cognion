@@ -12,7 +12,6 @@ from src.banco_preguntas.frameworks.api.schemas import (
 )
 from src.banco_preguntas.frameworks.dependencies import (
     get_materias_controller,
-    require_docente,
     require_docente_o_administrador,
 )
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
@@ -26,13 +25,17 @@ router = APIRouter(prefix="/materias", tags=["banco_preguntas"])
     "",
     response_model=MateriaResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_docente)],
+    dependencies=[Depends(require_docente_o_administrador)],
 )
 async def crear_materia(
     body: CrearMateriaRequest,
     controller: MateriasController = Depends(get_materias_controller),
 ) -> MateriaResponse:
-    """Crea una materia nueva y su banco asociado; responde 409 si el nombre ya existe."""
+    """Crea una materia nueva y su banco asociado; responde 409 si el nombre ya existe.
+
+    Rol `docente` o `administrador` (hallazgo de la prueba manual E2E: sin ninguna Materia
+    creada, el Administrador no tenía forma de crear la Comisión que la referencia).
+    """
     try:
         materia, banco, _evento_materia, _evento_banco = await controller.crear_materia(body.nombre)
     except MateriaYaExiste as exc:
