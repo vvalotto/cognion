@@ -44,15 +44,19 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
             horario=modelo.horario,
             administrador_id=modelo.administrador_id,
             docentes_asignados=[docente.id for docente in modelo.docentes],
+            activa=modelo.activa,
         )
 
     async def actualizar(self, comision: Comision) -> None:
-        """Guarda los docentes nuevos asignados a una comisión existente."""
+        """Guarda `horario`, `activa` y los docentes nuevos asignados a una comisión existente."""
         modelo = await self._session.get(
             ComisionModel, comision.id, options=[selectinload(ComisionModel.docentes)]
         )
         if modelo is None:
             raise ValueError(f"Comisión '{comision.id}' no existe.")
+
+        modelo.horario = comision.horario
+        modelo.activa = comision.activa
 
         ids_actuales = {docente.id for docente in modelo.docentes}
         for docente_id in comision.docentes_asignados:
@@ -61,4 +65,12 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
                 if docente_model is not None:
                     modelo.docentes.append(docente_model)
 
+        await self._session.commit()
+
+    async def eliminar(self, comision_id: UUID) -> None:
+        """Borra físicamente una comisión sin estudiantes inscriptos ni docentes asignados."""
+        modelo = await self._session.get(ComisionModel, comision_id)
+        if modelo is None:
+            return
+        await self._session.delete(modelo)
         await self._session.commit()

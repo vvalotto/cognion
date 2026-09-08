@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -149,6 +149,52 @@ describe("Cuentas", () => {
     expect(badge("Activa")).toHaveClass("bg-green-50")
     expect(badge("Bloqueada")).toHaveClass("bg-red-50")
     expect(screen.getAllByRole("button", { name: "Ver" })).toHaveLength(2)
+  })
+
+  it("una cuenta deshabilitada muestra 'Inactiva' y 'Activar' en vez de 'Eliminar'; al activarla pasa a 'Activa'", async () => {
+    const conInactiva = [
+      ...cuentasResponse,
+      {
+        id: "u3",
+        nombre: "Marta Deshabilitada",
+        email: "marta@fiuner.edu.ar",
+        perfil: "docente",
+        bloqueada: false,
+        deshabilitada: true,
+      },
+    ]
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, paginado(conInactiva)))
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          id: "u3",
+          nombre: "Marta Deshabilitada",
+          email: "marta@fiuner.edu.ar",
+          perfil: "docente",
+          bloqueada: false,
+          deshabilitada: false,
+          creado_en: "2026-01-01T00:00:00Z",
+          comision_id: null,
+        }),
+      )
+    const user = userEvent.setup()
+
+    renderCuentas()
+    await screen.findByText("Marta Deshabilitada")
+
+    const badge = (texto: string) =>
+      screen.getAllByText(texto).find((el) => el.getAttribute("data-slot") === "badge")
+    expect(badge("Inactiva")).toBeInTheDocument()
+    const filaMarta = screen.getByText("Marta Deshabilitada").closest("tr") as HTMLElement
+    expect(within(filaMarta).queryByRole("button", { name: "Eliminar" })).not.toBeInTheDocument()
+    expect(within(filaMarta).getByRole("button", { name: "Activar" })).toBeInTheDocument()
+
+    await user.click(within(filaMarta).getByRole("button", { name: "Activar" }))
+
+    await within(filaMarta).findByRole("button", { name: "Eliminar" })
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
+    expect(String(ultimaLlamada?.[0])).toMatch(/\/usuarios\/u3\/activar$/)
+    expect(ultimaLlamada?.[1]?.method).toBe("POST")
   })
 
   it("[US-ADJ-04] el botón Ver navega al detalle sin duplicar la navegación de la fila", async () => {

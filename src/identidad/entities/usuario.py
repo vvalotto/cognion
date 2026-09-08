@@ -56,6 +56,7 @@ class Usuario:
     intentos_fallidos_login: int = 0
     intentos_fallidos_password: int = 0
     creado_en: datetime = field(default_factory=_ahora)
+    deshabilitada: bool = False
 
     @property
     def tipo_perfil(self) -> TipoPerfil:
@@ -99,6 +100,32 @@ class Usuario:
         """
         if len(password_nueva) < _LARGO_MINIMO_PASSWORD:
             raise PasswordDemasiadoCorta()
+
+    def editar_datos(self, nombre: str, email: str) -> None:
+        """Corrige `nombre`/`email` de la cuenta (typos al darla de alta).
+
+        No toca password, bloqueo ni perfil. La unicidad del email nuevo la valida el caso
+        de uso, que sí tiene acceso al repositorio.
+        """
+        self.nombre = nombre
+        self.email = email
+
+    def deshabilitar(self) -> None:
+        """Da de baja lógica la cuenta (tiene datos asociados, no se puede borrar).
+
+        Distinto de `bloqueada` (automático, por intentos fallidos de login/cambio de
+        contraseña) — `deshabilitada` es una decisión manual del Administrador, con su
+        propio campo, y no se revierte con un reseteo de contraseña.
+        """
+        self.deshabilitada = True
+
+    def activar(self) -> None:
+        """Reactiva una cuenta previamente deshabilitada.
+
+        No toca `bloqueada` ni los contadores de intentos fallidos — son un concepto
+        separado que se resuelve con un reseteo de contraseña, no con esta acción.
+        """
+        self.deshabilitada = False
 
     def resetear_password(self, password_hash_nuevo: str) -> bool:
         """Fija `password_hash_nuevo` y desbloquea la cuenta si estaba bloqueada.

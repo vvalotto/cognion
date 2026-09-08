@@ -12,6 +12,15 @@ class MateriaYaExiste(Exception):
         super().__init__(f"La materia '{nombre}' ya existe.")
 
 
+class MateriaNoExiste(Exception):
+    """Se referenció un `materia_id` que no corresponde a ninguna `Materia` existente."""
+
+    def __init__(self, materia_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"La materia '{materia_id}' no existe.")
+
+
 class BancoNoExiste(Exception):
     """Se referenció un `banco_id` que no corresponde a ningún `Banco` existente."""
 

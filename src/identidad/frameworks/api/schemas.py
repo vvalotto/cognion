@@ -36,6 +36,7 @@ class CuentaResponse(BaseModel):
     email: str
     perfil: TipoPerfil
     bloqueada: bool
+    deshabilitada: bool
 
 
 class CuentasPaginadasResponse(BaseModel):
@@ -55,12 +56,20 @@ class CuentaDetalleResponse(BaseModel):
     bloqueada: bool
     creado_en: datetime
     comision_id: UUID | None
+    deshabilitada: bool
 
 
 class ResetearPasswordRequest(BaseModel):
     """Body de la request de reseteo de contraseña de una cuenta (`US-2.2.4`)."""
 
     password_nueva: str = Field(..., min_length=8)
+
+
+class EditarCuentaRequest(BaseModel):
+    """Body de la request de corrección de nombre/email de una cuenta existente."""
+
+    nombre: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=1)
 
 
 class CambiarPasswordRequest(BaseModel):
@@ -86,6 +95,7 @@ class ComisionResponse(BaseModel):
     horario: str
     administrador_id: UUID
     docentes_asignados: list[UUID]
+    activa: bool
 
 
 class ComisionResumenResponse(BaseModel):
@@ -98,6 +108,7 @@ class ComisionResumenResponse(BaseModel):
     id: UUID
     horario: str
     docentes_asignados: list[UUID]
+    activa: bool
 
 
 class EstudianteResumenResponse(BaseModel):
@@ -111,6 +122,12 @@ class AsignarDocenteRequest(BaseModel):
     """Body de la request de asignación de un docente a una comisión."""
 
     docente_id: UUID
+
+
+class EditarComisionRequest(BaseModel):
+    """Body de la request de corrección del horario de una comisión existente."""
+
+    horario: str = Field(..., min_length=1, max_length=200)
 
 
 class GenerarInvitacionRequest(BaseModel):

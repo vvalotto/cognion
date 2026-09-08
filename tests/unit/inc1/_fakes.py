@@ -5,8 +5,10 @@ from uuid import UUID
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
+from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
 from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
+from src.identidad.entities.ports.evaluacion_consulta_port import EvaluacionConsultaPort
 from src.identidad.entities.ports.invitacion_repository_port import InvitacionRepositoryPort
 from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
@@ -39,6 +41,9 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
     async def actualizar(self, usuario: Usuario) -> None:
         self.usuarios[usuario.id] = usuario
 
+    async def eliminar(self, usuario_id: UUID) -> None:
+        self.usuarios.pop(usuario_id, None)
+
 
 class FakeCuentaQueryRepository(CuentaQueryPort):
     def __init__(self) -> None:
@@ -51,14 +56,19 @@ class FakeCuentaQueryRepository(CuentaQueryPort):
         busqueda: str | None,
         pagina: int = 1,
         tamanio_pagina: int = 20,
+        incluir_inactivas: bool = False,
     ) -> ResultadoPaginadoCuentas:
         resultado = list(self.usuarios.values())
+        if not incluir_inactivas:
+            resultado = [u for u in resultado if not u.deshabilitada]
         if rol is not None:
             resultado = [u for u in resultado if u.tipo_perfil == rol]
         if estado == "activa":
-            resultado = [u for u in resultado if not u.bloqueada]
+            resultado = [u for u in resultado if not u.bloqueada and not u.deshabilitada]
         elif estado == "bloqueada":
-            resultado = [u for u in resultado if u.bloqueada]
+            resultado = [u for u in resultado if u.bloqueada and not u.deshabilitada]
+        elif estado == "inactiva":
+            resultado = [u for u in resultado if u.deshabilitada]
         if busqueda:
             patron = busqueda.lower()
             resultado = [
@@ -83,6 +93,38 @@ class FakeComisionRepository(ComisionRepositoryPort):
 
     async def actualizar(self, comision: Comision) -> None:
         self.comisiones[comision.id] = comision
+
+    async def eliminar(self, comision_id: UUID) -> None:
+        self.comisiones.pop(comision_id, None)
+
+
+class FakeComisionQueryRepository(ComisionQueryPort):
+    def __init__(self) -> None:
+        self.estudiantes_por_comision: dict[UUID, list[EstudianteResumen]] = {}
+        self.docentes_con_comisiones: set[UUID] = set()
+        self.administradores_con_comisiones: set[UUID] = set()
+
+    async def listar_comisiones_por_materia(
+        self, materia_id: UUID, incluir_inactivas: bool = False
+    ) -> list[Comision]:
+        return []
+
+    async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
+        return self.estudiantes_por_comision.get(comision_id, [])
+
+    async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
+        return docente_id in self.docentes_con_comisiones
+
+    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
+        return administrador_id in self.administradores_con_comisiones
+
+
+class FakeEvaluacionConsultaPort(EvaluacionConsultaPort):
+    def __init__(self) -> None:
+        self.estudiantes_con_evaluaciones: set[UUID] = set()
+
+    async def tiene_evaluaciones(self, estudiante_id: UUID) -> bool:
+        return estudiante_id in self.estudiantes_con_evaluaciones
 
 
 class FakeMateriaPort(MateriaPort):

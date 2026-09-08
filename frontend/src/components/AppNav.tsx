@@ -22,8 +22,8 @@ const ITEMS_POR_ROL: Record<Rol, ItemNav[]> = {
   ],
   administrador: [
     { label: "Inicio", to: "/" },
+    { label: "Materias", to: "/materias" },
     { label: "Comisiones", to: "/comisiones" },
-    { label: "Docentes", to: "/docentes/nuevo" },
     { label: "Cuentas", to: "/cuentas" },
   ],
 }

@@ -2,12 +2,17 @@ import uuid
 
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
+from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
+from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
+from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc1._fakes import (
+    FakeComisionQueryRepository,
     FakeCuentaQueryRepository,
+    FakeEvaluacionConsultaPort,
     FakePasswordHasher,
     FakeUsuarioRepository,
 )
@@ -20,6 +25,11 @@ def _armar_controller(
         ListarCuentasUseCase(cuenta_query_repo),
         ObtenerCuentaUseCase(usuario_repo),
         ResetearPasswordUseCase(usuario_repo, FakePasswordHasher()),
+        EditarCuentaUseCase(usuario_repo),
+        EliminarCuentaUseCase(
+            usuario_repo, FakeComisionQueryRepository(), FakeEvaluacionConsultaPort()
+        ),
+        ActivarCuentaUseCase(usuario_repo),
     )
 
 

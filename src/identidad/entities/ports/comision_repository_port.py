@@ -25,3 +25,8 @@ class ComisionRepositoryPort(ABC):
     async def actualizar(self, comision: Comision) -> None:
         """Guarda cambios sobre una comisión existente."""
         ...
+
+    @abstractmethod
+    async def eliminar(self, comision_id: UUID) -> None:
+        """Borra físicamente una comisión sin estudiantes ni docentes asociados."""
+        ...

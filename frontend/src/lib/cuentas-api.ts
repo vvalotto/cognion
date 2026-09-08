@@ -1,7 +1,7 @@
 import { ApiError, apiFetch } from "@/lib/api-client"
 import type { Rol } from "@/lib/session"
 
-export type Estado = "activa" | "bloqueada"
+export type Estado = "activa" | "bloqueada" | "inactiva"
 
 export interface CuentaResponse {
   id: string
@@ -9,6 +9,7 @@ export interface CuentaResponse {
   email: string
   perfil: Rol
   bloqueada: boolean
+  deshabilitada: boolean
 }
 
 export interface FiltrosCuentas {
@@ -35,6 +36,7 @@ interface CuentasPaginadasApiResponse {
 export interface CuentaDetalleResponse extends CuentaResponse {
   creadoEn: string
   comisionId: string | null
+  deshabilitada: boolean
 }
 
 interface CuentaDetalleApiResponse {
@@ -45,12 +47,19 @@ interface CuentaDetalleApiResponse {
   bloqueada: boolean
   creado_en: string
   comision_id: string | null
+  deshabilitada: boolean
 }
 
+/**
+ * Lista cuentas habilitadas filtradas por rol/estado/búsqueda; con `incluirInactivas: true`
+ * también trae las deshabilitadas — lo usa la pantalla de gestión de Cuentas, que permite
+ * reactivarlas.
+ */
 export async function listarCuentas(
   filtros: FiltrosCuentas = {},
   paginacion: PaginacionCuentas = { pagina: 1, tamanioPagina: 20 },
   signal?: AbortSignal,
+  incluirInactivas = false,
 ): Promise<CuentasPaginadas> {
   const params = new URLSearchParams()
   if (filtros.rol) params.set("rol", filtros.rol)
@@ -58,6 +67,7 @@ export async function listarCuentas(
   if (filtros.busqueda) params.set("busqueda", filtros.busqueda)
   params.set("pagina", String(paginacion.pagina))
   params.set("tamanio_pagina", String(paginacion.tamanioPagina))
+  if (incluirInactivas) params.set("incluir_inactivas", "true")
 
   const query = params.toString()
   return apiFetch<CuentasPaginadasApiResponse>(`/usuarios${query ? `?${query}` : ""}`, { signal })
@@ -72,6 +82,7 @@ function aCuentaDetalleResponse(datos: CuentaDetalleApiResponse): CuentaDetalleR
     bloqueada: datos.bloqueada,
     creadoEn: datos.creado_en,
     comisionId: datos.comision_id,
+    deshabilitada: datos.deshabilitada,
   }
 }
 
@@ -80,6 +91,41 @@ export async function obtenerCuenta(
   signal?: AbortSignal,
 ): Promise<CuentaDetalleResponse> {
   const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}`, { signal })
+  return aCuentaDetalleResponse(datos)
+}
+
+export async function editarCuenta(
+  id: string,
+  nombre: string,
+  email: string,
+  signal?: AbortSignal,
+): Promise<CuentaDetalleResponse> {
+  const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}`, {
+    method: "PATCH",
+    body: { nombre, email },
+    signal,
+  })
+  return aCuentaDetalleResponse(datos)
+}
+
+/**
+ * Elimina una cuenta, o la deshabilita si tiene datos asociados (Comisiones asignadas o
+ * creadas, evaluaciones rendidas) — 200 en ese caso, 204 sin cuerpo si se borró físicamente.
+ * De cualquier forma, deja de aparecer en el listado.
+ */
+export async function eliminarCuenta(id: string, signal?: AbortSignal): Promise<void> {
+  await apiFetch<void>(`/usuarios/${id}`, { method: "DELETE", signal })
+}
+
+/** Reactiva una cuenta deshabilitada. No toca `bloqueada` — son conceptos separados. */
+export async function activarCuenta(
+  id: string,
+  signal?: AbortSignal,
+): Promise<CuentaDetalleResponse> {
+  const datos = await apiFetch<CuentaDetalleApiResponse>(`/usuarios/${id}/activar`, {
+    method: "POST",
+    signal,
+  })
   return aCuentaDetalleResponse(datos)
 }
 

@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { listarCuentas, type CuentaResponse } from "@/lib/cuentas-api"
 import {
+  activarComision,
   listarComisionesPorMateria,
   listarEstudiantesDeComision,
   type ComisionResumenResponse,
@@ -44,7 +45,7 @@ export function Comisiones() {
     if (!materiaId) return
     const controller = new AbortController()
     setComisiones(null)
-    listarComisionesPorMateria(materiaId, controller.signal)
+    listarComisionesPorMateria(materiaId, controller.signal, true)
       .then(async (resultado) => {
         setComisiones(resultado)
         const conteos = await Promise.all(
@@ -62,6 +63,14 @@ export function Comisiones() {
 
   function nombreDocente(docenteId: string): string {
     return docentes.find((docente) => docente.id === docenteId)?.nombre ?? docenteId
+  }
+
+  async function handleActivar(comisionId: string) {
+    await activarComision(comisionId)
+    setComisiones(
+      (actual) =>
+        actual?.map((c) => (c.id === comisionId ? { ...c, activa: true } : c)) ?? actual,
+    )
   }
 
   return (
@@ -111,19 +120,20 @@ export function Comisiones() {
               <th className="py-2 pr-4 pl-4">Horario</th>
               <th className="py-2 pr-4">Docentes asignados</th>
               <th className="py-2 pr-4">Estudiantes</th>
+              <th className="py-2 pr-4">Estado</th>
               <th className="py-2 pr-4"></th>
             </tr>
           </thead>
           <tbody>
             {comisiones === null ? (
               <tr>
-                <td colSpan={4} className="py-4 pl-4 text-muted-foreground">
+                <td colSpan={5} className="py-4 pl-4 text-muted-foreground">
                   Cargando…
                 </td>
               </tr>
             ) : comisiones.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-6 pl-4 text-center text-muted-foreground">
+                <td colSpan={5} className="py-6 pl-4 text-center text-muted-foreground">
                   Esta materia todavía no tiene comisiones.
                 </td>
               </tr>
@@ -144,6 +154,11 @@ export function Comisiones() {
                   </td>
                   <td className="py-3 pr-4">{conteoEstudiantes[comision.id] ?? "…"}</td>
                   <td className="py-3 pr-4">
+                    <Badge variant={comision.activa ? "estado-activa" : "estado-inactiva"}>
+                      {comision.activa ? "Activa" : "Inactiva"}
+                    </Badge>
+                  </td>
+                  <td className="flex gap-2 py-3 pr-4">
                     <Button
                       type="button"
                       variant="outline"
@@ -152,6 +167,35 @@ export function Comisiones() {
                     >
                       Ver detalle
                     </Button>
+                    {comision.activa ? (
+                      <>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/comisiones/${comision.id}/editar`)}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/comisiones/${comision.id}/eliminar`)}
+                        >
+                          Eliminar
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => void handleActivar(comision.id)}
+                      >
+                        Activar
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))
