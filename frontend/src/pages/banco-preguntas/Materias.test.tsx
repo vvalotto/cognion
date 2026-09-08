@@ -19,10 +19,16 @@ function renderMaterias() {
         <Route path="/materias" element={<Materias />} />
         <Route path="/materias/nueva" element={<p>Nueva materia</p>} />
         <Route path="/materias/:materiaId/banco" element={<p>Banco de la materia</p>} />
+        <Route path="/materias/:materiaId/editar" element={<p>Editar materia</p>} />
       </Routes>
     </MemoryRouter>,
   )
 }
+
+const materiasResponse = [
+  { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 3 },
+  { id: "m2", nombre: "Gestión de Proyectos", banco_id: "b2", cantidad_preguntas_activas: 1 },
+]
 
 describe("Materias", () => {
   beforeEach(() => {
@@ -34,63 +40,69 @@ describe("Materias", () => {
     cleanup()
   })
 
-  it("renderiza una tarjeta por materia con su cantidad de preguntas activas", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        {
-          id: "m1",
-          nombre: "Ingeniería de Software",
-          banco_id: "b1",
-          cantidad_preguntas_activas: 3,
-        },
-        { id: "m2", nombre: "Gestión de Proyectos", banco_id: "b2", cantidad_preguntas_activas: 1 },
-      ]),
-    )
+  it("renderiza una fila por materia con su cantidad de preguntas activas", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
 
     renderMaterias()
 
     expect(await screen.findByText("Ingeniería de Software")).toBeInTheDocument()
-    expect(screen.getByText("3 preguntas activas")).toBeInTheDocument()
+    expect(screen.getByText("3")).toBeInTheDocument()
     expect(screen.getByText("Gestión de Proyectos")).toBeInTheDocument()
-    expect(screen.getByText("1 pregunta activa")).toBeInTheDocument()
+    expect(screen.getByText("1")).toBeInTheDocument()
   })
 
-  it("[US-ADJ-01] muestra el breadcrumb y la tarjeta 'Nueva materia' con borde punteado", async () => {
+  it("sin materias muestra un mensaje en vez de una tabla vacía", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
 
     renderMaterias()
-    await screen.findByRole("button", { name: /nueva materia/i })
 
-    expect(screen.getByText("Banco de preguntas")).toBeInTheDocument()
-    expect(screen.getByRole("heading", { name: "Materias" })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /nueva materia/i })).toHaveClass("border-dashed")
+    expect(await screen.findByText("Todavía no hay materias creadas.")).toBeInTheDocument()
   })
 
-  it("la tarjeta de una materia navega a su banco", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, [
-        {
-          id: "m1",
-          nombre: "Ingeniería de Software",
-          banco_id: "b1",
-          cantidad_preguntas_activas: 0,
-        },
-      ]),
-    )
+  it("hacer clic en una fila navega al banco de esa materia", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
     const user = userEvent.setup()
 
     renderMaterias()
-    await user.click(await screen.findByText("Ingeniería de Software"))
+    await screen.findByText("Ingeniería de Software")
+
+    await user.click(screen.getByText("Ingeniería de Software"))
 
     expect(await screen.findByText("Banco de la materia")).toBeInTheDocument()
   })
 
-  it("la tarjeta 'Nueva materia' navega al formulario de alta", async () => {
+  it("el botón 'Ver banco' navega al banco sin duplicar la navegación de la fila", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
+    const user = userEvent.setup()
+
+    renderMaterias()
+    await screen.findByText("Ingeniería de Software")
+
+    await user.click(screen.getAllByRole("button", { name: "Ver banco" })[0])
+
+    expect(await screen.findByText("Banco de la materia")).toBeInTheDocument()
+  })
+
+  it("el botón 'Editar' navega a la edición del nombre sin disparar la navegación de la fila", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
+    const user = userEvent.setup()
+
+    renderMaterias()
+    await screen.findByText("Ingeniería de Software")
+
+    await user.click(screen.getAllByRole("button", { name: "Editar" })[0])
+
+    expect(await screen.findByText("Editar materia")).toBeInTheDocument()
+  })
+
+  it("'+ Nueva materia' navega al formulario de alta", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
     const user = userEvent.setup()
 
     renderMaterias()
-    await user.click(await screen.findByRole("button", { name: /nueva materia/i }))
+    await screen.findByText("Todavía no hay materias creadas.")
+
+    await user.click(screen.getByText("+ Nueva materia"))
 
     expect(await screen.findByText("Nueva materia")).toBeInTheDocument()
   })
