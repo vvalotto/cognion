@@ -45,6 +45,7 @@ class MateriaListItemResponse(BaseModel):
     nombre: str
     banco_id: UUID
     cantidad_preguntas_activas: int
+    activa: bool
 
 
 class OpcionSchema(BaseModel):

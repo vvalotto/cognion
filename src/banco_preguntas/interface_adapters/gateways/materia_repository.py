@@ -68,11 +68,12 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
             return None
         return Materia(id=modelo.id, nombre=modelo.nombre, activa=modelo.activa)
 
-    async def listar(self) -> list[Materia]:
-        """Lista las materias activas."""
-        resultado = await self._session.execute(
-            select(MateriaModel).where(MateriaModel.activa.is_(True))
-        )
+    async def listar(self, incluir_inactivas: bool = False) -> list[Materia]:
+        """Lista las materias activas; con `incluir_inactivas=True`, también las deshabilitadas."""
+        query = select(MateriaModel)
+        if not incluir_inactivas:
+            query = query.where(MateriaModel.activa.is_(True))
+        resultado = await self._session.execute(query)
         return [
             Materia(id=modelo.id, nombre=modelo.nombre, activa=modelo.activa)
             for modelo in resultado.scalars()

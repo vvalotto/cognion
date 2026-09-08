@@ -106,19 +106,42 @@ async def eliminar_materia(
     dependencies=[Depends(require_docente_o_administrador)],
 )
 async def listar_materias(
+    incluir_inactivas: bool = False,
     controller: MateriasController = Depends(get_materias_controller),
 ) -> list[MateriaListItemResponse]:
-    """Lista todas las materias con la cantidad de preguntas activas de cada una.
+    """Lista las materias con la cantidad de preguntas activas de cada una.
 
     Rol `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3).
+    `incluir_inactivas=True` también trae las deshabilitadas — lo usa la pantalla de gestión
+    de Materias para poder reactivarlas; el resto de los consumidores (selectores) sigue
+    viendo solo las activas.
     """
-    materias = await controller.listar_materias()
+    materias = await controller.listar_materias(incluir_inactivas)
     return [
         MateriaListItemResponse(
             id=materia.id,
             nombre=materia.nombre,
             banco_id=banco.id,
             cantidad_preguntas_activas=cantidad,
+            activa=materia.activa,
         )
         for materia, banco, cantidad in materias
     ]
+
+
+@router.post(
+    "/{materia_id}/activar",
+    response_model=MateriaBasicaResponse,
+    dependencies=[Depends(require_docente_o_administrador)],
+)
+async def activar_materia(
+    materia_id: UUID,
+    controller: MateriasController = Depends(get_materias_controller),
+) -> MateriaBasicaResponse:
+    """Reactiva una materia deshabilitada; 404 si no existe."""
+    try:
+        materia = await controller.activar_materia(materia_id)
+    except MateriaNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)

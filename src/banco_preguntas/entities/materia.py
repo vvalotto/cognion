@@ -30,3 +30,7 @@ class Materia:
     def deshabilitar(self) -> None:
         """Da de baja lógica la materia (tiene preguntas o comisiones, no se puede borrar)."""
         self.activa = False
+
+    def activar(self) -> None:
+        """Reactiva una materia previamente deshabilitada."""
+        self.activa = True

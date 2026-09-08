@@ -119,6 +119,14 @@ class Usuario:
         """
         self.deshabilitada = True
 
+    def activar(self) -> None:
+        """Reactiva una cuenta previamente deshabilitada.
+
+        No toca `bloqueada` ni los contadores de intentos fallidos — son un concepto
+        separado que se resuelve con un reseteo de contraseña, no con esta acción.
+        """
+        self.deshabilitada = False
+
     def resetear_password(self, password_hash_nuevo: str) -> bool:
         """Fija `password_hash_nuevo` y desbloquea la cuenta si estaba bloqueada.
 

@@ -160,6 +160,31 @@ async def eliminar_comision(
 
 
 @router.post(
+    "/{comision_id}/activar",
+    response_model=ComisionResponse,
+    dependencies=[Depends(require_administrador)],
+)
+async def activar_comision(
+    comision_id: UUID,
+    controller: ComisionesController = Depends(get_comisiones_controller),
+) -> ComisionResponse:
+    """Reactiva una comisión deshabilitada; 404 si no existe."""
+    try:
+        comision = await controller.activar_comision(comision_id)
+    except ComisionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    return ComisionResponse(
+        id=comision.id,
+        materia_id=comision.materia_id,
+        horario=comision.horario,
+        administrador_id=comision.administrador_id,
+        docentes_asignados=comision.docentes_asignados,
+        activa=comision.activa,
+    )
+
+
+@router.post(
     "/{comision_id}/docentes",
     response_model=ComisionResponse,
     status_code=status.HTTP_200_OK,

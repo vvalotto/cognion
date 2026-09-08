@@ -25,16 +25,23 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         """Recibe la sesión async a usar en las consultas."""
         self._session = session
 
-    async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
+    async def listar_comisiones_por_materia(
+        self, materia_id: UUID, incluir_inactivas: bool = False
+    ) -> list[Comision]:
         """Lista las comisiones de una materia, con sus docentes asignados.
 
         Materia sin comisiones → lista vacía. Carga `docentes` con `selectinload` —
         necesario en SQLAlchemy async para evitar `MissingGreenlet` al acceder a la
-        relación fuera de la sesión (`US-ADJ-23`).
+        relación fuera de la sesión (`US-ADJ-23`). `incluir_inactivas=True` también trae las
+        deshabilitadas — lo usa la pantalla de gestión de Comisiones del Administrador; el
+        resto de los consumidores (Docente, Analytics) sigue viendo solo las activas.
         """
+        condiciones = [ComisionModel.materia_id == materia_id]
+        if not incluir_inactivas:
+            condiciones.append(ComisionModel.activa.is_(True))
         query = (
             select(ComisionModel)
-            .where(ComisionModel.materia_id == materia_id, ComisionModel.activa.is_(True))
+            .where(*condiciones)
             .options(selectinload(ComisionModel.docentes))
         )
         resultado = await self._session.execute(query)

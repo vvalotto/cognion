@@ -32,5 +32,5 @@ class MateriaRepositoryPort(ABC):
         """Busca una materia por id, o `None` si no existe."""
 
     @abstractmethod
-    async def listar(self) -> list[Materia]:
-        """Lista todas las materias existentes."""
+    async def listar(self, incluir_inactivas: bool = False) -> list[Materia]:
+        """Lista las materias activas; con `incluir_inactivas=True`, también las deshabilitadas."""

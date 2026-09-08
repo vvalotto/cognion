@@ -28,6 +28,7 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
 from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
+from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
 )
@@ -62,6 +63,7 @@ def get_materias_controller(session: SessionDep) -> MateriasController:
         ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
         EditarMateriaUseCase(materia_repo),
         EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
+        ActivarMateriaUseCase(materia_repo),
     )
 
 

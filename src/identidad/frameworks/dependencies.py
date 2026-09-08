@@ -43,6 +43,8 @@ from src.identidad.interface_adapters.gateways.invitacion_repository import (
     SQLAlchemyInvitacionRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
+from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
@@ -93,6 +95,7 @@ def get_comisiones_controller(session: SessionDep) -> ComisionesController:
         AsignarDocenteAComisionUseCase(comision_repo, usuario_repo),
         EditarComisionUseCase(comision_repo),
         EliminarComisionUseCase(comision_repo, comision_query),
+        ActivarComisionUseCase(comision_repo),
     )
 
 
@@ -151,6 +154,7 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
         ResetearPasswordUseCase(usuario_repo, hasher),
         EditarCuentaUseCase(usuario_repo),
         EliminarCuentaUseCase(usuario_repo, comision_query, evaluacion_consulta),
+        ActivarCuentaUseCase(usuario_repo),
     )
 
 

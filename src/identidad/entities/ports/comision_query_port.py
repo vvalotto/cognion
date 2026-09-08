@@ -26,8 +26,13 @@ class ComisionQueryPort(ABC):
     """Consultas de solo lectura sobre `Comision` para poblar selectores docentes (RF-16, RF-17)."""
 
     @abstractmethod
-    async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
-        """Lista las comisiones de una materia. Materia sin comisiones → lista vacía."""
+    async def listar_comisiones_por_materia(
+        self, materia_id: UUID, incluir_inactivas: bool = False
+    ) -> list[Comision]:
+        """Lista las comisiones activas de una materia; `incluir_inactivas=True` trae todas.
+
+        Materia sin comisiones → lista vacía.
+        """
         ...
 
     @abstractmethod

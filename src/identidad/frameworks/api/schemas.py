@@ -36,6 +36,7 @@ class CuentaResponse(BaseModel):
     email: str
     perfil: TipoPerfil
     bloqueada: bool
+    deshabilitada: bool
 
 
 class CuentasPaginadasResponse(BaseModel):
@@ -107,6 +108,7 @@ class ComisionResumenResponse(BaseModel):
     id: UUID
     horario: str
     docentes_asignados: list[UUID]
+    activa: bool
 
 
 class EstudianteResumenResponse(BaseModel):

@@ -30,11 +30,15 @@ class ComisionesQueryController:
         self._materia_port = materia_port
         self._comision_repository = comision_repository
 
-    async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
+    async def listar_comisiones_por_materia(
+        self, materia_id: UUID, incluir_inactivas: bool = False
+    ) -> list[Comision]:
         """Lista las comisiones de una materia; `MateriaNoExiste` si `materia_id` no existe."""
         if await self._materia_port.obtener(materia_id) is None:
             raise MateriaNoExiste(materia_id)
-        return await self._comision_query.listar_comisiones_por_materia(materia_id)
+        return await self._comision_query.listar_comisiones_por_materia(
+            materia_id, incluir_inactivas
+        )
 
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         """Lista los estudiantes de una comisión; `ComisionNoExiste` si `comision_id` no existe."""

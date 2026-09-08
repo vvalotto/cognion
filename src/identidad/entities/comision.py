@@ -39,3 +39,7 @@ class Comision:
     def deshabilitar(self) -> None:
         """Da de baja lógica la comisión (tiene estudiantes inscriptos, no se puede borrar)."""
         self.activa = False
+
+    def activar(self) -> None:
+        """Reactiva una comisión previamente deshabilitada."""
+        self.activa = True

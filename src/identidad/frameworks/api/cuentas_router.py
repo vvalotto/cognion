@@ -34,13 +34,19 @@ async def listar_cuentas(
     busqueda: str | None = None,
     pagina: int = 1,
     tamanio_pagina: int = 20,
+    incluir_inactivas: bool = False,
     controller: CuentasController = Depends(get_cuentas_controller),
 ) -> CuentasPaginadasResponse:
-    """Lista cuentas filtradas (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda.
+    """Lista cuentas filtradas (AND) por rol, estado (`activa`/`bloqueada`/`inactiva`) y búsqueda.
 
     Página fija de `tamanio_pagina` (default 20), orden estable por `creado_en`.
+    `incluir_inactivas=True` también trae las cuentas deshabilitadas — lo usa la pantalla de
+    gestión de Cuentas; el resto de los consumidores (selectores de Docentes) sigue viendo
+    solo las habilitadas.
     """
-    resultado = await controller.listar_cuentas(rol, estado, busqueda, pagina, tamanio_pagina)
+    resultado = await controller.listar_cuentas(
+        rol, estado, busqueda, pagina, tamanio_pagina, incluir_inactivas
+    )
     return CuentasPaginadasResponse(
         cuentas=[
             CuentaResponse(
@@ -49,6 +55,7 @@ async def listar_cuentas(
                 email=usuario.email,
                 perfil=usuario.tipo_perfil,
                 bloqueada=usuario.bloqueada,
+                deshabilitada=usuario.deshabilitada,
             )
             for usuario in resultado.cuentas
         ],
@@ -147,6 +154,24 @@ async def eliminar_cuenta(
 
     if usuario is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    return _a_detalle_response(usuario)
+
+
+@router.post(
+    "/{usuario_id}/activar",
+    response_model=CuentaDetalleResponse,
+    dependencies=[Depends(require_administrador)],
+)
+async def activar_cuenta(
+    usuario_id: UUID,
+    controller: CuentasController = Depends(get_cuentas_controller),
+) -> CuentaDetalleResponse:
+    """Reactiva una cuenta deshabilitada; 404 si no existe."""
+    try:
+        usuario = await controller.activar_cuenta(usuario_id)
+    except UsuarioNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
     return _a_detalle_response(usuario)
 
