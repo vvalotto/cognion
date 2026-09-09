@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select } from "@/components/ui/select"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { crearComision } from "@/lib/identidad-comisiones-api"
 
@@ -75,15 +76,14 @@ export function NuevaComision() {
 
       <Card className="mt-4">
         <CardContent>
-          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="nueva-comision-materia">Materia</Label>
-              <select
+              <Select
                 id="nueva-comision-materia"
                 required
                 value={materiaId}
                 onChange={(e) => setMateriaId(e.target.value)}
-                className="rounded-md border border-border px-2 py-1.5 text-sm"
               >
                 {materias === null ? (
                   <option value="">Cargando…</option>
@@ -94,7 +94,7 @@ export function NuevaComision() {
                     </option>
                   ))
                 )}
-              </select>
+              </Select>
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="nueva-comision-horario">Horario</Label>

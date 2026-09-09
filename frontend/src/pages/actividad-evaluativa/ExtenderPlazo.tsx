@@ -115,7 +115,7 @@ export function ExtenderPlazo() {
 
       <Card>
         <CardContent>
-          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="ep-cierre-actual">Cierre actual</Label>
               <Input
