@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select } from "@/components/ui/select"
 import {
   derivarSugerencias,
   editarPregunta,
@@ -191,7 +192,7 @@ export function EditarPregunta() {
 
       <Card className="mt-4">
       <CardContent>
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="editar-texto">Texto de la pregunta</Label>
           <textarea
@@ -199,7 +200,7 @@ export function EditarPregunta() {
             required
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
-            className="rounded-md border border-border px-2 py-1 text-sm"
+            className="min-h-24 rounded-lg border border-input bg-primary/5 px-3 py-2 text-sm shadow-sm outline-none focus-visible:border-ring focus-visible:bg-background focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         </div>
 
@@ -309,33 +310,31 @@ export function EditarPregunta() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="editar-dificultad">Dificultad</Label>
-          <select
+          <Select
             id="editar-dificultad"
             value={dificultad}
             onChange={(e) => setDificultad(e.target.value as Dificultad)}
-            className="rounded-md border border-border px-2 py-1 text-sm"
           >
             {NIVELES.map((nivel) => (
               <option key={nivel} value={nivel}>
                 {ETIQUETA_NIVEL[nivel]}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="editar-importancia">Importancia</Label>
-          <select
+          <Select
             id="editar-importancia"
             value={importancia}
             onChange={(e) => setImportancia(e.target.value as Importancia)}
-            className="rounded-md border border-border px-2 py-1 text-sm"
           >
             {NIVELES.map((nivel) => (
               <option key={nivel} value={nivel}>
                 {ETIQUETA_NIVEL[nivel]}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div className="flex gap-2">

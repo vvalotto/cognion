@@ -31,14 +31,14 @@ describe("AppLayout (integración)", () => {
 
     renderAppLayout()
 
-    expect(screen.getByText("administrador")).toBeInTheDocument()
+    expect(screen.getByText("Administrador")).toBeInTheDocument()
   })
 
   it("no muestra información de usuario sin sesión activa", () => {
     renderAppLayout()
 
-    expect(screen.queryByText("administrador")).not.toBeInTheDocument()
-    expect(screen.queryByText("docente")).not.toBeInTheDocument()
+    expect(screen.queryByText("Administrador")).not.toBeInTheDocument()
+    expect(screen.queryByText("Docente")).not.toBeInTheDocument()
   })
 
   it("renderiza el contenido anidado vía Outlet", () => {

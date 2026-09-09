@@ -7,6 +7,13 @@ export interface CrearActividadBody {
   cantidadPreguntas: number
   cantidadIntentosPermitidos: number
   titulo?: string
+  /** Vacío/omitido = visible para todas las Comisiones de la Materia. */
+  comisionesIds?: string[]
+  /** Vacío/omitido = las preguntas salen de cualquier unidad temática del banco, combinable
+   * con `tema` (AND). */
+  unidadTematica?: string | null
+  /** Vacío/omitido = las preguntas salen de cualquier tema del banco. */
+  tema?: string | null
 }
 
 export interface ActividadResponse {
@@ -18,6 +25,9 @@ export interface ActividadResponse {
   cantidadIntentosPermitidos: number
   cerradaManualmente: boolean
   titulo: string
+  comisionesIds: string[]
+  unidadTematica: string | null
+  tema: string | null
 }
 
 export type EstadoActividad = "en_curso" | "programada" | "cerrada"
@@ -34,6 +44,9 @@ export interface ActividadResumenResponse {
   cerradaManualmente: boolean
   cantidadEvaluacionesActivas: number
   cantidadEvaluacionesFinalizadas: number
+  comisionesIds: string[]
+  unidadTematica: string | null
+  tema: string | null
 }
 
 export type EstadoVisible = "pendiente" | "todavia_no_abrio" | "finalizada"
@@ -106,6 +119,9 @@ interface ActividadApiResponse {
   cantidad_intentos_permitidos: number
   cerrada_manualmente: boolean
   titulo: string
+  comisiones_ids: string[]
+  unidad_tematica: string | null
+  tema: string | null
 }
 
 interface ActividadResumenApiResponse {
@@ -120,6 +136,9 @@ interface ActividadResumenApiResponse {
   cerrada_manualmente: boolean
   cantidad_evaluaciones_activas: number
   cantidad_evaluaciones_finalizadas: number
+  comisiones_ids: string[]
+  unidad_tematica: string | null
+  tema: string | null
 }
 
 interface ActividadVisibleApiResponse {
@@ -191,6 +210,9 @@ function mapearActividad(actividad: ActividadApiResponse): ActividadResponse {
     cantidadIntentosPermitidos: actividad.cantidad_intentos_permitidos,
     cerradaManualmente: actividad.cerrada_manualmente,
     titulo: actividad.titulo,
+    comisionesIds: actividad.comisiones_ids,
+    unidadTematica: actividad.unidad_tematica,
+    tema: actividad.tema,
   }
 }
 
@@ -207,6 +229,9 @@ function mapearActividadResumen(resumen: ActividadResumenApiResponse): Actividad
     cerradaManualmente: resumen.cerrada_manualmente,
     cantidadEvaluacionesActivas: resumen.cantidad_evaluaciones_activas,
     cantidadEvaluacionesFinalizadas: resumen.cantidad_evaluaciones_finalizadas,
+    comisionesIds: resumen.comisiones_ids,
+    unidadTematica: resumen.unidad_tematica,
+    tema: resumen.tema,
   }
 }
 
@@ -277,6 +302,9 @@ export async function crearActividad(
       cantidad_preguntas: body.cantidadPreguntas,
       cantidad_intentos_permitidos: body.cantidadIntentosPermitidos,
       titulo: body.titulo,
+      comisiones_ids: body.comisionesIds ?? [],
+      unidad_tematica: body.unidadTematica ?? null,
+      tema: body.tema ?? null,
     },
     signal,
   })

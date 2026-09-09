@@ -732,11 +732,58 @@ completo desde `US-ADJ-26`) + navegación completa por clic para los 3 roles (�
 `US-ADJ-30`) + guion de prueba del flujo completo del MVP, arrancando desde login real (pendiente
 de `US-ADJ-31`). Cierre previsto como `BL-007`.
 
-**Próximo paso:** ejecutar `US-ADJ-31` — Validación E2E consolidada del MVP (Iteración 2, única
-US restante del Incremento 4-ADJ).
-**Baseline abierta:** ninguna — `BL-006` cerrada, `BL-007` (Incremento 4-ADJ) pendiente de
-cierre.
-**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.0`).
+**`US-ADJ-31` ejecutada y `BL-007` — Incremento 4-ADJ cerrada 2026-09-07**
+(`.cm/baselines/BL-007-incremento-4-adj-portal-de-entrada.md`), merge `develop → main` y tag
+`v0.6.1` (PATCH, mismo criterio de versionado que `BL-005`). Los tres criterios del DoD
+verificados de punta a punta.
+
+**Prueba manual E2E de estabilización, en curso desde 2026-09-08** (posterior a `BL-007`, sin
+US-IEDD ni spec formal — decisión explícita de Víctor: recorrer cada portal desde un login
+real con una base limpia, para revisar y estabilizar aspectos que ninguna de las rondas de
+UAT anteriores había cubierto). Registrada paso a paso, narrada por Víctor y escrita por la
+sesión de Claude Code, en `tests/uat/datos-reales/bitacora.md` (no versionado — directorio
+`tests/uat/datos-reales/` queda fuera de git). Usuarios sembrados en
+`tests/uat/datos-reales/usuarios.md`. **Regla operativa de la sesión:** no correr `pytest` en
+ninguna forma contra este entorno mientras dure la prueba — trunca la base de datos local
+compartida (confirmado en el Paso 3, ver
+[feedback_pytest_vacia_db_local](memory)); verificar cambios de backend con `curl` +
+`SELECT`/`psql` directo, nunca confiando en un `200` sin volver a leer la base (aprendizaje
+del Paso 5, ver más abajo).
+
+Pasos 1 a 9 cerrados: (1) `/` sin sesión no redirigía a `/login` — bug real, corregido en
+`Inicio.tsx`. (2) Cuenta del Administrador bloqueada por reintentos — desbloqueada
+directamente en la base, mismo criterio de excepción que `ADR-016` (única cuenta existente).
+(3) Administrador no podía crear Materia (solo Docente) — `POST /materias` pasa a
+`require_docente_o_administrador`; `RequireRole` gana soporte de array de roles. (4) Orden de
+accesos del portal Administrador reordenado a Docente → Materia → Comisiones → Cuentas. (5)
+**Hallazgo más serio de la prueba**: `PATCH` de edición de cuenta devolvía `200` con el dato
+"correcto" pero `SQLAlchemyUsuarioRepository.actualizar()` nunca escribía `nombre`/`email` al
+modelo ORM — placebo total, invisible sin volver a consultar la base. (6) Mismo bug class en
+`MateriaRepositoryPort` (no existía `actualizar()`) — agregado completo esta vez. (7) el botón
+"Editar" sobre una card violaba el patrón de card-como-unidad-clickeable — `Materias.tsx`
+reescrita como tabla, mismo patrón que `Cuentas.tsx`. (8) **Estandarización de CRUD**
+Materias/Comisiones/Cuentas: alta ya correcta, se agrega editar (desde la tabla), ver, y
+eliminar-con-baja-lógica-si-hay-datos-asociados (Materia: preguntas o Comisiones; Comisión:
+estudiantes inscriptos; Cuenta: según rol — Docente con Comisiones, Estudiante con
+evaluaciones rendidas, Administrador con Comisiones creadas, este último caso agregado por
+iniciativa propia de la sesión). Dos puertos cruzados nuevos (`ComisionConsultaPort` Banco→
+Identidad, `EvaluacionConsultaPort` Identidad→Actividad Evaluativa, ambos in-process,
+`ADR-006`). (9) la baja lógica del Paso 8 ocultaba la fila sin forma de reactivarla —
+agregado `activar()`/`POST .../activar` para las tres entidades, columna "Estado" en las
+tablas, query param `incluir_inactivas` (default `false`) para no afectar los ~20 selectores
+existentes que reutilizan esos mismos endpoints. Verificado con `curl`/`psql` real en cada
+paso — nunca con `pytest` (regla de la sesión) — y confirmado en navegador real con la sesión
+de Administrador. 359/359 tests frontend al cierre del Paso 9, `designreviewer` 0 CRITICAL en
+todos los pasos. Sin Issue de GitHub ni spec — track informal salvo que algún hallazgo
+requiera tocar `src/` con una invariante de dominio nueva (ninguno lo requirió hasta ahora,
+los cambios de entidad fueron mutaciones simples ya cubiertas por el patrón existente).
+
+**Próximo paso:** continuar la prueba manual E2E desde donde la dejó Víctor (bitácora sigue
+abierta, "A partir de acá, un bloque por paso narrado"). Sin US-IEDD activa.
+**Baseline abierta:** ninguna — `BL-007` cerrada. La prueba de estabilización en curso no abre
+baseline propia (no es un Incremento de `PLAN_v1.md`); se decidirá al cerrarla si amerita una
+baseline técnica (mismo criterio que `BL-005`) o si sus commits se consolidan en la próxima.
+**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.1`).
 
 ---
 

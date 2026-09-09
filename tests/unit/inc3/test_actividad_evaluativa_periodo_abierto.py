@@ -41,6 +41,65 @@ class TestActividadEvaluativaPeriodoAbiertoCrear:
         assert actividad.cantidad_intentos_permitidos == 1
         assert actividad.cerrada_manualmente is False
         assert actividad.id is not None
+        assert actividad.comisiones_ids == frozenset()
+
+    def test_crea_actividad_restringida_a_comisiones(self):
+        apertura, cierre = _fechas()
+        comision_1, comision_2 = uuid4(), uuid4()
+
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            materia_id=uuid4(),
+            fecha_apertura=apertura,
+            fecha_cierre=cierre,
+            cantidad_preguntas=10,
+            cantidad_intentos_permitidos=1,
+            comisiones_ids=frozenset({comision_1, comision_2}),
+        )
+
+        assert actividad.comisiones_ids == frozenset({comision_1, comision_2})
+
+    def test_crea_actividad_sin_tema_por_defecto(self):
+        apertura, cierre = _fechas()
+
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            materia_id=uuid4(),
+            fecha_apertura=apertura,
+            fecha_cierre=cierre,
+            cantidad_preguntas=10,
+            cantidad_intentos_permitidos=1,
+        )
+
+        assert actividad.tema is None
+
+    def test_crea_actividad_restringida_a_un_tema(self):
+        apertura, cierre = _fechas()
+
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            materia_id=uuid4(),
+            fecha_apertura=apertura,
+            fecha_cierre=cierre,
+            cantidad_preguntas=10,
+            cantidad_intentos_permitidos=1,
+            tema="Cohesión",
+        )
+
+        assert actividad.tema == "Cohesión"
+
+    def test_crea_actividad_restringida_a_unidad_y_tema_combinados(self):
+        apertura, cierre = _fechas()
+
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            materia_id=uuid4(),
+            fecha_apertura=apertura,
+            fecha_cierre=cierre,
+            cantidad_preguntas=10,
+            cantidad_intentos_permitidos=1,
+            unidad_tematica="Principios de Diseño",
+            tema="Cohesión",
+        )
+
+        assert actividad.unidad_tematica == "Principios de Diseño"
+        assert actividad.tema == "Cohesión"
 
     def test_genera_id_distinto_por_actividad(self):
         apertura, cierre = _fechas()
@@ -93,6 +152,9 @@ def _evento_creada(actividad: ActividadEvaluativaPeriodoAbierto) -> EventoAlmace
             "fecha_cierre": actividad.fecha_cierre.isoformat(),
             "cantidad_preguntas": actividad.cantidad_preguntas,
             "cantidad_intentos_permitidos": actividad.cantidad_intentos_permitidos,
+            "comisiones_ids": [str(c) for c in actividad.comisiones_ids],
+            "unidad_tematica": actividad.unidad_tematica,
+            "tema": actividad.tema,
             "ocurrido_en": "2026-01-01T00:00:00+00:00",
         },
         occurred_at=datetime.now(UTC),
@@ -134,6 +196,46 @@ class TestActividadEvaluativaPeriodoAbiertoReconstruir:
         assert reconstruida.id == actividad.id
         assert reconstruida.fecha_cierre == cierre
         assert reconstruida.cerrada_manualmente is False
+        assert reconstruida.comisiones_ids == frozenset()
+        assert reconstruida.tema is None
+
+    def test_reconstruye_tema_del_payload(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            uuid4(), apertura, cierre, 10, 1, tema="Acoplamiento"
+        )
+
+        reconstruida = ActividadEvaluativaPeriodoAbierto.reconstruir([_evento_creada(actividad)])
+
+        assert reconstruida.tema == "Acoplamiento"
+
+    def test_reconstruye_unidad_tematica_y_tema_combinados_del_payload(self):
+        apertura, cierre = _fechas()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            uuid4(),
+            apertura,
+            cierre,
+            10,
+            1,
+            unidad_tematica="Principios de Diseño",
+            tema="Cohesión",
+        )
+
+        reconstruida = ActividadEvaluativaPeriodoAbierto.reconstruir([_evento_creada(actividad)])
+
+        assert reconstruida.unidad_tematica == "Principios de Diseño"
+        assert reconstruida.tema == "Cohesión"
+
+    def test_reconstruye_comisiones_ids_del_payload(self):
+        apertura, cierre = _fechas()
+        comision = uuid4()
+        actividad = ActividadEvaluativaPeriodoAbierto.crear(
+            uuid4(), apertura, cierre, 10, 1, comisiones_ids=frozenset({comision})
+        )
+
+        reconstruida = ActividadEvaluativaPeriodoAbierto.reconstruir([_evento_creada(actividad)])
+
+        assert reconstruida.comisiones_ids == frozenset({comision})
 
     def test_reconstruye_aplicando_periodo_disponibilidad_modificado(self):
         apertura, cierre = _fechas()
