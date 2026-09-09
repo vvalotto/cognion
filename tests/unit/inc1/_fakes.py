@@ -174,7 +174,7 @@ class FakeJWTIssuer(JWTIssuerPort):
         self.payload_a_devolver: JWTPayload | None = None
         self.excepcion_a_levantar: Exception | None = None
 
-    def emitir(self, usuario_id: UUID, rol: TipoPerfil) -> JWT:
+    def emitir(self, usuario_id: UUID, rol: TipoPerfil, nombre: str = "") -> JWT:
         self.emitidos.append((usuario_id, rol))
         return JWT(
             token=f"fake-token:{usuario_id}:{rol.value}",

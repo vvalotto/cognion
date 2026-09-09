@@ -1,3 +1,4 @@
+import { Eye, RotateCcw, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
@@ -7,6 +8,16 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
+import { RowActionButton } from "@/components/ui/row-action-button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
 import { activarCuenta, listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-api"
 import type { Rol } from "@/lib/session"
 
@@ -162,92 +173,76 @@ export function Cuentas() {
         </CardContent>
       </Card>
 
-      <Card className="mt-4 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
-              <th className="py-2 pr-4 pl-4">Nombre</th>
-              <th className="py-2 pr-4">Email</th>
-              <th className="py-2 pr-4">Rol</th>
-              <th className="py-2 pr-4">Estado</th>
-              <th className="py-2 pr-4"></th>
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Nombre</TableHeaderCell>
+              <TableHeaderCell>Email</TableHeaderCell>
+              <TableHeaderCell>Rol</TableHeaderCell>
+              <TableHeaderCell>Estado</TableHeaderCell>
+              <TableHeaderCell></TableHeaderCell>
             </tr>
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {cuentas === null ? (
-              <tr>
-                <td colSpan={5} className="py-4 pl-4 text-muted-foreground">
-                  Cargando…
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={5}>Cargando…</TableEmptyRow>
             ) : cuentas.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="py-4 pl-4 text-muted-foreground">
-                  No hay cuentas que coincidan con los filtros.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={5}>No hay cuentas que coincidan con los filtros.</TableEmptyRow>
             ) : (
               cuentas.map((cuenta) => (
-                <tr
+                <TableRow
                   key={cuenta.id}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-accent"
+                  className="cursor-pointer"
                   onClick={() => navigate(`/cuentas/${cuenta.id}`)}
                 >
-                  <td className="py-3 pr-4 pl-4">{cuenta.nombre}</td>
-                  <td className="py-3 pr-4">{cuenta.email}</td>
-                  <td className="py-3 pr-4">
+                  <TableCell className="font-medium">{cuenta.nombre}</TableCell>
+                  <TableCell>{cuenta.email}</TableCell>
+                  <TableCell>
                     <RolBadge rol={cuenta.perfil} />
-                  </td>
-                  <td className="py-3 pr-4">
+                  </TableCell>
+                  <TableCell>
                     <Badge variant={VARIANTE_ESTADO[estadoDe(cuenta)]}>
                       {ETIQUETA_ESTADO[estadoDe(cuenta)]}
                     </Badge>
-                  </td>
-                  <td className="py-3 pr-4">
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1.5">
+                      <RowActionButton
+                        label="Ver"
+                        icon={Eye}
                         onClick={(e) => {
                           e.stopPropagation()
                           navigate(`/cuentas/${cuenta.id}`)
                         }}
-                      >
-                        Ver
-                      </Button>
+                      />
                       {cuenta.deshabilitada ? (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
+                        <RowActionButton
+                          label="Activar"
+                          icon={RotateCcw}
                           onClick={(e) => {
                             e.stopPropagation()
                             void handleActivar(cuenta.id)
                           }}
-                        >
-                          Activar
-                        </Button>
+                        />
                       ) : (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
+                        <RowActionButton
+                          label="Eliminar"
+                          icon={Trash2}
+                          variant="destructive"
                           onClick={(e) => {
                             e.stopPropagation()
                             navigate(`/cuentas/${cuenta.id}/eliminar`)
                           }}
-                        >
-                          Eliminar
-                        </Button>
+                        />
                       )}
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </Card>
 
       <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />

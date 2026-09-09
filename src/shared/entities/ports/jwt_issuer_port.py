@@ -13,8 +13,8 @@ class JWTIssuerPort(ABC):
     """Operaciones requeridas para emitir y verificar un token de sesión."""
 
     @abstractmethod
-    def emitir(self, usuario_id: UUID, rol: TipoPerfil) -> JWT:
-        """Genera un `JWT` con claim `rol` para el usuario dado (ADR-007, ADR-013)."""
+    def emitir(self, usuario_id: UUID, rol: TipoPerfil, nombre: str = "") -> JWT:
+        """Genera un `JWT` con claims `rol` y `nombre` para el usuario dado (ADR-007, ADR-013)."""
 
     @abstractmethod
     def verificar(self, token: str) -> JWTPayload:
