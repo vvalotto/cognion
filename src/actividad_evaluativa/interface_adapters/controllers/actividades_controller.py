@@ -45,6 +45,7 @@ class ActividadesController:
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
         titulo: str = "",
+        comisiones_ids: frozenset[UUID] | None = None,
     ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
         """Delega la creación de la actividad en el caso de uso correspondiente."""
         return await self._crear_actividad.execute(
@@ -54,6 +55,7 @@ class ActividadesController:
             cantidad_preguntas,
             cantidad_intentos_permitidos,
             titulo,
+            comisiones_ids,
         )
 
     async def modificar_periodo_disponibilidad(

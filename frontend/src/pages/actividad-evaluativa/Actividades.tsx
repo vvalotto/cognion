@@ -6,11 +6,25 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
+import {
   listarActividades,
   type ActividadResumenResponse,
   type EstadoActividad,
 } from "@/lib/actividad-evaluativa-api"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
+import {
+  listarComisionesPorMateria,
+  listarEstudiantesDeComision,
+  type ComisionResumenResponse,
+} from "@/lib/identidad-comisiones-api"
 
 const ETIQUETA_ESTADO: Record<EstadoActividad, string> = {
   en_curso: "En curso",
@@ -22,6 +36,20 @@ const VARIANTE_ESTADO: Record<EstadoActividad, "estado-en-curso" | "estado-progr
   en_curso: "estado-en-curso",
   programada: "estado-programada",
   cerrada: "estado-cerrada",
+}
+
+type FiltroEstado = "abiertas" | "cerradas" | "todas"
+
+const ETIQUETA_FILTRO: Record<FiltroEstado, string> = {
+  abiertas: "Abiertas",
+  cerradas: "Cerradas",
+  todas: "Todas",
+}
+
+function coincideFiltro(actividad: ActividadResumenResponse, filtro: FiltroEstado): boolean {
+  if (filtro === "todas") return true
+  if (filtro === "cerradas") return actividad.estado === "cerrada"
+  return actividad.estado !== "cerrada"
 }
 
 function formatearFecha(iso: string): string {
@@ -37,6 +65,28 @@ function tituloDeActividad(actividad: ActividadResumenResponse): string {
   return actividad.titulo || `Actividad del ${formatearFecha(actividad.fechaApertura)}`
 }
 
+function comisionesDeActividad(
+  actividad: ActividadResumenResponse,
+  comisiones: ComisionResumenResponse[],
+): string {
+  if (actividad.comisionesIds.length === 0) return "Todas"
+  return actividad.comisionesIds
+    .map((id) => comisiones.find((c) => c.id === id)?.horario ?? id)
+    .join(", ")
+}
+
+function estudiantesDeActividad(
+  actividad: ActividadResumenResponse,
+  comisiones: ComisionResumenResponse[],
+  estudiantesPorComision: Record<string, number>,
+): number {
+  const comisionesObjetivo =
+    actividad.comisionesIds.length === 0
+      ? comisiones.map((c) => c.id)
+      : actividad.comisionesIds
+  return comisionesObjetivo.reduce((total, id) => total + (estudiantesPorComision[id] ?? 0), 0)
+}
+
 function conteoDeActividad(actividad: ActividadResumenResponse): string {
   if (actividad.estado === "programada") return "0 evaluaciones"
   if (actividad.estado === "cerrada") {
@@ -47,13 +97,19 @@ function conteoDeActividad(actividad: ActividadResumenResponse): string {
   return `${n} evaluaci${n === 1 ? "ón" : "ones"} activa${n === 1 ? "" : "s"}`
 }
 
-/** Pantalla "Actividades de una materia" del BC Actividad Evaluativa (`#doc-actividades`, `US-3.4.2`). */
+/** Pantalla "Actividades de una materia" del BC Actividad Evaluativa (`#doc-actividades`, `US-3.4.2`).
+ *
+ * Tabla con filtro de estado — por defecto solo abiertas (`en_curso`/`programada`), con
+ * opción de consultar las cerradas, mismo patrón ya usado en Materias/Comisiones/Cuentas. */
 export function Actividades() {
   const { materiaId } = useParams<{ materiaId: string }>()
   const navigate = useNavigate()
 
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
   const [actividades, setActividades] = useState<ActividadResumenResponse[] | null>(null)
+  const [filtroEstado, setFiltroEstado] = useState<FiltroEstado>("abiertas")
+  const [comisiones, setComisiones] = useState<ComisionResumenResponse[]>([])
+  const [estudiantesPorComision, setEstudiantesPorComision] = useState<Record<string, number>>({})
 
   useEffect(() => {
     const controller = new AbortController()
@@ -72,6 +128,29 @@ export function Actividades() {
     return () => controller.abort()
   }, [materiaId])
 
+  useEffect(() => {
+    if (!materiaId) return undefined
+    const controller = new AbortController()
+    listarComisionesPorMateria(materiaId, controller.signal)
+      .then(async (resultado) => {
+        setComisiones(resultado)
+        const conteos = await Promise.all(
+          resultado.map((comision) =>
+            listarEstudiantesDeComision(comision.id, controller.signal).then(
+              (estudiantes) => [comision.id, estudiantes.length] as const,
+            ),
+          ),
+        )
+        setEstudiantesPorComision(Object.fromEntries(conteos))
+      })
+      .catch(() => {})
+    return () => controller.abort()
+  }, [materiaId])
+
+  const actividadesFiltradas = actividades?.filter((actividad) =>
+    coincideFiltro(actividad, filtroEstado),
+  )
+
   return (
     <div>
       <Breadcrumb
@@ -84,9 +163,9 @@ export function Actividades() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">Actividades de período abierto</h1>
-          {actividades !== null && (
+          {actividadesFiltradas !== undefined && (
             <p className="mt-1 text-sm text-muted-foreground">
-              {actividades.length} actividad{actividades.length === 1 ? "" : "es"}
+              {actividadesFiltradas.length} actividad{actividadesFiltradas.length === 1 ? "" : "es"}
             </p>
           )}
         </div>
@@ -105,44 +184,83 @@ export function Actividades() {
         </div>
       </div>
 
-      {actividades === null ? (
-        <p className="mt-4 text-sm text-muted-foreground">Cargando…</p>
-      ) : actividades.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">
-          Todavía no hay actividades creadas para esta materia.
-        </p>
-      ) : (
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {actividades.map((actividad) => (
-            <Card
-              key={actividad.id}
-              role="button"
-              tabIndex={0}
-              className="cursor-pointer p-5 transition-colors hover:border-primary"
-              onClick={() => navigate(`/actividad-evaluativa/actividades/${actividad.id}`)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  navigate(`/actividad-evaluativa/actividades/${actividad.id}`)
-                }
-              }}
-            >
-              <p className="font-semibold">{tituloDeActividad(actividad)}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
-                {formatearFecha(actividad.fechaCierre)}
-              </p>
-              <div className="mt-3 flex items-center gap-2">
-                <Badge variant={VARIANTE_ESTADO[actividad.estado]}>
-                  {ETIQUETA_ESTADO[actividad.estado]}
-                </Badge>
-                <span className="text-xs text-muted-foreground">
-                  {conteoDeActividad(actividad)}
-                </span>
-              </div>
-            </Card>
+      <Card className="mt-4 p-4">
+        <label
+          htmlFor="filtro-estado-actividad"
+          className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase"
+        >
+          Estado
+        </label>
+        <select
+          id="filtro-estado-actividad"
+          value={filtroEstado}
+          onChange={(e) => setFiltroEstado(e.target.value as FiltroEstado)}
+          className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
+        >
+          {(Object.keys(ETIQUETA_FILTRO) as FiltroEstado[]).map((valor) => (
+            <option key={valor} value={valor}>
+              {ETIQUETA_FILTRO[valor]}
+            </option>
           ))}
-        </div>
-      )}
+        </select>
+      </Card>
+
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Título</TableHeaderCell>
+              <TableHeaderCell>Período</TableHeaderCell>
+              <TableHeaderCell>Estado</TableHeaderCell>
+              <TableHeaderCell>Comisiones</TableHeaderCell>
+              <TableHeaderCell>Estudiantes</TableHeaderCell>
+              <TableHeaderCell>Evaluaciones</TableHeaderCell>
+            </tr>
+          </TableHeader>
+          <TableBody>
+            {actividadesFiltradas === undefined ? (
+              <TableEmptyRow colSpan={6}>Cargando…</TableEmptyRow>
+            ) : actividades?.length === 0 ? (
+              <TableEmptyRow colSpan={6}>
+                Todavía no hay actividades creadas para esta materia.
+              </TableEmptyRow>
+            ) : actividadesFiltradas.length === 0 ? (
+              <TableEmptyRow colSpan={6}>
+                No hay actividades {ETIQUETA_FILTRO[filtroEstado].toLowerCase()} para esta
+                materia.
+              </TableEmptyRow>
+            ) : (
+              actividadesFiltradas.map((actividad) => (
+                <TableRow
+                  key={actividad.id}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/actividad-evaluativa/actividades/${actividad.id}`)}
+                >
+                  <TableCell className="font-medium">{tituloDeActividad(actividad)}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
+                    {formatearFecha(actividad.fechaCierre)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={VARIANTE_ESTADO[actividad.estado]}>
+                      {ETIQUETA_ESTADO[actividad.estado]}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {comisionesDeActividad(actividad, comisiones)}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {estudiantesDeActividad(actividad, comisiones, estudiantesPorComision)}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {conteoDeActividad(actividad)}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   )
 }

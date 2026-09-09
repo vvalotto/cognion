@@ -26,6 +26,9 @@ class ActividadEvaluativaCreada:
     cantidad_preguntas: int
     cantidad_intentos_permitidos: int
     titulo: str = ""
+    comisiones_ids: frozenset[UUID] = field(default_factory=frozenset)
+    """Vacío = visible para todas las Comisiones de la Materia (ver
+    `ActividadEvaluativaPeriodoAbierto.comisiones_ids`)."""
     ocurrido_en: datetime = field(default_factory=_ahora)
 
 

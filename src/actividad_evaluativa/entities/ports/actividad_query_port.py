@@ -9,7 +9,7 @@ criterio de separación command/query ya aplicado en `EvaluacionActivaQueryPort`
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID
 
@@ -31,6 +31,8 @@ class ActividadResumen:
     "Extender plazo" / "Cerrar actividad ahora"."""
     cantidad_evaluaciones_activas: int
     cantidad_evaluaciones_finalizadas: int
+    comisiones_ids: frozenset[UUID] = field(default_factory=frozenset)
+    """Vacío = visible para todas las Comisiones de la Materia."""
 
 
 class ActividadQueryPort(ABC):

@@ -398,6 +398,7 @@ describe("router (integración)", () => {
             estado: "en_curso",
             cantidad_evaluaciones_activas: 3,
             cantidad_evaluaciones_finalizadas: 0,
+            comisiones_ids: [],
           },
         ]),
       )

@@ -82,6 +82,52 @@ class TestCrearActividadPeriodoAbiertoUseCase:
         assert actividad.titulo == "Parcial 1"
         assert evento.titulo == "Parcial 1"
 
+    async def test_crea_actividad_restringida_a_comisiones_y_persiste_el_payload(self):
+        materia_id = uuid4()
+        comision_1, comision_2 = uuid4(), uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        actividad, evento = await use_case.execute(
+            materia_id,
+            apertura,
+            cierre,
+            10,
+            1,
+            comisiones_ids=frozenset({comision_1, comision_2}),
+        )
+
+        assert actividad.comisiones_ids == frozenset({comision_1, comision_2})
+        assert evento.comisiones_ids == frozenset({comision_1, comision_2})
+
+        stream = await event_store.load(AGGREGATE_TYPE, actividad.id)
+        assert set(stream[0].payload["comisiones_ids"]) == {str(comision_1), str(comision_2)}
+
+    async def test_crea_actividad_sin_comisiones_persiste_lista_vacia(self):
+        materia_id = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        actividad, _evento = await use_case.execute(materia_id, apertura, cierre, 10, 1)
+
+        assert actividad.comisiones_ids == frozenset()
+        stream = await event_store.load(AGGREGATE_TYPE, actividad.id)
+        assert stream[0].payload["comisiones_ids"] == []
+
     async def test_rechaza_preguntas_insuficientes(self):
         materia_id = uuid4()
         materia_consulta = FakeMateriaConsultaPort()

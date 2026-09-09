@@ -9,6 +9,10 @@ import { Label } from "@/components/ui/label"
 import { crearActividad } from "@/lib/actividad-evaluativa-api"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { ApiError } from "@/lib/api-client"
+import {
+  listarComisionesPorMateria,
+  type ComisionResumenResponse,
+} from "@/lib/identidad-comisiones-api"
 
 /** Formulario de creación de actividad de período abierto (`#doc-nueva-actividad`, US-3.4.3). */
 export function NuevaActividad() {
@@ -16,6 +20,8 @@ export function NuevaActividad() {
   const navigate = useNavigate()
 
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
+  const [comisiones, setComisiones] = useState<ComisionResumenResponse[]>([])
+  const [comisionesSeleccionadas, setComisionesSeleccionadas] = useState<Set<string>>(new Set())
   const [titulo, setTitulo] = useState("")
   const [fechaApertura, setFechaApertura] = useState("")
   const [fechaCierre, setFechaCierre] = useState("")
@@ -33,6 +39,24 @@ export function NuevaActividad() {
       .catch(() => {})
     return () => controller.abort()
   }, [materiaId])
+
+  useEffect(() => {
+    if (!materiaId) return undefined
+    const controller = new AbortController()
+    listarComisionesPorMateria(materiaId, controller.signal)
+      .then(setComisiones)
+      .catch(() => {})
+    return () => controller.abort()
+  }, [materiaId])
+
+  function alternarComision(comisionId: string) {
+    setComisionesSeleccionadas((actual) => {
+      const siguiente = new Set(actual)
+      if (siguiente.has(comisionId)) siguiente.delete(comisionId)
+      else siguiente.add(comisionId)
+      return siguiente
+    })
+  }
 
   useEffect(() => {
     // Crea un controller nuevo en cada montaje real — en StrictMode (dev), React monta,
@@ -67,6 +91,7 @@ export function NuevaActividad() {
           fechaCierre,
           cantidadPreguntas,
           cantidadIntentosPermitidos: cantidadIntentos,
+          comisionesIds: [...comisionesSeleccionadas],
         },
         controladorSubmitRef.current?.signal,
       )
@@ -144,6 +169,40 @@ export function NuevaActividad() {
                   onChange={(event) => setFechaCierre(event.target.value)}
                 />
               </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label>Comisiones</Label>
+              {comisiones.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  Esta materia todavía no tiene comisiones — la actividad queda visible para
+                  todos sus estudiantes.
+                </p>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    {comisiones.map((comision) => (
+                      <label
+                        key={comision.id}
+                        className="flex items-center gap-2 text-sm"
+                        htmlFor={`na-comision-${comision.id}`}
+                      >
+                        <input
+                          id={`na-comision-${comision.id}`}
+                          type="checkbox"
+                          checked={comisionesSeleccionadas.has(comision.id)}
+                          onChange={() => alternarComision(comision.id)}
+                        />
+                        {comision.horario}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {comisionesSeleccionadas.size === 0
+                      ? "Ninguna marcada: la actividad queda visible para todas las comisiones de la materia."
+                      : "Solo los estudiantes de las comisiones marcadas van a ver esta actividad."}
+                  </p>
+                </>
+              )}
             </div>
             <div className="flex gap-3">
               <div className="flex flex-1 flex-col gap-1.5">

@@ -42,6 +42,7 @@ class CrearActividadPeriodoAbiertoUseCase:
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
         titulo: str = "",
+        comisiones_ids: frozenset[UUID] | None = None,
     ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
         """Crea la actividad validando INV-AE-01/02/03 y la persiste como primer evento del stream.
 
@@ -65,6 +66,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
             titulo=titulo,
+            comisiones_ids=comisiones_ids,
         )
 
         evento = ActividadEvaluativaCreada(
@@ -75,6 +77,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             cantidad_preguntas=actividad.cantidad_preguntas,
             cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
             titulo=actividad.titulo,
+            comisiones_ids=actividad.comisiones_ids,
         )
 
         payload = {
@@ -85,6 +88,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             "cantidad_preguntas": evento.cantidad_preguntas,
             "cantidad_intentos_permitidos": evento.cantidad_intentos_permitidos,
             "titulo": evento.titulo,
+            "comisiones_ids": [str(c) for c in evento.comisiones_ids],
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
         await self._event_store.append(

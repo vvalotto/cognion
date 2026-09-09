@@ -29,6 +29,8 @@ class CrearActividadRequest(BaseModel):
     cantidad_preguntas: int = Field(..., ge=1)
     cantidad_intentos_permitidos: int = Field(..., ge=1)
     titulo: str = ""
+    comisiones_ids: list[UUID] = []
+    """Vacío (default) = visible para todas las Comisiones de la Materia."""
 
     _normalizar_fechas = field_validator("fecha_apertura", "fecha_cierre")(_a_utc_si_naive)
 
@@ -44,6 +46,7 @@ class ActividadResponse(BaseModel):
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool
     titulo: str
+    comisiones_ids: list[UUID]
 
 
 class ActividadResumenResponse(BaseModel):
@@ -64,6 +67,7 @@ class ActividadResumenResponse(BaseModel):
     cerrada_manualmente: bool
     cantidad_evaluaciones_activas: int
     cantidad_evaluaciones_finalizadas: int
+    comisiones_ids: list[UUID]
 
 
 class ActividadVisibleResponse(BaseModel):

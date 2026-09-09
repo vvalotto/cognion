@@ -7,6 +7,8 @@ export interface CrearActividadBody {
   cantidadPreguntas: number
   cantidadIntentosPermitidos: number
   titulo?: string
+  /** Vacío/omitido = visible para todas las Comisiones de la Materia. */
+  comisionesIds?: string[]
 }
 
 export interface ActividadResponse {
@@ -18,6 +20,7 @@ export interface ActividadResponse {
   cantidadIntentosPermitidos: number
   cerradaManualmente: boolean
   titulo: string
+  comisionesIds: string[]
 }
 
 export type EstadoActividad = "en_curso" | "programada" | "cerrada"
@@ -34,6 +37,7 @@ export interface ActividadResumenResponse {
   cerradaManualmente: boolean
   cantidadEvaluacionesActivas: number
   cantidadEvaluacionesFinalizadas: number
+  comisionesIds: string[]
 }
 
 export type EstadoVisible = "pendiente" | "todavia_no_abrio" | "finalizada"
@@ -106,6 +110,7 @@ interface ActividadApiResponse {
   cantidad_intentos_permitidos: number
   cerrada_manualmente: boolean
   titulo: string
+  comisiones_ids: string[]
 }
 
 interface ActividadResumenApiResponse {
@@ -120,6 +125,7 @@ interface ActividadResumenApiResponse {
   cerrada_manualmente: boolean
   cantidad_evaluaciones_activas: number
   cantidad_evaluaciones_finalizadas: number
+  comisiones_ids: string[]
 }
 
 interface ActividadVisibleApiResponse {
@@ -191,6 +197,7 @@ function mapearActividad(actividad: ActividadApiResponse): ActividadResponse {
     cantidadIntentosPermitidos: actividad.cantidad_intentos_permitidos,
     cerradaManualmente: actividad.cerrada_manualmente,
     titulo: actividad.titulo,
+    comisionesIds: actividad.comisiones_ids,
   }
 }
 
@@ -207,6 +214,7 @@ function mapearActividadResumen(resumen: ActividadResumenApiResponse): Actividad
     cerradaManualmente: resumen.cerrada_manualmente,
     cantidadEvaluacionesActivas: resumen.cantidad_evaluaciones_activas,
     cantidadEvaluacionesFinalizadas: resumen.cantidad_evaluaciones_finalizadas,
+    comisionesIds: resumen.comisiones_ids,
   }
 }
 
@@ -277,6 +285,7 @@ export async function crearActividad(
       cantidad_preguntas: body.cantidadPreguntas,
       cantidad_intentos_permitidos: body.cantidadIntentosPermitidos,
       titulo: body.titulo,
+      comisiones_ids: body.comisionesIds ?? [],
     },
     signal,
   })

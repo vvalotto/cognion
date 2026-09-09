@@ -31,10 +31,15 @@ class FakeEstudianteConsultaPort(EstudianteConsultaPort):
     def __init__(self) -> None:
         """Inicializa el almacenamiento en memoria."""
         self.estudiantes: set[UUID] = set()
+        self.comisiones_por_estudiante: dict[UUID, UUID] = {}
 
     async def existe(self, estudiante_id: UUID) -> bool:
         """Indica si el estudiante fue precargado como válido."""
         return estudiante_id in self.estudiantes
+
+    async def obtener_comision_id(self, estudiante_id: UUID) -> UUID | None:
+        """Devuelve la comisión precargada en `comisiones_por_estudiante`, si hay alguna."""
+        return self.comisiones_por_estudiante.get(estudiante_id)
 
 
 class FakeMateriaConsultaPort(MateriaConsultaPort):

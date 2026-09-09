@@ -31,6 +31,12 @@ class ActividadEvaluativaPeriodoAbierto:
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool = field(default=False)
     titulo: str = field(default="")
+    comisiones_ids: frozenset[UUID] = field(default_factory=frozenset)
+    """Comisiones a las que se restringe la visibilidad de la actividad — vacío (default)
+    significa "todas las Comisiones de la Materia", mismo comportamiento que antes de que
+    existiera este campo (hallazgo de la prueba manual E2E del portal Docente: sin esto,
+    cualquier actividad era visible para cualquier Comisión de la Materia, sin forma de
+    dirigirla a una en particular)."""
 
     @staticmethod
     def crear(
@@ -40,6 +46,7 @@ class ActividadEvaluativaPeriodoAbierto:
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
         titulo: str = "",
+        comisiones_ids: frozenset[UUID] | None = None,
     ) -> ActividadEvaluativaPeriodoAbierto:
         """Crea la actividad validando INV-AE-02/03.
 
@@ -60,6 +67,7 @@ class ActividadEvaluativaPeriodoAbierto:
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
             titulo=titulo,
+            comisiones_ids=comisiones_ids or frozenset(),
         )
 
     @staticmethod
@@ -81,6 +89,7 @@ class ActividadEvaluativaPeriodoAbierto:
             cantidad_preguntas=int(payload["cantidad_preguntas"]),
             cantidad_intentos_permitidos=int(payload["cantidad_intentos_permitidos"]),
             titulo=payload.get("titulo", ""),
+            comisiones_ids=frozenset(UUID(c) for c in payload.get("comisiones_ids", [])),
         )
         for evento in eventos[1:]:
             _aplicar_evento(actividad, evento)

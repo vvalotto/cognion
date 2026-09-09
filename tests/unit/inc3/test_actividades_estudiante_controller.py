@@ -7,6 +7,7 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudia
 from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
 )
+from tests.unit.inc3._fakes import FakeEstudianteConsultaPort
 from tests.unit.inc3.test_listar_actividades_visibles_use_case import (
     FakeActividadQueryPort,
     FakeEvaluacionEstudianteQueryPort,
@@ -22,8 +23,9 @@ class TestActividadesEstudianteController:
         actividad_query = FakeActividadQueryPort()
         actividad_query.resumenes[materia_id] = [_resumen(materia_id, ahora)]
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
+        estudiante_consulta = FakeEstudianteConsultaPort()
         controller = ActividadesEstudianteController(
-            ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+            ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query, estudiante_consulta)
         )
 
         resultado = await controller.listar_actividades_visibles(materia_id, estudiante_id)
