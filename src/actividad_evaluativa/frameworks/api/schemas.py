@@ -31,6 +31,11 @@ class CrearActividadRequest(BaseModel):
     titulo: str = ""
     comisiones_ids: list[UUID] = []
     """Vacío (default) = visible para todas las Comisiones de la Materia."""
+    unidad_tematica: str | None = None
+    """`None`/omitido (default) = las preguntas salen de cualquier unidad temática del banco,
+    combinable con `tema` (AND)."""
+    tema: str | None = None
+    """`None`/omitido (default) = las preguntas salen de cualquier tema del banco."""
 
     _normalizar_fechas = field_validator("fecha_apertura", "fecha_cierre")(_a_utc_si_naive)
 
@@ -47,6 +52,8 @@ class ActividadResponse(BaseModel):
     cerrada_manualmente: bool
     titulo: str
     comisiones_ids: list[UUID]
+    unidad_tematica: str | None
+    tema: str | None
 
 
 class ActividadResumenResponse(BaseModel):
@@ -68,6 +75,8 @@ class ActividadResumenResponse(BaseModel):
     cantidad_evaluaciones_activas: int
     cantidad_evaluaciones_finalizadas: int
     comisiones_ids: list[UUID]
+    unidad_tematica: str | None
+    tema: str | None
 
 
 class ActividadVisibleResponse(BaseModel):

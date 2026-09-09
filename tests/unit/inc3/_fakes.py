@@ -61,16 +61,34 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         """Inicializa el almacenamiento en memoria."""
         self.conteos: dict[UUID, int] = {}
         self.ids_activas: dict[UUID, list[UUID]] = {}
+        self.conteos_por_tema: dict[tuple[UUID, str], int] = {}
+        self.ids_activas_por_tema: dict[tuple[UUID, str], list[UUID]] = {}
+        self.conteos_por_unidad_tema: dict[tuple[UUID, str, str], int] = {}
+        self.ids_activas_por_unidad_tema: dict[tuple[UUID, str, str], list[UUID]] = {}
         self.correcciones: dict[UUID, bool] = {}
         self.detalles: dict[UUID, DetalleCorreccionPregunta] = {}
         self.contenidos: dict[UUID, ContenidoPregunta] = {}
 
-    async def contar_activas_por_materia(self, materia_id: UUID) -> int:
-        """Devuelve el conteo precargado para la materia, o 0 si no se precargó."""
+    async def contar_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> int:
+        """Devuelve el conteo precargado para (materia, unidad, tema) según qué filtros se
+        pasen; 0 si no se precargó nada para esa combinación."""
+        if unidad is not None and tema is not None:
+            return self.conteos_por_unidad_tema.get((materia_id, unidad, tema), 0)
+        if tema is not None:
+            return self.conteos_por_tema.get((materia_id, tema), 0)
         return self.conteos.get(materia_id, 0)
 
-    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
-        """Devuelve los ids precargados para la materia, o lista vacía si no se precargó."""
+    async def listar_ids_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> list[UUID]:
+        """Devuelve los ids precargados para (materia, unidad, tema) según qué filtros se
+        pasen; lista vacía si no se precargó nada para esa combinación."""
+        if unidad is not None and tema is not None:
+            return list(self.ids_activas_por_unidad_tema.get((materia_id, unidad, tema), []))
+        if tema is not None:
+            return list(self.ids_activas_por_tema.get((materia_id, tema), []))
         return list(self.ids_activas.get(materia_id, []))
 
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict) -> bool:

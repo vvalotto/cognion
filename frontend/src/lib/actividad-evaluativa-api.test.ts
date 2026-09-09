@@ -78,6 +78,8 @@ describe("actividad-evaluativa-api", () => {
         cantidad_preguntas: 10,
         cantidad_intentos_permitidos: 1,
         comisiones_ids: [],
+        unidad_tematica: null,
+        tema: null,
       })
       expect(actividad).toEqual({
         id: "a1",

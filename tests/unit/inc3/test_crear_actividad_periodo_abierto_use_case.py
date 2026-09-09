@@ -128,6 +128,107 @@ class TestCrearActividadPeriodoAbiertoUseCase:
         stream = await event_store.load(AGGREGATE_TYPE, actividad.id)
         assert stream[0].payload["comisiones_ids"] == []
 
+    async def test_crea_actividad_restringida_a_un_tema_y_persiste_el_payload(self):
+        materia_id = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        pregunta_consulta.conteos_por_tema[(materia_id, "Cohesión")] = 6
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        actividad, evento = await use_case.execute(
+            materia_id, apertura, cierre, 5, 1, tema="Cohesión"
+        )
+
+        assert actividad.tema == "Cohesión"
+        assert evento.tema == "Cohesión"
+        stream = await event_store.load(AGGREGATE_TYPE, actividad.id)
+        assert stream[0].payload["tema"] == "Cohesión"
+
+    async def test_crea_actividad_restringida_a_unidad_y_tema_combinados(self):
+        materia_id = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        pregunta_consulta.conteos_por_tema[(materia_id, "Cohesión")] = 6
+        pregunta_consulta.conteos_por_unidad_tema[
+            (materia_id, "Principios de Diseño", "Cohesión")
+        ] = 4
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        actividad, evento = await use_case.execute(
+            materia_id,
+            apertura,
+            cierre,
+            4,
+            1,
+            unidad_tematica="Principios de Diseño",
+            tema="Cohesión",
+        )
+
+        assert actividad.unidad_tematica == "Principios de Diseño"
+        assert actividad.tema == "Cohesión"
+        assert evento.unidad_tematica == "Principios de Diseño"
+        stream = await event_store.load(AGGREGATE_TYPE, actividad.id)
+        assert stream[0].payload["unidad_tematica"] == "Principios de Diseño"
+
+    async def test_rechaza_preguntas_insuficientes_de_la_combinacion_aunque_el_tema_solo_alcance(
+        self,
+    ):
+        materia_id = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        pregunta_consulta.conteos_por_tema[(materia_id, "Cohesión")] = 6
+        pregunta_consulta.conteos_por_unidad_tema[
+            (materia_id, "Principios de Diseño", "Cohesión")
+        ] = 2
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        with pytest.raises(PreguntasInsuficientes):
+            await use_case.execute(
+                materia_id,
+                apertura,
+                cierre,
+                4,
+                1,
+                unidad_tematica="Principios de Diseño",
+                tema="Cohesión",
+            )
+
+    async def test_rechaza_preguntas_insuficientes_del_tema_elegido_aunque_el_banco_completo_alcance(
+        self,
+    ):
+        materia_id = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        pregunta_consulta.conteos_por_tema[(materia_id, "Cohesión")] = 3
+        event_store = FakeEventStore()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store)
+        apertura, cierre = _fechas()
+
+        with pytest.raises(PreguntasInsuficientes):
+            await use_case.execute(materia_id, apertura, cierre, 5, 1, tema="Cohesión")
+
     async def test_rechaza_preguntas_insuficientes(self):
         materia_id = uuid4()
         materia_consulta = FakeMateriaConsultaPort()

@@ -62,6 +62,8 @@ def _a_response(actividad: ActividadEvaluativaPeriodoAbierto) -> ActividadRespon
         cerrada_manualmente=actividad.cerrada_manualmente,
         titulo=actividad.titulo,
         comisiones_ids=list(actividad.comisiones_ids),
+        unidad_tematica=actividad.unidad_tematica,
+        tema=actividad.tema,
     )
 
 
@@ -93,6 +95,8 @@ def _a_resumen_response(resumen: ActividadResumen, ahora: datetime) -> Actividad
         cantidad_evaluaciones_activas=resumen.cantidad_evaluaciones_activas,
         cantidad_evaluaciones_finalizadas=resumen.cantidad_evaluaciones_finalizadas,
         comisiones_ids=list(resumen.comisiones_ids),
+        unidad_tematica=resumen.unidad_tematica,
+        tema=resumen.tema,
     )
 
 
@@ -180,6 +184,8 @@ async def crear_actividad(
             body.cantidad_intentos_permitidos,
             body.titulo,
             frozenset(body.comisiones_ids),
+            body.unidad_tematica,
+            body.tema,
         )
     except MateriaNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc

@@ -33,6 +33,10 @@ class ActividadResumen:
     cantidad_evaluaciones_finalizadas: int
     comisiones_ids: frozenset[UUID] = field(default_factory=frozenset)
     """Vacío = visible para todas las Comisiones de la Materia."""
+    unidad_tematica: str | None = None
+    """`None` = las preguntas salen de cualquier unidad temática del banco de la Materia."""
+    tema: str | None = None
+    """`None` = las preguntas salen de cualquier tema del banco de la Materia."""
 
 
 class ActividadQueryPort(ABC):

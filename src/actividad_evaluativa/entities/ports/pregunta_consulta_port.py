@@ -48,16 +48,24 @@ class PreguntaConsultaPort(ABC):
     """Operaciones de consulta requeridas sobre `PreguntaPlantilla` de BC Banco de Preguntas."""
 
     @abstractmethod
-    async def contar_activas_por_materia(self, materia_id: UUID) -> int:
-        """Cuenta las `PreguntaPlantilla` activas del banco de la materia (INV-AE-01)."""
+    async def contar_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> int:
+        """Cuenta las `PreguntaPlantilla` activas del banco de la materia (INV-AE-01).
+
+        `unidad`/`tema` son opcionales y combinables (AND) — si se proveen, cuenta solo las
+        que coinciden con ambos (el Docente puede restringir de qué unidad/tema salen las
+        preguntas de una Actividad)."""
 
     @abstractmethod
-    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
+    async def listar_ids_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> list[UUID]:
         """Lista los ids de las `PreguntaPlantilla` activas del banco de la materia.
 
         Base del sampleo aleatorio (RF-12) — el Use Case hace `random.sample` sobre esta lista,
-        el puerto no sabe nada de muestreo.
-        """
+        el puerto no sabe nada de muestreo. `unidad`/`tema` son opcionales y combinables,
+        mismo criterio que `contar_activas_por_materia`."""
 
     @abstractmethod
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict[str, Any]) -> bool:
