@@ -55,7 +55,8 @@ class PreguntaConsultaPort(ABC):
 
         `unidad`/`tema` son opcionales y combinables (AND) — si se proveen, cuenta solo las
         que coinciden con ambos (el Docente puede restringir de qué unidad/tema salen las
-        preguntas de una Actividad)."""
+        preguntas de una Actividad).
+        """
 
     @abstractmethod
     async def listar_ids_activas_por_materia(
@@ -65,7 +66,8 @@ class PreguntaConsultaPort(ABC):
 
         Base del sampleo aleatorio (RF-12) — el Use Case hace `random.sample` sobre esta lista,
         el puerto no sabe nada de muestreo. `unidad`/`tema` son opcionales y combinables,
-        mismo criterio que `contar_activas_por_materia`."""
+        mismo criterio que `contar_activas_por_materia`.
+        """
 
     @abstractmethod
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict[str, Any]) -> bool:

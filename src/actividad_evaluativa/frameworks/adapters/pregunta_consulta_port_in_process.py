@@ -39,8 +39,7 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
     async def contar_activas_por_materia(
         self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
     ) -> int:
-        """Cuenta las preguntas `activa = true` del banco de la materia, filtradas por
-        `unidad`/`tema`.
+        """Cuenta las preguntas `activa = true` del banco de la materia, filtradas por `unidad`/`tema`.
 
         Devuelve 0 si la materia no tiene `Banco` asociado — no debería ocurrir en la práctica
         (INV-BP-01, toda `Materia` se crea junto con su `Banco`), pero evita que este puerto le
@@ -55,8 +54,7 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
     async def listar_ids_activas_por_materia(
         self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
     ) -> list[UUID]:
-        """Lista los ids de las preguntas `activa = true` del banco de la materia, filtradas
-        por `unidad`/`tema`.
+        """Lista los ids de las preguntas `activa = true` del banco de la materia, filtradas por `unidad`/`tema`.
 
         Lista vacía si la materia no tiene `Banco` asociado — mismo criterio que
         `contar_activas_por_materia`.
