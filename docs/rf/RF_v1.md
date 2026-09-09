@@ -128,6 +128,31 @@ El docente puede ver el desempeño agregado por comisión e identificar qué tem
 El sistema mantiene un historial de KPIs por sesión y por cursada que el docente puede consultar a lo largo del tiempo.  
 - **Criterios de aceptación:** Los datos de sesiones anteriores son accesibles y comparables. Los KPIs específicos a mostrar serán definidos por el docente (ver Diferidos).
 
+> **Agregado 2026-09-09** (sesión de estabilización post-`BL-007`, prueba manual E2E del portal
+> Estudiante) — RF-20 a RF-23 abajo. Concretan, para el caso de "período abierto", parte de lo
+> que `RF-18` dejaba diferido como "definición detallada de KPIs a mostrar" — no lo reemplazan,
+> lo especifican.
+
+**RF-20 — Desempeño por comisión, con drill-down a la revisión de un estudiante**  
+El docente elige una materia y una comisión (una por vez) y ve una tabla con todos los estudiantes de esa comisión: su % de aciertos acumulado y la cantidad de actividades abiertas que todavía no respondió. Desde esa tabla entra al detalle de un estudiante (desempeño por actividad, ya cubierto por `RF-16`) y, desde ahí, a la revisión completa de una evaluación puntual — la misma vista pregunta por pregunta que hoy ve el propio estudiante al finalizar (`RF-15`), pero consultada por el docente.  
+- **Criterios de aceptación:** La tabla es ordenable por cualquier columna. Un estudiante sin evaluaciones finalizadas muestra "Sin datos" en el % de aciertos, nunca 0%. "Actividades pendientes" cuenta solo las actividades abiertas en este momento que el estudiante no respondió — no incluye actividades programadas a futuro. La revisión de una evaluación puntual expone lo mismo que ve el propio estudiante (enunciado, respuesta dada, respuesta correcta, acierto/error por pregunta), pero para un estudiante de una comisión del docente que consulta.  
+- **Casos límite:** Una comisión sin ningún estudiante con evaluaciones finalizadas — la tabla se muestra igual, todos con "Sin datos".
+
+**RF-21 — Evolución temporal del desempeño**  
+El docente ve un gráfico de línea con el % de aciertos a lo largo de las actividades rendidas, tanto para un estudiante individual (desde el drill-down de `RF-20`) como para el promedio de toda la comisión.  
+- **Criterios de aceptación:** El eje X respeta el orden cronológico de las actividades efectivamente rendidas — las no respondidas se saltean, sin dejar un punto en cero ni un hueco marcado.  
+- **Casos límite:** Un estudiante con una sola evaluación finalizada muestra un único punto, no una línea.
+
+**RF-22 — Ranking de preguntas más falladas**  
+El docente ve una lista completa y ordenable de las preguntas que aparecieron en al menos una actividad, con su tasa de error (fallos sobre cantidad de veces que la pregunta fue presentada a un estudiante) — no un conteo bruto de fallos. Filtrable por comisión o agregado de todas las comisiones de la materia, mismo criterio que `RF-17`.  
+- **Criterios de aceptación:** Solo se listan preguntas que efectivamente aparecieron en alguna actividad, no todo el banco. Usa la misma escala de color por severidad que `RF-17` (≥50% rojo, 20-49% ámbar, <20% verde).  
+- **Casos límite:** Una pregunta que apareció en una actividad pero todavía nadie respondió — sin tasa calculable, queda fuera del ranking hasta tener al menos una respuesta registrada.
+
+**RF-23 — Completitud y participación por actividad**  
+Para una actividad abierta puntual, el docente ve una tabla con todos los estudiantes de la comisión y su estado respecto de esa actividad: sin iniciar, en curso, suspendida o finalizada.  
+- **Criterios de aceptación:** Los cuatro estados se distinguen entre sí — "en curso" y "suspendida" no se agrupan.  
+- **Casos límite:** Ninguno explorado todavía — a definir al especificar la US si aparece alguno.
+
 ---
 
 ## Decisiones de alcance
@@ -143,15 +168,23 @@ El sistema mantiene un historial de KPIs por sesión y por cursada que el docent
 - Migración inicial desde PDFs
 - Cambio de contraseña self-service, con bloqueo automático de cuenta a los 3 intentos
   fallidos consecutivos (login o cambio de contraseña) — RF-19
+- Tabla de desempeño por comisión con drill-down a la revisión completa de una evaluación de
+  un estudiante puntual, evolución temporal del % de aciertos, ranking de preguntas más
+  falladas del banco, y completitud/participación por actividad — RF-20 a RF-23
+  (agregado 2026-09-09)
 
 ### Fuera de alcance
 - Múltiples docentes — *Razón:* el sistema es de uso personal del docente por ahora; se extiende después.
 - Reportes exportables — *Razón:* se evalúa en una etapa posterior.
+- Comparativa de desempeño entre comisiones de una misma materia — *Razón:* descartada
+  explícitamente por Víctor al elicitar RF-20 a RF-23 (2026-09-09).
 
 ### Diferidos
 - Algoritmo de selección de preguntas no aleatorio — *Razón del diferimiento:* requiere definir criterios de personalización (historial, desempeño previo, etc.).
 - Notificaciones por canales distintos al email — *Razón del diferimiento:* la arquitectura debe preverlo pero la implementación queda para después.
 - Definición detallada de KPIs a mostrar en el dashboard del docente — *Razón del diferimiento:* el docente los irá definiendo a medida que use el sistema.
+- Reporte de uso de intentos por pregunta (cuántos estudiantes necesitaron 2do/3er intento) —
+  *Razón del diferimiento:* alcance sin definir todavía, "no por el momento" (2026-09-09).
 
 ---
 

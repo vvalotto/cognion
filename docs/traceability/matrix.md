@@ -159,9 +159,18 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |
 | RF-18 | Analytics | 7 | — | Planificado |
 | RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Validado |
+| RF-20 | Analytics | Sin asignar | — | Planificado |
+| RF-21 | Analytics | Sin asignar | — | Planificado |
+| RF-22 | Analytics | Sin asignar | — | Planificado |
+| RF-23 | Analytics | Sin asignar | — | Planificado |
 
 > RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
 > y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
+
+> RF-20 a RF-23 agregados 2026-09-09 (elicitación dedicada durante la prueba manual E2E de
+> estabilización post-`BL-007`, ver `docs/rf/RF_v1.md` revisión 2026-09-09) — informes nuevos
+> de Analytics para el Docente/Administrador. Sin incremento asignado todavía; candidatos a un
+> incremento propio con sus US-IEDD, a definir con Víctor.
 
 > La columna US-IEDD se completa a medida que se elaboran las US candidatas de cada
 > Incremento (`docs/plans/incN/incN-candidatas.md`) — ver `docs/plans/WORKFLOW-DESARROLLO.md` §3.

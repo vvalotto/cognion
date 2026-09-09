@@ -65,6 +65,11 @@ function tituloDeActividad(actividad: ActividadResumenResponse): string {
   return actividad.titulo || `Actividad del ${formatearFecha(actividad.fechaApertura)}`
 }
 
+function contenidoDeActividad(actividad: ActividadResumenResponse): string {
+  if (!actividad.unidadTematica && !actividad.tema) return "Sin restricción"
+  return [actividad.unidadTematica, actividad.tema].filter(Boolean).join(" · ")
+}
+
 function comisionesDeActividad(
   actividad: ActividadResumenResponse,
   comisiones: ComisionResumenResponse[],
@@ -211,6 +216,7 @@ export function Actividades() {
             <tr>
               <TableHeaderCell>Título</TableHeaderCell>
               <TableHeaderCell>Período</TableHeaderCell>
+              <TableHeaderCell>Contenido</TableHeaderCell>
               <TableHeaderCell>Estado</TableHeaderCell>
               <TableHeaderCell>Comisiones</TableHeaderCell>
               <TableHeaderCell>Estudiantes</TableHeaderCell>
@@ -219,13 +225,13 @@ export function Actividades() {
           </TableHeader>
           <TableBody>
             {actividadesFiltradas === undefined ? (
-              <TableEmptyRow colSpan={6}>Cargando…</TableEmptyRow>
+              <TableEmptyRow colSpan={7}>Cargando…</TableEmptyRow>
             ) : actividades?.length === 0 ? (
-              <TableEmptyRow colSpan={6}>
+              <TableEmptyRow colSpan={7}>
                 Todavía no hay actividades creadas para esta materia.
               </TableEmptyRow>
             ) : actividadesFiltradas.length === 0 ? (
-              <TableEmptyRow colSpan={6}>
+              <TableEmptyRow colSpan={7}>
                 No hay actividades {ETIQUETA_FILTRO[filtroEstado].toLowerCase()} para esta
                 materia.
               </TableEmptyRow>
@@ -240,6 +246,9 @@ export function Actividades() {
                   <TableCell className="text-xs text-muted-foreground">
                     Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
                     {formatearFecha(actividad.fechaCierre)}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {contenidoDeActividad(actividad)}
                   </TableCell>
                   <TableCell>
                     <Badge variant={VARIANTE_ESTADO[actividad.estado]}>

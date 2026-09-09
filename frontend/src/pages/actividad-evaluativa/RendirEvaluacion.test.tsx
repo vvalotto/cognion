@@ -152,16 +152,14 @@ describe("RendirEvaluacion", () => {
     expect(await screen.findByText("Fuera de período")).toBeInTheDocument()
   })
 
-  it("en la última pregunta el botón dice 'Confirmar y finalizar' y navega a la revisión", async () => {
+  it("en la última pregunta el botón dice 'Confirmar respuesta' y no finaliza solo", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(200, evaluacionBody({ preguntas_respondidas: ["p1"] })),
     )
     renderRendirEvaluacion()
     await screen.findByText("Enunciado 1")
 
-    expect(
-      screen.getByRole("button", { name: "Confirmar y finalizar" }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Confirmar respuesta" })).toBeInTheDocument()
 
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(201, {
@@ -171,20 +169,61 @@ describe("RendirEvaluacion", () => {
         confirmada_en: "2026-09-01T00:05:00+00:00",
       }),
     )
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, evaluacionBody({ estado: "Finalizada" })),
-    )
 
     const user = userEvent.setup()
     await user.click(screen.getByText("Opción A"))
-    await user.click(screen.getByRole("button", { name: "Confirmar y finalizar" }))
+    await user.click(screen.getByRole("button", { name: "Confirmar respuesta" }))
+
+    expect(
+      vi.mocked(fetch).mock.calls.some((llamada) => String(llamada[0]).includes("/finalizar")),
+    ).toBe(false)
+  })
+
+  it("el Estudiante decide cuándo finalizar — habilitado recién con todo respondido, desde cualquier pregunta", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, evaluacionBody()))
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 0")
+
+    expect(screen.getByRole("button", { name: "Finalizar evaluación" })).toBeDisabled()
+    expect(screen.getByText(/Respondé las 2 preguntas que faltan/)).toBeInTheDocument()
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, {
+        id: "resp-1",
+        pregunta_id: "p1",
+        numero_intento: 1,
+        confirmada_en: "2026-09-01T00:05:00+00:00",
+      }),
+    )
+    const user = userEvent.setup()
+    await user.click(screen.getByText("Opción A"))
+    await user.click(screen.getByRole("button", { name: "Confirmar y siguiente" }))
+    await screen.findByText("Enunciado 1")
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, {
+        id: "resp-2",
+        pregunta_id: "p2",
+        numero_intento: 1,
+        confirmada_en: "2026-09-01T00:05:00+00:00",
+      }),
+    )
+    await user.click(screen.getByText("Opción A"))
+    await user.click(screen.getByRole("button", { name: "Confirmar respuesta" }))
+
+    expect(await screen.findByRole("button", { name: "Finalizar evaluación" })).toBeEnabled()
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, evaluacionBody({ estado: "Finalizada" })),
+    )
+    await user.click(screen.getByRole("button", { name: "Finalizar evaluación" }))
 
     expect(await screen.findByText("Revisión")).toBeInTheDocument()
     const llamadaFinalizar = vi.mocked(fetch).mock.calls.at(-1)
     expect(llamadaFinalizar?.[0]).toContain(`/evaluaciones/${EVALUACION_ID}/finalizar`)
   })
 
-  it("al volver a una pregunta ya respondida, muestra la selección confirmada y deshabilita los inputs", async () => {
+  it("al volver a una pregunta ya respondida, muestra la selección confirmada y permite cambiarla", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(
         200,
@@ -203,11 +242,11 @@ describe("RendirEvaluacion", () => {
     expect(await screen.findByText("Enunciado 0")).toBeInTheDocument()
     const opcionB = screen.getByRole("radio", { name: "Opción B" })
     expect(opcionB).toBeChecked()
-    expect(opcionB).toBeDisabled()
-    expect(screen.getByRole("radio", { name: "Opción A" })).toBeDisabled()
+    expect(opcionB).toBeEnabled()
+    expect(screen.getByRole("radio", { name: "Opción A" })).toBeEnabled()
   })
 
-  it("el botón sobre una pregunta ya respondida navega sin volver a registrar la respuesta", async () => {
+  it("sin cambiar la selección de una pregunta ya respondida, el botón avanza sin volver a registrar", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(
         200,
@@ -225,13 +264,49 @@ describe("RendirEvaluacion", () => {
     await screen.findByText("Enunciado 0")
 
     const llamadasAntes = vi.mocked(fetch).mock.calls.length
-    await user.click(screen.getByRole("button", { name: "Siguiente" }))
+    await user.click(screen.getByRole("button", { name: "Confirmar y siguiente" }))
 
     expect(await screen.findByText("Enunciado 1")).toBeInTheDocument()
     expect(vi.mocked(fetch).mock.calls.length).toBe(llamadasAntes)
   })
 
-  it("sobre la última pregunta ya respondida, el botón finaliza sin volver a registrar", async () => {
+  it("cambiar la selección de una pregunta ya respondida vuelve a registrar la respuesta", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(
+        200,
+        evaluacionBody({
+          preguntas_respondidas: ["p1"],
+          respuestas_confirmadas: [{ pregunta_id: "p1", contenido: { opcion_indice: 1 } }],
+        }),
+      ),
+    )
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 1")
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    await screen.findByText("Enunciado 0")
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, {
+        id: "resp-2",
+        pregunta_id: "p1",
+        numero_intento: 2,
+        confirmada_en: "2026-09-01T00:10:00+00:00",
+      }),
+    )
+
+    await user.click(screen.getByText("Opción A"))
+    await user.click(screen.getByRole("button", { name: "Confirmar y siguiente" }))
+
+    expect(await screen.findByText("Enunciado 1")).toBeInTheDocument()
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
+    expect(ultimaLlamada?.[0]).toContain(`/evaluaciones/${EVALUACION_ID}/respuestas`)
+    const body = JSON.parse((ultimaLlamada?.[1] as RequestInit).body as string)
+    expect(body).toEqual({ pregunta_id: "p1", contenido: { opcion_indice: 0 } })
+  })
+
+  it("con todo ya respondido, 'Finalizar evaluación' está habilitado desde la primera pregunta", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(
         200,
@@ -247,14 +322,15 @@ describe("RendirEvaluacion", () => {
     renderRendirEvaluacion()
     await screen.findByText("Enunciado 1")
 
-    expect(screen.getByRole("button", { name: "Finalizar" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Confirmar respuesta" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Finalizar evaluación" })).toBeEnabled()
 
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(200, evaluacionBody({ estado: "Finalizada" })),
     )
 
     const user = userEvent.setup()
-    await user.click(screen.getByRole("button", { name: "Finalizar" }))
+    await user.click(screen.getByRole("button", { name: "Finalizar evaluación" }))
 
     expect(await screen.findByText("Revisión")).toBeInTheDocument()
     const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
@@ -264,6 +340,37 @@ describe("RendirEvaluacion", () => {
         String(llamada[0]).includes("/respuestas"),
       ),
     ).toBe(false)
+  })
+
+  it("al agotar los intentos de una pregunta, muestra el error y deshabilita los inputs", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(
+        200,
+        evaluacionBody({
+          preguntas_respondidas: ["p1"],
+          respuestas_confirmadas: [{ pregunta_id: "p1", contenido: { opcion_indice: 1 } }],
+        }),
+      ),
+    )
+    renderRendirEvaluacion()
+    await screen.findByText("Enunciado 1")
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    await screen.findByText("Enunciado 0")
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(422, { detail: "Se agotaron los 3 intentos permitidos para la pregunta." }),
+    )
+
+    await user.click(screen.getByText("Opción A"))
+    await user.click(screen.getByRole("button", { name: "Confirmar y siguiente" }))
+
+    expect(
+      await screen.findByText("Se agotaron los 3 intentos permitidos para la pregunta."),
+    ).toBeInTheDocument()
+    expect(screen.getByRole("radio", { name: "Opción A" })).toBeDisabled()
+    expect(screen.getByRole("radio", { name: "Opción B" })).toBeDisabled()
   })
 
   it("una pregunta de Verdadero/Falso muestra las dos opciones fijas", async () => {
