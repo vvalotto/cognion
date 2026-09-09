@@ -38,6 +38,11 @@ function tituloDeActividad(actividad: ActividadResumenResponse): string {
   return actividad.titulo || `Actividad del ${formatearFecha(actividad.fechaApertura)}`
 }
 
+function contenidoDeActividad(actividad: ActividadResumenResponse): string {
+  if (!actividad.unidadTematica && !actividad.tema) return "Sin restricción (todo el banco)"
+  return [actividad.unidadTematica, actividad.tema].filter(Boolean).join(" · ")
+}
+
 /** Detalle de una actividad, con acciones de extender plazo y cerrar (`#doc-detalle-actividad`, `US-3.4.4`). */
 export function ActividadDetalle() {
   const { actividadId } = useParams<{ actividadId: string }>()
@@ -115,6 +120,10 @@ export function ActividadDetalle() {
         <div className="flex items-center justify-between px-4 py-3 text-sm">
           <span className="text-muted-foreground">Cierre</span>
           <span className="font-medium">{formatearFecha(actividad.fechaCierre)}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-3 text-sm">
+          <span className="text-muted-foreground">Unidad temática / Tema</span>
+          <span className="font-medium">{contenidoDeActividad(actividad)}</span>
         </div>
         <div className="flex items-center justify-between px-4 py-3 text-sm">
           <span className="text-muted-foreground">Cantidad de preguntas</span>
