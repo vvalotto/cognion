@@ -5,6 +5,15 @@ import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
+import {
   listarActividadesVisibles,
   type ActividadVisibleResponse,
   type EstadoVisible,
@@ -86,39 +95,45 @@ export function MisActividades() {
       />
       <h1 className="text-lg font-semibold">Actividades de período abierto</h1>
 
-      {actividades === null ? (
-        <p className="mt-4 text-sm text-muted-foreground">Cargando…</p>
-      ) : actividades.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">
-          Todavía no hay actividades disponibles para esta materia.
-        </p>
-      ) : (
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {actividades.map((actividad) => (
-            <Card
-              key={actividad.id}
-              role="button"
-              tabIndex={0}
-              className="cursor-pointer p-5 transition-colors hover:border-primary"
-              onClick={() => irA(actividad)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") irA(actividad)
-              }}
-            >
-              <p className="font-semibold">{tituloDeActividad(actividad)}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
-                {formatearFecha(actividad.fechaCierre)}
-              </p>
-              <div className="mt-3">
-                <Badge variant={VARIANTE_ESTADO[actividad.estado]}>
-                  {ETIQUETA_ESTADO[actividad.estado]}
-                </Badge>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Título</TableHeaderCell>
+              <TableHeaderCell>Período</TableHeaderCell>
+              <TableHeaderCell>Estado</TableHeaderCell>
+            </tr>
+          </TableHeader>
+          <TableBody>
+            {actividades === null ? (
+              <TableEmptyRow colSpan={3}>Cargando…</TableEmptyRow>
+            ) : actividades.length === 0 ? (
+              <TableEmptyRow colSpan={3}>
+                Todavía no hay actividades disponibles para esta materia.
+              </TableEmptyRow>
+            ) : (
+              actividades.map((actividad) => (
+                <TableRow
+                  key={actividad.id}
+                  className="cursor-pointer"
+                  onClick={() => irA(actividad)}
+                >
+                  <TableCell className="font-medium">{tituloDeActividad(actividad)}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
+                    {formatearFecha(actividad.fechaCierre)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={VARIANTE_ESTADO[actividad.estado]}>
+                      {ETIQUETA_ESTADO[actividad.estado]}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   )
 }
