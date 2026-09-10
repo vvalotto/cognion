@@ -23,8 +23,8 @@ from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class _BandejaSmtp:

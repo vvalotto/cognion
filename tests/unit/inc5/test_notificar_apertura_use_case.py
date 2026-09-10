@@ -98,9 +98,7 @@ class TestNotificarAperturaUseCase:
         use_case = NotificarAperturaUseCase(comision_consulta, canal_envio)
         apertura, cierre = _fechas()
 
-        await use_case.execute(
-            uuid4(), materia_id, "Materia X", "Actividad", apertura, cierre, []
-        )
+        await use_case.execute(uuid4(), materia_id, "Materia X", "Actividad", apertura, cierre, [])
 
         assert len(canal_envio.enviados) == 1
         assert canal_envio.enviados[0][0] == "ana@example.com"
@@ -112,9 +110,7 @@ class TestNotificarAperturaUseCase:
         use_case = NotificarAperturaUseCase(comision_consulta, canal_envio)
         apertura, cierre = _fechas()
 
-        await use_case.execute(
-            uuid4(), materia_id, "Materia X", "Actividad", apertura, cierre, []
-        )
+        await use_case.execute(uuid4(), materia_id, "Materia X", "Actividad", apertura, cierre, [])
 
         assert canal_envio.enviados == []
 

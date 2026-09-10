@@ -52,9 +52,7 @@ class NotificarAperturaUseCase:
             )
             if not comisiones_materia:
                 return
-            destinatarios = await self._comision_consulta.listar_destinatarios(
-                comisiones_materia
-            )
+            destinatarios = await self._comision_consulta.listar_destinatarios(comisiones_materia)
 
         asunto = f"Nueva actividad disponible: {titulo}"
         cuerpo = (
