@@ -9,55 +9,39 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-10
+
 ### Added
-- [US-5.1.1] Infraestructura del BC Notificaciones
-  - Primer código del quinto BC del sistema (`src/notificaciones/`), sin aggregate ni
-    endpoint HTTP propio — BC puramente reactivo
-  - `CanalEnvioPort`/`SmtpCanalEnvio`: adapter SMTP propio de Notificaciones, mismo patrón
-    `smtplib` + `asyncio.to_thread` que `SmtpNotificador` de Identidad (`ADR-012`) — sin
-    sumar `aiosmtplib` como dependencia nueva
-  - `ComisionConsultaPort`/`ComisionConsultaPortInProcess`: copia propia de Notificaciones
-    hacia Identidad (con `email`, a diferencia de la copia de Analytics/Banco de Preguntas)
-  - `ComisionQueryPort.listar_estudiantes_con_email` nuevo en Identidad (`EstudianteConEmail`),
-    coexiste con `listar_estudiantes` sin reemplazarlo
-  - `NotificacionPort` declarado como contrato en Actividad Evaluativa, sin implementación
-    cableada todavía — se conecta en `US-5.1.2`
-  - 934/934 tests (unit + integration + BDD), quality gates APROBADO (pylint 8.97/10, CC
-    máx 4, MI mín 69.72, coverage 100% en el código nuevo)
-- [US-5.1.2] Notificación de apertura de una Actividad Evaluativa de período abierto (RF-14)
-  - `CrearActividadPeriodoAbiertoUseCase` dispara `NotificacionPort.notificar_apertura(...)`
-    al final de `execute()`, después de persistir `ActividadEvaluativaCreada` — primer
-    cableado real de una integración directa entre BCs disparada desde un Use Case de
-    escritura (`ADR-006`)
-  - `NotificacionPortInProcess` (Actividad Evaluativa): único punto de ese BC que importa
-    `src.notificaciones`
-  - `NotificarAperturaUseCase` (Notificaciones): resuelve destinatarios por comisión o por
-    materia completa, envía un email por destinatario, un fallo de envío se loguea y no
-    aborta el resto del roster ni la creación de la actividad
-  - `NotificacionPort.notificar_apertura(...)` extendido con `materia_nombre` (gap dejado
-    abierto por `BC-notificaciones-modelo.md` §6, resuelto sin ensanchar ningún puerto de
-    Notificaciones)
-  - 746/746 tests unit+integration, 207/208 BDD (1 flake preexistente ajeno a esta US),
-    quality gates APROBADO (pylint 9.27/10, CC máx 5, MI mín 74.20, coverage 100% en el
-    código sujeto al gate)
-  - Fix de CBO en pre-push (`CrearActividadPeriodoAbiertoUseCase`, 11→10, mismo patrón
-    recurrente ya visto en incrementos anteriores): construcción de `ActividadEvaluativaCreada`
-    movida a un classmethod `desde_actividad()`, segundo elemento de la tupla de retorno
-    tipado como `object`
-- [US-5.1.3] Notificación de cierre manual de una Actividad Evaluativa de período abierto (RF-14)
-  - `CerrarActividadUseCase` dispara `NotificacionPort.notificar_cierre(...)` al final de
-    `execute()`, después de persistir `ActividadEvaluativaCerrada` — segundo y simétrico
-    cableado de `ADR-006`, solo ante cierre manual del Docente (el vencimiento natural del
-    período, verificado por `VerificarVencimientosUseCase`, sigue sin disparar ningún email)
-  - `NotificarCierreUseCase` (Notificaciones): mismo esqueleto que `NotificarAperturaUseCase`,
-    sin fechas de apertura/cierre en el cuerpo del email
-  - `NotificacionPort.notificar_cierre(...)` extendido con `materia_nombre`, resuelto en
-    `CerrarActividadUseCase` vía `MateriaConsultaPort` (ya usado por
-    `CrearActividadPeriodoAbiertoUseCase`) — decisión de diseño no listada en la spec
-    original, consecuencia directa del postcondition de la US
-  - 757/757 tests unit+integration, 212/212 BDD, quality gates APROBADO (pylint 9.47/10, CC
-    máx 5, MI mín 80.38, coverage 100% en el código sujeto al gate)
-  - Cierra completa la Iteración 1 del Incremento 5
+- **Incremento 5 — Notificaciones** (RF-14), cierre de baseline `BL-009`. Primer Bounded
+  Context puramente event-driven del sistema: sin aggregate ni comando propio disparado por
+  un actor humano, reacciona a eventos de dominio ya existentes de Actividad Evaluativa
+  (`ActividadEvaluativaCreada`/`ActividadEvaluativaCerrada`) y produce un efecto de borde
+  (enviar un email) vía integración directa (`ADR-006`). Incremento corto y deliberadamente
+  aislado — una sola iteración, sin frontend (RF-14 sin pantalla propia)
+  - `src/notificaciones/` (BC completo): `CanalEnvioPort`/`SmtpCanalEnvio` (adapter SMTP
+    propio, mismo patrón `smtplib` + `asyncio.to_thread` que `SmtpNotificador` de Identidad,
+    `ADR-012`), `ComisionConsultaPort`/`ComisionConsultaPortInProcess` (copia propia hacia
+    Identidad, con `email`), `NotificarAperturaUseCase`/`NotificarCierreUseCase`
+  - `NotificacionPort` (Actividad Evaluativa, dueño del puerto): `notificar_apertura(...)`
+    cableado en `CrearActividadPeriodoAbiertoUseCase`, `notificar_cierre(...)` cableado en
+    `CerrarActividadUseCase` — ambos con `materia_nombre` resuelto vía `MateriaConsultaPort`
+    (Notificaciones no tiene el propio), ambos "nunca lanzan": un fallo de envío se loguea y
+    no aborta la operación de dominio ni el resto del roster
+  - Solo el cierre manual del Docente dispara el email de cierre — el vencimiento natural del
+    período (`VerificarVencimientosUseCase`) sigue sin disparar ningún email, decisión de
+    producto confirmada en el modelado
+  - `ComisionQueryPort.listar_estudiantes_con_email` nuevo en Identidad
+    (`EstudianteConEmail`), coexiste con `listar_estudiantes` sin reemplazarlo
+  - 969/969 tests backend (94.82% cobertura), quality gates APROBADO en las 3 US, UAT de
+    cierre sin hallazgos 🔴 Bloqueantes (`quality/reports/uat/inc5/design.md`/`evidencia.md`):
+    Capa 1 (757/757 unit+integration, 212/212 BDD) y Capa 2 (`smoke.sh` extendido — fake SMTP
+    persiste el contenido real de cada mensaje, verificado contra el flujo ya existente de
+    crear/cerrar una actividad, sin pasos HTTP nuevos). RF-14 pasa a **Validado** en
+    `docs/traceability/matrix.md`
+  - Cuenta SMTP real de producción queda como ítem abierto (`CLAUDE.md`) — evaluadas 3
+    variantes (cuenta institucional única, "From" delegado del Docente, cuenta real por
+    Materia); se resuelve junto con la decisión mayor de infraestructura de producción,
+    todavía pendiente institucionalmente
 
 ## [0.6.2] - 2026-09-10
 
