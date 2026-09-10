@@ -805,9 +805,32 @@ Planificados). Merge `develop → main` y tag `v0.6.2` (PATCH, mismo criterio de
 `BL-005`/`BL-007`) ejecutados el mismo día, PR de cierre
 [#302](https://github.com/vvalotto/cognion/pull/302).
 
-**Próximo paso:** sin US-IEDD activa. Pendiente de decisión: a qué incremento asignar `RF-20`
-a `RF-23` (Incremento 5 de `PLAN_v1.md` o un nuevo `-ADJ`).
-**Baseline abierta:** ninguna — `BL-008` cerrada.
+Incremento 5 — Notificaciones, período abierto — en curso
+(`docs/plans/inc5/inc5-candidatas.md`, Milestone GitHub
+[Incremento 5](https://github.com/vvalotto/cognion/milestone/7)). Sigue la secuencia de
+`PLAN_v1.md` (decisión de Víctor 2026-09-10, entre las opciones de retomar RF-20/23 o avanzar
+con el próximo incremento planificado). Incremento corto y deliberadamente aislado: valida la
+integración BC Actividad Evaluativa → BC Notificaciones (`ADR-006`) con el menor acoplamiento
+posible. `RF-20` a `RF-23` siguen sin incremento asignado.
+**Iteración 0 — Modelado cerrada 2026-09-10**: `US-5.0.1` (event storming ligero, Issue
+[#304](https://github.com/vvalotto/cognion/issues/304),
+`docs/design/domain/BC-notificaciones-modelo.md`) aprobada por Víctor. Sin BC Notificaciones
+existente todavía — primer BC puramente reactivo del sistema, sin aggregate ni persistencia
+propia: recibe el disparo de `NotificacionPort` (dueño Actividad Evaluativa) al crear o cerrar
+manualmente una actividad, resuelve destinatarios con un `ComisionConsultaPort` propio hacia
+Identidad (nuevo — ningún puerto existente expone `email`) y envía por `CanalEnvioPort`
+(`SmtpCanalEnvio` inicial). Cuatro decisiones de producto/técnicas confirmadas con Víctor:
+(1) solo el cierre manual del Docente dispara el email de cierre, no el vencimiento natural del
+período; (2) destinatarios acotados a las Comisiones a las que la actividad está restringida,
+no toda la Materia; (3) canal de envío en este entorno: SMTP real de prueba (Mailtrap/Mailhog
+local); (4) un fallo de envío no bloquea la operación de dominio — se loguea y se continúa.
+Matriz de trazabilidad: RF-14 pasa de Planificado a Especificado.
+
+**Próximo paso:** escribir las specs US-IEDD de la Iteración 1 (`US-5.1.1` infraestructura,
+`US-5.1.2` notificación de apertura, `US-5.1.3` notificación de cierre —
+`docs/plans/inc5/inc5-candidatas.md`).
+**Baseline abierta:** ninguna — `BL-008` cerrada, Incremento 5 en curso sin baseline propia
+todavía (se abre al cerrarlo).
 **Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.2`).
 
 ---

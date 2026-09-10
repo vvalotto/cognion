@@ -153,7 +153,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
 | RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1, US-3.2.2, US-3.2.3 (backend); US-3.4.7 (frontend) | Validado |
-| RF-14 | Notificaciones | 5 | — | Planificado |
+| RF-14 | Notificaciones | 5 | US-5.0.1 (modelado) | Especificado |
 | RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend) | Validado |
 | RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.1, US-4.2.2 (backend, cerradas); US-4.2.5 (frontend, cerrada) | Validado |
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |

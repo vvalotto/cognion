@@ -1,11 +1,11 @@
 # Incremento 5 — Notificaciones — US candidatas
 
-> Estado documental: **Iteración 0 — Modelado, borrador completo pendiente de aprobación
-> explícita.** `US-5.0.1` (modelo de dominio, Issue
-> [#304](https://github.com/vvalotto/cognion/issues/304),
-> `docs/design/domain/BC-notificaciones-modelo.md`) — hot spots de producto ya resueltos con
-> Víctor (2026-09-10, ver §6 del modelo), falta el comentario de aprobación en el Issue.
-> Milestone [`Incremento 5 — Notificaciones`](https://github.com/vvalotto/cognion/milestone/7).
+> Estado documental: **Iteración 0 — Modelado cerrada (2026-09-10).** `US-5.0.1` (modelo de
+> dominio, Issue [#304](https://github.com/vvalotto/cognion/issues/304),
+> `docs/design/domain/BC-notificaciones-modelo.md`) aprobada por Víctor. Milestone
+> [`Incremento 5 — Notificaciones`](https://github.com/vvalotto/cognion/milestone/7).
+> Esta tabla ya puede usarse como base para elaborar las US-IEDD formales de la Iteración 1
+> (`WORKFLOW-DESARROLLO.md` §3, paso 1).
 >
 > Fuente: `docs/rf/PLAN_v1.md` §Incremento 5, `docs/rf/RF_v1.md` (RF-14), `docs/rf/ARQ_v1.md`
 > (Notificaciones = Generic Subdomain, Event-driven), `ADR-006` (integración directa Actividad
@@ -49,6 +49,8 @@ explícitamente por Víctor en el comentario que cierra el Issue. No genera spec
 
 Al cerrar la Iteración 0: actualizar `docs/traceability/matrix.md` — RF-14 pasa de
 *Planificado* a *Especificado*.
+
+~~US-5.0.1~~ Cerrada 2026-09-10, Issue #304.
 
 ---
 
