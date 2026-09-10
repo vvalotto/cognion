@@ -20,9 +20,7 @@ class TestSmtpCanalEnvio:
             return_value=smtp_mock,
         ) as smtp_class:
             canal = SmtpCanalEnvio()
-            await canal.enviar(
-                "estudiante@fiuner.edu.ar", "Asunto de prueba", "Cuerpo de prueba"
-            )
+            await canal.enviar("estudiante@fiuner.edu.ar", "Asunto de prueba", "Cuerpo de prueba")
 
         smtp_class.assert_called_once()
         smtp_mock.send_message.assert_called_once()

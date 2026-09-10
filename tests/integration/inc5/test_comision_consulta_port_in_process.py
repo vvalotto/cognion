@@ -62,9 +62,7 @@ class TestComisionConsultaPortInProcess:
         )
         await usuario_repo.guardar(admin)
         materia_id = uuid.uuid4()
-        comisiones = [
-            Comision.crear(materia_id, f"horario-{i}", admin.id) for i in range(3)
-        ]
+        comisiones = [Comision.crear(materia_id, f"horario-{i}", admin.id) for i in range(3)]
         for comision in comisiones:
             await comision_repo.guardar(comision)
         comision_inactiva = Comision.crear(materia_id, "horario-inactiva", admin.id)
