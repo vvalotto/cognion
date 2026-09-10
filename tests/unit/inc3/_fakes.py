@@ -148,6 +148,7 @@ class FakeNotificacionPort(NotificacionPort):
         self,
         actividad_id: UUID,
         materia_id: UUID,
+        materia_nombre: str,
         titulo: str,
         comisiones_ids: list[UUID],
     ) -> None:
@@ -156,6 +157,7 @@ class FakeNotificacionPort(NotificacionPort):
             {
                 "actividad_id": actividad_id,
                 "materia_id": materia_id,
+                "materia_nombre": materia_nombre,
                 "titulo": titulo,
                 "comisiones_ids": comisiones_ids,
             }
