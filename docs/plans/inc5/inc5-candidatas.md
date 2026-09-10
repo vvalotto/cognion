@@ -56,14 +56,18 @@ Al cerrar la Iteración 0: actualizar `docs/traceability/matrix.md` — RF-14 pa
 
 ## Iteración 1 — RF-14: email de apertura/cierre
 
-Pendiente de definir en detalle una vez cerrada la Iteración 0 — depende de las decisiones de
-los hot spots de arriba. Candidatas anticipadas (a confirmar contra el modelo aprobado):
+**Especificada 2026-09-10** — specs completas en `docs/specs/inc5/`, Issues creados en el
+Milestone [Incremento 5](https://github.com/vvalotto/cognion/milestone/7).
 
-| US | Descripción tentativa |
-|---|---|
-| US-5.1.1 | Infraestructura del BC Notificaciones (entidad `Notificacion`, adapter de envío de email según lo decidido en Iteración 0) |
-| US-5.1.2 | Envío de notificación al abrir una Actividad Evaluativa de período abierto |
-| US-5.1.3 | Envío de notificación al cerrar una Actividad Evaluativa de período abierto |
+| US | Descripción | Spec | Issue |
+|---|---|---|---|
+| US-5.1.1 | Infraestructura del BC Notificaciones — `CanalEnvioPort`/`SmtpCanalEnvio` (SMTP local de prueba), `ComisionConsultaPort` propio de Notificaciones (con `email`, adapter in-process hacia un método nuevo de Identidad), contrato de `NotificacionPort` sin cablear todavía | `docs/specs/inc5/US-5.1.1.md` | [#307](https://github.com/vvalotto/cognion/issues/307) |
+| US-5.1.2 | Envío de notificación al crear una Actividad Evaluativa de período abierto — cablea `NotificacionPort` en `CrearActividadPeriodoAbiertoUseCase` | `docs/specs/inc5/US-5.1.2.md` | [#308](https://github.com/vvalotto/cognion/issues/308) |
+| US-5.1.3 | Envío de notificación al cerrar manualmente una Actividad Evaluativa de período abierto — cablea `NotificacionPort` en `CerrarActividadUseCase`; el vencimiento natural del período no dispara email | `docs/specs/inc5/US-5.1.3.md` | [#309](https://github.com/vvalotto/cognion/issues/309) |
+
+Orden de dependencia: `US-5.1.1` → `US-5.1.2` → `US-5.1.3` (secuencial, cada una construye
+sobre la anterior — no hay paralelismo posible dentro de esta iteración).
 
 **Hito del incremento:** el ciclo de la actividad de período abierto queda completo, incluida
-la comunicación automática al estudiante.
+la comunicación automática al estudiante. `US-5.1.3` cierra completa la Iteración 1 y el
+Incremento 5.
