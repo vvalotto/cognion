@@ -19,14 +19,19 @@ from src.notificaciones.frameworks.adapters.comision_consulta_port_in_process im
 )
 from src.notificaciones.frameworks.adapters.smtp_canal_envio import SmtpCanalEnvio
 from src.notificaciones.use_cases.notificar_apertura import NotificarAperturaUseCase
+from src.notificaciones.use_cases.notificar_cierre import NotificarCierreUseCase
 
 
 class NotificacionPortInProcess(NotificacionPort):
     """Implementa `NotificacionPort` invocando los Use Case de Notificaciones in-process."""
 
     def __init__(self, session: AsyncSession) -> None:
-        """Arma internamente `NotificarAperturaUseCase` con la sesión compartida del request."""
+        """Arma internamente los Use Case de Notificaciones con la sesión compartida del request."""
         self._notificar_apertura_use_case = NotificarAperturaUseCase(
+            ComisionConsultaPortInProcess(session),
+            SmtpCanalEnvio(),
+        )
+        self._notificar_cierre_use_case = NotificarCierreUseCase(
             ComisionConsultaPortInProcess(session),
             SmtpCanalEnvio(),
         )
@@ -52,11 +57,19 @@ class NotificacionPortInProcess(NotificacionPort):
             comisiones_ids,
         )
 
-    async def notificar_cierre(  # pylint: disable=unused-argument
+    async def notificar_cierre(
         self,
         actividad_id: UUID,
         materia_id: UUID,
+        materia_nombre: str,
         titulo: str,
         comisiones_ids: list[UUID],
     ) -> None:
-        """No-op en esta US — cableado real de la notificación de cierre en `US-5.1.3`."""
+        """Delega en `NotificarCierreUseCase` — ver ahí el manejo de fallos de envío."""
+        await self._notificar_cierre_use_case.execute(
+            actividad_id,
+            materia_id,
+            materia_nombre,
+            titulo,
+            comisiones_ids,
+        )

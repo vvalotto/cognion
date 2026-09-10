@@ -5,10 +5,10 @@ BC, Actividad Evaluativa es quien lo posee e invoca, no quien lo consulta. Comun
 BCs solo por puertos definidos en `entities/ports/` (`CLAUDE.md`) — evita que Actividad
 Evaluativa importe directamente `src/notificaciones/`.
 
-Contrato declarado en esta US, sin implementación cableada todavía: ningún adapter lo
-implementa y ningún Use Case lo invoca hasta `US-5.1.2` (`NotificacionPortInProcess`, único
-punto de Actividad Evaluativa que importará `src.notificaciones`,
-`BC-notificaciones-modelo.md` §5).
+Contrato declarado en `US-5.1.1`. Cableado completo desde `US-5.1.3`: `notificar_apertura`
+(`US-5.1.2`) y `notificar_cierre` (`US-5.1.3`), ambos implementados por
+`NotificacionPortInProcess` — único punto de Actividad Evaluativa que importa
+`src.notificaciones` (`BC-notificaciones-modelo.md` §5).
 """
 
 from __future__ import annotations
@@ -50,10 +50,16 @@ class NotificacionPort(ABC):
         self,
         actividad_id: UUID,
         materia_id: UUID,
+        materia_nombre: str,
         titulo: str,
         comisiones_ids: list[UUID],
     ) -> None:
         """Notifica el cierre manual de una actividad a sus destinatarios.
+
+        `materia_nombre` viaja aparte de `materia_id` por el mismo motivo que en
+        `notificar_apertura` (`US-5.1.2`): Notificaciones no tiene su propio
+        `MateriaConsultaPort`, así que quien invoca (`CerrarActividadUseCase`, ya con
+        `MateriaConsultaPort` inyectado) lo resuelve y lo pasa directo (`US-5.1.3`).
 
         Se invoca al final de `CerrarActividadUseCase.execute()`, después de persistir
         `ActividadEvaluativaCerrada` — solo ante cierre manual, nunca ante el vencimiento
