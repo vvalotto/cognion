@@ -39,7 +39,11 @@ def _controller(event_store: FakeEventStore | None = None) -> ActividadesControl
         ),
         ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
         CerrarActividadUseCase(
-            event_store, FakeEvaluacionActivaQueryPort(), FinalizarEvaluacionUseCase(event_store)
+            event_store,
+            FakeEvaluacionActivaQueryPort(),
+            FinalizarEvaluacionUseCase(event_store),
+            materia_consulta,
+            FakeNotificacionPort(),
         ),
         ModificarTituloActividadUseCase(event_store),
     )
@@ -62,6 +66,8 @@ class TestActividadesController:
                 event_store,
                 FakeEvaluacionActivaQueryPort(),
                 FinalizarEvaluacionUseCase(event_store),
+                materia_consulta,
+                FakeNotificacionPort(),
             ),
             ModificarTituloActividadUseCase(event_store),
         )

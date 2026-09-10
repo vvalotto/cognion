@@ -109,7 +109,11 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
         ),
         ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query),
         CerrarActividadUseCase(
-            event_store, evaluacion_activa_query, FinalizarEvaluacionUseCase(event_store)
+            event_store,
+            evaluacion_activa_query,
+            FinalizarEvaluacionUseCase(event_store),
+            materia_consulta,
+            notificacion,
         ),
         ModificarTituloActividadUseCase(event_store),
     )

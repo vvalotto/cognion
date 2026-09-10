@@ -1,7 +1,7 @@
-"""Tests unitarios de `NotificacionPortInProcess` (US-5.1.2).
+"""Tests unitarios de `NotificacionPortInProcess` (US-5.1.2, US-5.1.3).
 
-Reemplaza `_notificar_apertura_use_case` por un doble en memoria después de construir el
-adapter — evita tocar la base de datos real (mismo criterio que
+Reemplaza `_notificar_apertura_use_case`/`_notificar_cierre_use_case` por dobles en memoria
+después de construir el adapter — evita tocar la base de datos real (mismo criterio que
 `tests/unit/inc5/test_comision_consulta_port_in_process.py` para adapters in-process que
 envuelven dependencias con sesión real).
 """
@@ -15,7 +15,7 @@ from src.actividad_evaluativa.frameworks.adapters.notificacion_port_in_process i
 )
 
 
-class _FakeNotificarAperturaUseCase:
+class _FakeNotificarUseCase:
     def __init__(self) -> None:
         self.llamadas: list[tuple] = []
 
@@ -23,16 +23,20 @@ class _FakeNotificarAperturaUseCase:
         self.llamadas.append(args)
 
 
-def _construir_adapter() -> tuple[NotificacionPortInProcess, _FakeNotificarAperturaUseCase]:
+def _construir_adapter() -> (
+    tuple[NotificacionPortInProcess, _FakeNotificarUseCase, _FakeNotificarUseCase]
+):
     adapter = NotificacionPortInProcess(MagicMock())
-    fake = _FakeNotificarAperturaUseCase()
-    adapter._notificar_apertura_use_case = fake  # type: ignore[attr-defined]
-    return adapter, fake
+    fake_apertura = _FakeNotificarUseCase()
+    fake_cierre = _FakeNotificarUseCase()
+    adapter._notificar_apertura_use_case = fake_apertura  # type: ignore[attr-defined]
+    adapter._notificar_cierre_use_case = fake_cierre  # type: ignore[attr-defined]
+    return adapter, fake_apertura, fake_cierre
 
 
 class TestNotificacionPortInProcess:
     async def test_notificar_apertura_delega_en_el_use_case_de_notificaciones(self):
-        adapter, fake = _construir_adapter()
+        adapter, fake_apertura, _fake_cierre = _construir_adapter()
         actividad_id, materia_id = uuid4(), uuid4()
         apertura = datetime.now(UTC)
         cierre = apertura + timedelta(days=7)
@@ -48,7 +52,7 @@ class TestNotificacionPortInProcess:
             comisiones_ids,
         )
 
-        assert fake.llamadas == [
+        assert fake_apertura.llamadas == [
             (
                 actividad_id,
                 materia_id,
@@ -60,9 +64,25 @@ class TestNotificacionPortInProcess:
             )
         ]
 
-    async def test_notificar_cierre_no_hace_nada_todavia(self):
-        adapter, _fake = _construir_adapter()
+    async def test_notificar_cierre_delega_en_el_use_case_de_notificaciones(self):
+        adapter, _fake_apertura, fake_cierre = _construir_adapter()
+        actividad_id, materia_id = uuid4(), uuid4()
+        comisiones_ids = [uuid4()]
 
-        resultado = await adapter.notificar_cierre(uuid4(), uuid4(), "Actividad", [])
+        await adapter.notificar_cierre(
+            actividad_id,
+            materia_id,
+            "Ingeniería de Software",
+            "Parcial 1",
+            comisiones_ids,
+        )
 
-        assert resultado is None
+        assert fake_cierre.llamadas == [
+            (
+                actividad_id,
+                materia_id,
+                "Ingeniería de Software",
+                "Parcial 1",
+                comisiones_ids,
+            )
+        ]

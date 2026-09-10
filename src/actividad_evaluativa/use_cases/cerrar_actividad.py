@@ -16,6 +16,8 @@ from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
 )
+from src.actividad_evaluativa.entities.ports.materia_consulta_port import MateriaConsultaPort
+from src.actividad_evaluativa.entities.ports.notificacion_port import NotificacionPort
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 
 AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
@@ -29,11 +31,19 @@ class CerrarActividadUseCase:
         event_store: EventStorePort,
         evaluacion_activa_query: EvaluacionActivaQueryPort,
         finalizar_evaluacion: FinalizarEvaluacionUseCase,
+        materia_consulta: MateriaConsultaPort,
+        notificacion: NotificacionPort,
     ) -> None:
-        """Recibe el event store, el read model de evaluaciones activas y el Use Case en cascada."""
+        """Recibe el event store, el read model, el Use Case en cascada y los puertos nuevos.
+
+        `materia_consulta` y `notificacion` se agregan en `US-5.1.3` para resolver el nombre
+        de la materia y disparar el email de cierre, respectivamente.
+        """
         self._event_store = event_store
         self._evaluacion_activa_query = evaluacion_activa_query
         self._finalizar_evaluacion = finalizar_evaluacion
+        self._materia_consulta = materia_consulta
+        self._notificacion = notificacion
 
     async def execute(self, actividad_id: UUID) -> ActividadEvaluativaPeriodoAbierto:
         """Cierra la actividad y finaliza de inmediato sus evaluaciones activas.
@@ -42,7 +52,9 @@ class CerrarActividadUseCase:
         (INV-AE-04b) si ya estaba cerrada manualmente. La cascada sobre cada `Evaluacion`
         `EnCurso`/`Suspendida` reutiliza `FinalizarEvaluacionUseCase` con `actor="sistema"` —
         mismo efecto que la Regla 2 del `VerificadorDeVencimientos`, disparado de inmediato en
-        vez de esperar la próxima pasada del job periódico.
+        vez de esperar la próxima pasada del job periódico. Al final, después de confirmar la
+        persistencia del evento, dispara `NotificacionPort.notificar_cierre(...)` (`US-5.1.3`,
+        RF-14) — un fallo de envío no revierte ni afecta la respuesta de esta operación.
         """
         eventos = await self._event_store.load(AGGREGATE_TYPE, actividad_id)
         if not eventos:
@@ -68,5 +80,15 @@ class CerrarActividadUseCase:
         for item in resumen:
             if item.actividad_id == actividad_id:
                 await self._finalizar_evaluacion.execute(item.evaluacion_id, actor="sistema")
+
+        materia = await self._materia_consulta.obtener(actividad.materia_id)
+        materia_nombre = materia.nombre if materia else ""
+        await self._notificacion.notificar_cierre(
+            actividad.id,
+            actividad.materia_id,
+            materia_nombre,
+            actividad.titulo,
+            list(actividad.comisiones_ids),
+        )
 
         return actividad
