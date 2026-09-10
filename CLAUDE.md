@@ -778,12 +778,37 @@ todos los pasos. Sin Issue de GitHub ni spec — track informal salvo que algún
 requiera tocar `src/` con una invariante de dominio nueva (ninguno lo requirió hasta ahora,
 los cambios de entidad fueron mutaciones simples ya cubiertas por el patrón existente).
 
-**Próximo paso:** continuar la prueba manual E2E desde donde la dejó Víctor (bitácora sigue
-abierta, "A partir de acá, un bloque por paso narrado"). Sin US-IEDD activa.
-**Baseline abierta:** ninguna — `BL-007` cerrada. La prueba de estabilización en curso no abre
-baseline propia (no es un Incremento de `PLAN_v1.md`); se decidirá al cerrarla si amerita una
-baseline técnica (mismo criterio que `BL-005`) o si sus commits se consolidan en la próxima.
-**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.1`).
+**Prueba de estabilización completada 2026-09-09/10** — portales Docente y Estudiante,
+continuación del Paso 9 del Administrador. Tres PRs, uno por portal, todos mergeados a
+`develop` con pre-push gate 0 CRITICAL: **PR #298** (Administrador, Pasos 1-9, detalle arriba),
+**PR #299** (Docente, Pasos 1-12,
+[`bitacora-docente.md`](../tests/uat/datos-reales/bitacora-docente.md)): carga masiva de las
+71 preguntas reales de Ingeniería de Software, Actividad Evaluativa restringible a Comisión y
+a unidad temática/tema concretos, listados en tabla con métricas, formularios más elegantes.
+**PR #300** (Estudiante, Pasos 1-5,
+[`bitacora-estudiante.md`](../tests/uat/datos-reales/bitacora-estudiante.md)): carga de los 17
+estudiantes reales, reintento de respuestas habilitado con feedback de acierto/error
+(`IntentosAgotados`, 422), "Finalizar evaluación" como acción independiente de responder la
+última pregunta, y elicitación de `RF-20` a `RF-23` (informes de Analytics para el Docente —
+desempeño por comisión, evolución temporal, ranking de preguntas falladas, completitud por
+actividad), agregados a `docs/rf/RF_v1.md` y a la matriz de trazabilidad como Planificado, sin
+incremento asignado (decisión explícita de Víctor: no priorizar todavía). Ningún hallazgo de
+las tres bitácoras requirió invariante de dominio nueva.
+
+**`BL-008` — Estabilización de Portales cerrada 2026-09-10**
+(`.cm/baselines/BL-008-estabilizacion-portales.md`): 910/910 tests backend, 379/379 frontend,
+`designreviewer` 0 CRITICAL (161 advertencias), `architectanalyst` 6 críticos (mismo "Zone of
+Pain" aceptado desde `US-ADJ-13`/`19`, sin módulo nuevo desde `BL-006`). Sin RF que pase a
+Validado — todos los cambios son refinamientos de UI/UX y correcciones de bugs sobre RF ya
+`Validado` (`RF-01`/`02`/`03`), o backlog nuevo sin implementar (`RF-20` a `23`, quedan
+Planificados). Merge `develop → main` y tag `v0.6.2` (PATCH, mismo criterio de versionado que
+`BL-005`/`BL-007`) ejecutados el mismo día, PR de cierre
+[#302](https://github.com/vvalotto/cognion/pull/302).
+
+**Próximo paso:** sin US-IEDD activa. Pendiente de decisión: a qué incremento asignar `RF-20`
+a `RF-23` (Incremento 5 de `PLAN_v1.md` o un nuevo `-ADJ`).
+**Baseline abierta:** ninguna — `BL-008` cerrada.
+**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.2`).
 
 ---
 
