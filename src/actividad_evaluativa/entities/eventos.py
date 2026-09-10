@@ -7,6 +7,9 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.entities.evaluacion import PreguntaAsignada
 
 
@@ -36,6 +39,27 @@ class ActividadEvaluativaCreada:
     """`None` = cualquier tema del banco de la Materia (ver
     `ActividadEvaluativaPeriodoAbierto.tema`)."""
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_actividad(cls, actividad: ActividadEvaluativaPeriodoAbierto) -> ActividadEvaluativaCreada:
+        """Construye el evento a partir de una `ActividadEvaluativaPeriodoAbierto` recién creada.
+
+        Mueve la construcción fuera de `CrearActividadPeriodoAbiertoUseCase` — ese Use Case no
+        necesita conocer los campos del evento, solo delegar (mismo criterio ya aplicado en
+        `Evaluacion.armar_preguntas_asignadas`, `US-3.1.3`, para evitar CBO excesivo).
+        """
+        return cls(
+            actividad_id=actividad.id,
+            materia_id=actividad.materia_id,
+            fecha_apertura=actividad.fecha_apertura,
+            fecha_cierre=actividad.fecha_cierre,
+            cantidad_preguntas=actividad.cantidad_preguntas,
+            cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
+            titulo=actividad.titulo,
+            comisiones_ids=actividad.comisiones_ids,
+            unidad_tematica=actividad.unidad_tematica,
+            tema=actividad.tema,
+        )
 
 
 @dataclass(frozen=True)

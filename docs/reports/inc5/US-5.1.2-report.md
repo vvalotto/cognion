@@ -44,7 +44,7 @@
 
 | Métrica | Valor | Umbral | Estado |
 |---------|-------|--------|--------|
-| Pylint (5 archivos de la US) | 9.19/10 | ≥ 8.0 | ✅ |
+| Pylint (5 archivos de la US) | 9.27/10 | ≥ 8.0 | ✅ (post fix de CBO, ver más abajo) |
 | Complejidad Ciclomática (máx/función) | 5 | ≤ 10 | ✅ |
 | Índice de Mantenibilidad (mín) | 74.20 | > 20 | ✅ |
 | Cobertura de Tests (código sujeto al gate) | 100% | ≥ 95% | ✅ |
@@ -168,6 +168,19 @@ de timing ajustado, confirmado ajeno a esta US al pasar en aislamiento) — sin 
 **Todos los criterios cumplidos:** ✅
 
 ---
+
+## CRITICAL de CBO detectado en pre-push (post-cierre de Fase 7)
+
+`DesignReviewer` (pre-push gate) detectó `CBOAnalyzer` CRITICAL sobre
+`CrearActividadPeriodoAbiertoUseCase` (CBO=11/10) — mismo patrón recurrente ya visto en
+`US-2.1.2`/`2.1.5`/`2.1.6`/`3.1.3`/`3.2.1` (CBO no se mide en Fase 7, recién en pre-push).
+Corregido con el mismo criterio que `US-3.1.3`: se movió la construcción de
+`ActividadEvaluativaCreada` a `ActividadEvaluativaCreada.desde_actividad(actividad)`
+(classmethod), y el segundo elemento de la tupla de retorno de `execute()` (y de
+`ActividadesController.crear_actividad`) se tipó como `object` — mismo criterio ya aplicado en
+los controllers de `US-2.1.5`/`2.1.6`. El router ya descartaba ese valor (`_evento`), sin
+impacto en el comportamiento observable. CBO verificado: 11 → 10. Pylint sube de 9.19/10 a
+9.27/10. 746/746 tests en verde tras el fix, mypy sin errores.
 
 ## Próximos Pasos
 

@@ -38,8 +38,12 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     abierto por `BC-notificaciones-modelo.md` §6, resuelto sin ensanchar ningún puerto de
     Notificaciones)
   - 746/746 tests unit+integration, 207/208 BDD (1 flake preexistente ajeno a esta US),
-    quality gates APROBADO (pylint 9.19/10, CC máx 5, MI mín 74.20, coverage 100% en el
+    quality gates APROBADO (pylint 9.27/10, CC máx 5, MI mín 74.20, coverage 100% en el
     código sujeto al gate)
+  - Fix de CBO en pre-push (`CrearActividadPeriodoAbiertoUseCase`, 11→10, mismo patrón
+    recurrente ya visto en incrementos anteriores): construcción de `ActividadEvaluativaCreada`
+    movida a un classmethod `desde_actividad()`, segundo elemento de la tupla de retorno
+    tipado como `object`
 
 ## [0.6.2] - 2026-09-10
 

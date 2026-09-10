@@ -8,7 +8,6 @@ from uuid import UUID
 from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
     ActividadEvaluativaPeriodoAbierto,
 )
-from src.actividad_evaluativa.entities.eventos import ActividadEvaluativaCreada
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
@@ -48,8 +47,12 @@ class ActividadesController:
         comisiones_ids: frozenset[UUID] | None = None,
         unidad_tematica: str | None = None,
         tema: str | None = None,
-    ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
-        """Delega la creación de la actividad en el caso de uso correspondiente."""
+    ) -> tuple[ActividadEvaluativaPeriodoAbierto, object]:
+        """Delega la creación de la actividad en el caso de uso correspondiente.
+
+        El segundo elemento se tipa como `object` — mismo criterio de `CrearActividadPeriodoAbiertoUseCase`
+        para no acumular CBO; el router descarta ese valor.
+        """
         return await self._crear_actividad.execute(
             materia_id,
             fecha_apertura,
