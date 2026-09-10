@@ -1,0 +1,759 @@
+[tool.designreviewer] clave desconocida ignorada: 'paths'
+╭──────────────────────────────────────────────────────────────────────────────╮
+│  🔍  DesignReviewer - Análisis de Calidad de Diseño                          │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Archivos analizados:   227  
+Analyzers ejecutados:  14   
+Tiempo de ejecución:   2.19s
+Resultados totales:    161  
+
+──────────── 📄  adapters/actividad_query_repository.py  (2 issues) ────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer          ┃ Clase / Módulo                   ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LCOMAnalyzer      │ SQLAlchemyActividadQueryReposit… │  │   2/1    │    1.5h │
+│ LongMethodAnalyz… │ SQLAlchemyActividadQueryReposit… │  │  25/20   │    0.2h │
+└───────────────────┴──────────────────────────────────┴──┴──────────┴─────────┘
+
+─────── 📄  adapters/estudiante_consulta_port_in_process.py  (1 issues) ────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo      ┃ Proble… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ obtener_comision_id │ Ley de… │    2/1     │     0.5h │
+└──────────────────────┴─────────────────────┴─────────┴────────────┴──────────┘
+
+── 📄  adapters/evaluacion_desempeno_consulta_port_in_process.py  (5 issues) ───
+
+                           Advertencias de Diseño (5)                           
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━┳━━━━━┓
+┃ Analyzer        ┃ Clase / Módulo                               ┃┃ Val… ┃ Es… ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━╇━━━━━┩
+│ LCOMAnalyzer    │ EvaluacionDesempenoConsultaPortInProcess     ││ 2/1  │ 1.… │
+│ LawOfDemeterAn… │ _materia_por_actividad                       ││ 2/1  │ 0.… │
+│ LongMethodAnal… │ EvaluacionDesempenoConsultaPortInProcess     ││ 25/… │ 0.… │
+│ LongMethodAnal… │ EvaluacionDesempenoConsultaPortInProcess     ││ 24/… │ 0.… │
+│ LongMethodAnal… │ evaluacion_desempeno_consulta_port_in_proce… ││ 29/… │ 0.… │
+└─────────────────┴──────────────────────────────────────────────┴┴──────┴─────┘
+
+────── 📄  adapters/evaluacion_estudiante_query_repository.py  (1 issues) ──────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo         ┃ Pro… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ existentes_finalizadas │ Ley… │    2/1     │     0.5h │
+└──────────────────────┴────────────────────────┴──────┴────────────┴──────────┘
+
+──────── 📄  adapters/pregunta_consulta_port_in_process.py  (3 issues) ─────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━┳━━━┓
+┃ Analyzer             ┃ Clase / Módulo                             ┃┃ Va… ┃ … ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━╇━━━┩
+│ DataClumpsAnalyzer   │ pregunta_consulta_port_in_process.py       ││ 2/2 │ … │
+│ LongMethodAnalyzer   │ PreguntaConsultaPortInProcess              ││ 25… │ … │
+│ PrimitiveObsessionA… │ PreguntaConsultaPortInProcess.evaluar_cor… ││ 1/0 │ … │
+└──────────────────────┴────────────────────────────────────────────┴┴─────┴───┘
+
+──── 📄  adapters/pregunta_metadato_consulta_port_in_process.py  (1 issues) ────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo    ┃ Problema  ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ obtener_metadatos │ Ley de D… │    2/1     │     0.5h │
+└──────────────────────┴───────────────────┴───────────┴────────────┴──────────┘
+
+────────────────── 📄  api/actividades_router.py  (4 issues) ───────────────────
+
+                           Advertencias de Diseño (4)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo        ┃ Proble… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ DataClumpsAnalyzer │ actividades_router.py │ Data C… │    2/2     │     2.0h │
+│ LongMethodAnalyzer │ actividades_router.py │ Método… │   23/20    │     0.1h │
+│ LongMethodAnalyzer │ actividades_router.py │ Método… │   25/20    │     0.2h │
+│ LongMethodAnalyzer │ actividades_router.py │ Método… │   22/20    │     0.1h │
+└────────────────────┴───────────────────────┴─────────┴────────────┴──────────┘
+
+─────────────────── 📄  api/analytics_router.py  (6 issues) ────────────────────
+
+                           Advertencias de Diseño (6)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo      ┃ Proble… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ _a_response         │ Ley de… │    2/1     │     0.5h │
+│ LawOfDemeterAnalyzer │ _a_response         │ Ley de… │    2/1     │     0.5h │
+│ LawOfDemeterAnalyzer │ _a_response         │ Ley de… │    2/1     │     0.5h │
+│ LawOfDemeterAnalyzer │ _a_response         │ Ley de… │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ analytics_router.py │ Método… │   21/20    │     0.1h │
+│ LongMethodAnalyzer   │ analytics_router.py │ Método… │   26/20    │     0.3h │
+└──────────────────────┴─────────────────────┴─────────┴────────────┴──────────┘
+
+────────────────────── 📄  api/auth_router.py  (1 issues) ──────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo ┃ Problema       ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ auth_router.py │ Método 'login… │   21/20    │     0.1h │
+└────────────────────┴────────────────┴────────────────┴────────────┴──────────┘
+
+───────────────────── 📄  api/bancos_router.py  (2 issues) ─────────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo   ┃ Prob… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer        │ bancos_router.py │ Méto… │   62/20    │     2.1h │
+│ LongParameterListAnalyzer │ bancos_router.py │ Func… │    8/5     │     1.5h │
+└───────────────────────────┴──────────────────┴───────┴────────────┴──────────┘
+
+─────────────────── 📄  api/comisiones_router.py  (4 issues) ───────────────────
+
+                           Advertencias de Diseño (4)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo       ┃ Problema ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ DataClumpsAnalyzer │ comisiones_router.py │ Data Cl… │    2/2     │     2.0h │
+│ LongMethodAnalyzer │ comisiones_router.py │ Método … │   22/20    │     0.1h │
+│ LongMethodAnalyzer │ comisiones_router.py │ Método … │   25/20    │     0.2h │
+│ LongMethodAnalyzer │ comisiones_router.py │ Método … │   23/20    │     0.1h │
+└────────────────────┴──────────────────────┴──────────┴────────────┴──────────┘
+
+──────────────────── 📄  api/cuentas_router.py  (5 issues) ─────────────────────
+
+                           Advertencias de Diseño (5)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo      ┃ P… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ DataClumpsAnalyzer        │ cuentas_router.py   │ D… │    2/2     │     2.0h │
+│ LawOfDemeterAnalyzer      │ _a_detalle_response │ L… │    2/1     │     0.5h │
+│ LongMethodAnalyzer        │ cuentas_router.py   │ M… │   33/20    │     0.7h │
+│ LongMethodAnalyzer        │ cuentas_router.py   │ M… │   22/20    │     0.1h │
+│ LongParameterListAnalyzer │ cuentas_router.py   │ F… │    7/5     │     1.0h │
+└───────────────────────────┴─────────────────────┴────┴────────────┴──────────┘
+
+────────────────── 📄  api/evaluaciones_router.py  (6 issues) ──────────────────
+
+                           Advertencias de Diseño (6)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo         ┃ Pro… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ DataClumpsAnalyzer   │ evaluaciones_router.py │ Dat… │    3/2     │     2.0h │
+│ DataClumpsAnalyzer   │ evaluaciones_router.py │ Dat… │    2/2     │     2.0h │
+│ LawOfDemeterAnalyzer │ _a_response            │ Ley… │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ evaluaciones_router.py │ Mét… │   44/20    │     1.2h │
+│ LongMethodAnalyzer   │ evaluaciones_router.py │ Mét… │   22/20    │     0.1h │
+│ LongMethodAnalyzer   │ evaluaciones_router.py │ Mét… │   32/20    │     0.6h │
+└──────────────────────┴────────────────────────┴──────┴────────────┴──────────┘
+
+────────────────── 📄  api/invitaciones_router.py  (1 issues) ──────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo         ┃ Probl… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ invitaciones_router.py │ Métod… │   24/20    │     0.2h │
+└────────────────────┴────────────────────────┴────────┴────────────┴──────────┘
+
+────────────── 📄  api/materias_comisiones_router.py  (1 issues) ───────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo                ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnalyzer │ materias_comisiones_router.py │  │   23/20    │    0.1h │
+└────────────────────┴───────────────────────────────┴──┴────────────┴─────────┘
+
+──────────────────── 📄  api/materias_router.py  (1 issues) ────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo     ┃ Problema   ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ materias_router.py │ Método 'l… │   22/20    │     0.1h │
+└────────────────────┴────────────────────┴────────────┴────────────┴──────────┘
+
+───────────────────── 📄  api/perfil_router.py  (1 issues) ─────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo   ┃ Problema     ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ perfil_router.py │ Método 'cam… │   35/20    │     0.8h │
+└────────────────────┴──────────────────┴──────────────┴────────────┴──────────┘
+
+─────────────────── 📄  api/preguntas_router.py  (3 issues) ────────────────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo      ┃ Problema  ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ preguntas_router.py │ Método '… │   38/20    │     0.9h │
+│ LongMethodAnalyzer │ preguntas_router.py │ Método '… │   34/20    │     0.7h │
+│ LongMethodAnalyzer │ preguntas_router.py │ Método '… │   61/20    │     2.0h │
+└────────────────────┴─────────────────────┴───────────┴────────────┴──────────┘
+
+──────────────────── 📄  api/registro_router.py  (2 issues) ────────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo       ┃ Probl… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ registrar_estudiante │ Ley d… │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ registro_router.py   │ Métod… │   33/20    │     0.7h │
+└──────────────────────┴──────────────────────┴────────┴────────────┴──────────┘
+
+──────────────────── 📄  api/revision_router.py  (1 issues) ────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo     ┃ Problema   ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ revision_router.py │ Método '_… │   21/20    │     0.1h │
+└────────────────────┴────────────────────┴────────────┴────────────┴──────────┘
+
+──────────── 📄  controllers/actividades_controller.py  (2 issues) ─────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo        ┃ … ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnalyzer        │ ActividadesController │ … │   24/20    │    0.2h │
+│ LongParameterListAnalyzer │ ActividadesController │ … │    9/5     │    2.0h │
+└───────────────────────────┴───────────────────────┴───┴────────────┴─────────┘
+
+─────────────── 📄  controllers/bancos_controller.py  (1 issues) ───────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo   ┃ Prob… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongParameterListAnalyzer │ BancosController │ Func… │    7/5     │     1.0h │
+└───────────────────────────┴──────────────────┴───────┴────────────┴──────────┘
+
+────────────── 📄  controllers/cuentas_controller.py  (2 issues) ───────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo    ┃ Pro… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongParameterListAnalyzer │ CuentasController │ Fun… │    6/5     │     0.5h │
+│ LongParameterListAnalyzer │ CuentasController │ Fun… │    6/5     │     0.5h │
+└───────────────────────────┴───────────────────┴──────┴────────────┴──────────┘
+
+──────────── 📄  controllers/evaluaciones_controller.py  (1 issues) ────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━┳━━━━━┓
+┃ Analyzer              ┃ Clase / Módulo                         ┃┃ Val… ┃ Es… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━╇━━━━━┩
+│ PrimitiveObsessionAn… │ EvaluacionesController.registrar_resp… ││ 1/0  │ 0.… │
+└───────────────────────┴────────────────────────────────────────┴┴──────┴─────┘
+
+────────────── 📄  controllers/registro_controller.py  (1 issues) ──────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━┳━━━━━┓
+┃ Analyzer               ┃ Clase / Módulo                      ┃┃ Val/U… ┃ Es… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━╇━━━━━┩
+│ PrimitiveObsessionAna… │ RegistroController.registrar_estud… ││  4/3   │ 1.… │
+└────────────────────────┴─────────────────────────────────────┴┴────────┴─────┘
+
+────────────── 📄  controllers/usuarios_controller.py  (1 issues) ──────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer                ┃ Clase / Módulo                 ┃┃ Val/Umb… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━━━╇━━━━━━━┩
+│ PrimitiveObsessionAnal… │ UsuariosController.crear_usua… ││   3/3    │  1.0h │
+└─────────────────────────┴────────────────────────────────┴┴──────────┴───────┘
+
+─────── 📄  entities/actividad_evaluativa_periodo_abierto.py  (3 issues) ───────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer               ┃ Clase / Módulo                  ┃┃ Val/Umb… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━━━╇━━━━━━━┩
+│ LongMethodAnalyzer     │ ActividadEvaluativaPeriodoAbie… ││  35/20   │  0.8h │
+│ LongMethodAnalyzer     │ ActividadEvaluativaPeriodoAbie… ││  25/20   │  0.2h │
+│ LongParameterListAnal… │ ActividadEvaluativaPeriodoAbie… ││   9/5    │  2.0h │
+└────────────────────────┴─────────────────────────────────┴┴──────────┴───────┘
+
+───────────────────── 📄  entities/comision.py  (1 issues) ─────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer       ┃ Clase / Módulo ┃ Problema           ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LCOMAnalyzer   │ Comision       │ Clase 'Comision' … │    3/1     │     3.0h │
+└────────────────┴────────────────┴────────────────────┴────────────┴──────────┘
+
+──────────────────── 📄  entities/evaluacion.py  (4 issues) ────────────────────
+
+                           Advertencias de Diseño (4)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo  ┃ Problema    ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ _aplicar_evento │ Ley de Dem… │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ Evaluacion      │ Método 'Ev… │   25/20    │     0.2h │
+│ LongMethodAnalyzer   │ evaluacion.py   │ Método '_a… │   24/20    │     0.2h │
+│ LongMethodAnalyzer   │ evaluacion.py   │ Método '_v… │   21/20    │     0.1h │
+└──────────────────────┴─────────────────┴─────────────┴────────────┴──────────┘
+
+───────────────────── 📄  entities/materia.py  (1 issues) ──────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer       ┃ Clase / Módulo ┃ Problema           ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LCOMAnalyzer   │ Materia        │ Clase 'Materia' t… │    2/1     │     1.5h │
+└────────────────┴────────────────┴────────────────────┴────────────┴──────────┘
+
+──────────────── 📄  entities/metadatos_pregunta.py  (3 issues) ────────────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━┳━━━━━┓
+┃ Analyzer              ┃ Clase / Módulo                         ┃┃ Val… ┃ Es… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━╇━━━━━┩
+│ LCOMAnalyzer          │ MetadatosPregunta                      ││ 2/1  │ 1.… │
+│ LongMethodAnalyzer    │ MetadatosPregunta                      ││ 23/… │ 0.… │
+│ PrimitiveObsessionAn… │ MetadatosPregunta.desde_valores_persi… ││ 5/3  │ 1.… │
+└───────────────────────┴────────────────────────────────────────┴┴──────┴─────┘
+
+───────────────────── 📄  entities/usuario.py  (5 issues) ──────────────────────
+
+                           Advertencias de Diseño (5)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo          ┃  ┃ Val/Umbr… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━╇━━━━━━━━━┩
+│ DataClumpsAnalyzer        │ usuario.py              │  │    2/2    │    2.0h │
+│ LCOMAnalyzer              │ Usuario                 │  │    4/1    │    4.5h │
+│ LongMethodAnalyzer        │ Usuario                 │  │   23/20   │    0.1h │
+│ PrimitiveObsessionAnalyz… │ Usuario.crear           │  │    3/3    │    1.0h │
+│ PrimitiveObsessionAnalyz… │ Usuario.crear_estudian… │  │    3/3    │    1.0h │
+└───────────────────────────┴─────────────────────────┴──┴───────────┴─────────┘
+
+──────────── 📄  event_store/sqlalchemy_event_store.py  (1 issues) ─────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo       ┃ Problema ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ SQLAlchemyEventStore │ Método … │   33/20    │     0.7h │
+└────────────────────┴──────────────────────┴──────────┴────────────┴──────────┘
+
+──────────── 📄  gateways/comision_query_repository.py  (4 issues) ─────────────
+
+                           Advertencias de Diseño (4)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo                  ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnaly… │ listar_comisiones_por_materia   │  │   2/1    │    0.5h │
+│ LawOfDemeterAnaly… │ tiene_comisiones_asignadas      │  │   2/1    │    0.5h │
+│ LawOfDemeterAnaly… │ tiene_comisiones_asignadas      │  │   2/1    │    0.5h │
+│ LongMethodAnalyzer │ SQLAlchemyComisionQueryReposit… │  │  29/20   │    0.5h │
+└────────────────────┴─────────────────────────────────┴──┴──────────┴─────────┘
+
+─────────────── 📄  gateways/comision_repository.py  (3 issues) ────────────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer            ┃ Clase / Módulo               ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ FeatureEnvyAnalyzer │ SQLAlchemyComisionRepository │  │    4/2     │    1.5h │
+│ FeatureEnvyAnalyzer │ SQLAlchemyComisionRepository │  │    5/3     │    1.5h │
+│ LawOfDemeterAnalyz… │ actualizar                   │  │    2/1     │    0.5h │
+└─────────────────────┴──────────────────────────────┴──┴────────────┴─────────┘
+
+───────────── 📄  gateways/cuenta_query_repository.py  (10 issues) ─────────────
+
+                          Advertencias de Diseño (10)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┳━━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer                ┃ Clase / Módulo                ┃ ┃ Val/Umb… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━╇━━━━━━━━━━╇━━━━━━━┩
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LawOfDemeterAnalyzer    │ listar                        │ │   2/1    │  0.5h │
+│ LongMethodAnalyzer      │ SQLAlchemyCuentaQueryReposit… │ │  58/20   │  1.9h │
+│ LongParameterListAnaly… │ SQLAlchemyCuentaQueryReposit… │ │   6/5    │  0.5h │
+└─────────────────────────┴───────────────────────────────┴─┴──────────┴───────┘
+
+────────────── 📄  gateways/invitacion_repository.py  (3 issues) ───────────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo                ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ FeatureEnvyAnalyz… │ SQLAlchemyInvitacionReposito… │  │    3/2     │    1.5h │
+│ FeatureEnvyAnalyz… │ SQLAlchemyInvitacionReposito… │  │    7/0     │    1.5h │
+│ FeatureEnvyAnalyz… │ SQLAlchemyInvitacionReposito… │  │    7/0     │    1.5h │
+└────────────────────┴───────────────────────────────┴──┴────────────┴─────────┘
+
+──────────────── 📄  gateways/materia_repository.py  (2 issues) ────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo              ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ FeatureEnvyAnalyzer  │ SQLAlchemyMateriaRepository │  │    3/2     │    1.5h │
+│ LawOfDemeterAnalyzer │ listar                      │  │    2/1     │    0.5h │
+└──────────────────────┴─────────────────────────────┴──┴────────────┴─────────┘
+
+─────────────── 📄  gateways/pregunta_repository.py  (3 issues) ────────────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer                ┃ Clase / Módulo             ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnalyzer    │ filtrar                    │  │   2/1    │    0.5h │
+│ LongMethodAnalyzer      │ SQLAlchemyPreguntaReposit… │  │  42/20   │    1.1h │
+│ LongParameterListAnaly… │ SQLAlchemyPreguntaReposit… │  │   7/5    │    1.0h │
+└─────────────────────────┴────────────────────────────┴──┴──────────┴─────────┘
+
+──────────────── 📄  gateways/usuario_repository.py  (5 issues) ────────────────
+
+                           Advertencias de Diseño (5)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo              ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ FeatureEnvyAnalyzer  │ SQLAlchemyUsuarioRepository │  │    8/2     │    1.5h │
+│ FeatureEnvyAnalyzer  │ SQLAlchemyUsuarioRepository │  │    5/0     │    1.5h │
+│ FeatureEnvyAnalyzer  │ SQLAlchemyUsuarioRepository │  │    10/1    │    1.5h │
+│ LCOMAnalyzer         │ SQLAlchemyUsuarioRepository │  │    2/1     │    1.5h │
+│ LawOfDemeterAnalyzer │ _perfil_model               │  │    2/1     │    0.5h │
+└──────────────────────┴─────────────────────────────┴──┴────────────┴─────────┘
+
+────────────────── 📄  ports/cuenta_query_port.py  (1 issues) ──────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo  ┃ Probl… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongParameterListAnalyzer │ CuentaQueryPort │ Funci… │    6/5     │     0.5h │
+└───────────────────────────┴─────────────────┴────────┴────────────┴──────────┘
+
+─────────────── 📄  ports/pregunta_consulta_port.py  (2 issues) ────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━┳━━━━━┓
+┃ Analyzer               ┃ Clase / Módulo                      ┃┃ Val/U… ┃ Es… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━╇━━━━━┩
+│ DataClumpsAnalyzer     │ pregunta_consulta_port.py           ││  2/2   │ 2.… │
+│ PrimitiveObsessionAna… │ PreguntaConsultaPort.evaluar_corre… ││  1/0   │ 0.… │
+└────────────────────────┴─────────────────────────────────────┴┴────────┴─────┘
+
+────────────── 📄  ports/pregunta_repository_port.py  (1 issues) ───────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo         ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LongParameterListAnalyzer │ PreguntaRepositoryPort │  │    7/5     │    1.0h │
+└───────────────────────────┴────────────────────────┴──┴────────────┴─────────┘
+
+───────────────── 📄  security/get_current_user.py  (1 issues) ─────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo      ┃ Problema  ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ get_current_user.py │ Método '… │   22/20    │     0.1h │
+└────────────────────┴─────────────────────┴───────────┴────────────┴──────────┘
+
+─────────────────── 📄  security/require_rol.py  (1 issues) ────────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo ┃ Problema       ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ require_rol.py │ Método 'requi… │   22/20    │     0.1h │
+└────────────────────┴────────────────┴────────────────┴────────────┴──────────┘
+
+─────────── 📄  use_cases/asignar_docente_a_comision.py  (1 issues) ────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer          ┃ Clase / Módulo                 ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnalyz… │ AsignarDocenteAComisionUseCase │  │   21/20    │    0.1h │
+└───────────────────┴────────────────────────────────┴──┴────────────┴─────────┘
+
+──────────────── 📄  use_cases/cambiar_password.py  (1 issues) ─────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo         ┃ Probl… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ CambiarPasswordUseCase │ Métod… │   34/20    │     0.7h │
+└────────────────────┴────────────────────────┴────────┴────────────┴──────────┘
+
+───────── 📄  use_cases/cargar_pregunta_opcion_multiple.py  (1 issues) ─────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer         ┃ Clase / Módulo                    ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnaly… │ CargarPreguntaOpcionMultipleUseC… │  │  23/20   │    0.1h │
+└──────────────────┴───────────────────────────────────┴──┴──────────┴─────────┘
+
+───────── 📄  use_cases/cargar_pregunta_verdadero_falso.py  (1 issues) ─────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer         ┃ Clase / Módulo                    ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnaly… │ CargarPreguntaVerdaderoFalsoUseC… │  │  23/20   │    0.1h │
+└──────────────────┴───────────────────────────────────┴──┴──────────┴─────────┘
+
+──────────────── 📄  use_cases/cerrar_actividad.py  (2 issues) ─────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo         ┃ Pro… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ execute                │ Ley… │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ CerrarActividadUseCase │ Mét… │   35/20    │     0.8h │
+└──────────────────────┴────────────────────────┴──────┴────────────┴──────────┘
+
+───────── 📄  use_cases/crear_actividad_periodo_abierto.py  (5 issues) ─────────
+
+                           Advertencias de Diseño (5)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer               ┃ Clase / Módulo                   ┃┃ Val/Um… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━━╇━━━━━━━┩
+│ LawOfDemeterAnalyzer   │ execute                          ││   2/1   │  0.5h │
+│ LawOfDemeterAnalyzer   │ execute                          ││   2/1   │  0.5h │
+│ LawOfDemeterAnalyzer   │ execute                          ││   2/1   │  0.5h │
+│ LongMethodAnalyzer     │ CrearActividadPeriodoAbiertoUse… ││  76/20  │  2.8h │
+│ LongParameterListAnal… │ CrearActividadPeriodoAbiertoUse… ││   9/5   │  2.0h │
+└────────────────────────┴──────────────────────────────────┴┴─────────┴───────┘
+
+────────────────── 📄  use_cases/crear_usuario.py  (2 issues) ──────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer                 ┃ Clase / Módulo            ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnalyzer     │ execute                   │  │   2/1    │    0.5h │
+│ PrimitiveObsessionAnaly… │ CrearUsuarioUseCase.exec… │  │   3/3    │    1.0h │
+└──────────────────────────┴───────────────────────────┴──┴──────────┴─────────┘
+
+───────────────── 📄  use_cases/editar_pregunta.py  (1 issues) ─────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo        ┃ Proble… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ EditarPreguntaUseCase │ Método… │   25/20    │     0.2h │
+└────────────────────┴───────────────────────┴─────────┴────────────┴──────────┘
+
+───────────────── 📄  use_cases/eliminar_cuenta.py  (1 issues) ─────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo        ┃ Proble… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ EliminarCuentaUseCase │ Método… │   27/20    │     0.3h │
+└────────────────────┴───────────────────────┴─────────┴────────────┴──────────┘
+
+──────────────── 📄  use_cases/eliminar_materia.py  (1 issues) ─────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo         ┃ Probl… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ EliminarMateriaUseCase │ Métod… │   23/20    │     0.1h │
+└────────────────────┴────────────────────────┴────────┴────────────┴──────────┘
+
+────────────────── 📄  use_cases/filtrar_banco.py  (2 issues) ──────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo      ┃ P… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer        │ FiltrarBancoUseCase │ M… │   29/20    │     0.5h │
+│ LongParameterListAnalyzer │ FiltrarBancoUseCase │ F… │    7/5     │     1.0h │
+└───────────────────────────┴─────────────────────┴────┴────────────┴──────────┘
+
+────────────── 📄  use_cases/finalizar_evaluacion.py  (2 issues) ───────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo             ┃ … ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ execute                    │ … │    2/1     │    0.5h │
+│ LongMethodAnalyzer   │ FinalizarEvaluacionUseCase │ … │   48/20    │    1.4h │
+└──────────────────────┴────────────────────────────┴───┴────────────┴─────────┘
+
+─────────────── 📄  use_cases/generar_invitacion.py  (1 issues) ────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo           ┃ Pro… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ GenerarInvitacionUseCase │ Mét… │   28/20    │     0.4h │
+└────────────────────┴──────────────────────────┴──────┴────────────┴──────────┘
+
+─────────────── 📄  use_cases/iniciar_evaluacion.py  (2 issues) ────────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo           ┃ P… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ execute                  │ L… │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ IniciarEvaluacionUseCase │ M… │   75/20    │     2.8h │
+└──────────────────────┴──────────────────────────┴────┴────────────┴──────────┘
+
+───────────────── 📄  use_cases/iniciar_sesion.py  (1 issues) ──────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo       ┃ Problema ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ IniciarSesionUseCase │ Método … │   30/20    │     0.5h │
+└────────────────────┴──────────────────────┴──────────┴────────────┴──────────┘
+
+─────────── 📄  use_cases/listar_actividades_visibles.py  (1 issues) ───────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer          ┃ Clase / Módulo                  ┃  ┃ Val/Umbr… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnalyz… │ ListarActividadesVisiblesUseCa… │  │   26/20   │    0.3h │
+└───────────────────┴─────────────────────────────────┴──┴───────────┴─────────┘
+
+───────────────── 📄  use_cases/listar_cuentas.py  (1 issues) ──────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer                  ┃ Clase / Módulo       ┃ … ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongParameterListAnalyzer │ ListarCuentasUseCase │ … │    6/5     │     0.5h │
+└───────────────────────────┴──────────────────────┴───┴────────────┴──────────┘
+
+───────── 📄  use_cases/listar_materias_del_estudiante.py  (3 issues) ──────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo                   ┃ ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnaly… │ execute                          │ │   2/1    │    0.5h │
+│ LawOfDemeterAnaly… │ execute                          │ │   2/1    │    0.5h │
+│ LongMethodAnalyzer │ ListarMateriasDelEstudianteUseC… │ │  21/20   │    0.1h │
+└────────────────────┴──────────────────────────────────┴─┴──────────┴─────────┘
+
+──────── 📄  use_cases/modificar_periodo_disponibilidad.py  (3 issues) ─────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo                      ┃┃ Val/Umb… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━━━╇━━━━━━━┩
+│ LawOfDemeterAnaly… │ execute                             ││   2/1    │  0.5h │
+│ LawOfDemeterAnaly… │ execute                             ││   2/1    │  0.5h │
+│ LongMethodAnalyzer │ ModificarPeriodoDisponibilidadUseC… ││  38/20   │  0.9h │
+└────────────────────┴─────────────────────────────────────┴┴──────────┴───────┘
+
+─────────── 📄  use_cases/modificar_titulo_actividad.py  (2 issues) ────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer            ┃ Clase / Módulo                 ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnalyz… │ execute                        │  │   2/1    │    0.5h │
+│ LongMethodAnalyzer  │ ModificarTituloActividadUseCa… │  │  28/20   │    0.4h │
+└─────────────────────┴────────────────────────────────┴──┴──────────┴─────────┘
+
+─────────── 📄  use_cases/obtener_revision_evaluacion.py  (3 issues) ───────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo                  ┃  ┃ Val/Umb… ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━╇━━━━━━━━━┩
+│ FeatureEnvyAnalyz… │ ObtenerRevisionEvaluacionUseCa… │  │   4/1    │    1.5h │
+│ LongMethodAnalyzer │ ObtenerRevisionEvaluacionUseCa… │  │  31/20   │    0.6h │
+│ LongMethodAnalyzer │ ObtenerRevisionEvaluacionUseCa… │  │  25/20   │    0.2h │
+└────────────────────┴─────────────────────────────────┴──┴──────────┴─────────┘
+
+─────────── 📄  use_cases/obtener_tasa_error_por_tema.py  (1 issues) ───────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer          ┃ Clase / Módulo                 ┃  ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LongMethodAnalyz… │ ObtenerTasaErrorPorTemaUseCase │  │   44/20    │    1.2h │
+└───────────────────┴────────────────────────────────┴──┴────────────┴─────────┘
+
+─────────────── 📄  use_cases/reanudar_evaluacion.py  (2 issues) ───────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo            ┃ … ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ execute                   │ … │    2/1     │     0.5h │
+│ LongMethodAnalyzer   │ ReanudarEvaluacionUseCase │ … │   43/20    │     1.1h │
+└──────────────────────┴───────────────────────────┴───┴────────────┴──────────┘
+
+────────────── 📄  use_cases/registrar_estudiante.py  (2 issues) ───────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer                ┃ Clase / Módulo                  ┃┃ Val/Um… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━━╇━━━━━━━┩
+│ LongMethodAnalyzer      │ RegistrarEstudianteUseCase      ││  29/20  │  0.5h │
+│ PrimitiveObsessionAnal… │ RegistrarEstudianteUseCase.exe… ││   4/3   │  1.0h │
+└─────────────────────────┴─────────────────────────────────┴┴─────────┴───────┘
+
+─────────────── 📄  use_cases/registrar_respuesta.py  (3 issues) ───────────────
+
+                           Advertencias de Diseño (3)                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳┳━━━━━━━━━━┳━━━━━━━┓
+┃ Analyzer                ┃ Clase / Módulo                 ┃┃ Val/Umb… ┃ Esfu… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇╇━━━━━━━━━━╇━━━━━━━┩
+│ LawOfDemeterAnalyzer    │ execute                        ││   2/1    │  0.5h │
+│ LongMethodAnalyzer      │ RegistrarRespuestaUseCase      ││  71/20   │  2.5h │
+│ PrimitiveObsessionAnal… │ RegistrarRespuestaUseCase.exe… ││   1/0    │  0.5h │
+└─────────────────────────┴────────────────────────────────┴┴──────────┴───────┘
+
+──────────────── 📄  use_cases/resetear_password.py  (1 issues) ────────────────
+
+                           Advertencias de Diseño (1)                           
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Analyzer           ┃ Clase / Módulo          ┃ Prob… ┃ Val/Umbral ┃ Esfuerzo ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ LongMethodAnalyzer │ ResetearPasswordUseCase │ Méto… │   24/20    │     0.2h │
+└────────────────────┴─────────────────────────┴───────┴────────────┴──────────┘
+
+────────────── 📄  use_cases/suspender_evaluacion.py  (2 issues) ───────────────
+
+                           Advertencias de Diseño (2)                           
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━┳━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Analyzer             ┃ Clase / Módulo             ┃ … ┃ Val/Umbral ┃ Esfuer… ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━╇━━━━━━━━━━━━╇━━━━━━━━━┩
+│ LawOfDemeterAnalyzer │ execute                    │ … │    2/1     │    0.5h │
+│ LongMethodAnalyzer   │ SuspenderEvaluacionUseCase │ … │   47/20    │    1.4h │
+└──────────────────────┴────────────────────────────┴───┴────────────┴─────────┘
+
+╭─────────────────────────────── Resumen Final ────────────────────────────────╮
+│  Resumen:                                                                    │
+│            0 blocking issues (CRITICAL)                                      │
+│            161 advertencias (WARNING)                                        │
+│            0 informativos (INFO)                                             │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+╭────────────────────────────── ⏱  Deuda Técnica ──────────────────────────────╮
+│  Esfuerzo estimado de refactoring:                                           │
+│    Blocking issues: 0.0h                                                     │
+│    Total del changeset: 130.5h                                               │
+╰──────────────────────────────────────────────────────────────────────────────╯
