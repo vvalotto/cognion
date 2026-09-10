@@ -1089,6 +1089,23 @@ Decidir el track **antes de codear**:
   (ver `docs/rf/PLAN_v1.md` revisión 2026-07-16). El build de imagen Docker en CI/CD no se
   ve afectado — corre en GitHub Actions, no localmente.
 - **Criterios de legibilidad en proyección** (RNF_v1.md): tamaño de fuente mínimo y contraste. Se define en etapa de diseño UX antes de Incremento 6.
+- **Cuenta de envío SMTP real para Notificaciones en producción** (RF-14, `US-5.1.1` a
+  `US-5.1.3`): `SmtpCanalEnvio` ya es agnóstico del proveedor (`smtplib` contra
+  `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM` de `settings.py`) — hoy
+  apunta a `localhost:25` sin autenticación, solo para el fake SMTP local de tests/UAT.
+  Decisión pendiente sobre qué cuenta real usar como remitente, evaluada 2026-09-10 con
+  Víctor: existen cuentas institucionales por materia (ej.
+  `gestiondeproyectos@ingenieria.uner.edu.ar`) — usarlas es viable y preferible a que el
+  email salga "de parte de" un Docente sin ser su cuenta real (spoofing, rechazado por
+  SPF/DKIM del servidor institucional). Implementarlo requiere un salto de alcance respecto
+  del diseño actual (una sola cuenta SMTP global para todo el sistema): agregar la
+  responsabilidad de resolver qué cuenta usar según la materia de la actividad, con las
+  credenciales reales resueltas por variable de entorno (una por materia) — nunca guardadas
+  en el dominio (`Materia`) en texto plano, dada la escala real del proyecto (2-3 materias,
+  no una tabla de credenciales). Encajaría como ajuste chico (`US-ADJ` o extensión de
+  `US-5.1.1`) una vez resuelta la decisión mayor de infraestructura de producción de arriba
+  — no tiene sentido implementarlo contra un entorno que todavía no despliega de verdad
+  (`cd.yml` solo construye la imagen Docker, `flyctl deploy` sigue comentado).
 
 ---
 

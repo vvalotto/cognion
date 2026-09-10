@@ -3,7 +3,17 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-06 — Cierre del Incremento 4 completo (Portal del Estudiante y
+> Última actualización: 2026-09-10 — Cierre del Incremento 5 completo (Notificaciones, RF-14),
+> única iteración (`inc5-candidatas.md` no planifica una Iteración 2), UAT aprobada sin
+> hallazgos 🔴 Bloqueantes (`quality/reports/uat/inc5/design.md`/`evidencia.md`): Capa 1
+> (757/757 unit+integration, 212/212 BDD) y Capa 2 (`smoke.sh` extendido con dos verificaciones
+> de contenido real de email, sin pasos HTTP nuevos — reutiliza el flujo ya existente de crear
+> y cerrar una actividad) en verde; verificación manual del contenido de los emails de apertura
+> y cierre capturados (sin recorrido de navegador — RF-14 no tiene pantalla propia). **RF-14
+> pasa de "Especificado" a "Validado"**, referenciando `.cm/baselines/BL-009` (a abrir al
+> cierre de esta baseline).
+>
+> 2026-09-06 — Cierre del Incremento 4 completo (Portal del Estudiante y
 > Analytics, Iteraciones 1 y 2): backend y frontend integrados, UAT formal aprobada por
 > iteración sin hallazgos 🔴 Bloqueantes (`quality/reports/uat/inc4/design.md`/`evidencia.md` —
 > Iteración 1; `design-iteracion2.md`/`evidencia-iteracion2.md` — Iteración 2). **RF-15, RF-16
@@ -153,7 +163,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
 | RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1, US-3.2.2, US-3.2.3 (backend); US-3.4.7 (frontend) | Validado |
-| RF-14 | Notificaciones | 5 | US-5.0.1 (modelado) | Especificado |
+| RF-14 | Notificaciones | 5 | US-5.0.1 (modelado); US-5.1.1 (infraestructura); US-5.1.2, US-5.1.3 (backend) | Validado |
 | RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend) | Validado |
 | RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.1, US-4.2.2 (backend, cerradas); US-4.2.5 (frontend, cerrada) | Validado |
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |
