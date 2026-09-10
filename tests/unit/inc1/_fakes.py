@@ -5,7 +5,11 @@ from uuid import UUID
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
-from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
+from src.identidad.entities.ports.comision_query_port import (
+    ComisionQueryPort,
+    EstudianteConEmail,
+    EstudianteResumen,
+)
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
 from src.identidad.entities.ports.cuenta_query_port import CuentaQueryPort
 from src.identidad.entities.ports.evaluacion_consulta_port import EvaluacionConsultaPort
@@ -101,6 +105,7 @@ class FakeComisionRepository(ComisionRepositoryPort):
 class FakeComisionQueryRepository(ComisionQueryPort):
     def __init__(self) -> None:
         self.estudiantes_por_comision: dict[UUID, list[EstudianteResumen]] = {}
+        self.estudiantes_con_email_por_comision: dict[UUID, list[EstudianteConEmail]] = {}
         self.docentes_con_comisiones: set[UUID] = set()
         self.administradores_con_comisiones: set[UUID] = set()
 
@@ -111,6 +116,9 @@ class FakeComisionQueryRepository(ComisionQueryPort):
 
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         return self.estudiantes_por_comision.get(comision_id, [])
+
+    async def listar_estudiantes_con_email(self, comision_id: UUID) -> list[EstudianteConEmail]:
+        return self.estudiantes_con_email_por_comision.get(comision_id, [])
 
     async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
         return docente_id in self.docentes_con_comisiones

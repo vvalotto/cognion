@@ -22,6 +22,20 @@ class EstudianteResumen:
     nombre: str
 
 
+@dataclass(frozen=True)
+class EstudianteConEmail:
+    """Representación de un `Usuario` con rol Estudiante para BC Notificaciones (`US-5.1.1`).
+
+    Copia con `email` separada de `EstudianteResumen` — ese DTO no lo expone porque sus
+    consumidores actuales (Analytics, Banco de Preguntas) solo necesitan `id`/`nombre` para
+    selectores de UI.
+    """
+
+    id: UUID
+    nombre: str
+    email: str
+
+
 class ComisionQueryPort(ABC):
     """Consultas de solo lectura sobre `Comision` para poblar selectores docentes (RF-16, RF-17)."""
 
@@ -38,6 +52,15 @@ class ComisionQueryPort(ABC):
     @abstractmethod
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         """Lista los estudiantes inscriptos en una comisión. Sin inscriptos → lista vacía."""
+        ...
+
+    @abstractmethod
+    async def listar_estudiantes_con_email(self, comision_id: UUID) -> list[EstudianteConEmail]:
+        """Lista los estudiantes inscriptos en una comisión, incluido su email (`US-5.1.1`).
+
+        Mismo roster que `listar_estudiantes` — coexisten como métodos separados por
+        consumidor, no se reemplaza el existente. Sin inscriptos → lista vacía.
+        """
         ...
 
     @abstractmethod
