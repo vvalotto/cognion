@@ -36,8 +36,10 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         self._banco_repositorio = SQLAlchemyBancoRepository(session)
         self._pregunta_repositorio = SQLAlchemyPreguntaRepository(session)
 
-    async def contar_activas_por_materia(self, materia_id: UUID) -> int:
-        """Cuenta las preguntas `activa = true` del banco de la materia.
+    async def contar_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> int:
+        """Cuenta las preguntas `activa = true` del banco de la materia, filtradas por `unidad`/`tema`.
 
         Devuelve 0 si la materia no tiene `Banco` asociado — no debería ocurrir en la práctica
         (INV-BP-01, toda `Materia` se crea junto con su `Banco`), pero evita que este puerto le
@@ -46,11 +48,13 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         banco = await self._banco_repositorio.obtener_por_materia_id(materia_id)
         if banco is None:
             return 0
-        resultado = await self._pregunta_repositorio.filtrar(banco.id)
+        resultado = await self._pregunta_repositorio.filtrar(banco.id, unidad=unidad, tema=tema)
         return resultado.total
 
-    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
-        """Lista los ids de las preguntas `activa = true` del banco de la materia.
+    async def listar_ids_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> list[UUID]:
+        """Lista los ids de las preguntas `activa = true` del banco de la materia, filtradas por `unidad`/`tema`.
 
         Lista vacía si la materia no tiene `Banco` asociado — mismo criterio que
         `contar_activas_por_materia`.
@@ -58,7 +62,7 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         banco = await self._banco_repositorio.obtener_por_materia_id(materia_id)
         if banco is None:
             return []
-        resultado = await self._pregunta_repositorio.filtrar(banco.id)
+        resultado = await self._pregunta_repositorio.filtrar(banco.id, unidad=unidad, tema=tema)
         return [pregunta.id for pregunta in resultado.preguntas]
 
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict[str, Any]) -> bool:

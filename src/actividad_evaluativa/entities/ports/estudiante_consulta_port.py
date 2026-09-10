@@ -16,3 +16,12 @@ class EstudianteConsultaPort(ABC):
     @abstractmethod
     async def existe(self, estudiante_id: UUID) -> bool:
         """Indica si `estudiante_id` corresponde a un `Usuario` existente con rol Estudiante."""
+
+    @abstractmethod
+    async def obtener_comision_id(self, estudiante_id: UUID) -> UUID | None:
+        """Devuelve la `comision_id` del Estudiante, o `None` si no existe.
+
+        Usado para filtrar la visibilidad de actividades restringidas a comisiones concretas
+        (`ListarActividadesVisiblesUseCase`) — un Estudiante cursa una única Comisión
+        (`estudiante.comision_id`, sin multi-inscripción todavía).
+        """

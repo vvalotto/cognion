@@ -32,6 +32,17 @@ const cuentaBloqueada = {
   comision_id: "c1",
 }
 
+const cuentaDeshabilitada = {
+  id: "u3",
+  nombre: "Marta Deshabilitada",
+  email: "marta@fiuner.edu.ar",
+  perfil: "docente",
+  bloqueada: false,
+  deshabilitada: true,
+  creado_en: "2026-08-01T10:00:00Z",
+  comision_id: null,
+}
+
 function renderCuentaDetalle(usuarioId: string) {
   return render(
     <MemoryRouter initialEntries={[`/cuentas/${usuarioId}`]}>
@@ -84,6 +95,26 @@ describe("CuentaDetalle", () => {
       screen.getAllByText(texto).find((el) => el.getAttribute("data-slot") === "badge")
     expect(badge("Estudiante")).toHaveClass("bg-violet-50")
     expect(badge("Bloqueada")).toHaveClass("bg-red-50")
+  })
+
+  it("una cuenta deshabilitada muestra 'Inactiva' y 'Activar cuenta' en vez de Editar/Resetear/Eliminar", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, cuentaDeshabilitada))
+      .mockResolvedValueOnce(jsonResponse(200, { ...cuentaDeshabilitada, deshabilitada: false }))
+    const user = userEvent.setup()
+
+    renderCuentaDetalle("u3")
+
+    expect(await screen.findByText("Inactiva")).toBeInTheDocument()
+    expect(screen.queryByText("Editar datos de la cuenta")).not.toBeInTheDocument()
+    expect(screen.queryByText("Eliminar cuenta")).not.toBeInTheDocument()
+
+    await user.click(screen.getByText("Activar cuenta"))
+
+    expect(await screen.findByText("Activa")).toBeInTheDocument()
+    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
+    expect(String(ultimaLlamada?.[0])).toMatch(/\/usuarios\/u3\/activar$/)
+    expect(ultimaLlamada?.[1]?.method).toBe("POST")
   })
 
   it("botón 'Resetear contraseña y desbloquear' navega al formulario de reseteo", async () => {

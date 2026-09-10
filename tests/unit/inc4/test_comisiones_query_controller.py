@@ -18,11 +18,19 @@ class _ComisionQueryPortFake(ComisionQueryPort):
         self.comisiones_por_materia: dict[UUID, list[Comision]] = {}
         self.estudiantes_por_comision: dict[UUID, list[EstudianteResumen]] = {}
 
-    async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
+    async def listar_comisiones_por_materia(
+        self, materia_id: UUID, incluir_inactivas: bool = False
+    ) -> list[Comision]:
         return self.comisiones_por_materia.get(materia_id, [])
 
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         return self.estudiantes_por_comision.get(comision_id, [])
+
+    async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
+        return False
+
+    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
+        return False
 
 
 class TestListarComisionesPorMateria:

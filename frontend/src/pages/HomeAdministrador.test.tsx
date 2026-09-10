@@ -11,7 +11,6 @@ function renderHomeAdministrador() {
       <Routes>
         <Route path="/" element={<HomeAdministrador />} />
         <Route path="/comisiones" element={<p>Comisiones listado</p>} />
-        <Route path="/docentes/nuevo" element={<p>Alta de Docente</p>} />
         <Route path="/cuentas" element={<p>Cuentas listado</p>} />
       </Routes>
     </MemoryRouter>,
@@ -32,8 +31,8 @@ describe("HomeAdministrador", () => {
   it("muestra las 3 cards de acceso", () => {
     renderHomeAdministrador()
 
+    expect(screen.getByText("Materias")).toBeInTheDocument()
     expect(screen.getByText("Comisiones")).toBeInTheDocument()
-    expect(screen.getByText("Alta de Docente")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
   })
 
@@ -63,7 +62,7 @@ describe("HomeAdministrador", () => {
     await user.keyboard("{Enter}")
 
     await waitFor(() => {
-      expect(screen.queryByText("Alta de Docente")).not.toBeInTheDocument()
+      expect(screen.getByText("Comisiones listado")).toBeInTheDocument()
     })
   })
 })

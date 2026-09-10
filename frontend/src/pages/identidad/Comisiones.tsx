@@ -1,3 +1,4 @@
+import { Eye, Pencil, RotateCcw, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
@@ -5,9 +6,20 @@ import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { RowActionButton } from "@/components/ui/row-action-button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { listarCuentas, type CuentaResponse } from "@/lib/cuentas-api"
 import {
+  activarComision,
   listarComisionesPorMateria,
   listarEstudiantesDeComision,
   type ComisionResumenResponse,
@@ -44,7 +56,7 @@ export function Comisiones() {
     if (!materiaId) return
     const controller = new AbortController()
     setComisiones(null)
-    listarComisionesPorMateria(materiaId, controller.signal)
+    listarComisionesPorMateria(materiaId, controller.signal, true)
       .then(async (resultado) => {
         setComisiones(resultado)
         const conteos = await Promise.all(
@@ -62,6 +74,14 @@ export function Comisiones() {
 
   function nombreDocente(docenteId: string): string {
     return docentes.find((docente) => docente.id === docenteId)?.nombre ?? docenteId
+  }
+
+  async function handleActivar(comisionId: string) {
+    await activarComision(comisionId)
+    setComisiones(
+      (actual) =>
+        actual?.map((c) => (c.id === comisionId ? { ...c, activa: true } : c)) ?? actual,
+    )
   }
 
   return (
@@ -104,34 +124,27 @@ export function Comisiones() {
         </select>
       </div>
 
-      <Card className="mt-4 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
-              <th className="py-2 pr-4 pl-4">Horario</th>
-              <th className="py-2 pr-4">Docentes asignados</th>
-              <th className="py-2 pr-4">Estudiantes</th>
-              <th className="py-2 pr-4"></th>
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Horario</TableHeaderCell>
+              <TableHeaderCell>Docentes asignados</TableHeaderCell>
+              <TableHeaderCell>Estudiantes</TableHeaderCell>
+              <TableHeaderCell>Estado</TableHeaderCell>
+              <TableHeaderCell></TableHeaderCell>
             </tr>
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {comisiones === null ? (
-              <tr>
-                <td colSpan={4} className="py-4 pl-4 text-muted-foreground">
-                  Cargando…
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={5}>Cargando…</TableEmptyRow>
             ) : comisiones.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="py-6 pl-4 text-center text-muted-foreground">
-                  Esta materia todavía no tiene comisiones.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={5}>Esta materia todavía no tiene comisiones.</TableEmptyRow>
             ) : (
               comisiones.map((comision) => (
-                <tr key={comision.id} className="border-b border-border last:border-0">
-                  <td className="py-3 pr-4 pl-4">{comision.horario}</td>
-                  <td className="py-3 pr-4">
+                <TableRow key={comision.id}>
+                  <TableCell className="font-medium">{comision.horario}</TableCell>
+                  <TableCell>
                     {comision.docentesAsignados.length === 0 ? (
                       <Badge variant="docente-sin-asignar">Sin docente asignado</Badge>
                     ) : (
@@ -141,23 +154,48 @@ export function Comisiones() {
                         </Badge>
                       ))
                     )}
-                  </td>
-                  <td className="py-3 pr-4">{conteoEstudiantes[comision.id] ?? "…"}</td>
-                  <td className="py-3 pr-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/comisiones/${comision.id}`)}
-                    >
-                      Ver detalle
-                    </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell>{conteoEstudiantes[comision.id] ?? "…"}</TableCell>
+                  <TableCell>
+                    <Badge variant={comision.activa ? "estado-activa" : "estado-inactiva"}>
+                      {comision.activa ? "Activa" : "Inactiva"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1.5">
+                      <RowActionButton
+                        label="Ver detalle"
+                        icon={Eye}
+                        onClick={() => navigate(`/comisiones/${comision.id}`)}
+                      />
+                      {comision.activa ? (
+                        <>
+                          <RowActionButton
+                            label="Editar"
+                            icon={Pencil}
+                            onClick={() => navigate(`/comisiones/${comision.id}/editar`)}
+                          />
+                          <RowActionButton
+                            label="Eliminar"
+                            icon={Trash2}
+                            variant="destructive"
+                            onClick={() => navigate(`/comisiones/${comision.id}/eliminar`)}
+                          />
+                        </>
+                      ) : (
+                        <RowActionButton
+                          label="Activar"
+                          icon={RotateCcw}
+                          onClick={() => void handleActivar(comision.id)}
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </Card>
     </div>
   )

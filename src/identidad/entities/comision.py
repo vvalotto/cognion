@@ -15,6 +15,7 @@ class Comision:
     horario: str
     administrador_id: UUID
     docentes_asignados: list[UUID] = field(default_factory=list)
+    activa: bool = True
 
     @staticmethod
     def crear(materia_id: UUID, horario: str, administrador_id: UUID) -> Comision:
@@ -30,3 +31,15 @@ class Comision:
         """Agrega un docente a la comisión si todavía no está asignado."""
         if docente_id not in self.docentes_asignados:
             self.docentes_asignados.append(docente_id)
+
+    def cambiar_horario(self, horario: str) -> None:
+        """Corrige el horario de la comisión (típicamente, un error de tipeo al crearla)."""
+        self.horario = horario
+
+    def deshabilitar(self) -> None:
+        """Da de baja lógica la comisión (tiene estudiantes inscriptos, no se puede borrar)."""
+        self.activa = False
+
+    def activar(self) -> None:
+        """Reactiva una comisión previamente deshabilitada."""
+        self.activa = True

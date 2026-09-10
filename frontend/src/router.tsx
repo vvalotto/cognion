@@ -5,6 +5,8 @@ import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
 import { AltaDocente } from "@/pages/identidad/AltaDocente"
 import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
+import { EditarComision } from "@/pages/identidad/EditarComision"
+import { EliminarComision } from "@/pages/identidad/EliminarComision"
 import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
@@ -16,6 +18,8 @@ import { CerrarActividad } from "@/pages/actividad-evaluativa/CerrarActividad"
 import { ComisionDetalleDocente } from "@/pages/actividad-evaluativa/ComisionDetalleDocente"
 import { ComisionesDeMateria } from "@/pages/actividad-evaluativa/ComisionesDeMateria"
 import { CuentaDetalle } from "@/pages/cuentas/CuentaDetalle"
+import { EditarCuenta } from "@/pages/cuentas/EditarCuenta"
+import { EliminarCuenta } from "@/pages/cuentas/EliminarCuenta"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
 import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
@@ -34,6 +38,9 @@ import { MisActividades } from "@/pages/actividad-evaluativa/MisActividades"
 import { MisMaterias } from "@/pages/actividad-evaluativa/MisMaterias"
 import { NuevaActividad } from "@/pages/actividad-evaluativa/NuevaActividad"
 import { NuevaComision } from "@/pages/identidad/NuevaComision"
+import { EditarMateria } from "@/pages/banco-preguntas/EditarMateria"
+import { EliminarMateria } from "@/pages/banco-preguntas/EliminarMateria"
+import { VerMateria } from "@/pages/banco-preguntas/VerMateria"
 import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
@@ -92,6 +99,22 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/comisiones/:comisionId/editar",
+        element: (
+          <RequireRole rol="administrador">
+            <EditarComision />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/comisiones/:comisionId/eliminar",
+        element: (
+          <RequireRole rol="administrador">
+            <EliminarComision />
+          </RequireRole>
+        ),
+      },
+      {
         path: "/docentes/nuevo",
         element: (
           <RequireRole rol="administrador">
@@ -110,7 +133,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias",
         element: (
-          <RequireRole rol="docente">
+          <RequireRole rol={["docente", "administrador"]}>
             <Materias />
           </RequireRole>
         ),
@@ -118,8 +141,32 @@ export const router = createBrowserRouter([
       {
         path: "/materias/nueva",
         element: (
-          <RequireRole rol="docente">
+          <RequireRole rol={["docente", "administrador"]}>
             <NuevaMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/editar",
+        element: (
+          <RequireRole rol={["docente", "administrador"]}>
+            <EditarMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/ver",
+        element: (
+          <RequireRole rol={["docente", "administrador"]}>
+            <VerMateria />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/materias/:materiaId/eliminar",
+        element: (
+          <RequireRole rol={["docente", "administrador"]}>
+            <EliminarMateria />
           </RequireRole>
         ),
       },
@@ -188,6 +235,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/cuentas/:usuarioId/editar",
+        element: (
+          <RequireRole rol="administrador">
+            <EditarCuenta />
+          </RequireRole>
+        ),
+      },
+      {
         path: "/cuentas/:usuarioId/resetear-password",
         element: (
           <RequireRole rol="administrador">
@@ -200,6 +255,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="administrador">
             <CuentaReseteada />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/cuentas/:usuarioId/eliminar",
+        element: (
+          <RequireRole rol="administrador">
+            <EliminarCuenta />
           </RequireRole>
         ),
       },

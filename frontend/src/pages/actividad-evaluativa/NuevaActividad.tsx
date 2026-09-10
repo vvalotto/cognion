@@ -6,9 +6,20 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select } from "@/components/ui/select"
 import { crearActividad } from "@/lib/actividad-evaluativa-api"
-import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
+import {
+  derivarSugerencias,
+  filtrarBanco,
+  listarMaterias,
+  type MateriaListItemResponse,
+  type PreguntaResponse,
+} from "@/lib/banco-preguntas-api"
 import { ApiError } from "@/lib/api-client"
+import {
+  listarComisionesPorMateria,
+  type ComisionResumenResponse,
+} from "@/lib/identidad-comisiones-api"
 
 /** Formulario de creación de actividad de período abierto (`#doc-nueva-actividad`, US-3.4.3). */
 export function NuevaActividad() {
@@ -16,6 +27,11 @@ export function NuevaActividad() {
   const navigate = useNavigate()
 
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
+  const [comisiones, setComisiones] = useState<ComisionResumenResponse[]>([])
+  const [comisionesSeleccionadas, setComisionesSeleccionadas] = useState<Set<string>>(new Set())
+  const [preguntas, setPreguntas] = useState<PreguntaResponse[]>([])
+  const [unidadTematica, setUnidadTematica] = useState("")
+  const [tema, setTema] = useState("")
   const [titulo, setTitulo] = useState("")
   const [fechaApertura, setFechaApertura] = useState("")
   const [fechaCierre, setFechaCierre] = useState("")
@@ -33,6 +49,40 @@ export function NuevaActividad() {
       .catch(() => {})
     return () => controller.abort()
   }, [materiaId])
+
+  useEffect(() => {
+    if (!materiaId) return undefined
+    const controller = new AbortController()
+    listarComisionesPorMateria(materiaId, controller.signal)
+      .then(setComisiones)
+      .catch(() => {})
+    return () => controller.abort()
+  }, [materiaId])
+
+  useEffect(() => {
+    if (!materia) return undefined
+    const controller = new AbortController()
+    filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
+      .then((resultado) => setPreguntas(resultado.preguntas))
+      .catch(() => {})
+    return () => controller.abort()
+  }, [materia])
+
+  const { unidades, temas } = derivarSugerencias(preguntas)
+  const cantidadDisponible = preguntas.filter(
+    (p) =>
+      (!unidadTematica || p.unidadTematica === unidadTematica) && (!tema || p.tema === tema),
+  ).length
+  const hayRestriccion = Boolean(unidadTematica || tema)
+
+  function alternarComision(comisionId: string) {
+    setComisionesSeleccionadas((actual) => {
+      const siguiente = new Set(actual)
+      if (siguiente.has(comisionId)) siguiente.delete(comisionId)
+      else siguiente.add(comisionId)
+      return siguiente
+    })
+  }
 
   useEffect(() => {
     // Crea un controller nuevo en cada montaje real — en StrictMode (dev), React monta,
@@ -67,6 +117,9 @@ export function NuevaActividad() {
           fechaCierre,
           cantidadPreguntas,
           cantidadIntentosPermitidos: cantidadIntentos,
+          comisionesIds: [...comisionesSeleccionadas],
+          unidadTematica: unidadTematica || null,
+          tema: tema || null,
         },
         controladorSubmitRef.current?.signal,
       )
@@ -111,8 +164,8 @@ export function NuevaActividad() {
       )}
 
       <Card className="mt-4">
-        <CardContent>
-          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+        <CardContent className="p-6">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="na-titulo">Título (opcional)</Label>
               <Input
@@ -123,7 +176,7 @@ export function NuevaActividad() {
                 placeholder="Ej: Parcial 1 — Unidades 1 a 3"
               />
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <div className="flex flex-1 flex-col gap-1.5">
                 <Label htmlFor="na-apertura">Apertura (fecha y hora)</Label>
                 <Input
@@ -145,7 +198,79 @@ export function NuevaActividad() {
                 />
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-1.5">
+              <Label>Comisiones</Label>
+              {comisiones.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  Esta materia todavía no tiene comisiones — la actividad queda visible para
+                  todos sus estudiantes.
+                </p>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-3">
+                    {comisiones.map((comision) => (
+                      <label
+                        key={comision.id}
+                        className="flex items-center gap-2.5 text-sm"
+                        htmlFor={`na-comision-${comision.id}`}
+                      >
+                        <input
+                          id={`na-comision-${comision.id}`}
+                          type="checkbox"
+                          className="size-4 rounded border-input accent-primary"
+                          checked={comisionesSeleccionadas.has(comision.id)}
+                          onChange={() => alternarComision(comision.id)}
+                        />
+                        {comision.horario}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {comisionesSeleccionadas.size === 0
+                      ? "Ninguna marcada: la actividad queda visible para todas las comisiones de la materia."
+                      : "Solo los estudiantes de las comisiones marcadas van a ver esta actividad."}
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="flex gap-4">
+              <div className="flex flex-1 flex-col gap-1.5">
+                <Label htmlFor="na-unidad">Unidad temática</Label>
+                <Select
+                  id="na-unidad"
+                  value={unidadTematica}
+                  onChange={(event) => setUnidadTematica(event.target.value)}
+                >
+                  <option value="">Todas</option>
+                  {unidades.map((valor) => (
+                    <option key={valor} value={valor}>
+                      {valor}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex flex-1 flex-col gap-1.5">
+                <Label htmlFor="na-tema">Tema</Label>
+                <Select
+                  id="na-tema"
+                  value={tema}
+                  onChange={(event) => setTema(event.target.value)}
+                >
+                  <option value="">Todos</option>
+                  {temas.map((valor) => (
+                    <option key={valor} value={valor}>
+                      {valor}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+            </div>
+            <p className="-mt-3 text-xs text-muted-foreground">
+              {hayRestriccion
+                ? "Las preguntas de esta actividad salen solo de la combinación elegida de unidad temática y tema."
+                : "Sin restricción: las preguntas pueden salir de cualquier unidad temática y tema del banco."}
+            </p>
+            <div className="flex gap-4">
               <div className="flex flex-1 flex-col gap-1.5">
                 <Label htmlFor="na-cantidad-preguntas">Cantidad de preguntas</Label>
                 <Input
@@ -157,8 +282,9 @@ export function NuevaActividad() {
                   onChange={(event) => setCantidadPreguntas(Number(event.target.value))}
                 />
                 <p className="text-xs text-muted-foreground">
-                  No puede superar la cantidad de preguntas activas del banco de la materia (
-                  {materia.cantidadPreguntasActivas} disponibles)
+                  No puede superar la cantidad de preguntas activas de{" "}
+                  {hayRestriccion ? "esa selección" : "la materia"} ({cantidadDisponible}{" "}
+                  disponibles)
                 </p>
               </div>
               <div className="flex flex-1 flex-col gap-1.5">
@@ -180,7 +306,7 @@ export function NuevaActividad() {
               Cada estudiante recibe un set aleatorio distinto, tomado del banco de preguntas de
               la materia.
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 border-t border-border pt-5">
               <Button type="submit">Crear actividad</Button>
               <Button
                 type="button"

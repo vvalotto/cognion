@@ -11,6 +11,9 @@ from src.actividad_evaluativa.entities.ports.actividad_query_port import (
     ActividadQueryPort,
     ActividadResumen,
 )
+from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
+    EstudianteConsultaPort,
+)
 from src.actividad_evaluativa.entities.ports.evaluacion_estudiante_query_port import (
     EvaluacionEstudianteQueryPort,
 )
@@ -41,14 +44,27 @@ class ListarActividadesVisiblesUseCase:
         self,
         actividad_query: ActividadQueryPort,
         evaluacion_query: EvaluacionEstudianteQueryPort,
+        estudiante_consulta: EstudianteConsultaPort,
     ) -> None:
-        """Recibe el puerto de consulta de actividades y el de evaluaciones finalizadas."""
+        """Recibe los puertos de consulta de actividades, evaluaciones finalizadas y Estudiante."""
         self._actividad_query = actividad_query
         self._evaluacion_query = evaluacion_query
+        self._estudiante_consulta = estudiante_consulta
 
     async def execute(self, materia_id: UUID, estudiante_id: UUID) -> list[ActividadVisible]:
-        """Devuelve cada actividad de `materia_id` con el `Badge` del Estudiante `estudiante_id`."""
-        resumenes = await self._actividad_query.listar_por_materia(materia_id)
+        """Devuelve cada actividad de `materia_id` con el `Badge` del Estudiante `estudiante_id`.
+
+        Una actividad con `comisiones_ids` no vacío solo es visible para un Estudiante de una
+        de esas Comisiones — `comisiones_ids` vacío (default) sigue siendo visible para
+        cualquier Comisión de la Materia, mismo comportamiento que antes de que existiera este
+        campo.
+        """
+        comision_estudiante = await self._estudiante_consulta.obtener_comision_id(estudiante_id)
+        resumenes = [
+            resumen
+            for resumen in await self._actividad_query.listar_por_materia(materia_id)
+            if not resumen.comisiones_ids or comision_estudiante in resumen.comisiones_ids
+        ]
         evaluacion_id_por_actividad = {
             resumen.id: Evaluacion.id_para(resumen.id, estudiante_id) for resumen in resumenes
         }

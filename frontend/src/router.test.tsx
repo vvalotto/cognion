@@ -73,8 +73,8 @@ describe("router (integración)", () => {
     expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
   })
 
-  it("la ruta /materias muestra acceso denegado con sesión de rol distinto de docente", async () => {
-    setSession({ token: "t", rol: "administrador" })
+  it("la ruta /materias muestra acceso denegado con sesión de rol distinto de docente o administrador", async () => {
+    setSession({ token: "t", rol: "estudiante" })
     await router.navigate("/materias")
     render(<RouterProvider router={router} />)
 
@@ -83,6 +83,14 @@ describe("router (integración)", () => {
 
   it("la ruta /materias renderiza el listado de materias con sesión de docente", async () => {
     setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
+  })
+
+  it("la ruta /materias renderiza el listado de materias con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
     await router.navigate("/materias")
     render(<RouterProvider router={router} />)
 
@@ -390,6 +398,7 @@ describe("router (integración)", () => {
             estado: "en_curso",
             cantidad_evaluaciones_activas: 3,
             cantidad_evaluaciones_finalizadas: 0,
+            comisiones_ids: [],
           },
         ]),
       )

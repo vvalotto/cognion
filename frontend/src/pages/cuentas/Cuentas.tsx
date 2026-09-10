@@ -1,39 +1,42 @@
+import { Eye, RotateCcw, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { RolBadge } from "@/components/RolBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
-import { listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-api"
+import { RowActionButton } from "@/components/ui/row-action-button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
+import { activarCuenta, listarCuentas, type CuentaResponse, type Estado } from "@/lib/cuentas-api"
 import type { Rol } from "@/lib/session"
 
 const TAMANIO_PAGINA = 20
 
-const ETIQUETA_ROL: Record<Rol, string> = {
-  administrador: "Administrador",
-  docente: "Docente",
-  estudiante: "Estudiante",
-}
-
-const VARIANTE_ROL: Record<Rol, "rol-docente" | "rol-estudiante" | "rol-admin"> = {
-  docente: "rol-docente",
-  estudiante: "rol-estudiante",
-  administrador: "rol-admin",
-}
-
 const ETIQUETA_ESTADO: Record<Estado, string> = {
   activa: "Activa",
   bloqueada: "Bloqueada",
+  inactiva: "Inactiva",
 }
 
-const VARIANTE_ESTADO: Record<Estado, "estado-activa" | "estado-bloqueada"> = {
+const VARIANTE_ESTADO: Record<Estado, "estado-activa" | "estado-bloqueada" | "estado-inactiva"> = {
   activa: "estado-activa",
   bloqueada: "estado-bloqueada",
+  inactiva: "estado-inactiva",
 }
 
 function estadoDe(cuenta: CuentaResponse): Estado {
+  if (cuenta.deshabilitada) return "inactiva"
   return cuenta.bloqueada ? "bloqueada" : "activa"
 }
 
@@ -58,6 +61,7 @@ export function Cuentas() {
       },
       { pagina, tamanioPagina: TAMANIO_PAGINA },
       controller.signal,
+      true,
     )
       .then((resultado) => {
         setCuentas(resultado.cuentas)
@@ -72,6 +76,13 @@ export function Cuentas() {
     setEstado("")
     setBusqueda("")
     setPagina(1)
+  }
+
+  async function handleActivar(id: string) {
+    await activarCuenta(id)
+    setCuentas(
+      (actual) => actual?.map((c) => (c.id === id ? { ...c, deshabilitada: false } : c)) ?? actual,
+    )
   }
 
   const totalPaginas = Math.ceil(total / TAMANIO_PAGINA)
@@ -134,6 +145,7 @@ export function Cuentas() {
               <option value="">Todos</option>
               <option value="activa">Activa</option>
               <option value="bloqueada">Bloqueada</option>
+              <option value="inactiva">Inactiva</option>
             </select>
           </div>
           <div>
@@ -161,67 +173,76 @@ export function Cuentas() {
         </CardContent>
       </Card>
 
-      <Card className="mt-4 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
-              <th className="py-2 pr-4 pl-4">Nombre</th>
-              <th className="py-2 pr-4">Email</th>
-              <th className="py-2 pr-4">Rol</th>
-              <th className="py-2 pr-4">Estado</th>
-              <th className="py-2 pr-4"></th>
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Nombre</TableHeaderCell>
+              <TableHeaderCell>Email</TableHeaderCell>
+              <TableHeaderCell>Rol</TableHeaderCell>
+              <TableHeaderCell>Estado</TableHeaderCell>
+              <TableHeaderCell></TableHeaderCell>
             </tr>
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {cuentas === null ? (
-              <tr>
-                <td colSpan={5} className="py-4 pl-4 text-muted-foreground">
-                  Cargando…
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={5}>Cargando…</TableEmptyRow>
             ) : cuentas.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="py-4 pl-4 text-muted-foreground">
-                  No hay cuentas que coincidan con los filtros.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={5}>No hay cuentas que coincidan con los filtros.</TableEmptyRow>
             ) : (
               cuentas.map((cuenta) => (
-                <tr
+                <TableRow
                   key={cuenta.id}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-accent"
+                  className="cursor-pointer"
                   onClick={() => navigate(`/cuentas/${cuenta.id}`)}
                 >
-                  <td className="py-3 pr-4 pl-4">{cuenta.nombre}</td>
-                  <td className="py-3 pr-4">{cuenta.email}</td>
-                  <td className="py-3 pr-4">
-                    <Badge variant={VARIANTE_ROL[cuenta.perfil]}>
-                      {ETIQUETA_ROL[cuenta.perfil]}
-                    </Badge>
-                  </td>
-                  <td className="py-3 pr-4">
+                  <TableCell className="font-medium">{cuenta.nombre}</TableCell>
+                  <TableCell>{cuenta.email}</TableCell>
+                  <TableCell>
+                    <RolBadge rol={cuenta.perfil} />
+                  </TableCell>
+                  <TableCell>
                     <Badge variant={VARIANTE_ESTADO[estadoDe(cuenta)]}>
                       {ETIQUETA_ESTADO[estadoDe(cuenta)]}
                     </Badge>
-                  </td>
-                  <td className="py-3 pr-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        navigate(`/cuentas/${cuenta.id}`)
-                      }}
-                    >
-                      Ver
-                    </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1.5">
+                      <RowActionButton
+                        label="Ver"
+                        icon={Eye}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/cuentas/${cuenta.id}`)
+                        }}
+                      />
+                      {cuenta.deshabilitada ? (
+                        <RowActionButton
+                          label="Activar"
+                          icon={RotateCcw}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            void handleActivar(cuenta.id)
+                          }}
+                        />
+                      ) : (
+                        <RowActionButton
+                          label="Eliminar"
+                          icon={Trash2}
+                          variant="destructive"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            navigate(`/cuentas/${cuenta.id}/eliminar`)
+                          }}
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </Card>
 
       <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />

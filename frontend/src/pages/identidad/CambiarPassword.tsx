@@ -119,7 +119,7 @@ export function CambiarPassword() {
 
       <Card className="mt-4">
         <CardContent>
-          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-actual">Contraseña actual</Label>
               <Input

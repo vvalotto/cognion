@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
@@ -6,6 +7,16 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Pagination } from "@/components/ui/pagination"
+import { RowActionButton } from "@/components/ui/row-action-button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
 import {
   derivarSugerencias,
   filtrarBanco,
@@ -134,22 +145,22 @@ export function Banco() {
           >
             Unidad temática
           </label>
-          <input
+          <select
             id="filtro-unidad"
-            type="text"
-            list="filtro-unidad-sugerencias"
             value={unidad}
             onChange={(e) => {
               setUnidad(e.target.value)
               setPagina(1)
             }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
-          />
-          <datalist id="filtro-unidad-sugerencias">
+          >
+            <option value="">Todos</option>
             {sugerenciasUnidad.map((valor) => (
-              <option key={valor} value={valor} />
+              <option key={valor} value={valor}>
+                {valor}
+              </option>
             ))}
-          </datalist>
+          </select>
         </div>
         <div>
           <label
@@ -229,79 +240,71 @@ export function Banco() {
         </CardContent>
       </Card>
 
-      <Card className="mt-4 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
-              <th className="py-2 pr-3 pl-4">Pregunta</th>
-              <th className="py-2 pr-3">Tipo</th>
-              <th className="py-2 pr-3">Unidad / Tema</th>
-              <th className="py-2 pr-3">Dificultad</th>
-              <th className="py-2 pr-3">Importancia</th>
-              <th className="py-2 pr-3"></th>
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Pregunta</TableHeaderCell>
+              <TableHeaderCell>Tipo</TableHeaderCell>
+              <TableHeaderCell>Unidad / Tema</TableHeaderCell>
+              <TableHeaderCell>Dificultad</TableHeaderCell>
+              <TableHeaderCell>Importancia</TableHeaderCell>
+              <TableHeaderCell></TableHeaderCell>
             </tr>
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {preguntas === null ? (
-              <tr>
-                <td colSpan={6} className="py-4 pl-4 text-muted-foreground">
-                  Cargando…
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={6}>Cargando…</TableEmptyRow>
             ) : (
               preguntas.map((pregunta) => (
-                <tr key={pregunta.id} className="border-b border-border last:border-0">
-                  <td className="max-w-[220px] py-3 pr-3 pl-4">{pregunta.texto}</td>
-                  <td className="py-3 pr-3 whitespace-nowrap">
+                <TableRow key={pregunta.id}>
+                  <TableCell className="max-w-[220px] pr-3">{pregunta.texto}</TableCell>
+                  <TableCell className="whitespace-nowrap pr-3">
                     <Badge variant={esOpcionMultiple(pregunta) ? "tipo-om" : "tipo-vf"}>
                       {esOpcionMultiple(pregunta) ? "Opción múltiple" : "Verdadero/Falso"}
                     </Badge>
-                  </td>
-                  <td className="max-w-[130px] py-3 pr-3">
+                  </TableCell>
+                  <TableCell className="max-w-[130px] pr-3">
                     {pregunta.unidadTematica} · {pregunta.tema}
-                  </td>
-                  <td className="py-3 pr-3">
+                  </TableCell>
+                  <TableCell className="pr-3">
                     <Badge variant={VARIANTE_NIVEL[pregunta.dificultad]}>
                       {ETIQUETA_NIVEL[pregunta.dificultad]}
                     </Badge>
-                  </td>
-                  <td className="py-3 pr-3">
+                  </TableCell>
+                  <TableCell className="pr-3">
                     <Badge variant={VARIANTE_NIVEL[pregunta.importancia]}>
                       {ETIQUETA_NIVEL[pregunta.importancia]}
                     </Badge>
-                  </td>
-                  <td className="py-3 pr-3 whitespace-nowrap">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="mr-1.5"
-                      onClick={() =>
-                        navigate(
-                          `/materias/${materiaId}/banco/preguntas/${pregunta.id}/editar`,
-                        )
-                      }
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="destructive-solid"
-                      size="sm"
-                      onClick={() =>
-                        navigate(
-                          `/materias/${materiaId}/banco/preguntas/${pregunta.id}/eliminar`,
-                        )
-                      }
-                    >
-                      Eliminar
-                    </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap pr-3">
+                    <div className="flex gap-1.5">
+                      <RowActionButton
+                        label="Editar"
+                        icon={Pencil}
+                        onClick={() =>
+                          navigate(
+                            `/materias/${materiaId}/banco/preguntas/${pregunta.id}/editar`,
+                          )
+                        }
+                      />
+                      <RowActionButton
+                        label="Eliminar"
+                        icon={Trash2}
+                        variant="destructive-solid"
+                        onClick={() =>
+                          navigate(
+                            `/materias/${materiaId}/banco/preguntas/${pregunta.id}/eliminar`,
+                          )
+                        }
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </Card>
 
       <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />

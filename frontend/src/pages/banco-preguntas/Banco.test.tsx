@@ -110,7 +110,7 @@ describe("Banco", () => {
       .getAllByText("Alto")
       .find((el) => el.getAttribute("data-slot") === "badge")
     expect(tagAlto).toHaveClass("bg-red-50")
-    expect(screen.getAllByText("Eliminar")[0]).toHaveClass("bg-destructive")
+    expect(screen.getAllByRole("button", { name: "Eliminar" })[0]).toHaveClass("bg-destructive")
   })
 
   it("filtrar por dificultad dispara una nueva consulta con ese filtro", async () => {
@@ -158,7 +158,7 @@ describe("Banco", () => {
     renderBanco()
     await screen.findByText(/¿Qué principio de Clean Architecture/)
 
-    await user.click(screen.getAllByText("Editar")[0])
+    await user.click(screen.getAllByRole("button", { name: "Editar" })[0])
 
     expect(await screen.findByText("Editar pregunta")).toBeInTheDocument()
   })
@@ -173,7 +173,7 @@ describe("Banco", () => {
     renderBanco()
     await screen.findByText(/¿Qué principio de Clean Architecture/)
 
-    await user.click(screen.getAllByText("Eliminar")[0])
+    await user.click(screen.getAllByRole("button", { name: "Eliminar" })[0])
 
     expect(await screen.findByText("Eliminar pregunta")).toBeInTheDocument()
   })

@@ -122,8 +122,9 @@ def get_actividades_estudiante_controller(session: SessionDep) -> ActividadesEst
     """Arma el `ActividadesEstudianteController` con sus dependencias concretas (`US-3.4.5`)."""
     actividad_query = SQLAlchemyActividadQueryRepository(session)
     evaluacion_query = SQLAlchemyEvaluacionEstudianteQueryRepository(session)
+    estudiante_consulta = EstudianteConsultaPortInProcess(session)
     return ActividadesEstudianteController(
-        ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+        ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query, estudiante_consulta)
     )
 
 

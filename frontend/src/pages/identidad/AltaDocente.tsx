@@ -85,7 +85,7 @@ export function AltaDocente() {
         </div>
       )}
 
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-1.5">
           <Label>Perfil</Label>
           <p className="text-sm text-muted-foreground">Docente</p>

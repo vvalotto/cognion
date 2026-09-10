@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
+from src.identidad.entities.usuario import Estudiante
 from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
@@ -33,3 +34,10 @@ class EstudianteConsultaPortInProcess(EstudianteConsultaPort):
         if usuario is None:
             return False
         return usuario.tipo_perfil is TipoPerfil.ESTUDIANTE
+
+    async def obtener_comision_id(self, estudiante_id: UUID) -> UUID | None:
+        """Devuelve `usuario.perfil.comision_id` si `estudiante_id` es un Estudiante existente."""
+        usuario = await self._usuario_repositorio.obtener_por_id(estudiante_id)
+        if usuario is None or not isinstance(usuario.perfil, Estudiante):
+            return None
+        return usuario.perfil.comision_id

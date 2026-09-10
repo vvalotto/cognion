@@ -9,6 +9,31 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-09-10
+
+Cierra `BL-008` — prueba manual E2E de estabilización de los tres portales (Administrador,
+Docente, Estudiante) con datos reales, posterior a `BL-007`. Sin US-IEDD ni RF nuevo — track
+informal en su totalidad; detalle completo en
+[`.cm/baselines/BL-008-estabilizacion-portales.md`](.cm/baselines/BL-008-estabilizacion-portales.md).
+
+### Fixed
+- Edición de cuenta (`PATCH /usuarios/{id}`) devolvía `200` sin escribir `nombre`/`email` a la
+  base — `SQLAlchemyUsuarioRepository.actualizar()` no persistía el cambio
+- Mismo bug class en `MateriaRepositoryPort` (sin método `actualizar()`)
+- `/` sin sesión no redirigía a `/login`
+- `POST /materias` rechazaba al rol `administrador` (solo aceptaba `docente`)
+
+### Added
+- CRUD estandarizado (editar, ver, eliminar con baja lógica condicionada, reactivar) para
+  Materias, Comisiones y Cuentas — dos puertos cruzados nuevos in-process
+  (`ComisionConsultaPort`, `EvaluacionConsultaPort`)
+- Actividad Evaluativa restringible a una Comisión y a una unidad temática/tema concretos
+- Reintento de respuestas durante la evaluación (`IntentosAgotados`, 422, contador por
+  pregunta) y "Finalizar evaluación" como acción independiente de responder la última pregunta
+- Listados de Materias/Comisiones/Actividades/Cuentas en tabla con columnas de métricas
+- `RF-20` a `RF-23` elicitados (informes de Analytics para el Docente) — quedan Planificados,
+  sin incremento asignado
+
 ## [0.6.1] - 2026-09-07
 
 ### Added

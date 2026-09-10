@@ -57,6 +57,6 @@ class IniciarSesionUseCase:
         usuario.intentos_fallidos_login = 0
         await self._usuario_repositorio.actualizar(usuario)
 
-        jwt = self._jwt_issuer.emitir(usuario.id, usuario.tipo_perfil)
+        jwt = self._jwt_issuer.emitir(usuario.id, usuario.tipo_perfil, usuario.nombre)
         evento = SesionIniciada(usuario_id=usuario.id, rol=usuario.tipo_perfil)
         return jwt, evento

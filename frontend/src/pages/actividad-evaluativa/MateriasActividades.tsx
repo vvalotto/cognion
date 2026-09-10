@@ -3,18 +3,50 @@ import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Card } from "@/components/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
+import { listarActividades } from "@/lib/actividad-evaluativa-api"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
+import { listarComisionesPorMateria } from "@/lib/identidad-comisiones-api"
+
+interface ResumenMateria {
+  cantidadComisiones: number
+  actividadesEnCurso: number
+  actividadesProgramadas: number
+  actividadesTotales: number
+}
+
+async function cargarResumen(materiaId: string, signal: AbortSignal): Promise<ResumenMateria> {
+  const [comisiones, actividades] = await Promise.all([
+    listarComisionesPorMateria(materiaId, signal),
+    listarActividades(materiaId, signal),
+  ])
+  return {
+    cantidadComisiones: comisiones.length,
+    actividadesEnCurso: actividades.filter((a) => a.estado === "en_curso").length,
+    actividadesProgramadas: actividades.filter((a) => a.estado === "programada").length,
+    actividadesTotales: actividades.length,
+  }
+}
 
 /** Pantalla "Mis materias" del BC Actividad Evaluativa (`#doc-materias`, `US-3.4.2`).
  *
  * Reutiliza `listarMaterias()` (`banco-preguntas-api.ts`, `US-2.1.9`) sin cambios — mismo dato
- * que `Materias.tsx` de Banco de Preguntas, con destino de navegación distinto. Sin comisión
- * ni conteo de actividades por tarjeta (simplificación documentada en
- * `docs/plans/inc3/US-3.4.2-context.md` §Gap 3 — esos datos no los expone `GET /materias`).
+ * que `Materias.tsx` de Banco de Preguntas, con destino de navegación distinto. Tabla con
+ * cantidad de Comisiones y de Actividades (en curso/planificadas/totales) por materia, mismo
+ * patrón que el resto del portal Docente.
  */
 export function MateriasActividades() {
   const navigate = useNavigate()
   const [materias, setMaterias] = useState<MateriaListItemResponse[] | null>(null)
+  const [resumenes, setResumenes] = useState<Record<string, ResumenMateria>>({})
 
   useEffect(() => {
     const controller = new AbortController()
@@ -24,6 +56,21 @@ export function MateriasActividades() {
     return () => controller.abort()
   }, [])
 
+  useEffect(() => {
+    if (!materias) return undefined
+    const controller = new AbortController()
+    Promise.all(
+      materias.map((materia) =>
+        cargarResumen(materia.id, controller.signal).then(
+          (resumen) => [materia.id, resumen] as const,
+        ),
+      ),
+    )
+      .then((entradas) => setResumenes(Object.fromEntries(entradas)))
+      .catch(() => {})
+    return () => controller.abort()
+  }, [materias])
+
   return (
     <div>
       <Breadcrumb items={[{ label: "Actividad evaluativa" }, { label: "Mis materias" }]} />
@@ -32,29 +79,45 @@ export function MateriasActividades() {
         Elegí una materia para ver y gestionar sus actividades de período abierto.
       </p>
 
-      {materias === null ? (
-        <p className="mt-4 text-sm text-muted-foreground">Cargando…</p>
-      ) : (
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {materias.map((materia) => (
-            <Card
-              key={materia.id}
-              role="button"
-              tabIndex={0}
-              className="cursor-pointer p-5 transition-colors hover:border-primary"
-              onClick={() => navigate(`/actividad-evaluativa/materias/${materia.id}/actividades`)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  navigate(`/actividad-evaluativa/materias/${materia.id}/actividades`)
-                }
-              }}
-            >
-              <p className="mb-2 text-xl">📘</p>
-              <p className="font-semibold">{materia.nombre}</p>
-            </Card>
-          ))}
-        </div>
-      )}
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Nombre</TableHeaderCell>
+              <TableHeaderCell>Comisiones</TableHeaderCell>
+              <TableHeaderCell>Actividades en curso</TableHeaderCell>
+              <TableHeaderCell>Actividades planificadas</TableHeaderCell>
+              <TableHeaderCell>Actividades totales</TableHeaderCell>
+            </tr>
+          </TableHeader>
+          <TableBody>
+            {materias === null ? (
+              <TableEmptyRow colSpan={5}>Cargando…</TableEmptyRow>
+            ) : materias.length === 0 ? (
+              <TableEmptyRow colSpan={5}>Todavía no hay materias creadas.</TableEmptyRow>
+            ) : (
+              materias.map((materia) => {
+                const resumen = resumenes[materia.id]
+                return (
+                  <TableRow
+                    key={materia.id}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate(`/actividad-evaluativa/materias/${materia.id}/actividades`)
+                    }
+                  >
+                    <TableCell className="font-medium">{materia.nombre}</TableCell>
+                    <TableCell>{resumen?.cantidadComisiones ?? "…"}</TableCell>
+                    <TableCell>{resumen?.actividadesEnCurso ?? "…"}</TableCell>
+                    <TableCell>{resumen?.actividadesProgramadas ?? "…"}</TableCell>
+                    <TableCell>{resumen?.actividadesTotales ?? "…"}</TableCell>
+                  </TableRow>
+                )
+              })
+            )}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   )
 }

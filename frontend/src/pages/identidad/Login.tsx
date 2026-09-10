@@ -87,7 +87,7 @@ export function Login() {
 
       {bloqueada ? <LoginCuentaBloqueadaError /> : error && <LoginError />}
 
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <fieldset className="flex flex-col gap-3" disabled={bloqueada}>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="login-email">Email</Label>

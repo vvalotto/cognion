@@ -44,7 +44,7 @@ describe("AppNav", () => {
 
     expect(screen.getByText("Inicio")).toBeInTheDocument()
     expect(screen.getByText("Comisiones")).toBeInTheDocument()
-    expect(screen.getByText("Docentes")).toBeInTheDocument()
+    expect(screen.getByText("Materias")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
     expect(screen.getAllByRole("link")).toHaveLength(4)
   })
@@ -72,7 +72,6 @@ describe("AppNav", () => {
     renderAppNav("administrador")
 
     expect(screen.getByText("Comisiones")).toHaveAttribute("href", "/comisiones")
-    expect(screen.getByText("Docentes")).toHaveAttribute("href", "/docentes/nuevo")
     expect(screen.getByText("Cuentas")).toHaveAttribute("href", "/cuentas")
   })
 })

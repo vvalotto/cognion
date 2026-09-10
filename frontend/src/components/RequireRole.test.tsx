@@ -5,14 +5,14 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { RequireRole } from "@/components/RequireRole"
 import { clearSession, setSession } from "@/lib/session"
 
-function renderProtected() {
+function renderProtected(rol: "administrador" | Array<"administrador" | "docente"> = "administrador") {
   return render(
     <MemoryRouter initialEntries={["/docentes/nuevo"]}>
       <Routes>
         <Route
           path="/docentes/nuevo"
           element={
-            <RequireRole rol="administrador">
+            <RequireRole rol={rol}>
               <p>contenido protegido</p>
             </RequireRole>
           }
@@ -54,5 +54,21 @@ describe("RequireRole (integración)", () => {
     renderProtected()
 
     expect(screen.getByText("contenido protegido")).toBeInTheDocument()
+  })
+
+  it("con un array de roles permitidos, renderiza el contenido si la sesión matchea alguno", () => {
+    setSession({ token: "t", rol: "docente" })
+
+    renderProtected(["docente", "administrador"])
+
+    expect(screen.getByText("contenido protegido")).toBeInTheDocument()
+  })
+
+  it("con un array de roles permitidos, deniega si la sesión no matchea ninguno", () => {
+    setSession({ token: "t", rol: "estudiante" })
+
+    renderProtected(["docente", "administrador"])
+
+    expect(screen.getByText("Acceso denegado")).toBeInTheDocument()
   })
 })

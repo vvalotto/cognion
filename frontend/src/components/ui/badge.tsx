@@ -18,6 +18,7 @@ const badgeVariants = cva(
         "rol-admin": "bg-orange-50 text-orange-800",
         "estado-activa": "bg-green-50 text-green-800",
         "estado-bloqueada": "bg-red-50 text-red-800",
+        "estado-inactiva": "bg-gray-100 text-gray-600",
         "estado-en-curso": "bg-green-50 text-green-800",
         "estado-programada": "bg-amber-50 text-amber-800",
         "estado-cerrada": "bg-red-50 text-red-800",

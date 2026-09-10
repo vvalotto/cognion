@@ -42,19 +42,25 @@ class CrearActividadPeriodoAbiertoUseCase:
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
         titulo: str = "",
+        comisiones_ids: frozenset[UUID] | None = None,
+        unidad_tematica: str | None = None,
+        tema: str | None = None,
     ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
         """Crea la actividad validando INV-AE-01/02/03 y la persiste como primer evento del stream.
 
         Levanta `MateriaNoExiste` si `materia_id` no corresponde a ninguna `Materia`,
         `PreguntasInsuficientes` si `cantidad_preguntas` excede las preguntas activas del banco
-        de esa materia. `PeriodoInvalido`/`CantidadIntentosInvalida` se validan en el aggregate
+        de esa materia (filtradas por `unidad_tematica`/`tema` si se eligieron, combinados con
+        AND). `PeriodoInvalido`/`CantidadIntentosInvalida` se validan en el aggregate
         (INV-AE-02/03).
         """
         materia = await self._materia_consulta.obtener(materia_id)
         if materia is None:
             raise MateriaNoExiste(materia_id)
 
-        cantidad_disponible = await self._pregunta_consulta.contar_activas_por_materia(materia_id)
+        cantidad_disponible = await self._pregunta_consulta.contar_activas_por_materia(
+            materia_id, unidad_tematica, tema
+        )
         if cantidad_preguntas > cantidad_disponible:
             raise PreguntasInsuficientes(cantidad_preguntas, cantidad_disponible)
 
@@ -65,6 +71,9 @@ class CrearActividadPeriodoAbiertoUseCase:
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
             titulo=titulo,
+            comisiones_ids=comisiones_ids,
+            unidad_tematica=unidad_tematica,
+            tema=tema,
         )
 
         evento = ActividadEvaluativaCreada(
@@ -75,6 +84,9 @@ class CrearActividadPeriodoAbiertoUseCase:
             cantidad_preguntas=actividad.cantidad_preguntas,
             cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
             titulo=actividad.titulo,
+            comisiones_ids=actividad.comisiones_ids,
+            unidad_tematica=actividad.unidad_tematica,
+            tema=actividad.tema,
         )
 
         payload = {
@@ -85,6 +97,9 @@ class CrearActividadPeriodoAbiertoUseCase:
             "cantidad_preguntas": evento.cantidad_preguntas,
             "cantidad_intentos_permitidos": evento.cantidad_intentos_permitidos,
             "titulo": evento.titulo,
+            "comisiones_ids": [str(c) for c in evento.comisiones_ids],
+            "unidad_tematica": evento.unidad_tematica,
+            "tema": evento.tema,
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
         await self._event_store.append(

@@ -7,6 +7,9 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.banco_preguntas.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
+)
 from src.banco_preguntas.interface_adapters.controllers.bancos_controller import (
     BancosController,
 )
@@ -25,6 +28,7 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
 from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
+from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
 )
@@ -32,7 +36,9 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
+from src.banco_preguntas.use_cases.editar_materia import EditarMateriaUseCase
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
+from src.banco_preguntas.use_cases.eliminar_materia import EliminarMateriaUseCase
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
 from src.banco_preguntas.use_cases.listar_materias import ListarMateriasUseCase
@@ -51,9 +57,13 @@ def get_materias_controller(session: SessionDep) -> MateriasController:
     materia_repo = SQLAlchemyMateriaRepository(session)
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return MateriasController(
         CrearMateriaUseCase(materia_repo, banco_repo),
         ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+        EditarMateriaUseCase(materia_repo),
+        EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
+        ActivarMateriaUseCase(materia_repo),
     )
 
 

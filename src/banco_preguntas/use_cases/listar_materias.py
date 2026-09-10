@@ -23,13 +23,15 @@ class ListarMateriasUseCase:
         self._banco_repositorio = banco_repositorio
         self._pregunta_repositorio = pregunta_repositorio
 
-    async def execute(self) -> list[tuple[Materia, Banco, int]]:
+    async def execute(self, incluir_inactivas: bool = False) -> list[tuple[Materia, Banco, int]]:
         """Devuelve cada materia con su banco y la cantidad de preguntas `activa = true`.
 
         Reutiliza `PreguntaRepositoryPort.filtrar()` (`US-2.1.7`) para el conteo, sin agregar
-        un método dedicado a ese puerto.
+        un método dedicado a ese puerto. `incluir_inactivas` es para la pantalla de gestión
+        de Materias — el resto de los consumidores (selectores, flujos de Docente) sigue
+        viendo solo las activas.
         """
-        materias = await self._materia_repositorio.listar()
+        materias = await self._materia_repositorio.listar(incluir_inactivas)
 
         resultado: list[tuple[Materia, Banco, int]] = []
         for materia in materias:

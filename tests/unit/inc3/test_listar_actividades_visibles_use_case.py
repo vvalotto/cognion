@@ -12,6 +12,7 @@ from src.actividad_evaluativa.entities.ports.evaluacion_estudiante_query_port im
 from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
 )
+from tests.unit.inc3._fakes import FakeEstudianteConsultaPort
 
 
 class FakeActividadQueryPort(ActividadQueryPort):
@@ -45,6 +46,7 @@ def _resumen(
     fecha_cierre: datetime | None = None,
     cerrada_manualmente: bool = False,
     actividad_id: UUID | None = None,
+    comisiones_ids: frozenset[UUID] | None = None,
 ) -> ActividadResumen:
     return ActividadResumen(
         id=actividad_id or uuid4(),
@@ -57,6 +59,7 @@ def _resumen(
         cerrada_manualmente=cerrada_manualmente,
         cantidad_evaluaciones_activas=1,
         cantidad_evaluaciones_finalizadas=0,
+        comisiones_ids=comisiones_ids or frozenset(),
     )
 
 
@@ -68,7 +71,10 @@ class TestListarActividadesVisiblesUseCase:
         actividad_query = FakeActividadQueryPort()
         actividad_query.resumenes[materia_id] = [_resumen(materia_id, ahora)]
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
-        use_case = ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
 
         resultado = await use_case.execute(materia_id, estudiante_id)
 
@@ -90,7 +96,10 @@ class TestListarActividadesVisiblesUseCase:
             )
         ]
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
-        use_case = ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
 
         resultado = await use_case.execute(materia_id, estudiante_id)
 
@@ -108,7 +117,10 @@ class TestListarActividadesVisiblesUseCase:
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
         evaluacion_id = Evaluacion.id_para(actividad_id, estudiante_id)
         evaluacion_query.finalizadas.add(evaluacion_id)
-        use_case = ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
 
         resultado = await use_case.execute(materia_id, estudiante_id)
 
@@ -130,16 +142,63 @@ class TestListarActividadesVisiblesUseCase:
             )
         ]
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
-        use_case = ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
 
         resultado = await use_case.execute(materia_id, estudiante_id)
 
         assert resultado[0].estado == "pendiente"
 
+    async def test_actividad_restringida_a_otra_comision_no_es_visible(self):
+        materia_id = uuid4()
+        estudiante_id = uuid4()
+        comision_estudiante = uuid4()
+        comision_otra = uuid4()
+        ahora = datetime.now(UTC)
+        actividad_query = FakeActividadQueryPort()
+        actividad_query.resumenes[materia_id] = [
+            _resumen(materia_id, ahora, comisiones_ids=frozenset({comision_otra}))
+        ]
+        evaluacion_query = FakeEvaluacionEstudianteQueryPort()
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        estudiante_consulta.comisiones_por_estudiante[estudiante_id] = comision_estudiante
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
+
+        resultado = await use_case.execute(materia_id, estudiante_id)
+
+        assert resultado == []
+
+    async def test_actividad_restringida_a_la_comision_del_estudiante_es_visible(self):
+        materia_id = uuid4()
+        estudiante_id = uuid4()
+        comision_estudiante = uuid4()
+        ahora = datetime.now(UTC)
+        actividad_query = FakeActividadQueryPort()
+        actividad_query.resumenes[materia_id] = [
+            _resumen(materia_id, ahora, comisiones_ids=frozenset({comision_estudiante}))
+        ]
+        evaluacion_query = FakeEvaluacionEstudianteQueryPort()
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        estudiante_consulta.comisiones_por_estudiante[estudiante_id] = comision_estudiante
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
+
+        resultado = await use_case.execute(materia_id, estudiante_id)
+
+        assert len(resultado) == 1
+
     async def test_lista_vacia_si_la_materia_no_tiene_actividades(self):
         actividad_query = FakeActividadQueryPort()
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
-        use_case = ListarActividadesVisiblesUseCase(actividad_query, evaluacion_query)
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        use_case = ListarActividadesVisiblesUseCase(
+            actividad_query, evaluacion_query, estudiante_consulta
+        )
 
         resultado = await use_case.execute(uuid4(), uuid4())
 

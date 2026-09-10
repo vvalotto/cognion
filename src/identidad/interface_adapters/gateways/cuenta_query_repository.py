@@ -45,21 +45,30 @@ class SQLAlchemyCuentaQueryRepository(CuentaQueryPort):
         busqueda: str | None,
         pagina: int = 1,
         tamanio_pagina: int = 20,
+        incluir_inactivas: bool = False,
     ) -> ResultadoPaginadoCuentas:
-        """Lista usuarios filtrados (AND) por rol, estado (`activa`/`bloqueada`) y búsqueda.
+        """Lista usuarios filtrados (AND) por rol, estado (`activa`/`bloqueada`/`inactiva`) y búsqueda.
 
         Devuelve la página pedida, ordenada por `creado_en` (desempate por `id`), junto con
-        el `total` de cuentas que matchean los filtros, sin paginar.
+        el `total` de cuentas que matchean los filtros, sin paginar. Sin
+        `incluir_inactivas=True`, las cuentas deshabilitadas quedan afuera sin importar
+        `estado` (`estado="inactiva"` solo tiene efecto combinado con `incluir_inactivas`).
         """
         filtros: list[ColumnElement[bool]] = []
+        if not incluir_inactivas:
+            filtros.append(UsuarioModel.deshabilitada.is_(False))
         joins: list[type[AdministradorModel | DocenteModel | EstudianteModel]] = []
         if rol is not None:
             model_cls = _MODEL_POR_ROL[rol]
             joins.append(model_cls)
         if estado == "activa":
             filtros.append(UsuarioModel.bloqueada.is_(False))
+            filtros.append(UsuarioModel.deshabilitada.is_(False))
         elif estado == "bloqueada":
             filtros.append(UsuarioModel.bloqueada.is_(True))
+            filtros.append(UsuarioModel.deshabilitada.is_(False))
+        elif estado == "inactiva":
+            filtros.append(UsuarioModel.deshabilitada.is_(True))
         if busqueda:
             patron = f"%{busqueda}%"
             filtros.append(or_(UsuarioModel.nombre.ilike(patron), UsuarioModel.email.ilike(patron)))

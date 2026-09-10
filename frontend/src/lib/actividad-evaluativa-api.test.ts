@@ -77,6 +77,9 @@ describe("actividad-evaluativa-api", () => {
         fecha_cierre: "2026-09-10T00:00:00Z",
         cantidad_preguntas: 10,
         cantidad_intentos_permitidos: 1,
+        comisiones_ids: [],
+        unidad_tematica: null,
+        tema: null,
       })
       expect(actividad).toEqual({
         id: "a1",
