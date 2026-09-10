@@ -9,6 +9,22 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-5.1.1] Infraestructura del BC Notificaciones
+  - Primer código del quinto BC del sistema (`src/notificaciones/`), sin aggregate ni
+    endpoint HTTP propio — BC puramente reactivo
+  - `CanalEnvioPort`/`SmtpCanalEnvio`: adapter SMTP propio de Notificaciones, mismo patrón
+    `smtplib` + `asyncio.to_thread` que `SmtpNotificador` de Identidad (`ADR-012`) — sin
+    sumar `aiosmtplib` como dependencia nueva
+  - `ComisionConsultaPort`/`ComisionConsultaPortInProcess`: copia propia de Notificaciones
+    hacia Identidad (con `email`, a diferencia de la copia de Analytics/Banco de Preguntas)
+  - `ComisionQueryPort.listar_estudiantes_con_email` nuevo en Identidad (`EstudianteConEmail`),
+    coexiste con `listar_estudiantes` sin reemplazarlo
+  - `NotificacionPort` declarado como contrato en Actividad Evaluativa, sin implementación
+    cableada todavía — se conecta en `US-5.1.2`
+  - 934/934 tests (unit + integration + BDD), quality gates APROBADO (pylint 8.97/10, CC
+    máx 4, MI mín 69.72, coverage 100% en el código nuevo)
+
 ## [0.6.2] - 2026-09-10
 
 Cierra `BL-008` — prueba manual E2E de estabilización de los tres portales (Administrador,

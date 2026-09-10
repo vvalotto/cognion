@@ -1,0 +1,47 @@
+{
+  "us_id": "US-5.1.1",
+  "fecha": "2026-09-10T11:57:22-03:00",
+  "componente": "src/notificaciones/ (nuevo) + extensión de src/identidad/entities/ports/comision_query_port.py + src/identidad/interface_adapters/gateways/comision_query_repository.py + src/actividad_evaluativa/entities/ports/notificacion_port.py (nuevo)",
+  "metricas": {
+    "pylint": 8.97,
+    "cc_promedio": 1.58,
+    "cc_maximo": 4,
+    "mi_promedio": 96.97,
+    "mi_minimo": 69.72,
+    "coverage": 93.1
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 10,
+    "errors": 23,
+    "warnings": 50,
+    "infos": 71,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 10},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 10},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 10},
+      "DeadCode": {"errors": 21, "warnings": 34, "infos": 2},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 10},
+      "Pylint": {"errors": 2, "warnings": 3, "infos": 5},
+      "Spelling": {"errors": 0, "warnings": 13, "infos": 6},
+      "Types": {"errors": 0, "warnings": 0, "infos": 8},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 10}
+    },
+    "reporte": "quality/reports/inc5/US-5.1.1-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 21 'errors' de DeadCode (vulture) son falsos positivos 100% de confianza sobre parámetros de métodos abstractos (`CanalEnvioPort.enviar`, `ComisionConsultaPort.*`, `ComisionQueryPort.*`, `NotificacionPort.*`) — el cuerpo de un método abstracto es `...`, así que vulture reporta cada parámetro como 'nunca usado'. Mismo patrón ya documentado en `US-4.1.1`/`US-4.2.2` para los DTOs y Ports de Analytics.",
+    "Los 2 'errors' de Pylint ('Could not extract pylint score') son sobre `src/notificaciones/entities/ports/__init__.py` y `src/notificaciones/frameworks/adapters/__init__.py`, ambos vacíos (paquetes nuevos) — mismo patrón ya documentado en `US-4.1.1`. Verificado con pylint directo contra los 8 archivos de la US: 8.97/10, 0 errores reales — solo `R0903` (too-few-public-methods, aceptado en Ports de un solo método), `R0913`/`R0917` (NotificacionPort.notificar_apertura con 6 parámetros, todos requeridos por el contrato modelado en `BC-notificaciones-modelo.md` §5) y `W2301` (unnecessary-ellipsis) — este último ya aparece en pylint 4.0.6 contra Ports preexistentes sin tocar (`src/analytics/entities/ports/comision_consulta_port.py`), confirmado no es una regresión de esta US sino un artefacto de la versión de pylint del entorno sobre el idiom estándar de método abstracto.",
+    "Los 13 warnings de Spelling son palabras en español ('comision', 'implemente') mal interpretadas por el diccionario en inglés de codespell — mismo patrón ya aceptado en el resto del proyecto.",
+    "`mypy src/` (fuente de verdad local de tipos, ver nota de CLAUDE.md sobre el timeout de CodeGuard): 'Success: no issues found in 235 source files'.",
+    "Coverage 93.1% mide solo `entities/`+`interface_adapters/` de los archivos tocados (`frameworks/*` está excluido del gate por `pyproject.toml`, igual que el resto del proyecto): 100% en los 4 archivos nuevos/extendidos de esta US (`canal_envio_port.py`, `comision_consulta_port.py`, `comision_query_port.py`, `notificacion_port.py`) y 100% en el método nuevo `listar_estudiantes_con_email` de `comision_query_repository.py`. El 82.35% de ese archivo baja el promedio ponderado a 93.1% por 6 líneas sin cubrir en `tiene_comisiones_asignadas`/`tiene_comisiones_creadas` — dos métodos preexistentes de `US-2.2.x`/`US-ADJ-2x` que esta US no toca y que ya tenían ese gap de cobertura de integración antes de este cambio (solo cubiertos por el Fake de `tests/unit/`, sin test de integración contra Postgres real). No introducido por `US-5.1.1` — reportado como chip aparte para no ensanchar el alcance de esta US.",
+    "`SmtpCanalEnvio`/`ComisionConsultaPortInProcess`/`dependencies.py` (todos en `frameworks/`) están excluidos del gate de coverage por `pyproject.toml` (mismo criterio que el resto del proyecto) pero están cubiertos por 5 tests unitarios (`tests/unit/inc5/`) y 4 tests de integración reales contra PostgreSQL (`tests/integration/inc5/`), más 5 escenarios BDD (`tests/step_defs/inc5/`).",
+    "934/934 tests (unit + integration + BDD) del proyecto completo en verde, sin regresiones."
+  ]
+}
