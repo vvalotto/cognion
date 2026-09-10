@@ -23,9 +23,9 @@ class _FakeNotificarUseCase:
         self.llamadas.append(args)
 
 
-def _construir_adapter() -> tuple[
-    NotificacionPortInProcess, _FakeNotificarUseCase, _FakeNotificarUseCase
-]:
+def _construir_adapter() -> (
+    tuple[NotificacionPortInProcess, _FakeNotificarUseCase, _FakeNotificarUseCase]
+):
     adapter = NotificacionPortInProcess(MagicMock())
     fake_apertura = _FakeNotificarUseCase()
     fake_cierre = _FakeNotificarUseCase()

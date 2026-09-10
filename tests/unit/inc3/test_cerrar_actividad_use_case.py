@@ -208,7 +208,9 @@ class TestCerrarActividadUseCase:
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
         notificacion = FakeNotificacionPort()
-        use_case = _use_case(event_store, FakeEvaluacionActivaQueryPort(), notificacion=notificacion)
+        use_case = _use_case(
+            event_store, FakeEvaluacionActivaQueryPort(), notificacion=notificacion
+        )
         await use_case.execute(actividad_id)
 
         with pytest.raises(ActividadYaCerrada):
