@@ -124,7 +124,7 @@ método:
 
 | Método | Comportamiento |
 |---|---|
-| `enviar(destinatario_email, asunto, cuerpo) -> None` | Envía el mensaje por el canal concreto. Implementación inicial: `SmtpCanalEnvio` (`frameworks/adapters/`), contra un servidor SMTP de prueba local (Mailtrap/Mailhog, §6 decisión 3) configurado por variables de entorno (`SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM`, mismo criterio de configuración por entorno que el resto del proyecto, `ARQ_v1.md` "Configuración y secretos"). Librería candidata: `aiosmtplib` (async, consistente con el resto del stack) — a confirmar en la spec de `US-5.1.1`. |
+| `enviar(destinatario_email, asunto, cuerpo) -> None` | Envía el mensaje por el canal concreto. Implementación: `SmtpCanalEnvio` (`frameworks/adapters/`), configurado por variables de entorno (`SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM`, mismo criterio de configuración por entorno que el resto del proyecto, `ARQ_v1.md` "Configuración y secretos"). **Decidido en `US-5.1.1`:** `smtplib` estándar + `asyncio.to_thread` — no `aiosmtplib` (candidata original de este documento) — reutiliza el mismo patrón ya probado en `SmtpNotificador` de Identidad (`ADR-012`) sin sumar una dependencia nueva; los dos adaptadores quedan separados por BC. |
 
 El manejo de fallos (§6, decisión 4) vive en el Use Case que llama a `CanalEnvioPort`, no en el
 adapter: cada fallo de envío se captura, se loguea (`logging`, nivel `warning`, incluye
@@ -153,9 +153,11 @@ notificación.
 **Pendiente de definir en la spec de implementación (no bloquea la aprobación del modelo):**
 - Contenido exacto del asunto/cuerpo del email (texto plano vs. HTML mínimo, qué datos de la
   actividad incluir) — a resolver en `US-5.1.2`/`US-5.1.3`.
-- Configuración concreta de Mailhog/Mailtrap para el entorno de desarrollo local (¿Mailhog vía
-  Homebrew, igual que PostgreSQL, o Mailtrap como servicio externo con cuenta gratuita?) — a
-  resolver en `US-5.1.1`.
+- **Resuelto en `US-5.1.1`:** sin Mailhog/Mailtrap instalado en este entorno de desarrollo —
+  la verificación automatizada (unit/integration/BDD) usa un servidor SMTP-stub embebido en
+  los propios tests (`tests/integration/inc5/`, `tests/step_defs/inc5/`), sin depender de
+  infraestructura externa. Instalar Mailhog real (vía Homebrew, mismo criterio que PostgreSQL)
+  queda diferido para cuando haga falta un smoke test manual end-to-end de `US-5.1.2`/`5.1.3`.
 - Si `CrearActividadPeriodoAbiertoUseCase`/`CerrarActividadUseCase` acumulan CBO al inyectar
   `NotificacionPort` (mismo patrón de CRITICAL de CBO ya visto repetidamente en el proyecto,
   `US-2.1.2`/`2.1.5`/`2.1.6`/`3.1.3`/`3.2.1`) — a resolver si el pre-push gate lo detecta,

@@ -99,8 +99,10 @@ dispara cada notificación. Recibe la orden de notificar desde Actividad Evaluat
 directa a su Use Case (`ADR-006`), no consume el event store completo.
 
 **Nota:** BC Identidad ya tiene, desde el Incremento 1, su propio mecanismo de envío de email
-para invitaciones (`ADR-012`), independiente del que implementará este BC — deuda técnica
-consciente a revisar cuando Notificaciones se modele (Incremento 5).
+para invitaciones (`ADR-012`), independiente del de este BC — deuda técnica consciente,
+revisada en `US-5.1.1`: se mantienen dos adaptadores SMTP separados por BC, pero
+`SmtpCanalEnvio` reutiliza la misma técnica (`smtplib` + `asyncio.to_thread`) que
+`SmtpNotificador` de Identidad, sin sumar una dependencia async nueva.
 
 ## Regla de comunicación entre BCs
 

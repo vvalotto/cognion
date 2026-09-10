@@ -104,6 +104,9 @@ markers = [
     "ux: escenario BDD de UI — pendiente hasta que exista infraestructura de frontend (routing/cliente API)",
     "US-2.1.1: escenarios BDD de la US-2.1.1",
     "crear-materia: escenario BDD de alta de Materia y Banco",
+    "edge-case: escenario BDD de caso límite (colecciones vacías, etc.)",
+    "integration: escenario BDD que verifica integración real entre componentes",
+    "US-5.1.1: escenarios BDD de la US-5.1.1",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

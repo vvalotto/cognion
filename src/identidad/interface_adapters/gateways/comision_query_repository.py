@@ -9,7 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
+from src.identidad.entities.ports.comision_query_port import (
+    ComisionQueryPort,
+    EstudianteConEmail,
+    EstudianteResumen,
+)
 from src.identidad.frameworks.db.models import (
     ComisionModel,
     EstudianteModel,
@@ -65,6 +69,24 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         resultado = await self._session.execute(query)
         return [
             EstudianteResumen(id=modelo.id, nombre=modelo.nombre)
+            for modelo in resultado.scalars().all()
+        ]
+
+    async def listar_estudiantes_con_email(self, comision_id: UUID) -> list[EstudianteConEmail]:
+        """Lista los estudiantes inscriptos en una comisión, incluido su email (`US-5.1.1`).
+
+        Mismo query que `listar_estudiantes`, agregando `email` al DTO — no reemplaza ese
+        método, ambos coexisten para no romper a sus consumidores actuales (Analytics, Banco
+        de Preguntas).
+        """
+        query = (
+            select(UsuarioModel)
+            .join(EstudianteModel, EstudianteModel.id == UsuarioModel.id)
+            .where(EstudianteModel.comision_id == comision_id)
+        )
+        resultado = await self._session.execute(query)
+        return [
+            EstudianteConEmail(id=modelo.id, nombre=modelo.nombre, email=modelo.email)
             for modelo in resultado.scalars().all()
         ]
 

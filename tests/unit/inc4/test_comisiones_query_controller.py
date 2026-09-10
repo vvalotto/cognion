@@ -6,7 +6,11 @@ import pytest
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.errors import ComisionNoExiste, MateriaNoExiste
-from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
+from src.identidad.entities.ports.comision_query_port import (
+    ComisionQueryPort,
+    EstudianteConEmail,
+    EstudianteResumen,
+)
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
 )
@@ -25,6 +29,9 @@ class _ComisionQueryPortFake(ComisionQueryPort):
 
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         return self.estudiantes_por_comision.get(comision_id, [])
+
+    async def listar_estudiantes_con_email(self, comision_id: UUID) -> list[EstudianteConEmail]:
+        return []
 
     async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
         return False
