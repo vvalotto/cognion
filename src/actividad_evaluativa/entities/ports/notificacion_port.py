@@ -26,12 +26,18 @@ class NotificacionPort(ABC):
         self,
         actividad_id: UUID,
         materia_id: UUID,
+        materia_nombre: str,
         titulo: str,
         fecha_apertura: datetime,
         fecha_cierre: datetime,
         comisiones_ids: list[UUID],
     ) -> None:
         """Notifica la apertura de una actividad a sus destinatarios.
+
+        `materia_nombre` viaja aparte de `materia_id` porque el email debe mostrar el nombre
+        de la materia y ni el evento `ActividadEvaluativaCreada` ni este puerto lo llevaban
+        hasta `US-5.1.2` — quien invoca ya lo tiene en memoria (`MateriaConsultaPort.obtener`)
+        y lo pasa directo, sin que Notificaciones necesite su propio `MateriaConsultaPort`.
 
         Se invoca al final de `CrearActividadPeriodoAbiertoUseCase.execute()`, después de
         persistir `ActividadEvaluativaCreada`. Nunca propaga una excepción hacia quien la

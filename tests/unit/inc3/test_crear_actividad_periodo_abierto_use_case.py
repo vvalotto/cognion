@@ -18,6 +18,7 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 from tests.unit.inc3._fakes import (
     FakeEventStore,
     FakeMateriaConsultaPort,
+    FakeNotificacionPort,
     FakePreguntaConsultaPort,
 )
 
@@ -32,8 +33,11 @@ def _use_case(
     materia_consulta: FakeMateriaConsultaPort,
     pregunta_consulta: FakePreguntaConsultaPort,
     event_store: FakeEventStore,
+    notificacion: FakeNotificacionPort | None = None,
 ) -> CrearActividadPeriodoAbiertoUseCase:
-    return CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store)
+    return CrearActividadPeriodoAbiertoUseCase(
+        materia_consulta, pregunta_consulta, event_store, notificacion or FakeNotificacionPort()
+    )
 
 
 class TestCrearActividadPeriodoAbiertoUseCase:
@@ -269,6 +273,40 @@ class TestCrearActividadPeriodoAbiertoUseCase:
 
         with pytest.raises(CantidadIntentosInvalida):
             await use_case.execute(materia_id, apertura, cierre, 10, 0)
+
+    async def test_dispara_notificar_apertura_con_los_datos_de_la_actividad_creada(self):
+        materia_id = uuid4()
+        comision_1 = uuid4()
+        materia_consulta = FakeMateriaConsultaPort()
+        materia_consulta.materias[materia_id] = MateriaDTO(
+            id=materia_id, nombre="Ingeniería de Software"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.conteos[materia_id] = 20
+        event_store = FakeEventStore()
+        notificacion = FakeNotificacionPort()
+        use_case = _use_case(materia_consulta, pregunta_consulta, event_store, notificacion)
+        apertura, cierre = _fechas()
+
+        actividad, _evento = await use_case.execute(
+            materia_id,
+            apertura,
+            cierre,
+            10,
+            1,
+            titulo="Parcial 1",
+            comisiones_ids=frozenset({comision_1}),
+        )
+
+        assert len(notificacion.aperturas) == 1
+        llamada = notificacion.aperturas[0]
+        assert llamada["actividad_id"] == actividad.id
+        assert llamada["materia_id"] == materia_id
+        assert llamada["materia_nombre"] == "Ingeniería de Software"
+        assert llamada["titulo"] == "Parcial 1"
+        assert llamada["fecha_apertura"] == apertura
+        assert llamada["fecha_cierre"] == cierre
+        assert llamada["comisiones_ids"] == [comision_1]
 
     async def test_rechaza_materia_inexistente(self):
         materia_consulta = FakeMateriaConsultaPort()
