@@ -1,0 +1,48 @@
+{
+  "us_id": "US-5.1.2",
+  "fecha": "2026-09-10T12:55:00-03:00",
+  "componente": "src/actividad_evaluativa/entities/ports/notificacion_port.py (extendido) + src/actividad_evaluativa/frameworks/adapters/notificacion_port_in_process.py (nuevo) + src/actividad_evaluativa/use_cases/crear_actividad_periodo_abierto.py (modificado) + src/actividad_evaluativa/frameworks/dependencies.py (modificado) + src/notificaciones/use_cases/notificar_apertura.py (nuevo)",
+  "metricas": {
+    "pylint": 9.27,
+    "cc_promedio": 1.68,
+    "cc_maximo": 5,
+    "mi_promedio": 92.63,
+    "mi_minimo": 74.20,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 5,
+    "errors": 11,
+    "warnings": 23,
+    "infos": 37,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 5},
+      "PEP8": {"errors": 0, "warnings": 1, "infos": 4},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 5},
+      "DeadCode": {"errors": 11, "warnings": 12, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 5},
+      "Pylint": {"errors": 0, "warnings": 1, "infos": 4},
+      "Spelling": {"errors": 0, "warnings": 1, "infos": 0},
+      "Types": {"errors": 0, "warnings": 0, "infos": 5},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 5}
+    },
+    "reporte": "quality/reports/inc5/US-5.1.2-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 11 'errors' de DeadCode (vulture) son falsos positivos 100% de confianza sobre los parámetros de los dos métodos abstractos de `NotificacionPort` (`notificar_apertura`/`notificar_cierre`) — el cuerpo de un método abstracto es `...`, vulture reporta cada parámetro como 'nunca usado'. Mismo patrón ya documentado en `US-5.1.1`/`US-4.1.1`/`US-4.2.2` para Ports y DTOs del proyecto. Los 12 'warnings' de DeadCode son clases/métodos/funciones marcados como 'never used (60% confidence)' — corresponden a puntos de entrada consumidos vía DI/composition root (`dependencies.py`) o vía la implementación concreta de un puerto, que vulture no puede rastrear estáticamente; mismo patrón que el resto del proyecto en `frameworks/`.",
+    "El único 'warning' de PEP8 (línea 45 de `dependencies.py`, 103/100 caracteres) es preexistente — verificado contra `develop` antes de esta US (`git show develop:...dependencies.py | pylint`, mismo hallazgo C0301 en la misma línea) — no introducido por `US-5.1.2`, fuera de alcance corregirlo acá.",
+    "El único 'warning' de Pylint (score aislado 5.56/10 en `notificacion_port.py` medido solo-archivo) sube a 9.19/10 al medir pylint sobre el conjunto real de los 5 archivos tocados por la US — mismo criterio que `US-5.1.1`. Los hallazgos reales: R0913/R0917 (7-9 parámetros en `notificar_apertura`, todos requeridos por el contrato del puerto — mismo patrón aceptado en `US-5.1.1`), R0903 (too-few-public-methods, aceptado en Use Case de un solo método execute()), W2301 (unnecessary-ellipsis en el cuerpo de los métodos abstractos, artefacto ya documentado de la versión de pylint del entorno).",
+    "El único 'warning' de Spelling ('excede' interpretado como palabra en inglés mal escrita por el diccionario de codespell) es un falso positivo de idioma — mismo patrón ya aceptado en el resto del proyecto.",
+    "`mypy src/` (fuente de verdad local de tipos, ver nota de CLAUDE.md sobre el timeout de CodeGuard): sin errores nuevos — verificado contra el hook de pre-commit del propio proceso de esta US (bloqueante, no se pudo commitear con errores de tipos).",
+    "Coverage 100% en los 3 archivos sujetos al gate (`notificacion_port.py`, `crear_actividad_periodo_abierto.py`, `notificar_apertura.py`) — `notificacion_port_in_process.py` y `dependencies.py` (ambos en `frameworks/`) están excluidos del gate por `pyproject.toml`, igual que el resto del proyecto, pero cubiertos por 2 tests unitarios adicionales (`tests/unit/inc5/test_notificacion_port_in_process.py`), 4 tests de integración reales contra PostgreSQL + SMTP-stub (`tests/integration/inc5/test_notificar_apertura_actividad_integration.py`) y 4 escenarios BDD (`tests/step_defs/inc5/test_us_5_1_2_steps.py`).",
+    "746/746 tests unit+integration en verde (project completo, sin regresiones); 207/208 BDD en verde — el único fallo es un flake preexistente de timing ajustado ya documentado en `CLAUDE.md` (`test_us_3_2_2_steps.py::test_suspender_no_valida_período_vigente`), confirmado ajeno a esta US al pasar en aislamiento.",
+    "CBO CRITICAL detectado en pre-push (DesignReviewer) sobre `CrearActividadPeriodoAbiertoUseCase` (11/10) — mismo patrón recurrente ya visto en `US-2.1.2`/`2.1.5`/`2.1.6`/`3.1.3`/`3.2.1`. Corregido moviendo la construcción de `ActividadEvaluativaCreada` a un classmethod `desde_actividad()` y tipando el segundo elemento de la tupla de retorno como `object` (mismo criterio de `US-2.1.5`/`2.1.6`) tanto en el Use Case como en `ActividadesController.crear_actividad` — el router ya descartaba ese valor. CBO verificado: 11 → 10. Pylint sube de 9.19/10 a 9.27/10 tras el fix. 746/746 tests en verde, mypy sin errores."
+  ]
+}

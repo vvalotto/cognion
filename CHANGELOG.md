@@ -24,6 +24,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     cableada todavía — se conecta en `US-5.1.2`
   - 934/934 tests (unit + integration + BDD), quality gates APROBADO (pylint 8.97/10, CC
     máx 4, MI mín 69.72, coverage 100% en el código nuevo)
+- [US-5.1.2] Notificación de apertura de una Actividad Evaluativa de período abierto (RF-14)
+  - `CrearActividadPeriodoAbiertoUseCase` dispara `NotificacionPort.notificar_apertura(...)`
+    al final de `execute()`, después de persistir `ActividadEvaluativaCreada` — primer
+    cableado real de una integración directa entre BCs disparada desde un Use Case de
+    escritura (`ADR-006`)
+  - `NotificacionPortInProcess` (Actividad Evaluativa): único punto de ese BC que importa
+    `src.notificaciones`
+  - `NotificarAperturaUseCase` (Notificaciones): resuelve destinatarios por comisión o por
+    materia completa, envía un email por destinatario, un fallo de envío se loguea y no
+    aborta el resto del roster ni la creación de la actividad
+  - `NotificacionPort.notificar_apertura(...)` extendido con `materia_nombre` (gap dejado
+    abierto por `BC-notificaciones-modelo.md` §6, resuelto sin ensanchar ningún puerto de
+    Notificaciones)
+  - 746/746 tests unit+integration, 207/208 BDD (1 flake preexistente ajeno a esta US),
+    quality gates APROBADO (pylint 9.27/10, CC máx 5, MI mín 74.20, coverage 100% en el
+    código sujeto al gate)
+  - Fix de CBO en pre-push (`CrearActividadPeriodoAbiertoUseCase`, 11→10, mismo patrón
+    recurrente ya visto en incrementos anteriores): construcción de `ActividadEvaluativaCreada`
+    movida a un classmethod `desde_actividad()`, segundo elemento de la tupla de retorno
+    tipado como `object`
 
 ## [0.6.2] - 2026-09-10
 
