@@ -41,7 +41,9 @@ class ActividadEvaluativaCreada:
     ocurrido_en: datetime = field(default_factory=_ahora)
 
     @classmethod
-    def desde_actividad(cls, actividad: ActividadEvaluativaPeriodoAbierto) -> ActividadEvaluativaCreada:
+    def desde_actividad(
+        cls, actividad: ActividadEvaluativaPeriodoAbierto
+    ) -> ActividadEvaluativaCreada:
         """Construye el evento a partir de una `ActividadEvaluativaPeriodoAbierto` recién creada.
 
         Mueve la construcción fuera de `CrearActividadPeriodoAbiertoUseCase` — ese Use Case no
