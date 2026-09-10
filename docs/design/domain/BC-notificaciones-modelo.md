@@ -94,8 +94,13 @@ Actividad Evaluativa que importa `src.notificaciones`).
 
 | Método | Cuándo se llama |
 |---|---|
-| `notificar_apertura(actividad_id, materia_id, titulo, fecha_apertura, fecha_cierre, comisiones_ids)` | Al final de `CrearActividadPeriodoAbiertoUseCase.execute()`, después de persistir `ActividadEvaluativaCreada` |
-| `notificar_cierre(actividad_id, materia_id, titulo, comisiones_ids)` | Al final de `CerrarActividadUseCase.execute()`, después de persistir `ActividadEvaluativaCerrada` |
+| `notificar_apertura(actividad_id, materia_id, materia_nombre, titulo, fecha_apertura, fecha_cierre, comisiones_ids)` | Al final de `CrearActividadPeriodoAbiertoUseCase.execute()`, después de persistir `ActividadEvaluativaCreada` |
+| `notificar_cierre(actividad_id, materia_id, materia_nombre, titulo, comisiones_ids)` | Al final de `CerrarActividadUseCase.execute()`, después de persistir `ActividadEvaluativaCerrada` |
+
+`materia_nombre` viaja aparte de `materia_id` en ambos métodos porque Notificaciones no tiene
+su propio `MateriaConsultaPort` — quien invoca (`CrearActividadPeriodoAbiertoUseCase`/
+`CerrarActividadUseCase`, ambos ya con `MateriaConsultaPort` inyectado) lo resuelve y lo pasa
+directo (`US-5.1.2`/`US-5.1.3`).
 
 Ninguno de los dos métodos devuelve nada ni puede propagar una excepción hacia quien lo llama
 (§6, decisión 4) — el manejo de fallos de envío se resuelve enteramente del lado de

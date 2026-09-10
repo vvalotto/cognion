@@ -44,6 +44,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
     recurrente ya visto en incrementos anteriores): construcción de `ActividadEvaluativaCreada`
     movida a un classmethod `desde_actividad()`, segundo elemento de la tupla de retorno
     tipado como `object`
+- [US-5.1.3] Notificación de cierre manual de una Actividad Evaluativa de período abierto (RF-14)
+  - `CerrarActividadUseCase` dispara `NotificacionPort.notificar_cierre(...)` al final de
+    `execute()`, después de persistir `ActividadEvaluativaCerrada` — segundo y simétrico
+    cableado de `ADR-006`, solo ante cierre manual del Docente (el vencimiento natural del
+    período, verificado por `VerificarVencimientosUseCase`, sigue sin disparar ningún email)
+  - `NotificarCierreUseCase` (Notificaciones): mismo esqueleto que `NotificarAperturaUseCase`,
+    sin fechas de apertura/cierre en el cuerpo del email
+  - `NotificacionPort.notificar_cierre(...)` extendido con `materia_nombre`, resuelto en
+    `CerrarActividadUseCase` vía `MateriaConsultaPort` (ya usado por
+    `CrearActividadPeriodoAbiertoUseCase`) — decisión de diseño no listada en la spec
+    original, consecuencia directa del postcondition de la US
+  - 757/757 tests unit+integration, 212/212 BDD, quality gates APROBADO (pylint 9.47/10, CC
+    máx 5, MI mín 80.38, coverage 100% en el código sujeto al gate)
+  - Cierra completa la Iteración 1 del Incremento 5
 
 ## [0.6.2] - 2026-09-10
 
