@@ -80,6 +80,12 @@ mismo orden que `US-ADJ-21`→`US-ADJ-22` en Incremento 4-ADJ.
 `AutoregistrarDocente`/`AutoregistrarEstudiante`, `INV-ID-11` ampliada,
 `docs/design/domain/BC-identidad-modelo.md` §13 (PR #322).
 
+~~US-ADJ-33~~ Cerrada 2026-09-12, Issue [#319](https://github.com/vvalotto/cognion/issues/319)
+— modelo ampliado aprobado por Víctor: 4 queries nuevas (RF-20 a RF-23),
+`EvaluacionDesempenoConsultaPort`/`MetadatoPreguntaResumen` ampliados, sin puertos nuevos,
+`docs/design/domain/BC-analytics-modelo.md` §8 (PR #324, #325). Hallazgo de deriva documental
+en `BC-actividad-evaluativa-modelo.md` anotado para la Iteración 5.
+
 ---
 
 ## Iteración 1 — Identidad: contraseña segura y accesible
