@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router"
 
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -110,9 +111,8 @@ export function Registro() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="registro-password">Contraseña</Label>
-          <Input
+          <PasswordInput
             id="registro-password"
-            type="password"
             required
             minLength={8}
             value={password}
@@ -121,9 +121,8 @@ export function Registro() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="registro-confirmar-password">Confirmar contraseña</Label>
-          <Input
+          <PasswordInput
             id="registro-confirmar-password"
-            type="password"
             required
             minLength={8}
             value={confirmarPassword}

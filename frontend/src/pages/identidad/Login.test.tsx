@@ -136,4 +136,30 @@ describe("Login", () => {
       "Email o contraseña incorrectos"
     )
   })
+
+  it("mostrar/ocultar contraseña (US-ADJ-35) no pierde el valor tipeado ni rompe el submit", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        access_token: "token-docente",
+        rol: "docente",
+        expira_en: "2026-01-01T00:00:00Z",
+      })
+    )
+
+    const user = userEvent.setup()
+    renderLogin()
+
+    const password = screen.getByLabelText("Contraseña")
+    await user.type(password, "Docente#2026")
+    expect(password).toHaveAttribute("type", "password")
+
+    await user.click(screen.getByRole("button", { name: "Mostrar contraseña" }))
+    expect(password).toHaveAttribute("type", "text")
+    expect(password).toHaveValue("Docente#2026")
+
+    await user.type(screen.getByLabelText("Email"), "docente@fiuner.edu.ar")
+    await user.click(screen.getByRole("button", { name: "Ingresar" }))
+
+    expect(await screen.findByText("Inicio")).toBeInTheDocument()
+  })
 })

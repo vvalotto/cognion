@@ -2,9 +2,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CambiarPasswordError, cambiarPassword } from "@/lib/cuentas-api"
 
@@ -122,9 +122,8 @@ export function CambiarPassword() {
           <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-actual">Contraseña actual</Label>
-              <Input
+              <PasswordInput
                 id="password-actual"
-                type="password"
                 required
                 disabled={bloqueada}
                 value={passwordActual}
@@ -133,9 +132,8 @@ export function CambiarPassword() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-nueva">Contraseña nueva</Label>
-              <Input
+              <PasswordInput
                 id="password-nueva"
-                type="password"
                 required
                 disabled={bloqueada}
                 value={passwordNueva}
@@ -144,9 +142,8 @@ export function CambiarPassword() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-confirmacion">Confirmar contraseña nueva</Label>
-              <Input
+              <PasswordInput
                 id="password-confirmacion"
-                type="password"
                 required
                 disabled={bloqueada}
                 value={confirmacion}
