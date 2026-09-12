@@ -30,9 +30,7 @@ class TestCrearUsuarioUseCase:
         await use_case.execute("Ana", "ana@fiuner.edu.ar", "Clave#Segura1", TipoPerfil.DOCENTE)
 
         with pytest.raises(EmailYaRegistrado):
-            await use_case.execute(
-                "Otro", "ana@fiuner.edu.ar", "Clave#Segura2", TipoPerfil.DOCENTE
-            )
+            await use_case.execute("Otro", "ana@fiuner.edu.ar", "Clave#Segura2", TipoPerfil.DOCENTE)
 
         assert len(repo.usuarios) == 1
 

@@ -83,7 +83,9 @@ class TestRegistrarEstudianteUseCase:
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
         with pytest.raises(InvitacionInvalida):
-            await use_case.execute("token-inexistente", "Nico", "nico@fiuner.edu.ar", "Password#123x")
+            await use_case.execute(
+                "token-inexistente", "Nico", "nico@fiuner.edu.ar", "Password#123x"
+            )
 
         assert usuario_repo.usuarios == {}
 
