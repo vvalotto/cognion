@@ -10,6 +10,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-36] Contraseña segura — política ampliada
+  - `Usuario.validar_password_nueva` (INV-ID-11 ampliada): mínimo sube de 8 a 12 caracteres,
+    agrega mezcla de tipos (mayúscula, número, símbolo) — `PasswordSinComplejidadSuficiente`
+    (nueva) además de `PasswordDemasiadoCorta`
+  - **Gap real cerrado**: `CrearUsuarioUseCase` y `RegistrarEstudianteUseCase` no invocaban
+    `validar_password_nueva` — `POST /usuarios` y `POST /identidad/registro` aceptaban
+    cualquier contraseña del lado del dominio, protegidos solo por `minLength` HTML del
+    cliente. Ahora los 4 endpoints de password (`crear_usuario`, `registro`, `cambiar
+    password`, `resetear password`) validan la misma regla
+  - `PasswordInput` (`US-ADJ-35`) gana el prop `mostrarFortaleza` — indicador de 3 niveles
+    (Débil/Media/Fuerte) + checklist de las 4 reglas, activado en los campos de contraseña
+    nueva de `Registro.tsx`, `CambiarPassword.tsx`, `AltaDocente.tsx`,
+    `cuentas/ResetearPassword.tsx`
+  - Actualizados ~19 archivos de fixtures de tests preexistentes (unit, integration,
+    step_defs) para usar contraseñas que cumplen la política ampliada
+  - 986/986 tests backend (unit + integration + BDD), 385/389 frontend (4 fallos de flake
+    preexistente ajeno, confirmado en aislamiento), quality gates APROBADO (pylint 9.83/10,
+    CC máx 8, MI mín 63.89, coverage 98% backend / 100% en `PasswordInput.tsx`)
 - [US-ADJ-35] Toggle mostrar/ocultar contraseña
   - Componente compartido `PasswordInput.tsx` (nuevo) — envuelve `Input` agregando un botón
     de mostrar/ocultar (íconos `Eye`/`EyeOff` de `lucide-react`), sin perder el valor tipeado

@@ -1,8 +1,10 @@
 # BC Identidad — Wireframes: Autoservicio (Recuperación, Autoregistro, Contraseña)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue [#320](https://github.com/vvalotto/cognion/issues/320) (US-ADJ-34,
-> Iteración 0, Incremento 5-ADJ).**
+> Estado documental: **vigente — aprobado por Víctor en el cierre del Issue
+> [#320](https://github.com/vvalotto/cognion/issues/320) (US-ADJ-34, Iteración 0, Incremento
+> 5-ADJ). Implementación: §2 (toggle + indicador de fortaleza) completa (`US-ADJ-35`/`36`);
+> §3 (link "olvidaste tu contraseña"), §4 (recuperación), §5 (autoregistro) y §6 (menú de
+> usuario) siguen sin implementar — Iteraciones 2, 3 y `US-ADJ-37` respectivamente.**
 > Alcance: hallazgos de Identidad y cuentas de `hallazgos-cognion.md` — toggle mostrar/ocultar
 > contraseña, política de contraseña segura, recuperación de contraseña por autoservicio,
 > autoregistro de Docente/Estudiante con selección de perfil, logout voluntario y
