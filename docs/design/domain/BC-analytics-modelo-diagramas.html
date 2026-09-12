@@ -277,8 +277,8 @@
       el flujo por actor.
     </p>
     <div class="meta-row">
-      <span>Estado: <code>borrador</code></span>
-      <span>Issue: <code>#227</code></span>
+      <span>Estado: <code>borrador</code> (§02 pendiente de aprobación)</span>
+      <span>Issues: <code>#227</code>, <code>#319</code></span>
       <span>Fuente: <code>docs/design/domain/BC-analytics-modelo.md</code></span>
     </div>
   </header>
@@ -392,11 +392,59 @@ classDiagram
       solo datos ya escritos por otro BC que se leen y agregan en el momento de cada consulta.
     </div>
 
+    <section id="ampliacion-rf20-23">
+      <h2><span class="num">02</span> Ampliación — métodos y DTOs de RF-20 a RF-23 (Incremento 5-ADJ, <code style="font-family: var(--font-mono); font-size: 0.85em;">US-ADJ-33</code>, pendiente de aprobación)</h2>
+      <p class="lede">
+        <code style="font-family: var(--font-mono);">EvaluacionDesempenoConsultaPort</code> y
+        <code style="font-family: var(--font-mono);">MetadatoPreguntaResumen</code> crecen con
+        métodos/campos nuevos — sin puerto nuevo. Detalle completo:
+        <code style="font-family: var(--font-mono);">BC-analytics-modelo.md</code> §8.
+      </p>
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+classDiagram
+    class EvaluacionDesempenoConsultaPort {
+        &lt;&lt;Puerto — Actividad Evaluativa&gt;&gt;
+        listar_evaluaciones_finalizadas(estudiante_id, materia_id?) List~EvaluacionDesempenoResumen~
+        listar_respuestas_vigentes_de_materia(materia_id, estudiante_ids?) List~RespuestaVigenteResumen~
+        listar_actividades_abiertas(materia_id, comision_id) List~UUID~
+        listar_estados_de_actividad(actividad_id, estudiante_ids) Dict~UUID, EstadoEvaluacion~
+    }
+
+    class MetadatoPreguntaResumen {
+        &lt;&lt;DTO — ampliado&gt;&gt;
+        string enunciado
+        string unidad_tematica
+        string tema
+    }
+
+    class EstadoEvaluacion {
+        &lt;&lt;enum&gt;&gt;
+        en_curso
+        suspendida
+        finalizada
+    }
+
+    EvaluacionDesempenoConsultaPort ..> EstadoEvaluacion : devuelve (valores del dict)
+    PreguntaMetadatoConsultaPort ..> MetadatoPreguntaResumen : devuelve (ampliado)
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> ningún estudiante ausente del resultado de
+          <code style="font-family: var(--font-mono);">listar_estados_de_actividad</code> es un
+          error — significa "sin iniciar", el cuarto estado de RF-23 que no necesita entrada
+          explícita en el enum porque nunca hubo <code style="font-family: var(--font-mono);">Evaluacion</code>
+          que lo represente.
+        </figcaption>
+      </figure>
+    </section>
+
   </main>
 
   <footer>
     <span>Cognión — BC Analytics</span>
-    <span>Modelado en conversación con Víctor, 2026-09-04</span>
+    <span>Modelado en conversación con Víctor, 2026-09-04 · Ampliación 2026-09-12</span>
   </footer>
 
 </div>

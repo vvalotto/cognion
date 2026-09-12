@@ -20,6 +20,11 @@
 > Mermaid): `BC-analytics-modelo-event-storming.html`.
 > Diagrama complementario (puertos de consulta, sus métodos y DTOs, en Mermaid):
 > `BC-analytics-modelo-diagramas.html`.
+>
+> **Ampliación 2026-09-12 — pendiente de aprobación** (`US-ADJ-33`, Incremento 5-ADJ,
+> `docs/plans/inc5-adj/inc5-adj-candidatas.md`): se agrega el §8 con las 4 queries de RF-20 a
+> RF-23 (agregadas a `RF_v1.md` el 2026-09-09, sin incremento asignado hasta ahora). No
+> reemplaza nada de lo ya aprobado en `US-4.0.1` — solo agrega.
 
 ---
 
@@ -153,3 +158,90 @@ Modelo completo, sin hot spots abiertos (§6) — pasa a aprobación explícita 
 comentario de cierre del Issue #227 (DoD tipo `Modelado`, `WORKFLOW-DESARROLLO.md` §2). Una vez
 aprobado, es el input de los wireframes de US-4.0.2 (Issue #228) y de las specs US-IEDD de las
 Iteraciones 1 y 2 (`docs/plans/inc4/inc4-candidatas.md`).
+
+---
+
+## 8. Ampliación — RF-20 a RF-23 (Incremento 5-ADJ, `US-ADJ-33`)
+
+> Origen: `RF-20` a `RF-23` (`RF_v1.md`, agregados 2026-09-09 durante la prueba manual E2E de
+> estabilización), sin incremento asignado hasta que se agrupan en
+> `docs/plans/inc5-adj/inc5-adj-candidatas.md`. Mismo criterio del BC ya vigente (§2): sin
+> aggregate, sin comando, sin evento propio — solo compone lectura de otros BCs vía puertos.
+> Todos los actores son Docente (a diferencia de RF-15/16, acá no hay vista propia del
+> Estudiante).
+
+### 8.1 Hallazgo de deriva documental — `ActividadEvaluativaPeriodoAbierto` (no bloquea este modelo)
+
+Al diseñar RF-20 se detectó que `src/actividad_evaluativa/entities/actividad_evaluativa_periodo_abierto.py`
+ya tiene cuatro atributos que `docs/design/domain/BC-actividad-evaluativa-modelo.md` (§5, la
+tabla del aggregate) no documenta: `titulo` (`US-ADJ-10`), `comisiones_ids` (restricción de
+visibilidad por comisión, agregada en la prueba de estabilización del portal Docente, PR #299,
+sin US-IEDD formal — hallazgo de UAT resuelto directo en `src/`, `frontend/`-only según el
+criterio de la época pero terminó tocando el aggregate) y `unidad_tematica`/`tema` (restricción
+del set aleatorio, mismo PR). Este modelo de Analytics **ya diseña contra el código real**
+(`comisiones_ids` es imprescindible para RF-20, ver §8.3) — la actualización formal de
+`BC-actividad-evaluativa-modelo.md` §5 queda anotada para la Iteración 5 (revisión documental
+transversal) de este mismo incremento, no se corrige acá para no mezclar el modelo de un BC
+ajeno dentro de este documento.
+
+### 8.2 Fuentes de datos nuevas / puertos ampliados
+
+| Fuente | BC dueño | Qué expone (nuevo) |
+|---|---|---|
+| `ActividadEvaluativaPeriodoAbierto.comisiones_ids`/`fecha_apertura`/`fecha_cierre`/`cerrada_manualmente` | Actividad Evaluativa | Qué actividades de una materia están **abiertas ahora** y visibles para una comisión puntual (RF-20) |
+| Tabla `events`, stream `Evaluacion` — estado sin exigir `Finalizada` | Actividad Evaluativa | Estado (`en_curso`/`suspendida`/`finalizada`) de cada `Evaluacion` de una actividad puntual, no solo las finalizadas (RF-23) — a diferencia de `listar_evaluaciones_finalizadas` (§5), que ignora todo lo que no llegó a `Finalizada` |
+| `PreguntaPlantilla.enunciado` | Banco de Preguntas | Texto de la pregunta, para el ranking (RF-22) — `MetadatoPreguntaResumen` (§5) hoy solo trae `unidad_tematica`/`tema` |
+
+**Ampliación de `EvaluacionDesempenoConsultaPort`** (mismo puerto de §5, crece con la
+Iteración 4 igual que ya creció entre `US-4.1.1` y `US-4.2.4` — no se crea un puerto nuevo por
+cada RF):
+
+| Método nuevo | Devuelve |
+|---|---|
+| `listar_actividades_abiertas(materia_id, comision_id)` | `list[UUID]` de `actividad_id` con `fecha_apertura ≤ ahora ≤ fecha_cierre`, `cerrada_manualmente = false`, y visibles a `comision_id` (`comisiones_ids` vacío = todas, o `comision_id ∈ comisiones_ids`) — insumo de "actividades pendientes" (RF-20) |
+| `listar_estados_de_actividad(actividad_id, estudiante_ids)` | `dict[UUID, EstadoEvaluacion]` — estado de la `Evaluacion` de cada estudiante para esa actividad puntual (`en_curso`, `suspendida` o `finalizada`); un `estudiante_id` ausente del dict nunca inició — "sin iniciar" (RF-23) |
+
+**Ampliación de `MetadatoPreguntaResumen`/`PreguntaMetadatoConsultaPort`** (§5): agrega el
+campo `enunciado: str` al DTO existente — mismo método `obtener_metadatos`, sin nuevo método,
+ya que es la misma consulta por lote a `PreguntaPlantilla` ampliando qué campos trae.
+
+**Sin cambios** en `ComisionConsultaPort` (§5) — `listar_comisiones_por_materia` y
+`listar_estudiantes` ya alcanzan para las 4 queries nuevas.
+
+### 8.3 Queries → resultados (nuevas)
+
+| Query | RF | Resultado |
+|---|---|---|
+| `ObtenerDesempenoPorComision(comision_id)` | RF-20 | Una fila por estudiante de la comisión: `estudiante_id`, `nombre`, `porcentaje_aciertos_acumulado: float \| None` (`None` = "Sin datos", nunca `0%`, si no tiene ninguna `Evaluacion` finalizada — agrega igual que `ObtenerDesempenoAcumuladoPorMateria`, §4, para cada estudiante del roster), `actividades_pendientes: int` (actividades de `listar_actividades_abiertas(materia_id, comision_id)` sin `Evaluacion` `Finalizada` de ese estudiante — no distingue sin-iniciar de en-curso/suspendida, ese detalle es RF-23) |
+| `ObtenerRevisionDeEvaluacion(evaluacion_id, docente_id)` | RF-20 (drill-down) | Reusa la revisión completa ya existente de Actividad Evaluativa (`GET /evaluaciones/{id}/revision`, `US-3.2.3`) — **requiere ampliar su guard de rol** (hoy solo el propio Estudiante dueño puede pedirla) para admitir Docente, validando que la `Evaluacion` pertenezca a una comisión de una materia que ese Docente dicta (mismo patrón de `require_docente_o_administrador` ya usado en `US-ADJ-23`, pero acá es "Docente de la materia", no "cualquier Docente") |
+| `ObtenerEvolucionTemporalEstudiante(estudiante_id, materia_id)` | RF-21 (individual) | Una fila por `Evaluacion` finalizada del estudiante en la materia, ordenada por `finalizada_en` — mismo dato que `ObtenerDesempenoPorEvaluacion` (§4), solo reordenado como serie temporal; sin fuente adicional |
+| `ObtenerEvolucionTemporalComision(comision_id, materia_id)` | RF-21 (comisión) | Una fila por `actividad_id` con al menos una `Evaluacion` finalizada de algún estudiante del roster: `porcentaje_aciertos_promedio` (promedio simple entre los estudiantes que finalizaron esa actividad — quien no la rindió no entra al promedio de ese punto, no cuenta como 0%), ordenada por `min(finalizada_en)` del grupo como proxy de orden cronológico de la actividad (evita depender de `fecha_apertura`, que `EvaluacionDesempenoResumen` no trae hoy) |
+| `ObtenerRankingPreguntasFalladas(materia_id, comision_id?)` | RF-22 | Una fila por `pregunta_id` que apareció en al menos una `Respuesta` vigente de la materia (`listar_respuestas_vigentes_de_materia`, §5, acotado a `estudiante_ids` del roster si se indica `comision_id`): `enunciado`, `unidad_tematica`, `tema`, `cantidad_presentaciones`, `cantidad_fallos`, `tasa_error` — mismo criterio de "solo lo efectivamente presentado" que evita denominador cero |
+| `ObtenerCompletitudPorActividad(actividad_id)` | RF-23 | Una fila por estudiante del roster de la(s) comisión(es) a la(s) que la actividad está restringida (o de toda la materia si `comisiones_ids` está vacío — requiere que el Docente indique qué comisión mirar en ese caso, a resolver en la spec/wireframe): `estudiante_id`, `nombre`, `estado` ∈ {`sin_iniciar`, `en_curso`, `suspendida`, `finalizada`} — de `listar_estados_de_actividad` (§8.2), completando con `sin_iniciar` los estudiantes ausentes del dict |
+
+### 8.4 Hot spots — resueltos con Víctor (2026-09-12)
+
+1. **¿"Actividades pendientes" (RF-20) distingue sin-iniciar de en-curso/suspendida?**
+   Resuelto — no, es un conteo simple ("no finalizada todavía"); el detalle por estado es
+   exactamente RF-23, sin duplicar esa granularidad en RF-20.
+2. **¿Cómo se ordena el eje X de la evolución por comisión (RF-21) sin un campo de fecha de la
+   actividad en el DTO existente?** Resuelto — se usa `min(finalizada_en)` del grupo de
+   evaluaciones de esa actividad como proxy de orden cronológico, evitando ampliar
+   `EvaluacionDesempenoResumen` con un dato (`fecha_apertura` de la actividad) que ningún otro
+   consumidor de ese DTO necesita hoy.
+3. **¿Quién puede pedir la revisión completa de una evaluación de un estudiante (RF-20
+   drill-down)?** Resuelto — se amplía el guard de `GET /evaluaciones/{id}/revision` (hoy
+   exclusivo del propio Estudiante) para admitir también al Docente de la materia de esa
+   actividad, no a cualquier Docente del sistema.
+4. **¿`ObtenerCompletitudPorActividad` sobre una actividad sin restricción de comisión
+   (`comisiones_ids` vacío) — contra qué roster se arma la tabla?** Sin resolver del todo —
+   queda para la spec de implementación (probablemente el Docente elige una comisión de la
+   materia igual, mismo patrón que `ObtenerTasaErrorPorTema` con `comision_id` opcional) — no
+   bloquea la aprobación de este modelo.
+
+### 8.5 Próximo paso
+
+Ampliación del modelo completa — pasa a aprobación explícita de Víctor en el comentario de
+cierre del Issue [#319](https://github.com/vvalotto/cognion/issues/319) (`US-ADJ-33`, DoD tipo
+`Modelado`, `WORKFLOW-DESARROLLO.md` §2). Habilita `US-ADJ-34` (wireframes) y la Iteración 4 de
+`docs/plans/inc5-adj/inc5-adj-candidatas.md`.
