@@ -86,6 +86,13 @@ mismo orden que `US-ADJ-21`→`US-ADJ-22` en Incremento 4-ADJ.
 `docs/design/domain/BC-analytics-modelo.md` §8 (PR #324, #325). Hallazgo de deriva documental
 en `BC-actividad-evaluativa-modelo.md` anotado para la Iteración 5.
 
+~~US-ADJ-34~~ Cerrada 2026-09-12, Issue [#320](https://github.com/vvalotto/cognion/issues/320)
+— wireframes/prototipo aprobados por Víctor: `docs/design/ux/prototipos/identidad-autoservicio.html`
+(11 pantallas) + `docs/design/ux/wireframes-identidad-autoservicio.md`, ampliación de
+`docs/design/ux/prototipos/analytics-portal-desempeno.html` (+4 pantallas) y
+`docs/design/ux/wireframes-analytics.md` §3.2-3.5 (PR #327). **Cierra completa la Iteración 0**
+del Incremento 5-ADJ.
+
 ---
 
 ## Iteración 1 — Identidad: contraseña segura y accesible
