@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -112,9 +113,8 @@ export function AltaDocente() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="alta-docente-password">Contraseña temporal</Label>
-          <Input
+          <PasswordInput
             id="alta-docente-password"
-            type="password"
             required
             minLength={8}
             value={password}
@@ -123,9 +123,8 @@ export function AltaDocente() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="alta-docente-confirmar-password">Confirmar contraseña</Label>
-          <Input
+          <PasswordInput
             id="alta-docente-confirmar-password"
-            type="password"
             required
             minLength={8}
             value={confirmarPassword}

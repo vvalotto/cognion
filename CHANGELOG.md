@@ -9,6 +9,19 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- [US-ADJ-35] Toggle mostrar/ocultar contraseña
+  - Componente compartido `PasswordInput.tsx` (nuevo) — envuelve `Input` agregando un botón
+    de mostrar/ocultar (íconos `Eye`/`EyeOff` de `lucide-react`), sin perder el valor tipeado
+  - Reemplaza los 10 inputs `type="password"` de los 5 formularios existentes: `Login.tsx`,
+    `Registro.tsx` (×2), `CambiarPassword.tsx` (×3), `AltaDocente.tsx` (×2),
+    `cuentas/ResetearPassword.tsx` (×2) — sin cambios de validación ni de backend
+  - Primera US de la Iteración 1 del Incremento 5-ADJ; `US-ADJ-36` reutiliza este componente
+    para el indicador de fortaleza de contraseña
+  - 380/384 tests frontend (4 fallos de flake preexistente de contención de CPU, confirmado
+    ajeno a esta US — los 2 archivos afectados pasan 8/8 en aislamiento), quality gates
+    APROBADO (oxlint 0 errores, `tsc -b` 0 errores, 100% cobertura en `PasswordInput.tsx`)
+
 ## [0.7.0] - 2026-09-10
 
 ### Added

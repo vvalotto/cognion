@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Logo } from "@/components/Logo"
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -101,9 +102,8 @@ export function Login() {
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="login-password">Contraseña</Label>
-            <Input
+            <PasswordInput
               id="login-password"
-              type="password"
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
