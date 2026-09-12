@@ -16,6 +16,12 @@
 > `materia_id: UUID` vía `MateriaPort` (`US-2.1.2`) — este documento ya no lo trata como
 > pendiente. Se agregan también `Comisión.administrador_id` y la excepción
 > `CuentaBloqueadaError` de `IniciarSesion`, sin cambios de fondo en aggregates ni invariantes.
+>
+> **Ampliación 2026-09-12 — pendiente de aprobación** (`US-ADJ-32`, Incremento 5-ADJ,
+> `docs/plans/inc5-adj/inc5-adj-candidatas.md`): se agrega el §13 con dos comandos nuevos
+> (recuperación de contraseña por autoservicio y autoregistro de Docente/Estudiante con
+> selección de perfil) y la ampliación de la política de contraseña segura (INV-ID-11). No
+> reemplaza nada de lo ya aprobado en Incremento 1/2 — solo agrega.
 
 ---
 
@@ -317,3 +323,116 @@ Modelo completo (sin hot spots, preguntas abiertas ni observaciones de diseño p
 pasa a aprobación explícita de Víctor en el comentario de cierre de
 https://github.com/vvalotto/cognion/issues/2 (DoD tipo `Modelado`, `WORKFLOW-DESARROLLO.md`
 §2).
+
+---
+
+## 13. Ampliación — Identidad Autoservicio (Incremento 5-ADJ, `US-ADJ-32`)
+
+> Origen: hallazgos de Identidad y cuentas relevados por Víctor en revisión manual
+> (2026-09-12), agrupados en `docs/plans/inc5-adj/inc5-adj-candidatas.md`. Decisiones de
+> producto ya confirmadas con Víctor antes de este modelo (recogidas ahí, no repetidas acá
+> salvo donde afectan directamente el aggregate/invariante).
+
+### 13.1 Actores (ampliación de §1)
+
+| Actor | Rol en el BC |
+|---|---|
+| Cualquiera (sin autenticar) | Puede solicitar recuperación de contraseña y autoregistrarse como Docente o Estudiante — únicos dos comandos de este BC que no requieren `Usuario` autenticado ni invitación previa |
+
+### 13.2 Comandos → Eventos (nuevos)
+
+| Comando | Actor | Aggregate | Evento(s) | Excepciones |
+|---|---|---|---|---|
+| `SolicitarRecuperacionPassword(email)` | Sin autenticar | `TokenRecuperacionPassword` (crea) | `RecuperacionPasswordSolicitada` | Ninguna expuesta al llamante — ver INV-ID-17 (no filtrar existencia de cuenta) |
+| `ConfirmarNuevaPassword(token, password_nueva)` | Sin autenticar | `TokenRecuperacionPassword` (consulta) → `Usuario` (muta) | `PasswordRecuperada` | `TokenRecuperacionVencido`, `TokenRecuperacionInvalido`, `TokenRecuperacionYaUsado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
+| `AutoregistrarDocente(nombre, email, password)` | Sin autenticar | `Usuario` + `Docente` (crea ambos, misma transacción) | `UsuarioAutoregistrado` | `EmailYaRegistrado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
+| `AutoregistrarEstudiante(nombre, email, password, comision_id)` | Sin autenticar | `Usuario` + `Estudiante` (crea ambos, misma transacción) | `UsuarioAutoregistrado` | `EmailYaRegistrado`, `ComisionNoExiste`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
+
+**Nota de diseño — dos comandos de autoregistro, no uno con `perfil` como parámetro:**
+a diferencia de `CrearUsuario` (§3, un solo comando parametrizado por `perfil` porque el actor
+—Administrador— ya está autenticado y autorizado para crear cualquier perfil), acá cada perfil
+tiene su propia precondición de datos (`Estudiante` exige `comision_id`, `Docente` no admite
+ninguno) — separar el comando evita un parámetro condicional y dos ramas de validación dentro
+de un único handler. Ninguno de los dos admite perfil `Administrador` (INV-ID-15) — el
+autoregistro es exclusivo de Docente y Estudiante, mismo alcance acordado con Víctor.
+
+**Nota de diseño — recuperación reusa el envío de email de Notificaciones, no el de
+`Invitación`:** `TokenRecuperacionPassword` es un aggregate nuevo, estructuralmente parecido a
+`Invitación` (token, expiración, uso único), pero el email se envía a través de
+`CanalEnvioPort`/`SmtpCanalEnvio` ya existente en BC Notificaciones (RF-14, `US-5.1.1`) en vez
+del adaptador SMTP propio de BC Identidad que usa `GenerarInvitacion` (`ADR-012`) — decisión
+de producto ya tomada: reusar el canal de prueba existente sin esperar la cuenta SMTP real de
+producción (`CLAUDE.md`, ítem abierto). Esto es la primera vez que BC Identidad depende de un
+puerto de BC Notificaciones — se resuelve igual que cualquier dependencia entre BCs (`ADR-006`,
+puerto propio de Identidad hacia Notificaciones, adapter in-process), no por import directo.
+
+### 13.3 Aggregate nuevo: `TokenRecuperacionPassword`
+
+| Atributo | Tipo | Notas |
+|---|---|---|
+| `id` | UUID | |
+| `usuario_id` | referencia a `Usuario` | a quien pertenece |
+| `token` | string único | enviado por email |
+| `generado_en` | datetime | |
+| `expira_en` | datetime | `generado_en + 1 hora` (INV-ID-13) — sensiblemente más corto que la invitación (7 días, `ADR-012`), acorde a que es un mecanismo de seguridad sobre una cuenta ya existente, no un alta nueva |
+| `usado_en` | datetime \| null | se completa al confirmar |
+
+**Invariantes:**
+- **INV-ID-12:** a lo sumo un `TokenRecuperacionPassword` activo (sin usar y sin vencer) por
+  `Usuario` — solicitar uno nuevo invalida cualquier token anterior sin usar del mismo
+  `Usuario` (mismo criterio que evitar links de recuperación acumulados y válidos en
+  simultáneo).
+- **INV-ID-13:** `expira_en = generado_en + 1 hora`, calculado una sola vez al generar — sin
+  extensión ni reenvío (mismo criterio de no-recuperación-de-la-recuperación que `ADR-012`
+  aplica a la invitación).
+- **INV-ID-17:** `SolicitarRecuperacionPassword` responde siempre con el mismo resultado
+  exista o no una cuenta con ese email — no debe ser posible enumerar cuentas registradas
+  probando emails contra este endpoint. Si el email no existe, no se genera token ni se
+  envía nada, pero la respuesta al llamante es indistinguible del caso exitoso.
+
+### 13.4 Cambios sobre `Usuario` y sus perfiles (ampliación de §4)
+
+Sin atributos nuevos en `Usuario` — `ConfirmarNuevaPassword` reutiliza
+`password_hash`/`validar_password_nueva` ya existentes (mismo método que `CambiarPassword` y
+`ResetearPassword`, ahora con la regla ampliada de INV-ID-11). `AutoregistrarDocente`/
+`AutoregistrarEstudiante` crean `Usuario` + perfil exactamente igual que `CrearUsuario` y
+`RegistrarEstudiante` (misma transacción, mismas invariantes INV-ID-04/06/09) — la única
+diferencia real es el actor (sin autenticar, no Administrador) y, para `Estudiante`, que
+`comision_id` lo aporta el propio llamante en vez de derivarse de una `Invitación` ya validada
+(INV-ID-05 se sigue cumpliendo: el `Estudiante` creado tiene `comision_id` desde el alta).
+
+**Invariantes nuevas:**
+- **INV-ID-14:** `AutoregistrarEstudiante` exige que `comision_id` corresponda a una
+  `Comisión` existente — mismo chequeo que ya hace `RegistrarEstudiante` indirectamente vía la
+  `Invitación` (acá no hay invitación de por medio, así que se valida directo contra
+  `Comisión`).
+- **INV-ID-15:** el autoregistro no admite perfil `Administrador` — solo `Docente` o
+  `Estudiante` tienen comando de autoregistro propio.
+- **INV-ID-16:** una cuenta creada por `AutoregistrarDocente`/`AutoregistrarEstudiante` queda
+  activa de inmediato (`bloqueada = false`, sin estado "pendiente de aprobación" ni
+  verificación de email) — mismo criterio de confianza que el resto del sistema (docente
+  único, entorno controlado). El autoregistro **convive** con la invitación existente
+  (`GenerarInvitacion`/`RegistrarEstudiante`, §3) y con el alta directa por Administrador
+  (`CrearUsuario`, §9) — no los reemplaza; son tres vías de alta independientes que conviven.
+
+**INV-ID-11 (ampliada):** toda contraseña nueva (`CrearUsuario`, `RegistrarEstudiante`,
+`CambiarPassword`, `ResetearPassword`, y ahora `ConfirmarNuevaPassword`,
+`AutoregistrarDocente`, `AutoregistrarEstudiante`) debe cumplir: mínimo 12 caracteres (sube de
+8) **y** al menos una mayúscula, un número y un símbolo. Regla única y transversal a los 7
+comandos que fijan contraseña — no hay variantes por comando ni por rol.
+
+### 13.5 Nota de alcance — relación con `ADR-012`
+
+`ADR-012` describe "rechazo sin recuperación automática" para la **invitación** (un link
+vencido no se reenvía ni se extiende) — no tiene relación con la recuperación de **contraseña**
+modelada acá (una cuenta ya existente que su dueño no puede acceder). No hay contradicción,
+pero el nombre corto "recuperación" es ambiguo entre ambos conceptos — se deja nota para la
+Iteración 5 (revisión documental) de aclarar esta distinción directamente en `ADR-012` o en
+`CLAUDE.md`, sin reabrir la decisión original.
+
+### 13.6 Próximo paso
+
+Ampliación del modelo completa — pasa a aprobación explícita de Víctor en el comentario de
+cierre del Issue [#318](https://github.com/vvalotto/cognion/issues/318) (`US-ADJ-32`, DoD tipo
+`Modelado`, `WORKFLOW-DESARROLLO.md` §2). Habilita `US-ADJ-34` (wireframes) y las Iteraciones
+1-3 de `docs/plans/inc5-adj/inc5-adj-candidatas.md`.

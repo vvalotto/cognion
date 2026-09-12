@@ -255,9 +255,9 @@
       <code>BC-identidad-modelo-diagramas.html</code>.
     </p>
     <div class="meta-row">
-      <span>Estado: <code>vigente</code></span>
-      <span>Issue: <code>#2</code></span>
-      <span>Fuente: <code>docs/design/domain/BC-identidad-modelo.md</code> §2, §3, §11</span>
+      <span>Estado: <code>vigente</code> (ampliación §13 pendiente de aprobación)</span>
+      <span>Issues: <code>#2</code>, <code>#318</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-identidad-modelo.md</code> §2, §3, §11, §13</span>
     </div>
   </header>
 
@@ -352,11 +352,64 @@ flowchart TB
       como evento en el ciclo de vida de <code>Invitación</code> (ver diagrama de estructura).
     </div>
 
+    <section>
+      <div class="eyebrow"><span class="dot"></span> Ampliación 2026-09-12 · Incremento 5-ADJ · <code>US-ADJ-32</code> — pendiente de aprobación</div>
+      <p class="lede">
+        Dos comandos nuevos, ambos sin actor autenticado — a diferencia de todo lo de arriba,
+        que siempre parte de un actor humano ya identificado (Docente, Estudiante o
+        Administrador) o de una <code>Invitación</code> ya generada. Detalle completo:
+        <code>BC-identidad-modelo.md</code> §13.
+      </p>
+
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TB
+    subgraph RECUP["🔑 Sin autenticar — recuperación de contraseña"]
+        direction LR
+        C10["SolicitarRecuperacionPassword(email)"] --> E10["RecuperacionPasswordSolicitada"]
+        E10 -. envía email vía CanalEnvioPort .-> C11["ConfirmarNuevaPassword(token, nueva)"]
+        C11 --> E11["PasswordRecuperada"]
+    end
+
+    subgraph AUTOREG["📝 Sin autenticar — autoregistro"]
+        direction LR
+        C12["AutoregistrarDocente(nombre, email,\npassword)"] --> E12a["UsuarioAutoregistrado"]
+        C13["AutoregistrarEstudiante(nombre, email,\npassword, comision_id)"] --> E12b["UsuarioAutoregistrado"]
+    end
+
+    E11 -. habilita .-> AUTH_REF["IniciarSesion — ver diagrama principal"]
+    E12a -. habilita .-> AUTH_REF
+    E12b -. habilita .-> AUTH_REF
+
+    class C10,C11,C12,C13 cmd
+    class E10,E11,E12a,E12b evt
+    class AUTH_REF evt
+
+    classDef cmd fill:#dce7fb,stroke:#5b8def,color:#1b2a4a,stroke-width:1px
+    classDef evt fill:#f6e3c4,stroke:#c98a2e,color:#5a3a10,stroke-width:1px
+</pre>
+        </div>
+        <figcaption>
+          <strong>Por qué son comandos separados de <code>CrearUsuario</code>/<code>RegistrarEstudiante</code>:</strong>
+          conviven con las dos vías de alta ya existentes (arriba) sin reemplazarlas — mismo
+          <code>Usuario</code>/perfil resultante, pero sin actor Administrador ni
+          <code>Invitación</code> de por medio. <code>AutoregistrarEstudiante</code> valida
+          <code>comision_id</code> directo contra <code>Comisión</code> (INV-ID-14), en vez de
+          heredarlo de una invitación ya aceptada. Ninguno de los dos admite perfil
+          <code>Administrador</code> (INV-ID-15). El envío de email de
+          <code>SolicitarRecuperacionPassword</code> reusa el <code>CanalEnvioPort</code> de BC
+          Notificaciones (RF-14) — primera dependencia de Identidad hacia otro BC vía puerto
+          propio, no hacia el adaptador SMTP que usa <code>GenerarInvitacion</code>.
+        </figcaption>
+      </figure>
+    </section>
+
   </main>
 
   <footer>
     <span>Cognión — BC Identidad</span>
-    <span>Modelado en conversación con Víctor, 2026-07-17/18 · Event storming agregado 2026-08-26</span>
+    <span>Modelado en conversación con Víctor, 2026-07-17/18 · Event storming agregado 2026-08-26 · Ampliación 2026-09-12</span>
   </footer>
 
 </div>
