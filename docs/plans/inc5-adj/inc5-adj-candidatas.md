@@ -116,9 +116,11 @@ PR [#335](https://github.com/vvalotto/cognion/pull/335) — `INV-ID-11` ampliada
 mayúscula/número/símbolo) en `develop`; **cierra el gap real** de `CrearUsuario`/
 `RegistrarEstudiante`, que no validaban contraseña del lado del dominio. `PasswordInput` gana
 indicador de fortaleza. Reporte `docs/reports/inc5-adj/US-ADJ-36-report.md`.
-**US-ADJ-37** Issue [#331](https://github.com/vvalotto/cognion/issues/331), spec
-`docs/specs/ajustes/US-ADJ-37.md` — backlog, pendiente de implementar. Última US de la
-Iteración 1 — la cierra completa.
+~~US-ADJ-37~~ Cerrada 2026-09-12, Issue [#331](https://github.com/vvalotto/cognion/issues/331),
+PR [#337](https://github.com/vvalotto/cognion/pull/337) — `UserMenu.tsx` (nuevo) reemplaza el
+bloque estático de avatar/nombre de `AppLayout.tsx`; agrega el único punto de entrada por clic
+a "Cambiar contraseña" y "Cerrar sesión". Última US de la Iteración 1 — la cierra completa.
+Reporte `docs/reports/inc5-adj/US-ADJ-37-report.md`.
 
 **Orden:** las 3 son independientes entre sí — pueden implementarse en cualquier orden o en
 paralelo.
