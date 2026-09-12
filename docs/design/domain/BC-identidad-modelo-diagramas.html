@@ -287,8 +287,8 @@
       invitación (RF-01) y el bloqueo/desbloqueo de una cuenta (RF-19).
     </p>
     <div class="meta-row">
-      <span>Estado: <code>vigente</code></span>
-      <span>Issue: <code>#2</code></span>
+      <span>Estado: <code>vigente</code> (§04 pendiente de aprobación)</span>
+      <span>Issues: <code>#2</code>, <code>#318</code></span>
       <span>Fuente: <code>docs/design/domain/BC-identidad-modelo.md</code></span>
     </div>
     <p class="subtitle" style="margin-top: 0.9rem;">
@@ -298,6 +298,9 @@
       <code style="font-family: var(--font-mono);">MateriaPort</code> (<code style="font-family: var(--font-mono);">US-2.1.2</code>),
       se agrega <code style="font-family: var(--font-mono);">administrador_id</code> y la
       excepción <code style="font-family: var(--font-mono);">CuentaBloqueadaError</code>.
+      Ampliado 2026-09-12 (Incremento 5-ADJ, <code style="font-family: var(--font-mono);">US-ADJ-32</code>)
+      con el ciclo de vida del aggregate nuevo
+      <code style="font-family: var(--font-mono);">TokenRecuperacionPassword</code> (§04).
     </p>
   </header>
 
@@ -480,11 +483,42 @@ stateDiagram-v2
       </div>
     </section>
 
+    <section id="recuperacion">
+      <h2><span class="num">04</span> Ciclo de vida de <span style="font-family: var(--font-mono); font-size: 0.85em;">TokenRecuperacionPassword</span> — ampliación 2026-09-12, <code style="font-family: var(--font-mono); font-size: 0.85em;">US-ADJ-32</code>, pendiente de aprobación</h2>
+      <p class="lede">
+        Mismo patrón de uso único que <code style="font-family: var(--font-mono);">Invitación</code>
+        (§02), con una diferencia clave: expira en 1 hora, no 7 días (INV-ID-13) — es un
+        mecanismo de seguridad sobre una cuenta ya existente, no un alta nueva. Detalle
+        completo: <code style="font-family: var(--font-mono);">BC-identidad-modelo.md</code> §13.
+      </p>
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> Vigente : SolicitarRecuperacionPassword(email)\nexpira_en = generado_en + 1 hora — INV-ID-13
+    Vigente --> Usado : ConfirmarNuevaPassword(token, nueva)\nahora &lt; expira_en
+    Vigente --> Vencido : ahora ≥ expira_en\n(pasivo, sin comando)
+    Vigente --> Vigente : SolicitarRecuperacionPassword (mismo usuario)\ninvalida el token anterior — INV-ID-12
+    Usado --> Usado : ConfirmarNuevaPassword\n❌ TokenRecuperacionYaUsado
+    Vencido --> Vencido : ConfirmarNuevaPassword\n❌ TokenRecuperacionVencido — sin recuperación de la recuperación
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> a lo sumo un token <code style="font-family: var(--font-mono);">Vigente</code>
+          por <code style="font-family: var(--font-mono);">Usuario</code> a la vez (INV-ID-12) —
+          pedir uno nuevo invalida cualquier token anterior sin usar, no los acumula. El correo
+          se envía siempre con la misma respuesta al llamante, exista o no la cuenta
+          (INV-ID-17) — no expuesto en este diagrama de estados porque ocurre antes de que el
+          aggregate llegue a existir.
+        </figcaption>
+      </figure>
+    </section>
+
   </main>
 
   <footer>
     <span>Cognión — BC Identidad</span>
-    <span>Modelado en conversación con Víctor, 2026-07-17/18 · Diagramas agregados 2026-08-26</span>
+    <span>Modelado en conversación con Víctor, 2026-07-17/18 · Diagramas agregados 2026-08-26 · Ampliación 2026-09-12</span>
   </footer>
 
 </div>
