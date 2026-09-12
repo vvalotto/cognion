@@ -6,10 +6,10 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
-from src.identidad.entities.errors import PasswordDemasiadoCorta
+from src.identidad.entities.errors import PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente
 from src.shared.entities.tipo_perfil import TipoPerfil
 
-_LARGO_MINIMO_PASSWORD = 8
+_LARGO_MINIMO_PASSWORD = 12
 _INTENTOS_MAXIMOS_CAMBIO_PASSWORD = 3
 
 
@@ -94,12 +94,19 @@ class Usuario:
 
     @staticmethod
     def validar_password_nueva(password_nueva: str) -> None:
-        """Valida INV-ID-11 sobre una contraseña en texto plano, antes de hashearla.
+        """Valida INV-ID-11 (ampliada) sobre una contraseña en texto plano, antes de hashearla.
 
-        Lanza `PasswordDemasiadoCorta` si no llega al mínimo de 8 caracteres.
+        Lanza `PasswordDemasiadoCorta` si no llega al mínimo de 12 caracteres.
+        Lanza `PasswordSinComplejidadSuficiente` si, cumpliendo la longitud, no mezcla al
+        menos una mayúscula, un dígito y un símbolo no alfanumérico.
         """
         if len(password_nueva) < _LARGO_MINIMO_PASSWORD:
             raise PasswordDemasiadoCorta()
+        tiene_mayuscula = any(c.isupper() for c in password_nueva)
+        tiene_digito = any(c.isdigit() for c in password_nueva)
+        tiene_simbolo = any(not c.isalnum() for c in password_nueva)
+        if not (tiene_mayuscula and tiene_digito and tiene_simbolo):
+            raise PasswordSinComplejidadSuficiente()
 
     def editar_datos(self, nombre: str, email: str) -> None:
         """Corrige `nombre`/`email` de la cuenta (typos al darla de alta).

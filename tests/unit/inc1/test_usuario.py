@@ -2,7 +2,10 @@ import uuid
 
 import pytest
 
-from src.identidad.entities.errors import PasswordDemasiadoCorta
+from src.identidad.entities.errors import (
+    PasswordDemasiadoCorta,
+    PasswordSinComplejidadSuficiente,
+)
 from src.identidad.entities.usuario import Administrador, Docente, Estudiante, Usuario
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -43,19 +46,38 @@ class TestUsuarioCrearEstudiante:
 
 
 class TestUsuarioValidarPasswordNueva:
-    def test_acepta_password_de_8_caracteres(self):
-        Usuario.validar_password_nueva("12345678")
+    """INV-ID-11 ampliada (`US-ADJ-36`): mínimo 12 caracteres + mayúscula + número + símbolo."""
 
-    def test_acepta_password_larga(self):
-        Usuario.validar_password_nueva("unaContraseñaBienLarga123")
+    def test_acepta_password_que_cumple_las_4_reglas(self):
+        Usuario.validar_password_nueva("Segura#2026x")
 
-    def test_rechaza_password_de_menos_de_8_caracteres(self):
+    def test_acepta_password_larga_con_las_4_reglas(self):
+        Usuario.validar_password_nueva("UnaContraseñaBienLarga#123")
+
+    def test_rechaza_password_de_menos_de_12_caracteres(self):
         with pytest.raises(PasswordDemasiadoCorta):
-            Usuario.validar_password_nueva("corta")
+            Usuario.validar_password_nueva("Ab1#567")
 
     def test_rechaza_password_vacia(self):
         with pytest.raises(PasswordDemasiadoCorta):
             Usuario.validar_password_nueva("")
+
+    def test_longitud_se_valida_antes_que_complejidad(self):
+        """Una contraseña corta y sin complejidad rechaza por longitud, no por complejidad."""
+        with pytest.raises(PasswordDemasiadoCorta):
+            Usuario.validar_password_nueva("corta")
+
+    def test_rechaza_password_larga_sin_mayuscula(self):
+        with pytest.raises(PasswordSinComplejidadSuficiente):
+            Usuario.validar_password_nueva("segura#2026x")
+
+    def test_rechaza_password_larga_sin_numero(self):
+        with pytest.raises(PasswordSinComplejidadSuficiente):
+            Usuario.validar_password_nueva("Segura#abcdx")
+
+    def test_rechaza_password_larga_sin_simbolo(self):
+        with pytest.raises(PasswordSinComplejidadSuficiente):
+            Usuario.validar_password_nueva("Segura2026xx")
 
 
 class TestUsuarioResetearPassword:

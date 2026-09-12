@@ -31,10 +31,10 @@ class TestCambiarPasswordUseCase:
         repo.usuarios[usuario.id] = usuario
         use_case = CambiarPasswordUseCase(repo, hasher)
 
-        evento = await use_case.execute(usuario.id, "ClaveActual1", "nuevaClave123")
+        evento = await use_case.execute(usuario.id, "ClaveActual1", "nuevaClave123#")
 
         actualizado = repo.usuarios[usuario.id]
-        assert actualizado.password_hash == hasher.hash("nuevaClave123")
+        assert actualizado.password_hash == hasher.hash("nuevaClave123#")
         assert actualizado.intentos_fallidos_password == 0
         assert isinstance(evento, PasswordCambiada)
         assert evento.usuario_id == usuario.id
@@ -46,7 +46,7 @@ class TestCambiarPasswordUseCase:
         usuario_id = uuid.uuid4()
 
         with pytest.raises(UsuarioNoExiste) as exc:
-            await use_case.execute(usuario_id, "ClaveActual1", "nuevaClave123")
+            await use_case.execute(usuario_id, "ClaveActual1", "nuevaClave123#")
 
         assert exc.value.usuario_id == usuario_id
 
@@ -58,7 +58,7 @@ class TestCambiarPasswordUseCase:
         use_case = CambiarPasswordUseCase(repo, hasher)
 
         with pytest.raises(CuentaBloqueadaError) as exc:
-            await use_case.execute(usuario.id, "cualquier-cosa", "nuevaClave123")
+            await use_case.execute(usuario.id, "cualquier-cosa", "nuevaClave123#")
 
         assert exc.value.usuario_id == usuario.id
         assert repo.usuarios[usuario.id].password_hash == hasher.hash("ClaveActual1")
@@ -71,7 +71,7 @@ class TestCambiarPasswordUseCase:
         use_case = CambiarPasswordUseCase(repo, hasher)
 
         with pytest.raises(PasswordActualIncorrecta) as exc:
-            await use_case.execute(usuario.id, "password-incorrecta", "nuevaClave123")
+            await use_case.execute(usuario.id, "password-incorrecta", "nuevaClave123#")
 
         actualizado = repo.usuarios[usuario.id]
         assert actualizado.intentos_fallidos_password == 2
@@ -87,7 +87,7 @@ class TestCambiarPasswordUseCase:
         use_case = CambiarPasswordUseCase(repo, hasher)
 
         with pytest.raises(PasswordActualIncorrecta) as exc:
-            await use_case.execute(usuario.id, "password-incorrecta", "nuevaClave123")
+            await use_case.execute(usuario.id, "password-incorrecta", "nuevaClave123#")
 
         actualizado = repo.usuarios[usuario.id]
         assert actualizado.intentos_fallidos_password == 3

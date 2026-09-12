@@ -23,11 +23,13 @@ class CrearUsuarioUseCase:
     ) -> tuple[Usuario, UsuarioCreado]:
         """Crea y persiste el usuario, y devuelve el usuario junto al evento emitido.
 
-        Lanza `EmailYaRegistrado` si el email ya está en uso.
+        Lanza `EmailYaRegistrado` si el email ya está en uso, o `PasswordDemasiadoCorta`/
+        `PasswordSinComplejidadSuficiente` si `password` no cumple INV-ID-11 (`US-ADJ-36`).
         """
         if await self._repositorio.existe_email(email):
             raise EmailYaRegistrado(email)
 
+        Usuario.validar_password_nueva(password)
         password_hash = self._hasher.hash(password)
         usuario = Usuario.crear(nombre, email, password_hash, tipo_perfil)
         await self._repositorio.guardar(usuario)

@@ -9,6 +9,8 @@ from src.identidad.entities.errors import (
     InvitacionInvalida,
     InvitacionVencida,
     InvitacionYaUsada,
+    PasswordDemasiadoCorta,
+    PasswordSinComplejidadSuficiente,
 )
 from src.identidad.entities.usuario import Estudiante
 from src.identidad.frameworks.api.schemas import RegistrarEstudianteRequest, RegistroResponse
@@ -26,7 +28,8 @@ async def registrar_estudiante(
     """Registra un Estudiante vía invitación; endpoint público, sin JWT (aún no autenticado).
 
     Responde 409 si el email ya está registrado, 422 si la invitación no es válida
-    (inexistente, vencida o ya usada — mismo status y mensaje para los tres casos, `US-1.1.3`).
+    (inexistente, vencida o ya usada — mismo status y mensaje para los tres casos, `US-1.1.3`)
+    o si `password` no cumple INV-ID-11 (`US-ADJ-36`).
     """
     try:
         usuario, materia, _evento_invitacion, _evento_usuario = (
@@ -36,7 +39,13 @@ async def registrar_estudiante(
         )
     except EmailYaRegistrado as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
-    except (InvitacionInvalida, InvitacionVencida, InvitacionYaUsada) as exc:
+    except (
+        InvitacionInvalida,
+        InvitacionVencida,
+        InvitacionYaUsada,
+        PasswordDemasiadoCorta,
+        PasswordSinComplejidadSuficiente,
+    ) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

@@ -127,7 +127,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
             json={
                 "nombre": "Usuario Test",
                 "email": email,
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": perfil,
             },
             headers=admin_headers(),

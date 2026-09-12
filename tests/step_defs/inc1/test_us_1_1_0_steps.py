@@ -55,7 +55,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
             json={
                 "nombre": "Usuario Test",
                 "email": email,
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": perfil,
             },
             headers=admin_headers(),
@@ -145,7 +145,7 @@ def ejecuta_crear_usuario_docente(context):
             {
                 "nombre": "Nueva Docente",
                 "email": "nueva.docente@fiuner.edu.ar",
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": "docente",
             },
         )
@@ -160,7 +160,7 @@ def ejecuta_crear_usuario_email_duplicado(context):
             {
                 "nombre": "Otro Docente",
                 "email": context["email_existente"],
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": "docente",
             },
         )

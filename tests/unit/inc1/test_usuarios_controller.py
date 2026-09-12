@@ -11,7 +11,7 @@ class TestUsuariosController:
         controller = UsuariosController(CrearUsuarioUseCase(repo, FakePasswordHasher()))
 
         usuario, evento = await controller.crear_usuario(
-            "Ana", "ana@fiuner.edu.ar", "claveSegura1", TipoPerfil.DOCENTE
+            "Ana", "ana@fiuner.edu.ar", "claveSegura1#", TipoPerfil.DOCENTE
         )
 
         assert usuario.email == "ana@fiuner.edu.ar"

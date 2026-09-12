@@ -17,10 +17,13 @@
 > pendiente. Se agregan también `Comisión.administrador_id` y la excepción
 > `CuentaBloqueadaError` de `IniciarSesion`, sin cambios de fondo en aggregates ni invariantes.
 >
-> **Ampliación 2026-09-12 — pendiente de aprobación** (`US-ADJ-32`, Incremento 5-ADJ,
+> **Ampliación 2026-09-12 — aprobada por Víctor** (`US-ADJ-32`, Incremento 5-ADJ,
 > `docs/plans/inc5-adj/inc5-adj-candidatas.md`): se agrega el §13 con dos comandos nuevos
 > (recuperación de contraseña por autoservicio y autoregistro de Docente/Estudiante con
-> selección de perfil) y la ampliación de la política de contraseña segura (INV-ID-11). No
+> selección de perfil) y la ampliación de la política de contraseña segura (INV-ID-11).
+> `INV-ID-11` ampliada ya está **implementada** (`US-ADJ-36`, `Usuario.validar_password_nueva`
+> en `src/identidad/entities/usuario.py`) — los comandos de recuperación y autoregistro
+> siguen sin implementar (Iteraciones 2 y 3 del incremento). No
 > reemplaza nada de lo ya aprobado en Incremento 1/2 — solo agrega.
 
 ---

@@ -59,4 +59,42 @@ describe("PasswordInput", () => {
     await user.type(input, "a")
     expect(valor).toBe("a")
   })
+
+  describe("mostrarFortaleza (US-ADJ-36)", () => {
+    it("no muestra el indicador si mostrarFortaleza es false u omitido", () => {
+      render(<PasswordInput id="p" value="cualquiera" onChange={() => {}} />)
+      expect(screen.queryByText("Débil")).not.toBeInTheDocument()
+    })
+
+    it("muestra 'Débil' con 0 o 1 regla cumplida", () => {
+      render(
+        <PasswordInput id="p" mostrarFortaleza value="solotextolargo" onChange={() => {}} />,
+      )
+      expect(screen.getByText("Débil")).toBeInTheDocument()
+    })
+
+    it("muestra 'Media' con 2-3 reglas cumplidas", () => {
+      render(
+        <PasswordInput id="p" mostrarFortaleza value="Segura2026xx" onChange={() => {}} />,
+      )
+      expect(screen.getByText("Media")).toBeInTheDocument()
+    })
+
+    it("muestra 'Fuerte' con las 4 reglas cumplidas", () => {
+      render(
+        <PasswordInput id="p" mostrarFortaleza value="Segura#2026x" onChange={() => {}} />,
+      )
+      expect(screen.getByText("Fuerte")).toBeInTheDocument()
+    })
+
+    it("el checklist marca cada regla cumplida/faltante", () => {
+      render(
+        <PasswordInput id="p" mostrarFortaleza value="Segura#2026x" onChange={() => {}} />,
+      )
+      expect(screen.getByText(/Mínimo 12 caracteres/)).toBeInTheDocument()
+      expect(screen.getByText(/Una mayúscula/)).toBeInTheDocument()
+      expect(screen.getByText(/Un número/)).toBeInTheDocument()
+      expect(screen.getByText(/Un símbolo/)).toBeInTheDocument()
+    })
+  })
 })

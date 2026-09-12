@@ -8,7 +8,7 @@ Feature: Reseteo de contraseña con desbloqueo (US-2.2.4)
   @resetear-password @happy-path
   Scenario: Reseteo de cuenta bloqueada
     Given un Usuario con bloqueada = true
-    When un Administrador ejecuta ResetearPassword(usuario_id, "nuevaClave123", administrador_id)
+    When un Administrador ejecuta ResetearPassword(usuario_id, "nuevaClave123#", administrador_id)
     Then el sistema actualiza password_hash
     And bloqueada pasa a false, los contadores vuelven a 0
     And se emiten PasswordReseteada y CuentaDesbloqueada
@@ -16,7 +16,7 @@ Feature: Reseteo de contraseña con desbloqueo (US-2.2.4)
   @resetear-password @happy-path
   Scenario: Reseteo de cuenta activa (no bloqueada)
     Given un Usuario con bloqueada = false
-    When un Administrador ejecuta ResetearPassword(usuario_id, "nuevaClave123", administrador_id)
+    When un Administrador ejecuta ResetearPassword(usuario_id, "nuevaClave123#", administrador_id)
     Then el sistema actualiza password_hash
     And se emite PasswordReseteada, sin CuentaDesbloqueada
 
