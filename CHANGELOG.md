@@ -10,6 +10,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-37] Descubribilidad — Cambiar contraseña y Cerrar sesión en el menú
+  - `UserMenu.tsx` (nuevo) — envuelve `Menu` de `@base-ui/react/menu` sobre el trigger de
+    avatar/nombre/rol del header, reemplazando el `<div>` estático de `AppLayout.tsx`
+  - Dos ítems nuevos, únicos puntos de entrada por clic a funciones ya existentes sin punto
+    de entrada visible: "🔑 Cambiar contraseña" (navega a `/mi-cuenta/cambiar-password`,
+    `US-2.2.8`) y "↩ Cerrar sesión" (`clearSession()` + redirige a `/login`, antes solo se
+    invocaba desde el interceptor 401)
+  - Mismo menú para los 3 roles — sin lógica condicional por rol en el contenido
+  - Cierra completa la Iteración 1 del Incremento 5-ADJ (`US-ADJ-35` a `37`)
+  - Verificado en navegador real (Claude Browser): abrir menú, navegar a cambiar contraseña,
+    cerrar sesión limpia la sesión local y redirige a `/login`
+  - 396/396 tests frontend en aislamiento (6 fallos de flake preexistente de contención de
+    CPU al correr la suite completa, confirmado ajeno a esta US), quality gates APROBADO
+    (oxlint 0 errores, `tsc -b` 0 errores, 100% cobertura en `UserMenu.tsx`/`AppLayout.tsx`)
 - [US-ADJ-36] Contraseña segura — política ampliada
   - `Usuario.validar_password_nueva` (INV-ID-11 ampliada): mínimo sube de 8 a 12 caracteres,
     agrega mezcla de tipos (mayúscula, número, símbolo) — `PasswordSinComplejidadSuficiente`

@@ -1,0 +1,39 @@
+{
+  "us_id": "US-ADJ-37",
+  "titulo": "Descubribilidad — Cambiar contraseña y Cerrar sesión en el menú",
+  "tipo": "frontend puro, sin cambios de backend",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 6
+    },
+    "tsc_b": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "390/396 (6 fallos son flake preexistente de contención de CPU al correr la suite completa — confirmado corriendo los archivos afectados en aislamiento: 100% verdes, ninguno de los 2 archivos tocados por esta US)",
+      "archivos_nuevos_o_modificados": {
+        "UserMenu.test.tsx": "6/6 (nuevo)",
+        "AppLayout.test.tsx": "9/9 (1 caso nuevo: abre el menú de usuario desde el header)"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "UserMenu.tsx": { "statements": "100%", "branches": "87.5%", "functions": "100%", "lines": "100%", "nota": "rama sin cubrir: fallback `?? \"\"` de iniciales() para partes vacías del nombre, inalcanzable en la práctica tras `.trim().split(/\\s+/)` sobre un nombre no vacío" },
+      "AppLayout.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" }
+    },
+    "coverage_global_nota": "Sin regresión de cobertura en los archivos preexistentes — AppLayout.tsx quedó más simple (delegó el markup del avatar a UserMenu.tsx) sin perder cobertura."
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro"
+  },
+  "manual_browser_verification": {
+    "herramienta": "Claude Browser (preview_start + computer)",
+    "escenarios_verificados": [
+      "Abrir el menú de usuario haciendo clic en el trigger",
+      "Navegar a /mi-cuenta/cambiar-password desde el ítem del menú",
+      "Cerrar sesión desde el menú — limpia localStorage y redirige a /login"
+    ]
+  },
+  "estado_general": "APROBADO"
+}
