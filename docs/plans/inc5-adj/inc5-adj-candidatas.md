@@ -111,10 +111,14 @@ propio — ajuste de UX/seguridad sobre `RF-02`/`RF-19` ya Validados, mismo crit
 PR [#333](https://github.com/vvalotto/cognion/pull/333) — componente `PasswordInput.tsx`
 implementado y en `develop`, reemplaza los 10 inputs de contraseña de los 5 formularios.
 Reporte `docs/reports/inc5-adj/US-ADJ-35-report.md`.
-**US-ADJ-36** Issue [#330](https://github.com/vvalotto/cognion/issues/330), spec
-`docs/specs/ajustes/US-ADJ-36.md` — backlog, pendiente de implementar.
+~~US-ADJ-36~~ Cerrada 2026-09-12, Issue [#330](https://github.com/vvalotto/cognion/issues/330),
+PR [#335](https://github.com/vvalotto/cognion/pull/335) — `INV-ID-11` ampliada (12 caracteres +
+mayúscula/número/símbolo) en `develop`; **cierra el gap real** de `CrearUsuario`/
+`RegistrarEstudiante`, que no validaban contraseña del lado del dominio. `PasswordInput` gana
+indicador de fortaleza. Reporte `docs/reports/inc5-adj/US-ADJ-36-report.md`.
 **US-ADJ-37** Issue [#331](https://github.com/vvalotto/cognion/issues/331), spec
-`docs/specs/ajustes/US-ADJ-37.md` — backlog, pendiente de implementar.
+`docs/specs/ajustes/US-ADJ-37.md` — backlog, pendiente de implementar. Última US de la
+Iteración 1 — la cierra completa.
 
 **Orden:** las 3 son independientes entre sí — pueden implementarse en cualquier orden o en
 paralelo.
