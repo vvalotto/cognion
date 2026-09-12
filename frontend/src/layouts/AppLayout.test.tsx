@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
@@ -84,5 +85,17 @@ describe("AppLayout (integración)", () => {
 
     expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
     expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+  })
+
+  it("abre el menú de usuario desde el header y ofrece Cambiar contraseña y Cerrar sesión", async () => {
+    const user = userEvent.setup()
+    setSession({ token: "t", rol: "docente" })
+
+    renderAppLayout()
+
+    await user.click(screen.getByRole("button", { name: /Docente/ }))
+
+    expect(await screen.findByText("🔑 Cambiar contraseña")).toBeInTheDocument()
+    expect(screen.getByText("↩ Cerrar sesión")).toBeInTheDocument()
   })
 })
