@@ -75,6 +75,11 @@ explícitamente por Víctor en el comentario que cierra el Issue.
 entre sí). `US-ADJ-34` depende de ambas — el wireframe visualiza los dos modelos ya aprobados,
 mismo orden que `US-ADJ-21`→`US-ADJ-22` en Incremento 4-ADJ.
 
+~~US-ADJ-32~~ Cerrada 2026-09-12, Issue [#318](https://github.com/vvalotto/cognion/issues/318)
+— modelo ampliado aprobado por Víctor: aggregate `TokenRecuperacionPassword`, comandos
+`AutoregistrarDocente`/`AutoregistrarEstudiante`, `INV-ID-11` ampliada,
+`docs/design/domain/BC-identidad-modelo.md` §13 (PR #322).
+
 ---
 
 ## Iteración 1 — Identidad: contraseña segura y accesible
