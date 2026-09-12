@@ -67,7 +67,7 @@ class TestCuentasController:
         usuario_repo.usuarios[usuario.id] = usuario
         controller = _armar_controller(cuenta_query_repo, usuario_repo)
 
-        resultado = await controller.resetear_password(usuario.id, "nuevaClave123", uuid.uuid4())
+        resultado = await controller.resetear_password(usuario.id, "nuevaClave123#", uuid.uuid4())
 
         assert resultado.id == usuario.id
         assert resultado.bloqueada is False

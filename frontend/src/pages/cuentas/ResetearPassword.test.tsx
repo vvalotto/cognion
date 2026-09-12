@@ -62,7 +62,7 @@ describe("ResetearPassword", () => {
     expect(String(ultimaLlamada?.[0])).toMatch(/\/usuarios\/u1\/resetear-password$/)
   })
 
-  it("rechaza una contraseña de menos de 8 caracteres sin llamar al backend", async () => {
+  it("rechaza una contraseña de menos de 12 caracteres sin llamar al backend", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaApi))
     const user = userEvent.setup()
 
@@ -73,7 +73,7 @@ describe("ResetearPassword", () => {
     await user.type(screen.getByLabelText("Confirmar contraseña"), "corta")
     await user.click(screen.getByRole("button", { name: "Resetear contraseña" }))
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(/al menos 8 caracteres/i)
+    expect(await screen.findByRole("alert")).toHaveTextContent(/al menos 12 caracteres/i)
     expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1)
   })
 
@@ -84,8 +84,8 @@ describe("ResetearPassword", () => {
     renderResetearPassword()
     await screen.findByLabelText("Nueva contraseña temporal")
 
-    await user.type(screen.getByLabelText("Nueva contraseña temporal"), "passwordUno")
-    await user.type(screen.getByLabelText("Confirmar contraseña"), "passwordDos")
+    await user.type(screen.getByLabelText("Nueva contraseña temporal"), "passwordUno1")
+    await user.type(screen.getByLabelText("Confirmar contraseña"), "passwordDos1")
     await user.click(screen.getByRole("button", { name: "Resetear contraseña" }))
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/no coinciden/i)

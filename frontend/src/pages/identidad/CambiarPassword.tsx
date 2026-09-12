@@ -49,8 +49,8 @@ export function CambiarPassword() {
     event.preventDefault()
     setError(null)
 
-    if (passwordNueva.length < 8) {
-      setError("La contraseña nueva debe tener al menos 8 caracteres.")
+    if (passwordNueva.length < 12) {
+      setError("La contraseña nueva debe tener al menos 12 caracteres.")
       return
     }
     if (passwordNueva !== confirmacion) {
@@ -135,6 +135,8 @@ export function CambiarPassword() {
               <PasswordInput
                 id="password-nueva"
                 required
+                minLength={12}
+                mostrarFortaleza
                 disabled={bloqueada}
                 value={passwordNueva}
                 onChange={(e) => setPasswordNueva(e.target.value)}

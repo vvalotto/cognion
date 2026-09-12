@@ -27,7 +27,7 @@ class TestComisionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente.flujo@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -39,7 +39,7 @@ class TestComisionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin.flujo@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -78,7 +78,7 @@ class TestComisionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin.sinmateria@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -107,7 +107,7 @@ class TestComisionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin2.flujo@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,

@@ -72,7 +72,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -84,7 +84,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -133,7 +133,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin3.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -145,7 +145,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente4.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -195,7 +195,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin4.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -207,7 +207,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente5.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -251,7 +251,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Admin",
                     "email": "admin2.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -263,7 +263,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Docente Sin Asignar",
                     "email": "docente2.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -299,7 +299,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Docente",
                     "email": "docente3.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,

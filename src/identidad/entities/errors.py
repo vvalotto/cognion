@@ -118,11 +118,25 @@ class UsuarioNoExiste(Exception):
 
 
 class PasswordDemasiadoCorta(Exception):
-    """La contraseña nueva no cumple el mínimo de 8 caracteres (INV-ID-11)."""
+    """La contraseña nueva no cumple el mínimo de 12 caracteres (INV-ID-11 ampliada)."""
 
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos de la contraseña rechazada."""
-        super().__init__("La contraseña debe tener al menos 8 caracteres.")
+        super().__init__("La contraseña debe tener al menos 12 caracteres.")
+
+
+class PasswordSinComplejidadSuficiente(Exception):
+    """La contraseña nueva no mezcla mayúscula, número y símbolo (INV-ID-11 ampliada).
+
+    Se lanza solo cuando la contraseña ya cumple el mínimo de longitud — si es demasiado
+    corta, `Usuario.validar_password_nueva` lanza `PasswordDemasiadoCorta` primero.
+    """
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción, sin datos de la contraseña rechazada."""
+        super().__init__(
+            "La contraseña debe incluir al menos una mayúscula, un número y un símbolo."
+        )
 
 
 class PasswordActualIncorrecta(Exception):

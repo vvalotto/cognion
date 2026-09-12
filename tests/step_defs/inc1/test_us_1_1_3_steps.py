@@ -153,7 +153,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
             {
                 "nombre": "Usuario Test",
                 "email": email,
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": perfil,
             },
             headers=admin_headers(),
@@ -232,7 +232,7 @@ def ejecuta_registrar_estudiante(context):
                 "token": context["token"],
                 "nombre": "Nico Estudiante",
                 "email": "rechazo.bdd113@fiuner.edu.ar",
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
             },
         )
     )

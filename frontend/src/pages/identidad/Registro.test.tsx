@@ -33,7 +33,7 @@ function renderRegistro(token = "token-vigente") {
 
 async function completarFormulario(
   email: string,
-  password = "password123",
+  password = "password123x",
   confirmar = password
 ) {
   const user = userEvent.setup()
@@ -102,7 +102,7 @@ describe("Registro", () => {
 
   it("contraseñas que no coinciden muestran error de cliente sin llamar al backend", async () => {
     renderRegistro()
-    await completarFormulario("nico@fiuner.edu.ar", "password123", "otra-password")
+    await completarFormulario("nico@fiuner.edu.ar", "password123x", "otra-password")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Las contraseñas no coinciden.")
     expect(fetch).not.toHaveBeenCalled()

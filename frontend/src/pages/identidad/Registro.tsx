@@ -44,8 +44,8 @@ export function Registro() {
     event.preventDefault()
     setError(null)
 
-    if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.")
+    if (password.length < 12) {
+      setError("La contraseña debe tener al menos 12 caracteres.")
       return
     }
     if (password !== confirmarPassword) {
@@ -114,7 +114,8 @@ export function Registro() {
           <PasswordInput
             id="registro-password"
             required
-            minLength={8}
+            minLength={12}
+            mostrarFortaleza
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
@@ -124,7 +125,7 @@ export function Registro() {
           <PasswordInput
             id="registro-confirmar-password"
             required
-            minLength={8}
+            minLength={12}
             value={confirmarPassword}
             onChange={(event) => setConfirmarPassword(event.target.value)}
           />

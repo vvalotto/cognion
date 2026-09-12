@@ -46,8 +46,8 @@ export function ResetearPassword() {
 
     if (!usuarioId) return
 
-    if (passwordNueva.length < 8) {
-      setError("La contraseña nueva debe tener al menos 8 caracteres.")
+    if (passwordNueva.length < 12) {
+      setError("La contraseña nueva debe tener al menos 12 caracteres.")
       return
     }
     if (passwordNueva !== confirmacion) {
@@ -113,6 +113,8 @@ export function ResetearPassword() {
               <PasswordInput
                 id="password-nueva"
                 required
+                minLength={12}
+                mostrarFortaleza
                 value={passwordNueva}
                 onChange={(e) => setPasswordNueva(e.target.value)}
               />
@@ -126,6 +128,7 @@ export function ResetearPassword() {
               <PasswordInput
                 id="password-confirmacion"
                 required
+                minLength={12}
                 value={confirmacion}
                 onChange={(e) => setConfirmacion(e.target.value)}
               />

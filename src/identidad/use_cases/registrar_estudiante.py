@@ -34,14 +34,16 @@ class RegistrarEstudianteUseCase:
 
         Lanza `InvitacionInvalida` si el token no corresponde a ninguna invitación,
         `InvitacionVencida` o `InvitacionYaUsada` si ya no está vigente (INV-ID-01, INV-ID-03),
-        y `EmailYaRegistrado` si el email ya está en uso (INV-ID-04). Ninguna invitación se
-        marca como usada si el registro se rechaza.
+        `EmailYaRegistrado` si el email ya está en uso (INV-ID-04), o `PasswordDemasiadoCorta`/
+        `PasswordSinComplejidadSuficiente` si `password` no cumple INV-ID-11 (`US-ADJ-36`).
+        Ninguna invitación se marca como usada si el registro se rechaza.
         """
         invitacion = await self._buscar_invitacion_vigente(token)
 
         if await self._usuario_repositorio.existe_email(email):
             raise EmailYaRegistrado(email)
 
+        Usuario.validar_password_nueva(password)
         password_hash = self._hasher.hash(password)
         usuario = Usuario.crear_estudiante(nombre, email, password_hash, invitacion.comision_id)
         await self._usuario_repositorio.guardar(usuario)

@@ -41,8 +41,8 @@ export function AltaDocente() {
     event.preventDefault()
     setError(null)
 
-    if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.")
+    if (password.length < 12) {
+      setError("La contraseña debe tener al menos 12 caracteres.")
       return
     }
     if (password !== confirmarPassword) {
@@ -116,7 +116,8 @@ export function AltaDocente() {
           <PasswordInput
             id="alta-docente-password"
             required
-            minLength={8}
+            minLength={12}
+            mostrarFortaleza
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
@@ -126,7 +127,7 @@ export function AltaDocente() {
           <PasswordInput
             id="alta-docente-confirmar-password"
             required
-            minLength={8}
+            minLength={12}
             value={confirmarPassword}
             onChange={(event) => setConfirmarPassword(event.target.value)}
           />
