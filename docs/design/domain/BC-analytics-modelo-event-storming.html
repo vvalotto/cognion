@@ -254,9 +254,9 @@
       métodos y tipos de retorno.
     </p>
     <div class="meta-row">
-      <span>Estado: <code>borrador</code></span>
-      <span>Issue: <code>#227</code></span>
-      <span>Fuente: <code>docs/design/domain/BC-analytics-modelo.md</code> §4, §5</span>
+      <span>Estado: <code>borrador</code> (§8 pendiente de aprobación)</span>
+      <span>Issues: <code>#227</code>, <code>#319</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-analytics-modelo.md</code> §4, §5, §8</span>
     </div>
   </header>
 
@@ -352,11 +352,91 @@ flowchart TB
       este modelo.
     </div>
 
+    <section>
+      <div class="eyebrow"><span class="dot"></span> Ampliación 2026-09-12 · Incremento 5-ADJ · <code>US-ADJ-33</code> — pendiente de aprobación</div>
+      <p class="lede">
+        Cuatro queries nuevas (RF-20 a RF-23), todas de actor Docente — el <code>EvaluacionDesempenoConsultaPort</code>
+        ya existente crece con dos métodos más, en vez de sumar un puerto por query (mismo
+        criterio de puertos angostos ya aplicado arriba). Detalle completo:
+        <code>BC-analytics-modelo.md</code> §8.
+      </p>
+
+      <figure>
+        <div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TB
+    subgraph DOCENTE2["🧑‍🏫 Docente"]
+        direction LR
+        Q6["ObtenerDesempenoPorComision"]
+        Q7["ObtenerRevisionDeEvaluacion"]
+        Q8["ObtenerEvolucionTemporalEstudiante /\nObtenerEvolucionTemporalComision"]
+        Q9["ObtenerRankingPreguntasFalladas"]
+        Q10["ObtenerCompletitudPorActividad"]
+    end
+
+    subgraph PUERTOS2["Puertos — EvaluacionDesempenoConsultaPort crece (no se crea uno nuevo)"]
+        direction LR
+        P1b["EvaluacionDesempenoConsultaPort\n+ listar_actividades_abiertas\n+ listar_estados_de_actividad"]
+        P2b["PreguntaMetadatoConsultaPort\n+ enunciado en MetadatoPreguntaResumen"]
+        P3b["ComisionConsultaPort\n(sin cambios)"]
+    end
+
+    subgraph FUENTES2["Fuentes nuevas"]
+        direction LR
+        F1b["ActividadEvaluativaPeriodoAbierto\ncomisiones_ids / fecha_apertura / fecha_cierre"]
+        F1c["events, stream Evaluacion —\nestado sin exigir Finalizada"]
+        F2b["PreguntaPlantilla.enunciado"]
+    end
+
+    Q6 --> P1b
+    Q6 --> P3b
+    Q7 -. reusa GET /evaluaciones/{id}/revision\nAE, guard ampliado a Docente .-> P1b
+    Q8 --> P1b
+    Q9 --> P1b
+    Q9 --> P2b
+    Q9 --> P3b
+    Q10 --> P1b
+    Q10 --> P3b
+
+    P1b --> F1b
+    P1b --> F1c
+    P2b --> F2b
+
+    class Q6,Q7,Q8,Q9,Q10 qry
+    class P1b,P2b,P3b port
+    class F1b,F1c,F2b src
+
+    classDef qry fill:#dce7fb,stroke:#5b8def,color:#1b2a4a,stroke-width:1px
+    classDef port fill:#f6e3c4,stroke:#c98a2e,color:#5a3a10,stroke-width:1px
+    classDef src fill:#ece2f8,stroke:#9b6fd1,color:#3a2a52,stroke-width:1px
+</pre>
+        </div>
+        <figcaption>
+          <strong>Lo que hay que ver acá:</strong> <code>ObtenerRevisionDeEvaluacion</code> no
+          agrega una fuente nueva — reusa el endpoint de revisión que ya existe en Actividad
+          Evaluativa (<code>US-3.2.3</code>), solo ampliando su guard de rol para admitir al
+          Docente de la materia, no cualquier Docente del sistema. Las otras cuatro queries
+          reutilizan los mismos tres puertos de arriba, ampliados con métodos nuevos — ninguna
+          requiere un cuarto puerto.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <strong>Hallazgo de deriva documental (no bloquea este modelo)</strong>
+        <code>comisiones_ids</code>, <code>titulo</code>, <code>unidad_tematica</code> y
+        <code>tema</code> ya existen en
+        <code>src/actividad_evaluativa/entities/actividad_evaluativa_periodo_abierto.py</code>
+        pero <code>BC-actividad-evaluativa-modelo.md</code> §5 todavía no los documenta — este
+        modelo de Analytics ya diseña contra el código real. Corrección formal del modelo ajeno
+        diferida a la Iteración 5 (revisión documental transversal) del Incremento 5-ADJ.
+      </div>
+    </section>
+
   </main>
 
   <footer>
     <span>Cognión — BC Analytics</span>
-    <span>Modelado en conversación con Víctor, 2026-09-04</span>
+    <span>Modelado en conversación con Víctor, 2026-09-04 · Ampliación 2026-09-12</span>
   </footer>
 
 </div>
