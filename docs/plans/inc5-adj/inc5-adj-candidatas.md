@@ -103,9 +103,17 @@ propio — ajuste de UX/seguridad sobre `RF-02`/`RF-19` ya Validados, mismo crit
 
 | US | Descripción | Toca | Actor |
 |---|---|---|---|
-| **US-ADJ-35** | Toggle mostrar/ocultar contraseña en los 5 inputs `type="password"` existentes (`Login.tsx`, `Registro.tsx`, `CambiarPassword.tsx`, `AltaDocente.tsx`, `cuentas/ResetearPassword.tsx`) | Frontend puro | Docente, Estudiante, Administrador |
-| **US-ADJ-36** | Contraseña segura: `Usuario.validar_password_nueva` sube el mínimo de 8 caracteres y agrega mezcla de tipos (mayúscula, número, símbolo), con mensaje de error específico por regla incumplida; frontend refleja la regla nueva en los formularios que ya validan contraseña (`Registro.tsx`, `CambiarPassword.tsx`, `cuentas/ResetearPassword.tsx`) | Backend (`entities/usuario.py`) + Frontend | Docente, Estudiante, Administrador |
-| **US-ADJ-37** | Descubribilidad: entrada "Cambiar contraseña" en `AppNav.tsx` (hoy sin ningún link hacia `/mi-cuenta/cambiar-password`) + botón "Cerrar sesión" que invoca `clearSession()` (hoy solo se dispara desde el interceptor 401) y navega a `/login` | Frontend puro (`AppNav.tsx`) | Docente, Estudiante, Administrador |
+| **US-ADJ-35** | Componente compartido `PasswordInput` con toggle mostrar/ocultar, reemplaza los 10 inputs `type="password"` de los 5 formularios existentes (`Login.tsx`, `Registro.tsx` ×2, `CambiarPassword.tsx` ×3, `AltaDocente.tsx` ×2, `cuentas/ResetearPassword.tsx` ×2) | Frontend puro | Docente, Estudiante, Administrador |
+| **US-ADJ-36** | Contraseña segura: `Usuario.validar_password_nueva` sube el mínimo a 12 caracteres y agrega mezcla de tipos (mayúscula, número, símbolo); **cierra un gap real** — `CrearUsuario`/`RegistrarEstudiante` hoy no llaman esa validación (solo `CambiarPassword`/`ResetearPassword` lo hacen); frontend agrega indicador de fortaleza a `PasswordInput` (`US-ADJ-35`) | Backend (`entities/usuario.py`, 2 use cases, 4 routers) + Frontend | Docente, Estudiante, Administrador |
+| **US-ADJ-37** | Descubribilidad: el bloque de avatar/nombre de `AppLayout.tsx` (hoy estático) pasa a menú desplegable con "Cambiar contraseña" (sin link hoy hacia `/mi-cuenta/cambiar-password`) y "Cerrar sesión" (invoca `clearSession()`, hoy solo se dispara desde el interceptor 401) | Frontend puro (`AppLayout.tsx`) | Docente, Estudiante, Administrador |
+
+**US-ADJ-35** Issue [#329](https://github.com/vvalotto/cognion/issues/329), spec
+`docs/specs/ajustes/US-ADJ-35.md`.
+**US-ADJ-36** Issue [#330](https://github.com/vvalotto/cognion/issues/330), spec
+`docs/specs/ajustes/US-ADJ-36.md`.
+**US-ADJ-37** Issue [#331](https://github.com/vvalotto/cognion/issues/331), spec
+`docs/specs/ajustes/US-ADJ-37.md`.
+Las 3 especificadas 2026-09-12 — backlog, pendientes de implementar (`/implement-us`).
 
 **Orden:** las 3 son independientes entre sí — pueden implementarse en cualquier orden o en
 paralelo.
