@@ -778,12 +778,60 @@ todos los pasos. Sin Issue de GitHub ni spec — track informal salvo que algún
 requiera tocar `src/` con una invariante de dominio nueva (ninguno lo requirió hasta ahora,
 los cambios de entidad fueron mutaciones simples ya cubiertas por el patrón existente).
 
-**Próximo paso:** continuar la prueba manual E2E desde donde la dejó Víctor (bitácora sigue
-abierta, "A partir de acá, un bloque por paso narrado"). Sin US-IEDD activa.
-**Baseline abierta:** ninguna — `BL-007` cerrada. La prueba de estabilización en curso no abre
-baseline propia (no es un Incremento de `PLAN_v1.md`); se decidirá al cerrarla si amerita una
-baseline técnica (mismo criterio que `BL-005`) o si sus commits se consolidan en la próxima.
-**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.1`).
+**Prueba de estabilización completada 2026-09-09/10** — portales Docente y Estudiante,
+continuación del Paso 9 del Administrador. Tres PRs, uno por portal, todos mergeados a
+`develop` con pre-push gate 0 CRITICAL: **PR #298** (Administrador, Pasos 1-9, detalle arriba),
+**PR #299** (Docente, Pasos 1-12,
+[`bitacora-docente.md`](../tests/uat/datos-reales/bitacora-docente.md)): carga masiva de las
+71 preguntas reales de Ingeniería de Software, Actividad Evaluativa restringible a Comisión y
+a unidad temática/tema concretos, listados en tabla con métricas, formularios más elegantes.
+**PR #300** (Estudiante, Pasos 1-5,
+[`bitacora-estudiante.md`](../tests/uat/datos-reales/bitacora-estudiante.md)): carga de los 17
+estudiantes reales, reintento de respuestas habilitado con feedback de acierto/error
+(`IntentosAgotados`, 422), "Finalizar evaluación" como acción independiente de responder la
+última pregunta, y elicitación de `RF-20` a `RF-23` (informes de Analytics para el Docente —
+desempeño por comisión, evolución temporal, ranking de preguntas falladas, completitud por
+actividad), agregados a `docs/rf/RF_v1.md` y a la matriz de trazabilidad como Planificado, sin
+incremento asignado (decisión explícita de Víctor: no priorizar todavía). Ningún hallazgo de
+las tres bitácoras requirió invariante de dominio nueva.
+
+**`BL-008` — Estabilización de Portales cerrada 2026-09-10**
+(`.cm/baselines/BL-008-estabilizacion-portales.md`): 910/910 tests backend, 379/379 frontend,
+`designreviewer` 0 CRITICAL (161 advertencias), `architectanalyst` 6 críticos (mismo "Zone of
+Pain" aceptado desde `US-ADJ-13`/`19`, sin módulo nuevo desde `BL-006`). Sin RF que pase a
+Validado — todos los cambios son refinamientos de UI/UX y correcciones de bugs sobre RF ya
+`Validado` (`RF-01`/`02`/`03`), o backlog nuevo sin implementar (`RF-20` a `23`, quedan
+Planificados). Merge `develop → main` y tag `v0.6.2` (PATCH, mismo criterio de versionado que
+`BL-005`/`BL-007`) ejecutados el mismo día, PR de cierre
+[#302](https://github.com/vvalotto/cognion/pull/302).
+
+Incremento 5 — Notificaciones, período abierto — en curso
+(`docs/plans/inc5/inc5-candidatas.md`, Milestone GitHub
+[Incremento 5](https://github.com/vvalotto/cognion/milestone/7)). Sigue la secuencia de
+`PLAN_v1.md` (decisión de Víctor 2026-09-10, entre las opciones de retomar RF-20/23 o avanzar
+con el próximo incremento planificado). Incremento corto y deliberadamente aislado: valida la
+integración BC Actividad Evaluativa → BC Notificaciones (`ADR-006`) con el menor acoplamiento
+posible. `RF-20` a `RF-23` siguen sin incremento asignado.
+**Iteración 0 — Modelado cerrada 2026-09-10**: `US-5.0.1` (event storming ligero, Issue
+[#304](https://github.com/vvalotto/cognion/issues/304),
+`docs/design/domain/BC-notificaciones-modelo.md`) aprobada por Víctor. Sin BC Notificaciones
+existente todavía — primer BC puramente reactivo del sistema, sin aggregate ni persistencia
+propia: recibe el disparo de `NotificacionPort` (dueño Actividad Evaluativa) al crear o cerrar
+manualmente una actividad, resuelve destinatarios con un `ComisionConsultaPort` propio hacia
+Identidad (nuevo — ningún puerto existente expone `email`) y envía por `CanalEnvioPort`
+(`SmtpCanalEnvio` inicial). Cuatro decisiones de producto/técnicas confirmadas con Víctor:
+(1) solo el cierre manual del Docente dispara el email de cierre, no el vencimiento natural del
+período; (2) destinatarios acotados a las Comisiones a las que la actividad está restringida,
+no toda la Materia; (3) canal de envío en este entorno: SMTP real de prueba (Mailtrap/Mailhog
+local); (4) un fallo de envío no bloquea la operación de dominio — se loguea y se continúa.
+Matriz de trazabilidad: RF-14 pasa de Planificado a Especificado.
+
+**Próximo paso:** escribir las specs US-IEDD de la Iteración 1 (`US-5.1.1` infraestructura,
+`US-5.1.2` notificación de apertura, `US-5.1.3` notificación de cierre —
+`docs/plans/inc5/inc5-candidatas.md`).
+**Baseline abierta:** ninguna — `BL-008` cerrada, Incremento 5 en curso sin baseline propia
+todavía (se abre al cerrarlo).
+**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.2`).
 
 ---
 
@@ -1041,6 +1089,23 @@ Decidir el track **antes de codear**:
   (ver `docs/rf/PLAN_v1.md` revisión 2026-07-16). El build de imagen Docker en CI/CD no se
   ve afectado — corre en GitHub Actions, no localmente.
 - **Criterios de legibilidad en proyección** (RNF_v1.md): tamaño de fuente mínimo y contraste. Se define en etapa de diseño UX antes de Incremento 6.
+- **Cuenta de envío SMTP real para Notificaciones en producción** (RF-14, `US-5.1.1` a
+  `US-5.1.3`): `SmtpCanalEnvio` ya es agnóstico del proveedor (`smtplib` contra
+  `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM` de `settings.py`) — hoy
+  apunta a `localhost:25` sin autenticación, solo para el fake SMTP local de tests/UAT.
+  Decisión pendiente sobre qué cuenta real usar como remitente, evaluada 2026-09-10 con
+  Víctor: existen cuentas institucionales por materia (ej.
+  `gestiondeproyectos@ingenieria.uner.edu.ar`) — usarlas es viable y preferible a que el
+  email salga "de parte de" un Docente sin ser su cuenta real (spoofing, rechazado por
+  SPF/DKIM del servidor institucional). Implementarlo requiere un salto de alcance respecto
+  del diseño actual (una sola cuenta SMTP global para todo el sistema): agregar la
+  responsabilidad de resolver qué cuenta usar según la materia de la actividad, con las
+  credenciales reales resueltas por variable de entorno (una por materia) — nunca guardadas
+  en el dominio (`Materia`) en texto plano, dada la escala real del proyecto (2-3 materias,
+  no una tabla de credenciales). Encajaría como ajuste chico (`US-ADJ` o extensión de
+  `US-5.1.1`) una vez resuelta la decisión mayor de infraestructura de producción de arriba
+  — no tiene sentido implementarlo contra un entorno que todavía no despliega de verdad
+  (`cd.yml` solo construye la imagen Docker, `flyctl deploy` sigue comentado).
 
 ---
 

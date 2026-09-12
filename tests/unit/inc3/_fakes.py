@@ -18,6 +18,7 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import (
     MateriaConsultaPort,
     MateriaDTO,
 )
+from src.actividad_evaluativa.entities.ports.notificacion_port import NotificacionPort
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     ContenidoPregunta,
     DetalleCorreccionPregunta,
@@ -105,6 +106,62 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:
         """Devuelve el contenido precargado para la pregunta, o uno vacío si no se precargó."""
         return self.contenidos.get(pregunta_id, ContenidoPregunta(texto="", opciones=None))
+
+
+class FakeNotificacionPort(NotificacionPort):
+    """Puerto de disparo de notificaciones en memoria — registra cada llamada recibida.
+
+    Nunca lanza (mismo contrato que `NotificacionPortInProcess` real, `US-5.1.2`) — los tests
+    de `CrearActividadPeriodoAbiertoUseCase` no necesitan simular un fallo de envío acá, ese
+    comportamiento se prueba en `tests/unit/inc5/test_notificar_apertura_use_case.py`.
+    """
+
+    def __init__(self) -> None:
+        """Inicializa el registro de llamadas."""
+        self.aperturas: list[dict] = []
+        self.cierres: list[dict] = []
+
+    async def notificar_apertura(
+        self,
+        actividad_id: UUID,
+        materia_id: UUID,
+        materia_nombre: str,
+        titulo: str,
+        fecha_apertura: datetime,
+        fecha_cierre: datetime,
+        comisiones_ids: list[UUID],
+    ) -> None:
+        """Registra los argumentos recibidos en `aperturas`."""
+        self.aperturas.append(
+            {
+                "actividad_id": actividad_id,
+                "materia_id": materia_id,
+                "materia_nombre": materia_nombre,
+                "titulo": titulo,
+                "fecha_apertura": fecha_apertura,
+                "fecha_cierre": fecha_cierre,
+                "comisiones_ids": comisiones_ids,
+            }
+        )
+
+    async def notificar_cierre(
+        self,
+        actividad_id: UUID,
+        materia_id: UUID,
+        materia_nombre: str,
+        titulo: str,
+        comisiones_ids: list[UUID],
+    ) -> None:
+        """Registra los argumentos recibidos en `cierres`."""
+        self.cierres.append(
+            {
+                "actividad_id": actividad_id,
+                "materia_id": materia_id,
+                "materia_nombre": materia_nombre,
+                "titulo": titulo,
+                "comisiones_ids": comisiones_ids,
+            }
+        )
 
 
 class FakeEventStore(EventStorePort):

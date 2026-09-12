@@ -9,6 +9,40 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-10
+
+### Added
+- **Incremento 5 — Notificaciones** (RF-14), cierre de baseline `BL-009`. Primer Bounded
+  Context puramente event-driven del sistema: sin aggregate ni comando propio disparado por
+  un actor humano, reacciona a eventos de dominio ya existentes de Actividad Evaluativa
+  (`ActividadEvaluativaCreada`/`ActividadEvaluativaCerrada`) y produce un efecto de borde
+  (enviar un email) vía integración directa (`ADR-006`). Incremento corto y deliberadamente
+  aislado — una sola iteración, sin frontend (RF-14 sin pantalla propia)
+  - `src/notificaciones/` (BC completo): `CanalEnvioPort`/`SmtpCanalEnvio` (adapter SMTP
+    propio, mismo patrón `smtplib` + `asyncio.to_thread` que `SmtpNotificador` de Identidad,
+    `ADR-012`), `ComisionConsultaPort`/`ComisionConsultaPortInProcess` (copia propia hacia
+    Identidad, con `email`), `NotificarAperturaUseCase`/`NotificarCierreUseCase`
+  - `NotificacionPort` (Actividad Evaluativa, dueño del puerto): `notificar_apertura(...)`
+    cableado en `CrearActividadPeriodoAbiertoUseCase`, `notificar_cierre(...)` cableado en
+    `CerrarActividadUseCase` — ambos con `materia_nombre` resuelto vía `MateriaConsultaPort`
+    (Notificaciones no tiene el propio), ambos "nunca lanzan": un fallo de envío se loguea y
+    no aborta la operación de dominio ni el resto del roster
+  - Solo el cierre manual del Docente dispara el email de cierre — el vencimiento natural del
+    período (`VerificarVencimientosUseCase`) sigue sin disparar ningún email, decisión de
+    producto confirmada en el modelado
+  - `ComisionQueryPort.listar_estudiantes_con_email` nuevo en Identidad
+    (`EstudianteConEmail`), coexiste con `listar_estudiantes` sin reemplazarlo
+  - 969/969 tests backend (94.82% cobertura), quality gates APROBADO en las 3 US, UAT de
+    cierre sin hallazgos 🔴 Bloqueantes (`quality/reports/uat/inc5/design.md`/`evidencia.md`):
+    Capa 1 (757/757 unit+integration, 212/212 BDD) y Capa 2 (`smoke.sh` extendido — fake SMTP
+    persiste el contenido real de cada mensaje, verificado contra el flujo ya existente de
+    crear/cerrar una actividad, sin pasos HTTP nuevos). RF-14 pasa a **Validado** en
+    `docs/traceability/matrix.md`
+  - Cuenta SMTP real de producción queda como ítem abierto (`CLAUDE.md`) — evaluadas 3
+    variantes (cuenta institucional única, "From" delegado del Docente, cuenta real por
+    Materia); se resuelve junto con la decisión mayor de infraestructura de producción,
+    todavía pendiente institucionalmente
+
 ## [0.6.2] - 2026-09-10
 
 Cierra `BL-008` — prueba manual E2E de estabilización de los tres portales (Administrador,

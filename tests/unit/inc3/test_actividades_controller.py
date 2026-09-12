@@ -20,6 +20,7 @@ from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
 from tests.unit.inc3._fakes import (
     FakeEventStore,
     FakeMateriaConsultaPort,
+    FakeNotificacionPort,
     FakePreguntaConsultaPort,
 )
 from tests.unit.inc3.test_modificar_periodo_disponibilidad_use_case import (
@@ -33,10 +34,16 @@ def _controller(event_store: FakeEventStore | None = None) -> ActividadesControl
     materia_consulta = FakeMateriaConsultaPort()
     pregunta_consulta = FakePreguntaConsultaPort()
     return ActividadesController(
-        CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
+        CrearActividadPeriodoAbiertoUseCase(
+            materia_consulta, pregunta_consulta, event_store, FakeNotificacionPort()
+        ),
         ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
         CerrarActividadUseCase(
-            event_store, FakeEvaluacionActivaQueryPort(), FinalizarEvaluacionUseCase(event_store)
+            event_store,
+            FakeEvaluacionActivaQueryPort(),
+            FinalizarEvaluacionUseCase(event_store),
+            materia_consulta,
+            FakeNotificacionPort(),
         ),
         ModificarTituloActividadUseCase(event_store),
     )
@@ -51,12 +58,16 @@ class TestActividadesController:
         pregunta_consulta.conteos[materia_id] = 20
         event_store = FakeEventStore()
         controller = ActividadesController(
-            CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
+            CrearActividadPeriodoAbiertoUseCase(
+                materia_consulta, pregunta_consulta, event_store, FakeNotificacionPort()
+            ),
             ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
             CerrarActividadUseCase(
                 event_store,
                 FakeEvaluacionActivaQueryPort(),
                 FinalizarEvaluacionUseCase(event_store),
+                materia_consulta,
+                FakeNotificacionPort(),
             ),
             ModificarTituloActividadUseCase(event_store),
         )

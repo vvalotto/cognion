@@ -30,6 +30,9 @@ from src.actividad_evaluativa.frameworks.adapters.evaluacion_estudiante_query_re
 from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_process import (
     MateriaConsultaPortInProcess,
 )
+from src.actividad_evaluativa.frameworks.adapters.notificacion_port_in_process import (
+    NotificacionPortInProcess,
+)
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
@@ -99,11 +102,18 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
     pregunta_consulta = PreguntaConsultaPortInProcess(session)
     event_store = SQLAlchemyEventStore(session)
     evaluacion_activa_query = SQLAlchemyEvaluacionActivaQueryRepository(session)
+    notificacion = NotificacionPortInProcess(session)
     return ActividadesController(
-        CrearActividadPeriodoAbiertoUseCase(materia_consulta, pregunta_consulta, event_store),
+        CrearActividadPeriodoAbiertoUseCase(
+            materia_consulta, pregunta_consulta, event_store, notificacion
+        ),
         ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query),
         CerrarActividadUseCase(
-            event_store, evaluacion_activa_query, FinalizarEvaluacionUseCase(event_store)
+            event_store,
+            evaluacion_activa_query,
+            FinalizarEvaluacionUseCase(event_store),
+            materia_consulta,
+            notificacion,
         ),
         ModificarTituloActividadUseCase(event_store),
     )
