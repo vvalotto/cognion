@@ -238,10 +238,54 @@
     font-size: 14px;
   }
 
+  /* Ampliación 2026-09-12 (US-ADJ-34, Incremento 5-ADJ) — RF-20 a RF-23 */
+
+  /* Tabla de desempeño por comisión (RF-20) */
+  table.data-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 12px; }
+  table.data-table th, table.data-table td { text-align: left; padding: 11px 14px; font-size: 13px; border-bottom: 1px solid var(--border); }
+  table.data-table th { background: var(--muted); font-weight: 600; color: var(--muted-foreground); font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; cursor: pointer; }
+  table.data-table th .sort-arrow { font-size: 9px; margin-left: 3px; color: var(--muted-foreground); }
+  table.data-table tr:last-child td { border-bottom: none; }
+  table.data-table tr.clickable { cursor: pointer; }
+  table.data-table tr.clickable:hover { background: var(--muted); }
+  table.data-table td.sin-datos { color: var(--muted-foreground); font-style: italic; }
+  table.data-table td.pendientes.some { color: var(--warning); font-weight: 600; }
+
+  /* Evolución temporal — gráfico de línea simple en SVG (RF-21) */
+  .line-chart-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; }
+  .line-chart-card .lc-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .line-chart-card svg { width: 100%; height: auto; display: block; }
+  .line-chart-card .lc-legend { display: flex; gap: 16px; margin-top: 10px; font-size: 12px; color: var(--muted-foreground); }
+  .line-chart-card .lc-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+
+  /* Ranking de preguntas falladas (RF-22) — mismo patrón visual que .tema-row */
+  .ranking-row { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+  .ranking-row .rk-pos { font-size: 13px; font-weight: 700; color: var(--muted-foreground); width: 22px; text-align: center; flex-shrink: 0; }
+  .ranking-row .rk-body { flex: 1; min-width: 0; }
+  .ranking-row .rk-enunciado { font-size: 13px; font-weight: 500; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ranking-row .rk-meta { font-size: 11px; color: var(--muted-foreground); }
+  .ranking-row .rk-pct { font-weight: 700; font-size: 15px; flex-shrink: 0; }
+  .ranking-row .rk-pct.alta { color: var(--destructive); }
+  .ranking-row .rk-pct.media { color: var(--warning); }
+  .ranking-row .rk-pct.baja { color: var(--success); }
+
+  /* Completitud por actividad (RF-23) */
+  .state-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
+  .state-badge.sin-iniciar { background: var(--muted); color: var(--muted-foreground); }
+  .state-badge.en-curso { background: #eaf2f8; color: var(--primary-dark); }
+  .state-badge.suspendida { background: var(--warning-bg); color: #7a5210; }
+  .state-badge.finalizada { background: var(--success-bg); color: #14532d; }
+  .completitud-summary { display: flex; gap: 18px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 20px; }
+  .completitud-summary .stat { text-align: center; }
+  .completitud-summary .stat .n { font-size: 20px; font-weight: 700; }
+  .completitud-summary .stat .l { font-size: 11px; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.03em; }
+
   @media (max-width: 560px) {
     .card-grid { grid-template-columns: 1fr; }
     .eval-item { flex-direction: column; align-items: flex-start; }
     .filters-row .field { min-width: 100%; }
+    table.data-table { display: block; overflow-x: auto; white-space: nowrap; }
+    .ranking-row { flex-wrap: wrap; }
   }
 </style>
 </head>
@@ -254,6 +298,12 @@
   <button data-target="est-desempeno" class="active">1. Estudiante — Mi desempeño</button>
   <button data-target="doc-desempeno-alumno">2. Docente — Desempeño por alumno</button>
   <button data-target="doc-desempeno-tema">3. Docente — Desempeño por tema</button>
+  <span class="sep"></span>
+  <strong>Inc.5-ADJ (RF-20 a 23):</strong>
+  <button data-target="doc-desempeno-comision">4. Desempeño por comisión</button>
+  <button data-target="doc-evolucion-temporal">5. Evolución temporal</button>
+  <button data-target="doc-ranking-preguntas">6. Ranking preguntas falladas</button>
+  <button data-target="doc-completitud-actividad">7. Completitud por actividad</button>
 </nav>
 
 <!-- 1. ESTUDIANTE — MI DESEMPEÑO (RF-15) -->
@@ -456,6 +506,177 @@
     </div>
 
     <p style="font-size:12px; color:var(--muted-foreground); text-align:center; margin-top:8px;">… resto de los temas de la materia, mismo formato — ordenados por tasa de error descendente.</p>
+  </div>
+</section>
+
+<!-- 4. DOCENTE — DESEMPEÑO POR COMISIÓN (RF-20) -->
+<section class="screen" id="doc-desempeno-comision">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Analytics &nbsp;›&nbsp; <span class="current">Desempeño por comisión</span></div>
+    <h1 class="page-title">Desempeño por comisión</h1>
+    <p class="page-subtitle">Todos los estudiantes de la comisión, con su % de aciertos acumulado y actividades pendientes (RF-20). Hacé clic en un estudiante para ver su detalle.</p>
+
+    <div class="filters-row">
+      <div class="field">
+        <label>Materia</label>
+        <select><option>Ingeniería de Software</option><option>Gestión de Proyectos</option></select>
+      </div>
+      <div class="field">
+        <label>Comisión</label>
+        <select><option>Comisión A</option><option>Comisión B</option></select>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Estudiante <span class="sort-arrow">▾</span></th><th>% Aciertos acum.</th><th>Actividades pendientes</th></tr>
+      </thead>
+      <tbody>
+        <tr class="clickable" onclick="go('doc-evolucion-temporal')"><td>María González</td><td>76%</td><td>0</td></tr>
+        <tr class="clickable" onclick="go('doc-evolucion-temporal')"><td>Juan Pérez</td><td>54%</td><td class="pendientes some">1</td></tr>
+        <tr class="clickable" onclick="go('doc-evolucion-temporal')"><td>Lucía Fernández</td><td class="sin-datos">Sin datos</td><td class="pendientes some">2</td></tr>
+        <tr class="clickable" onclick="go('doc-evolucion-temporal')"><td>Tomás Ríos</td><td>88%</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color:var(--muted-foreground);">Clic en una fila → detalle del estudiante (ya existe, mismo componente que "Desempeño por alumno") → desde ahí, revisión completa de una evaluación puntual (reusa la pantalla de revisión de Actividad Evaluativa, guard ampliado a Docente — sin pantalla nueva).</p>
+  </div>
+</section>
+
+<!-- 5. DOCENTE — EVOLUCIÓN TEMPORAL (RF-21) -->
+<section class="screen" id="doc-evolucion-temporal">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Analytics &nbsp;›&nbsp; Desempeño por comisión &nbsp;›&nbsp; <span class="current">María González — Evolución temporal</span></div>
+    <h1 class="page-title">Evolución temporal — María González</h1>
+    <p class="page-subtitle">% de aciertos a lo largo de las actividades rendidas, comparado con el promedio de la comisión (RF-21).</p>
+
+    <div class="line-chart-card">
+      <div class="lc-title">% de aciertos por actividad rendida</div>
+      <svg viewBox="0 0 520 200" preserveAspectRatio="xMidYMid meet">
+        <line x1="40" y1="10" x2="40" y2="170" stroke="#e2e6e9" stroke-width="1"/>
+        <line x1="40" y1="170" x2="500" y2="170" stroke="#e2e6e9" stroke-width="1"/>
+        <text x="10" y="14" font-size="9" fill="#707070">100%</text>
+        <text x="18" y="93" font-size="9" fill="#707070">50%</text>
+        <text x="22" y="174" font-size="9" fill="#707070">0%</text>
+        <!-- Individual (María) -->
+        <polyline points="80,72 220,54 360,100 480,42" fill="none" stroke="#1d75b5" stroke-width="2.5" />
+        <circle cx="80" cy="72" r="3.5" fill="#1d75b5"/>
+        <circle cx="220" cy="54" r="3.5" fill="#1d75b5"/>
+        <circle cx="360" cy="100" r="3.5" fill="#1d75b5"/>
+        <circle cx="480" cy="42" r="3.5" fill="#1d75b5"/>
+        <!-- Promedio comisión -->
+        <polyline points="80,90 220,85 360,88 480,70" fill="none" stroke="#53aa74" stroke-width="2" stroke-dasharray="5,3" />
+        <circle cx="80" cy="90" r="3" fill="#53aa74"/>
+        <circle cx="220" cy="85" r="3" fill="#53aa74"/>
+        <circle cx="360" cy="88" r="3" fill="#53aa74"/>
+        <circle cx="480" cy="70" r="3" fill="#53aa74"/>
+        <text x="60" y="188" font-size="9" fill="#707070">Parcial 1</text>
+        <text x="195" y="188" font-size="9" fill="#707070">Repaso U4</text>
+        <text x="340" y="188" font-size="9" fill="#707070">Práctica U5</text>
+        <text x="455" y="188" font-size="9" fill="#707070">Parcial 2</text>
+      </svg>
+      <div class="lc-legend">
+        <span><span class="dot" style="background:#1d75b5;"></span>María González (individual)</span>
+        <span><span class="dot" style="background:#53aa74;"></span>Promedio de la comisión</span>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--muted-foreground);">Eje X: solo actividades efectivamente rendidas por María — sin puntos en cero ni huecos por lo que no rindió. Con una sola evaluación finalizada, se muestra un único punto (sin línea).</p>
+  </div>
+</section>
+
+<!-- 6. DOCENTE — RANKING DE PREGUNTAS FALLADAS (RF-22) -->
+<section class="screen" id="doc-ranking-preguntas">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Analytics &nbsp;›&nbsp; <span class="current">Preguntas más falladas</span></div>
+    <h1 class="page-title">Preguntas más falladas</h1>
+    <p class="page-subtitle">Ranking por tasa de error, no por conteo bruto de fallos (RF-22) — solo preguntas que ya fueron presentadas al menos una vez.</p>
+
+    <div class="filters-row">
+      <div class="field">
+        <label>Materia</label>
+        <select><option>Ingeniería de Software</option><option>Gestión de Proyectos</option></select>
+      </div>
+      <div class="field">
+        <label>Comisión</label>
+        <select><option>Toda la materia</option><option>Comisión A</option><option>Comisión B</option></select>
+      </div>
+    </div>
+
+    <div class="ranking-row">
+      <div class="rk-pos">1</div>
+      <div class="rk-body">
+        <div class="rk-enunciado">¿Cuál de los siguientes principios corresponde a la "I" de SOLID?</div>
+        <div class="rk-meta">Unidad 3 — Principios SOLID · Inversión de dependencias · 42 presentaciones</div>
+      </div>
+      <div class="rk-pct alta">62%</div>
+    </div>
+    <div class="ranking-row">
+      <div class="rk-pos">2</div>
+      <div class="rk-body">
+        <div class="rk-enunciado">Un Bounded Context puede compartir su modelo de dominio con otro BC sin traducción.</div>
+        <div class="rk-meta">Unidad 2 — Arquitectura · Bounded Contexts · 58 presentaciones</div>
+      </div>
+      <div class="rk-pct alta">55%</div>
+    </div>
+    <div class="ranking-row">
+      <div class="rk-pos">3</div>
+      <div class="rk-body">
+        <div class="rk-enunciado">El patrón Repository pertenece a la capa de infraestructura, nunca a dominio.</div>
+        <div class="rk-meta">Unidad 2 — Arquitectura · Patrones de persistencia · 39 presentaciones</div>
+      </div>
+      <div class="rk-pct media">34%</div>
+    </div>
+    <div class="ranking-row">
+      <div class="rk-pos">4</div>
+      <div class="rk-body">
+        <div class="rk-enunciado">El ciclo de vida de un incremento ágil siempre incluye una fase de mantenimiento formal.</div>
+        <div class="rk-meta">Unidad 1 — Fundamentos · Ciclo de vida del software · 65 presentaciones</div>
+      </div>
+      <div class="rk-pct baja">12%</div>
+    </div>
+    <p style="font-size:12px; color:var(--muted-foreground); text-align:center; margin-top:8px;">… resto de las preguntas de la materia, mismo formato — ordenadas por tasa de error descendente.</p>
+  </div>
+</section>
+
+<!-- 7. DOCENTE — COMPLETITUD POR ACTIVIDAD (RF-23) -->
+<section class="screen" id="doc-completitud-actividad">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Actividades &nbsp;›&nbsp; Parcial 1 &nbsp;›&nbsp; <span class="current">Completitud</span></div>
+    <h1 class="page-title">Completitud — Parcial 1, Unidades 1 a 3</h1>
+    <p class="page-subtitle">Estado de cada estudiante respecto de esta actividad puntual (RF-23). Sin restricción de comisión: se muestran todos los estudiantes de la materia.</p>
+
+    <div class="completitud-summary">
+      <div class="stat"><div class="n">12</div><div class="l">Finalizadas</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">En curso</div></div>
+      <div class="stat"><div class="n">2</div><div class="l">Suspendidas</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">Sin iniciar</div></div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Estudiante</th><th>Comisión</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td>María González</td><td>Comisión A</td><td><span class="state-badge finalizada">✓ Finalizada</span></td></tr>
+        <tr><td>Juan Pérez</td><td>Comisión A</td><td><span class="state-badge en-curso">● En curso</span></td></tr>
+        <tr><td>Lucía Fernández</td><td>Comisión A</td><td><span class="state-badge suspendida">⏸ Suspendida</span></td></tr>
+        <tr><td>Tomás Ríos</td><td>Comisión B</td><td><span class="state-badge sin-iniciar">— Sin iniciar</span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color:var(--muted-foreground);">… resto de los estudiantes, mismo formato.</p>
   </div>
 </section>
 
