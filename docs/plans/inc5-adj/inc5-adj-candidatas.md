@@ -107,13 +107,14 @@ propio — ajuste de UX/seguridad sobre `RF-02`/`RF-19` ya Validados, mismo crit
 | **US-ADJ-36** | Contraseña segura: `Usuario.validar_password_nueva` sube el mínimo a 12 caracteres y agrega mezcla de tipos (mayúscula, número, símbolo); **cierra un gap real** — `CrearUsuario`/`RegistrarEstudiante` hoy no llaman esa validación (solo `CambiarPassword`/`ResetearPassword` lo hacen); frontend agrega indicador de fortaleza a `PasswordInput` (`US-ADJ-35`) | Backend (`entities/usuario.py`, 2 use cases, 4 routers) + Frontend | Docente, Estudiante, Administrador |
 | **US-ADJ-37** | Descubribilidad: el bloque de avatar/nombre de `AppLayout.tsx` (hoy estático) pasa a menú desplegable con "Cambiar contraseña" (sin link hoy hacia `/mi-cuenta/cambiar-password`) y "Cerrar sesión" (invoca `clearSession()`, hoy solo se dispara desde el interceptor 401) | Frontend puro (`AppLayout.tsx`) | Docente, Estudiante, Administrador |
 
-**US-ADJ-35** Issue [#329](https://github.com/vvalotto/cognion/issues/329), spec
-`docs/specs/ajustes/US-ADJ-35.md`.
+~~US-ADJ-35~~ Cerrada 2026-09-12, Issue [#329](https://github.com/vvalotto/cognion/issues/329),
+PR [#333](https://github.com/vvalotto/cognion/pull/333) — componente `PasswordInput.tsx`
+implementado y en `develop`, reemplaza los 10 inputs de contraseña de los 5 formularios.
+Reporte `docs/reports/inc5-adj/US-ADJ-35-report.md`.
 **US-ADJ-36** Issue [#330](https://github.com/vvalotto/cognion/issues/330), spec
-`docs/specs/ajustes/US-ADJ-36.md`.
+`docs/specs/ajustes/US-ADJ-36.md` — backlog, pendiente de implementar.
 **US-ADJ-37** Issue [#331](https://github.com/vvalotto/cognion/issues/331), spec
-`docs/specs/ajustes/US-ADJ-37.md`.
-Las 3 especificadas 2026-09-12 — backlog, pendientes de implementar (`/implement-us`).
+`docs/specs/ajustes/US-ADJ-37.md` — backlog, pendiente de implementar.
 
 **Orden:** las 3 son independientes entre sí — pueden implementarse en cualquier orden o en
 paralelo.
