@@ -26,8 +26,8 @@
   - cobertura ≥ 95% (aplica a `frontend/`, vía Vitest — umbral de branches del proyecto: 80% global, ver `CLAUDE.md`/`US-ADJ-16`)
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-ADJ-37-context.md
+- Contexto: docs/plans/inc5-adj/US-ADJ-37-context.md
 - BDD feature: N/A (skip_bdd)
-- Plan: docs/plans/US-ADJ-37-plan.md
+- Plan: docs/plans/inc5-adj/US-ADJ-37-plan.md
 - Reporte: docs/reports/inc5-adj/US-ADJ-37-report.md
 - Quality report: quality/reports/inc5-adj/US-ADJ-37-quality.json
