@@ -217,7 +217,7 @@ ya que es la misma consulta por lote a `PreguntaPlantilla` ampliando qué campos
 | `ObtenerEvolucionTemporalEstudiante(estudiante_id, materia_id)` | RF-21 (individual) | Una fila por `Evaluacion` finalizada del estudiante en la materia, ordenada por `finalizada_en` — mismo dato que `ObtenerDesempenoPorEvaluacion` (§4), solo reordenado como serie temporal; sin fuente adicional |
 | `ObtenerEvolucionTemporalComision(comision_id, materia_id)` | RF-21 (comisión) | Una fila por `actividad_id` con al menos una `Evaluacion` finalizada de algún estudiante del roster: `porcentaje_aciertos_promedio` (promedio simple entre los estudiantes que finalizaron esa actividad — quien no la rindió no entra al promedio de ese punto, no cuenta como 0%), ordenada por `min(finalizada_en)` del grupo como proxy de orden cronológico de la actividad (evita depender de `fecha_apertura`, que `EvaluacionDesempenoResumen` no trae hoy) |
 | `ObtenerRankingPreguntasFalladas(materia_id, comision_id?)` | RF-22 | Una fila por `pregunta_id` que apareció en al menos una `Respuesta` vigente de la materia (`listar_respuestas_vigentes_de_materia`, §5, acotado a `estudiante_ids` del roster si se indica `comision_id`): `enunciado`, `unidad_tematica`, `tema`, `cantidad_presentaciones`, `cantidad_fallos`, `tasa_error` — mismo criterio de "solo lo efectivamente presentado" que evita denominador cero |
-| `ObtenerCompletitudPorActividad(actividad_id)` | RF-23 | Una fila por estudiante del roster de la(s) comisión(es) a la(s) que la actividad está restringida (o de toda la materia si `comisiones_ids` está vacío — requiere que el Docente indique qué comisión mirar en ese caso, a resolver en la spec/wireframe): `estudiante_id`, `nombre`, `estado` ∈ {`sin_iniciar`, `en_curso`, `suspendida`, `finalizada`} — de `listar_estados_de_actividad` (§8.2), completando con `sin_iniciar` los estudiantes ausentes del dict |
+| `ObtenerCompletitudPorActividad(actividad_id)` | RF-23 | Una fila por estudiante del roster de la(s) comisión(es) a la(s) que la actividad está restringida, o de **todas** las comisiones de la materia si `comisiones_ids` está vacío (unidas en una sola tabla, sin selección previa del Docente): `estudiante_id`, `nombre`, `estado` ∈ {`sin_iniciar`, `en_curso`, `suspendida`, `finalizada`} — de `listar_estados_de_actividad` (§8.2), completando con `sin_iniciar` los estudiantes ausentes del dict |
 
 ### 8.4 Hot spots — resueltos con Víctor (2026-09-12)
 
@@ -234,10 +234,13 @@ ya que es la misma consulta por lote a `PreguntaPlantilla` ampliando qué campos
    exclusivo del propio Estudiante) para admitir también al Docente de la materia de esa
    actividad, no a cualquier Docente del sistema.
 4. **¿`ObtenerCompletitudPorActividad` sobre una actividad sin restricción de comisión
-   (`comisiones_ids` vacío) — contra qué roster se arma la tabla?** Sin resolver del todo —
-   queda para la spec de implementación (probablemente el Docente elige una comisión de la
-   materia igual, mismo patrón que `ObtenerTasaErrorPorTema` con `comision_id` opcional) — no
-   bloquea la aprobación de este modelo.
+   (`comisiones_ids` vacío) — contra qué roster se arma la tabla?** Resuelto con Víctor
+   (2026-09-12) — el roster de **todas las comisiones de la materia**, unidas en una sola
+   tabla (vía `listar_comisiones_por_materia` + `listar_estudiantes` por cada una,
+   `ComisionConsultaPort` §5). Distinto del patrón de `ObtenerTasaErrorPorTema` (RF-17, `comision_id`
+   opcional): acá no hace falta que el Docente elija nada — si la actividad está restringida,
+   se usa esa(s) comisión(es); si no, se usa la materia entera, sin paso intermedio de
+   selección.
 
 ### 8.5 Próximo paso
 
