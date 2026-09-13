@@ -163,6 +163,8 @@ def get_autoregistro_controller(session: SessionDep) -> AutoregistroController:
     return AutoregistroController(
         AutoregistrarDocenteUseCase(usuario_repo, hasher),
         AutoregistrarEstudianteUseCase(usuario_repo, hasher, comision_repo),
+        MateriaPortInProcess(session),
+        SQLAlchemyComisionQueryRepository(session),
     )
 
 

@@ -10,6 +10,29 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-43] Pantallas de autoregistro con selección de perfil
+  - Frontend nuevo — consume `POST /identidad/autoregistro/docente` (`US-ADJ-41`) y
+    `POST /identidad/autoregistro/estudiante` (`US-ADJ-42`), ya cerrados
+  - 4 pantallas nuevas: elegir perfil (`AutoregistroPerfil`, dos tarjetas Docente/Estudiante,
+    sin opción de Administrador, INV-ID-15), formulario de Docente, formulario de Estudiante
+    (selector Materia→Comisión en cascada antes de los datos personales), éxito (única para
+    ambos perfiles, sin login automático)
+  - Link "¿No tenés cuenta? Registrate" nuevo en `Login.tsx`
+  - Gap de backend detectado en Fase 2 (decidido antes de codear): el selector de Materia→
+    Comisión del Estudiante necesita listar sin JWT (todavía no tiene cuenta) — `GET /materias`
+    y `GET /materias/{id}/comisiones` exigen rol `docente`/`administrador`. Resuelto con dos
+    endpoints públicos nuevos y acotados, `GET /identidad/autoregistro/materias` y
+    `GET /identidad/autoregistro/materias/{id}/comisiones`, que exponen solo `id`/`nombre` e
+    `id`/`horario` respectivamente — sin tocar el RBAC de los endpoints protegidos existentes.
+    Reutiliza `MateriaPort`/`ComisionQueryPort` ya existentes (`MateriaPort` gana `listar()`)
+    sin puertos nuevos entre BCs
+  - Cierra completa la Iteración 3 del Incremento 5-ADJ (autoregistro, `US-ADJ-41` a `43`)
+  - 10 tests unitarios backend nuevos (controller + fakes actualizados), 5 de integración
+    backend nuevos, 4 escenarios BDD nuevos (acotados al comportamiento backend testeable — las
+    pantallas en sí son frontend puro, sin BDD, mismo criterio que `US-ADJ-40`), 31 tests
+    Vitest nuevos (incluye 2 tests de integración con el router real), quality gates APROBADO
+    (pylint 10.00/10, CC máx 4, MI mín 59.77, coverage 100% en `entities`/`interface_adapters`,
+    oxlint 0 errores, `tsc -b` 0 errores)
 - [US-ADJ-42] Autoregistro de Estudiante (endpoint público)
   - `AutoregistrarEstudianteUseCase`: valida email único (`EmailYaRegistrado`), comisión
     existente (`ComisionNoExiste`, INV-ID-14) y contraseña segura (INV-ID-11 ampliada), crea el

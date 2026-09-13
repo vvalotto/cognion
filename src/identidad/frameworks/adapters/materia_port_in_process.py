@@ -19,11 +19,12 @@ from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 
 
 class MateriaPortInProcess(MateriaPort):
-    """Implementa `MateriaPort` invocando `ObtenerMateriaUseCase` en el mismo proceso."""
+    """Implementa `MateriaPort` invocando use cases de consulta de Materia en el mismo proceso."""
 
     def __init__(self, session: AsyncSession) -> None:
         """Recibe la sesión async de Identidad, compartida con el repositorio de Materia."""
-        self._obtener_materia = ObtenerMateriaUseCase(SQLAlchemyMateriaRepository(session))
+        self._materia_repositorio = SQLAlchemyMateriaRepository(session)
+        self._obtener_materia = ObtenerMateriaUseCase(self._materia_repositorio)
 
     async def obtener(self, materia_id: UUID) -> MateriaDTO | None:
         """Busca la materia por id, o `None` si no existe."""
@@ -31,3 +32,13 @@ class MateriaPortInProcess(MateriaPort):
         if materia is None:
             return None
         return MateriaDTO(id=materia.id, nombre=materia.nombre)
+
+    async def listar(self) -> list[MateriaDTO]:
+        """Lista las materias activas.
+
+        Usa `MateriaRepositoryPort.listar()` directo en vez de `ListarMateriasUseCase` — ese
+        use case agrega banco y conteo de preguntas por materia (`N+1` queries), datos que
+        este consumidor (selector de autoregistro de Estudiante, `US-ADJ-43`) no necesita.
+        """
+        materias = await self._materia_repositorio.listar()
+        return [MateriaDTO(id=materia.id, nombre=materia.nombre) for materia in materias]
