@@ -153,3 +153,30 @@ class PasswordActualIncorrecta(Exception):
         self.evento_cuenta_bloqueada: CuentaBloqueada | None = None
         self.intentos_restantes: int | None = None
         super().__init__("La contraseña actual es incorrecta.")
+
+
+class TokenRecuperacionInvalido(Exception):
+    """Se intentó canjear un token de recuperación cuyo valor no corresponde a ninguno existente."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"El token de recuperación '{token}' no existe.")
+
+
+class TokenRecuperacionVencido(Exception):
+    """Se intentó canjear un `TokenRecuperacionPassword` cuyo `expira_en` ya pasó (INV-ID-13)."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"El token de recuperación '{token}' ya venció.")
+
+
+class TokenRecuperacionYaUsado(Exception):
+    """Se intentó canjear un `TokenRecuperacionPassword` con `usado_en` no null."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"El token de recuperación '{token}' ya fue utilizado.")

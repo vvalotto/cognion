@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
+from src.identidad.entities.errors import TokenRecuperacionVencido, TokenRecuperacionYaUsado
+
 EXPIRACION_HORAS = 1
 
 
@@ -44,3 +46,15 @@ class TokenRecuperacionPassword:
         en ambos casos el efecto es idéntico: el token deja de poder canjearse.
         """
         self.usado_en = ahora
+
+    def verificar_vigente(self, ahora: datetime) -> None:
+        """Lanza el rechazo específico si el token no puede canjearse (`US-ADJ-39`).
+
+        Lanza `TokenRecuperacionYaUsado` si `usado_en` no es null, o
+        `TokenRecuperacionVencido` si `ahora >= expira_en` (INV-ID-13). No lanza nada si el
+        token es vigente. Mismo patrón que `Invitacion.verificar_vigente`.
+        """
+        if self.usado_en is not None:
+            raise TokenRecuperacionYaUsado(self.token)
+        if ahora >= self.expira_en:
+            raise TokenRecuperacionVencido(self.token)

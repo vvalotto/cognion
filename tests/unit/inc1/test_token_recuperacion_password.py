@@ -1,6 +1,9 @@
 import uuid
 from datetime import UTC, datetime, timedelta
 
+import pytest
+
+from src.identidad.entities.errors import TokenRecuperacionVencido, TokenRecuperacionYaUsado
 from src.identidad.entities.token_recuperacion_password import TokenRecuperacionPassword
 
 
@@ -47,3 +50,36 @@ class TestTokenRecuperacionPasswordInvalidar:
         token.invalidar(segundo_instante)
 
         assert token.usado_en == segundo_instante
+
+
+class TestTokenRecuperacionPasswordVerificarVigente:
+    def test_no_lanza_nada_si_el_token_es_vigente(self):
+        token = TokenRecuperacionPassword.crear(uuid.uuid4())
+
+        token.verificar_vigente(token.generado_en)
+
+    def test_lanza_ya_usado_si_usado_en_no_es_null(self):
+        token = TokenRecuperacionPassword.crear(uuid.uuid4())
+        token.invalidar(datetime.now(UTC))
+
+        with pytest.raises(TokenRecuperacionYaUsado):
+            token.verificar_vigente(datetime.now(UTC))
+
+    def test_lanza_vencido_si_ahora_es_posterior_a_expira_en(self):
+        token = TokenRecuperacionPassword.crear(uuid.uuid4())
+
+        with pytest.raises(TokenRecuperacionVencido):
+            token.verificar_vigente(token.expira_en + timedelta(seconds=1))
+
+    def test_lanza_vencido_si_ahora_es_exactamente_expira_en(self):
+        token = TokenRecuperacionPassword.crear(uuid.uuid4())
+
+        with pytest.raises(TokenRecuperacionVencido):
+            token.verificar_vigente(token.expira_en)
+
+    def test_ya_usado_tiene_prioridad_sobre_vencido(self):
+        token = TokenRecuperacionPassword.crear(uuid.uuid4())
+        token.invalidar(datetime.now(UTC))
+
+        with pytest.raises(TokenRecuperacionYaUsado):
+            token.verificar_vigente(token.expira_en + timedelta(seconds=1))

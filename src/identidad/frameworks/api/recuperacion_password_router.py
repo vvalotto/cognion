@@ -1,10 +1,19 @@
-"""Router FastAPI de recuperación de contraseña por autoservicio (`US-ADJ-38`)."""
+"""Router FastAPI de recuperación de contraseña por autoservicio (`US-ADJ-38`, `US-ADJ-39`)."""
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from src.identidad.entities.errors import (
+    PasswordDemasiadoCorta,
+    PasswordSinComplejidadSuficiente,
+    TokenRecuperacionInvalido,
+    TokenRecuperacionVencido,
+    TokenRecuperacionYaUsado,
+)
 from src.identidad.frameworks.api.schemas import (
+    ConfirmarRecuperacionPasswordRequest,
+    ConfirmarRecuperacionPasswordResponse,
     SolicitarRecuperacionPasswordRequest,
     SolicitarRecuperacionPasswordResponse,
 )
@@ -32,3 +41,34 @@ async def solicitar_recuperacion_password(
     """
     await controller.solicitar(body.email)
     return SolicitarRecuperacionPasswordResponse()
+
+
+@router.post(
+    "/recuperar-password/confirmar",
+    response_model=ConfirmarRecuperacionPasswordResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def confirmar_recuperacion_password(
+    body: ConfirmarRecuperacionPasswordRequest,
+    controller: RecuperacionPasswordController = Depends(get_recuperacion_password_controller),
+) -> ConfirmarRecuperacionPasswordResponse:
+    """Canjea un token de recuperación por una contraseña nueva; endpoint público, sin JWT.
+
+    Responde 422 si el token no es válido (inexistente, vencido o ya usado — mismo status y
+    criterio que `InvitacionInvalida`/`InvitacionVencida`/`InvitacionYaUsada` en
+    `registro_router.py`) o si `password_nueva` no cumple INV-ID-11 ampliada. No desbloquea la
+    cuenta ni resetea sus contadores de intentos fallidos.
+    """
+    try:
+        await controller.confirmar(body.token, body.password_nueva)
+    except (
+        TokenRecuperacionInvalido,
+        TokenRecuperacionVencido,
+        TokenRecuperacionYaUsado,
+        PasswordDemasiadoCorta,
+        PasswordSinComplejidadSuficiente,
+    ) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+    return ConfirmarRecuperacionPasswordResponse()

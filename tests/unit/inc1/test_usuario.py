@@ -151,6 +151,33 @@ class TestUsuarioCambiarPassword:
         assert usuario.bloqueada is False
 
 
+class TestUsuarioRecuperarPassword:
+    def test_actualiza_el_hash(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash-viejo", TipoPerfil.DOCENTE)
+
+        usuario.recuperar_password("hash-nuevo")
+
+        assert usuario.password_hash == "hash-nuevo"
+
+    def test_no_desbloquea_una_cuenta_bloqueada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.bloqueada = True
+
+        usuario.recuperar_password("hash-nuevo")
+
+        assert usuario.bloqueada is True
+
+    def test_no_toca_los_contadores_de_intentos_fallidos(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.intentos_fallidos_login = 2
+        usuario.intentos_fallidos_password = 1
+
+        usuario.recuperar_password("hash-nuevo")
+
+        assert usuario.intentos_fallidos_login == 2
+        assert usuario.intentos_fallidos_password == 1
+
+
 class TestUsuarioRegistrarFalloCambioPassword:
     def test_incrementa_el_contador(self):
         usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)

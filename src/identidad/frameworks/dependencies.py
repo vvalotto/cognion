@@ -57,6 +57,7 @@ from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
 from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
+from src.identidad.use_cases.confirmar_nueva_password import ConfirmarNuevaPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.identidad.use_cases.editar_comision import EditarComisionUseCase
@@ -206,8 +207,10 @@ def get_recuperacion_password_controller(session: SessionDep) -> RecuperacionPas
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     token_repo = SQLAlchemyTokenRecuperacionPasswordRepository(session)
     canal_recuperacion = get_canal_recuperacion()
+    hasher = get_password_hasher()
     return RecuperacionPasswordController(
-        SolicitarRecuperacionPasswordUseCase(usuario_repo, token_repo, canal_recuperacion)
+        SolicitarRecuperacionPasswordUseCase(usuario_repo, token_repo, canal_recuperacion),
+        ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, hasher),
     )
 
 
