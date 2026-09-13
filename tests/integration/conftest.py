@@ -12,6 +12,7 @@ from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 async def _limpiar_tablas_identidad() -> None:
     async with SessionLocal() as session:
+        await session.execute(text("DELETE FROM token_recuperacion_password"))
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))

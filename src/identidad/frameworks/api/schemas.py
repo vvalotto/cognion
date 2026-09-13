@@ -191,3 +191,17 @@ class MateriaEstudianteResponse(BaseModel):
 
     id: UUID
     nombre: str
+
+
+class SolicitarRecuperacionPasswordRequest(BaseModel):
+    """Body de la request de solicitud de recuperación de contraseña (`US-ADJ-38`)."""
+
+    email: str = Field(..., min_length=3, max_length=255)
+
+
+class SolicitarRecuperacionPasswordResponse(BaseModel):
+    """Respuesta genérica de la solicitud — igual exista o no la cuenta (INV-ID-17)."""
+
+    mensaje: str = (
+        "Si el email ingresado corresponde a una cuenta, te enviamos un link de recuperación."
+    )

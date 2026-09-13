@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     smtp_from: str = "no-responder@cognion.local"
     verificador_vencimientos_cadencia_segundos: int = 120
     verificador_vencimientos_umbral_inactividad_minutos: int = 15
+    frontend_url: str = "http://localhost:5173"
 
 
 settings = Settings()

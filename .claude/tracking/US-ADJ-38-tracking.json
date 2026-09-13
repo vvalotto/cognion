@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-38",
+    "us_title": "Solicitar recuperación de contraseña",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-13T12:34:21.180818+00:00",
+    "completed_at": "2026-09-13T13:11:47.441831+00:00",
+    "total_elapsed_seconds": 2246,
+    "effective_seconds": 2246,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-09-13T12:34:27.332760+00:00",
+      "completed_at": "2026-09-13T12:35:08.839639+00:00",
+      "elapsed_seconds": 41,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-13T12:35:19.953506+00:00",
+      "completed_at": "2026-09-13T12:36:10.848485+00:00",
+      "elapsed_seconds": 50,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-13T12:37:37.396905+00:00",
+      "completed_at": "2026-09-13T12:38:24.388947+00:00",
+      "elapsed_seconds": 46,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-13T12:38:30.346888+00:00",
+      "completed_at": "2026-09-13T12:41:45.012600+00:00",
+      "elapsed_seconds": 194,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Entity TokenRecuperacionPassword",
+          "task_type": "entity",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-13T12:38:38.450368+00:00",
+          "completed_at": "2026-09-13T12:38:48.131024+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -9.85,
+          "file_created": "src/identidad/entities/token_recuperacion_password.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Ports TokenRecuperacionPasswordRepositoryPort y CanalRecuperacionPort",
+          "task_type": "port",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-13T12:38:50.734712+00:00",
+          "completed_at": "2026-09-13T12:39:06.428463+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -9.75,
+          "file_created": "src/identidad/entities/ports/token_recuperacion_password_repository_port.py,src/identidad/entities/ports/canal_recuperacion_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "UseCase SolicitarRecuperacionPasswordUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-13T12:39:08.855957+00:00",
+          "completed_at": "2026-09-13T12:39:20.384224+00:00",
+          "elapsed_seconds": 11,
+          "actual_minutes": 0.18,
+          "variance_minutes": -14.82,
+          "file_created": "src/identidad/use_cases/solicitar_recuperacion_password.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Modelo ORM + gateway SQLAlchemy",
+          "task_type": "repository",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-13T12:39:23.274936+00:00",
+          "completed_at": "2026-09-13T12:40:15.525556+00:00",
+          "elapsed_seconds": 52,
+          "actual_minutes": 0.87,
+          "variance_minutes": -19.13,
+          "file_created": "src/identidad/frameworks/db/models.py,src/identidad/interface_adapters/gateways/token_recuperacion_password_repository.py,migrations/versions/e31e7dfcab3a_token_recuperacion_password.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Adapter CanalRecuperacionPortInProcess hacia Notificaciones",
+          "task_type": "adapter",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-13T12:40:18.165648+00:00",
+          "completed_at": "2026-09-13T12:40:31.424911+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -19.78,
+          "file_created": "src/identidad/frameworks/adapters/canal_recuperacion_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Controller, schema y router",
+          "task_type": "controller",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-09-13T12:40:33.965195+00:00",
+          "completed_at": "2026-09-13T12:41:29.479508+00:00",
+          "elapsed_seconds": 55,
+          "actual_minutes": 0.92,
+          "variance_minutes": -24.08,
+          "file_created": "src/identidad/frameworks/api/schemas.py,src/identidad/interface_adapters/controllers/recuperacion_password_controller.py,src/identidad/frameworks/api/recuperacion_password_router.py,src/identidad/frameworks/dependencies.py,src/app.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-13T12:41:51.571791+00:00",
+      "completed_at": "2026-09-13T12:46:19.650488+00:00",
+      "elapsed_seconds": 268,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-13T12:46:26.598333+00:00",
+      "completed_at": "2026-09-13T12:50:32.219387+00:00",
+      "elapsed_seconds": 245,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-13T12:50:38.636596+00:00",
+      "completed_at": "2026-09-13T12:54:03.067058+00:00",
+      "elapsed_seconds": 204,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-13T12:54:08.868540+00:00",
+      "completed_at": "2026-09-13T13:08:56.281468+00:00",
+      "elapsed_seconds": 887,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-13T13:09:03.349238+00:00",
+      "completed_at": "2026-09-13T13:10:26.645855+00:00",
+      "elapsed_seconds": 83,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-13T13:10:33.569409+00:00",
+      "completed_at": "2026-09-13T13:11:46.461919+00:00",
+      "elapsed_seconds": 72,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 6,
+    "completed_tasks": 6,
+    "total_phases": 10,
+    "estimated_total_minutes": 100.0,
+    "actual_total_minutes": 2.58,
+    "variance_minutes": -97.42,
+    "variance_percent": -97.42
+  }
+}

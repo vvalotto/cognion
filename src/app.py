@@ -30,6 +30,9 @@ from src.identidad.frameworks.api.materias_comisiones_router import (
     router as identidad_materias_comisiones_router,
 )
 from src.identidad.frameworks.api.perfil_router import router as perfil_router
+from src.identidad.frameworks.api.recuperacion_password_router import (
+    router as recuperacion_password_router,
+)
 from src.identidad.frameworks.api.registro_router import router as registro_router
 from src.identidad.frameworks.api.usuarios_router import router as usuarios_router
 from src.settings import settings
@@ -82,6 +85,7 @@ app.include_router(identidad_materias_comisiones_router)
 app.include_router(estudiante_router)
 app.include_router(invitaciones_router)
 app.include_router(registro_router)
+app.include_router(recuperacion_password_router)
 app.include_router(auth_router)
 app.include_router(materias_router)
 app.include_router(preguntas_router)

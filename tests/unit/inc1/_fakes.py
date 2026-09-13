@@ -5,6 +5,7 @@ from uuid import UUID
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
+from src.identidad.entities.ports.canal_recuperacion_port import CanalRecuperacionPort
 from src.identidad.entities.ports.comision_query_port import (
     ComisionQueryPort,
     EstudianteConEmail,
@@ -17,8 +18,12 @@ from src.identidad.entities.ports.invitacion_repository_port import InvitacionRe
 from src.identidad.entities.ports.materia_port import MateriaDTO, MateriaPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.entities.ports.token_recuperacion_password_repository_port import (
+    TokenRecuperacionPasswordRepositoryPort,
+)
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.resultado_paginado_cuentas import ResultadoPaginadoCuentas
+from src.identidad.entities.token_recuperacion_password import TokenRecuperacionPassword
 from src.identidad.entities.usuario import Usuario
 from src.shared.entities.errors import JWTInvalido
 from src.shared.entities.jwt import JWT, JWTPayload
@@ -196,3 +201,33 @@ class FakeJWTIssuer(JWTIssuerPort):
         if self.payload_a_devolver is not None:
             return self.payload_a_devolver
         raise JWTInvalido()
+
+
+class FakeTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRepositoryPort):
+    def __init__(self) -> None:
+        self.tokens: dict[UUID, TokenRecuperacionPassword] = {}
+
+    async def guardar(self, token: TokenRecuperacionPassword) -> None:
+        self.tokens[token.id] = token
+
+    async def obtener_por_token(self, token: str) -> TokenRecuperacionPassword | None:
+        return next((t for t in self.tokens.values() if t.token == token), None)
+
+    async def invalidar_activos_de(self, usuario_id: UUID, ahora: datetime) -> None:
+        for token in self.tokens.values():
+            if token.usuario_id == usuario_id and token.usado_en is None:
+                token.usado_en = ahora
+
+    async def actualizar(self, token: TokenRecuperacionPassword) -> None:
+        self.tokens[token.id] = token
+
+
+class FakeCanalRecuperacion(CanalRecuperacionPort):
+    def __init__(self, falla: bool = False) -> None:
+        self.enviados: list[tuple[str, str]] = []
+        self._falla = falla
+
+    async def enviar_recuperacion(self, email_destinatario: str, token: str) -> None:
+        if self._falla:
+            raise RuntimeError("Fallo simulado de envío")
+        self.enviados.append((email_destinatario, token))
