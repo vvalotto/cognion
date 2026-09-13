@@ -35,6 +35,9 @@ from src.identidad.interface_adapters.controllers.perfil_controller import Perfi
 from src.identidad.interface_adapters.controllers.recuperacion_password_controller import (
     RecuperacionPasswordController,
 )
+from src.identidad.interface_adapters.controllers.autoregistro_controller import (
+    AutoregistroController,
+)
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.interface_adapters.gateways.comision_query_repository import (
@@ -71,6 +74,7 @@ from src.identidad.use_cases.listar_materias_del_estudiante import (
     ListarMateriasDelEstudianteUseCase,
 )
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
+from src.identidad.use_cases.autoregistrar_docente import AutoregistrarDocenteUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
@@ -148,6 +152,13 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
         comision_repo,
         materia_port,
     )
+
+
+def get_autoregistro_controller(session: SessionDep) -> AutoregistroController:
+    """Arma el `AutoregistroController` con sus dependencias concretas."""
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    hasher = get_password_hasher()
+    return AutoregistroController(AutoregistrarDocenteUseCase(usuario_repo, hasher))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:
