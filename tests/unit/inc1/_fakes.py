@@ -109,15 +109,22 @@ class FakeComisionRepository(ComisionRepositoryPort):
 
 class FakeComisionQueryRepository(ComisionQueryPort):
     def __init__(self) -> None:
+        self.comisiones_por_materia: dict[UUID, list[Comision]] = {}
         self.estudiantes_por_comision: dict[UUID, list[EstudianteResumen]] = {}
         self.estudiantes_con_email_por_comision: dict[UUID, list[EstudianteConEmail]] = {}
         self.docentes_con_comisiones: set[UUID] = set()
         self.administradores_con_comisiones: set[UUID] = set()
 
+    def agregar_comision(self, comision: Comision) -> None:
+        self.comisiones_por_materia.setdefault(comision.materia_id, []).append(comision)
+
     async def listar_comisiones_por_materia(
         self, materia_id: UUID, incluir_inactivas: bool = False
     ) -> list[Comision]:
-        return []
+        comisiones = self.comisiones_por_materia.get(materia_id, [])
+        if incluir_inactivas:
+            return comisiones
+        return [comision for comision in comisiones if comision.activa]
 
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         return self.estudiantes_por_comision.get(comision_id, [])
@@ -149,6 +156,9 @@ class FakeMateriaPort(MateriaPort):
 
     async def obtener(self, materia_id: UUID) -> MateriaDTO | None:
         return self.materias.get(materia_id)
+
+    async def listar(self) -> list[MateriaDTO]:
+        return list(self.materias.values())
 
 
 class FakePasswordHasher(PasswordHasherPort):
