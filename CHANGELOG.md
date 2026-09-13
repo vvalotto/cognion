@@ -10,6 +10,23 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-38] Solicitar recuperación de contraseña (endpoint público)
+  - Aggregate nuevo `TokenRecuperacionPassword` (token único, expiración a 1 hora, INV-ID-13)
+    y comando `SolicitarRecuperacionPasswordUseCase`: busca el `Usuario` por email, invalida
+    cualquier token activo previo del mismo usuario (INV-ID-12) y genera uno nuevo
+  - Endpoint público `POST /identidad/recuperar-password/solicitar` — responde siempre
+    `202 Accepted` con el mismo mensaje genérico, exista o no la cuenta (INV-ID-17, no
+    filtrar existencia de cuentas)
+  - **Primera vez que BC Identidad depende de un puerto de BC Notificaciones**:
+    `CanalRecuperacionPort`/`CanalRecuperacionPortInProcess` invocan `SmtpCanalEnvio` de
+    Notificaciones directo (`ADR-006`, mismo patrón que `NotificacionPort` en sentido
+    Actividad Evaluativa → Notificaciones); un fallo de envío se loguea sin bloquear la
+    operación (manejo en el Use Case, no en el adapter, consistente con `CanalEnvioPort`)
+  - Primera de la Iteración 2 del Incremento 5-ADJ — `US-ADJ-39` (confirmar token) depende
+    de esta
+  - 12 tests unitarios (100% cobertura en entity/use case/controller), 10 tests de
+    integración (repositorio + endpoint con SMTP fake), 4 escenarios BDD — 99% cobertura
+    total, quality gates APROBADO (pylint 9.75/10, CC máx 3, MI mín 49.97, mypy 0 issues)
 - [US-ADJ-37] Descubribilidad — Cambiar contraseña y Cerrar sesión en el menú
   - `UserMenu.tsx` (nuevo) — envuelve `Menu` de `@base-ui/react/menu` sobre el trigger de
     avatar/nombre/rol del header, reemplazando el `<div>` estático de `AppLayout.tsx`

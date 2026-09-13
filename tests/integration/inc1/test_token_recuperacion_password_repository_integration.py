@@ -13,9 +13,7 @@ from src.shared.entities.tipo_perfil import TipoPerfil
 
 async def _crear_usuario(session) -> Usuario:
     usuario_repo = SQLAlchemyUsuarioRepository(session)
-    usuario = Usuario.crear(
-        "Ana", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
-    )
+    usuario = Usuario.crear("Ana", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
     await usuario_repo.guardar(usuario)
     return usuario
 
