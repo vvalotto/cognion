@@ -196,6 +196,28 @@ class AutoregistrarEstudianteRequest(BaseModel):
     comision_id: UUID
 
 
+class MateriaAutoregistroResponse(BaseModel):
+    """Materia mínima para el selector de la pantalla de autoregistro (`US-ADJ-43`).
+
+    Endpoint público, sin JWT — expone solo `id`/`nombre`, sin los campos adicionales de
+    `GET /materias` (`US-2.1.9`, protegido por rol).
+    """
+
+    id: UUID
+    nombre: str
+
+
+class ComisionAutoregistroResponse(BaseModel):
+    """Comisión mínima para el selector de la pantalla de autoregistro (`US-ADJ-43`).
+
+    Endpoint público, sin JWT — expone solo `id`/`horario`, sin `docentes_asignados` ni
+    `activa` como sí hace `GET /materias/{id}/comisiones` (`US-4.2.2`, protegido por rol).
+    """
+
+    id: UUID
+    horario: str
+
+
 class LoginRequest(BaseModel):
     """Body de la request de autenticación."""
 
