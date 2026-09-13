@@ -10,6 +10,20 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-40] Pantallas de recuperación de contraseña
+  - Frontend puro — consume `POST /identidad/recuperar-password/solicitar` (`US-ADJ-38`) y
+    `POST /identidad/recuperar-password/confirmar` (`US-ADJ-39`), ya cerrados
+  - 5 pantallas nuevas: solicitar, email enviado, definir nueva contraseña (token por
+    path param `/recuperar-password/:token`), link inválido/vencido/ya usado, éxito
+  - Link "¿Olvidaste tu contraseña?" nuevo en `Login.tsx`
+  - Distingue el error de política de contraseña del error de token sin código de error
+    estructurado del backend — por el prefijo del mensaje (`"La contraseña debe..."`),
+    encapsulado en un helper local en `RecuperarPasswordNueva.tsx`
+  - Cierra completa la Iteración 2 del Incremento 5-ADJ (`US-ADJ-38` a `40`)
+  - 35 tests nuevos (Vitest — unitarios de pantalla + integración real vía `router.test.tsx`),
+    quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores, coverage global 91.28%
+    statements / 81.35% branches / 86.89% functions / 94% lines, por encima del umbral de
+    80% del proyecto)
 - [US-ADJ-38] Solicitar recuperación de contraseña (endpoint público)
   - Aggregate nuevo `TokenRecuperacionPassword` (token único, expiración a 1 hora, INV-ID-13)
     y comando `SolicitarRecuperacionPasswordUseCase`: busca el `Usuario` por email, invalida
