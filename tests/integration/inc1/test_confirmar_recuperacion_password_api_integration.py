@@ -8,7 +8,9 @@ from src.app import app
 from src.identidad.frameworks.db.models import TokenRecuperacionPasswordModel, UsuarioModel
 
 
-async def _crear_docente_y_token(client: AsyncClient, admin_headers: dict[str, str]) -> tuple[str, str]:
+async def _crear_docente_y_token(
+    client: AsyncClient, admin_headers: dict[str, str]
+) -> tuple[str, str]:
     """Crea un docente, solicita recuperación y devuelve (email, token generado)."""
     email = f"docente.confirmar.{uuid.uuid4()}@fiuner.edu.ar"
     await client.post(
