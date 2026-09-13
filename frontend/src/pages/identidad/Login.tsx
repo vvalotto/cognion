@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 import { Logo } from "@/components/Logo"
 import { PasswordInput } from "@/components/PasswordInput"
@@ -108,6 +108,14 @@ export function Login() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
+          </div>
+          <div className="flex items-center justify-end">
+            <Link
+              to="/recuperar-password"
+              className="text-sm font-medium text-muted-foreground underline-offset-2 hover:underline"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
           </div>
           <Button type="submit">Ingresar</Button>
         </fieldset>

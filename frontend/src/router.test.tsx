@@ -552,4 +552,64 @@ describe("router (integración)", () => {
       expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
     })
   })
+
+  describe("Recuperación de contraseña (US-ADJ-40)", () => {
+    it("Login → clic en '¿Olvidaste tu contraseña?' → pantalla de solicitud, dentro del layout de auth", async () => {
+      await router.navigate("/login")
+      render(<RouterProvider router={router} />)
+      await screen.findByText("Iniciar sesión")
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "¿Olvidaste tu contraseña?" }))
+
+      expect(
+        await screen.findByRole("heading", { name: "¿Olvidaste tu contraseña?" }),
+      ).toBeInTheDocument()
+    })
+
+    it("flujo completo: solicitar → email enviado → abrir link con token → guardar → éxito → login", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(jsonResponse(202, {})) // solicitar
+        .mockResolvedValueOnce(jsonResponse(200, {})) // confirmar
+      const user = userEvent.setup()
+
+      await router.navigate("/recuperar-password")
+      render(<RouterProvider router={router} />)
+      await user.type(screen.getByLabelText("Email"), "ana@fiuner.edu.ar")
+      await user.click(screen.getByRole("button", { name: "Enviar link de recuperación" }))
+      expect(await screen.findByText("Revisá tu email")).toBeInTheDocument()
+
+      await router.navigate("/recuperar-password/tok-abc")
+      await screen.findByRole("heading", { name: "Definí tu nueva contraseña" })
+      await user.type(screen.getByLabelText("Contraseña nueva"), "nuevaClave123")
+      await user.type(screen.getByLabelText("Confirmar contraseña nueva"), "nuevaClave123")
+      await user.click(screen.getByRole("button", { name: "Guardar nueva contraseña" }))
+      expect(await screen.findByText("Contraseña actualizada")).toBeInTheDocument()
+
+      await user.click(screen.getByRole("link", { name: "Iniciar sesión" }))
+      expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+    })
+
+    it("un token vencido/inválido/ya usado navega a la pantalla de link no válido, con salida a pedir uno nuevo", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(422, { detail: "El token de recuperación 'tok-viejo' ya venció." }),
+      )
+      const user = userEvent.setup()
+
+      await router.navigate("/recuperar-password/tok-viejo")
+      render(<RouterProvider router={router} />)
+      await user.type(screen.getByLabelText("Contraseña nueva"), "nuevaClave123")
+      await user.type(screen.getByLabelText("Confirmar contraseña nueva"), "nuevaClave123")
+      await user.click(screen.getByRole("button", { name: "Guardar nueva contraseña" }))
+
+      expect(await screen.findByText("Este link ya no es válido")).toBeInTheDocument()
+
+      await user.click(screen.getByRole("link", { name: "Pedir un nuevo link" }))
+      expect(
+        await screen.findByRole("heading", { name: "¿Olvidaste tu contraseña?" }),
+      ).toBeInTheDocument()
+    })
+  })
 })

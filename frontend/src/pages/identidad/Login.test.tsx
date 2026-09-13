@@ -162,4 +162,20 @@ describe("Login", () => {
 
     expect(await screen.findByText("Inicio")).toBeInTheDocument()
   })
+
+  it("el link '¿Olvidaste tu contraseña?' navega a /recuperar-password (US-ADJ-40)", async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={["/login"]}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/recuperar-password" element={<p>Recuperar contraseña</p>} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await user.click(screen.getByRole("link", { name: "¿Olvidaste tu contraseña?" }))
+
+    expect(await screen.findByText("Recuperar contraseña")).toBeInTheDocument()
+  })
 })
