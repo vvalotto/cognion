@@ -143,6 +143,11 @@ que se numeraron formalmente después de acordar el alcance con Víctor.
 **Orden:** `US-ADJ-38` → `US-ADJ-39` (confirmar necesita que el token ya se pueda generar) →
 `US-ADJ-40`.
 
+**Specs e Issues creados 2026-09-13:** `docs/specs/ajustes/US-ADJ-38.md` (Issue
+[#339](https://github.com/vvalotto/cognion/issues/339)), `US-ADJ-39.md` (Issue
+[#340](https://github.com/vvalotto/cognion/issues/340)), `US-ADJ-40.md` (Issue
+[#341](https://github.com/vvalotto/cognion/issues/341)) — ninguna implementada todavía.
+
 ---
 
 ## Iteración 3 — Identidad: autoregistro con selección de perfil (RF nuevo)
