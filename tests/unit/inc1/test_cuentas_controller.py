@@ -14,6 +14,7 @@ from tests.unit.inc1._fakes import (
     FakeCuentaQueryRepository,
     FakeEvaluacionConsultaPort,
     FakePasswordHasher,
+    FakeTokenRecuperacionPasswordRepository,
     FakeUsuarioRepository,
 )
 
@@ -27,7 +28,10 @@ def _armar_controller(
         ResetearPasswordUseCase(usuario_repo, FakePasswordHasher()),
         EditarCuentaUseCase(usuario_repo),
         EliminarCuentaUseCase(
-            usuario_repo, FakeComisionQueryRepository(), FakeEvaluacionConsultaPort()
+            usuario_repo,
+            FakeComisionQueryRepository(),
+            FakeEvaluacionConsultaPort(),
+            FakeTokenRecuperacionPasswordRepository(),
         ),
         ActivarCuentaUseCase(usuario_repo),
     )

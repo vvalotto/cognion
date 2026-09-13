@@ -221,6 +221,11 @@ class FakeTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRepositor
     async def actualizar(self, token: TokenRecuperacionPassword) -> None:
         self.tokens[token.id] = token
 
+    async def eliminar_de(self, usuario_id: UUID) -> None:
+        self.tokens = {
+            id_: token for id_, token in self.tokens.items() if token.usuario_id != usuario_id
+        }
+
 
 class FakeCanalRecuperacion(CanalRecuperacionPort):
     def __init__(self, falla: bool = False) -> None:

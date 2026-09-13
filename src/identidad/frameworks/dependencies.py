@@ -161,13 +161,16 @@ def get_cuentas_controller(session: SessionDep) -> CuentasController:
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     comision_query = SQLAlchemyComisionQueryRepository(session)
     evaluacion_consulta = EvaluacionConsultaPortInProcess(session)
+    token_recuperacion_repo = SQLAlchemyTokenRecuperacionPasswordRepository(session)
     hasher = get_password_hasher()
     return CuentasController(
         ListarCuentasUseCase(cuenta_query),
         ObtenerCuentaUseCase(usuario_repo),
         ResetearPasswordUseCase(usuario_repo, hasher),
         EditarCuentaUseCase(usuario_repo),
-        EliminarCuentaUseCase(usuario_repo, comision_query, evaluacion_consulta),
+        EliminarCuentaUseCase(
+            usuario_repo, comision_query, evaluacion_consulta, token_recuperacion_repo
+        ),
         ActivarCuentaUseCase(usuario_repo),
     )
 
