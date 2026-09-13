@@ -170,6 +170,23 @@ class RegistroResponse(BaseModel):
     materia: str
 
 
+class AutoregistrarDocenteRequest(BaseModel):
+    """Body de la request de autoregistro de un Docente (`US-ADJ-41`)."""
+
+    nombre: str = Field(..., min_length=1, max_length=200)
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=8)
+
+
+class AutoregistroResponse(BaseModel):
+    """Representación del Usuario autoregistrado devuelta por la API."""
+
+    id: UUID
+    nombre: str
+    email: str
+    tipo_perfil: str
+
+
 class LoginRequest(BaseModel):
     """Body de la request de autenticación."""
 

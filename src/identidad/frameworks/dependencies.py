@@ -20,6 +20,9 @@ from src.identidad.frameworks.adapters.materia_port_in_process import MateriaPor
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
+from src.identidad.interface_adapters.controllers.autoregistro_controller import (
+    AutoregistroController,
+)
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
@@ -56,6 +59,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlch
 from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
 from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
+from src.identidad.use_cases.autoregistrar_docente import AutoregistrarDocenteUseCase
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.confirmar_nueva_password import ConfirmarNuevaPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
@@ -148,6 +152,13 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
         comision_repo,
         materia_port,
     )
+
+
+def get_autoregistro_controller(session: SessionDep) -> AutoregistroController:
+    """Arma el `AutoregistroController` con sus dependencias concretas."""
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    hasher = get_password_hasher()
+    return AutoregistroController(AutoregistrarDocenteUseCase(usuario_repo, hasher))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

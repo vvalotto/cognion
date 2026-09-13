@@ -74,6 +74,20 @@ class UsuarioRegistrado:
 
 
 @dataclass(frozen=True)
+class UsuarioAutoregistrado:
+    """Un Docente o Estudiante creó su propia cuenta sin invitación ni Administrador (`US-ADJ-41`).
+
+    Distinto de `UsuarioCreado` (alta por Administrador, autenticada) — mismo shape, actor
+    distinto (`BC-identidad-modelo.md` §13.2).
+    """
+
+    usuario_id: UUID
+    email: str
+    tipo_perfil: str
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
 class SesionIniciada:
     """Un Usuario se autenticó exitosamente y recibió un JWT con su rol (RF-02)."""
 

@@ -22,6 +22,7 @@ from src.banco_preguntas.frameworks.api.bancos_router import router as bancos_ro
 from src.banco_preguntas.frameworks.api.materias_router import router as materias_router
 from src.banco_preguntas.frameworks.api.preguntas_router import router as preguntas_router
 from src.identidad.frameworks.api.auth_router import router as auth_router
+from src.identidad.frameworks.api.autoregistro_router import router as autoregistro_router
 from src.identidad.frameworks.api.comisiones_router import router as comisiones_router
 from src.identidad.frameworks.api.cuentas_router import router as cuentas_router
 from src.identidad.frameworks.api.estudiante_router import router as estudiante_router
@@ -85,6 +86,7 @@ app.include_router(identidad_materias_comisiones_router)
 app.include_router(estudiante_router)
 app.include_router(invitaciones_router)
 app.include_router(registro_router)
+app.include_router(autoregistro_router)
 app.include_router(recuperacion_password_router)
 app.include_router(auth_router)
 app.include_router(materias_router)
