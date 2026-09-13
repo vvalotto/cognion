@@ -51,9 +51,7 @@ class TestAutoregistrarEstudianteUseCase:
         comision = _comision()
         await comision_repo.guardar(comision)
         use_case = AutoregistrarEstudianteUseCase(repo, hasher, comision_repo)
-        await use_case.execute(
-            "Ana", "ana.estudiante@fiuner.edu.ar", "Clave#Segura1", comision.id
-        )
+        await use_case.execute("Ana", "ana.estudiante@fiuner.edu.ar", "Clave#Segura1", comision.id)
 
         with pytest.raises(EmailYaRegistrado):
             await use_case.execute(
@@ -69,9 +67,7 @@ class TestAutoregistrarEstudianteUseCase:
         use_case = AutoregistrarEstudianteUseCase(repo, hasher, comision_repo)
 
         with pytest.raises(ComisionNoExiste):
-            await use_case.execute(
-                "Ana", "ana.estudiante@fiuner.edu.ar", "Clave#Segura1", uuid4()
-            )
+            await use_case.execute("Ana", "ana.estudiante@fiuner.edu.ar", "Clave#Segura1", uuid4())
 
         assert len(repo.usuarios) == 0
 
@@ -84,8 +80,6 @@ class TestAutoregistrarEstudianteUseCase:
         use_case = AutoregistrarEstudianteUseCase(repo, hasher, comision_repo)
 
         with pytest.raises(PasswordDemasiadoCorta):
-            await use_case.execute(
-                "Ana", "ana.estudiante@fiuner.edu.ar", "abc123", comision.id
-            )
+            await use_case.execute("Ana", "ana.estudiante@fiuner.edu.ar", "abc123", comision.id)
 
         assert len(repo.usuarios) == 0

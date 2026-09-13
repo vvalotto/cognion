@@ -32,6 +32,4 @@ class AutoregistroController:
         self, nombre: str, email: str, password: str, comision_id: UUID
     ) -> tuple[Usuario, UsuarioAutoregistrado]:
         """Delega el autoregistro de Estudiante en el caso de uso correspondiente."""
-        return await self._autoregistrar_estudiante.execute(
-            nombre, email, password, comision_id
-        )
+        return await self._autoregistrar_estudiante.execute(nombre, email, password, comision_id)

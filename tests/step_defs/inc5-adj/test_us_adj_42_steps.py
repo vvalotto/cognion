@@ -151,7 +151,9 @@ def dado_un_estudiante_ya_autoregistrado(context, email):
     assert respuesta.status_code == 201
 
 
-@when("se solicita POST /identidad/autoregistro/estudiante con datos válidos y el id de esa Comisión")
+@when(
+    "se solicita POST /identidad/autoregistro/estudiante con datos válidos y el id de esa Comisión"
+)
 def cuando_se_autoregistra_con_datos_validos(context):
     context["response"] = run_async(
         _post(
