@@ -7,8 +7,12 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.identidad.entities.ports.canal_recuperacion_port import CanalRecuperacionPort
 from src.identidad.entities.ports.notificador_port import NotificadorPort
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
+from src.identidad.frameworks.adapters.canal_recuperacion_port_in_process import (
+    CanalRecuperacionPortInProcess,
+)
 from src.identidad.frameworks.adapters.evaluacion_consulta_port_in_process import (
     EvaluacionConsultaPortInProcess,
 )
@@ -28,6 +32,9 @@ from src.identidad.interface_adapters.controllers.invitaciones_controller import
     InvitacionesController,
 )
 from src.identidad.interface_adapters.controllers.perfil_controller import PerfilController
+from src.identidad.interface_adapters.controllers.recuperacion_password_controller import (
+    RecuperacionPasswordController,
+)
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.interface_adapters.gateways.comision_query_repository import (
@@ -41,6 +48,9 @@ from src.identidad.interface_adapters.gateways.cuenta_query_repository import (
 )
 from src.identidad.interface_adapters.gateways.invitacion_repository import (
     SQLAlchemyInvitacionRepository,
+)
+from src.identidad.interface_adapters.gateways.token_recuperacion_password_repository import (
+    SQLAlchemyTokenRecuperacionPasswordRepository,
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
@@ -62,6 +72,9 @@ from src.identidad.use_cases.listar_materias_del_estudiante import (
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
+from src.identidad.use_cases.solicitar_recuperacion_password import (
+    SolicitarRecuperacionPasswordUseCase,
+)
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -181,6 +194,21 @@ def get_auth_controller(session: SessionDep) -> AuthController:
     hasher = get_password_hasher()
     jwt_issuer = get_jwt_issuer()
     return AuthController(IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer))
+
+
+def get_canal_recuperacion() -> CanalRecuperacionPort:
+    """Provee la implementación del canal de envío de recuperación de contraseña a usar."""
+    return CanalRecuperacionPortInProcess()
+
+
+def get_recuperacion_password_controller(session: SessionDep) -> RecuperacionPasswordController:
+    """Arma el `RecuperacionPasswordController` con sus dependencias concretas."""
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    token_repo = SQLAlchemyTokenRecuperacionPasswordRepository(session)
+    canal_recuperacion = get_canal_recuperacion()
+    return RecuperacionPasswordController(
+        SolicitarRecuperacionPasswordUseCase(usuario_repo, token_repo, canal_recuperacion)
+    )
 
 
 get_current_user = build_get_current_user(get_jwt_issuer())
