@@ -612,4 +612,54 @@ describe("router (integración)", () => {
       ).toBeInTheDocument()
     })
   })
+
+  describe("Autoregistro (US-ADJ-43)", () => {
+    it("Login → clic en 'Registrate' → elegir perfil Docente → completar → éxito", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(201, {
+          id: "u1",
+          nombre: "Nico",
+          email: "nico@fiuner.edu.ar",
+          tipo_perfil: "docente",
+        }),
+      )
+      const user = userEvent.setup()
+
+      await router.navigate("/login")
+      render(<RouterProvider router={router} />)
+      await screen.findByText("Iniciar sesión")
+
+      await user.click(screen.getByRole("link", { name: "Registrate" }))
+      expect(await screen.findByRole("heading", { name: "Creá tu cuenta" })).toBeInTheDocument()
+
+      await user.click(screen.getByText("Soy Docente"))
+      await screen.findByRole("heading", { name: "Creá tu cuenta de Docente" })
+      await user.type(screen.getByLabelText("Nombre completo"), "Nico")
+      await user.type(screen.getByLabelText("Email"), "nico@fiuner.edu.ar")
+      await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
+      await user.type(screen.getByLabelText("Confirmar contraseña"), "Password#123x")
+      await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
+
+      expect(await screen.findByRole("heading", { name: "Cuenta creada" })).toBeInTheDocument()
+
+      await user.click(screen.getByRole("link", { name: "Iniciar sesión" }))
+      expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+    })
+
+    it("elegir perfil Estudiante y volver a elegir otro perfil vuelve a /autoregistro", async () => {
+      vi.mocked(fetch).mockReset().mockResolvedValue(jsonResponse(200, []))
+      const user = userEvent.setup()
+
+      await router.navigate("/autoregistro")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Creá tu cuenta" })
+
+      await user.click(screen.getByText("Soy Estudiante"))
+      await screen.findByRole("heading", { name: "Creá tu cuenta de Estudiante" })
+
+      await user.click(screen.getByRole("link", { name: "‹ Elegir otro perfil" }))
+      expect(await screen.findByRole("heading", { name: "Creá tu cuenta" })).toBeInTheDocument()
+    })
+  })
 })
