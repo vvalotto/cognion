@@ -1,0 +1,52 @@
+{
+  "us_id": "US-ADJ-40",
+  "titulo": "Pantallas de recuperación de contraseña",
+  "tipo": "frontend puro, sin cambios de backend",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 6
+    },
+    "tsc_b": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "417/417 (0 fallos en esta corrida; en corridas previas con --coverage bajo la timeout por defecto de 5000ms se observaron fallos por contención de CPU en archivos no tocados por esta US — mismo patrón de flake preexistente ya documentado en US-ADJ-24/US-ADJ-37 — resuelto para el reporte final elevando testTimeout a 20000ms, sin tocar código de producción)",
+      "archivos_nuevos": {
+        "RecuperarPasswordSolicitar.test.tsx": "2/2 (nuevo)",
+        "RecuperarPasswordSolicitado.test.tsx": "2/2 (nuevo)",
+        "RecuperarPasswordNueva.test.tsx": "5/5 (nuevo)",
+        "RecuperarPasswordTokenInvalido.test.tsx": "1/1 (nuevo)",
+        "RecuperarPasswordExito.test.tsx": "1/1 (nuevo)"
+      },
+      "archivos_modificados": {
+        "cuentas-api.test.ts": "+4 casos (solicitarRecuperacionPassword, confirmarNuevaPassword)",
+        "Login.test.tsx": "+1 caso (link '¿Olvidaste tu contraseña?')",
+        "router.test.tsx": "+3 casos de integración (login→solicitar, flujo completo solicitar→éxito→login, token inválido→pedir nuevo link)"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "RecuperarPasswordSolicitar.tsx": { "statements": "94.11%", "branches": "75%", "functions": "100%", "lines": "100%" },
+      "RecuperarPasswordSolicitado.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" },
+      "RecuperarPasswordNueva.tsx": { "statements": "92.3%", "branches": "80%", "functions": "100%", "lines": "97.14%" },
+      "RecuperarPasswordTokenInvalido.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" },
+      "RecuperarPasswordExito.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" },
+      "Login.tsx": { "statements": "94.59%", "branches": "87.5%", "functions": "100%", "lines": "96.96%" },
+      "cuentas-api.ts": { "statements": "97.14%", "branches": "90.9%", "functions": "100%", "lines": "96.77%", "nota": "línea 232 sin cubrir es de editarCuenta, no tocada por esta US" },
+      "router.tsx": { "nota": "solo agrega imports + 5 entradas de ruta, sin lógica propia — cubierto indirectamente por router.test.tsx" }
+    },
+    "coverage_global": {
+      "statements": "91.28%",
+      "branches": "81.35%",
+      "functions": "86.89%",
+      "lines": "94%",
+      "umbral_proyecto": "80% (vite.config.ts, ver CLAUDE.md/US-ADJ-16)",
+      "estado": "por encima del umbral en las 4 métricas"
+    }
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro, consume POST /identidad/recuperar-password/solicitar y /confirmar ya existentes desde US-ADJ-38/US-ADJ-39"
+  },
+  "estado_general": "APROBADO"
+}

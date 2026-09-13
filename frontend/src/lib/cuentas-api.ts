@@ -166,6 +166,43 @@ function esDetalleCambiarPassword(detail: unknown): detail is CambiarPasswordErr
 }
 
 /**
+ * Solicita el link de recuperación de contraseña (`POST /identidad/recuperar-password/solicitar`,
+ * `US-ADJ-38`). Endpoint público — sin sesión, `apiFetch` no adjunta `Authorization`. Responde
+ * siempre 202 con el mismo mensaje genérico, exista o no una cuenta con ese email (INV-ID-17).
+ */
+export async function solicitarRecuperacionPassword(
+  email: string,
+  signal?: AbortSignal,
+): Promise<void> {
+  await apiFetch<void>("/identidad/recuperar-password/solicitar", {
+    method: "POST",
+    body: { email },
+    signal,
+  })
+}
+
+/**
+ * Canjea un token de recuperación por una contraseña nueva
+ * (`POST /identidad/recuperar-password/confirmar`, `US-ADJ-39`). Endpoint público — sin sesión.
+ *
+ * Propaga `ApiError` tal cual, sin envolver: el 422 trae `detail` como string plano (no un
+ * objeto estructurado como `CambiarPasswordError`), así que `ApiError.message` ya queda con el
+ * texto exacto de la excepción de dominio — el caller distingue "política de contraseña" de
+ * "token inválido/vencido/ya usado" por el prefijo del mensaje.
+ */
+export async function confirmarNuevaPassword(
+  token: string,
+  passwordNueva: string,
+  signal?: AbortSignal,
+): Promise<void> {
+  await apiFetch<void>("/identidad/recuperar-password/confirmar", {
+    method: "POST",
+    body: { token, password_nueva: passwordNueva },
+    signal,
+  })
+}
+
+/**
  * Cambia la contraseña del Usuario autenticado (`PUT /usuarios/me/password`, `US-2.2.5`).
  *
  * Usa `handleUnauthorized: false` porque un 401 acá es un rechazo puntual de la acción

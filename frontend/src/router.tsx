@@ -45,6 +45,11 @@ import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
 import { NuevaPreguntaVerdaderoFalso } from "@/pages/banco-preguntas/NuevaPreguntaVerdaderoFalso"
+import { RecuperarPasswordExito } from "@/pages/identidad/RecuperarPasswordExito"
+import { RecuperarPasswordNueva } from "@/pages/identidad/RecuperarPasswordNueva"
+import { RecuperarPasswordSolicitado } from "@/pages/identidad/RecuperarPasswordSolicitado"
+import { RecuperarPasswordSolicitar } from "@/pages/identidad/RecuperarPasswordSolicitar"
+import { RecuperarPasswordTokenInvalido } from "@/pages/identidad/RecuperarPasswordTokenInvalido"
 import { Registro } from "@/pages/identidad/Registro"
 import { RegistroError } from "@/pages/identidad/RegistroError"
 import { RegistroExito } from "@/pages/identidad/RegistroExito"
@@ -67,6 +72,11 @@ export const router = createBrowserRouter([
       { path: "/registro", element: <Registro /> },
       { path: "/registro/error", element: <RegistroError /> },
       { path: "/registro/exito", element: <RegistroExito /> },
+      { path: "/recuperar-password", element: <RecuperarPasswordSolicitar /> },
+      { path: "/recuperar-password/solicitado", element: <RecuperarPasswordSolicitado /> },
+      { path: "/recuperar-password/invalido", element: <RecuperarPasswordTokenInvalido /> },
+      { path: "/recuperar-password/exito", element: <RecuperarPasswordExito /> },
+      { path: "/recuperar-password/:token", element: <RecuperarPasswordNueva /> },
     ],
   },
   {
