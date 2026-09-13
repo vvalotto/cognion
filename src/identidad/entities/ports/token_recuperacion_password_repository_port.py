@@ -31,3 +31,12 @@ class TokenRecuperacionPasswordRepositoryPort(ABC):
     @abstractmethod
     async def actualizar(self, token: TokenRecuperacionPassword) -> None:
         """Guarda cambios sobre un token existente (por ejemplo, tras un canje exitoso)."""
+
+    @abstractmethod
+    async def eliminar_de(self, usuario_id: UUID) -> None:
+        """Borra físicamente todos los tokens (usados o no) de `usuario_id`.
+
+        Lo usa `EliminarCuentaUseCase` antes de la baja física de un usuario: la FK de
+        `usuario_id` no tiene `ON DELETE CASCADE`, así que un token de recuperación sin
+        canjear (`INV-ID-12`) deja huérfano el `DELETE` de `usuario` si no se limpia antes.
+        """

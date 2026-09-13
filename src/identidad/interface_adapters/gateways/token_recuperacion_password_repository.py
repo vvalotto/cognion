@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.ports.token_recuperacion_password_repository_port import (
@@ -59,6 +59,15 @@ class SQLAlchemyTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRep
         if modelo is None:
             raise ValueError(f"TokenRecuperacionPassword '{token.id}' no existe para actualizar.")
         modelo.usado_en = token.usado_en
+        await self._session.commit()
+
+    async def eliminar_de(self, usuario_id: UUID) -> None:
+        """Borra físicamente todos los tokens de `usuario_id`."""
+        await self._session.execute(
+            delete(TokenRecuperacionPasswordModel).where(
+                TokenRecuperacionPasswordModel.usuario_id == usuario_id
+            )
+        )
         await self._session.commit()
 
     @staticmethod

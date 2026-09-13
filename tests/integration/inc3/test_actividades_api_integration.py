@@ -500,9 +500,12 @@ class TestActividadesFechasNaiveAPIIntegration:
             )
             actividad_id = crear.json()["id"]
 
+            nueva_fecha_cierre = (datetime.now(UTC) + timedelta(days=14)).replace(
+                tzinfo=None
+            )
             response = await client.patch(
                 f"/actividades/{actividad_id}/periodo",
-                json={"nueva_fecha_cierre": "2026-09-13T17:00"},
+                json={"nueva_fecha_cierre": nueva_fecha_cierre.isoformat()},
                 headers=docente_headers,
             )
 
