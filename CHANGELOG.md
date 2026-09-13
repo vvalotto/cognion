@@ -10,6 +10,21 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-42] Autoregistro de Estudiante (endpoint público)
+  - `AutoregistrarEstudianteUseCase`: valida email único (`EmailYaRegistrado`), comisión
+    existente (`ComisionNoExiste`, INV-ID-14) y contraseña segura (INV-ID-11 ampliada), crea el
+    `Usuario` con perfil Estudiante vía `Usuario.crear_estudiante()`, activo de inmediato
+    (INV-ID-16)
+  - Endpoint público nuevo `POST /identidad/autoregistro/estudiante`, hermano de
+    `POST /identidad/autoregistro/docente` (`US-ADJ-41`) — mismo `AutoregistroController`,
+    mismo router, sin puertos nuevos (reutiliza `UsuarioRepositoryPort`,
+    `PasswordHasherPort`, `ComisionRepositoryPort`)
+  - Reutiliza el evento `UsuarioAutoregistrado` de `US-ADJ-41` sin cambios de shape
+  - Segunda US de la Iteración 3 del Incremento 5-ADJ (autoregistro con selección de perfil) —
+    `US-ADJ-43` (pantalla con selección de perfil Docente/Estudiante) sigue a esta
+  - 6 tests unitarios, 5 de integración y 5 BDD nuevos, coverage 100% en el código nuevo
+    (`autoregistrar_estudiante.py`, `autoregistro_controller.py`), quality gates APROBADO
+    (pylint 9.58/10, CC máx 3, MI grado A)
 - [US-ADJ-40] Pantallas de recuperación de contraseña
   - Frontend puro — consume `POST /identidad/recuperar-password/solicitar` (`US-ADJ-38`) y
     `POST /identidad/recuperar-password/confirmar` (`US-ADJ-39`), ya cerrados

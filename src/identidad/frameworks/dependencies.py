@@ -60,6 +60,7 @@ from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
 from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
 from src.identidad.use_cases.autoregistrar_docente import AutoregistrarDocenteUseCase
+from src.identidad.use_cases.autoregistrar_estudiante import AutoregistrarEstudianteUseCase
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.confirmar_nueva_password import ConfirmarNuevaPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
@@ -158,7 +159,11 @@ def get_autoregistro_controller(session: SessionDep) -> AutoregistroController:
     """Arma el `AutoregistroController` con sus dependencias concretas."""
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     hasher = get_password_hasher()
-    return AutoregistroController(AutoregistrarDocenteUseCase(usuario_repo, hasher))
+    comision_repo = SQLAlchemyComisionRepository(session)
+    return AutoregistroController(
+        AutoregistrarDocenteUseCase(usuario_repo, hasher),
+        AutoregistrarEstudianteUseCase(usuario_repo, hasher, comision_repo),
+    )
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

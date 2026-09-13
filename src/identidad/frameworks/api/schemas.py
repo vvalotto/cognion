@@ -187,6 +187,15 @@ class AutoregistroResponse(BaseModel):
     tipo_perfil: str
 
 
+class AutoregistrarEstudianteRequest(BaseModel):
+    """Body de la request de autoregistro de un Estudiante (`US-ADJ-42`)."""
+
+    nombre: str = Field(..., min_length=1, max_length=200)
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=8)
+    comision_id: UUID
+
+
 class LoginRequest(BaseModel):
     """Body de la request de autenticación."""
 
