@@ -56,9 +56,7 @@ async def _post(path: str, json: dict):
 
 async def _existe_usuario(email: str) -> bool:
     async with SessionLocal() as session:
-        resultado = await session.execute(
-            select(UsuarioModel).where(UsuarioModel.email == email)
-        )
+        resultado = await session.execute(select(UsuarioModel).where(UsuarioModel.email == email))
         return resultado.scalar_one_or_none() is not None
 
 

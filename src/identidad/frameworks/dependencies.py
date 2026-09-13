@@ -20,6 +20,9 @@ from src.identidad.frameworks.adapters.materia_port_in_process import MateriaPor
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
+from src.identidad.interface_adapters.controllers.autoregistro_controller import (
+    AutoregistroController,
+)
 from src.identidad.interface_adapters.controllers.comisiones_controller import ComisionesController
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
@@ -34,9 +37,6 @@ from src.identidad.interface_adapters.controllers.invitaciones_controller import
 from src.identidad.interface_adapters.controllers.perfil_controller import PerfilController
 from src.identidad.interface_adapters.controllers.recuperacion_password_controller import (
     RecuperacionPasswordController,
-)
-from src.identidad.interface_adapters.controllers.autoregistro_controller import (
-    AutoregistroController,
 )
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
@@ -59,6 +59,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlch
 from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
 from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase
+from src.identidad.use_cases.autoregistrar_docente import AutoregistrarDocenteUseCase
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 from src.identidad.use_cases.confirmar_nueva_password import ConfirmarNuevaPasswordUseCase
 from src.identidad.use_cases.crear_comision import CrearComisionUseCase
@@ -74,7 +75,6 @@ from src.identidad.use_cases.listar_materias_del_estudiante import (
     ListarMateriasDelEstudianteUseCase,
 )
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
-from src.identidad.use_cases.autoregistrar_docente import AutoregistrarDocenteUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (

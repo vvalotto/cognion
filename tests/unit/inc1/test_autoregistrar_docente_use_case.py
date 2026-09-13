@@ -13,9 +13,7 @@ class TestAutoregistrarDocenteUseCase:
         hasher = FakePasswordHasher()
         use_case = AutoregistrarDocenteUseCase(repo, hasher)
 
-        usuario, evento = await use_case.execute(
-            "Ana", "ana@fiuner.edu.ar", "ClaveSegura#1"
-        )
+        usuario, evento = await use_case.execute("Ana", "ana@fiuner.edu.ar", "ClaveSegura#1")
 
         assert usuario.password_hash == "hashed:ClaveSegura#1"
         assert usuario.password_hash != "ClaveSegura#1"
