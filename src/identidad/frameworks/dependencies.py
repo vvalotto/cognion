@@ -72,6 +72,7 @@ from src.identidad.use_cases.listar_materias_del_estudiante import (
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
+from src.identidad.use_cases.confirmar_nueva_password import ConfirmarNuevaPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
     SolicitarRecuperacionPasswordUseCase,
 )
@@ -206,8 +207,10 @@ def get_recuperacion_password_controller(session: SessionDep) -> RecuperacionPas
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     token_repo = SQLAlchemyTokenRecuperacionPasswordRepository(session)
     canal_recuperacion = get_canal_recuperacion()
+    hasher = get_password_hasher()
     return RecuperacionPasswordController(
-        SolicitarRecuperacionPasswordUseCase(usuario_repo, token_repo, canal_recuperacion)
+        SolicitarRecuperacionPasswordUseCase(usuario_repo, token_repo, canal_recuperacion),
+        ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, hasher),
     )
 
 

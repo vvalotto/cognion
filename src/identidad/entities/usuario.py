@@ -148,6 +148,17 @@ class Usuario:
         self.intentos_fallidos_password = 0
         return estaba_bloqueada
 
+    def recuperar_password(self, password_hash_nuevo: str) -> None:
+        """Fija `password_hash_nuevo` tras un canje de token de recuperación (`US-ADJ-39`).
+
+        No toca `bloqueada` ni `intentos_fallidos_login`/`intentos_fallidos_password` — a
+        diferencia de `resetear_password()` (desbloquea) y `cambiar_password()` (resetea el
+        contador de intentos de cambio), este flujo de autoservicio deja el estado de bloqueo
+        intacto: una cuenta bloqueada sigue bloqueada tras recuperar la contraseña (nota de
+        diseño de `wireframes-identidad-autoservicio.md` §3.1).
+        """
+        self.password_hash = password_hash_nuevo
+
     def cambiar_password(self, password_hash_nuevo: str) -> None:
         """Fija `password_hash_nuevo` y resetea `intentos_fallidos_password` a 0.
 

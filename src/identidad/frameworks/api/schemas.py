@@ -205,3 +205,16 @@ class SolicitarRecuperacionPasswordResponse(BaseModel):
     mensaje: str = (
         "Si el email ingresado corresponde a una cuenta, te enviamos un link de recuperación."
     )
+
+
+class ConfirmarRecuperacionPasswordRequest(BaseModel):
+    """Body de la request de confirmación de una contraseña nueva (`US-ADJ-39`)."""
+
+    token: str = Field(..., min_length=1)
+    password_nueva: str = Field(..., min_length=12)
+
+
+class ConfirmarRecuperacionPasswordResponse(BaseModel):
+    """Respuesta de éxito del canje de token por una contraseña nueva."""
+
+    mensaje: str = "Tu contraseña fue actualizada correctamente."

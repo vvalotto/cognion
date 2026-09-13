@@ -120,3 +120,15 @@ class PasswordCambiada:
 
     usuario_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class PasswordRecuperada:
+    """Un Usuario recuperó el acceso a su cuenta con un token de recuperación (`US-ADJ-39`).
+
+    Autoservicio, sin intervención de un Administrador — a diferencia de `PasswordReseteada`,
+    no lleva `administrador_id`.
+    """
+
+    usuario_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
