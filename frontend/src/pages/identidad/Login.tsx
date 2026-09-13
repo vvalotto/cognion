@@ -120,6 +120,15 @@ export function Login() {
           <Button type="submit">Ingresar</Button>
         </fieldset>
       </form>
+
+      {!bloqueada && (
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          ¿No tenés cuenta?{" "}
+          <Link to="/autoregistro" className="font-medium text-foreground underline-offset-2 hover:underline">
+            Registrate
+          </Link>
+        </p>
+      )}
     </div>
   )
 }

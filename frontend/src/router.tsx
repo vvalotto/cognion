@@ -50,6 +50,10 @@ import { RecuperarPasswordNueva } from "@/pages/identidad/RecuperarPasswordNueva
 import { RecuperarPasswordSolicitado } from "@/pages/identidad/RecuperarPasswordSolicitado"
 import { RecuperarPasswordSolicitar } from "@/pages/identidad/RecuperarPasswordSolicitar"
 import { RecuperarPasswordTokenInvalido } from "@/pages/identidad/RecuperarPasswordTokenInvalido"
+import { AutoregistroDocente } from "@/pages/identidad/AutoregistroDocente"
+import { AutoregistroEstudiante } from "@/pages/identidad/AutoregistroEstudiante"
+import { AutoregistroExito } from "@/pages/identidad/AutoregistroExito"
+import { AutoregistroPerfil } from "@/pages/identidad/AutoregistroPerfil"
 import { Registro } from "@/pages/identidad/Registro"
 import { RegistroError } from "@/pages/identidad/RegistroError"
 import { RegistroExito } from "@/pages/identidad/RegistroExito"
@@ -69,6 +73,10 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: "/login", element: <Login /> },
+      { path: "/autoregistro", element: <AutoregistroPerfil /> },
+      { path: "/autoregistro/docente", element: <AutoregistroDocente /> },
+      { path: "/autoregistro/estudiante", element: <AutoregistroEstudiante /> },
+      { path: "/autoregistro/exito", element: <AutoregistroExito /> },
       { path: "/registro", element: <Registro /> },
       { path: "/registro/error", element: <RegistroError /> },
       { path: "/registro/exito", element: <RegistroExito /> },
