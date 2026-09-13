@@ -805,33 +805,68 @@ Planificados). Merge `develop → main` y tag `v0.6.2` (PATCH, mismo criterio de
 `BL-005`/`BL-007`) ejecutados el mismo día, PR de cierre
 [#302](https://github.com/vvalotto/cognion/pull/302).
 
-Incremento 5 — Notificaciones, período abierto — en curso
+Incremento 5 — Notificaciones (RF-14), cerrado 2026-09-10
 (`docs/plans/inc5/inc5-candidatas.md`, Milestone GitHub
-[Incremento 5](https://github.com/vvalotto/cognion/milestone/7)). Sigue la secuencia de
+[Incremento 5](https://github.com/vvalotto/cognion/milestone/7)). Siguió la secuencia de
 `PLAN_v1.md` (decisión de Víctor 2026-09-10, entre las opciones de retomar RF-20/23 o avanzar
-con el próximo incremento planificado). Incremento corto y deliberadamente aislado: valida la
+con el próximo incremento planificado). Incremento corto y deliberadamente aislado: validó la
 integración BC Actividad Evaluativa → BC Notificaciones (`ADR-006`) con el menor acoplamiento
-posible. `RF-20` a `RF-23` siguen sin incremento asignado.
-**Iteración 0 — Modelado cerrada 2026-09-10**: `US-5.0.1` (event storming ligero, Issue
-[#304](https://github.com/vvalotto/cognion/issues/304),
-`docs/design/domain/BC-notificaciones-modelo.md`) aprobada por Víctor. Sin BC Notificaciones
-existente todavía — primer BC puramente reactivo del sistema, sin aggregate ni persistencia
-propia: recibe el disparo de `NotificacionPort` (dueño Actividad Evaluativa) al crear o cerrar
+posible. Primer BC puramente reactivo del sistema, sin aggregate ni persistencia propia:
+recibe el disparo de `NotificacionPort` (dueño Actividad Evaluativa) al crear o cerrar
 manualmente una actividad, resuelve destinatarios con un `ComisionConsultaPort` propio hacia
-Identidad (nuevo — ningún puerto existente expone `email`) y envía por `CanalEnvioPort`
-(`SmtpCanalEnvio` inicial). Cuatro decisiones de producto/técnicas confirmadas con Víctor:
-(1) solo el cierre manual del Docente dispara el email de cierre, no el vencimiento natural del
-período; (2) destinatarios acotados a las Comisiones a las que la actividad está restringida,
-no toda la Materia; (3) canal de envío en este entorno: SMTP real de prueba (Mailtrap/Mailhog
-local); (4) un fallo de envío no bloquea la operación de dominio — se loguea y se continúa.
-Matriz de trazabilidad: RF-14 pasa de Planificado a Especificado.
+Identidad (nuevo — ningún puerto existente exponía `email`) y envía por `CanalEnvioPort`
+(`SmtpCanalEnvio`). **US-5.0.1** (Modelado, Issue #304), **US-5.1.1** (infraestructura, PR
+#311), **US-5.1.2** (notificación de apertura, PR #313), **US-5.1.3** (notificación de cierre
+manual, PR #314) — cierra completa la única iteración del incremento. Sin frontend propio (RF-14
+no tiene pantalla). **`BL-009` cerrada 2026-09-10**
+(`.cm/baselines/BL-009-notificaciones.md`): 969 tests backend, UAT Capa 1 + Capa 2 (contenido
+real de emails vía fake SMTP extendido) en verde. Merge `develop → main` y tag `v0.7.0` (MINOR)
+ejecutados el mismo día. RF-14 pasa a Validado. `RF-20` a `RF-23` (Analytics) quedaron sin
+incremento asignado.
 
-**Próximo paso:** escribir las specs US-IEDD de la Iteración 1 (`US-5.1.1` infraestructura,
-`US-5.1.2` notificación de apertura, `US-5.1.3` notificación de cierre —
-`docs/plans/inc5/inc5-candidatas.md`).
-**Baseline abierta:** ninguna — `BL-008` cerrada, Incremento 5 en curso sin baseline propia
-todavía (se abre al cerrarlo).
-**Branch activo:** ninguna — `develop` sincronizado, `main` al día (`v0.6.2`).
+Incremento 5-ADJ — Identidad Autoservicio y Analytics del Docente, período abierto — en curso
+(`docs/plans/inc5-adj/inc5-adj-candidatas.md`, Milestone GitHub
+[Incremento 5-ADJ](https://github.com/vvalotto/cognion/milestone/13)). Insertado fuera de la
+secuencia numérica 0-7 de `PLAN_v1.md` (mismo criterio que `Incremento 3-ADJ`/`4-ADJ`: no se
+renumeran los Incrementos 6-7 ya mapeados a RF), inmediatamente después de `BL-009`. Agrupa dos
+frentes independientes que comparten el mismo motivo de secuenciación (backlog sin asignar
+antes de abrir el Incremento 6 — Sesión en Vivo): (1) `RF-20` a `RF-23` (Analytics, elicitados
+2026-09-09 durante la prueba manual E2E de estabilización); (2) hallazgos de Identidad
+relevados por Víctor en revisión manual (`hallazgos-cognion.md`, 2026-09-12): mostrar/ocultar
+contraseña, política de contraseña segura, descubribilidad de "Cambiar contraseña", recuperación
+de contraseña por autoservicio (RF nuevo) y autoregistro de Docente/Estudiante con selección de
+perfil (RF nuevo, convive con el registro por invitación existente). Decisiones de producto
+confirmadas con Víctor: autoregistro coexiste con la invitación (`RF-01` sin cambios); Docente
+autoregistrado queda activo de inmediato, sin aprobación; recuperación de contraseña reusa
+`SmtpCanalEnvio` de Notificaciones; contraseña segura sube el mínimo de 8 a 12 caracteres +
+mezcla de tipos. Cinco iteraciones planificadas: 0 (Modelado), 1 (contraseña segura y
+accesible), 2 (recuperación de contraseña), 3 (autoregistro), 4 (Analytics RF-20/23), 5
+(revisión documental de cierre, incluye ADRs y modelos de dominio).
+**Iteración 0 — Modelado cerrada 2026-09-12**: `US-ADJ-32` (ampliación de
+`BC-identidad-modelo.md` §13: `TokenRecuperacionPassword`, comandos
+`AutoregistrarDocente`/`AutoregistrarEstudiante`, `INV-ID-11` ampliada, Issue #318, PR #322),
+`US-ADJ-33` (ampliación de `BC-analytics-modelo.md` §8: 4 queries nuevas para RF-20 a 23, sin
+puertos nuevos, Issue #319, PR #324/#325), `US-ADJ-34` (wireframes/prototipo — 11 pantallas de
+`identidad-autoservicio.html` + ampliación de `analytics-portal-desempeno.html` con 4
+pantallas, Issue #320, PR #327), todas aprobadas por Víctor.
+**Iteración 1 — Identidad: contraseña segura y accesible, cerrada 2026-09-12** (backend +
+frontend juntos, sin RF propio — ajuste sobre `RF-02`/`RF-19` ya Validados). **US-ADJ-35**
+(componente compartido `PasswordInput.tsx` con toggle mostrar/ocultar, reemplaza los 10 inputs
+de contraseña de los 5 formularios existentes), Issue #329, PR #333. **US-ADJ-36**
+(`INV-ID-11` ampliada: mínimo 12 caracteres + mayúscula/número/símbolo; cierra un gap real —
+`CrearUsuario`/`RegistrarEstudiante` no llamaban la validación de dominio, solo
+`CambiarPassword`/`ResetearPassword`; indicador de fortaleza en `PasswordInput`), Issue #330,
+PR #335. **US-ADJ-37** (`UserMenu.tsx` nuevo reemplaza el bloque estático de avatar/nombre en
+`AppLayout.tsx`, agrega el único punto de entrada por clic a "Cambiar contraseña" y "Cerrar
+sesión"), Issue #331, PR #337. Cierra completa la Iteración 1.
+
+**Próximo paso:** Iteración 2 (recuperación de contraseña — `US-ADJ-38` a `40`, sin Issue/spec
+todavía) e Iteración 3 (autoregistro — `US-ADJ-41` a `43`) son independientes entre sí y de la
+Iteración 4 (Analytics) — pueden intercalarse según prioridad de Víctor.
+**Baseline abierta:** ninguna — `BL-009` cerrada, Incremento 5-ADJ en curso sin baseline propia
+todavía (se abre como `BL-010` al cerrarlo).
+**Branch activo:** ninguna — `develop` sincronizado (2 commits locales pendientes de push al
+cierre de esta sesión), `main` al día (`v0.7.0`).
 
 ---
 
