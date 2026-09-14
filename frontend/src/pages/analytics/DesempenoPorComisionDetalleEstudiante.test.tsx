@@ -71,6 +71,10 @@ function renderPantalla() {
           path="/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId/evaluaciones/:evaluacionId/revision"
           element={<p>Revisión completa (docente)</p>}
         />
+        <Route
+          path="/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId/evolucion"
+          element={<p>Evolución temporal (docente)</p>}
+        />
       </Routes>
     </MemoryRouter>,
   )
@@ -158,5 +162,29 @@ describe("DesempenoPorComisionDetalleEstudiante", () => {
     await user.click(screen.getByRole("button", { name: /Parcial 1/ }))
 
     expect(await screen.findByText("Revisión completa (docente)")).toBeInTheDocument()
+  })
+
+  it("el link 'Ver evolución temporal' navega a la pantalla de evolución (US-ADJ-49)", async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(
+          200,
+          desempeno([evaluacionDetalle("a1", "2026-08-30T10:00:00Z", 14, 3)], {
+            total_correctas: 14,
+            total_incorrectas: 3,
+            porcentaje_acierto: 82,
+            cantidad_evaluaciones: 1,
+          }),
+        ),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, [actividadResumen("a1", MATERIA_ID, "Parcial 1")]))
+
+    renderPantalla()
+    await screen.findByText("Parcial 1")
+
+    await user.click(screen.getByRole("link", { name: "Ver evolución temporal" }))
+
+    expect(await screen.findByText("Evolución temporal (docente)")).toBeInTheDocument()
   })
 })

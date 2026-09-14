@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-49",
+    "us_title": "Docente ve la evolucion temporal de un estudiante y de su comision",
+    "us_points": 5,
+    "producto": "analytics",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-14T21:03:53.708642+00:00",
+    "completed_at": "2026-09-14T21:38:07.713649+00:00",
+    "total_elapsed_seconds": 2054,
+    "effective_seconds": 2054,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validacion de Contexto",
+      "started_at": "2026-09-14T21:03:53.864137+00:00",
+      "completed_at": "2026-09-14T21:04:09.334094+00:00",
+      "elapsed_seconds": 15,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de Implementacion",
+      "started_at": "2026-09-14T21:04:09.455063+00:00",
+      "completed_at": "2026-09-14T21:24:25.423983+00:00",
+      "elapsed_seconds": 1215,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementacion",
+      "started_at": "2026-09-14T21:24:40.954238+00:00",
+      "completed_at": "2026-09-14T21:28:39.384728+00:00",
+      "elapsed_seconds": 238,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-14T21:28:39.940563+00:00",
+      "completed_at": "2026-09-14T21:30:41.388240+00:00",
+      "elapsed_seconds": 121,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integracion",
+      "started_at": "2026-09-14T21:30:41.938801+00:00",
+      "completed_at": "2026-09-14T21:31:32.445844+00:00",
+      "elapsed_seconds": 50,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-14T21:31:39.661553+00:00",
+      "completed_at": "2026-09-14T21:36:54.285326+00:00",
+      "elapsed_seconds": 314,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentacion",
+      "started_at": "2026-09-14T21:36:58.341724+00:00",
+      "completed_at": "2026-09-14T21:37:25.771180+00:00",
+      "elapsed_seconds": 27,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-14T21:37:26.083384+00:00",
+      "completed_at": "2026-09-14T21:38:07.464243+00:00",
+      "elapsed_seconds": 41,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 8,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

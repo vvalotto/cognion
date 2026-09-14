@@ -26,6 +26,7 @@ import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
 import { DesempenoPorComision } from "@/pages/analytics/DesempenoPorComision"
 import { DesempenoPorComisionDetalleEstudiante } from "@/pages/analytics/DesempenoPorComisionDetalleEstudiante"
 import { DesempenoPorTema } from "@/pages/analytics/DesempenoPorTema"
+import { EvolucionTemporal } from "@/pages/analytics/EvolucionTemporal"
 import { EditarPregunta } from "@/pages/banco-preguntas/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/actividad-evaluativa/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/banco-preguntas/EliminarPregunta"
@@ -436,6 +437,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <RevisionEvaluacionDocente />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId/evolucion",
+        element: (
+          <RequireRole rol="docente">
+            <EvolucionTemporal />
           </RequireRole>
         ),
       },

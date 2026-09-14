@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router"
+import { Link, useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { listarActividades } from "@/lib/actividad-evaluativa-api"
@@ -60,7 +60,15 @@ export function DesempenoPorComisionDetalleEstudiante() {
           { label: "Detalle del estudiante" },
         ]}
       />
-      <h1 className="text-lg font-semibold">Detalle del estudiante</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-semibold">Detalle del estudiante</h1>
+        <Link
+          to={`/analytics/desempeno-por-comision/materias/${materiaId}/comisiones/${comisionId}/estudiantes/${estudianteId}/evolucion`}
+          className="text-sm font-medium text-primary hover:underline"
+        >
+          Ver evolución temporal
+        </Link>
+      </div>
 
       {error && (
         <div

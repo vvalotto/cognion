@@ -7,6 +7,8 @@ vi.mock("@/router", () => ({
 import {
   obtenerDesempenoDeEstudiante,
   obtenerDesempenoPorComision,
+  obtenerEvolucionTemporalComision,
+  obtenerEvolucionTemporalEstudiante,
   obtenerMiDesempeno,
   obtenerTasaErrorPorTema,
 } from "@/lib/analytics-api"
@@ -233,6 +235,69 @@ describe("analytics-api", () => {
       const filas = await obtenerDesempenoPorComision("m1", "c1")
 
       expect(filas).toEqual([])
+    })
+  })
+
+  describe("obtenerEvolucionTemporalEstudiante", () => {
+    it("hace GET /analytics/materias/{materiaId}/estudiantes/{estudianteId}/evolucion-temporal y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            actividad_id: "a1",
+            titulo_actividad: "Parcial 1",
+            finalizada_en: "2026-08-30T10:00:00Z",
+            porcentaje_acierto: 82,
+          },
+        ]),
+      )
+
+      const puntos = await obtenerEvolucionTemporalEstudiante("m1", "u1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/estudiantes/u1/evolucion-temporal",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(puntos).toEqual([
+        { actividadId: "a1", tituloActividad: "Parcial 1", finalizadaEn: "2026-08-30T10:00:00Z", porcentajeAcierto: 82 },
+      ])
+    })
+
+    it("mapea una lista vacía (estudiante sin evaluaciones finalizadas)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const puntos = await obtenerEvolucionTemporalEstudiante("m1", "u1")
+
+      expect(puntos).toEqual([])
+    })
+  })
+
+  describe("obtenerEvolucionTemporalComision", () => {
+    it("hace GET /analytics/materias/{materiaId}/comisiones/{comisionId}/evolucion-temporal y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          { actividad_id: "a1", titulo_actividad: "Parcial 1", porcentaje_aciertos_promedio: 74.5 },
+        ]),
+      )
+
+      const puntos = await obtenerEvolucionTemporalComision("m1", "c1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/comisiones/c1/evolucion-temporal",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(puntos).toEqual([
+        { actividadId: "a1", tituloActividad: "Parcial 1", porcentajeAciertosPromedio: 74.5 },
+      ])
+    })
+
+    it("mapea una lista vacía (comisión sin evaluaciones finalizadas)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const puntos = await obtenerEvolucionTemporalComision("m1", "c1")
+
+      expect(puntos).toEqual([])
     })
   })
 })
