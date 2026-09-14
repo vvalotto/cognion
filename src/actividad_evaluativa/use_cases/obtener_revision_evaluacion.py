@@ -38,19 +38,25 @@ class ObtenerRevisionEvaluacionUseCase:
         self._pregunta_consulta = pregunta_consulta
         self._event_store = event_store
 
-    async def execute(self, evaluacion_id: UUID, estudiante_id: UUID) -> RevisionEvaluacion:
+    async def execute(
+        self, evaluacion_id: UUID, usuario_id: UUID, verificar_propietario: bool = True
+    ) -> RevisionEvaluacion:
         """Arma la revisión, o levanta el error de dominio correspondiente.
 
-        Levanta `EvaluacionNoExiste` si `evaluacion_id` no tiene stream o no pertenece al
-        estudiante autenticado, `EvaluacionNoFinalizada` si `Evaluacion.estado` no es
-        `Finalizada` (RF-13: nunca antes de finalizar).
+        Levanta `EvaluacionNoExiste` si `evaluacion_id` no tiene stream, o si no pertenece al
+        `usuario_id` autenticado y `verificar_propietario` es `True` (caso Estudiante).
+        `verificar_propietario=False` (caso Docente, `US-ADJ-44`) omite ese chequeo — el
+        drill-down de Analytics no exige pertenencia Docente↔Materia, mismo precedente de RBAC
+        por rol ya aplicado en `US-4.2.1` (`docs/design/domain/BC-analytics-modelo.md` §4).
+        `EvaluacionNoFinalizada` si `Evaluacion.estado` no es `Finalizada` (RF-13: nunca antes
+        de finalizar).
         """
         eventos = await self._event_store.load(AGGREGATE_TYPE_EVALUACION, evaluacion_id)
         if not eventos:
             raise EvaluacionNoExiste(evaluacion_id)
 
         evaluacion = Evaluacion.reconstruir(eventos)
-        if evaluacion.estudiante_id != estudiante_id:
+        if verificar_propietario and evaluacion.estudiante_id != usuario_id:
             raise EvaluacionNoExiste(evaluacion_id)
 
         if evaluacion.estado is not EstadoEvaluacion.FINALIZADA:
