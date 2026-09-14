@@ -412,14 +412,54 @@ class TestRevisionAPIIntegration:
 
         assert response.status_code == 401
 
-    async def test_rechazo_con_rol_insuficiente(self, docente_headers):
+    async def test_rechazo_con_rol_insuficiente(self):
+        """`docente` ya no es rol insuficiente desde `US-ADJ-44` (drill-down de Analytics) —
+        `administrador` sigue sin acceso, ni siquiera al guard de rol."""
+        jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
+        headers = {"Authorization": f"Bearer {jwt_vo.token}"}
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/evaluaciones/{uuid.uuid4()}/revision", headers=headers)
+
+        assert response.status_code == 403
+
+    async def test_docente_puede_pedir_la_revision_de_un_estudiante_ajeno(
+        self, session, docente_headers
+    ):
+        """Drill-down de "Desempeño por comisión" (`US-ADJ-44`, RF-20) — sin verificación de
+        pertenencia Docente↔Materia, mismo precedente de RBAC por rol que `US-4.2.1`."""
+        estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 1, apertura, cierre
+            )
+            evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
+            await client.post(
+                f"/evaluaciones/{evaluacion['id']}/finalizar", headers=estudiante_headers
+            )
+
+            response = await client.get(
+                f"/evaluaciones/{evaluacion['id']}/revision", headers=docente_headers
+            )
+
+        assert response.status_code == 200
+        cuerpo = response.json()
+        assert cuerpo["cantidad_preguntas"] == 1
+        assert cuerpo["detalle"][0]["pregunta_id"] == pregunta_id
+
+    async def test_docente_recibe_404_por_evaluacion_inexistente(self, docente_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get(
                 f"/evaluaciones/{uuid.uuid4()}/revision", headers=docente_headers
             )
 
-        assert response.status_code == 403
+        assert response.status_code == 404
 
     async def test_revision_de_opcion_multiple_expone_el_texto_de_las_opciones(
         self, session, docente_headers

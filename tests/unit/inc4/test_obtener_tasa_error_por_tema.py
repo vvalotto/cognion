@@ -37,6 +37,9 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         self.ultimo_estudiante_ids = estudiante_ids
         return self._respuestas
 
+    async def listar_actividades_abiertas(self, materia_id, comision_id):
+        raise NotImplementedError
+
 
 class _ComisionConsultaPortFake(ComisionConsultaPort):
     def __init__(

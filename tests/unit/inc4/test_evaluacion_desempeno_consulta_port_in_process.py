@@ -1,15 +1,19 @@
-"""Tests unitarios de las funciones puras del adapter in-process (US-4.1.1, US-4.2.4).
+"""Tests unitarios de las funciones puras del adapter in-process (US-4.1.1, US-4.2.4, US-ADJ-44).
 
 Sin sesión de BD — mismo criterio que `tests/unit/inc3/test_evaluacion_activa_query_repository.py`:
 `EventoModel` se instancia directamente en memoria, sin persistir.
 """
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
+    ActividadEvaluativaPeriodoAbierto,
+)
 from src.actividad_evaluativa.frameworks.db.models import EventoModel
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import RespuestaVigente
 from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
+    _actividad_abierta_y_visible,
     _respuestas_vigentes_de_stream,
     _resumen_de_stream,
 )
@@ -153,3 +157,58 @@ class TestResumenDeStream:
         assert resumen.finalizada_en == finalizada_en
         assert resumen.cantidad_correctas == 1
         assert resumen.cantidad_incorrectas == 1
+
+
+def _actividad(
+    fecha_apertura=None,
+    fecha_cierre=None,
+    cerrada_manualmente: bool = False,
+    comisiones_ids=frozenset(),
+) -> ActividadEvaluativaPeriodoAbierto:
+    ahora = datetime(2026, 6, 15, 12, tzinfo=UTC)
+    return ActividadEvaluativaPeriodoAbierto(
+        id=uuid4(),
+        materia_id=uuid4(),
+        fecha_apertura=fecha_apertura or ahora - timedelta(days=1),
+        fecha_cierre=fecha_cierre or ahora + timedelta(days=1),
+        cantidad_preguntas=5,
+        cantidad_intentos_permitidos=1,
+        cerrada_manualmente=cerrada_manualmente,
+        comisiones_ids=comisiones_ids,
+    )
+
+
+class TestActividadAbiertaYVisible:
+    def test_actividad_vigente_sin_restriccion_de_comision_es_visible(self):
+        ahora = datetime(2026, 6, 15, 12, tzinfo=UTC)
+        actividad = _actividad()
+
+        assert _actividad_abierta_y_visible(actividad, uuid4(), ahora) is True
+
+    def test_actividad_cerrada_manualmente_no_es_visible(self):
+        ahora = datetime(2026, 6, 15, 12, tzinfo=UTC)
+        actividad = _actividad(cerrada_manualmente=True)
+
+        assert _actividad_abierta_y_visible(actividad, uuid4(), ahora) is False
+
+    def test_actividad_fuera_del_periodo_no_es_visible(self):
+        ahora = datetime(2026, 6, 15, 12, tzinfo=UTC)
+        actividad = _actividad(
+            fecha_apertura=ahora - timedelta(days=10),
+            fecha_cierre=ahora - timedelta(days=1),
+        )
+
+        assert _actividad_abierta_y_visible(actividad, uuid4(), ahora) is False
+
+    def test_actividad_restringida_visible_a_su_comision(self):
+        ahora = datetime(2026, 6, 15, 12, tzinfo=UTC)
+        comision_id = uuid4()
+        actividad = _actividad(comisiones_ids=frozenset({comision_id}))
+
+        assert _actividad_abierta_y_visible(actividad, comision_id, ahora) is True
+
+    def test_actividad_restringida_no_visible_a_otra_comision(self):
+        ahora = datetime(2026, 6, 15, 12, tzinfo=UTC)
+        actividad = _actividad(comisiones_ids=frozenset({uuid4()}))
+
+        assert _actividad_abierta_y_visible(actividad, uuid4(), ahora) is False

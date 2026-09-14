@@ -67,3 +67,15 @@ class EvaluacionDesempenoConsultaPort(ABC):
         todas las comisiones de la materia (`US-4.2.4`, RF-17). Materia sin `Evaluacion`
         finalizadas → lista vacía.
         """
+
+    @abstractmethod
+    async def listar_actividades_abiertas(self, materia_id: UUID, comision_id: UUID) -> list[UUID]:
+        """Devuelve los `actividad_id` abiertos *ahora* y visibles a `comision_id` (RF-20).
+
+        "Abierta ahora" es `fecha_apertura ≤ ahora ≤ fecha_cierre` y `cerrada_manualmente =
+        False` — el estado *actual* de `ActividadEvaluativaPeriodoAbierto`, que puede haber
+        cambiado por `PeriodoDisponibilidadModificado`/`ActividadEvaluativaCerrada` desde la
+        creación. "Visible" es `comisiones_ids` vacío (todas las comisiones de la materia) o
+        `comision_id ∈ comisiones_ids`. Insumo de "actividades pendientes" en
+        `ObtenerDesempenoPorComisionUseCase` (`US-ADJ-44`).
+        """

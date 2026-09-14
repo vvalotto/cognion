@@ -152,6 +152,14 @@ require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 require_estudiante = require_rol([TipoPerfil.ESTUDIANTE], get_current_user)
 """Dependency que exige rol `estudiante` — endpoints de rendición de evaluaciones (RF-02, RF-12)."""
 
+require_estudiante_o_docente = require_rol(
+    [TipoPerfil.ESTUDIANTE, TipoPerfil.DOCENTE], get_current_user
+)
+"""Dependency que exige rol `estudiante` o `docente` — revisión de una evaluación (`RF-13`),
+accesible tanto al propio Estudiante dueño como al Docente vía el drill-down de Analytics
+(`US-ADJ-44`, RF-20). El chequeo de pertenencia lo hace el Use Case (`verificar_propietario`),
+no esta dependency."""
+
 
 def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
     """Arma el `EvaluacionesController` con sus dependencias concretas."""

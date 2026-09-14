@@ -1,4 +1,7 @@
-"""Controller de la API para la revisión de una evaluación finalizada (US-3.2.3, RF-13)."""
+"""Controller de la API para la revisión de una evaluación finalizada.
+
+US-3.2.3, RF-13, US-ADJ-44.
+"""
 
 from __future__ import annotations
 
@@ -23,7 +26,13 @@ class RevisionController:
         self._obtener_revision_evaluacion = obtener_revision_evaluacion
 
     async def obtener_revision(
-        self, evaluacion_id: UUID, estudiante_id: UUID
+        self, evaluacion_id: UUID, usuario_id: UUID, verificar_propietario: bool = True
     ) -> RevisionEvaluacion:
-        """Delega la composición de la revisión en el caso de uso correspondiente."""
-        return await self._obtener_revision_evaluacion.execute(evaluacion_id, estudiante_id)
+        """Delega la composición de la revisión en el caso de uso correspondiente.
+
+        `verificar_propietario=False` habilita el drill-down del Docente (`US-ADJ-44`) sobre la
+        evaluación de un Estudiante que no es quien hace la request.
+        """
+        return await self._obtener_revision_evaluacion.execute(
+            evaluacion_id, usuario_id, verificar_propietario
+        )

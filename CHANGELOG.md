@@ -10,6 +10,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-44] Docente consulta el desempeño de una Comisión completa (RF-20)
+  - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/comisiones/{comision_id}/desempeno`
+    (rol `docente`) — una fila por estudiante del roster: `porcentaje_aciertos_acumulado`
+    (`None` = "Sin datos", nunca `0%`) y `actividades_pendientes` (actividades abiertas ahora
+    sin `Evaluacion` `Finalizada` de ese estudiante)
+  - `EvaluacionDesempenoConsultaPort` gana `listar_actividades_abiertas` — primer método de
+    Analytics que reconstruye `ActividadEvaluativaPeriodoAbierto` completa (reusa
+    `.reconstruir()`, entidad pura de Actividad Evaluativa, en vez de reimplementar el replay)
+  - Guard de `GET /evaluaciones/{id}/revision` (BC Actividad Evaluativa) ampliado a
+    `require_estudiante_o_docente` — el drill-down de "Desempeño por comisión" permite al
+    Docente ver la revisión de cualquier Estudiante, sin verificación de pertenencia
+    Docente↔Materia (mismo precedente de RBAC por rol ya usado en `US-4.2.1`)
+  - Primera US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) — backend del
+    par RF-20, consumido por `US-ADJ-48` (frontend, pendiente)
+  - 6 tests unitarios nuevos + 4 modificados (fakes ampliados con el método nuevo del puerto),
+    11 tests de integración nuevos + 4 modificados, 7 escenarios BDD nuevos. 1116/1116 tests
+    del proyecto en verde, quality gates APROBADO (pylint 9.89/10, coverage 100%)
+
 - [US-ADJ-43] Pantallas de autoregistro con selección de perfil
   - Frontend nuevo — consume `POST /identidad/autoregistro/docente` (`US-ADJ-41`) y
     `POST /identidad/autoregistro/estudiante` (`US-ADJ-42`), ya cerrados
