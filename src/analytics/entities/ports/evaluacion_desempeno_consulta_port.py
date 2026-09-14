@@ -115,9 +115,9 @@ class EvaluacionDesempenoConsultaPort(ABC):
     async def listar_estados_de_actividad(
         self, actividad_id: UUID, estudiante_ids: list[UUID]
     ) -> dict[UUID, str]:
-        """Estado (`"en_curso"`, `"suspendida"` o `"finalizada"`) de la `Evaluacion` de cada
-        estudiante de `estudiante_ids` para `actividad_id` (RF-23).
+        """Estado de la `Evaluacion` de cada estudiante de `estudiante_ids` para `actividad_id` (RF-23).
 
-        Un `estudiante_id` ausente del dict nunca inició esa actividad — "sin_iniciar" es
-        responsabilidad del Use Case, no de este puerto.
+        Estado es `"en_curso"`, `"suspendida"` o `"finalizada"`. Un `estudiante_id` ausente del
+        dict nunca inició esa actividad — "sin_iniciar" es responsabilidad del Use Case, no de
+        este puerto.
         """
