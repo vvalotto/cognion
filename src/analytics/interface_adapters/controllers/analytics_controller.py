@@ -1,7 +1,10 @@
-"""Controller de la API del BC Analytics (`US-4.1.2`, `US-4.2.1`, `US-4.2.4`, `US-ADJ-44`).
+"""Controller de la API del BC Analytics — desempeño individual del Estudiante.
 
-Primer controller del BC — delega directo en el Use Case, mismo patrón mínimo que
-`ActividadesEstudianteController` (`src/actividad_evaluativa`).
+`US-4.1.2`, `US-4.2.1`, `US-ADJ-45`. Separado de `AnalyticsInformesController`
+(`analytics_informes_controller.py`, `US-ADJ-46`) — mismo criterio de separación por
+responsabilidad ya aplicado en Incremento 2 (`BancosController`/`PreguntasController`,
+`CuentasController`/`UsuariosController`) para no repetir el CRITICAL de CBO que salió al
+mezclar demasiados Use Case en un solo controller.
 """
 
 from __future__ import annotations
@@ -12,41 +15,29 @@ from src.analytics.use_cases.obtener_desempeno_estudiante import (
     DesempenoEstudiante,
     ObtenerDesempenoEstudianteUseCase,
 )
-from src.analytics.use_cases.obtener_desempeno_por_comision import (
-    DesempenoComisionFila,
-    ObtenerDesempenoPorComisionUseCase,
-)
-from src.analytics.use_cases.obtener_tasa_error_por_tema import (
-    ObtenerTasaErrorPorTemaUseCase,
-    TasaErrorTema,
+from src.analytics.use_cases.obtener_evolucion_temporal_estudiante import (
+    EvolucionTemporalPunto,
+    ObtenerEvolucionTemporalEstudianteUseCase,
 )
 
 
 class AnalyticsController:
-    """Adapta requests HTTP de consulta de desempeño al Use Case correspondiente."""
+    """Adapta requests HTTP de consulta de desempeño individual al Use Case correspondiente."""
 
     def __init__(
         self,
         obtener_desempeno_estudiante: ObtenerDesempenoEstudianteUseCase,
-        obtener_tasa_error_por_tema: ObtenerTasaErrorPorTemaUseCase,
-        obtener_desempeno_por_comision: ObtenerDesempenoPorComisionUseCase,
+        obtener_evolucion_temporal_estudiante: ObtenerEvolucionTemporalEstudianteUseCase,
     ) -> None:
-        """Recibe los Use Case de desempeño, tasa de error por tema y desempeño por comisión."""
+        """Recibe los Use Case de desempeño y evolución temporal individuales."""
         self._obtener_desempeno_estudiante = obtener_desempeno_estudiante
-        self._obtener_tasa_error_por_tema = obtener_tasa_error_por_tema
-        self._obtener_desempeno_por_comision = obtener_desempeno_por_comision
+        self._obtener_evolucion_temporal_estudiante = obtener_evolucion_temporal_estudiante
 
     async def obtener_mi_desempeno(
         self, estudiante_id: UUID, materia_id: UUID
     ) -> DesempenoEstudiante:
         """Delega la obtención del desempeño en el Use Case correspondiente."""
         return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)
-
-    async def obtener_tasa_error_por_tema(
-        self, materia_id: UUID, comision_id: UUID | None
-    ) -> list[TasaErrorTema]:
-        """Tasa de error por tema de una materia, acotada a una comisión si se indica (RF-17)."""
-        return await self._obtener_tasa_error_por_tema.execute(materia_id, comision_id)
 
     async def obtener_desempeno_de_estudiante(
         self, estudiante_id: UUID, materia_id: UUID
@@ -59,8 +50,8 @@ class AnalyticsController:
         """
         return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)
 
-    async def obtener_desempeno_por_comision(
-        self, materia_id: UUID, comision_id: UUID
-    ) -> list[DesempenoComisionFila]:
-        """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20)."""
-        return await self._obtener_desempeno_por_comision.execute(materia_id, comision_id)
+    async def obtener_evolucion_temporal_estudiante(
+        self, estudiante_id: UUID, materia_id: UUID
+    ) -> list[EvolucionTemporalPunto]:
+        """Evolución temporal individual de un estudiante (`US-ADJ-45`, RF-21)."""
+        return await self._obtener_evolucion_temporal_estudiante.execute(estudiante_id, materia_id)

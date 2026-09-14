@@ -14,6 +14,7 @@ from src.actividad_evaluativa.frameworks.db.models import EventoModel
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import RespuestaVigente
 from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_process import (
     _actividad_abierta_y_visible,
+    _estados_por_estudiante,
     _respuestas_vigentes_de_stream,
     _resumen_de_stream,
 )
@@ -212,3 +213,64 @@ class TestActividadAbiertaYVisible:
         actividad = _actividad(comisiones_ids=frozenset({uuid4()}))
 
         assert _actividad_abierta_y_visible(actividad, uuid4(), ahora) is False
+
+
+def _stream_evaluacion(actividad_id, estudiante_id, eventos_siguientes: list | None = None):
+    """Arma un stream mínimo de `Evaluacion` — `EvaluacionIniciada` + eventos adicionales."""
+    iniciada = _evento(
+        uuid4(),
+        "EvaluacionIniciada",
+        {
+            "evaluacion_id": str(uuid4()),
+            "actividad_id": str(actividad_id),
+            "estudiante_id": str(estudiante_id),
+            "ocurrido_en": datetime(2026, 1, 1, tzinfo=UTC).isoformat(),
+            "preguntas_asignadas": [],
+        },
+        1,
+    )
+    return [iniciada, *(eventos_siguientes or [])]
+
+
+class TestEstadosPorEstudiante:
+    def test_estado_en_curso_por_defecto(self):
+        actividad_id, estudiante_id = uuid4(), uuid4()
+        streams = [_stream_evaluacion(actividad_id, estudiante_id)]
+
+        estados = _estados_por_estudiante(streams, actividad_id, {str(estudiante_id)})
+
+        assert estados == {estudiante_id: "en_curso"}
+
+    def test_estado_finalizada(self):
+        actividad_id, estudiante_id = uuid4(), uuid4()
+        eventos_siguientes = [
+            EventoModel(
+                aggregate_type="Evaluacion",
+                aggregate_id=uuid4(),
+                sequence_number=2,
+                event_type="EvaluacionFinalizada",
+                payload={"actor": "estudiante"},
+                occurred_at=datetime(2026, 1, 2, tzinfo=UTC),
+            )
+        ]
+        streams = [_stream_evaluacion(actividad_id, estudiante_id, eventos_siguientes)]
+
+        estados = _estados_por_estudiante(streams, actividad_id, {str(estudiante_id)})
+
+        assert estados == {estudiante_id: "finalizada"}
+
+    def test_ignora_streams_de_otra_actividad(self):
+        actividad_id, otra_actividad_id, estudiante_id = uuid4(), uuid4(), uuid4()
+        streams = [_stream_evaluacion(otra_actividad_id, estudiante_id)]
+
+        estados = _estados_por_estudiante(streams, actividad_id, {str(estudiante_id)})
+
+        assert estados == {}
+
+    def test_ignora_estudiantes_fuera_del_filtro(self):
+        actividad_id, estudiante_id = uuid4(), uuid4()
+        streams = [_stream_evaluacion(actividad_id, estudiante_id)]
+
+        estados = _estados_por_estudiante(streams, actividad_id, {str(uuid4())})
+
+        assert estados == {}

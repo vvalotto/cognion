@@ -1,23 +1,14 @@
-"""Tests unitarios de `AnalyticsController` (US-4.1.2, US-4.2.1, US-4.2.4, US-ADJ-44)."""
+"""Tests unitarios de `AnalyticsController` — desempeño individual (US-4.1.2, US-4.2.1, US-ADJ-45)."""
 
 from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
 
-from src.analytics.entities.ports.comision_consulta_port import (
-    ComisionConsultaPort,
-    ComisionResumen,
-    EstudianteResumen,
-)
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
     RespuestaVigente,
-)
-from src.analytics.entities.ports.pregunta_metadato_consulta_port import (
-    MetadatoPreguntaResumen,
-    PreguntaMetadatoConsultaPort,
 )
 from src.analytics.interface_adapters.controllers.analytics_controller import (
     AnalyticsController,
@@ -25,11 +16,8 @@ from src.analytics.interface_adapters.controllers.analytics_controller import (
 from src.analytics.use_cases.obtener_desempeno_estudiante import (
     ObtenerDesempenoEstudianteUseCase,
 )
-from src.analytics.use_cases.obtener_desempeno_por_comision import (
-    ObtenerDesempenoPorComisionUseCase,
-)
-from src.analytics.use_cases.obtener_tasa_error_por_tema import (
-    ObtenerTasaErrorPorTemaUseCase,
+from src.analytics.use_cases.obtener_evolucion_temporal_estudiante import (
+    ObtenerEvolucionTemporalEstudianteUseCase,
 )
 
 
@@ -37,12 +25,10 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
     def __init__(
         self,
         resumenes: list[EvaluacionDesempenoResumen] | None = None,
-        respuestas: list[RespuestaVigente] | None = None,
-        actividades_abiertas: list | None = None,
+        titulos_actividades: dict | None = None,
     ) -> None:
         self._resumenes = resumenes or []
-        self._respuestas = respuestas or []
-        self._actividades_abiertas = actividades_abiertas or []
+        self._titulos_actividades = titulos_actividades or {}
 
     async def listar_evaluaciones_finalizadas(
         self, estudiante_id, materia_id
@@ -52,49 +38,30 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
     async def listar_respuestas_vigentes_de_materia(
         self, materia_id, estudiante_ids
     ) -> list[RespuestaVigente]:
-        return self._respuestas
+        raise NotImplementedError
 
     async def listar_actividades_abiertas(self, materia_id, comision_id):
-        return self._actividades_abiertas
+        raise NotImplementedError
 
+    async def obtener_titulos_actividades(self, actividad_ids):
+        return self._titulos_actividades
 
-class _ComisionConsultaPortFake(ComisionConsultaPort):
-    def __init__(self) -> None:
-        self.comisiones: list[ComisionResumen] = []
-        self.estudiantes: list[EstudianteResumen] = []
+    async def obtener_actividad_resumen(self, actividad_id):
+        raise NotImplementedError
 
-    async def listar_comisiones_por_materia(self, materia_id) -> list[ComisionResumen]:
-        return self.comisiones
-
-    async def listar_estudiantes(self, comision_id) -> list[EstudianteResumen]:
-        return self.estudiantes
-
-
-class _PreguntaMetadatoConsultaPortFake(PreguntaMetadatoConsultaPort):
-    def __init__(self, metadatos: dict | None = None) -> None:
-        self._metadatos = metadatos or {}
-
-    async def obtener_metadatos(self, pregunta_ids) -> dict:
-        return {pid: self._metadatos[pid] for pid in pregunta_ids if pid in self._metadatos}
+    async def listar_estados_de_actividad(self, actividad_id, estudiante_ids):
+        raise NotImplementedError
 
 
 def _controller(
     evaluacion_desempeno_consulta: EvaluacionDesempenoConsultaPort | None = None,
-    comision_consulta: ComisionConsultaPort | None = None,
-    pregunta_metadato_consulta: PreguntaMetadatoConsultaPort | None = None,
 ) -> AnalyticsController:
     evaluacion_desempeno_consulta = (
         evaluacion_desempeno_consulta or _EvaluacionDesempenoConsultaPortFake()
     )
-    comision_consulta = comision_consulta or _ComisionConsultaPortFake()
     return AnalyticsController(
         ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
-        ObtenerTasaErrorPorTemaUseCase(
-            evaluacion_desempeno_consulta,
-            comision_consulta,
-            pregunta_metadato_consulta or _PreguntaMetadatoConsultaPortFake(),
-        ),
-        ObtenerDesempenoPorComisionUseCase(comision_consulta, evaluacion_desempeno_consulta),
+        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta),
     )
 
 
@@ -150,45 +117,18 @@ class TestAnalyticsController:
         assert resultado.resumen.porcentaje_acierto == 0
 
     @pytest.mark.asyncio
-    async def test_obtener_tasa_error_por_tema_delega_en_el_use_case(self):
-        pregunta_id = uuid4()
-        respuestas = [
-            RespuestaVigente(pregunta_id=pregunta_id, estudiante_id=uuid4(), es_correcta=False)
-        ]
-        metadatos = {pregunta_id: MetadatoPreguntaResumen(unidad_tematica="U1", tema="T1")}
-        controller = _controller(
-            evaluacion_desempeno_consulta=_EvaluacionDesempenoConsultaPortFake(
-                respuestas=respuestas
-            ),
-            pregunta_metadato_consulta=_PreguntaMetadatoConsultaPortFake(metadatos),
+    async def test_obtener_evolucion_temporal_estudiante_delega_en_el_use_case(self):
+        resumen = EvaluacionDesempenoResumen(
+            evaluacion_id=uuid4(),
+            actividad_id=uuid4(),
+            materia_id=uuid4(),
+            finalizada_en=datetime(2026, 1, 1, tzinfo=UTC),
+            cantidad_correctas=1,
+            cantidad_incorrectas=0,
         )
+        controller = _controller(_EvaluacionDesempenoConsultaPortFake(resumenes=[resumen]))
 
-        resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None)
-
-        assert len(resultado) == 1
-        assert resultado[0].unidad_tematica == "U1"
-        assert resultado[0].tema == "T1"
-        assert resultado[0].tasa_error == 1.0
-
-    @pytest.mark.asyncio
-    async def test_obtener_tasa_error_por_tema_sin_respuestas_devuelve_lista_vacia(self):
-        controller = _controller()
-
-        resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None)
-
-        assert resultado == []
-
-    @pytest.mark.asyncio
-    async def test_obtener_desempeno_por_comision_delega_en_el_use_case(self):
-        materia_id, comision_id = uuid4(), uuid4()
-        estudiante = EstudianteResumen(id=uuid4(), nombre="Ana Pérez")
-        comision_consulta = _ComisionConsultaPortFake()
-        comision_consulta.comisiones = [ComisionResumen(id=comision_id, horario="lu 10-12")]
-        comision_consulta.estudiantes = [estudiante]
-        controller = _controller(comision_consulta=comision_consulta)
-
-        resultado = await controller.obtener_desempeno_por_comision(materia_id, comision_id)
+        resultado = await controller.obtener_evolucion_temporal_estudiante(uuid4(), uuid4())
 
         assert len(resultado) == 1
-        assert resultado[0].estudiante_id == estudiante.id
-        assert resultado[0].porcentaje_aciertos_acumulado is None
+        assert resultado[0].porcentaje_acierto == 100

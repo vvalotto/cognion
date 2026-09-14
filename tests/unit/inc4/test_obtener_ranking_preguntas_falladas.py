@@ -1,4 +1,4 @@
-"""Tests unitarios de `ObtenerTasaErrorPorTemaUseCase` (US-4.2.4)."""
+"""Tests unitarios de `ObtenerRankingPreguntasFalladasUseCase` (US-ADJ-46)."""
 
 from uuid import uuid4
 
@@ -18,8 +18,8 @@ from src.analytics.entities.ports.pregunta_metadato_consulta_port import (
     MetadatoPreguntaResumen,
     PreguntaMetadatoConsultaPort,
 )
-from src.analytics.use_cases.obtener_tasa_error_por_tema import (
-    ObtenerTasaErrorPorTemaUseCase,
+from src.analytics.use_cases.obtener_ranking_preguntas_falladas import (
+    ObtenerRankingPreguntasFalladasUseCase,
 )
 
 
@@ -79,9 +79,9 @@ def _use_case(
     metadatos: dict,
     comisiones: list[ComisionResumen] | None = None,
     estudiantes: list[EstudianteResumen] | None = None,
-) -> tuple[ObtenerTasaErrorPorTemaUseCase, _EvaluacionDesempenoConsultaPortFake]:
+) -> tuple[ObtenerRankingPreguntasFalladasUseCase, _EvaluacionDesempenoConsultaPortFake]:
     evaluacion_desempeno_consulta = _EvaluacionDesempenoConsultaPortFake(respuestas)
-    use_case = ObtenerTasaErrorPorTemaUseCase(
+    use_case = ObtenerRankingPreguntasFalladasUseCase(
         evaluacion_desempeno_consulta,
         _ComisionConsultaPortFake(comisiones, estudiantes),
         _PreguntaMetadatoConsultaPortFake(metadatos),
@@ -89,7 +89,11 @@ def _use_case(
     return use_case, evaluacion_desempeno_consulta
 
 
-class TestObtenerTasaErrorPorTemaUseCase:
+def _metadato(unidad: str, tema: str, enunciado: str) -> MetadatoPreguntaResumen:
+    return MetadatoPreguntaResumen(unidad_tematica=unidad, tema=tema, enunciado=enunciado)
+
+
+class TestObtenerRankingPreguntasFalladasUseCase:
     @pytest.mark.asyncio
     async def test_sin_respuestas_devuelve_lista_vacia(self):
         use_case, _ = _use_case(respuestas=[], metadatos={})
@@ -99,49 +103,60 @@ class TestObtenerTasaErrorPorTemaUseCase:
         assert resultado == []
 
     @pytest.mark.asyncio
-    async def test_agrupa_por_unidad_tematica_y_tema(self):
-        pregunta_a, pregunta_b = uuid4(), uuid4()
+    async def test_agrupa_por_pregunta_individual(self):
+        pregunta_id = uuid4()
         respuestas = [
-            RespuestaVigente(pregunta_id=pregunta_a, estudiante_id=uuid4(), es_correcta=False),
-            RespuestaVigente(pregunta_id=pregunta_b, estudiante_id=uuid4(), es_correcta=True),
+            RespuestaVigente(pregunta_id=pregunta_id, estudiante_id=uuid4(), es_correcta=False),
+            RespuestaVigente(pregunta_id=pregunta_id, estudiante_id=uuid4(), es_correcta=True),
         ]
-        metadatos = {
-            pregunta_a: MetadatoPreguntaResumen(
-                unidad_tematica="U1", tema="Herencia", enunciado="Enunciado de prueba"
-            ),
-            pregunta_b: MetadatoPreguntaResumen(
-                unidad_tematica="U1", tema="Herencia", enunciado="Enunciado de prueba"
-            ),
-        }
+        metadatos = {pregunta_id: _metadato("U1", "Herencia", "¿Qué es herencia?")}
         use_case, _ = _use_case(respuestas, metadatos)
 
         resultado = await use_case.execute(uuid4(), None)
 
         assert len(resultado) == 1
+        assert resultado[0].pregunta_id == pregunta_id
+        assert resultado[0].enunciado == "¿Qué es herencia?"
         assert resultado[0].unidad_tematica == "U1"
         assert resultado[0].tema == "Herencia"
-        assert resultado[0].cantidad_respuestas == 2
-        assert resultado[0].cantidad_incorrectas == 1
+        assert resultado[0].cantidad_presentaciones == 2
+        assert resultado[0].cantidad_fallos == 1
         assert resultado[0].tasa_error == 0.5
 
     @pytest.mark.asyncio
-    async def test_tasa_error_nunca_divide_por_cero(self):
-        pregunta_id = uuid4()
+    async def test_tasa_de_error_prevalece_sobre_conteo_bruto(self):
+        pregunta_baja_conteo, pregunta_alto_conteo = uuid4(), uuid4()
         respuestas = [
-            RespuestaVigente(pregunta_id=pregunta_id, estudiante_id=uuid4(), es_correcta=True)
-        ]
-        metadatos = {
-            pregunta_id: MetadatoPreguntaResumen(
-                unidad_tematica="U1", tema="T1", enunciado="Enunciado de prueba"
+            RespuestaVigente(
+                pregunta_id=pregunta_baja_conteo, estudiante_id=uuid4(), es_correcta=False
             )
+        ]
+        for _ in range(40):
+            respuestas.append(
+                RespuestaVigente(
+                    pregunta_id=pregunta_alto_conteo, estudiante_id=uuid4(), es_correcta=True
+                )
+            )
+        for _ in range(10):
+            respuestas.append(
+                RespuestaVigente(
+                    pregunta_id=pregunta_alto_conteo, estudiante_id=uuid4(), es_correcta=False
+                )
+            )
+        metadatos = {
+            pregunta_baja_conteo: _metadato("U1", "T1", "Pregunta A"),
+            pregunta_alto_conteo: _metadato("U1", "T2", "Pregunta B"),
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
         resultado = await use_case.execute(uuid4(), None)
 
-        assert resultado[0].cantidad_respuestas == 1
-        assert resultado[0].cantidad_incorrectas == 0
-        assert resultado[0].tasa_error == 0.0
+        assert [fila.pregunta_id for fila in resultado] == [
+            pregunta_baja_conteo,
+            pregunta_alto_conteo,
+        ]
+        assert resultado[0].tasa_error == 1.0
+        assert resultado[1].tasa_error == 0.2
 
     @pytest.mark.asyncio
     async def test_excluye_respuestas_sin_metadato_resoluble(self):
@@ -154,38 +169,13 @@ class TestObtenerTasaErrorPorTemaUseCase:
                 pregunta_id=pregunta_sin_metadato, estudiante_id=uuid4(), es_correcta=False
             ),
         ]
-        metadatos = {
-            pregunta_con_metadato: MetadatoPreguntaResumen(
-                unidad_tematica="U1", tema="T1", enunciado="Enunciado de prueba"
-            )
-        }
+        metadatos = {pregunta_con_metadato: _metadato("U1", "T1", "Pregunta con metadato")}
         use_case, _ = _use_case(respuestas, metadatos)
 
         resultado = await use_case.execute(uuid4(), None)
 
         assert len(resultado) == 1
-        assert resultado[0].cantidad_respuestas == 1
-
-    @pytest.mark.asyncio
-    async def test_ordena_por_tasa_error_descendente(self):
-        pregunta_baja, pregunta_alta = uuid4(), uuid4()
-        respuestas = [
-            RespuestaVigente(pregunta_id=pregunta_baja, estudiante_id=uuid4(), es_correcta=True),
-            RespuestaVigente(pregunta_id=pregunta_alta, estudiante_id=uuid4(), es_correcta=False),
-        ]
-        metadatos = {
-            pregunta_baja: MetadatoPreguntaResumen(
-                unidad_tematica="U1", tema="BajaTasa", enunciado="Enunciado de prueba"
-            ),
-            pregunta_alta: MetadatoPreguntaResumen(
-                unidad_tematica="U2", tema="AltaTasa", enunciado="Enunciado de prueba"
-            ),
-        }
-        use_case, _ = _use_case(respuestas, metadatos)
-
-        resultado = await use_case.execute(uuid4(), None)
-
-        assert [tasa.tema for tasa in resultado] == ["AltaTasa", "BajaTasa"]
+        assert resultado[0].pregunta_id == pregunta_con_metadato
 
     @pytest.mark.asyncio
     async def test_sin_comision_id_no_acota_estudiantes(self):

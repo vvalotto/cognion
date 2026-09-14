@@ -36,14 +36,32 @@ from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_pro
 from src.analytics.frameworks.adapters.pregunta_metadato_consulta_port_in_process import (
     PreguntaMetadatoConsultaPortInProcess,
 )
+from src.analytics.interface_adapters.controllers.analytics_completitud_controller import (
+    AnalyticsCompletitudController,
+)
 from src.analytics.interface_adapters.controllers.analytics_controller import (
     AnalyticsController,
+)
+from src.analytics.interface_adapters.controllers.analytics_informes_controller import (
+    AnalyticsInformesController,
+)
+from src.analytics.use_cases.obtener_completitud_por_actividad import (
+    ObtenerCompletitudPorActividadUseCase,
 )
 from src.analytics.use_cases.obtener_desempeno_estudiante import (
     ObtenerDesempenoEstudianteUseCase,
 )
 from src.analytics.use_cases.obtener_desempeno_por_comision import (
     ObtenerDesempenoPorComisionUseCase,
+)
+from src.analytics.use_cases.obtener_evolucion_temporal_comision import (
+    ObtenerEvolucionTemporalComisionUseCase,
+)
+from src.analytics.use_cases.obtener_evolucion_temporal_estudiante import (
+    ObtenerEvolucionTemporalEstudianteUseCase,
+)
+from src.analytics.use_cases.obtener_ranking_preguntas_falladas import (
+    ObtenerRankingPreguntasFalladasUseCase,
 )
 from src.analytics.use_cases.obtener_tasa_error_por_tema import (
     ObtenerTasaErrorPorTemaUseCase,
@@ -81,16 +99,45 @@ def get_pregunta_metadato_consulta_port(session: SessionDep) -> PreguntaMetadato
 
 
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:
-    """Arma el `AnalyticsController` con sus dependencias concretas."""
+    """Arma el `AnalyticsController` (desempeño individual) con sus dependencias concretas."""
+    evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
+    return AnalyticsController(
+        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta),
+    )
+
+
+def get_analytics_informes_controller(session: SessionDep) -> AnalyticsInformesController:
+    """Arma el `AnalyticsInformesController` (informes agregados) con sus dependencias.
+
+    Separado de `get_analytics_controller` — mismo criterio documentado en
+    `AnalyticsInformesController` (`US-ADJ-46`, fix de CRITICAL de CBO).
+    """
     evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
     comision_consulta = ComisionConsultaPortInProcess(session)
     pregunta_metadato_consulta = PreguntaMetadatoConsultaPortInProcess(session)
-    return AnalyticsController(
-        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
+    return AnalyticsInformesController(
         ObtenerTasaErrorPorTemaUseCase(
             evaluacion_desempeno_consulta, comision_consulta, pregunta_metadato_consulta
         ),
         ObtenerDesempenoPorComisionUseCase(comision_consulta, evaluacion_desempeno_consulta),
+        ObtenerEvolucionTemporalComisionUseCase(comision_consulta, evaluacion_desempeno_consulta),
+        ObtenerRankingPreguntasFalladasUseCase(
+            evaluacion_desempeno_consulta, comision_consulta, pregunta_metadato_consulta
+        ),
+    )
+
+
+def get_analytics_completitud_controller(session: SessionDep) -> AnalyticsCompletitudController:
+    """Arma el `AnalyticsCompletitudController` con sus dependencias concretas.
+
+    Tercer controller del BC — mismo criterio documentado en `AnalyticsCompletitudController`
+    (`US-ADJ-47`, fix de CRITICAL de CBO detectado localmente antes de commitear).
+    """
+    evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    return AnalyticsCompletitudController(
+        ObtenerCompletitudPorActividadUseCase(evaluacion_desempeno_consulta, comision_consulta)
     )
 
 
