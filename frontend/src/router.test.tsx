@@ -485,6 +485,28 @@ describe("router (integración)", () => {
     ).toBeInTheDocument()
   })
 
+  it("la ruta de evolución temporal de desempeño por comisión muestra acceso denegado con sesión de estudiante (US-ADJ-49)", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1/evolucion",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta de evolución temporal de desempeño por comisión renderiza con sesión de docente (US-ADJ-49)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1/evolucion",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Evolución temporal" }),
+    ).toBeInTheDocument()
+  })
+
   describe("AppNav — navegación real por clic (US-ADJ-27)", () => {
     it("Docente navega de Mis materias a Banco de Preguntas por el menú", async () => {
       setSession({ token: "t", rol: "docente" })

@@ -215,8 +215,17 @@ tabla ordenable) con dos niveles de drill-down —
 `onFilaClick` opcional sin afectar `US-4.1.3`/`US-4.2.5`) y `RevisionEvaluacionDocente.tsx`
 (reusa el contenido visual extraído de `RevisionEvaluacion.tsx` a un componente compartido
 nuevo, `RevisionEvaluacionContenido.tsx`, parametrizado por la etiqueta de "respuesta propia").
-Cierra completo el par backend→frontend de RF-20. Quedan `US-ADJ-49`/`50`/`51` (frontend de
-RF-21/22/23) para completar la Iteración 4.
+Cierra completo el par backend→frontend de RF-20. **`US-ADJ-49`** (RF-21, frontend) cerrada
+2026-09-14, `docs/reports/inc5-adj/US-ADJ-49-report.md`: cliente API
+`obtenerEvolucionTemporalEstudiante`/`obtenerEvolucionTemporalComision`, pantalla
+`EvolucionTemporal.tsx` con gráfico SVG hecho a mano (sin librería) — dos series sobre un eje X
+unificado (unión de actividades de ambas series, sin interpolar huecos), un solo punto sin
+`<polyline>` cuando la serie tiene un solo elemento; accesible únicamente desde un link nuevo
+en `DesempenoPorComisionDetalleEstudiante.tsx` (`US-ADJ-48`), sin entrada en `AppNav.tsx`, tal
+como especifica la spec. **Decisión operativa de Víctor 2026-09-14**: a partir de esta
+iteración, la verificación manual en navegador real no se repite US por US — se concentra en
+un solo pase al cierre completo de la Iteración 4, resembrando la base de datos para esa
+corrida. Quedan `US-ADJ-50`/`51` (frontend de RF-22/23) para completar la Iteración 4.
 
 ---
 

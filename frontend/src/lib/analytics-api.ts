@@ -35,6 +35,19 @@ export interface DesempenoComisionFilaResponse {
   actividadesPendientes: number
 }
 
+export interface EvolucionTemporalPuntoResponse {
+  actividadId: string
+  tituloActividad: string
+  finalizadaEn: string
+  porcentajeAcierto: number
+}
+
+export interface EvolucionTemporalComisionPuntoResponse {
+  actividadId: string
+  tituloActividad: string
+  porcentajeAciertosPromedio: number
+}
+
 interface EvaluacionDesempenoApiResponse {
   evaluacion_id: string
   actividad_id: string
@@ -68,6 +81,19 @@ interface DesempenoComisionFilaApiResponse {
   nombre: string
   porcentaje_aciertos_acumulado: number | null
   actividades_pendientes: number
+}
+
+interface EvolucionTemporalPuntoApiResponse {
+  actividad_id: string
+  titulo_actividad: string
+  finalizada_en: string
+  porcentaje_acierto: number
+}
+
+interface EvolucionTemporalComisionPuntoApiResponse {
+  actividad_id: string
+  titulo_actividad: string
+  porcentaje_aciertos_promedio: number
 }
 
 function mapearDesempenoEstudiante(
@@ -161,4 +187,51 @@ export async function obtenerDesempenoPorComision(
     { signal },
   )
   return response.map(mapearDesempenoComisionFila)
+}
+
+function mapearEvolucionTemporalPunto(
+  response: EvolucionTemporalPuntoApiResponse,
+): EvolucionTemporalPuntoResponse {
+  return {
+    actividadId: response.actividad_id,
+    tituloActividad: response.titulo_actividad,
+    finalizadaEn: response.finalizada_en,
+    porcentajeAcierto: response.porcentaje_acierto,
+  }
+}
+
+/** Cliente API de evolución temporal individual de un estudiante (`US-ADJ-45`, RF-21). */
+export async function obtenerEvolucionTemporalEstudiante(
+  materiaId: string,
+  estudianteId: string,
+  signal?: AbortSignal,
+): Promise<EvolucionTemporalPuntoResponse[]> {
+  const response = await apiFetch<EvolucionTemporalPuntoApiResponse[]>(
+    `/analytics/materias/${materiaId}/estudiantes/${estudianteId}/evolucion-temporal`,
+    { signal },
+  )
+  return response.map(mapearEvolucionTemporalPunto)
+}
+
+function mapearEvolucionTemporalComisionPunto(
+  response: EvolucionTemporalComisionPuntoApiResponse,
+): EvolucionTemporalComisionPuntoResponse {
+  return {
+    actividadId: response.actividad_id,
+    tituloActividad: response.titulo_actividad,
+    porcentajeAciertosPromedio: response.porcentaje_aciertos_promedio,
+  }
+}
+
+/** Cliente API de evolución temporal promedio de una comisión (`US-ADJ-45`, RF-21). */
+export async function obtenerEvolucionTemporalComision(
+  materiaId: string,
+  comisionId: string,
+  signal?: AbortSignal,
+): Promise<EvolucionTemporalComisionPuntoResponse[]> {
+  const response = await apiFetch<EvolucionTemporalComisionPuntoApiResponse[]>(
+    `/analytics/materias/${materiaId}/comisiones/${comisionId}/evolucion-temporal`,
+    { signal },
+  )
+  return response.map(mapearEvolucionTemporalComisionPunto)
 }
