@@ -173,7 +173,7 @@ siquiera dentro de la misma sesión de trabajo.
 ## Documentación Actualizada
 
 - [x] Docstrings agregados/actualizados en los 8 archivos tocados
-- [x] `docs/plans/US-ADJ-45-plan.md` completado con estado, métricas y lecciones aprendidas
+- [x] `docs/plans/inc5-adj/US-ADJ-45-plan.md` completado con estado, métricas y lecciones aprendidas
 - [x] `CHANGELOG.md` actualizado (`[Unreleased]`)
 - [x] `quality/reports/inc5-adj/US-ADJ-45-quality.json` y `-codeguard.json` generados
 - [ ] `docs/plans/inc5-adj/inc5-adj-candidatas.md`/`CLAUDE.md` — se actualizan al cierre de
