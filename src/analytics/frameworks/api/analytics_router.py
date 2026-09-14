@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.analytics.entities.errors import ComisionNoPerteneceAMateria
 from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.frameworks.api.schemas import (
+    DesempenoComisionFilaResponse,
     DesempenoEstudianteResponse,
     EvaluacionDetalleResponse,
     ResumenDesempenoResponse,
@@ -130,4 +131,36 @@ async def obtener_tasa_error_por_tema(
             tasa_error=tasa.tasa_error,
         )
         for tasa in tasas
+    ]
+
+
+@router.get(
+    "/materias/{materia_id}/comisiones/{comision_id}/desempeno",
+    response_model=list[DesempenoComisionFilaResponse],
+    dependencies=[Depends(require_docente)],
+)
+async def obtener_desempeno_por_comision(
+    materia_id: UUID,
+    comision_id: UUID,
+    controller: AnalyticsController = Depends(get_analytics_controller),
+) -> list[DesempenoComisionFilaResponse]:
+    """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20).
+
+    `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`, mismo
+    criterio que `obtener_tasa_error_por_tema`).
+    """
+    try:
+        filas = await controller.obtener_desempeno_por_comision(materia_id, comision_id)
+    except ComisionNoPerteneceAMateria as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+    return [
+        DesempenoComisionFilaResponse(
+            estudiante_id=fila.estudiante_id,
+            nombre=fila.nombre,
+            porcentaje_aciertos_acumulado=fila.porcentaje_aciertos_acumulado,
+            actividades_pendientes=fila.actividades_pendientes,
+        )
+        for fila in filas
     ]

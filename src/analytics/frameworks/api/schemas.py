@@ -42,3 +42,12 @@ class TasaErrorTemaResponse(BaseModel):
     cantidad_respuestas: int
     cantidad_incorrectas: int
     tasa_error: float
+
+
+class DesempenoComisionFilaResponse(BaseModel):
+    """Fila de `GET /analytics/materias/{id}/comisiones/{id}/desempeno` (`US-ADJ-44`, RF-20)."""
+
+    estudiante_id: UUID
+    nombre: str
+    porcentaje_aciertos_acumulado: float | None
+    actividades_pendientes: int

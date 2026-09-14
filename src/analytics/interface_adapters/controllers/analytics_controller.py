@@ -1,4 +1,4 @@
-"""Controller de la API del BC Analytics (`US-4.1.2`, `US-4.2.1`, `US-4.2.4`).
+"""Controller de la API del BC Analytics (`US-4.1.2`, `US-4.2.1`, `US-4.2.4`, `US-ADJ-44`).
 
 Primer controller del BC — delega directo en el Use Case, mismo patrón mínimo que
 `ActividadesEstudianteController` (`src/actividad_evaluativa`).
@@ -11,6 +11,10 @@ from uuid import UUID
 from src.analytics.use_cases.obtener_desempeno_estudiante import (
     DesempenoEstudiante,
     ObtenerDesempenoEstudianteUseCase,
+)
+from src.analytics.use_cases.obtener_desempeno_por_comision import (
+    DesempenoComisionFila,
+    ObtenerDesempenoPorComisionUseCase,
 )
 from src.analytics.use_cases.obtener_tasa_error_por_tema import (
     ObtenerTasaErrorPorTemaUseCase,
@@ -25,10 +29,12 @@ class AnalyticsController:
         self,
         obtener_desempeno_estudiante: ObtenerDesempenoEstudianteUseCase,
         obtener_tasa_error_por_tema: ObtenerTasaErrorPorTemaUseCase,
+        obtener_desempeno_por_comision: ObtenerDesempenoPorComisionUseCase,
     ) -> None:
-        """Recibe los Use Case de obtención de desempeño y de tasa de error por tema."""
+        """Recibe los Use Case de desempeño, tasa de error por tema y desempeño por comisión."""
         self._obtener_desempeno_estudiante = obtener_desempeno_estudiante
         self._obtener_tasa_error_por_tema = obtener_tasa_error_por_tema
+        self._obtener_desempeno_por_comision = obtener_desempeno_por_comision
 
     async def obtener_mi_desempeno(
         self, estudiante_id: UUID, materia_id: UUID
@@ -52,3 +58,9 @@ class AnalyticsController:
         router antes de llegar acá.
         """
         return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)
+
+    async def obtener_desempeno_por_comision(
+        self, materia_id: UUID, comision_id: UUID
+    ) -> list[DesempenoComisionFila]:
+        """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20)."""
+        return await self._obtener_desempeno_por_comision.execute(materia_id, comision_id)

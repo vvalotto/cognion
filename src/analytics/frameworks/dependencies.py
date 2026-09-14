@@ -42,6 +42,9 @@ from src.analytics.interface_adapters.controllers.analytics_controller import (
 from src.analytics.use_cases.obtener_desempeno_estudiante import (
     ObtenerDesempenoEstudianteUseCase,
 )
+from src.analytics.use_cases.obtener_desempeno_por_comision import (
+    ObtenerDesempenoPorComisionUseCase,
+)
 from src.analytics.use_cases.obtener_tasa_error_por_tema import (
     ObtenerTasaErrorPorTemaUseCase,
 )
@@ -87,6 +90,7 @@ def get_analytics_controller(session: SessionDep) -> AnalyticsController:
         ObtenerTasaErrorPorTemaUseCase(
             evaluacion_desempeno_consulta, comision_consulta, pregunta_metadato_consulta
         ),
+        ObtenerDesempenoPorComisionUseCase(comision_consulta, evaluacion_desempeno_consulta),
     )
 
 
