@@ -30,6 +30,18 @@ class EvaluacionDesempenoResumen:
 
 
 @dataclass(frozen=True)
+class ActividadResumen:
+    """Metadatos mínimos de una actividad para resolver su roster aplicable (`US-ADJ-47`).
+
+    `comisiones_ids` vacío = visible a todas las comisiones de la materia, mismo significado
+    que en `ActividadEvaluativaPeriodoAbierto` (BC Actividad Evaluativa).
+    """
+
+    materia_id: UUID
+    comisiones_ids: frozenset[UUID]
+
+
+@dataclass(frozen=True)
 class RespuestaVigente:
     """Una respuesta vigente (INV-AE-09) de una `Evaluacion` finalizada de una materia.
 
@@ -78,4 +90,34 @@ class EvaluacionDesempenoConsultaPort(ABC):
         creación. "Visible" es `comisiones_ids` vacío (todas las comisiones de la materia) o
         `comision_id ∈ comisiones_ids`. Insumo de "actividades pendientes" en
         `ObtenerDesempenoPorComisionUseCase` (`US-ADJ-44`).
+        """
+
+    @abstractmethod
+    async def obtener_titulos_actividades(self, actividad_ids: list[UUID]) -> dict[UUID, str]:
+        """Resuelve el `titulo` *actual* de cada `actividad_id` (RF-21).
+
+        `titulo` puede haber cambiado por `TituloActividadModificado` desde la creación — se
+        reconstruye el stream completo, mismo criterio que `listar_actividades_abiertas`
+        (`US-ADJ-44`). `actividad_ids` vacía devuelve `dict` vacío, sin consultar la base. Un
+        id que no corresponde a ninguna actividad simplemente no aparece en el resultado.
+        """
+
+    @abstractmethod
+    async def obtener_actividad_resumen(self, actividad_id: UUID) -> ActividadResumen | None:
+        """Resuelve `materia_id`/`comisiones_ids` de una actividad, o `None` si no existe (RF-23).
+
+        Insumo para resolver el roster aplicable de `ObtenerCompletitudPorActividadUseCase`
+        (`US-ADJ-47`) — reusa el mismo cruce hacia `ActividadEvaluativaPeriodoAbierto` que
+        `listar_actividades_abiertas` (`US-ADJ-44`).
+        """
+
+    @abstractmethod
+    async def listar_estados_de_actividad(
+        self, actividad_id: UUID, estudiante_ids: list[UUID]
+    ) -> dict[UUID, str]:
+        """Estado (`"en_curso"`, `"suspendida"` o `"finalizada"`) de la `Evaluacion` de cada
+        estudiante de `estudiante_ids` para `actividad_id` (RF-23).
+
+        Un `estudiante_id` ausente del dict nunca inició esa actividad — "sin_iniciar" es
+        responsabilidad del Use Case, no de este puerto.
         """

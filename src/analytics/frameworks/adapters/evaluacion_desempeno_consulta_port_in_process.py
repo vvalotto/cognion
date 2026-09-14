@@ -24,9 +24,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
     ActividadEvaluativaPeriodoAbierto,
 )
+from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion, Evaluacion
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 from src.actividad_evaluativa.frameworks.db.models import EventoModel
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
+    ActividadResumen,
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
     RespuestaVigente,
@@ -37,6 +39,11 @@ AGGREGATE_TYPE_ACTIVIDAD = "ActividadEvaluativaPeriodoAbierto"
 EVENT_TYPE_INICIADA = "EvaluacionIniciada"
 EVENT_TYPE_FINALIZADA = "EvaluacionFinalizada"
 EVENT_TYPE_RESPUESTA = "RespuestaRegistrada"
+_ESTADO_A_TEXTO = {
+    EstadoEvaluacion.EN_CURSO: "en_curso",
+    EstadoEvaluacion.SUSPENDIDA: "suspendida",
+    EstadoEvaluacion.FINALIZADA: "finalizada",
+}
 
 
 class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
@@ -51,26 +58,13 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
     ) -> list[EvaluacionDesempenoResumen]:
         """Ver `EvaluacionDesempenoConsultaPort.listar_evaluaciones_finalizadas`."""
         streams = await _todos_los_streams_evaluacion(self._session)
-        eventos_evaluacion = [
-            eventos
-            for eventos in streams
-            if eventos[0].payload["estudiante_id"] == str(estudiante_id)
-        ]
+        eventos_evaluacion = _streams_de_estudiante(streams, estudiante_id)
         if not eventos_evaluacion:
             return []
 
         actividad_ids = {UUID(eventos[0].payload["actividad_id"]) for eventos in eventos_evaluacion}
         materia_por_actividad = await _materia_por_actividad(self._session, actividad_ids)
-
-        resumenes = []
-        for eventos in eventos_evaluacion:
-            resumen = _resumen_de_stream(eventos, materia_por_actividad)
-            if resumen is None:
-                continue
-            if materia_id is not None and resumen.materia_id != materia_id:
-                continue
-            resumenes.append(resumen)
-        return resumenes
+        return _resumenes_filtrados(eventos_evaluacion, materia_por_actividad, materia_id)
 
     async def listar_respuestas_vigentes_de_materia(
         self, materia_id: UUID, estudiante_ids: list[UUID] | None
@@ -109,6 +103,36 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
             if _actividad_abierta_y_visible(actividad, comision_id, ahora)
         ]
 
+    async def obtener_titulos_actividades(self, actividad_ids: list[UUID]) -> dict[UUID, str]:
+        """Ver `EvaluacionDesempenoConsultaPort.obtener_titulos_actividades`."""
+        if not actividad_ids:
+            return {}
+        streams = await _streams_de_actividades(self._session, set(actividad_ids))
+        return {
+            actividad.id: actividad.titulo
+            for actividad in (
+                ActividadEvaluativaPeriodoAbierto.reconstruir(eventos) for eventos in streams
+            )
+        }
+
+    async def obtener_actividad_resumen(self, actividad_id: UUID) -> ActividadResumen | None:
+        """Ver `EvaluacionDesempenoConsultaPort.obtener_actividad_resumen`."""
+        streams = await _streams_de_actividades(self._session, {actividad_id})
+        if not streams:
+            return None
+        actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(streams[0])
+        return ActividadResumen(
+            materia_id=actividad.materia_id, comisiones_ids=actividad.comisiones_ids
+        )
+
+    async def listar_estados_de_actividad(
+        self, actividad_id: UUID, estudiante_ids: list[UUID]
+    ) -> dict[UUID, str]:
+        """Ver `EvaluacionDesempenoConsultaPort.listar_estados_de_actividad`."""
+        streams = await _todos_los_streams_evaluacion(self._session)
+        estudiante_ids_str = {str(estudiante_id) for estudiante_id in estudiante_ids}
+        return _estados_por_estudiante(streams, actividad_id, estudiante_ids_str)
+
 
 async def _todos_los_streams_evaluacion(session: AsyncSession) -> list[list[EventoModel]]:
     """Agrupa todos los eventos de `Evaluacion` por stream, ordenados dentro de cada uno.
@@ -129,6 +153,26 @@ async def _todos_los_streams_evaluacion(session: AsyncSession) -> list[list[Even
             continue
         streams.append(eventos)
     return streams
+
+
+def _estados_por_estudiante(
+    streams: list[list[EventoModel]], actividad_id: UUID, estudiante_ids_str: set[str]
+) -> dict[UUID, str]:
+    """Resuelve el estado de la `Evaluacion` de cada estudiante para `actividad_id` (US-ADJ-47).
+
+    Función de módulo (no método) — mismo criterio de WMC que el resto de este archivo. Reusa
+    `Evaluacion.reconstruir()` en vez de reimplementar el dispatch por `event_type`.
+    """
+    resultado: dict[UUID, str] = {}
+    for eventos in streams:
+        primero = eventos[0]
+        if primero.payload["actividad_id"] != str(actividad_id):
+            continue
+        if primero.payload["estudiante_id"] not in estudiante_ids_str:
+            continue
+        evaluacion = Evaluacion.reconstruir([_a_evento_almacenado(evento) for evento in eventos])
+        resultado[evaluacion.estudiante_id] = _ESTADO_A_TEXTO[evaluacion.estado]
+    return resultado
 
 
 async def _materia_por_actividad(
@@ -152,6 +196,39 @@ async def _materia_por_actividad(
         modelo.aggregate_id: UUID(modelo.payload["materia_id"])
         for modelo in resultado.scalars().all()
     }
+
+
+def _streams_de_estudiante(
+    streams: list[list[EventoModel]], estudiante_id: UUID
+) -> list[list[EventoModel]]:
+    """Filtra los streams de `Evaluacion` que pertenecen al estudiante indicado.
+
+    Función de módulo — mismo criterio de WMC que el resto de este archivo (mantener
+    `EvaluacionDesempenoConsultaPortInProcess` bajo el umbral de `DesignReviewer`).
+    """
+    return [
+        eventos for eventos in streams if eventos[0].payload["estudiante_id"] == str(estudiante_id)
+    ]
+
+
+def _resumenes_filtrados(
+    eventos_evaluacion: list[list[EventoModel]],
+    materia_por_actividad: dict[UUID, UUID],
+    materia_id: UUID | None,
+) -> list[EvaluacionDesempenoResumen]:
+    """Deriva el resumen de cada stream y descarta los que no finalizaron o no matchean materia.
+
+    Función de módulo (no método) — mismo criterio de WMC que el resto de este archivo.
+    """
+    resumenes = []
+    for eventos in eventos_evaluacion:
+        resumen = _resumen_de_stream(eventos, materia_por_actividad)
+        if resumen is None:
+            continue
+        if materia_id is not None and resumen.materia_id != materia_id:
+            continue
+        resumenes.append(resumen)
+    return resumenes
 
 
 def _resumen_de_stream(
@@ -252,6 +329,30 @@ async def _streams_actividad_de_materia(
             continue
         streams.append([_a_evento_almacenado(evento) for evento in eventos])
     return streams
+
+
+async def _streams_de_actividades(
+    session: AsyncSession, actividad_ids: set[UUID]
+) -> list[list[EventoAlmacenado]]:
+    """Streams completos de `ActividadEvaluativaPeriodoAbierto` por id exacto (`US-ADJ-45`).
+
+    A diferencia de `_streams_actividad_de_materia` (filtra por `materia_id`, sin conocer los
+    ids de antemano), acá ya se conocen los `actividad_id` exactos desde los resúmenes de
+    evaluación — resolver por `aggregate_id.in_(...)` es más preciso y liviano.
+    """
+    resultado = await session.execute(
+        select(EventoModel)
+        .where(
+            EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD,
+            EventoModel.aggregate_id.in_(actividad_ids),
+        )
+        .order_by(EventoModel.aggregate_id, EventoModel.sequence_number)
+    )
+    modelos = resultado.scalars().all()
+    return [
+        [_a_evento_almacenado(evento) for evento in grupo_iter]
+        for _, grupo_iter in groupby(modelos, key=lambda modelo: modelo.aggregate_id)
+    ]
 
 
 def _a_evento_almacenado(evento: EventoModel) -> EventoAlmacenado:
