@@ -23,6 +23,8 @@ import { EliminarCuenta } from "@/pages/cuentas/EliminarCuenta"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
 import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
+import { DesempenoPorComision } from "@/pages/analytics/DesempenoPorComision"
+import { DesempenoPorComisionDetalleEstudiante } from "@/pages/analytics/DesempenoPorComisionDetalleEstudiante"
 import { DesempenoPorTema } from "@/pages/analytics/DesempenoPorTema"
 import { EditarPregunta } from "@/pages/banco-preguntas/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/actividad-evaluativa/EditarTituloActividad"
@@ -60,6 +62,7 @@ import { RegistroExito } from "@/pages/identidad/RegistroExito"
 import { RendirEvaluacion } from "@/pages/actividad-evaluativa/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/cuentas/ResetearPassword"
 import { RevisionEvaluacion } from "@/pages/actividad-evaluativa/RevisionEvaluacion"
+import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionDocente"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -409,6 +412,30 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="estudiante">
             <MiDesempeno />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision",
+        element: (
+          <RequireRole rol="docente">
+            <DesempenoPorComision />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId",
+        element: (
+          <RequireRole rol="docente">
+            <DesempenoPorComisionDetalleEstudiante />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId/evaluaciones/:evaluacionId/revision",
+        element: (
+          <RequireRole rol="docente">
+            <RevisionEvaluacionDocente />
           </RequireRole>
         ),
       },

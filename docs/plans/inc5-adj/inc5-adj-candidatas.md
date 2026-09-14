@@ -197,7 +197,7 @@ orden entre RFs, backend siempre antes que su propio frontend.
 [#358](https://github.com/vvalotto/cognion/issues/358)), `US-ADJ-49.md` (Issue
 [#359](https://github.com/vvalotto/cognion/issues/359)), `US-ADJ-50.md` (Issue
 [#360](https://github.com/vvalotto/cognion/issues/360)), `US-ADJ-51.md` (Issue
-[#361](https://github.com/vvalotto/cognion/issues/361)) — ninguna implementada todavía. Dos
+[#361](https://github.com/vvalotto/cognion/issues/361)). Dos
 gaps detectados durante la escritura de las specs, ambos resueltos ampliando puertos ya
 existentes en vez de crear nuevos: `US-ADJ-45` necesita título de actividad para el eje X del
 gráfico de evolución (`BC-analytics-modelo.md` §8.3 no lo preveía); `US-ADJ-44`/`US-ADJ-47`
@@ -206,6 +206,17 @@ por primera vez desde Analytics, ya anticipado en `BC-analytics-modelo.md` §8.2
 de revisión de evaluación ajena (`US-ADJ-44`) sigue el mismo precedente de RBAC por rol sin
 verificación de pertenencia Docente↔Materia ya vigente en `US-4.2.1` — el dominio actual no
 modela esa relación (`Comision.docentes_asignados` liga Docente↔Comisión, no Materia).
+
+`US-ADJ-44` a `47` (backend) cerradas 2026-09-14. **`US-ADJ-48`** (RF-20, frontend) cerrada
+2026-09-14, `docs/reports/inc5-adj/US-ADJ-48-report.md`: cliente API
+`obtenerDesempenoPorComision`, pantalla `DesempenoPorComision.tsx` (selectores Materia→Comisión,
+tabla ordenable) con dos niveles de drill-down —
+`DesempenoPorComisionDetalleEstudiante.tsx` (reusa `DesempenoResumenDetalle.tsx`, que gana un
+`onFilaClick` opcional sin afectar `US-4.1.3`/`US-4.2.5`) y `RevisionEvaluacionDocente.tsx`
+(reusa el contenido visual extraído de `RevisionEvaluacion.tsx` a un componente compartido
+nuevo, `RevisionEvaluacionContenido.tsx`, parametrizado por la etiqueta de "respuesta propia").
+Cierra completo el par backend→frontend de RF-20. Quedan `US-ADJ-49`/`50`/`51` (frontend de
+RF-21/22/23) para completar la Iteración 4.
 
 ---
 

@@ -38,17 +38,21 @@ interface DesempenoResumenDetalleProps {
   desempeno: DesempenoEstudianteResponse
   filas: FilaDesempeno[]
   mensajeVacio: string
+  onFilaClick?: (evaluacionId: string) => void
 }
 
 /**
  * Resumen acumulado + detalle por evaluación — componente visual único compartido por
- * "Mi desempeño" (`US-4.1.3`) y "Desempeño por alumno" (`US-4.2.5`), solo cambia el origen
- * de los datos (wireframes-analytics.md §4, hot spot 2).
+ * "Mi desempeño" (`US-4.1.3`), "Desempeño por alumno" (`US-4.2.5`) y el drill-down 1° de
+ * "Desempeño por comisión" (`US-ADJ-48`), solo cambia el origen de los datos
+ * (wireframes-analytics.md §4, hot spot 2). `onFilaClick` es opcional — sin él, cada
+ * `.eval-item` se muestra sin drill-down 2° (comportamiento sin cambios de `US-4.1.3`/`4.2.5`).
  */
 export function DesempenoResumenDetalle({
   desempeno,
   filas,
   mensajeVacio,
+  onFilaClick,
 }: DesempenoResumenDetalleProps) {
   if (filas.length === 0) {
     return <p className="mt-4 text-sm text-muted-foreground">{mensajeVacio}</p>
@@ -83,7 +87,22 @@ export function DesempenoResumenDetalle({
 
       <div className="flex flex-col gap-3">
         {filas.map((fila) => (
-          <Card key={fila.evaluacionId} className="flex items-center justify-between gap-3 p-4">
+          <Card
+            key={fila.evaluacionId}
+            className={`eval-item flex items-center justify-between gap-3 p-4 ${
+              onFilaClick ? "cursor-pointer hover:bg-accent" : ""
+            }`}
+            role={onFilaClick ? "button" : undefined}
+            tabIndex={onFilaClick ? 0 : undefined}
+            onClick={onFilaClick ? () => onFilaClick(fila.evaluacionId) : undefined}
+            onKeyDown={
+              onFilaClick
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") onFilaClick(fila.evaluacionId)
+                  }
+                : undefined
+            }
+          >
             <div>
               <p className="text-sm font-semibold">{fila.titulo}</p>
               <p className="text-xs text-muted-foreground">

@@ -443,6 +443,48 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Mi desempeño" })).toBeInTheDocument()
   })
 
+  it("la ruta /analytics/desempeno-por-comision muestra acceso denegado con sesión de estudiante", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/analytics/desempeno-por-comision")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /analytics/desempeno-por-comision renderiza Desempeño por comisión con sesión de docente", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/analytics/desempeno-por-comision")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Desempeño por comisión" }),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta de drill-down 1° de desempeño por comisión renderiza el detalle del estudiante con sesión de docente (US-ADJ-48)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Detalle del estudiante" }),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta de drill-down 2° de desempeño por comisión renderiza la revisión con sesión de docente (US-ADJ-48)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1/evaluaciones/ev1/revision",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Revisión completa" }),
+    ).toBeInTheDocument()
+  })
+
   describe("AppNav — navegación real por clic (US-ADJ-27)", () => {
     it("Docente navega de Mis materias a Banco de Preguntas por el menú", async () => {
       setSession({ token: "t", rol: "docente" })
@@ -454,6 +496,20 @@ describe("router (integración)", () => {
       await user.click(screen.getByRole("link", { name: "Banco de Preguntas" }))
 
       expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
+    })
+
+    it("Docente navega a Desempeño por comisión por el menú (US-ADJ-48)", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/actividad-evaluativa/materias")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Mis materias" })
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "Desempeño por comisión" }))
+
+      expect(
+        await screen.findByRole("heading", { name: "Desempeño por comisión" }),
+      ).toBeInTheDocument()
     })
 
     it("Administrador navega a Comisiones por el menú", async () => {
