@@ -1,4 +1,4 @@
-"""Tests unitarios de `ObtenerDesempenoPorComisionUseCase` (US-ADJ-44)."""
+"""Tests unitarios de `ObtenerEvolucionTemporalComisionUseCase` (US-ADJ-45)."""
 
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -15,8 +15,8 @@ from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
 )
-from src.analytics.use_cases.obtener_desempeno_por_comision import (
-    ObtenerDesempenoPorComisionUseCase,
+from src.analytics.use_cases.obtener_evolucion_temporal_comision import (
+    ObtenerEvolucionTemporalComisionUseCase,
 )
 
 
@@ -24,10 +24,10 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
     def __init__(
         self,
         resumenes_por_estudiante: dict | None = None,
-        actividades_abiertas: list | None = None,
+        titulos: dict | None = None,
     ) -> None:
         self._resumenes_por_estudiante = resumenes_por_estudiante or {}
-        self._actividades_abiertas = actividades_abiertas or []
+        self._titulos = titulos or {}
 
     async def listar_evaluaciones_finalizadas(self, estudiante_id, materia_id):
         return self._resumenes_por_estudiante.get(estudiante_id, [])
@@ -36,10 +36,10 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         raise NotImplementedError
 
     async def listar_actividades_abiertas(self, materia_id, comision_id):
-        return self._actividades_abiertas
+        raise NotImplementedError
 
     async def obtener_titulos_actividades(self, actividad_ids):
-        raise NotImplementedError
+        return {aid: self._titulos[aid] for aid in actividad_ids if aid in self._titulos}
 
     async def obtener_actividad_resumen(self, actividad_id):
         raise NotImplementedError
@@ -64,22 +64,22 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
         return self._estudiantes
 
 
-def _resumen(actividad_id, correctas: int, incorrectas: int) -> EvaluacionDesempenoResumen:
+def _resumen(actividad_id, finalizada_en, correctas, incorrectas) -> EvaluacionDesempenoResumen:
     return EvaluacionDesempenoResumen(
         evaluacion_id=uuid4(),
         actividad_id=actividad_id,
         materia_id=uuid4(),
-        finalizada_en=datetime(2026, 1, 1, tzinfo=UTC),
+        finalizada_en=finalizada_en,
         cantidad_correctas=correctas,
         cantidad_incorrectas=incorrectas,
     )
 
 
-class TestObtenerDesempenoPorComisionUseCase:
+class TestObtenerEvolucionTemporalComisionUseCase:
     @pytest.mark.asyncio
     async def test_comision_que_no_pertenece_a_la_materia_levanta_error(self):
         materia_id, comision_id = uuid4(), uuid4()
-        use_case = ObtenerDesempenoPorComisionUseCase(
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
             _ComisionConsultaPortFake(comisiones=[ComisionResumen(id=uuid4(), horario="lu 10-12")]),
             _EvaluacionDesempenoConsultaPortFake(),
         )
@@ -88,11 +88,13 @@ class TestObtenerDesempenoPorComisionUseCase:
             await use_case.execute(materia_id, comision_id)
 
     @pytest.mark.asyncio
-    async def test_comision_sin_estudiantes_devuelve_lista_vacia(self):
+    async def test_comision_sin_evaluaciones_finalizadas_devuelve_lista_vacia(self):
         materia_id, comision_id = uuid4(), uuid4()
-        use_case = ObtenerDesempenoPorComisionUseCase(
+        estudiante = EstudianteResumen(id=uuid4(), nombre="Ana")
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
             _ComisionConsultaPortFake(
-                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")]
+                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
+                estudiantes=[estudiante],
             ),
             _EvaluacionDesempenoConsultaPortFake(),
         )
@@ -102,108 +104,77 @@ class TestObtenerDesempenoPorComisionUseCase:
         assert resultado == []
 
     @pytest.mark.asyncio
-    async def test_estudiante_sin_evaluaciones_finalizadas_tiene_sin_datos(self):
+    async def test_promedia_solo_entre_quienes_finalizaron_la_actividad(self):
         materia_id, comision_id = uuid4(), uuid4()
-        estudiante = EstudianteResumen(id=uuid4(), nombre="Ana Pérez")
-        actividad_abierta = uuid4()
-        use_case = ObtenerDesempenoPorComisionUseCase(
+        actividad_id = uuid4()
+        estudiante_1 = EstudianteResumen(id=uuid4(), nombre="A")
+        estudiante_2 = EstudianteResumen(id=uuid4(), nombre="B")
+        estudiante_3 = EstudianteResumen(id=uuid4(), nombre="C")
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
             _ComisionConsultaPortFake(
                 comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
-                estudiantes=[estudiante],
+                estudiantes=[estudiante_1, estudiante_2, estudiante_3],
             ),
             _EvaluacionDesempenoConsultaPortFake(
-                resumenes_por_estudiante={},
-                actividades_abiertas=[actividad_abierta],
+                resumenes_por_estudiante={
+                    estudiante_1.id: [
+                        _resumen(actividad_id, datetime(2026, 1, 1, tzinfo=UTC), 4, 0)
+                    ],
+                    estudiante_2.id: [
+                        _resumen(actividad_id, datetime(2026, 1, 1, tzinfo=UTC), 2, 2)
+                    ],
+                    estudiante_3.id: [],
+                }
             ),
         )
 
         resultado = await use_case.execute(materia_id, comision_id)
 
         assert len(resultado) == 1
-        assert resultado[0].estudiante_id == estudiante.id
-        assert resultado[0].porcentaje_aciertos_acumulado is None
-        assert resultado[0].actividades_pendientes == 1
+        assert resultado[0].porcentaje_aciertos_promedio == 75.0
 
     @pytest.mark.asyncio
-    async def test_estudiante_con_evaluaciones_calcula_porcentaje_y_pendientes(self):
+    async def test_ordena_por_min_finalizada_en_del_grupo(self):
         materia_id, comision_id = uuid4(), uuid4()
-        estudiante = EstudianteResumen(id=uuid4(), nombre="Juan López")
-        actividad_rendida, actividad_pendiente = uuid4(), uuid4()
-        use_case = ObtenerDesempenoPorComisionUseCase(
+        actividad_vieja, actividad_nueva = uuid4(), uuid4()
+        estudiante = EstudianteResumen(id=uuid4(), nombre="A")
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
             _ComisionConsultaPortFake(
                 comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
                 estudiantes=[estudiante],
             ),
             _EvaluacionDesempenoConsultaPortFake(
                 resumenes_por_estudiante={
-                    estudiante.id: [_resumen(actividad_rendida, correctas=3, incorrectas=1)]
-                },
-                actividades_abiertas=[actividad_rendida, actividad_pendiente],
+                    estudiante.id: [
+                        _resumen(actividad_nueva, datetime(2026, 2, 1, tzinfo=UTC), 1, 0),
+                        _resumen(actividad_vieja, datetime(2026, 1, 1, tzinfo=UTC), 1, 0),
+                    ]
+                }
             ),
         )
 
         resultado = await use_case.execute(materia_id, comision_id)
 
-        assert resultado[0].porcentaje_aciertos_acumulado == 75.0
-        assert resultado[0].actividades_pendientes == 1
+        assert [punto.actividad_id for punto in resultado] == [actividad_vieja, actividad_nueva]
 
     @pytest.mark.asyncio
-    async def test_estudiante_finalizo_todas_las_abiertas_no_tiene_pendientes(self):
+    async def test_resuelve_titulo_de_cada_actividad(self):
         materia_id, comision_id = uuid4(), uuid4()
-        estudiante = EstudianteResumen(id=uuid4(), nombre="Marta Díaz")
         actividad_id = uuid4()
-        use_case = ObtenerDesempenoPorComisionUseCase(
+        estudiante = EstudianteResumen(id=uuid4(), nombre="A")
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
             _ComisionConsultaPortFake(
                 comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
                 estudiantes=[estudiante],
             ),
             _EvaluacionDesempenoConsultaPortFake(
                 resumenes_por_estudiante={
-                    estudiante.id: [_resumen(actividad_id, correctas=1, incorrectas=0)]
+                    estudiante.id: [_resumen(actividad_id, datetime(2026, 1, 1, tzinfo=UTC), 1, 0)]
                 },
-                actividades_abiertas=[actividad_id],
+                titulos={actividad_id: "Parcial 1"},
             ),
         )
 
         resultado = await use_case.execute(materia_id, comision_id)
 
-        assert resultado[0].actividades_pendientes == 0
-
-    @pytest.mark.asyncio
-    async def test_evaluacion_finalizada_sin_respuestas_no_divide_por_cero(self):
-        """Caso límite: `Evaluacion` finalizada sin ninguna pregunta correcta/incorrecta."""
-        materia_id, comision_id = uuid4(), uuid4()
-        estudiante = EstudianteResumen(id=uuid4(), nombre="Sin Respuestas")
-        actividad_id = uuid4()
-        use_case = ObtenerDesempenoPorComisionUseCase(
-            _ComisionConsultaPortFake(
-                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
-                estudiantes=[estudiante],
-            ),
-            _EvaluacionDesempenoConsultaPortFake(
-                resumenes_por_estudiante={
-                    estudiante.id: [_resumen(actividad_id, correctas=0, incorrectas=0)]
-                },
-            ),
-        )
-
-        resultado = await use_case.execute(materia_id, comision_id)
-
-        assert resultado[0].porcentaje_aciertos_acumulado == 0.0
-
-    @pytest.mark.asyncio
-    async def test_multiples_estudiantes_una_fila_por_cada_uno(self):
-        materia_id, comision_id = uuid4(), uuid4()
-        estudiante_1 = EstudianteResumen(id=uuid4(), nombre="A")
-        estudiante_2 = EstudianteResumen(id=uuid4(), nombre="B")
-        use_case = ObtenerDesempenoPorComisionUseCase(
-            _ComisionConsultaPortFake(
-                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
-                estudiantes=[estudiante_1, estudiante_2],
-            ),
-            _EvaluacionDesempenoConsultaPortFake(),
-        )
-
-        resultado = await use_case.execute(materia_id, comision_id)
-
-        assert {fila.estudiante_id for fila in resultado} == {estudiante_1.id, estudiante_2.id}
+        assert resultado[0].titulo_actividad == "Parcial 1"

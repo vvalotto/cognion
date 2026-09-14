@@ -31,6 +31,15 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
     async def listar_actividades_abiertas(self, materia_id, comision_id):
         raise NotImplementedError
 
+    async def obtener_titulos_actividades(self, actividad_ids):
+        raise NotImplementedError
+
+    async def obtener_actividad_resumen(self, actividad_id):
+        raise NotImplementedError
+
+    async def listar_estados_de_actividad(self, actividad_id, estudiante_ids):
+        raise NotImplementedError
+
 
 def _resumen(
     finalizada_en: datetime, correctas: int, incorrectas: int
@@ -115,6 +124,15 @@ class TestObtenerDesempenoEstudianteUseCase:
                 raise NotImplementedError
 
             async def listar_actividades_abiertas(self, materia_id, comision_id):
+                raise NotImplementedError
+
+            async def obtener_titulos_actividades(self, actividad_ids):
+                raise NotImplementedError
+
+            async def obtener_actividad_resumen(self, actividad_id):
+                raise NotImplementedError
+
+            async def listar_estados_de_actividad(self, actividad_id, estudiante_ids):
                 raise NotImplementedError
 
         use_case = ObtenerDesempenoEstudianteUseCase(_PuertoQueRegistraLlamada())
