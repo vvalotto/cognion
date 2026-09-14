@@ -10,6 +10,55 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- [US-ADJ-47] Docente consulta la completitud de una actividad puntual (RF-23)
+  - Backend nuevo (BC Analytics): `GET /analytics/actividades/{actividad_id}/completitud`
+    (rol `docente`) — resumen (`finalizadas`/`en_curso`/`suspendidas`/`sin_iniciar`) y detalle
+    por estudiante del roster aplicable (comisión(es) restringida(s) de la actividad, o toda la
+    materia si no hay restricción); `actividad_id` inexistente → 404
+  - `EvaluacionDesempenoConsultaPort` gana `obtener_actividad_resumen` (reusa
+    `ActividadEvaluativaPeriodoAbierto.reconstruir()`, mismo cruce que
+    `listar_actividades_abiertas`, `US-ADJ-44`) y `listar_estados_de_actividad` (primer método
+    de Analytics que reconstruye `Evaluacion` completa con `.reconstruir()`, en vez de leer el
+    payload crudo, para resolver el estado exacto de cada estudiante)
+  - **Refactor de arquitectura:** tercer controller, `AnalyticsCompletitudController` — agregar
+    este Use Case a `AnalyticsInformesController` disparó CRITICAL de CBO (11/10), mismo
+    criterio de separación por responsabilidad ya aplicado en `US-ADJ-46`
+  - Cuarta y última US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) —
+    backend del par RF-23, consumido por `US-ADJ-51` (frontend, pendiente); cierra completo el
+    backend de la Iteración 4
+  - Implementada junto con `US-ADJ-44`/`45`/`46` en una sola ejecución/PR (decisión de Víctor)
+  - 1196/1196 tests del proyecto en verde, quality gates APROBADO (pylint 9.69/10, coverage 100%)
+
+- [US-ADJ-46] Docente consulta el ranking de preguntas más falladas (RF-22)
+  - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/ranking-preguntas-falladas?comision_id=`
+    (rol `docente`) — una fila por pregunta presentada, ordenada por tasa de error descendente
+    (no conteo bruto), con enunciado
+  - `MetadatoPreguntaResumen`/`PreguntaMetadatoConsultaPort` ganan el campo `enunciado`
+    (mapea a `PreguntaPlantillaModel.texto`, mismo método `obtener_metadatos`)
+  - Reusa exactamente la fuente de `US-4.2.4` (RF-17), agrupando por `pregunta_id` en vez de
+    `(unidad_tematica, tema)`
+  - **Refactor de arquitectura:** `AnalyticsController` separado en dos — desempeño individual
+    (`AnalyticsController`) e informes agregados de comisión/materia
+    (`AnalyticsInformesController`, nuevo) — el 6° Use Case disparó CRITICAL de CBO (13/10),
+    mismo criterio de separación por responsabilidad ya aplicado en Incremento 2
+  - Tercera US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) — backend del
+    par RF-22, consumido por `US-ADJ-50` (frontend, pendiente)
+  - Implementada junto con `US-ADJ-44`/`45`/`47` en una sola ejecución/PR (decisión de Víctor)
+  - 1169/1169 tests del proyecto en verde, quality gates APROBADO (pylint 9.82/10, coverage 100%)
+
+- [US-ADJ-45] Docente consulta la evolución temporal de aciertos (RF-21)
+  - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/estudiantes/{estudiante_id}/evolucion-temporal`
+    (serie individual, ordenada cronológicamente, con título de cada actividad) y
+    `GET /analytics/materias/{materia_id}/comisiones/{comision_id}/evolucion-temporal`
+    (promedio simple por actividad entre quienes la finalizaron), ambos rol `docente`
+  - `EvaluacionDesempenoConsultaPort` gana `obtener_titulos_actividades` — resuelve el
+    `titulo` *actual* de cada actividad (reusa `.reconstruir()`, mismo criterio que
+    `listar_actividades_abiertas`, `US-ADJ-44`)
+  - Segunda US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) — backend del
+    par RF-21, consumido por `US-ADJ-49` (frontend, pendiente)
+  - Implementada junto con `US-ADJ-46`/`47` en una sola ejecución/PR (decisión de Víctor)
+  - 1148/1148 tests del proyecto en verde, quality gates APROBADO (pylint 9.92/10, coverage 100%)
+
 - [US-ADJ-44] Docente consulta el desempeño de una Comisión completa (RF-20)
   - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/comisiones/{comision_id}/desempeno`
     (rol `docente`) — una fila por estudiante del roster: `porcentaje_aciertos_acumulado`

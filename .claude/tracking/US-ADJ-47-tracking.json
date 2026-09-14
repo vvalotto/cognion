@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-47",
+    "us_title": "Docente consulta la completitud de una actividad puntual",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-14T15:08:24.061331+00:00",
+    "completed_at": "2026-09-14T19:26:13.939838+00:00",
+    "total_elapsed_seconds": 15469,
+    "effective_seconds": 15469,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-14T15:08:24.181237+00:00",
+      "completed_at": "2026-09-14T15:08:56.721620+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-14T15:08:56.842711+00:00",
+      "completed_at": "2026-09-14T15:09:13.249020+00:00",
+      "elapsed_seconds": 16,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-14T15:09:13.370090+00:00",
+      "completed_at": "2026-09-14T15:10:15.175862+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-14T15:10:15.297720+00:00",
+      "completed_at": "2026-09-14T15:23:27.584194+00:00",
+      "elapsed_seconds": 792,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Entities: ActividadNoExiste",
+          "task_type": "entity",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-14T15:10:21.476526+00:00",
+          "completed_at": "2026-09-14T15:10:43.402721+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -4.65,
+          "file_created": "src/analytics/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Port+Adapter: completitud",
+          "task_type": "port",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-09-14T15:10:59.279194+00:00",
+          "completed_at": "2026-09-14T15:17:12.054049+00:00",
+          "elapsed_seconds": 372,
+          "actual_minutes": 6.2,
+          "variance_minutes": -18.8,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Use Case: ObtenerCompletitudPorActividad",
+          "task_type": "use_case",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-14T15:17:35.927946+00:00",
+          "completed_at": "2026-09-14T15:18:42.940709+00:00",
+          "elapsed_seconds": 67,
+          "actual_minutes": 1.12,
+          "variance_minutes": -18.88,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-14T15:23:33.467361+00:00",
+      "completed_at": "2026-09-14T15:25:28.002947+00:00",
+      "elapsed_seconds": 114,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-14T15:25:28.123570+00:00",
+      "completed_at": "2026-09-14T15:30:30.455442+00:00",
+      "elapsed_seconds": 302,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-14T15:30:30.586597+00:00",
+      "completed_at": "2026-09-14T15:36:39.815628+00:00",
+      "elapsed_seconds": 369,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-14T15:36:39.945364+00:00",
+      "completed_at": "2026-09-14T19:23:44.396739+00:00",
+      "elapsed_seconds": 13624,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-14T19:23:44.528037+00:00",
+      "completed_at": "2026-09-14T19:24:31.008423+00:00",
+      "elapsed_seconds": 46,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-14T19:24:31.209807+00:00",
+      "completed_at": "2026-09-14T19:26:13.798006+00:00",
+      "elapsed_seconds": 102,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 10,
+    "estimated_total_minutes": 50.0,
+    "actual_total_minutes": 7.67,
+    "variance_minutes": -42.33,
+    "variance_percent": -84.67
+  }
+}
