@@ -19,7 +19,7 @@ describe("AppNav", () => {
     cleanup()
   })
 
-  it("Docente ve sus 6 ítems", () => {
+  it("Docente ve sus 7 ítems", () => {
     renderAppNav("docente")
 
     expect(screen.getByText("Inicio")).toBeInTheDocument()
@@ -28,7 +28,8 @@ describe("AppNav", () => {
     expect(screen.getByText("Desempeño por comisión")).toBeInTheDocument()
     expect(screen.getByText("Desempeño por alumno")).toBeInTheDocument()
     expect(screen.getByText("Desempeño por tema")).toBeInTheDocument()
-    expect(screen.getAllByRole("link")).toHaveLength(6)
+    expect(screen.getByText("Preguntas más falladas")).toBeInTheDocument()
+    expect(screen.getAllByRole("link")).toHaveLength(7)
   })
 
   it("Estudiante ve sus 3 ítems", () => {

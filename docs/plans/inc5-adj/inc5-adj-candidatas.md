@@ -225,7 +225,15 @@ en `DesempenoPorComisionDetalleEstudiante.tsx` (`US-ADJ-48`), sin entrada en `Ap
 como especifica la spec. **Decisión operativa de Víctor 2026-09-14**: a partir de esta
 iteración, la verificación manual en navegador real no se repite US por US — se concentra en
 un solo pase al cierre completo de la Iteración 4, resembrando la base de datos para esa
-corrida. Quedan `US-ADJ-50`/`51` (frontend de RF-22/23) para completar la Iteración 4.
+corrida. **`US-ADJ-50`** (RF-22, frontend) cerrada 2026-09-14,
+`docs/reports/inc5-adj/US-ADJ-50-report.md`: cliente API `obtenerRankingPreguntasFalladas`,
+pantalla `RankingPreguntasFalladas.tsx` (mismo esqueleto que `DesempenoPorTema.tsx`, `US-4.2.6`
+— selectores Materia→Comisión, misma escala de severidad 50%/20%) con listado `.ranking-row`
+numerado por posición (índice de presentación en la lista, no un campo de la respuesta),
+enunciado truncado a una línea; entrada directa en `AppNav.tsx` ("Preguntas más falladas"), a
+diferencia de `EvolucionTemporal.tsx` (`US-ADJ-49`) que solo se accede por drill-down. Cierra
+completo el par backend→frontend de RF-22. Queda `US-ADJ-51` (frontend de RF-23) para
+completar la Iteración 4.
 
 ---
 

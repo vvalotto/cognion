@@ -27,6 +27,7 @@ import { DesempenoPorComision } from "@/pages/analytics/DesempenoPorComision"
 import { DesempenoPorComisionDetalleEstudiante } from "@/pages/analytics/DesempenoPorComisionDetalleEstudiante"
 import { DesempenoPorTema } from "@/pages/analytics/DesempenoPorTema"
 import { EvolucionTemporal } from "@/pages/analytics/EvolucionTemporal"
+import { RankingPreguntasFalladas } from "@/pages/analytics/RankingPreguntasFalladas"
 import { EditarPregunta } from "@/pages/banco-preguntas/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/actividad-evaluativa/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/banco-preguntas/EliminarPregunta"
@@ -461,6 +462,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <DesempenoPorTema />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/ranking-preguntas-falladas",
+        element: (
+          <RequireRole rol="docente">
+            <RankingPreguntasFalladas />
           </RequireRole>
         ),
       },
