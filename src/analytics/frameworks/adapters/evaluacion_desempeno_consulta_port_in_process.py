@@ -50,7 +50,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
         self, estudiante_id: UUID, materia_id: UUID | None
     ) -> list[EvaluacionDesempenoResumen]:
         """Ver `EvaluacionDesempenoConsultaPort.listar_evaluaciones_finalizadas`."""
-        streams = await self._todos_los_streams_evaluacion()
+        streams = await _todos_los_streams_evaluacion(self._session)
         eventos_evaluacion = [
             eventos
             for eventos in streams
@@ -60,7 +60,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
             return []
 
         actividad_ids = {UUID(eventos[0].payload["actividad_id"]) for eventos in eventos_evaluacion}
-        materia_por_actividad = await self._materia_por_actividad(actividad_ids)
+        materia_por_actividad = await _materia_por_actividad(self._session, actividad_ids)
 
         resumenes = []
         for eventos in eventos_evaluacion:
@@ -76,12 +76,12 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
         self, materia_id: UUID, estudiante_ids: list[UUID] | None
     ) -> list[RespuestaVigente]:
         """Ver `EvaluacionDesempenoConsultaPort.listar_respuestas_vigentes_de_materia`."""
-        streams = await self._todos_los_streams_evaluacion()
+        streams = await _todos_los_streams_evaluacion(self._session)
         if not streams:
             return []
 
         actividad_ids = {UUID(eventos[0].payload["actividad_id"]) for eventos in streams}
-        materia_por_actividad = await self._materia_por_actividad(actividad_ids)
+        materia_por_actividad = await _materia_por_actividad(self._session, actividad_ids)
         estudiante_ids_str = (
             {str(estudiante_id) for estudiante_id in estudiante_ids}
             if estudiante_ids is not None
@@ -109,41 +109,49 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
             if _actividad_abierta_y_visible(actividad, comision_id, ahora)
         ]
 
-    async def _todos_los_streams_evaluacion(self) -> list[list[EventoModel]]:
-        """Agrupa todos los eventos de `Evaluacion` por stream, ordenados dentro de cada uno."""
-        resultado = await self._session.execute(
-            select(EventoModel)
-            .where(EventoModel.aggregate_type == AGGREGATE_TYPE_EVALUACION)
-            .order_by(EventoModel.aggregate_id, EventoModel.sequence_number)
+
+async def _todos_los_streams_evaluacion(session: AsyncSession) -> list[list[EventoModel]]:
+    """Agrupa todos los eventos de `Evaluacion` por stream, ordenados dentro de cada uno.
+
+    Función de módulo (no método) — mismo criterio de WMC que el resto de este archivo.
+    """
+    resultado = await session.execute(
+        select(EventoModel)
+        .where(EventoModel.aggregate_type == AGGREGATE_TYPE_EVALUACION)
+        .order_by(EventoModel.aggregate_id, EventoModel.sequence_number)
+    )
+    modelos = resultado.scalars().all()
+
+    streams = []
+    for _, grupo_iter in groupby(modelos, key=lambda modelo: modelo.aggregate_id):
+        eventos = list(grupo_iter)
+        if eventos[0].event_type != EVENT_TYPE_INICIADA:
+            continue
+        streams.append(eventos)
+    return streams
+
+
+async def _materia_por_actividad(
+    session: AsyncSession, actividad_ids: set[UUID]
+) -> dict[UUID, UUID]:
+    """Resuelve `materia_id` de cada `actividad_id` leyendo el primer evento de su stream.
+
+    `materia_id` no cambia después de creada la actividad — no hace falta replay completo.
+    Función de módulo (no método) — mismo criterio de WMC que el resto de este archivo.
+    """
+    if not actividad_ids:
+        return {}
+    resultado = await session.execute(
+        select(EventoModel).where(
+            EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD,
+            EventoModel.aggregate_id.in_(actividad_ids),
+            EventoModel.sequence_number == 1,
         )
-        modelos = resultado.scalars().all()
-
-        streams = []
-        for _, grupo_iter in groupby(modelos, key=lambda modelo: modelo.aggregate_id):
-            eventos = list(grupo_iter)
-            if eventos[0].event_type != EVENT_TYPE_INICIADA:
-                continue
-            streams.append(eventos)
-        return streams
-
-    async def _materia_por_actividad(self, actividad_ids: set[UUID]) -> dict[UUID, UUID]:
-        """Resuelve `materia_id` de cada `actividad_id` leyendo el primer evento de su stream.
-
-        `materia_id` no cambia después de creada la actividad — no hace falta replay completo.
-        """
-        if not actividad_ids:
-            return {}
-        resultado = await self._session.execute(
-            select(EventoModel).where(
-                EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD,
-                EventoModel.aggregate_id.in_(actividad_ids),
-                EventoModel.sequence_number == 1,
-            )
-        )
-        return {
-            modelo.aggregate_id: UUID(modelo.payload["materia_id"])
-            for modelo in resultado.scalars().all()
-        }
+    )
+    return {
+        modelo.aggregate_id: UUID(modelo.payload["materia_id"])
+        for modelo in resultado.scalars().all()
+    }
 
 
 def _resumen_de_stream(
