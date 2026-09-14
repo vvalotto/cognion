@@ -6,6 +6,7 @@ vi.mock("@/router", () => ({
 
 import {
   obtenerDesempenoDeEstudiante,
+  obtenerDesempenoPorComision,
   obtenerMiDesempeno,
   obtenerTasaErrorPorTema,
 } from "@/lib/analytics-api"
@@ -191,6 +192,47 @@ describe("analytics-api", () => {
       const tasas = await obtenerTasaErrorPorTema("m1")
 
       expect(tasas).toEqual([])
+    })
+  })
+
+  describe("obtenerDesempenoPorComision", () => {
+    it("hace GET /analytics/materias/{materiaId}/comisiones/{comisionId}/desempeno y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            estudiante_id: "u1",
+            nombre: "Ana Pérez",
+            porcentaje_aciertos_acumulado: 82,
+            actividades_pendientes: 1,
+          },
+          {
+            estudiante_id: "u2",
+            nombre: "Juan Gómez",
+            porcentaje_aciertos_acumulado: null,
+            actividades_pendientes: 2,
+          },
+        ]),
+      )
+
+      const filas = await obtenerDesempenoPorComision("m1", "c1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/comisiones/c1/desempeno",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(filas).toEqual([
+        { estudianteId: "u1", nombre: "Ana Pérez", porcentajeAciertosAcumulado: 82, actividadesPendientes: 1 },
+        { estudianteId: "u2", nombre: "Juan Gómez", porcentajeAciertosAcumulado: null, actividadesPendientes: 2 },
+      ])
+    })
+
+    it("mapea una lista vacía (comisión sin estudiantes)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const filas = await obtenerDesempenoPorComision("m1", "c1")
+
+      expect(filas).toEqual([])
     })
   })
 })

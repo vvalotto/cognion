@@ -1,0 +1,56 @@
+{
+  "us_id": "US-ADJ-48",
+  "titulo": "Docente ve \"Desempeño por comisión\" con drill-down",
+  "tipo": "frontend puro, sin cambios de backend (consume US-ADJ-44 ya cerrado)",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 6
+    },
+    "tsc_b": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "469/469 (el flake preexistente de contención de CPU en NuevaPreguntaOpcionMultiple.test.tsx, documentado en US-ADJ-24/37, no se reprodujo en esta corrida)",
+      "archivos_nuevos": {
+        "DesempenoPorComision.test.tsx": "9/9 (nuevo)",
+        "DesempenoPorComisionDetalleEstudiante.test.tsx": "3/3 (nuevo)",
+        "RevisionEvaluacionDocente.test.tsx": "2/2 (nuevo)",
+        "DesempenoResumenDetalle.test.tsx": "6/6 (nuevo — cubre el `onFilaClick` opcional agregado)"
+      },
+      "archivos_modificados": {
+        "analytics-api.test.ts": "+2 casos (obtenerDesempenoPorComision)",
+        "router.test.tsx": "+6 casos (3 rutas nuevas + navegación por clic desde AppNav)",
+        "AppNav.test.tsx": "actualizado a 6 ítems del Docente (antes 5)",
+        "RevisionEvaluacion.test.tsx": "sin cambios — sigue pasando 4/4 tras extraer RevisionEvaluacionContenido.tsx"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "analytics-api.ts": { "statements": "100%", "branches": "100%", "functions": "100%" },
+      "DesempenoResumenDetalle.tsx": { "statements": "100%", "branches": "95%", "functions": "100%" },
+      "DesempenoPorComision.tsx": { "statements": "97.01%", "branches": "87.5%", "functions": "92.59%" },
+      "DesempenoPorComisionDetalleEstudiante.tsx": { "statements": "91.67%", "branches": "78.57%", "functions": "100%", "nota": "rama sin cubrir: chequeo de AbortError en el catch, mismo patrón inalcanzable en la práctica ya aceptado en DesempenoPorAlumno.tsx" },
+      "RevisionEvaluacionDocente.tsx": { "statements": "87.5%", "branches": "72.73%", "functions": "100%", "nota": "mismo patrón de guardas (!evaluacionId, AbortError) ya aceptado en RevisionEvaluacion.tsx" },
+      "RevisionEvaluacionContenido.tsx": { "statements": "100%", "branches": "88.89%", "functions": "100%" },
+      "router.tsx": { "statements": "100%", "branches": "100%", "functions": "100%" },
+      "AppNav.tsx": { "statements": "100%", "branches": "100%", "functions": "100%" }
+    },
+    "coverage_global_nota": "Umbral global de branches del proyecto (80%, US-ADJ-16) no se re-verificó con --coverage sobre la suite completa en esta corrida por el tiempo que toma; se verificó por archivo tocado en su lugar, mismo criterio que US-ADJ-37. Ningún archivo tocado bajó de cobertura respecto de antes del cambio."
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro, consume el endpoint ya cerrado en US-ADJ-44"
+  },
+  "manual_browser_verification": {
+    "herramienta": "Claude Browser (preview_start + computer), backend real (uvicorn) contra la base local vía psql — hallazgo: la base estaba vacía (0 usuarios) al momento de la sesión, no era la base de estabilización con datos reales de la bitácora; se sembró un Administrador (`scripts/seed_admin.py`), un Docente, una Materia, una Comisión, 2 Estudiantes reales (vía invitación, flujo real) y una Actividad con 2 preguntas V/F, y se limpió todo al finalizar (0 usuarios al cierre)",
+    "escenarios_verificados": [
+      "Comisión sin evaluaciones finalizadas: ambos estudiantes en 'Sin datos', 'Actividades pendientes' en ámbar para el que tiene 1 pendiente",
+      "Comisión con datos mixtos: 'Ana Pérez' 50% / 0 pendientes, 'Juan Gómez' 'Sin datos' / 1 pendiente en ámbar",
+      "Drill-down 1°: click en una fila navega al detalle del estudiante (resumen acumulado + `.eval-item` de 'Parcial 1')",
+      "Drill-down 2°: click en la evaluación navega a la revisión completa, con la etiqueta 'Respuesta del estudiante' (distinta de 'Tu respuesta' del Estudiante) y breadcrumb de 4 niveles",
+      "RBAC: sesión de Estudiante contra la ruta de nivel 0 muestra 'Acceso denegado' (RequireRole)"
+    ],
+    "hallazgos": "ninguno — comportamiento idéntico al esperado por la spec y los tests"
+  },
+  "estado_general": "APROBADO"
+}

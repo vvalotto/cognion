@@ -28,6 +28,13 @@ export interface TasaErrorTemaResponse {
   tasaError: number
 }
 
+export interface DesempenoComisionFilaResponse {
+  estudianteId: string
+  nombre: string
+  porcentajeAciertosAcumulado: number | null
+  actividadesPendientes: number
+}
+
 interface EvaluacionDesempenoApiResponse {
   evaluacion_id: string
   actividad_id: string
@@ -54,6 +61,13 @@ interface TasaErrorTemaApiResponse {
   cantidad_respuestas: number
   cantidad_incorrectas: number
   tasa_error: number
+}
+
+interface DesempenoComisionFilaApiResponse {
+  estudiante_id: string
+  nombre: string
+  porcentaje_aciertos_acumulado: number | null
+  actividades_pendientes: number
 }
 
 function mapearDesempenoEstudiante(
@@ -123,4 +137,28 @@ export async function obtenerTasaErrorPorTema(
     { signal },
   )
   return response.map(mapearTasaErrorTema)
+}
+
+function mapearDesempenoComisionFila(
+  response: DesempenoComisionFilaApiResponse,
+): DesempenoComisionFilaResponse {
+  return {
+    estudianteId: response.estudiante_id,
+    nombre: response.nombre,
+    porcentajeAciertosAcumulado: response.porcentaje_aciertos_acumulado,
+    actividadesPendientes: response.actividades_pendientes,
+  }
+}
+
+/** Cliente API de desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20). */
+export async function obtenerDesempenoPorComision(
+  materiaId: string,
+  comisionId: string,
+  signal?: AbortSignal,
+): Promise<DesempenoComisionFilaResponse[]> {
+  const response = await apiFetch<DesempenoComisionFilaApiResponse[]>(
+    `/analytics/materias/${materiaId}/comisiones/${comisionId}/desempeno`,
+    { signal },
+  )
+  return response.map(mapearDesempenoComisionFila)
 }
