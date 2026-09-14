@@ -99,7 +99,7 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
 
     async def listar_actividades_abiertas(self, materia_id: UUID, comision_id: UUID) -> list[UUID]:
         """Ver `EvaluacionDesempenoConsultaPort.listar_actividades_abiertas`."""
-        streams = await self._streams_actividad_de_materia(materia_id)
+        streams = await _streams_actividad_de_materia(self._session, materia_id)
         ahora = datetime.now(UTC)
         return [
             actividad.id
@@ -108,28 +108,6 @@ class EvaluacionDesempenoConsultaPortInProcess(EvaluacionDesempenoConsultaPort):
             )
             if _actividad_abierta_y_visible(actividad, comision_id, ahora)
         ]
-
-    async def _streams_actividad_de_materia(self, materia_id: UUID) -> list[list[EventoAlmacenado]]:
-        """Streams completos de `ActividadEvaluativaPeriodoAbierto` de una materia.
-
-        Filtra por `materia_id` leyendo el primer evento de cada stream (invariante desde la
-        creación, mismo criterio que `_materia_por_actividad`) antes de convertir a
-        `EventoAlmacenado` — evita convertir streams de otras materias sin necesidad.
-        """
-        resultado = await self._session.execute(
-            select(EventoModel)
-            .where(EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD)
-            .order_by(EventoModel.aggregate_id, EventoModel.sequence_number)
-        )
-        modelos = resultado.scalars().all()
-
-        streams = []
-        for _, grupo_iter in groupby(modelos, key=lambda modelo: modelo.aggregate_id):
-            eventos = list(grupo_iter)
-            if UUID(eventos[0].payload["materia_id"]) != materia_id:
-                continue
-            streams.append([_a_evento_almacenado(evento) for evento in eventos])
-        return streams
 
     async def _todos_los_streams_evaluacion(self) -> list[list[EventoModel]]:
         """Agrupa todos los eventos de `Evaluacion` por stream, ordenados dentro de cada uno."""
@@ -238,6 +216,34 @@ def _respuestas_vigentes_de_stream(eventos: list[EventoModel]) -> list[Respuesta
         )
         for pregunta_id, es_correcta in es_correcta_por_pregunta.items()
     ]
+
+
+async def _streams_actividad_de_materia(
+    session: AsyncSession, materia_id: UUID
+) -> list[list[EventoAlmacenado]]:
+    """Streams completos de `ActividadEvaluativaPeriodoAbierto` de una materia.
+
+    Función de módulo (no método) — mismo criterio que `_resumen_de_stream`/
+    `_stream_califica_para_materia` para mantener el WMC de
+    `EvaluacionDesempenoConsultaPortInProcess` bajo el umbral de `DesignReviewer`. Filtra por
+    `materia_id` leyendo el primer evento de cada stream (invariante desde la creación, mismo
+    criterio que `_materia_por_actividad`) antes de convertir a `EventoAlmacenado` — evita
+    convertir streams de otras materias sin necesidad.
+    """
+    resultado = await session.execute(
+        select(EventoModel)
+        .where(EventoModel.aggregate_type == AGGREGATE_TYPE_ACTIVIDAD)
+        .order_by(EventoModel.aggregate_id, EventoModel.sequence_number)
+    )
+    modelos = resultado.scalars().all()
+
+    streams = []
+    for _, grupo_iter in groupby(modelos, key=lambda modelo: modelo.aggregate_id):
+        eventos = list(grupo_iter)
+        if UUID(eventos[0].payload["materia_id"]) != materia_id:
+            continue
+        streams.append([_a_evento_almacenado(evento) for evento in eventos])
+    return streams
 
 
 def _a_evento_almacenado(evento: EventoModel) -> EventoAlmacenado:
