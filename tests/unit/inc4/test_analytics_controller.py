@@ -1,4 +1,4 @@
-"""Tests unitarios de `AnalyticsController` (US-4.1.2, US-4.2.1, US-4.2.4)."""
+"""Tests unitarios de `AnalyticsController` (US-4.1.2, US-4.2.1, US-4.2.4, US-ADJ-44)."""
 
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -25,6 +25,9 @@ from src.analytics.interface_adapters.controllers.analytics_controller import (
 from src.analytics.use_cases.obtener_desempeno_estudiante import (
     ObtenerDesempenoEstudianteUseCase,
 )
+from src.analytics.use_cases.obtener_desempeno_por_comision import (
+    ObtenerDesempenoPorComisionUseCase,
+)
 from src.analytics.use_cases.obtener_tasa_error_por_tema import (
     ObtenerTasaErrorPorTemaUseCase,
 )
@@ -35,9 +38,11 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         self,
         resumenes: list[EvaluacionDesempenoResumen] | None = None,
         respuestas: list[RespuestaVigente] | None = None,
+        actividades_abiertas: list | None = None,
     ) -> None:
         self._resumenes = resumenes or []
         self._respuestas = respuestas or []
+        self._actividades_abiertas = actividades_abiertas or []
 
     async def listar_evaluaciones_finalizadas(
         self, estudiante_id, materia_id
@@ -48,6 +53,9 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         self, materia_id, estudiante_ids
     ) -> list[RespuestaVigente]:
         return self._respuestas
+
+    async def listar_actividades_abiertas(self, materia_id, comision_id):
+        return self._actividades_abiertas
 
 
 class _ComisionConsultaPortFake(ComisionConsultaPort):
@@ -78,13 +86,15 @@ def _controller(
     evaluacion_desempeno_consulta = (
         evaluacion_desempeno_consulta or _EvaluacionDesempenoConsultaPortFake()
     )
+    comision_consulta = comision_consulta or _ComisionConsultaPortFake()
     return AnalyticsController(
         ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
         ObtenerTasaErrorPorTemaUseCase(
             evaluacion_desempeno_consulta,
-            comision_consulta or _ComisionConsultaPortFake(),
+            comision_consulta,
             pregunta_metadato_consulta or _PreguntaMetadatoConsultaPortFake(),
         ),
+        ObtenerDesempenoPorComisionUseCase(comision_consulta, evaluacion_desempeno_consulta),
     )
 
 
@@ -167,3 +177,18 @@ class TestAnalyticsController:
         resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None)
 
         assert resultado == []
+
+    @pytest.mark.asyncio
+    async def test_obtener_desempeno_por_comision_delega_en_el_use_case(self):
+        materia_id, comision_id = uuid4(), uuid4()
+        estudiante = EstudianteResumen(id=uuid4(), nombre="Ana Pérez")
+        comision_consulta = _ComisionConsultaPortFake()
+        comision_consulta.comisiones = [ComisionResumen(id=comision_id, horario="lu 10-12")]
+        comision_consulta.estudiantes = [estudiante]
+        controller = _controller(comision_consulta=comision_consulta)
+
+        resultado = await controller.obtener_desempeno_por_comision(materia_id, comision_id)
+
+        assert len(resultado) == 1
+        assert resultado[0].estudiante_id == estudiante.id
+        assert resultado[0].porcentaje_aciertos_acumulado is None

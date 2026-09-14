@@ -1,13 +1,14 @@
-"""Tests de integración de `EvaluacionDesempenoConsultaPortInProcess` (US-4.1.1, US-4.2.4).
+"""Tests de integración de `EvaluacionDesempenoConsultaPortInProcess` (US-4.1.1, US-4.2.4, US-ADJ-44).
 
 Escribe eventos reales en la tabla `events` (vía `SQLAlchemyEventStore`, mismo event store
 que usa Actividad Evaluativa) y ejercita el algoritmo completo del adapter contra Postgres —
 mismos 5 escenarios que `tests/features/inc4/US-4.1.1-infra-consulta-analytics.feature`, más
-`listar_respuestas_vigentes_de_materia` (`US-4.2.4`).
+`listar_respuestas_vigentes_de_materia` (`US-4.2.4`) y `listar_actividades_abiertas` (`US-ADJ-44`).
 """
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
@@ -31,6 +32,60 @@ async def _crear_actividad(store: SQLAlchemyEventStore, actividad_id, materia_id
             EventoParaAlmacenar(
                 event_type="ActividadEvaluativaCreada",
                 payload={"actividad_id": str(actividad_id), "materia_id": str(materia_id)},
+            )
+        ],
+    )
+
+
+async def _crear_actividad_completa(
+    store: SQLAlchemyEventStore,
+    actividad_id,
+    materia_id,
+    fecha_apertura: datetime,
+    fecha_cierre: datetime,
+    comisiones_ids: frozenset | None = None,
+) -> None:
+    """Payload completo, mismo shape que `ActividadEvaluativaCreada` real (`US-3.1.2`).
+
+    A diferencia de `_crear_actividad` (solo `actividad_id`/`materia_id`, suficiente para
+    `_materia_por_actividad`), `listar_actividades_abiertas` (`US-ADJ-44`) reconstruye la
+    entidad completa con `ActividadEvaluativaPeriodoAbierto.reconstruir()` — necesita todos los
+    campos obligatorios del evento real.
+    """
+    await store.append(
+        AGGREGATE_TYPE_ACTIVIDAD,
+        actividad_id,
+        0,
+        [
+            EventoParaAlmacenar(
+                event_type="ActividadEvaluativaCreada",
+                payload={
+                    "actividad_id": str(actividad_id),
+                    "materia_id": str(materia_id),
+                    "fecha_apertura": fecha_apertura.isoformat(),
+                    "fecha_cierre": fecha_cierre.isoformat(),
+                    "cantidad_preguntas": 5,
+                    "cantidad_intentos_permitidos": 1,
+                    "titulo": "Actividad de prueba",
+                    "comisiones_ids": [str(c) for c in (comisiones_ids or frozenset())],
+                    "unidad_tematica": None,
+                    "tema": None,
+                    "ocurrido_en": fecha_apertura.isoformat(),
+                },
+            )
+        ],
+    )
+
+
+async def _cerrar_actividad(store: SQLAlchemyEventStore, actividad_id, expected_seq: int) -> None:
+    await store.append(
+        AGGREGATE_TYPE_ACTIVIDAD,
+        actividad_id,
+        expected_seq,
+        [
+            EventoParaAlmacenar(
+                event_type="ActividadEvaluativaCerrada",
+                payload={"actividad_id": str(actividad_id), "actor": "docente"},
             )
         ],
     )
@@ -318,5 +373,90 @@ class TestListarEvaluacionesFinalizadas:
         adapter = EvaluacionDesempenoConsultaPortInProcess(session)
 
         resultado = await adapter.listar_evaluaciones_finalizadas(uuid4(), uuid4())
+
+        assert resultado == []
+
+
+class TestListarActividadesAbiertas:
+    """Tests de `listar_actividades_abiertas` (`US-ADJ-44`, RF-20)."""
+
+    async def test_actividad_vigente_sin_restriccion_aparece_para_cualquier_comision(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        materia_id, actividad_id = uuid4(), uuid4()
+        ahora = datetime.now(UTC)
+        await _crear_actividad_completa(
+            store, actividad_id, materia_id, ahora - timedelta(days=1), ahora + timedelta(days=1)
+        )
+
+        resultado = await adapter.listar_actividades_abiertas(materia_id, uuid4())
+
+        assert resultado == [actividad_id]
+
+    async def test_actividad_cerrada_manualmente_no_aparece(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        materia_id, actividad_id = uuid4(), uuid4()
+        ahora = datetime.now(UTC)
+        await _crear_actividad_completa(
+            store, actividad_id, materia_id, ahora - timedelta(days=1), ahora + timedelta(days=1)
+        )
+        await _cerrar_actividad(store, actividad_id, expected_seq=1)
+
+        resultado = await adapter.listar_actividades_abiertas(materia_id, uuid4())
+
+        assert resultado == []
+
+    async def test_actividad_ya_vencida_no_aparece(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        materia_id, actividad_id = uuid4(), uuid4()
+        ahora = datetime.now(UTC)
+        await _crear_actividad_completa(
+            store,
+            actividad_id,
+            materia_id,
+            ahora - timedelta(days=10),
+            ahora - timedelta(days=1),
+        )
+
+        resultado = await adapter.listar_actividades_abiertas(materia_id, uuid4())
+
+        assert resultado == []
+
+    async def test_actividad_restringida_aparece_solo_para_su_comision(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        materia_id, actividad_id, comision_id = uuid4(), uuid4(), uuid4()
+        ahora = datetime.now(UTC)
+        await _crear_actividad_completa(
+            store,
+            actividad_id,
+            materia_id,
+            ahora - timedelta(days=1),
+            ahora + timedelta(days=1),
+            comisiones_ids=frozenset({comision_id}),
+        )
+
+        assert await adapter.listar_actividades_abiertas(materia_id, comision_id) == [actividad_id]
+        assert await adapter.listar_actividades_abiertas(materia_id, uuid4()) == []
+
+    async def test_actividad_de_otra_materia_no_aparece(self, session):
+        store = SQLAlchemyEventStore(session)
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+        materia_x, materia_y, actividad_y = uuid4(), uuid4(), uuid4()
+        ahora = datetime.now(UTC)
+        await _crear_actividad_completa(
+            store, actividad_y, materia_y, ahora - timedelta(days=1), ahora + timedelta(days=1)
+        )
+
+        resultado = await adapter.listar_actividades_abiertas(materia_x, uuid4())
+
+        assert resultado == []
+
+    async def test_materia_sin_actividades_devuelve_lista_vacia(self, session):
+        adapter = EvaluacionDesempenoConsultaPortInProcess(session)
+
+        resultado = await adapter.listar_actividades_abiertas(uuid4(), uuid4())
 
         assert resultado == []
