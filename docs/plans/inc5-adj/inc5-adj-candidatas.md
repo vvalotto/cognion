@@ -189,6 +189,24 @@ puerto nuevo.
 `US-ADJ-45`→`49`, `US-ADJ-46`→`50`, `US-ADJ-47`→`51`) — pueden implementarse en cualquier
 orden entre RFs, backend siempre antes que su propio frontend.
 
+**Specs e Issues creados 2026-09-14:** `docs/specs/ajustes/US-ADJ-44.md` (Issue
+[#354](https://github.com/vvalotto/cognion/issues/354)), `US-ADJ-45.md` (Issue
+[#355](https://github.com/vvalotto/cognion/issues/355)), `US-ADJ-46.md` (Issue
+[#356](https://github.com/vvalotto/cognion/issues/356)), `US-ADJ-47.md` (Issue
+[#357](https://github.com/vvalotto/cognion/issues/357)), `US-ADJ-48.md` (Issue
+[#358](https://github.com/vvalotto/cognion/issues/358)), `US-ADJ-49.md` (Issue
+[#359](https://github.com/vvalotto/cognion/issues/359)), `US-ADJ-50.md` (Issue
+[#360](https://github.com/vvalotto/cognion/issues/360)), `US-ADJ-51.md` (Issue
+[#361](https://github.com/vvalotto/cognion/issues/361)) — ninguna implementada todavía. Dos
+gaps detectados durante la escritura de las specs, ambos resueltos ampliando puertos ya
+existentes en vez de crear nuevos: `US-ADJ-45` necesita título de actividad para el eje X del
+gráfico de evolución (`BC-analytics-modelo.md` §8.3 no lo preveía); `US-ADJ-44`/`US-ADJ-47`
+amplían `EvaluacionDesempenoConsultaPort` con métodos que leen `ActividadEvaluativaPeriodoAbierto`
+por primera vez desde Analytics, ya anticipado en `BC-analytics-modelo.md` §8.2. El drill-down
+de revisión de evaluación ajena (`US-ADJ-44`) sigue el mismo precedente de RBAC por rol sin
+verificación de pertenencia Docente↔Materia ya vigente en `US-4.2.1` — el dominio actual no
+modela esa relación (`Comision.docentes_asignados` liga Docente↔Comisión, no Materia).
+
 ---
 
 ## Iteración 5 — Revisión documental de cierre
