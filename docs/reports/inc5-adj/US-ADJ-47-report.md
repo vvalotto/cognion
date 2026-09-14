@@ -158,7 +158,7 @@ fuente de verdad local, no reporta ningún import sin usar en ese archivo.
 el 5° (`ObtenerCompletitudPorActividadUseCase`) empujó el CBO a 11/10.
 
 **Solución:** Corrido `designreviewer src/analytics/ --config pyproject.toml` localmente antes
-de commitear (lección explícita de `US-ADJ-46`, anotada en `docs/plans/US-ADJ-47-context.md`).
+de commitear (lección explícita de `US-ADJ-46`, anotada en `docs/plans/inc5-adj/US-ADJ-47-context.md`).
 Se creó `AnalyticsCompletitudController`, tercer controller del BC, con ese único Use Case.
 
 **Aprendizaje:** Confirma la regla ya documentada: cualquier Use Case nuevo sobre un controller
@@ -187,7 +187,7 @@ con mirar solo CC por método (Fase 7) o solo CBO de controllers.
 ## Documentación Actualizada
 
 - [x] Docstrings agregados/actualizados en los 9 archivos tocados
-- [x] `docs/plans/US-ADJ-47-plan.md` completado con estado, métricas y lecciones aprendidas
+- [x] `docs/plans/inc5-adj/US-ADJ-47-plan.md` completado con estado, métricas y lecciones aprendidas
 - [x] `CHANGELOG.md` actualizado (`[Unreleased]`)
 - [x] `quality/reports/inc5-adj/US-ADJ-47-quality.json` y `-codeguard.json` generados
 - [ ] `docs/plans/inc5-adj/inc5-adj-candidatas.md`/`CLAUDE.md` — se actualizan al cierre de
@@ -225,7 +225,7 @@ tiempo reportado no incluya el intervalo entre sesiones.
 
 ### Lo que Funcionó Bien
 
-1. Anticipar en `docs/plans/US-ADJ-47-context.md` las 4 lecciones de `US-ADJ-44`/`45`/`46`
+1. Anticipar en `docs/plans/inc5-adj/US-ADJ-47-context.md` las 4 lecciones de `US-ADJ-44`/`45`/`46`
    (actualizar Fakes en la misma tarea, extraer agregación a funciones de módulo desde el
    diseño, correr `designreviewer` local antes de commitear, nunca correr suites en paralelo)
    evitó repetir cualquiera de esos incidentes en esta US.

@@ -222,7 +222,7 @@ antes de correr la suite completa ahorra un ciclo de fallos.
 ## Documentación Actualizada
 
 - [x] Docstrings agregados/actualizados en los 11 archivos tocados
-- [x] `docs/plans/US-ADJ-44-plan.md` completado con estado, métricas y lecciones aprendidas
+- [x] `docs/plans/inc5-adj/US-ADJ-44-plan.md` completado con estado, métricas y lecciones aprendidas
 - [x] `CHANGELOG.md` actualizado (`[Unreleased]`)
 - [x] `quality/reports/inc5-adj/US-ADJ-44-quality.json` y `-codeguard.json` generados
 - [ ] `docs/plans/inc5-adj/inc5-adj-candidatas.md`/`CLAUDE.md` — se actualizan al cierre de sesión (`/checkpoint`), no en esta fase
