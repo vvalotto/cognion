@@ -100,6 +100,11 @@ require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 require_docente_o_administrador = require_rol(
     [TipoPerfil.DOCENTE, TipoPerfil.ADMINISTRADOR], get_current_user
 )
-"""Dependency que exige rol `docente` o `administrador` — `GET /materias` lo necesita también
-para el Administrador (selector de la pantalla de Comisiones, `US-ADJ-23`, gap detectado en
-Fase 3: `GET /materias` era `require_docente` únicamente y bloqueaba la pantalla)."""
+"""Dependency que exige rol `docente` o `administrador` — `GET /materias` (lectura) lo
+necesita para ambos roles: el Administrador (selector de la pantalla de Comisiones,
+`US-ADJ-23`) y el Docente (selector de Banco de Preguntas)."""
+
+require_administrador = require_rol([TipoPerfil.ADMINISTRADOR], get_current_user)
+"""Dependency que exige rol `administrador` — alta/edición/baja de Materia (unificación con
+Comisión: el Administrador arma la estructura Materia→Comisión→Docente, el Docente consume,
+no crea)."""

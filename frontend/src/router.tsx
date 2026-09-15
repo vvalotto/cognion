@@ -165,7 +165,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/nueva",
         element: (
-          <RequireRole rol={["docente", "administrador"]}>
+          <RequireRole rol="administrador">
             <NuevaMateria />
           </RequireRole>
         ),
@@ -173,7 +173,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/:materiaId/editar",
         element: (
-          <RequireRole rol={["docente", "administrador"]}>
+          <RequireRole rol="administrador">
             <EditarMateria />
           </RequireRole>
         ),
@@ -189,7 +189,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/:materiaId/eliminar",
         element: (
-          <RequireRole rol={["docente", "administrador"]}>
+          <RequireRole rol="administrador">
             <EliminarMateria />
           </RequireRole>
         ),

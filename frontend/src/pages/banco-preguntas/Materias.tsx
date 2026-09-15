@@ -29,6 +29,9 @@ import { getSession } from "@/lib/session"
  *
  * El Administrador no gestiona el banco de preguntas (`Banco.tsx` sigue siendo exclusivo
  * del Docente) — ve "Ver" (detalle de solo lectura, `VerMateria.tsx`) en vez de "Ver banco".
+ * Crear/editar/eliminar/activar Materias es exclusivo del Administrador (unificación con
+ * Comisión, hallazgo de UAT 2026-09-15) — el Docente solo consume (ve el listado y entra al
+ * banco de preguntas de cada una).
  */
 export function Materias() {
   const navigate = useNavigate()
@@ -61,7 +64,9 @@ export function Materias() {
             Elegí una materia para ver y cargar su banco de preguntas.
           </p>
         </div>
-        <Button onClick={() => navigate("/materias/nueva")}>+ Nueva materia</Button>
+        {!esDocente && (
+          <Button onClick={() => navigate("/materias/nueva")}>+ Nueva materia</Button>
+        )}
       </div>
 
       <Card className="mt-4 overflow-x-auto py-0">
@@ -107,36 +112,37 @@ export function Materias() {
                             navigate(rutaVer)
                           }}
                         />
-                        {materia.activa ? (
-                          <>
+                        {!esDocente &&
+                          (materia.activa ? (
+                            <>
+                              <RowActionButton
+                                label="Editar"
+                                icon={Pencil}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  navigate(`/materias/${materia.id}/editar`)
+                                }}
+                              />
+                              <RowActionButton
+                                label="Eliminar"
+                                icon={Trash2}
+                                variant="destructive"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  navigate(`/materias/${materia.id}/eliminar`)
+                                }}
+                              />
+                            </>
+                          ) : (
                             <RowActionButton
-                              label="Editar"
-                              icon={Pencil}
+                              label="Activar"
+                              icon={RotateCcw}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                navigate(`/materias/${materia.id}/editar`)
+                                void handleActivar(materia.id)
                               }}
                             />
-                            <RowActionButton
-                              label="Eliminar"
-                              icon={Trash2}
-                              variant="destructive"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                navigate(`/materias/${materia.id}/eliminar`)
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <RowActionButton
-                            label="Activar"
-                            icon={RotateCcw}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              void handleActivar(materia.id)
-                            }}
-                          />
-                        )}
+                          ))}
                       </div>
                     </TableCell>
                   </TableRow>

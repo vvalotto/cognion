@@ -97,8 +97,16 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
   })
 
-  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de docente", async () => {
+  it("la ruta /materias/nueva muestra acceso denegado con sesión de docente (unificación con Comisión)", async () => {
     setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
     await router.navigate("/materias/nueva")
     render(<RouterProvider router={router} />)
 
