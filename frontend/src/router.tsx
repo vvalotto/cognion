@@ -23,6 +23,7 @@ import { EditarCuenta } from "@/pages/cuentas/EditarCuenta"
 import { EliminarCuenta } from "@/pages/cuentas/EliminarCuenta"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
+import { Analytics } from "@/pages/analytics/Analytics"
 import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
 import { DesempenoPorComision } from "@/pages/analytics/DesempenoPorComision"
 import { DesempenoPorComisionDetalleEstudiante } from "@/pages/analytics/DesempenoPorComisionDetalleEstudiante"
@@ -423,6 +424,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="estudiante">
             <MiDesempeno />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics",
+        element: (
+          <RequireRole rol="docente">
+            <Analytics />
           </RequireRole>
         ),
       },
