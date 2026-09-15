@@ -15,6 +15,7 @@ const ITEMS_POR_ROL: Record<Rol, ItemNav[]> = {
     { label: "Desempeño por comisión", to: "/analytics/desempeno-por-comision" },
     { label: "Desempeño por alumno", to: "/analytics/desempeno-por-alumno" },
     { label: "Desempeño por tema", to: "/analytics/desempeno-por-tema" },
+    { label: "Preguntas más falladas", to: "/analytics/ranking-preguntas-falladas" },
   ],
   estudiante: [
     { label: "Inicio", to: "/" },

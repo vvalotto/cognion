@@ -48,6 +48,16 @@ export interface EvolucionTemporalComisionPuntoResponse {
   porcentajeAciertosPromedio: number
 }
 
+export interface RankingPreguntaFalladaResponse {
+  preguntaId: string
+  enunciado: string
+  unidadTematica: string
+  tema: string
+  cantidadPresentaciones: number
+  cantidadFallos: number
+  tasaError: number
+}
+
 interface EvaluacionDesempenoApiResponse {
   evaluacion_id: string
   actividad_id: string
@@ -94,6 +104,16 @@ interface EvolucionTemporalComisionPuntoApiResponse {
   actividad_id: string
   titulo_actividad: string
   porcentaje_aciertos_promedio: number
+}
+
+interface RankingPreguntaFalladaApiResponse {
+  pregunta_id: string
+  enunciado: string
+  unidad_tematica: string
+  tema: string
+  cantidad_presentaciones: number
+  cantidad_fallos: number
+  tasa_error: number
 }
 
 function mapearDesempenoEstudiante(
@@ -234,4 +254,32 @@ export async function obtenerEvolucionTemporalComision(
     { signal },
   )
   return response.map(mapearEvolucionTemporalComisionPunto)
+}
+
+function mapearRankingPreguntaFallada(
+  response: RankingPreguntaFalladaApiResponse,
+): RankingPreguntaFalladaResponse {
+  return {
+    preguntaId: response.pregunta_id,
+    enunciado: response.enunciado,
+    unidadTematica: response.unidad_tematica,
+    tema: response.tema,
+    cantidadPresentaciones: response.cantidad_presentaciones,
+    cantidadFallos: response.cantidad_fallos,
+    tasaError: response.tasa_error,
+  }
+}
+
+/** Cliente API de ranking de preguntas más falladas de una materia, agregado o por comisión (`US-ADJ-46`, RF-22). */
+export async function obtenerRankingPreguntasFalladas(
+  materiaId: string,
+  comisionId?: string,
+  signal?: AbortSignal,
+): Promise<RankingPreguntaFalladaResponse[]> {
+  const query = comisionId ? `?comision_id=${comisionId}` : ""
+  const response = await apiFetch<RankingPreguntaFalladaApiResponse[]>(
+    `/analytics/materias/${materiaId}/ranking-preguntas-falladas${query}`,
+    { signal },
+  )
+  return response.map(mapearRankingPreguntaFallada)
 }

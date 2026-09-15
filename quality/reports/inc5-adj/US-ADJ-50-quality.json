@@ -1,0 +1,54 @@
+{
+  "us_id": "US-ADJ-50",
+  "titulo": "Docente ve el ranking de Preguntas más falladas",
+  "tipo": "frontend puro",
+  "fecha": "2026-09-14",
+  "backend": {
+    "cambios": false,
+    "nota": "Endpoint ya existente desde US-ADJ-46, sin modificaciones."
+  },
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_preexistentes": 6,
+      "warnings_introducidos_por_esta_us": 0
+    },
+    "build": {
+      "comando": "npm run build (tsc -b && vite build)",
+      "resultado": "OK",
+      "errores": 0
+    },
+    "vitest": {
+      "test_files": "82 passed (82)",
+      "tests": "487 passed (487)",
+      "tests_nuevos": 7,
+      "archivos_nuevos_o_modificados": [
+        "src/lib/analytics-api.ts",
+        "src/pages/analytics/RankingPreguntasFalladas.tsx",
+        "src/pages/analytics/RankingPreguntasFalladas.test.tsx",
+        "src/router.tsx",
+        "src/components/AppNav.tsx",
+        "src/components/AppNav.test.tsx"
+      ],
+      "nota_flakes": "5-8 fallos intermitentes observados en corridas bajo --coverage en tests preexistentes ajenos a esta US (ResetearPassword, NuevaPreguntaOpcionMultiple, NuevaPreguntaVerdaderoFalso, AutoregistroDocente, CambiarPassword) por timeout de 5000ms bajo carga de instrumentación — confirmados en verde tanto de forma aislada como en una segunda corrida completa con --coverage."
+    },
+    "coverage": {
+      "global": {
+        "statements": 91.65,
+        "branches": 81.86,
+        "functions": 87.66,
+        "lines": 94.44
+      },
+      "umbral_branches_min": 80,
+      "cumple": true,
+      "por_archivo": {
+        "src/router.tsx": "1/1 stmts (sin cambio de cobertura, línea de import)",
+        "src/components/AppNav.tsx": "9/9 stmts, 3/3 funcs, 8/8 branches",
+        "src/lib/analytics-api.ts": "23/23 stmts, 14/14 funcs, 4/4 branches",
+        "src/pages/analytics/RankingPreguntasFalladas.tsx": "46/49 stmts, 14/17 funcs, 22/27 branches"
+      }
+    }
+  },
+  "should_block": false,
+  "resultado": "APROBADO"
+}
