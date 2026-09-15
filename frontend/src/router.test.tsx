@@ -507,6 +507,49 @@ describe("router (integración)", () => {
     ).toBeInTheDocument()
   })
 
+  it("la ruta de completitud de actividad muestra acceso denegado con sesión de estudiante (US-ADJ-51)", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/actividad-evaluativa/actividades/act-1/completitud")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta de completitud de actividad renderiza con sesión de docente (US-ADJ-51)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          id: "act-1",
+          materia_id: "m1",
+          titulo: "Parcial 1",
+          fecha_apertura: "2026-09-20T09:00:00",
+          fecha_cierre: "2026-09-27T23:59:00",
+          cantidad_preguntas: 10,
+          cantidad_intentos_permitidos: 1,
+          estado: "en_curso",
+          cerrada_manualmente: false,
+          cantidad_evaluaciones_activas: 0,
+          cantidad_evaluaciones_finalizadas: 0,
+          comisiones_ids: [],
+          unidad_tematica: null,
+          tema: null,
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          detalle: [],
+          resumen: { finalizadas: 0, en_curso: 0, suspendidas: 0, sin_iniciar: 0 },
+        }),
+      )
+    await router.navigate("/actividad-evaluativa/actividades/act-1/completitud")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Completitud de la actividad" }),
+    ).toBeInTheDocument()
+  })
+
   describe("AppNav — navegación real por clic (US-ADJ-27)", () => {
     it("Docente navega de Mis materias a Banco de Preguntas por el menú", async () => {
       setSession({ token: "t", rol: "docente" })

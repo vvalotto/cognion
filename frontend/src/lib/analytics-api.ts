@@ -58,6 +58,24 @@ export interface RankingPreguntaFalladaResponse {
   tasaError: number
 }
 
+export interface CompletitudFilaResponse {
+  estudianteId: string
+  nombre: string
+  estado: string
+}
+
+export interface CompletitudResumenResponse {
+  finalizadas: number
+  enCurso: number
+  suspendidas: number
+  sinIniciar: number
+}
+
+export interface CompletitudPorActividadResponse {
+  detalle: CompletitudFilaResponse[]
+  resumen: CompletitudResumenResponse
+}
+
 interface EvaluacionDesempenoApiResponse {
   evaluacion_id: string
   actividad_id: string
@@ -104,6 +122,24 @@ interface EvolucionTemporalComisionPuntoApiResponse {
   actividad_id: string
   titulo_actividad: string
   porcentaje_aciertos_promedio: number
+}
+
+interface CompletitudFilaApiResponse {
+  estudiante_id: string
+  nombre: string
+  estado: string
+}
+
+interface CompletitudResumenApiResponse {
+  finalizadas: number
+  en_curso: number
+  suspendidas: number
+  sin_iniciar: number
+}
+
+interface CompletitudPorActividadApiResponse {
+  detalle: CompletitudFilaApiResponse[]
+  resumen: CompletitudResumenApiResponse
 }
 
 interface RankingPreguntaFalladaApiResponse {
@@ -282,4 +318,34 @@ export async function obtenerRankingPreguntasFalladas(
     { signal },
   )
   return response.map(mapearRankingPreguntaFallada)
+}
+
+function mapearCompletitudPorActividad(
+  response: CompletitudPorActividadApiResponse,
+): CompletitudPorActividadResponse {
+  return {
+    detalle: response.detalle.map((fila) => ({
+      estudianteId: fila.estudiante_id,
+      nombre: fila.nombre,
+      estado: fila.estado,
+    })),
+    resumen: {
+      finalizadas: response.resumen.finalizadas,
+      enCurso: response.resumen.en_curso,
+      suspendidas: response.resumen.suspendidas,
+      sinIniciar: response.resumen.sin_iniciar,
+    },
+  }
+}
+
+/** Cliente API de completitud de una actividad puntual (`US-ADJ-51`, RF-23). */
+export async function obtenerCompletitudPorActividad(
+  actividadId: string,
+  signal?: AbortSignal,
+): Promise<CompletitudPorActividadResponse> {
+  const response = await apiFetch<CompletitudPorActividadApiResponse>(
+    `/analytics/actividades/${actividadId}/completitud`,
+    { signal },
+  )
+  return mapearCompletitudPorActividad(response)
 }

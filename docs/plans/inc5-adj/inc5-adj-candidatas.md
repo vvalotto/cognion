@@ -232,8 +232,20 @@ pantalla `RankingPreguntasFalladas.tsx` (mismo esqueleto que `DesempenoPorTema.t
 numerado por posición (índice de presentación en la lista, no un campo de la respuesta),
 enunciado truncado a una línea; entrada directa en `AppNav.tsx` ("Preguntas más falladas"), a
 diferencia de `EvolucionTemporal.tsx` (`US-ADJ-49`) que solo se accede por drill-down. Cierra
-completo el par backend→frontend de RF-22. Queda `US-ADJ-51` (frontend de RF-23) para
-completar la Iteración 4.
+completo el par backend→frontend de RF-22. **`US-ADJ-51`** (RF-23, frontend) cerrada
+2026-09-15, `docs/reports/inc5-adj/US-ADJ-51-report.md`: cliente API
+`obtenerCompletitudPorActividad`, pantalla `CompletitudActividad.tsx` (resumen de 4 números +
+tabla de estados con `Badge`, 4 variantes nuevas `completitud-*`), entry point "Ver
+completitud" en `ActividadDetalle.tsx` (`US-3.4.4`) — sin entrada en `AppNav.tsx`, mismo
+criterio que `EvolucionTemporal.tsx`. **Gap detectado en Fase 2:** el backend
+(`US-ADJ-47`) no expone la comisión de cada estudiante en el detalle; la spec dejaba margen
+explícito para omitir la columna si la actividad está restringida a una sola comisión —
+resuelto sin backend nuevo, cruzando `listarComisionesPorMateria`/`listarEstudiantesDeComision`
+ya usados por `DesempenoPorComision.tsx` (`US-ADJ-48`) para armar el mapa estudiante→comisión
+en el frontend. 494/494 tests frontend, quality gates APROBADO
+(`quality/reports/inc5-adj/US-ADJ-51-quality.json`). **Cierra completa la Iteración 4 del
+Incremento 5-ADJ** (`US-ADJ-44` a `51`) — el Docente tiene los 4 informes de Analytics de
+RF-20 a RF-23 completos, backend + frontend.
 
 ---
 

@@ -12,6 +12,7 @@ import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
 import { ActividadDetalle } from "@/pages/actividad-evaluativa/ActividadDetalle"
+import { CompletitudActividad } from "@/pages/analytics/CompletitudActividad"
 import { Banco } from "@/pages/banco-preguntas/Banco"
 import { CambiarPassword } from "@/pages/identidad/CambiarPassword"
 import { CerrarActividad } from "@/pages/actividad-evaluativa/CerrarActividad"
@@ -358,6 +359,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <CerrarActividad />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/actividad-evaluativa/actividades/:actividadId/completitud",
+        element: (
+          <RequireRole rol="docente">
+            <CompletitudActividad />
           </RequireRole>
         ),
       },
