@@ -7,7 +7,7 @@ from src.app import app
 
 async def _crear_comision(client, admin_headers, docente_headers) -> str:
     materia_resp = await client.post(
-        "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=docente_headers
+        "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers
     )
     materia_id = materia_resp.json()["id"]
 

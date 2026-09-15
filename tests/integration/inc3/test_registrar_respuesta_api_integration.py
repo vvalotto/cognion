@@ -125,11 +125,11 @@ async def _iniciar_evaluacion(client: AsyncClient, headers: dict, actividad_id: 
 class TestRegistrarRespuestaAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.2.1-registrar-respuesta.feature`."""
 
-    async def test_confirma_respuesta_valida_verdadero_falso(self, session, docente_headers):
+    async def test_confirma_respuesta_valida_verdadero_falso(self, session, docente_headers, admin_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -158,11 +158,11 @@ class TestRegistrarRespuestaAPIIntegration:
         assert stream[1].event_type == "RespuestaRegistrada"
         assert stream[1].payload["es_correcta"] is True
 
-    async def test_calcula_correccion_para_opcion_multiple(self, session, docente_headers):
+    async def test_calcula_correccion_para_opcion_multiple(self, session, docente_headers, admin_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             await _cargar_opcion_multiple(client, docente_headers, banco_id)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -182,11 +182,11 @@ class TestRegistrarRespuestaAPIIntegration:
         stream = await store.load("Evaluacion", uuid.UUID(evaluacion["id"]))
         assert stream[1].payload["es_correcta"] is True
 
-    async def test_segundo_intento_incrementa_numero_intento(self, session, docente_headers):
+    async def test_segundo_intento_incrementa_numero_intento(self, session, docente_headers, admin_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -216,11 +216,11 @@ class TestRegistrarRespuestaAPIIntegration:
         assert segunda.status_code == 201
         assert segunda.json()["numero_intento"] == 2
 
-    async def test_rechazo_por_intentos_agotados(self, session, docente_headers):
+    async def test_rechazo_por_intentos_agotados(self, session, docente_headers, admin_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -243,11 +243,11 @@ class TestRegistrarRespuestaAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_por_pregunta_no_asignada(self, session, docente_headers):
+    async def test_rechazo_por_pregunta_no_asignada(self, session, docente_headers, admin_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True, cantidad=5)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)

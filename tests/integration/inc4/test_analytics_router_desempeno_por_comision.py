@@ -116,11 +116,11 @@ class TestAnalyticsRouterDesempenoPorComision:
     """Escenarios de `tests/features/inc5-adj/US-ADJ-44-desempeno-por-comision.feature`."""
 
     async def test_estudiante_con_evaluacion_finalizada_y_actividad_pendiente(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id)
             comision_id, estudiante, estudiante_headers = await _comision_con_estudiante(
                 session, materia_id
@@ -155,10 +155,10 @@ class TestAnalyticsRouterDesempenoPorComision:
         assert data[0]["porcentaje_aciertos_acumulado"] == 100.0
         assert data[0]["actividades_pendientes"] == 1
 
-    async def test_comision_sin_evaluaciones_finalizadas(self, session, docente_headers):
+    async def test_comision_sin_evaluaciones_finalizadas(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, _banco_id = await _crear_materia(client, docente_headers)
+            materia_id, _banco_id = await _crear_materia(client, admin_headers)
             comision_id, estudiante, _headers = await _comision_con_estudiante(session, materia_id)
 
             response = await client.get(
@@ -173,10 +173,10 @@ class TestAnalyticsRouterDesempenoPorComision:
         assert data[0]["porcentaje_aciertos_acumulado"] is None
         assert data[0]["actividades_pendientes"] == 0
 
-    async def test_comision_que_no_pertenece_a_la_materia(self, session, docente_headers):
+    async def test_comision_que_no_pertenece_a_la_materia(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, _banco_id = await _crear_materia(client, docente_headers)
+            materia_id, _banco_id = await _crear_materia(client, admin_headers)
             otra_materia_id = uuid.uuid4()
             comision_de_otra_materia, _est, _h = await _comision_con_estudiante(
                 session, otra_materia_id

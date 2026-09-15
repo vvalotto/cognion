@@ -142,7 +142,7 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
 
 
 async def _crear_materia_id(nombre: str) -> str:
-    respuesta = await _post("/materias", {"nombre": nombre}, headers=docente_headers())
+    respuesta = await _post("/materias", {"nombre": nombre}, headers=admin_headers())
     return respuesta.json()["id"]
 
 

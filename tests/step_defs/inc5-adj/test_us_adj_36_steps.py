@@ -150,7 +150,7 @@ async def _crear_usuario_api(email: str, perfil: str) -> dict:
 
 async def _crear_materia(sufijo: str) -> str:
     respuesta = await _post(
-        "/materias", {"nombre": f"IS-2026-ADJ36-{sufijo}"}, headers=docente_headers()
+        "/materias", {"nombre": f"IS-2026-ADJ36-{sufijo}"}, headers=admin_headers()
     )
     return respuesta.json()["id"]
 

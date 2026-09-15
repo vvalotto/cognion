@@ -63,13 +63,12 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
 
 
 async def _crear_comision() -> str:
-    docente_headers = _headers_con_rol(TipoPerfil.DOCENTE)
     admin_headers = _headers_con_rol(TipoPerfil.ADMINISTRADOR)
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         materia_resp = await client.post(
-            "/materias", json={"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=docente_headers
+            "/materias", json={"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=admin_headers
         )
         materia_id = materia_resp.json()["id"]
 

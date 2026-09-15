@@ -70,8 +70,10 @@ async def _cargar_verdadero_falso(client: AsyncClient, headers: dict, banco_id: 
     )
 
 
-async def _crear_actividad_vigente(client: AsyncClient, docente_headers: dict) -> str:
-    materia_id, banco_id = await _crear_materia(client, docente_headers)
+async def _crear_actividad_vigente(
+    client: AsyncClient, admin_headers: dict, docente_headers: dict
+) -> str:
+    materia_id, banco_id = await _crear_materia(client, admin_headers)
     await _cargar_verdadero_falso(client, docente_headers, banco_id)
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
@@ -127,11 +129,11 @@ async def _backdatear_fecha_cierre(
 class TestVerificarVencimientosIntegration:
     """Escenarios de `tests/features/inc3/US-3.2.4-verificador-vencimientos.feature`."""
 
-    async def test_regla_1_suspende_evaluacion_inactiva(self, session, docente_headers):
+    async def test_regla_1_suspende_evaluacion_inactiva(self, session, docente_headers, admin_headers):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id = await _crear_actividad_vigente(client, docente_headers)
+            actividad_id = await _crear_actividad_vigente(client, admin_headers, docente_headers)
             evaluacion_id = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
         await _backdatear_ultima_actividad(
@@ -148,12 +150,12 @@ class TestVerificarVencimientosIntegration:
         assert stream[-1].payload["actor"] == "sistema"
 
     async def test_regla_1_no_afecta_evaluacion_con_actividad_reciente(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id = await _crear_actividad_vigente(client, docente_headers)
+            actividad_id = await _crear_actividad_vigente(client, admin_headers, docente_headers)
             evaluacion_id = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
         use_case = build_verificar_vencimientos_use_case(session)
@@ -164,11 +166,11 @@ class TestVerificarVencimientosIntegration:
         stream = await store.load("Evaluacion", uuid.UUID(evaluacion_id))
         assert len(stream) == 1
 
-    async def test_regla_2_finaliza_evaluacion_de_actividad_vencida(self, session, docente_headers):
+    async def test_regla_2_finaliza_evaluacion_de_actividad_vencida(self, session, docente_headers, admin_headers):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id = await _crear_actividad_vigente(client, docente_headers)
+            actividad_id = await _crear_actividad_vigente(client, admin_headers, docente_headers)
             evaluacion_id = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
         await _backdatear_fecha_cierre(session, actividad_id, datetime.now(UTC) - timedelta(days=1))
@@ -182,11 +184,11 @@ class TestVerificarVencimientosIntegration:
         assert stream[-1].event_type == "EvaluacionFinalizada"
         assert stream[-1].payload["actor"] == "sistema"
 
-    async def test_idempotencia_segunda_corrida_es_no_op(self, session, docente_headers):
+    async def test_idempotencia_segunda_corrida_es_no_op(self, session, docente_headers, admin_headers):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id = await _crear_actividad_vigente(client, docente_headers)
+            actividad_id = await _crear_actividad_vigente(client, admin_headers, docente_headers)
             evaluacion_id = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
         await _backdatear_fecha_cierre(session, actividad_id, datetime.now(UTC) - timedelta(days=1))

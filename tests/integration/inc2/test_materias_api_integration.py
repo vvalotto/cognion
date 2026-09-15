@@ -17,7 +17,9 @@ class TestMateriasAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
-                "/materias", json={"nombre": f"Rechazo Docente {uuid.uuid4()}"}, headers=docente_headers
+                "/materias",
+                json={"nombre": f"Rechazo Docente {uuid.uuid4()}"},
+                headers=docente_headers,
             )
 
         assert response.status_code == 403
@@ -26,12 +28,8 @@ class TestMateriasAPIIntegration:
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            primera = await client.post(
-                "/materias", json={"nombre": nombre}, headers=admin_headers
-            )
-            segunda = await client.post(
-                "/materias", json={"nombre": nombre}, headers=admin_headers
-            )
+            primera = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
+            segunda = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
 
         assert primera.status_code == 201
         assert segunda.status_code == 409
@@ -76,13 +74,13 @@ class TestMateriasAPIIntegration:
 class TestListarMateriasAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.9-listado-alta-materias.feature`."""
 
-    async def test_lista_materias_con_cantidad_de_preguntas_activas(self, docente_headers, admin_headers):
+    async def test_lista_materias_con_cantidad_de_preguntas_activas(
+        self, docente_headers, admin_headers
+    ):
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            creada = await client.post(
-                "/materias", json={"nombre": nombre}, headers=admin_headers
-            )
+            creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
             banco_id = creada.json()["banco_id"]
 
             await client.post(

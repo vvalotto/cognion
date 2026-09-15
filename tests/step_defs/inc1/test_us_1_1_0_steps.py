@@ -12,7 +12,7 @@ from src.app import app
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/inc1/US-1.1.0-alta-usuarios-comision-docentes.feature")
 
@@ -72,7 +72,7 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
 async def _crear_materia_id() -> str:
     """Crea una Materia única en BC Banco de Preguntas y devuelve su id."""
     respuesta = await _post(
-        "/materias", {"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=docente_headers()
+        "/materias", {"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=admin_headers()
     )
     return respuesta.json()["id"]
 

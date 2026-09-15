@@ -41,9 +41,11 @@ async def _crear_estudiante(session) -> dict[str, str]:
     return _headers_para(estudiante)
 
 
-async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(
+    client: AsyncClient, admin_headers: dict, docente_headers: dict, cantidad: int
+) -> str:
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
-    creada = await client.post("/materias", json={"nombre": nombre}, headers=headers)
+    creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
 
     for i in range(cantidad):
@@ -58,7 +60,7 @@ async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, canti
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=headers,
+            headers=docente_headers,
         )
 
     return creada.json()["id"]
@@ -73,10 +75,10 @@ def _periodo() -> tuple[str, str]:
 class TestCrearActividadAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.1.2-crear-actividad-periodo-abierto.feature`."""
 
-    async def test_docente_crea_actividad_valida(self, docente_headers):
+    async def test_docente_crea_actividad_valida(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             response = await client.post(
@@ -100,10 +102,10 @@ class TestCrearActividadAPIIntegration:
         assert data["titulo"] == ""
         assert "id" in data
 
-    async def test_docente_crea_actividad_con_titulo(self, docente_headers):
+    async def test_docente_crea_actividad_con_titulo(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             response = await client.post(
@@ -122,10 +124,10 @@ class TestCrearActividadAPIIntegration:
         assert response.status_code == 201
         assert response.json()["titulo"] == "Parcial 1 — Unidades 1 a 3"
 
-    async def test_rechazo_por_preguntas_insuficientes(self, docente_headers):
+    async def test_rechazo_por_preguntas_insuficientes(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 5)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 5)
             apertura, cierre = _periodo()
 
             response = await client.post(
@@ -142,10 +144,10 @@ class TestCrearActividadAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_por_periodo_invalido(self, docente_headers):
+    async def test_rechazo_por_periodo_invalido(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             response = await client.post(
@@ -162,10 +164,10 @@ class TestCrearActividadAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_por_cantidad_intentos_invalida(self, docente_headers):
+    async def test_rechazo_por_cantidad_intentos_invalida(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             response = await client.post(
@@ -239,10 +241,10 @@ class TestCrearActividadAPIIntegration:
 class TestListarActividadesAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.4.2-listado-materias-actividades-docente.feature`."""
 
-    async def test_lista_actividad_en_curso_con_conteo_de_activas(self, session, docente_headers):
+    async def test_lista_actividad_en_curso_con_conteo_de_activas(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             estudiante_headers = await _crear_estudiante(session)
             apertura, cierre = _periodo()
 
@@ -276,10 +278,10 @@ class TestListarActividadesAPIIntegration:
         assert data[0]["cantidad_evaluaciones_activas"] == 1
         assert data[0]["cantidad_evaluaciones_finalizadas"] == 0
 
-    async def test_actividad_con_apertura_futura_es_programada(self, docente_headers):
+    async def test_actividad_con_apertura_futura_es_programada(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura = datetime.now(UTC) + timedelta(days=1)
             cierre = apertura + timedelta(days=7)
 
@@ -303,10 +305,10 @@ class TestListarActividadesAPIIntegration:
         assert data[0]["estado"] == "programada"
         assert data[0]["cantidad_evaluaciones_activas"] == 0
 
-    async def test_actividad_cerrada_manualmente(self, docente_headers):
+    async def test_actividad_cerrada_manualmente(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             crear = await client.post(
@@ -330,10 +332,10 @@ class TestListarActividadesAPIIntegration:
         data = response.json()
         assert data[0]["estado"] == "cerrada"
 
-    async def test_materia_sin_actividades_devuelve_lista_vacia(self, docente_headers):
+    async def test_materia_sin_actividades_devuelve_lista_vacia(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
 
             response = await client.get(
                 "/actividades", params={"materia_id": materia_id}, headers=docente_headers
@@ -362,10 +364,10 @@ class TestListarActividadesAPIIntegration:
 class TestObtenerActividadAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.4.4-detalle-actividad.feature`."""
 
-    async def test_obtiene_el_detalle_con_conteos_y_estado(self, session, docente_headers):
+    async def test_obtiene_el_detalle_con_conteos_y_estado(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             estudiante_headers = await _crear_estudiante(session)
             apertura, cierre = _periodo()
 
@@ -399,10 +401,10 @@ class TestObtenerActividadAPIIntegration:
         assert data["cantidad_evaluaciones_activas"] == 1
         assert data["cantidad_evaluaciones_finalizadas"] == 0
 
-    async def test_detalle_de_actividad_cerrada_manualmente(self, docente_headers):
+    async def test_detalle_de_actividad_cerrada_manualmente(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             crear = await client.post(
@@ -455,10 +457,10 @@ class TestActividadesFechasNaiveAPIIntegration:
     `datetime.now(UTC).isoformat()`, aware).
     """
 
-    async def test_lista_actividad_creada_con_fecha_naive(self, docente_headers):
+    async def test_lista_actividad_creada_con_fecha_naive(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
 
             crear = await client.post(
                 "/actividades",
@@ -481,10 +483,10 @@ class TestActividadesFechasNaiveAPIIntegration:
         assert response.status_code == 200
         assert response.json()[0]["id"] == actividad_id
 
-    async def test_modifica_periodo_con_nueva_fecha_cierre_naive(self, docente_headers):
+    async def test_modifica_periodo_con_nueva_fecha_cierre_naive(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             crear = await client.post(
@@ -515,10 +517,10 @@ class TestActividadesFechasNaiveAPIIntegration:
 class TestModificarTituloAPIIntegration:
     """Escenarios de `US-ADJ-10` — edición de título de una actividad ya creada."""
 
-    async def test_docente_edita_el_titulo(self, docente_headers):
+    async def test_docente_edita_el_titulo(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             crear = await client.post(
@@ -544,10 +546,10 @@ class TestModificarTituloAPIIntegration:
         assert response.status_code == 200
         assert response.json()["titulo"] == "Parcial 1 (final)"
 
-    async def test_edita_el_titulo_de_una_actividad_cerrada(self, docente_headers):
+    async def test_edita_el_titulo_de_una_actividad_cerrada(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
             apertura, cierre = _periodo()
 
             crear = await client.post(

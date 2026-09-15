@@ -26,7 +26,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import docente_headers
+from tests.step_defs.inc3._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc5/US-5.1.2-notificacion-apertura.feature")
 
@@ -119,7 +119,7 @@ async def _crear_materia_con_preguntas(cantidad: int) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
-        creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
         for i in range(cantidad):
             await client.post(
