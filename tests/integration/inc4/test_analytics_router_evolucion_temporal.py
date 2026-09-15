@@ -108,7 +108,9 @@ async def _rendir_correctamente_y_finalizar(
 
 
 class TestAnalyticsRouterEvolucionTemporalEstudiante:
-    async def test_serie_individual_ordenada_con_titulos(self, session, docente_headers, admin_headers):
+    async def test_serie_individual_ordenada_con_titulos(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
@@ -137,7 +139,9 @@ class TestAnalyticsRouterEvolucionTemporalEstudiante:
         assert data[0]["porcentaje_acierto"] == 100
         assert data[1]["actividad_id"] == actividad_2
 
-    async def test_estudiante_sin_evaluaciones_finalizadas(self, session, docente_headers, admin_headers):
+    async def test_estudiante_sin_evaluaciones_finalizadas(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
@@ -184,7 +188,9 @@ class TestAnalyticsRouterEvolucionTemporalEstudiante:
 
 
 class TestAnalyticsRouterEvolucionTemporalComision:
-    async def test_serie_de_comision_con_participacion_parcial(self, session, docente_headers, admin_headers):
+    async def test_serie_de_comision_con_participacion_parcial(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
@@ -206,7 +212,9 @@ class TestAnalyticsRouterEvolucionTemporalComision:
         assert data[0]["actividad_id"] == actividad_id
         assert data[0]["porcentaje_aciertos_promedio"] == 100.0
 
-    async def test_comision_que_no_pertenece_a_la_materia(self, session, docente_headers, admin_headers):
+    async def test_comision_que_no_pertenece_a_la_materia(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)

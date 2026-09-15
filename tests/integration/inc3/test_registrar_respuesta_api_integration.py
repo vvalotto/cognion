@@ -125,7 +125,9 @@ async def _iniciar_evaluacion(client: AsyncClient, headers: dict, actividad_id: 
 class TestRegistrarRespuestaAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.2.1-registrar-respuesta.feature`."""
 
-    async def test_confirma_respuesta_valida_verdadero_falso(self, session, docente_headers, admin_headers):
+    async def test_confirma_respuesta_valida_verdadero_falso(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -158,7 +160,9 @@ class TestRegistrarRespuestaAPIIntegration:
         assert stream[1].event_type == "RespuestaRegistrada"
         assert stream[1].payload["es_correcta"] is True
 
-    async def test_calcula_correccion_para_opcion_multiple(self, session, docente_headers, admin_headers):
+    async def test_calcula_correccion_para_opcion_multiple(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -182,7 +186,9 @@ class TestRegistrarRespuestaAPIIntegration:
         stream = await store.load("Evaluacion", uuid.UUID(evaluacion["id"]))
         assert stream[1].payload["es_correcta"] is True
 
-    async def test_segundo_intento_incrementa_numero_intento(self, session, docente_headers, admin_headers):
+    async def test_segundo_intento_incrementa_numero_intento(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

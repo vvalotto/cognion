@@ -155,7 +155,9 @@ class TestAnalyticsRouterDesempenoPorComision:
         assert data[0]["porcentaje_aciertos_acumulado"] == 100.0
         assert data[0]["actividades_pendientes"] == 1
 
-    async def test_comision_sin_evaluaciones_finalizadas(self, session, docente_headers, admin_headers):
+    async def test_comision_sin_evaluaciones_finalizadas(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
@@ -173,7 +175,9 @@ class TestAnalyticsRouterDesempenoPorComision:
         assert data[0]["porcentaje_aciertos_acumulado"] is None
         assert data[0]["actividades_pendientes"] == 0
 
-    async def test_comision_que_no_pertenece_a_la_materia(self, session, docente_headers, admin_headers):
+    async def test_comision_que_no_pertenece_a_la_materia(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)

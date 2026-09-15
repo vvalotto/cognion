@@ -129,7 +129,9 @@ async def _backdatear_fecha_cierre(
 class TestVerificarVencimientosIntegration:
     """Escenarios de `tests/features/inc3/US-3.2.4-verificador-vencimientos.feature`."""
 
-    async def test_regla_1_suspende_evaluacion_inactiva(self, session, docente_headers, admin_headers):
+    async def test_regla_1_suspende_evaluacion_inactiva(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -166,7 +168,9 @@ class TestVerificarVencimientosIntegration:
         stream = await store.load("Evaluacion", uuid.UUID(evaluacion_id))
         assert len(stream) == 1
 
-    async def test_regla_2_finaliza_evaluacion_de_actividad_vencida(self, session, docente_headers, admin_headers):
+    async def test_regla_2_finaliza_evaluacion_de_actividad_vencida(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -184,7 +188,9 @@ class TestVerificarVencimientosIntegration:
         assert stream[-1].event_type == "EvaluacionFinalizada"
         assert stream[-1].payload["actor"] == "sistema"
 
-    async def test_idempotencia_segunda_corrida_es_no_op(self, session, docente_headers, admin_headers):
+    async def test_idempotencia_segunda_corrida_es_no_op(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

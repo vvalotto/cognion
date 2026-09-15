@@ -110,11 +110,15 @@ async def _crear_actividad(
 class TestIniciarEvaluacionAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.1.3-iniciar-evaluacion.feature`."""
 
-    async def test_estudiante_inicia_evaluacion_por_primera_vez(self, session, docente_headers, admin_headers):
+    async def test_estudiante_inicia_evaluacion_por_primera_vez(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -138,7 +142,9 @@ class TestIniciarEvaluacionAPIIntegration:
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -161,12 +167,16 @@ class TestIniciarEvaluacionAPIIntegration:
         assert segunda.json()["id"] == primera.json()["id"]
         assert segunda.json()["preguntas_asignadas"] == primera.json()["preguntas_asignadas"]
 
-    async def test_dos_estudiantes_reciben_evaluaciones_propias(self, session, docente_headers, admin_headers):
+    async def test_dos_estudiantes_reciben_evaluaciones_propias(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante_1, headers_1 = await _crear_estudiante(session)
         estudiante_2, headers_2 = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -194,7 +204,9 @@ class TestIniciarEvaluacionAPIIntegration:
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -219,7 +231,9 @@ class TestIniciarEvaluacionAPIIntegration:
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) + timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -238,7 +252,9 @@ class TestIniciarEvaluacionAPIIntegration:
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             cierre = datetime.now(UTC) - timedelta(days=1)
             apertura = cierre - timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -294,9 +310,7 @@ class TestRendirEvaluacionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             nombre = f"Ingeniería de Software {uuid.uuid4()}"
-            creada = await client.post(
-                "/materias", json={"nombre": nombre}, headers=admin_headers
-            )
+            creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
             banco_id = creada.json()["banco_id"]
             materia_id = creada.json()["id"]
 
@@ -355,7 +369,9 @@ class TestRendirEvaluacionAPIIntegration:
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 5)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 5
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -392,7 +408,9 @@ class TestRendirEvaluacionAPIIntegration:
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 5)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 5
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(

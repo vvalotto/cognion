@@ -11,7 +11,11 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante_de_materia, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante_de_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.4.5-mis-materias-actividades.feature")
 

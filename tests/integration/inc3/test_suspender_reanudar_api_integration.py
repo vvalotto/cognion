@@ -99,7 +99,11 @@ async def _iniciar_evaluacion(client: AsyncClient, headers: dict, actividad_id: 
 
 
 async def _preparar_evaluacion_en_curso(
-    client: AsyncClient, admin_headers: dict, docente_headers: dict, estudiante_headers: dict, session
+    client: AsyncClient,
+    admin_headers: dict,
+    docente_headers: dict,
+    estudiante_headers: dict,
+    session,
 ) -> dict:
     materia_id, banco_id = await _crear_materia(client, admin_headers)
     await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
@@ -152,7 +156,9 @@ class TestSuspenderReanudarAPIIntegration:
         stream = await store.load("Evaluacion", uuid.UUID(evaluacion["id"]))
         assert stream[-1].event_type == "EvaluacionReanudada"
 
-    async def test_reanudar_habilita_volver_a_registrar_respuestas(self, session, docente_headers, admin_headers):
+    async def test_reanudar_habilita_volver_a_registrar_respuestas(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -216,7 +222,9 @@ class TestSuspenderReanudarAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_al_reanudar_una_evaluacion_en_curso(self, session, docente_headers, admin_headers):
+    async def test_rechazo_al_reanudar_una_evaluacion_en_curso(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -230,7 +238,9 @@ class TestSuspenderReanudarAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_al_reanudar_fuera_del_periodo_vigente(self, session, docente_headers, admin_headers):
+    async def test_rechazo_al_reanudar_fuera_del_periodo_vigente(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -253,7 +263,9 @@ class TestSuspenderReanudarAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_suspender_no_valida_periodo_vigente(self, session, docente_headers, admin_headers):
+    async def test_suspender_no_valida_periodo_vigente(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

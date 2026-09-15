@@ -84,7 +84,9 @@ class TestListarComisionesAutoregistroAPIIntegration:
         assert comisiones[0]["horario"] == "lu 10-12"
         assert set(comisiones[0].keys()) == {"id", "horario"}
 
-    async def test_materia_sin_comisiones_devuelve_lista_vacia(self, session, docente_headers, admin_headers):
+    async def test_materia_sin_comisiones_devuelve_lista_vacia(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers)

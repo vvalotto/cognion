@@ -94,7 +94,9 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
     async def test_docente_extiende_el_plazo(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -113,10 +115,14 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
         assert data["id"] == actividad_id
         assert datetime.fromisoformat(data["fecha_cierre"]) == nueva_fecha_cierre
 
-    async def test_docente_acorta_el_plazo_sin_evaluaciones_activas(self, docente_headers, admin_headers):
+    async def test_docente_acorta_el_plazo_sin_evaluaciones_activas(
+        self, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -133,11 +139,15 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
         assert response.status_code == 200
         assert datetime.fromisoformat(response.json()["fecha_cierre"]) == nueva_fecha_cierre
 
-    async def test_rechazo_al_acortar_con_evaluacion_en_curso(self, session, docente_headers, admin_headers):
+    async def test_rechazo_al_acortar_con_evaluacion_en_curso(
+        self, session, docente_headers, admin_headers
+    ):
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -161,7 +171,9 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
     async def test_rechazo_por_periodo_invalido(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -190,7 +202,9 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
     async def test_rechazo_sin_autenticacion(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -207,7 +221,9 @@ class TestModificarPeriodoDisponibilidadAPIIntegration:
     async def test_rechazo_con_rol_insuficiente(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(

@@ -150,7 +150,9 @@ class TestFinalizarAPIIntegration:
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, admin_headers, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
             response = await client.post(
@@ -164,11 +166,15 @@ class TestFinalizarAPIIntegration:
         assert stream[-1].event_type == "EvaluacionFinalizada"
         assert stream[-1].payload["actor"] == "estudiante"
 
-    async def test_finaliza_una_evaluacion_suspendida(self, session, docente_headers, admin_headers):
+    async def test_finaliza_una_evaluacion_suspendida(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, admin_headers, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
             await client.post(
                 f"/evaluaciones/{evaluacion['id']}/suspender", headers=estudiante_headers
@@ -187,7 +193,9 @@ class TestFinalizarAPIIntegration:
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, admin_headers, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
             await client.post(
                 f"/evaluaciones/{evaluacion['id']}/finalizar", headers=estudiante_headers
@@ -288,7 +296,9 @@ class TestRevisionAPIIntegration:
         assert fila_incorrecta["es_correcta"] is False
         assert fila_incorrecta["contenido_correcto"] == {"valor": False}
 
-    async def test_revision_incluye_no_respondidas_como_incorrectas(self, session, docente_headers, admin_headers):
+    async def test_revision_incluye_no_respondidas_como_incorrectas(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -368,7 +378,9 @@ class TestRevisionAPIIntegration:
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, admin_headers, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
             response = await client.get(
@@ -383,7 +395,9 @@ class TestRevisionAPIIntegration:
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, admin_headers, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
             await client.post(
                 f"/evaluaciones/{evaluacion['id']}/suspender", headers=estudiante_headers

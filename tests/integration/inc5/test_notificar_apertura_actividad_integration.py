@@ -148,7 +148,9 @@ class TestNotificarAperturaActividadIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             comision_a_id, emails_a = await _crear_comision_con_estudiantes(
                 session, uuid.UUID(materia_id), 2
             )
@@ -185,7 +187,9 @@ class TestNotificarAperturaActividadIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             _comision_id, emails = await _crear_comision_con_estudiantes(
                 session, uuid.UUID(materia_id), 2
             )
@@ -219,7 +223,9 @@ class TestNotificarAperturaActividadIntegration:
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             await _crear_comision_con_estudiantes(session, uuid.UUID(materia_id), 1)
             apertura, cierre = _periodo()
 
@@ -242,7 +248,9 @@ class TestNotificarAperturaActividadIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura, cierre = _periodo()
 
             response = await client.post(

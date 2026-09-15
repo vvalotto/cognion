@@ -91,10 +91,14 @@ async def _crear_actividad(
 class TestCerrarActividadAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.3.2-cerrar-actividad.feature`."""
 
-    async def test_docente_cierra_actividad_sin_evaluaciones_activas(self, docente_headers, admin_headers):
+    async def test_docente_cierra_actividad_sin_evaluaciones_activas(
+        self, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -110,11 +114,15 @@ class TestCerrarActividadAPIIntegration:
         assert data["id"] == actividad_id
         assert data["cerrada_manualmente"] is True
 
-    async def test_cerrar_finaliza_en_cascada_evaluacion_en_curso(self, session, docente_headers, admin_headers):
+    async def test_cerrar_finaliza_en_cascada_evaluacion_en_curso(
+        self, session, docente_headers, admin_headers
+    ):
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -140,7 +148,9 @@ class TestCerrarActividadAPIIntegration:
     async def test_rechazo_al_cerrar_una_actividad_ya_cerrada(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -154,10 +164,14 @@ class TestCerrarActividadAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_al_modificar_periodo_de_actividad_cerrada(self, docente_headers, admin_headers):
+    async def test_rechazo_al_modificar_periodo_de_actividad_cerrada(
+        self, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -185,7 +199,9 @@ class TestCerrarActividadAPIIntegration:
     async def test_rechazo_sin_autenticacion(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -199,7 +215,9 @@ class TestCerrarActividadAPIIntegration:
     async def test_rechazo_con_rol_insuficiente(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, admin_headers, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
