@@ -1,0 +1,51 @@
+{
+  "_nota": "Completar 'docentes' con los datos reales antes de correr seed_datos_reales.py. Los demás valores (comisiones, estudiantes) son editables libremente.",
+  "administrador": {
+    "nombre": "Victor Valotto",
+    "email": "admin-datos-reales@fiuner.edu.ar",
+    "password": "AdminReal2026!"
+  },
+  "docentes": [
+    {
+      "_pendiente": "PENDIENTE — reemplazar nombre/email/password con los datos reales que va a pasar Víctor",
+      "nombre": "PENDIENTE",
+      "email": "docente1-pendiente@fiuner.edu.ar",
+      "password": "DocenteReal2026!",
+      "materias": ["Gestión de Proyectos"]
+    },
+    {
+      "_pendiente": "PENDIENTE — puede ser el mismo Docente que arriba, o uno distinto",
+      "nombre": "PENDIENTE",
+      "email": "docente2-pendiente@fiuner.edu.ar",
+      "password": "DocenteReal2026!",
+      "materias": ["Ingeniería de Software"]
+    }
+  ],
+  "comisiones": [
+    {
+      "materia": "Gestión de Proyectos",
+      "horario": "Lunes y Miércoles 18 a 20hs",
+      "docente_email": "docente1-pendiente@fiuner.edu.ar",
+      "estudiantes": [
+        {"nombre": "Lucía Fernández", "email": "lfernandez-uat@fiuner.edu.ar"},
+        {"nombre": "Martín Gómez", "email": "mgomez-uat@fiuner.edu.ar"},
+        {"nombre": "Camila Sosa", "email": "csosa-uat@fiuner.edu.ar"},
+        {"nombre": "Nicolás Ibarra", "email": "nibarra-uat@fiuner.edu.ar"},
+        {"nombre": "Valentina Rolón", "email": "vrolon-uat@fiuner.edu.ar"}
+      ]
+    },
+    {
+      "materia": "Ingeniería de Software",
+      "horario": "Martes y Jueves 19 a 21hs",
+      "docente_email": "docente2-pendiente@fiuner.edu.ar",
+      "estudiantes": [
+        {"nombre": "Tomás Benítez", "email": "tbenitez-uat@fiuner.edu.ar"},
+        {"nombre": "Agustina Correa", "email": "acorrea-uat@fiuner.edu.ar"},
+        {"nombre": "Federico Acosta", "email": "facosta-uat@fiuner.edu.ar"},
+        {"nombre": "Julieta Medina", "email": "jmedina-uat@fiuner.edu.ar"},
+        {"nombre": "Bruno Vera", "email": "bvera-uat@fiuner.edu.ar"}
+      ]
+    }
+  ],
+  "password_estudiante": "EstudianteReal2026!"
+}
