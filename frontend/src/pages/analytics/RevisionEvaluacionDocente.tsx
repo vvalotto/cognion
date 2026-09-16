@@ -35,7 +35,7 @@ export function RevisionEvaluacionDocente() {
     <div className="mx-auto max-w-2xl">
       <Breadcrumb
         items={[
-          { label: "Analytics" },
+          { label: "Reportes", to: "/analytics" },
           { label: "Desempeño por comisión", to: "/analytics/desempeno-por-comision" },
           {
             label: "Detalle del estudiante",

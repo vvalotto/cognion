@@ -16,6 +16,7 @@ from src.banco_preguntas.frameworks.api.schemas import (
 )
 from src.banco_preguntas.frameworks.dependencies import (
     get_materias_controller,
+    require_administrador,
     require_docente_o_administrador,
 )
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
@@ -29,7 +30,7 @@ router = APIRouter(prefix="/materias", tags=["banco_preguntas"])
     "",
     response_model=MateriaResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(require_docente_o_administrador)],
+    dependencies=[Depends(require_administrador)],
 )
 async def crear_materia(
     body: CrearMateriaRequest,
@@ -37,8 +38,9 @@ async def crear_materia(
 ) -> MateriaResponse:
     """Crea una materia nueva y su banco asociado; responde 409 si el nombre ya existe.
 
-    Rol `docente` o `administrador` (hallazgo de la prueba manual E2E: sin ninguna Materia
-    creada, el Administrador no tenía forma de crear la Comisión que la referencia).
+    Rol `administrador` exclusivamente — unificación con Comisión (hallazgo de UAT
+    2026-09-15): el Administrador arma la estructura Materia→Comisión→Docente, el Docente
+    consume (carga/edita preguntas en el banco), no crea Materias.
     """
     try:
         materia, banco, _evento_materia, _evento_banco = await controller.crear_materia(body.nombre)
@@ -51,7 +53,7 @@ async def crear_materia(
 @router.patch(
     "/{materia_id}",
     response_model=MateriaBasicaResponse,
-    dependencies=[Depends(require_docente_o_administrador)],
+    dependencies=[Depends(require_administrador)],
 )
 async def editar_materia(
     materia_id: UUID,
@@ -60,9 +62,9 @@ async def editar_materia(
 ) -> MateriaBasicaResponse:
     """Corrige el nombre de una materia existente.
 
-    Rol `docente` o `administrador` — hallazgo de la prueba manual E2E: no existía forma de
-    corregir un nombre cargado con error de tipeo, para ningún rol. Responde 404 si la
-    materia no existe, 409 si el nombre nuevo ya pertenece a otra.
+    Rol `administrador` exclusivamente (unificación con Comisión, hallazgo de UAT
+    2026-09-15). Responde 404 si la materia no existe, 409 si el nombre nuevo ya pertenece
+    a otra.
     """
     try:
         materia = await controller.editar_materia(materia_id, body.nombre)
@@ -77,7 +79,7 @@ async def editar_materia(
 @router.delete(
     "/{materia_id}",
     response_model=None,
-    dependencies=[Depends(require_docente_o_administrador)],
+    dependencies=[Depends(require_administrador)],
 )
 async def eliminar_materia(
     materia_id: UUID,
@@ -132,7 +134,7 @@ async def listar_materias(
 @router.post(
     "/{materia_id}/activar",
     response_model=MateriaBasicaResponse,
-    dependencies=[Depends(require_docente_o_administrador)],
+    dependencies=[Depends(require_administrador)],
 )
 async def activar_materia(
     materia_id: UUID,

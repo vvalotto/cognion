@@ -13,9 +13,9 @@ from httpx import ASGITransport, AsyncClient
 from src.app import app
 
 
-async def _crear_materia(client, docente_headers) -> str:
+async def _crear_materia(client, admin_headers) -> str:
     materia_resp = await client.post(
-        "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=docente_headers
+        "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers
     )
     return materia_resp.json()["id"]
 
@@ -42,10 +42,10 @@ async def _crear_comision(client, materia_id, admin_headers) -> dict:
 
 
 class TestListarMateriasAutoregistroAPIIntegration:
-    async def test_lista_materias_sin_jwt(self, session, docente_headers):
+    async def test_lista_materias_sin_jwt(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers)
+            materia_id = await _crear_materia(client, admin_headers)
 
             response = await client.get("/identidad/autoregistro/materias")
 
@@ -72,7 +72,7 @@ class TestListarComisionesAutoregistroAPIIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers)
+            materia_id = await _crear_materia(client, admin_headers)
             comision = await _crear_comision(client, materia_id, admin_headers)
 
             response = await client.get(f"/identidad/autoregistro/materias/{materia_id}/comisiones")
@@ -84,10 +84,12 @@ class TestListarComisionesAutoregistroAPIIntegration:
         assert comisiones[0]["horario"] == "lu 10-12"
         assert set(comisiones[0].keys()) == {"id", "horario"}
 
-    async def test_materia_sin_comisiones_devuelve_lista_vacia(self, session, docente_headers):
+    async def test_materia_sin_comisiones_devuelve_lista_vacia(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers)
+            materia_id = await _crear_materia(client, admin_headers)
 
             response = await client.get(f"/identidad/autoregistro/materias/{materia_id}/comisiones")
 

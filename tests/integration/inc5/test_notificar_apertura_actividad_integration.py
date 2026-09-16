@@ -92,9 +92,11 @@ def _periodo() -> tuple[str, str]:
     return apertura.isoformat(), cierre.isoformat()
 
 
-async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(
+    client: AsyncClient, admin_headers: dict, docente_headers: dict, cantidad: int
+) -> str:
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
-    creada = await client.post("/materias", json={"nombre": nombre}, headers=headers)
+    creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
 
     for i in range(cantidad):
@@ -109,7 +111,7 @@ async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, canti
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=headers,
+            headers=docente_headers,
         )
 
     return creada.json()["id"]
@@ -142,11 +144,13 @@ class TestNotificarAperturaActividadIntegration:
     """Escenarios de `tests/features/inc5/US-5.1.2-notificacion-apertura.feature`."""
 
     async def test_actividad_restringida_a_comisiones_envia_un_email_por_estudiante(
-        self, session, docente_headers, fake_smtp_server
+        self, session, docente_headers, admin_headers, fake_smtp_server
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             comision_a_id, emails_a = await _crear_comision_con_estudiantes(
                 session, uuid.UUID(materia_id), 2
             )
@@ -179,11 +183,13 @@ class TestNotificarAperturaActividadIntegration:
             assert "Parcial 1" in mensaje
 
     async def test_actividad_sin_restriccion_envia_a_todas_las_comisiones_de_la_materia(
-        self, session, docente_headers, fake_smtp_server
+        self, session, docente_headers, admin_headers, fake_smtp_server
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             _comision_id, emails = await _crear_comision_con_estudiantes(
                 session, uuid.UUID(materia_id), 2
             )
@@ -209,7 +215,7 @@ class TestNotificarAperturaActividadIntegration:
         assert destinatarios_notificados == set(emails)
 
     async def test_fallo_de_envio_smtp_no_aborta_la_creacion_de_la_actividad(
-        self, session, docente_headers, monkeypatch
+        self, session, docente_headers, admin_headers, monkeypatch
     ):
         # Puerto sin ningún servidor escuchando — el intento de conexión SMTP falla.
         monkeypatch.setattr(settings, "smtp_host", "127.0.0.1")
@@ -217,7 +223,9 @@ class TestNotificarAperturaActividadIntegration:
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             await _crear_comision_con_estudiantes(session, uuid.UUID(materia_id), 1)
             apertura, cierre = _periodo()
 
@@ -236,11 +244,13 @@ class TestNotificarAperturaActividadIntegration:
         assert response.status_code == 201
 
     async def test_materia_sin_comisiones_no_envia_ningun_email(
-        self, docente_headers, fake_smtp_server
+        self, docente_headers, admin_headers, fake_smtp_server
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura, cierre = _periodo()
 
             response = await client.post(

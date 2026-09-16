@@ -9,7 +9,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc2/US-2.1.5-editar-pregunta.feature")
 
@@ -42,7 +42,7 @@ def context():
 async def _post_crear_materia(nombre: str):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        return await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
 
 
 async def _post_cargar_pregunta_opcion_multiple(banco_id: str, opciones: list[dict]):

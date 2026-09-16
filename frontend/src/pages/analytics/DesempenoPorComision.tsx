@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { Pagination } from "@/components/ui/pagination"
 import {
   obtenerDesempenoPorComision,
   type DesempenoComisionFilaResponse,
@@ -14,6 +15,8 @@ import {
 
 type Columna = "nombre" | "porcentajeAciertosAcumulado" | "actividadesPendientes"
 type Direccion = "asc" | "desc"
+
+const TAMANIO_PAGINA = 20
 
 function ordenarFilas(
   filas: DesempenoComisionFilaResponse[],
@@ -44,6 +47,7 @@ export function DesempenoPorComision() {
 
   const [columna, setColumna] = useState<Columna>("nombre")
   const [direccion, setDireccion] = useState<Direccion>("asc")
+  const [pagina, setPagina] = useState(1)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -64,6 +68,7 @@ export function DesempenoPorComision() {
     setComisionId(value)
     setFilas(null)
     setError(null)
+    setPagina(1)
   }
 
   useEffect(() => {
@@ -99,12 +104,15 @@ export function DesempenoPorComision() {
       setColumna(nuevaColumna)
       setDireccion("asc")
     }
+    setPagina(1)
   }
 
   const filasOrdenadas = useMemo(
     () => (filas ? ordenarFilas(filas, columna, direccion) : []),
     [filas, columna, direccion],
   )
+  const totalPaginas = Math.ceil(filasOrdenadas.length / TAMANIO_PAGINA)
+  const filasPagina = filasOrdenadas.slice((pagina - 1) * TAMANIO_PAGINA, pagina * TAMANIO_PAGINA)
 
   function verDetalle(estudianteId: string) {
     navigate(
@@ -114,7 +122,7 @@ export function DesempenoPorComision() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Desempeño por comisión" }]} />
+      <Breadcrumb items={[{ label: "Reportes", to: "/analytics" }, { label: "Desempeño por comisión" }]} />
       <h1 className="text-lg font-semibold">Desempeño por comisión</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Elegí una materia y una comisión para ver el desempeño de cada estudiante.
@@ -177,6 +185,7 @@ export function DesempenoPorComision() {
       )}
 
       {!error && filas !== null && (
+        <>
         <table className="mt-4 w-full text-sm">
           <thead>
             <tr className="border-b text-left text-muted-foreground">
@@ -198,7 +207,7 @@ export function DesempenoPorComision() {
             </tr>
           </thead>
           <tbody>
-            {filasOrdenadas.map((fila) => (
+            {filasPagina.map((fila) => (
               <tr
                 key={fila.estudianteId}
                 className="cursor-pointer border-b hover:bg-accent"
@@ -231,6 +240,8 @@ export function DesempenoPorComision() {
             ))}
           </tbody>
         </table>
+        <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />
+        </>
       )}
     </div>
   )

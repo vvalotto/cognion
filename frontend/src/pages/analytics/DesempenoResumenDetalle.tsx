@@ -1,5 +1,10 @@
+import { useEffect, useState } from "react"
+
 import { Card } from "@/components/ui/card"
+import { Pagination } from "@/components/ui/pagination"
 import type { DesempenoEstudianteResponse } from "@/lib/analytics-api"
+
+const TAMANIO_PAGINA = 20
 
 function formatearFecha(iso: string): string {
   return new Date(iso).toLocaleString(undefined, {
@@ -54,9 +59,18 @@ export function DesempenoResumenDetalle({
   mensajeVacio,
   onFilaClick,
 }: DesempenoResumenDetalleProps) {
+  const [pagina, setPagina] = useState(1)
+
+  useEffect(() => {
+    setPagina(1)
+  }, [filas])
+
   if (filas.length === 0) {
     return <p className="mt-4 text-sm text-muted-foreground">{mensajeVacio}</p>
   }
+
+  const totalPaginas = Math.ceil(filas.length / TAMANIO_PAGINA)
+  const filasPagina = filas.slice((pagina - 1) * TAMANIO_PAGINA, pagina * TAMANIO_PAGINA)
 
   return (
     <>
@@ -86,7 +100,7 @@ export function DesempenoResumenDetalle({
       <p className="mt-4 mb-2 text-sm text-muted-foreground">Detalle por evaluación</p>
 
       <div className="flex flex-col gap-3">
-        {filas.map((fila) => (
+        {filasPagina.map((fila) => (
           <Card
             key={fila.evaluacionId}
             className={`eval-item flex items-center justify-between gap-3 p-4 ${
@@ -120,6 +134,7 @@ export function DesempenoResumenDetalle({
           </Card>
         ))}
       </div>
+      <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />
     </>
   )
 }

@@ -56,13 +56,12 @@ def _headers_con_rol(rol: TipoPerfil) -> dict[str, str]:
 
 
 async def _crear_materia_con_comision() -> tuple[str, str]:
-    docente_headers = _headers_con_rol(TipoPerfil.DOCENTE)
     admin_headers = _headers_con_rol(TipoPerfil.ADMINISTRADOR)
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         materia_resp = await client.post(
-            "/materias", json={"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=docente_headers
+            "/materias", json={"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=admin_headers
         )
         materia_id = materia_resp.json()["id"]
 
@@ -87,11 +86,11 @@ async def _crear_materia_con_comision() -> tuple[str, str]:
 
 
 async def _crear_materia_sin_comision() -> str:
-    docente_headers = _headers_con_rol(TipoPerfil.DOCENTE)
+    admin_headers = _headers_con_rol(TipoPerfil.ADMINISTRADOR)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         materia_resp = await client.post(
-            "/materias", json={"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=docente_headers
+            "/materias", json={"nombre": f"Materia BDD {uuid.uuid4()}"}, headers=admin_headers
         )
         return materia_resp.json()["id"]
 

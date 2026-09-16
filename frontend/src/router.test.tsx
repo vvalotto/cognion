@@ -97,8 +97,16 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
   })
 
-  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de docente", async () => {
+  it("la ruta /materias/nueva muestra acceso denegado con sesión de docente (unificación con Comisión)", async () => {
     setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
     await router.navigate("/materias/nueva")
     render(<RouterProvider router={router} />)
 
@@ -563,14 +571,17 @@ describe("router (integración)", () => {
       expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
     })
 
-    it("Docente navega a Desempeño por comisión por el menú (US-ADJ-48)", async () => {
+    it("Docente navega a Analytics por el menú y de ahí a Desempeño por comisión por la tarjeta", async () => {
       setSession({ token: "t", rol: "docente" })
       await router.navigate("/actividad-evaluativa/materias")
       render(<RouterProvider router={router} />)
       await screen.findByRole("heading", { name: "Mis materias" })
 
       const user = userEvent.setup()
-      await user.click(screen.getByRole("link", { name: "Desempeño por comisión" }))
+      await user.click(screen.getByRole("link", { name: "Reportes" }))
+      await screen.findByRole("heading", { name: "Reportes" })
+
+      await user.click(screen.getByText("Desempeño por comisión"))
 
       expect(
         await screen.findByRole("heading", { name: "Desempeño por comisión" }),

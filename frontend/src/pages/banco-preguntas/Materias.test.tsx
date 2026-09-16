@@ -113,7 +113,19 @@ describe("Materias", () => {
     expect(await screen.findByText("Ver materia")).toBeInTheDocument()
   })
 
-  it("el botón 'Editar' navega a la edición del nombre sin disparar la navegación de la fila", async () => {
+  it("Docente: no ve '+ Nueva materia' ni acciones de Editar/Eliminar/Activar (unificación con Comisión)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
+
+    renderMaterias()
+    await screen.findByText("Ingeniería de Software")
+
+    expect(screen.queryByText("+ Nueva materia")).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Editar" })).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Eliminar" })).not.toBeInTheDocument()
+  })
+
+  it("Administrador: el botón 'Editar' navega a la edición del nombre sin disparar la navegación de la fila", async () => {
+    setSession({ token: "t", rol: "administrador" })
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materiasResponse))
     const user = userEvent.setup()
 
@@ -125,7 +137,8 @@ describe("Materias", () => {
     expect(await screen.findByText("Editar materia")).toBeInTheDocument()
   })
 
-  it("una materia inactiva muestra 'Activar' en vez de 'Editar'/'Eliminar', y al activarla pasa a 'Activa'", async () => {
+  it("Administrador: una materia inactiva muestra 'Activar' en vez de 'Editar'/'Eliminar', y al activarla pasa a 'Activa'", async () => {
+    setSession({ token: "t", rol: "administrador" })
     const inactivaResponse = [
       { id: "m3", nombre: "Materia Retirada", banco_id: "b3", cantidad_preguntas_activas: 0, activa: false },
     ]
@@ -149,7 +162,8 @@ describe("Materias", () => {
     expect(ultimaLlamada?.[1]?.method).toBe("POST")
   })
 
-  it("'+ Nueva materia' navega al formulario de alta", async () => {
+  it("Administrador: '+ Nueva materia' navega al formulario de alta", async () => {
+    setSession({ token: "t", rol: "administrador" })
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
     const user = userEvent.setup()
 

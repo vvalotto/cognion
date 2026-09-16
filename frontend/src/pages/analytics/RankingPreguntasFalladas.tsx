@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { Pagination } from "@/components/ui/pagination"
 import {
   obtenerRankingPreguntasFalladas,
   type RankingPreguntaFalladaResponse,
@@ -25,6 +26,8 @@ function severidad(tasaError: number): Severidad {
   return "baja"
 }
 
+const TAMANIO_PAGINA = 20
+
 /** Pantalla "Preguntas más falladas" del Docente (`#doc-ranking-preguntas`, `US-ADJ-50`, RF-22). */
 export function RankingPreguntasFalladas() {
   const [materias, setMaterias] = useState<MateriaListItemResponse[]>([])
@@ -35,6 +38,7 @@ export function RankingPreguntasFalladas() {
 
   const [ranking, setRanking] = useState<RankingPreguntaFalladaResponse[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [pagina, setPagina] = useState(1)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -68,6 +72,7 @@ export function RankingPreguntasFalladas() {
     const controller = new AbortController()
     setError(null)
     setRanking(null)
+    setPagina(1)
     obtenerRankingPreguntasFalladas(materiaId, comisionId || undefined, controller.signal)
       .then(setRanking)
       .catch((err) => {
@@ -79,7 +84,7 @@ export function RankingPreguntasFalladas() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Preguntas más falladas" }]} />
+      <Breadcrumb items={[{ label: "Reportes", to: "/analytics" }, { label: "Preguntas más falladas" }]} />
       <h1 className="text-lg font-semibold">Preguntas más falladas</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Ranking de preguntas por tasa de error, de toda la materia o de una comisión puntual.
@@ -148,37 +153,47 @@ export function RankingPreguntasFalladas() {
       )}
 
       {!error && ranking !== null && ranking.length > 0 && (
-        <div className="mt-4 flex flex-col gap-2">
-          {ranking.map((fila, indice) => {
-            const nivel = severidad(fila.tasaError)
-            const porcentaje = Math.round(fila.tasaError * 100)
-            return (
-              <div key={fila.preguntaId} className="ranking-row rounded-lg border p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 gap-3">
-                    <span className="shrink-0 text-sm font-semibold text-muted-foreground">
-                      {indice + 1}.
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium">{fila.enunciado}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {fila.unidadTematica} · {fila.tema}
-                      </p>
+        <>
+          <div className="mt-4 flex flex-col gap-2">
+            {ranking
+              .slice((pagina - 1) * TAMANIO_PAGINA, pagina * TAMANIO_PAGINA)
+              .map((fila, indiceEnPagina) => {
+                const indice = (pagina - 1) * TAMANIO_PAGINA + indiceEnPagina
+                const nivel = severidad(fila.tasaError)
+                const porcentaje = Math.round(fila.tasaError * 100)
+                return (
+                  <div key={fila.preguntaId} className="ranking-row rounded-lg border p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex min-w-0 gap-3">
+                        <span className="shrink-0 text-sm font-semibold text-muted-foreground">
+                          {indice + 1}.
+                        </span>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">{fila.enunciado}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {fila.unidadTematica} · {fila.tema}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`shrink-0 text-sm font-bold ${COLOR_TEXTO[nivel]}`}
+                      >
+                        {porcentaje}%
+                      </span>
                     </div>
+                    <p className="mt-1 pl-6 text-xs text-muted-foreground">
+                      {fila.cantidadPresentaciones} presentaciones · {fila.cantidadFallos} fallos
+                    </p>
                   </div>
-                  <span
-                    className={`shrink-0 text-sm font-bold ${COLOR_TEXTO[nivel]}`}
-                  >
-                    {porcentaje}%
-                  </span>
-                </div>
-                <p className="mt-1 pl-6 text-xs text-muted-foreground">
-                  {fila.cantidadPresentaciones} presentaciones · {fila.cantidadFallos} fallos
-                </p>
-              </div>
-            )
-          })}
-        </div>
+                )
+              })}
+          </div>
+          <Pagination
+            pagina={pagina}
+            totalPaginas={Math.ceil(ranking.length / TAMANIO_PAGINA)}
+            onCambiarPagina={setPagina}
+          />
+        </>
       )}
     </div>
   )

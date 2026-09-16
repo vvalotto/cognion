@@ -162,7 +162,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
 
 
 async def _crear_materia() -> str:
-    respuesta = await _post("/materias", {"nombre": "IS-2026-C3"}, headers=docente_headers())
+    respuesta = await _post("/materias", {"nombre": "IS-2026-C3"}, headers=admin_headers())
     return respuesta.json()["id"]
 
 

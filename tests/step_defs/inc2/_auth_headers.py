@@ -11,3 +11,8 @@ from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 def docente_headers() -> dict[str, str]:
     jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.DOCENTE)
     return {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
+def admin_headers() -> dict[str, str]:
+    jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
