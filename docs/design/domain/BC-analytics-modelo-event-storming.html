@@ -254,7 +254,7 @@
       métodos y tipos de retorno.
     </p>
     <div class="meta-row">
-      <span>Estado: <code>borrador</code> (§8 pendiente de aprobación)</span>
+      <span>Estado: <code>vigente</code> — aprobado, Incremento 5-ADJ Iteración 4 cerrada</span>
       <span>Issues: <code>#227</code>, <code>#319</code></span>
       <span>Fuente: <code>docs/design/domain/BC-analytics-modelo.md</code> §4, §5, §8</span>
     </div>
@@ -353,7 +353,7 @@ flowchart TB
     </div>
 
     <section>
-      <div class="eyebrow"><span class="dot"></span> Ampliación 2026-09-12 · Incremento 5-ADJ · <code>US-ADJ-33</code> — pendiente de aprobación</div>
+      <div class="eyebrow"><span class="dot"></span> Ampliación 2026-09-12 · Incremento 5-ADJ · <code>US-ADJ-33</code> — aprobada e implementada</div>
       <p class="lede">
         Cuatro queries nuevas (RF-20 a RF-23), todas de actor Docente — el <code>EvaluacionDesempenoConsultaPort</code>
         ya existente crece con dos métodos más, en vez de sumar un puerto por query (mismo
@@ -422,13 +422,14 @@ flowchart TB
       </figure>
 
       <div class="callout">
-        <strong>Hallazgo de deriva documental (no bloquea este modelo)</strong>
+        <strong>Hallazgo de deriva documental — resuelto</strong>
         <code>comisiones_ids</code>, <code>titulo</code>, <code>unidad_tematica</code> y
-        <code>tema</code> ya existen en
+        <code>tema</code> ya existían en
         <code>src/actividad_evaluativa/entities/actividad_evaluativa_periodo_abierto.py</code>
-        pero <code>BC-actividad-evaluativa-modelo.md</code> §5 todavía no los documenta — este
-        modelo de Analytics ya diseña contra el código real. Corrección formal del modelo ajeno
-        diferida a la Iteración 5 (revisión documental transversal) del Incremento 5-ADJ.
+        antes de que <code>BC-actividad-evaluativa-modelo.md</code> §5 los documentara — este
+        modelo de Analytics diseñó contra el código real primero. Corrección formal del modelo
+        ajeno cerrada en la Iteración 5 (revisión documental transversal, <code>US-ADJ-52</code>,
+        2026-09-16) del Incremento 5-ADJ.
       </div>
     </section>
 
