@@ -21,10 +21,11 @@
 > `docs/plans/inc5-adj/inc5-adj-candidatas.md`): se agrega el §13 con dos comandos nuevos
 > (recuperación de contraseña por autoservicio y autoregistro de Docente/Estudiante con
 > selección de perfil) y la ampliación de la política de contraseña segura (INV-ID-11).
-> `INV-ID-11` ampliada ya está **implementada** (`US-ADJ-36`, `Usuario.validar_password_nueva`
-> en `src/identidad/entities/usuario.py`) — los comandos de recuperación y autoregistro
-> siguen sin implementar (Iteraciones 2 y 3 del incremento). No
-> reemplaza nada de lo ya aprobado en Incremento 1/2 — solo agrega.
+> `INV-ID-11` ampliada implementada (`US-ADJ-36`, `Usuario.validar_password_nueva` en
+> `src/identidad/entities/usuario.py`); los comandos de recuperación (`US-ADJ-38` a `40`,
+> RF-24) y autoregistro (`US-ADJ-41` a `43`, RF-25) también implementados — Iteraciones 2 y 3
+> del incremento cerradas (actualizado 2026-09-16, `US-ADJ-52`). No reemplaza nada de lo ya
+> aprobado en Incremento 1/2 — solo agrega.
 
 ---
 

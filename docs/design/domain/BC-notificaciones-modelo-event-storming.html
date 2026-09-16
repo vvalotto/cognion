@@ -1,4 +1,4 @@
-<title>Event Storming Actividad Evaluativa</title>
+<title>Event Storming Notificaciones</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
@@ -11,12 +11,12 @@
     --line-soft: #d9dee5;
     --accent: #9c6712;
     --accent-soft: #f1e3cc;
-    --cmd: #5b8def;
-    --cmd-soft: #dce7fb;
-    --evt: #c98a2e;
-    --evt-soft: #f6e3c4;
-    --pol: #9b6fd1;
-    --pol-soft: #ece2f8;
+    --qry: #5b8def;
+    --qry-soft: #dce7fb;
+    --port: #c98a2e;
+    --port-soft: #f6e3c4;
+    --src: #9b6fd1;
+    --src-soft: #ece2f8;
     --shadow: 0 1px 2px rgba(27, 34, 44, 0.06), 0 4px 14px rgba(27, 34, 44, 0.05);
     --font-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
     --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
@@ -33,12 +33,12 @@
       --line-soft: #232a33;
       --accent: #e3a83f;
       --accent-soft: #3a2f18;
-      --cmd: #7fa8f7;
-      --cmd-soft: #1c2740;
-      --evt: #e0a34f;
-      --evt-soft: #3a2c14;
-      --pol: #c19eea;
-      --pol-soft: #2c2440;
+      --qry: #7fa8f7;
+      --qry-soft: #1c2740;
+      --port: #e0a34f;
+      --port-soft: #3a2c14;
+      --src: #c19eea;
+      --src-soft: #2c2440;
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
     }
   }
@@ -52,12 +52,12 @@
     --line-soft: #232a33;
     --accent: #e3a83f;
     --accent-soft: #3a2f18;
-    --cmd: #7fa8f7;
-    --cmd-soft: #1c2740;
-    --evt: #e0a34f;
-    --evt-soft: #3a2c14;
-    --pol: #c19eea;
-    --pol-soft: #2c2440;
+    --qry: #7fa8f7;
+    --qry-soft: #1c2740;
+    --port: #e0a34f;
+    --port-soft: #3a2c14;
+    --src: #c19eea;
+    --src-soft: #2c2440;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.35);
   }
 
@@ -157,9 +157,9 @@
 
   .legend .item { display: inline-flex; align-items: center; gap: 0.48rem; color: var(--muted); }
   .legend .swatch { width: 13px; height: 13px; border-radius: 3px; flex: none; }
-  .legend .swatch.cmd { background: var(--cmd-soft); border: 1.5px solid var(--cmd); }
-  .legend .swatch.evt { background: var(--evt-soft); border: 1.5px solid var(--evt); }
-  .legend .swatch.pol { background: var(--pol-soft); border: 1.5px solid var(--pol); }
+  .legend .swatch.qry { background: var(--qry-soft); border: 1.5px solid var(--qry); }
+  .legend .swatch.port { background: var(--port-soft); border: 1.5px solid var(--port); }
+  .legend .swatch.src { background: var(--src-soft); border: 1.5px solid var(--src); }
   .legend .swatch.lane { background: none; border: 1.5px dashed var(--muted); }
 
   figure {
@@ -244,101 +244,111 @@
 <div class="page">
 
   <header class="masthead">
-    <div class="eyebrow"><span class="dot"></span> BC Actividad Evaluativa · Incremento 3 · Iteración 0 — Modelado</div>
-    <h1>Event storming, en línea de tiempo</h1>
+    <div class="eyebrow"><span class="dot"></span> BC Notificaciones · Incremento 5 · Iteración 0 — Modelado</div>
+    <h1>Event storming ligero, disparado desde otro BC</h1>
     <p class="subtitle">
-      La vista narrativa del modelo — quién dispara qué, en qué orden, y dónde el
-      <code>VerificadorDeVencimientos</code> se mete en la línea de tiempo aunque no sea un
-      actor humano. Para la estructura de aggregates y el detalle de estados, ver
-      <code>BC-actividad-evaluativa-modelo-diagramas.html</code>.
+      Sin comando ni evento de dominio propios — Notificaciones no decide nada, reacciona.
+      La vista narrativa acá es de <strong>disparo → resolución de destinatarios → envío</strong>,
+      no de comandos de un actor humano (no hay ninguno: el único disparador es Actividad
+      Evaluativa). Ver <code>docs/design/domain/BC-notificaciones-modelo.md</code> para el
+      detalle completo de puertos y hot spots.
     </p>
     <div class="meta-row">
-      <span>Estado: <code>vigente</code> — aprobado, Incremento 3 validado (<code>BL-004</code>)</span>
-      <span>Issue: <code>#137</code></span>
-      <span>Fuente: <code>docs/design/domain/BC-actividad-evaluativa-modelo.md</code> §3</span>
+      <span>Estado: <code>vigente</code> — aprobado, Incremento 5 validado (<code>BL-009</code>)</span>
+      <span>Issues: <code>#304</code></span>
+      <span>Fuente: <code>docs/design/domain/BC-notificaciones-modelo.md</code> §3, §4, §5</span>
     </div>
   </header>
 
   <main>
 
     <div class="legend">
-      <span class="item"><span class="swatch cmd"></span>Comando</span>
-      <span class="item"><span class="swatch evt"></span>Evento de dominio</span>
-      <span class="item"><span class="swatch pol"></span>Regla de la Policy (dispara sobre el paso del tiempo)</span>
-      <span class="item"><span class="swatch lane"></span>Carril = actor</span>
+      <span class="item"><span class="swatch qry"></span>Evento de dominio (disparador)</span>
+      <span class="item"><span class="swatch port"></span>Puerto (propio de Notificaciones o de disparo)</span>
+      <span class="item"><span class="swatch src"></span>Fuente / destino externo (BC dueño)</span>
+      <span class="item"><span class="swatch lane"></span>Carril = BC / capa</span>
     </div>
 
     <figure>
       <div class="diagram-wrap">
 <pre class="mermaid">
 flowchart TB
-    subgraph DOCENTE["🧑‍🏫 Docente — sobre ActividadEvaluativaPeriodoAbierto"]
+    subgraph AE["🗓️ Actividad Evaluativa — único disparador, sin acción humana sobre Notificaciones"]
         direction LR
-        C1["CrearActividadPeriodoAbierto"] --> E1["ActividadEvaluativaCreada"]
-        E1 --> C2["ModificarPeriodoDisponibilidad"] --> E2["PeriodoDisponibilidadModificado"]
-        E2 --> C3["CerrarActividad (opcional)"] --> E3["ActividadEvaluativaCerrada"]
+        E1["ActividadEvaluativaCreada\n(CrearActividadPeriodoAbiertoUseCase)"]
+        E2["ActividadEvaluativaCerrada\n(CerrarActividadUseCase, solo cierre manual)"]
     end
 
-    subgraph ESTUDIANTE["🎓 Estudiante — sobre Evaluacion"]
+    subgraph DISPARO["Puerto de disparo — dueño Actividad Evaluativa, implementado por Notificaciones"]
         direction LR
-        C4["IniciarEvaluacion"] --> E4["EvaluacionIniciada"]
-        E4 --> C5["RegistrarRespuesta (×N por pregunta)"] --> E5["RespuestaRegistrada"]
-        E5 --> C6["SuspenderEvaluacion"] --> E6["EvaluacionSuspendida"]
-        E6 --> C7["ReanudarEvaluacion"] --> E7["EvaluacionReanudada"]
-        E7 --> C5
-        E5 --> C8["FinalizarEvaluacion"] --> E8["EvaluacionFinalizada"]
+        NP["NotificacionPort\nnotificar_apertura / notificar_cierre"]
     end
 
-    subgraph POLICY["⏰ Sistema — VerificadorDeVencimientos, no es aggregate"]
+    subgraph NOTIF["Notificaciones — resuelve destinatarios y envía"]
         direction LR
-        P1{{"Regla 1 — inactividad mayor al umbral"}}
-        P2{{"Regla 2 — fecha_cierre vencida, pasivo"}}
-        P3{{"Regla 3 — cascada de CerrarActividad"}}
+        P1["ComisionConsultaPort\n(copia propia — única con email)"]
+        P2["CanalEnvioPort\n(SmtpCanalEnvio)"]
     end
 
-    P1 -. emite .-> C6
-    P2 -. emite .-> C8
-    P3 -. emite .-> C8
-    E3 -. dispara .-> P3
+    subgraph DEST["🎓 Estudiante — destinatario, sin interacción propia con este BC"]
+        direction LR
+        M["Email de apertura / cierre"]
+    end
 
-    class C1,C2,C3,C4,C5,C6,C7,C8 cmd
-    class E1,E2,E3,E4,E5,E6,E7,E8 evt
-    class P1,P2,P3 pol
+    subgraph FUENTE["Fuente — BC dueño"]
+        direction LR
+        F1["Comisión — roster + email\nIdentidad"]
+    end
 
-    classDef cmd fill:#dce7fb,stroke:#5b8def,color:#1b2a4a,stroke-width:1px
-    classDef evt fill:#f6e3c4,stroke:#c98a2e,color:#5a3a10,stroke-width:1px
-    classDef pol fill:#ece2f8,stroke:#9b6fd1,color:#3a2a52,stroke-width:1px
+    E1 --> NP
+    E2 --> NP
+    NP --> P1
+    P1 --> F1
+    NP --> P2
+    P2 --> M
+
+    class E1,E2 qry
+    class NP,P1,P2 port
+    class F1 src
+
+    classDef qry fill:#dce7fb,stroke:#5b8def,color:#1b2a4a,stroke-width:1px
+    classDef port fill:#f6e3c4,stroke:#c98a2e,color:#5a3a10,stroke-width:1px
+    classDef src fill:#ece2f8,stroke:#9b6fd1,color:#3a2a52,stroke-width:1px
 </pre>
       </div>
       <figcaption>
-        <strong>Lo que hay que ver acá:</strong> tres carriles, no dos — el
-        <code>VerificadorDeVencimientos</code> es un tercer emisor de comandos que no tiene
-        actor humano detrás. <code>SuspenderEvaluacion</code> y <code>FinalizarEvaluacion</code>
-        son los dos puntos donde convergen varios orígenes: <code>FinalizarEvaluacion</code> lo
-        puede disparar el propio estudiante, la Regla 2 (vencimiento pasivo) o la Regla 3
-        (cascada inmediata de un cierre manual del docente) — son el mismo comando y el mismo
-        evento sin importar quién lo emitió (payload distingue el actor, no el tipo de evento).
-        El orden dentro de cada carril es narrativo, no una secuencia obligatoria: un estudiante
-        puede finalizar sin haber suspendido nunca, o suspenderse y reanudarse varias veces.
+        <strong>Lo que hay que ver acá:</strong> los dos únicos eventos que disparan algo en
+        este BC vienen de un solo BC ajeno (Actividad Evaluativa) — no hay ningún comando que
+        un Docente, Estudiante o Administrador invoque directamente sobre Notificaciones.
+        <code>ComisionConsultaPort</code> es la única de las tres copias de este puerto que
+        existen en el proyecto (Analytics, Banco de Preguntas, Notificaciones) que trae
+        <code>email</code>, porque es la única que lo necesita para el paso final del flujo.
       </figcaption>
     </figure>
 
     <div class="callout">
-      <strong>Por qué la Policy cruza los carriles</strong>
-      En event storming clásico, una regla de negocio disparada automáticamente (una "Policy")
-      se dibuja como una nota lila conectando un evento con un comando nuevo — acá,
-      <code>ActividadEvaluativaCerrada</code> (carril Docente) dispara la Regla 3, que a su vez
-      emite <code>FinalizarEvaluacion</code> sobre cada <code>Evaluacion</code> activa (carril
-      Estudiante). Es la única flecha que cruza de un aggregate al otro en todo el modelo — y
-      cruza por la Policy, nunca por invariante compartido entre los dos aggregates (ver
-      diagrama de estructura, sección 01 del archivo de diagramas).
+      <strong>Por qué no hay carril de Policy ni de Sistema como en Actividad Evaluativa</strong>
+      A diferencia de <code>BC-actividad-evaluativa-modelo-event-storming.html</code>
+      (<code>VerificadorDeVencimientos</code>, que vigila el paso del tiempo), acá no hay
+      ningún proceso que corra solo y decida disparar algo por su cuenta — el disparo siempre
+      viene sincrónicamente de la misma transacción de proceso que ya persistió el evento de
+      Actividad Evaluativa (§2 del documento de modelo — "recibir un disparo, resolver
+      destinatarios, enviar").
+    </div>
+
+    <div class="callout">
+      <strong>Segundo BC del sistema sin aggregate propio</strong>
+      El primero fue Analytics, por ser puramente de lectura. Notificaciones no tiene
+      aggregate por un motivo distinto: es puramente de <em>efecto de borde</em> — no hay
+      estado que mutar ni consulta que resolver, solo un email que sale o no sale (§2, §6
+      decisión 4 — un fallo de envío se loguea y no aborta nada).
     </div>
 
   </main>
 
   <footer>
-    <span>Cognión — BC Actividad Evaluativa</span>
-    <span>Modelado en conversación con Víctor, 2026-08-25</span>
+    <span>Cognión — BC Notificaciones</span>
+    <span>Modelado en conversación con Víctor, 2026-09-10 · Diagramas agregados 2026-09-16 (US-ADJ-52)</span>
   </footer>
 
 </div>

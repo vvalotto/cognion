@@ -1,7 +1,9 @@
 # BC Actividad Evaluativa — Modelo de Dominio (Event Storming)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue #137 (US-3.0.1, Iteración 0, Incremento 3).**
+> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
+> #137 (US-3.0.1, Iteración 0, Incremento 3, cerrado 2026-08-25). Incremento 3 completo y
+> validado (`BL-004`) — actualizado 2026-09-16 durante la revisión documental transversal del
+> Incremento 5-ADJ.**
 > Alcance de este modelo: exclusivamente el modo **período abierto** (RF-11, RF-11b, RF-12,
 > RF-13). El modo **en vivo** (RF-08 a RF-10) y las notificaciones (RF-14) no forman parte de
 > este incremento (`docs/plans/inc3/inc3-candidatas.md`) — quedan fuera de alcance de este
@@ -372,13 +374,12 @@ propias ni stream de eventos) — es una **Policy/Process Manager** que reaccion
 tiempo, no a un comando de un actor humano. Es el mecanismo concreto detrás de los dos puntos
 que quedaban solo mencionados como "Sistema" en §3/§8 antes de esta revisión.
 
-**Disparador:** ejecución periódica (job en background — cadencia a definir en la spec de
-implementación de la Iteración 2, ej. cada 1–5 minutos; a esta escala de 30-60 alumnos no
-justifica un mecanismo más fino que polling). Alternativa de menor infraestructura, válida como
-mismo criterio: chequeo perezoso disparado por cualquier query relevante (ej. al listar
-evaluaciones activas), aceptando una demora acotada entre el vencimiento real y la emisión del
-evento — no es un caso donde la exactitud al segundo importe (a diferencia del ranking en vivo,
-`RNF_v1.md` Escenario 1, que si tiene ese requisito y no aplica a este BC).
+**Disparador:** ejecución periódica (job en background). **Resuelto en `US-3.2.4`:** `asyncio`
+background task en el `lifespan` de FastAPI, cadencia de 120 segundos configurable
+(`verificador_vencimientos_cadencia_segundos`) — polling simple, a esta escala de 30-60
+alumnos no justificó un mecanismo más fino ni la alternativa de chequeo perezoso considerada
+originalmente (no es un caso donde la exactitud al segundo importe, a diferencia del ranking
+en vivo, `RNF_v1.md` Escenario 1, que sí tiene ese requisito y no aplica a este BC).
 
 **Regla 1 — inactividad (nuevo, a pedido de Víctor):**
 ```
@@ -446,7 +447,7 @@ Mismo patrón que `MateriaPort` (BC Identidad → BC Banco de Preguntas, `US-2.1
 se define y consume dentro de `src/actividad_evaluativa/entities/ports/`, implementado por un
 adapter in-process propio en `src/actividad_evaluativa/frameworks/adapters/`:
 
-| Puerto (a definir) | Consumido por | Resuelve |
+| Puerto (consumido, hacia otro BC) | Consumido por | Resuelve |
 |---|---|---|
 | `PreguntaConsultaPort` → BC Banco de Preguntas (`PreguntaRepositoryPort.filtrar`/`obtener_por_id`) | `CrearActividadPeriodoAbierto` (INV-AE-01), `IniciarEvaluacion` (arma el set aleatorio, RF-12), `RegistrarRespuesta` (INV-AE-10) | Contar preguntas activas de la materia, samplear `cantidad_preguntas` al azar, consultar la respuesta correcta vigente |
 | `MateriaConsultaPort` → BC Banco de Preguntas | `CrearActividadPeriodoAbierto` | Validar que `materia_id` existe |
@@ -456,6 +457,13 @@ El sampleo aleatorio de RF-12 se resuelve en el propio Use Case de `IniciarEvalu
 (`random.sample` sobre el resultado de `PreguntaConsultaPort`) — no requiere ensanchar el puerto
 de Banco de Preguntas con un método de muestreo aleatorio, mismo criterio de "no ensanchar
 puertos existentes" ya aplicado en `US-2.1.9`.
+
+**Puerto propio, en la dirección inversa (agregado en Incremento 5, `US-5.1.1`):**
+`NotificacionPort` lo define y posee este BC — no lo consume de otro, sino que otro BC
+(Notificaciones) lo **implementa** (`NotificacionPortInProcess`), para que
+`CrearActividadPeriodoAbiertoUseCase`/`CerrarActividadUseCase` disparen un email sin importar
+`src.notificaciones` directamente. Detalle completo:
+`docs/design/domain/BC-notificaciones-modelo.md` §5.
 
 ---
 

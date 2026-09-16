@@ -1,7 +1,10 @@
 # BC Banco de Preguntas — Wireframes: Carga y Filtrado
 
-> Estado documental: **vigente — aprobado por Víctor en sesión de trabajo, 2026-07-31 (pendiente
-> de formalizar cierre de Issue — ver §5).**
+> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
+> [#39](https://github.com/vvalotto/cognion/issues/39) (US-2.0.2, Iteración 0, Incremento 2,
+> cerrado 2026-07-31). Incremento 2 completo y validado (`BL-003`) — actualizado 2026-09-16
+> durante la revisión documental transversal del Incremento 5-ADJ (ver §5, nota que quedaba
+> "pendiente de formalizar" y ya estaba resuelta).**
 > Usado como input de las specs US-IEDD de la Iteración 1 (`docs/specs/inc2/US-2.1.x`).
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-04, RF-05, RF-06), `docs/design/domain/BC-banco-preguntas-modelo.md`
@@ -148,7 +151,8 @@ de las pantallas de sesión en vivo (Incremento 6), no de estas pantallas de ges
 
 ## 5. Próximo paso
 
-Prototipo y spec completos, validados por Víctor en sesión de trabajo (2026-07-31) — falta
-formalizar la creación y cierre del Issue tipo `Modelado` correspondiente en GitHub (mismo
-patrón que `US-1.0.2`, Issue #4) para que quede como fuente de verdad de gestión, junto con el
-Issue de `docs/design/domain/BC-banco-preguntas-modelo.md` (equivalente a `US-1.0.1`, Issue #2).
+Prototipo y spec completos, validados por Víctor en sesión de trabajo (2026-07-31). **Resuelto
+2026-09-16:** el Issue de GitHub sí se formalizó (`US-2.0.2`, Issue
+[#39](https://github.com/vvalotto/cognion/issues/39), cerrado 2026-07-31) — esta nota había
+quedado desactualizada, apuntando a un pendiente que ya no existía. Sin próximo paso pendiente
+sobre este documento.

@@ -1,8 +1,9 @@
 # BC Analytics — Modelo de Dominio (Event Storming ligero)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue [#227](https://github.com/vvalotto/cognion/issues/227) (US-4.0.1,
-> Iteración 0, Incremento 4).**
+> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
+> [#227](https://github.com/vvalotto/cognion/issues/227) (US-4.0.1, Iteración 0, Incremento
+> 4, cerrado 2026-09-04). Incremento 4 completo y validado (`BL-006`) — actualizado
+> 2026-09-16 durante la revisión documental transversal del Incremento 5-ADJ.**
 > Alcance de este modelo: RF-15 (vista de desempeño individual del estudiante, acotada a
 > evaluaciones de período abierto — sin sesiones en vivo, que no existen todavía, Incremento
 > 6), RF-16 (seguimiento por alumno) y RF-17 (seguimiento por curso y tema). RF-18 (KPIs
@@ -21,10 +22,10 @@
 > Diagrama complementario (puertos de consulta, sus métodos y DTOs, en Mermaid):
 > `BC-analytics-modelo-diagramas.html`.
 >
-> **Ampliación 2026-09-12 — pendiente de aprobación** (`US-ADJ-33`, Incremento 5-ADJ,
-> `docs/plans/inc5-adj/inc5-adj-candidatas.md`): se agrega el §8 con las 4 queries de RF-20 a
-> RF-23 (agregadas a `RF_v1.md` el 2026-09-09, sin incremento asignado hasta ahora). No
-> reemplaza nada de lo ya aprobado en `US-4.0.1` — solo agrega.
+> **Ampliación 2026-09-12 — aprobada e implementada** (`US-ADJ-33`, Incremento 5-ADJ,
+> `docs/plans/inc5-adj/inc5-adj-candidatas.md`): §8 con las 4 queries de RF-20 a RF-23
+> (numeradas y pasadas a "Implementado" en `RF_v1.md`/`matrix.md` el 2026-09-16,
+> `US-ADJ-52`). No reemplaza nada de lo ya aprobado en `US-4.0.1` — solo agrega.
 
 ---
 

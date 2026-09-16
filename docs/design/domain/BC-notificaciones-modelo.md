@@ -1,8 +1,9 @@
 # BC Notificaciones — Modelo de Dominio (Event Storming ligero)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue [#304](https://github.com/vvalotto/cognion/issues/304) (US-5.0.1,
-> Iteración 0, Incremento 5).**
+> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
+> [#304](https://github.com/vvalotto/cognion/issues/304) (US-5.0.1, Iteración 0, Incremento
+> 5, cerrado 2026-09-10). Incremento 5 completo y validado (`BL-009`) — actualizado
+> 2026-09-16 durante la revisión documental transversal del Incremento 5-ADJ.**
 > Alcance de este modelo: RF-14 (email de apertura y cierre de una Actividad Evaluativa de
 > período abierto). Sin pantalla propia — el email es el único artefacto visible, no requiere
 > wireframes.
@@ -155,24 +156,24 @@ notificación.
    creación/cierre de la Actividad se confirma igual. Mismo criterio de "deuda técnica
    consciente" ya aceptado en `ADR-006` para el acoplamiento de la integración.
 
-**Pendiente de definir en la spec de implementación (no bloquea la aprobación del modelo):**
-- Contenido exacto del asunto/cuerpo del email (texto plano vs. HTML mínimo, qué datos de la
-  actividad incluir) — a resolver en `US-5.1.2`/`US-5.1.3`.
+**Pendientes al aprobar el modelo — resueltos durante la Iteración 1 (actualizado
+2026-09-16):**
+- **Resuelto en `US-5.1.2`/`US-5.1.3`:** contenido del asunto/cuerpo del email — texto plano,
+  con los datos de la actividad (materia, título, fecha de apertura/cierre según el caso).
 - **Resuelto en `US-5.1.1`:** sin Mailhog/Mailtrap instalado en este entorno de desarrollo —
   la verificación automatizada (unit/integration/BDD) usa un servidor SMTP-stub embebido en
   los propios tests (`tests/integration/inc5/`, `tests/step_defs/inc5/`), sin depender de
   infraestructura externa. Instalar Mailhog real (vía Homebrew, mismo criterio que PostgreSQL)
   queda diferido para cuando haga falta un smoke test manual end-to-end de `US-5.1.2`/`5.1.3`.
-- Si `CrearActividadPeriodoAbiertoUseCase`/`CerrarActividadUseCase` acumulan CBO al inyectar
-  `NotificacionPort` (mismo patrón de CRITICAL de CBO ya visto repetidamente en el proyecto,
-  `US-2.1.2`/`2.1.5`/`2.1.6`/`3.1.3`/`3.2.1`) — a resolver si el pre-push gate lo detecta,
-  mismo criterio de separación por responsabilidad ya aplicado en esos casos.
+- **Ocurrió, resuelto en `US-5.1.2`:** `CrearActividadPeriodoAbiertoUseCase` acumuló CBO al
+  inyectar `NotificacionPort` (CBO 11/10, CRITICAL en pre-push) — mismo patrón recurrente ya
+  visto en `US-2.1.2`/`2.1.5`/`2.1.6`/`3.1.3`/`3.2.1`. Corregido, CBO 11 → 10.
 
 ---
 
 ## 7. Próximo paso
 
-Modelo completo, sin hot spots de producto abiertos (§6) — pasa a aprobación explícita de
-Víctor en el comentario de cierre del Issue #304 (DoD tipo `Modelado`,
-`WORKFLOW-DESARROLLO.md` §2). Una vez aprobado, es el input directo de las specs US-IEDD de la
-Iteración 1 (`docs/plans/inc5/inc5-candidatas.md`).
+Modelo completo, sin hot spots de producto abiertos (§6). **Aprobado por Víctor en el cierre
+del Issue #304 (2026-09-10)** — fue el input directo de las specs US-IEDD de la Iteración 1
+(`docs/plans/inc5/inc5-candidatas.md`), Incremento 5 completo y validado en `BL-009`. Sin
+próximo paso pendiente sobre este modelo.

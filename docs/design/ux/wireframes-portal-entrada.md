@@ -55,12 +55,13 @@ rol, sin navegación).
 > documento no se reescribe retroactivamente — la tabla de arriba refleja lo aprobado el
 > 2026-09-07; esta nota documenta el estado vigente.
 >
-> **Hallazgo resuelto 2026-09-16 (track informal, solo `frontend/`):** las 2 cards sueltas de
-> "Desempeño por alumno"/"Desempeño por tema" en `HomeDocente.tsx` (que enlazaban directo a
-> esas dos pantallas, sin pasar por la landing "Reportes" ni incluir los otros 2 informes)
-> se reemplazaron por una única card "Reportes" → `/analytics`, mismo destino y mismo criterio
-> de unificación que el ítem de `.app-nav` de arriba. `HomeDocente.tsx` pasa de 4 a 3 cards de
-> acceso.
+> **Hallazgo resuelto 2026-09-16, en tarea aparte (PR #374, track informal, solo
+> `frontend/`):** las 2 cards sueltas de "Desempeño por alumno"/"Desempeño por tema" en
+> `HomeDocente.tsx` (que enlazaban directo a esas dos pantallas, sin pasar por la landing
+> "Reportes" ni incluir los otros 2 informes) se reemplazaron por una única card "Reportes" →
+> `/analytics`, mismo destino y mismo criterio de unificación que el ítem de `.app-nav` de
+> arriba. `HomeDocente.tsx` pasa de 4 a 3 cards de acceso — Home y menú persistente quedan
+> consistentes entre sí.
 
 ### 2.2 Home Estudiante (`#home-estudiante`) — `US-ADJ-29`
 
