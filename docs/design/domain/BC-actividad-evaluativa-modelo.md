@@ -1,7 +1,9 @@
 # BC Actividad Evaluativa — Modelo de Dominio (Event Storming)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue #137 (US-3.0.1, Iteración 0, Incremento 3).**
+> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
+> #137 (US-3.0.1, Iteración 0, Incremento 3, cerrado 2026-08-25). Incremento 3 completo y
+> validado (`BL-004`) — actualizado 2026-09-16 durante la revisión documental transversal del
+> Incremento 5-ADJ.**
 > Alcance de este modelo: exclusivamente el modo **período abierto** (RF-11, RF-11b, RF-12,
 > RF-13). El modo **en vivo** (RF-08 a RF-10) y las notificaciones (RF-14) no forman parte de
 > este incremento (`docs/plans/inc3/inc3-candidatas.md`) — quedan fuera de alcance de este

@@ -55,11 +55,11 @@ rol, sin navegación).
 > documento no se reescribe retroactivamente — la tabla de arriba refleja lo aprobado el
 > 2026-09-07; esta nota documenta el estado vigente.
 >
-> **Hallazgo pendiente, no resuelto en esta revisión (toca `frontend/`, fuera del alcance de
-> `US-ADJ-52` — Documentación):** las cards de "Desempeño por alumno"/"Desempeño por tema" en
-> `HomeDocente.tsx` siguen enlazando directo a esas dos pantallas, sin pasar por la landing
-> "Reportes" ni incluir los otros 2 informes (Desempeño por comisión, Preguntas más falladas).
-> Reportado como tarea aparte.
+> **Hallazgo resuelto 2026-09-16, en tarea aparte (PR #374, fuera de `US-ADJ-52` —
+> Documentación, tocaba `frontend/`):** las cards de `HomeDocente.tsx` (antes "Desempeño por
+> alumno"/"Desempeño por tema" directas) ahora son **Banco de Preguntas · Actividades ·
+> Reportes**, la última apuntando a la misma landing `/analytics` del menú — Home y menú
+> persistente quedan consistentes entre sí.
 
 ### 2.2 Home Estudiante (`#home-estudiante`) — `US-ADJ-29`
 
