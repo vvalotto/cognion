@@ -179,10 +179,10 @@ visibilidad por comisión, agregada en la prueba de estabilización del portal D
 sin US-IEDD formal — hallazgo de UAT resuelto directo en `src/`, `frontend/`-only según el
 criterio de la época pero terminó tocando el aggregate) y `unidad_tematica`/`tema` (restricción
 del set aleatorio, mismo PR). Este modelo de Analytics **ya diseña contra el código real**
-(`comisiones_ids` es imprescindible para RF-20, ver §8.3) — la actualización formal de
-`BC-actividad-evaluativa-modelo.md` §5 queda anotada para la Iteración 5 (revisión documental
-transversal) de este mismo incremento, no se corrige acá para no mezclar el modelo de un BC
-ajeno dentro de este documento.
+(`comisiones_ids` es imprescindible para RF-20, ver §8.3).
+
+**Resuelto en la Iteración 5 (`US-ADJ-52`, 2026-09-16):** `BC-actividad-evaluativa-modelo.md`
+§5 actualizado con los 4 atributos (`titulo`, `comisiones_ids`, `unidad_tematica`, `tema`).
 
 ### 8.2 Fuentes de datos nuevas / puertos ampliados
 

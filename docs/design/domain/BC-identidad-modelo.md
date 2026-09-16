@@ -429,9 +429,11 @@ comandos que fijan contraseña — no hay variantes por comando ni por rol.
 `ADR-012` describe "rechazo sin recuperación automática" para la **invitación** (un link
 vencido no se reenvía ni se extiende) — no tiene relación con la recuperación de **contraseña**
 modelada acá (una cuenta ya existente que su dueño no puede acceder). No hay contradicción,
-pero el nombre corto "recuperación" es ambiguo entre ambos conceptos — se deja nota para la
-Iteración 5 (revisión documental) de aclarar esta distinción directamente en `ADR-012` o en
-`CLAUDE.md`, sin reabrir la decisión original.
+pero el nombre corto "recuperación" es ambiguo entre ambos conceptos.
+
+**Resuelto en la Iteración 5 (`US-ADJ-52`, 2026-09-16):** nota aclaratoria agregada
+directamente en `ADR-012` (sección "Nota de alcance") sin reabrir la decisión original. El
+autoregistro (§13.2) quedó documentado como decisión arquitectónica propia en `ADR-020`.
 
 ### 13.6 Próximo paso
 

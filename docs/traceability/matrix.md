@@ -169,18 +169,29 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |
 | RF-18 | Analytics | 7 | — | Planificado |
 | RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Validado |
-| RF-20 | Analytics | Sin asignar | — | Planificado |
-| RF-21 | Analytics | Sin asignar | — | Planificado |
-| RF-22 | Analytics | Sin asignar | — | Planificado |
-| RF-23 | Analytics | Sin asignar | — | Planificado |
+| RF-20 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-44 (backend); US-ADJ-48 (frontend) | Implementado |
+| RF-21 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-45 (backend); US-ADJ-49 (frontend) | Implementado |
+| RF-22 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-46 (backend); US-ADJ-50 (frontend) | Implementado |
+| RF-23 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-47 (backend); US-ADJ-51 (frontend) | Implementado |
+| RF-24 | Identidad | 5-ADJ | US-ADJ-32, US-ADJ-34 (modelado); US-ADJ-38, US-ADJ-39 (backend); US-ADJ-40 (frontend) | Implementado |
+| RF-25 | Identidad | 5-ADJ | US-ADJ-32, US-ADJ-34 (modelado); US-ADJ-41, US-ADJ-42 (backend); US-ADJ-43 (frontend) | Implementado |
 
 > RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
 > y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
 
 > RF-20 a RF-23 agregados 2026-09-09 (elicitación dedicada durante la prueba manual E2E de
 > estabilización post-`BL-007`, ver `docs/rf/RF_v1.md` revisión 2026-09-09) — informes nuevos
-> de Analytics para el Docente/Administrador. Sin incremento asignado todavía; candidatos a un
-> incremento propio con sus US-IEDD, a definir con Víctor.
+> de Analytics para el Docente/Administrador. **RF-20 a RF-23 pasan de "Planificado" a
+> "Implementado"** el 2026-09-16 (`US-ADJ-52`) — cerrada su única iteración de código en el
+> Incremento 5-ADJ (`US-ADJ-44` a `51`, backend + frontend, más el ajuste de UAT del PR #370).
+> No pasan a "Validado" todavía — ese estado espera el cierre de baseline `BL-010` con las 5
+> iteraciones del incremento juntas, mismo criterio que el resto de los incrementos.
+
+> RF-24 (recuperación de contraseña) y RF-25 (autoregistro) agregados y numerados 2026-09-16
+> (`US-ADJ-52`, revisión documental de cierre) — elicitados junto con RF-20 a RF-23 el
+> 2026-09-12 (`docs/plans/inc5-adj/inc5-adj-candidatas.md`), sin número formal hasta este
+> cierre. Iteraciones 2 (`US-ADJ-38` a `40`) y 3 (`US-ADJ-41` a `43`) del Incremento 5-ADJ ya
+> cerradas — **Implementado**, no "Validado" hasta `BL-010`, mismo criterio que RF-20 a RF-23.
 
 > La columna US-IEDD se completa a medida que se elaboran las US candidatas de cada
 > Incremento (`docs/plans/incN/incN-candidatas.md`) — ver `docs/plans/WORKFLOW-DESARROLLO.md` §3.

@@ -13,6 +13,12 @@
 > en ningún lado; RF-03 gana un mecanismo de bloqueo *automático* por intentos fallidos
 > (antes solo contemplaba bloqueos como acción del administrador). Sesión de elicitación en
 > `docs/design/domain/BC-identidad-modelo.md` §9.
+> Revisión 2026-09-16: se agregan RF-24 (recuperación de contraseña por autoservicio) y RF-25
+> (autoregistro de Docente/Estudiante), numerados en el cierre documental del Incremento 5-ADJ
+> (`US-ADJ-52`) — elicitados y modelados durante ese incremento
+> (`docs/design/domain/BC-identidad-modelo.md` §13). RF-24 amplía la regla de longitud mínima
+> de contraseña de RF-19 (sube de 8 a 12 caracteres + mezcla de tipos) a los 7 comandos que
+> fijan contraseña en el sistema, RF-19 no se reescribe.
 
 ## Descripción del sistema
 
@@ -153,6 +159,28 @@ Para una actividad abierta puntual, el docente ve una tabla con todos los estudi
 - **Criterios de aceptación:** Los cuatro estados se distinguen entre sí — "en curso" y "suspendida" no se agrupan.  
 - **Casos límite:** Ninguno explorado todavía — a definir al especificar la US si aparece alguno.
 
+> **Agregado 2026-09-16** (revisión documental de cierre del Incremento 5-ADJ, `US-ADJ-52`) —
+> RF-24 y RF-25 abajo. Elicitados junto con RF-20 a RF-23 en `docs/plans/inc5-adj/
+> inc5-adj-candidatas.md`, numerados formalmente recién ahora que el alcance quedó cerrado e
+> implementado.
+
+**RF-24 — Recuperación de contraseña por autoservicio**  
+Cualquier usuario que no recuerde su contraseña puede solicitar restablecerla ingresando su email, sin depender del administrador. El sistema envía un link con token de un solo uso al email registrado; al confirmarlo con una contraseña nueva, la cuenta queda accesible de inmediato.  
+- **Criterios de aceptación:** El token expira a la hora de generado. La respuesta a la solicitud es indistinguible exista o no una cuenta con ese email (no debe ser posible enumerar cuentas). Solicitar un token nuevo invalida cualquier token anterior sin usar de la misma cuenta. La contraseña nueva cumple la misma regla de complejidad que RF-19 (ver nota de complejidad abajo).  
+- **Casos límite:** Token vencido, inválido, o ya usado — el sistema rechaza la confirmación con un mensaje explicando el motivo, sin recuperación automática (mismo criterio de `ADR-012` para la invitación, aplicado acá a un concepto distinto — ver `ADR-012` nota de alcance).
+
+**RF-25 — Autoregistro de Docente y Estudiante**  
+Cualquier persona puede crear su propia cuenta como Docente o Estudiante sin invitación previa ni aprobación del administrador, eligiendo su perfil. Un Estudiante que se autoregistra debe elegir su Materia y Comisión de una lista pública. Una cuenta autoregistrada queda activa de inmediato.  
+- **Criterios de aceptación:** El autoregistro convive con el registro por invitación existente (RF-01) y con el alta directa por el administrador (RF-03) — no los reemplaza, son tres vías de alta independientes. El autoregistro no admite el perfil Administrador. La contraseña elegida cumple la misma regla de complejidad que RF-19/RF-24.  
+- **Casos límite:** Email ya registrado — el sistema rechaza el autoregistro con un mensaje explicando el motivo. Comisión inexistente en el autoregistro de Estudiante — mismo rechazo.
+
+> **Nota de complejidad de contraseña (afecta RF-01, RF-03, RF-19, RF-24, RF-25):** desde el
+> Incremento 5-ADJ (`US-ADJ-36`), toda contraseña nueva exige mínimo 12 caracteres (sube de 8)
+> y al menos una mayúscula, un número y un símbolo — regla única y transversal a los 7 comandos
+> que fijan contraseña en el sistema. Ninguno de los RF que mencionan "mínimo 8 caracteres" se
+> reescribe; esta nota documenta la ampliación vigente, igual criterio que la nota de RF-19
+> arriba.
+
 ---
 
 ## Decisiones de alcance
@@ -172,6 +200,11 @@ Para una actividad abierta puntual, el docente ve una tabla con todos los estudi
   un estudiante puntual, evolución temporal del % de aciertos, ranking de preguntas más
   falladas del banco, y completitud/participación por actividad — RF-20 a RF-23
   (agregado 2026-09-09)
+- Recuperación de contraseña por autoservicio, sin depender del administrador — RF-24
+  (agregado 2026-09-16)
+- Autoregistro de Docente y Estudiante sin invitación ni aprobación, conviviendo con el
+  registro por invitación (RF-01) y el alta directa por administrador (RF-03) — RF-25
+  (agregado 2026-09-16)
 
 ### Fuera de alcance
 - Múltiples docentes — *Razón:* el sistema es de uso personal del docente por ahora; se extiende después.
