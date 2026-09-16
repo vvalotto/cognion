@@ -2,9 +2,10 @@
 
 > Estado documental: **vigente — aprobado por Víctor en el cierre del Issue
 > [#320](https://github.com/vvalotto/cognion/issues/320) (US-ADJ-34, Iteración 0, Incremento
-> 5-ADJ). Implementación: §2 (toggle + indicador de fortaleza) completa (`US-ADJ-35`/`36`);
-> §3 (link "olvidaste tu contraseña"), §4 (recuperación), §5 (autoregistro) y §6 (menú de
-> usuario) siguen sin implementar — Iteraciones 2, 3 y `US-ADJ-37` respectivamente.**
+> 5-ADJ). Implementación completa (actualizado 2026-09-16, `US-ADJ-52`): §2 (toggle +
+> indicador de fortaleza, `US-ADJ-35`/`36`), §3/§4 (link "olvidaste tu contraseña" +
+> recuperación, `US-ADJ-38` a `40`, RF-24), §5 (autoregistro, `US-ADJ-41` a `43`, RF-25) y §6
+> (menú de usuario, `US-ADJ-37`) — las 5 iteraciones de código del incremento cerradas.**
 > Alcance: hallazgos de Identidad y cuentas de `hallazgos-cognion.md` — toggle mostrar/ocultar
 > contraseña, política de contraseña segura, recuperación de contraseña por autoservicio,
 > autoregistro de Docente/Estudiante con selección de perfil, logout voluntario y
@@ -12,8 +13,8 @@
 > `wireframes-cuentas-administracion.md` §2.5-2.8 (Cambiar contraseña, Login bloqueada) — no
 > los reemplaza.
 >
-> Fuente: `docs/rf/RF_v1.md` (RF nuevos de recuperación y autoregistro, numeración definitiva
-> pendiente de la Iteración 5 de este incremento), `docs/design/domain/BC-identidad-modelo.md`
+> Fuente: `docs/rf/RF_v1.md` (RF-24 recuperación de contraseña, RF-25 autoregistro —
+> numerados 2026-09-16 en `US-ADJ-52`), `docs/design/domain/BC-identidad-modelo.md`
 > §13 (`US-ADJ-32`, aprobado — comandos `SolicitarRecuperacionPassword`,
 > `ConfirmarNuevaPassword`, `AutoregistrarDocente`, `AutoregistrarEstudiante`, `INV-ID-11`
 > ampliada), `docs/plans/inc5-adj/inc5-adj-candidatas.md`.

@@ -205,6 +205,10 @@ activas de inmediato (mismo efecto que la Regla 2) y no admite reabrir con
 | `cantidad_preguntas` | int | tamaño del set que recibe cada estudiante (RF-11, RF-12) |
 | `cantidad_intentos_permitidos` | int | por defecto 1 (RF-11) — tope de `Respuesta` por `PreguntaAsignada`, no de reintentos de la evaluación completa |
 | `cerrada_manualmente` | bool | `false` por defecto; `true` tras `ActividadEvaluativaCerrada` — terminal, ver INV-AE-04b |
+| `titulo` | string | `""` por defecto (opcional al crear); editable en cualquier estado, incluso cerrada, vía `ModificarTituloActividad` — evento `TituloActividadModificado` (`US-ADJ-10`), sin invariante de dominio propia |
+| `comisiones_ids` | `frozenset[UUID]` | restringe la visibilidad de la actividad a Comisiones puntuales de la Materia — vacío (default) significa "todas las Comisiones de la Materia" (agregado en la prueba manual E2E del portal Docente, PR #299, sin US-IEDD formal; consumido por Analytics para RF-20/RF-23, `BC-analytics-modelo.md` §8.2) |
+| `unidad_tematica` | string \| null | restringe el set aleatorio de preguntas a una unidad temática del banco — `None` (default) = cualquier unidad, combinable (AND) con `tema` (mismo PR que `comisiones_ids`) |
+| `tema` | string \| null | restringe el set aleatorio a un tema puntual, combinado con `unidad_tematica` — `None` (default) = cualquier tema |
 
 **Invariantes:**
 - **INV-AE-01:** `cantidad_preguntas` ≤ cantidad de `PreguntaPlantilla` activas de la materia al

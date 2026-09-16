@@ -59,3 +59,17 @@ se modele Notificaciones.
 - ✅ Resuelve el caso límite que `RF_v1.md` (RF-01) dejaba explícitamente abierto.
 - ⚠️ Cuando se modele BC Notificaciones (Incremento 5, ADR-006) habrá dos adaptadores SMTP
   independientes en el sistema — evaluar en ese momento si conviene unificarlos.
+
+## Nota de alcance (agregada 2026-09-16, `US-ADJ-52`)
+
+Esta decisión ("rechazo sin recuperación automática") aplica exclusivamente a la
+**invitación** de RF-01: un link de invitación vencido o inválido no se reenvía ni se
+extiende, el estudiante debe pedirle al docente uno nuevo. **No tiene relación** con la
+**recuperación de contraseña** (RF-24, Incremento 5-ADJ) introducida después — un mecanismo
+distinto, para una cuenta ya existente cuyo dueño no puede acceder, modelado en
+`docs/design/domain/BC-identidad-modelo.md` §13 (aggregate `TokenRecuperacionPassword`). El
+nombre corto "recuperación" es ambiguo entre ambos conceptos, de ahí esta nota: la decisión de
+"sin recuperación automática" de este ADR no se reabre ni se contradice, simplemente no
+alcanza al caso de RF-24, que sí resuelve un mecanismo de reset self-service (con su propio
+token de un solo uso, expiración de 1 hora — ver `INV-ID-12`/`INV-ID-13`) precisamente para no
+depender del administrador.

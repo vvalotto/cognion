@@ -860,13 +860,80 @@ PR #335. **US-ADJ-37** (`UserMenu.tsx` nuevo reemplaza el bloque estático de av
 `AppLayout.tsx`, agrega el único punto de entrada por clic a "Cambiar contraseña" y "Cerrar
 sesión"), Issue #331, PR #337. Cierra completa la Iteración 1.
 
-**Próximo paso:** Iteración 2 (recuperación de contraseña — `US-ADJ-38` a `40`, sin Issue/spec
-todavía) e Iteración 3 (autoregistro — `US-ADJ-41` a `43`) son independientes entre sí y de la
-Iteración 4 (Analytics) — pueden intercalarse según prioridad de Víctor.
-**Baseline abierta:** ninguna — `BL-009` cerrada, Incremento 5-ADJ en curso sin baseline propia
-todavía (se abre como `BL-010` al cerrarlo).
-**Branch activo:** ninguna — `develop` sincronizado (2 commits locales pendientes de push al
-cierre de esta sesión), `main` al día (`v0.7.0`).
+**Iteración 2 — Identidad: recuperación de contraseña (RF-24), cerrada 2026-09-13** (backend +
+frontend juntos). **US-ADJ-38** (endpoint público `POST /identidad/recuperar-password/solicitar`
+— email → token con expiración de 1 hora, dispara email vía `SmtpCanalEnvio` de Notificaciones,
+respuesta indistinguible si el email existe o no, `INV-ID-17`), Issue #339, PR #343. **US-ADJ-39**
+(endpoint público `POST /identidad/recuperar-password/confirmar` — token + password nueva,
+reutiliza `Usuario.validar_password_nueva` ampliada de `US-ADJ-36`, invalida el token tras el
+uso), Issue #340, PR #344. **US-ADJ-40** (pantallas "Olvidé mi contraseña" y "Definir nueva
+contraseña"), Issue #341, PR #345. Fix aparte durante la iteración: FK de
+`TokenRecuperacionPassword` bloqueaba `EliminarCuenta` de un usuario con tokens emitidos, PR
+#346. Cierra completa la Iteración 2.
+
+**Iteración 3 — Identidad: autoregistro con selección de perfil (RF-25), cerrada 2026-09-13**
+(backend + frontend juntos). **US-ADJ-41** (endpoint público `POST
+/identidad/autoregistro/docente` — cuenta activa de inmediato, sin aprobación), Issue #347,
+PR #351. **US-ADJ-42**
+(mismo patrón para perfil Estudiante — agrega `comision_id` obligatorio, reutiliza `GET
+/materias`/`GET /materias/{id}/comisiones` ya existentes para poblar el selector), Issue #348,
+PR #352.
+**US-ADJ-43** (pantalla de autoregistro: selección de perfil Docente/Estudiante → formulario
+dinámico, selector Materia→Comisión solo para Estudiante), Issue #349, PR #353. Cierra completa la
+Iteración 3 — con esto, las Iteraciones 2 y 3 dejan resuelto todo el backlog de Identidad
+Autoservicio relevado en `hallazgos-cognion.md` (2026-09-12).
+
+**Iteración 4 — Analytics: RF-20 a RF-23, cerrada 2026-09-15** (backend + frontend juntos).
+**US-ADJ-44** a **47** (backend, PR #364): `ObtenerDesempenoPorComision` (RF-20, reutiliza
+`ObtenerDesempenoEstudianteUseCase` de `US-4.1.2` sin cambios para el drill-down),
+`ObtenerEvolucionTemporalEstudiante`/`Comision` (RF-21), `ObtenerRankingPreguntasFalladas`
+(RF-22), `ObtenerCompletitudPorActividad` (RF-23) — todas amplían `EvaluacionDesempenoConsultaPort`
+ya existente, sin puertos nuevos. **US-ADJ-48** (frontend RF-20) cerrada 2026-09-14:
+`DesempenoPorComision.tsx` con dos niveles de drill-down —
+`DesempenoPorComisionDetalleEstudiante.tsx` y `RevisionEvaluacionDocente.tsx` (revisión de
+evaluación ajena, guard de rol ampliado). **Decisión operativa de Víctor 2026-09-14:** a
+partir de esta iteración, la verificación manual en navegador real no se repite US por US —
+un solo pase al cierre completo de la iteración. **US-ADJ-49** (frontend RF-21) cerrada
+2026-09-14: `EvolucionTemporal.tsx`, gráfico SVG hecho a mano, solo accesible por drill-down
+(sin entrada en `AppNav.tsx`). **US-ADJ-50** (frontend RF-22) cerrada 2026-09-14:
+`RankingPreguntasFalladas.tsx`, con entrada directa en `AppNav.tsx`. **US-ADJ-51** (frontend
+RF-23) cerrada 2026-09-15: `CompletitudActividad.tsx`, entry point desde
+`ActividadDetalle.tsx`. 494/494 tests frontend al cierre. Cierra completa la Iteración 4 — el
+Docente tiene los 4 informes de Analytics de RF-20 a RF-23 completos, backend + frontend.
+
+**UAT de cierre de la Iteración 4 ejecutada 2026-09-15/16**, único pase en navegador real con
+Víctor (datos sembrados), mismo criterio decidido el 2026-09-14. Hallazgos corregidos en **PR
+#370** (mergeado 2026-09-16): alta/edición/baja de Materia pasa a ser exclusiva del
+Administrador (antes también el Docente, RBAC confuso —`require_administrador`; `GET
+/materias` sigue abierto a ambos roles); los 4 informes de Analytics se unifican bajo un único
+ítem de menú **"Reportes"** en `AppNav.tsx` (antes 2 entradas sueltas —
+`Desempeño por alumno`/`por tema`— sin las 2 nuevas de esta iteración), con una landing
+(`Analytics.tsx`, `/analytics`) que muestra una card por informe; paginación de 20 ítems en
+ranking/tema/comisión/detalle-por-evaluación. 1197/1197 tests backend, 497/497 frontend,
+DesignReviewer 0 CRITICAL. **Hallazgo detectado y no resuelto en esta UAT** (deuda de
+`frontend/`, reportada aparte, no bloqueante): `HomeDocente.tsx` sigue con cards directas a
+"Desempeño por alumno"/"por tema" sin pasar por la landing "Reportes" ni incluir los otros 2
+informes nuevos.
+
+**Iteración 5 — Revisión documental de cierre, en curso** (`US-ADJ-52`, Issue #372, tipo
+Documentación — sin código de producción). Alcance: numeración definitiva de RF-24
+(recuperación de contraseña) y RF-25 (autoregistro) en `RF_v1.md`; matriz de trazabilidad
+(RF-20 a RF-25 pasan de "Planificado"/"Sin asignar" a "Implementado"); nota aclaratoria en
+`ADR-012` (recuperación de contraseña ≠ recuperación de invitación) y `ADR-020` nuevo
+(autoregistro como tercera vía de alta de cuenta); `BC-actividad-evaluativa-modelo.md` §5
+actualizado con `titulo`/`comisiones_ids`/`unidad_tematica`/`tema` (deriva documental que
+`BC-analytics-modelo.md` §8.1 ya había señalado); wireframes de Identidad Autoservicio y
+Analytics reconciliados con el código real (incluida la unificación en "Reportes" del PR
+#370); este mismo bloque de `CLAUDE.md`. Pendiente: confirmación de Víctor en el comentario de
+cierre del Issue #372, y con eso, cerrar `BL-010`.
+
+**Próximo paso:** cerrar `US-ADJ-52` (confirmación de Víctor) → cerrar Incremento 5-ADJ como
+`BL-010` (merge `develop → main`, tag, Milestone) → retomar Incremento 6 (Sesión en Vivo,
+`PLAN_v1.md`).
+**Baseline abierta:** ninguna — `BL-009` cerrada, Incremento 5-ADJ en su última iteración
+(`US-ADJ-52`), sin baseline propia todavía (se abre como `BL-010` al cerrarlo).
+**Branch activo:** `docs/us-adj-52-revision-documental-cierre`, sobre `develop` sincronizado
+con `origin/develop`. `main` al día en `v0.7.0`.
 
 ---
 

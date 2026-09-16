@@ -14,10 +14,12 @@
 > Prototipo: `docs/design/ux/prototipos/analytics-portal-desempeno.html` — navegable, 7
 > pantallas (3 de RF-15/16/17 + 4 de la ampliación de abajo).
 >
-> **Ampliación 2026-09-12 — pendiente de aprobación** (`US-ADJ-34`, Incremento 5-ADJ,
-> `docs/plans/inc5-adj/inc5-adj-candidatas.md`): se agrega el §3.2 a §3.5 con las pantallas de
-> RF-20 a RF-23, sobre el modelo ya aprobado en `BC-analytics-modelo.md` §8 (`US-ADJ-33`). No
-> reemplaza nada de lo ya aprobado en `US-4.0.2` — solo agrega.
+> **Ampliación 2026-09-12 — aprobada por Víctor y completamente implementada** (`US-ADJ-34`,
+> Incremento 5-ADJ, `docs/plans/inc5-adj/inc5-adj-candidatas.md`): §3.2 a §3.5 (RF-20 a
+> RF-23), sobre el modelo aprobado en `BC-analytics-modelo.md` §8 (`US-ADJ-33`). No reemplaza
+> nada de lo ya aprobado en `US-4.0.2` — solo agrega. Backend (`US-ADJ-44` a `47`) y frontend
+> (`US-ADJ-48` a `51`) cerrados 2026-09-14/15 (actualizado 2026-09-16, `US-ADJ-52`) — ver nota
+> de reconciliación del menú de navegación en `wireframes-portal-entrada.md` §2.1.
 
 ---
 
@@ -158,10 +160,15 @@ RF-16.
    el origen del `estudiante_id` (propio vs. elegido) y los selectores adicionales de
    comisión/estudiante que solo ve el docente.
 3. **¿La fila de evaluación (`.eval-item`) navega a la revisión pregunta por pregunta?**
-   Resuelto — no. Esa pantalla ya existe en Actividad Evaluativa (`#est-revision`) para el
-   propio estudiante mientras cursa; Analytics no la reimplementa ni la expone al docente en
-   este incremento (fuera de alcance de RF-15/16/17, que piden agregados, no el detalle
-   pregunta por pregunta de una evaluación ajena).
+   Resuelto en su momento (RF-15/16/17) — no. Esa pantalla ya existe en Actividad Evaluativa
+   (`#est-revision`) para el propio estudiante mientras cursa; Analytics no la reimplementaba
+   ni la exponía al docente en el alcance original (agregados, no detalle pregunta por
+   pregunta de una evaluación ajena).
+   **Ampliado por RF-20** (`BC-analytics-modelo.md` §8.3, `US-ADJ-48`): el drill-down de 2°
+   nivel de §3.2 sí navega a la revisión completa de una evaluación puntual — reusa
+   `#est-revision` con el guard de rol ampliado (Docente de la materia, no cualquier Docente).
+   La respuesta original de este hot spot queda acotada al alcance de RF-15/16/17; no se
+   contradice, se amplía en una iteración posterior — nota agregada 2026-09-16 (`US-ADJ-52`).
 
 **Pendiente de definir en la spec de implementación (no bloquea la aprobación de los
 wireframes):**
