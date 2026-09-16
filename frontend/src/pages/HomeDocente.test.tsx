@@ -12,8 +12,7 @@ function renderHomeDocente() {
         <Route path="/" element={<HomeDocente />} />
         <Route path="/materias" element={<p>Materias</p>} />
         <Route path="/actividad-evaluativa/materias" element={<p>Mis materias</p>} />
-        <Route path="/analytics/desempeno-por-alumno" element={<p>Desempeño por alumno</p>} />
-        <Route path="/analytics/desempeno-por-tema" element={<p>Desempeño por tema</p>} />
+        <Route path="/analytics" element={<p>Reportes</p>} />
       </Routes>
     </MemoryRouter>,
   )
@@ -30,13 +29,12 @@ describe("HomeDocente", () => {
     expect(screen.getByRole("heading", { name: "Hola, Docente" })).toBeInTheDocument()
   })
 
-  it("muestra las 4 cards de acceso", () => {
+  it("muestra las 3 cards de acceso", () => {
     renderHomeDocente()
 
     expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
     expect(screen.getByText("Actividades")).toBeInTheDocument()
-    expect(screen.getByText("Desempeño por alumno")).toBeInTheDocument()
-    expect(screen.getByText("Desempeño por tema")).toBeInTheDocument()
+    expect(screen.getByText("Reportes")).toBeInTheDocument()
   })
 
   it("navega a /materias al hacer clic en Banco de Preguntas", async () => {
@@ -61,7 +59,7 @@ describe("HomeDocente", () => {
     renderHomeDocente()
     const user = userEvent.setup()
 
-    ;(screen.getByText("Desempeño por alumno").closest('[role="button"]') as HTMLElement).focus()
+    ;(screen.getByText("Reportes").closest('[role="button"]') as HTMLElement).focus()
     await user.keyboard("{Enter}")
 
     await waitFor(() => {
