@@ -1,0 +1,44 @@
+{
+  "us_id": "US-ADJ-44",
+  "fecha": "2026-09-14T10:30:00",
+  "componente": "src/analytics (evaluacion_desempeno_consulta_port.py, evaluacion_desempeno_consulta_port_in_process.py, obtener_desempeno_por_comision.py, analytics_controller.py, analytics_router.py, schemas.py, dependencies.py) + src/actividad_evaluativa (obtener_revision_evaluacion.py, revision_controller.py, revision_router.py, dependencies.py)",
+  "metricas": {
+    "pylint": 9.89,
+    "cc_promedio": 2.6,
+    "cc_max": 9,
+    "mi_promedio": 83.05,
+    "mi_min_archivo": 50.54,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 11,
+    "errors": 7,
+    "warnings": 87,
+    "infos": 74,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 11 },
+      "PEP8": { "errors": 0, "warnings": 4, "infos": 7 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 11 },
+      "DeadCode": { "errors": 6, "warnings": 70, "infos": 2 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 11 },
+      "Pylint": { "errors": 0, "warnings": 1, "infos": 10 },
+      "Spelling": { "errors": 0, "warnings": 12, "infos": 2 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 10 },
+      "UnusedImports": { "errors": 1, "warnings": 0, "infos": 10 }
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-44-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "DeadCode reporta 6 errores 'variable never used' sobre los parámetros de los 3 métodos abstractos de EvaluacionDesempenoConsultaPort (entities/ports) — falso positivo de vulture sobre firmas de interfaz ABC, mismo patrón ya presente en los métodos preexistentes del mismo archivo antes de esta US.",
+    "UnusedImports reporta 1 error 'pylint execution timed out (>5s)' sobre evaluacion_desempeno_consulta_port_in_process.py — bug ya documentado en CLAUDE.md (vvalotto/software_limpio#70): el check de tipos/lint integrado en CodeGuard no tiene --cache-dir y cae en timeout en corridas en frío. El pylint dedicado (fuera de CodeGuard) corrió limpio: 9.89/10 sobre los 11 archivos modificados.",
+    "Coverage medido en entities/use_cases/interface_adapters (100%) — frameworks/ queda fuera del gate por diseño (tool.coverage.run.omit en pyproject.toml), incluye los adapters/routers/dependencies.py nuevos y modificados.",
+    "Dos líneas de docstring de módulo que esta US extendió (revision_router.py, revision_controller.py) superaban los 100 caracteres — corregidas reformateando el docstring a 2 líneas. Las otras 2 líneas largas reportadas por pylint (dependencies.py:45, analytics_router.py:1) son deuda preexistente, no tocada por esta US."
+  ]
+}

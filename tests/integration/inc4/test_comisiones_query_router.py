@@ -23,8 +23,8 @@ def _headers_estudiante() -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
-async def _crear_materia(client, docente_headers, nombre: str) -> str:
-    response = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers)
+async def _crear_materia(client, admin_headers, nombre: str) -> str:
+    response = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     return response.json()["id"]
 
 
@@ -36,7 +36,7 @@ class TestListarComisionesPorMateria:
         await SQLAlchemyUsuarioRepository(session).guardar(admin)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
             comision_repo = SQLAlchemyComisionRepository(session)
             comision_1 = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
             comision_2 = Comision.crear(uuid.UUID(materia_id), "ma 14-16", admin.id)
@@ -60,10 +60,10 @@ class TestListarComisionesPorMateria:
 
         assert response.status_code == 404
 
-    async def test_rol_distinto_de_docente_devuelve_403(self, docente_headers):
+    async def test_rol_distinto_de_docente_devuelve_403(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
 
             response = await client.get(
                 f"/materias/{materia_id}/comisiones", headers=_headers_estudiante()
@@ -75,7 +75,7 @@ class TestListarComisionesPorMateria:
         """`US-ADJ-23`: el Administrador necesita este endpoint para la pantalla de Comisiones."""
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
 
             response = await client.get(f"/materias/{materia_id}/comisiones", headers=admin_headers)
 
@@ -98,7 +98,7 @@ class TestListarComisionesPorMateria:
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
             comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
             await comision_repo.guardar(comision)
             comision.asignar_docente(docente.id)

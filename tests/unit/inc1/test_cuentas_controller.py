@@ -14,6 +14,7 @@ from tests.unit.inc1._fakes import (
     FakeCuentaQueryRepository,
     FakeEvaluacionConsultaPort,
     FakePasswordHasher,
+    FakeTokenRecuperacionPasswordRepository,
     FakeUsuarioRepository,
 )
 
@@ -27,7 +28,10 @@ def _armar_controller(
         ResetearPasswordUseCase(usuario_repo, FakePasswordHasher()),
         EditarCuentaUseCase(usuario_repo),
         EliminarCuentaUseCase(
-            usuario_repo, FakeComisionQueryRepository(), FakeEvaluacionConsultaPort()
+            usuario_repo,
+            FakeComisionQueryRepository(),
+            FakeEvaluacionConsultaPort(),
+            FakeTokenRecuperacionPasswordRepository(),
         ),
         ActivarCuentaUseCase(usuario_repo),
     )
@@ -67,7 +71,7 @@ class TestCuentasController:
         usuario_repo.usuarios[usuario.id] = usuario
         controller = _armar_controller(cuenta_query_repo, usuario_repo)
 
-        resultado = await controller.resetear_password(usuario.id, "nuevaClave123", uuid.uuid4())
+        resultado = await controller.resetear_password(usuario.id, "nuevaClave123#", uuid.uuid4())
 
         assert resultado.id == usuario.id
         assert resultado.bloqueada is False

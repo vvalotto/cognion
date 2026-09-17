@@ -97,8 +97,16 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
   })
 
-  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de docente", async () => {
+  it("la ruta /materias/nueva muestra acceso denegado con sesión de docente (unificación con Comisión)", async () => {
     setSession({ token: "t", rol: "docente" })
+    await router.navigate("/materias/nueva")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /materias/nueva renderiza el formulario de alta con sesión de administrador", async () => {
+    setSession({ token: "t", rol: "administrador" })
     await router.navigate("/materias/nueva")
     render(<RouterProvider router={router} />)
 
@@ -443,6 +451,113 @@ describe("router (integración)", () => {
     expect(await screen.findByRole("heading", { name: "Mi desempeño" })).toBeInTheDocument()
   })
 
+  it("la ruta /analytics/desempeno-por-comision muestra acceso denegado con sesión de estudiante", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/analytics/desempeno-por-comision")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta /analytics/desempeno-por-comision renderiza Desempeño por comisión con sesión de docente", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate("/analytics/desempeno-por-comision")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Desempeño por comisión" }),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta de drill-down 1° de desempeño por comisión renderiza el detalle del estudiante con sesión de docente (US-ADJ-48)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Detalle del estudiante" }),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta de drill-down 2° de desempeño por comisión renderiza la revisión con sesión de docente (US-ADJ-48)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1/evaluaciones/ev1/revision",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Revisión completa" }),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta de evolución temporal de desempeño por comisión muestra acceso denegado con sesión de estudiante (US-ADJ-49)", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1/evolucion",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta de evolución temporal de desempeño por comisión renderiza con sesión de docente (US-ADJ-49)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    await router.navigate(
+      "/analytics/desempeno-por-comision/materias/m1/comisiones/c1/estudiantes/u1/evolucion",
+    )
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Evolución temporal" }),
+    ).toBeInTheDocument()
+  })
+
+  it("la ruta de completitud de actividad muestra acceso denegado con sesión de estudiante (US-ADJ-51)", async () => {
+    setSession({ token: "t", rol: "estudiante" })
+    await router.navigate("/actividad-evaluativa/actividades/act-1/completitud")
+    render(<RouterProvider router={router} />)
+
+    expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+  })
+
+  it("la ruta de completitud de actividad renderiza con sesión de docente (US-ADJ-51)", async () => {
+    setSession({ token: "t", rol: "docente" })
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          id: "act-1",
+          materia_id: "m1",
+          titulo: "Parcial 1",
+          fecha_apertura: "2026-09-20T09:00:00",
+          fecha_cierre: "2026-09-27T23:59:00",
+          cantidad_preguntas: 10,
+          cantidad_intentos_permitidos: 1,
+          estado: "en_curso",
+          cerrada_manualmente: false,
+          cantidad_evaluaciones_activas: 0,
+          cantidad_evaluaciones_finalizadas: 0,
+          comisiones_ids: [],
+          unidad_tematica: null,
+          tema: null,
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          detalle: [],
+          resumen: { finalizadas: 0, en_curso: 0, suspendidas: 0, sin_iniciar: 0 },
+        }),
+      )
+    await router.navigate("/actividad-evaluativa/actividades/act-1/completitud")
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole("heading", { name: "Completitud de la actividad" }),
+    ).toBeInTheDocument()
+  })
+
   describe("AppNav — navegación real por clic (US-ADJ-27)", () => {
     it("Docente navega de Mis materias a Banco de Preguntas por el menú", async () => {
       setSession({ token: "t", rol: "docente" })
@@ -454,6 +569,23 @@ describe("router (integración)", () => {
       await user.click(screen.getByRole("link", { name: "Banco de Preguntas" }))
 
       expect(await screen.findByRole("heading", { name: "Materias" })).toBeInTheDocument()
+    })
+
+    it("Docente navega a Analytics por el menú y de ahí a Desempeño por comisión por la tarjeta", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/actividad-evaluativa/materias")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Mis materias" })
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "Reportes" }))
+      await screen.findByRole("heading", { name: "Reportes" })
+
+      await user.click(screen.getByText("Desempeño por comisión"))
+
+      expect(
+        await screen.findByRole("heading", { name: "Desempeño por comisión" }),
+      ).toBeInTheDocument()
     })
 
     it("Administrador navega a Comisiones por el menú", async () => {
@@ -550,6 +682,116 @@ describe("router (integración)", () => {
       await user.click(cardMisActividades)
 
       expect(await screen.findByRole("heading", { name: "Mis materias" })).toBeInTheDocument()
+    })
+  })
+
+  describe("Recuperación de contraseña (US-ADJ-40)", () => {
+    it("Login → clic en '¿Olvidaste tu contraseña?' → pantalla de solicitud, dentro del layout de auth", async () => {
+      await router.navigate("/login")
+      render(<RouterProvider router={router} />)
+      await screen.findByText("Iniciar sesión")
+
+      const user = userEvent.setup()
+      await user.click(screen.getByRole("link", { name: "¿Olvidaste tu contraseña?" }))
+
+      expect(
+        await screen.findByRole("heading", { name: "¿Olvidaste tu contraseña?" }),
+      ).toBeInTheDocument()
+    })
+
+    it("flujo completo: solicitar → email enviado → abrir link con token → guardar → éxito → login", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(jsonResponse(202, {})) // solicitar
+        .mockResolvedValueOnce(jsonResponse(200, {})) // confirmar
+      const user = userEvent.setup()
+
+      await router.navigate("/recuperar-password")
+      render(<RouterProvider router={router} />)
+      await user.type(screen.getByLabelText("Email"), "ana@fiuner.edu.ar")
+      await user.click(screen.getByRole("button", { name: "Enviar link de recuperación" }))
+      expect(await screen.findByText("Revisá tu email")).toBeInTheDocument()
+
+      await router.navigate("/recuperar-password/tok-abc")
+      await screen.findByRole("heading", { name: "Definí tu nueva contraseña" })
+      await user.type(screen.getByLabelText("Contraseña nueva"), "nuevaClave123")
+      await user.type(screen.getByLabelText("Confirmar contraseña nueva"), "nuevaClave123")
+      await user.click(screen.getByRole("button", { name: "Guardar nueva contraseña" }))
+      expect(await screen.findByText("Contraseña actualizada")).toBeInTheDocument()
+
+      await user.click(screen.getByRole("link", { name: "Iniciar sesión" }))
+      expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+    })
+
+    it("un token vencido/inválido/ya usado navega a la pantalla de link no válido, con salida a pedir uno nuevo", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(422, { detail: "El token de recuperación 'tok-viejo' ya venció." }),
+      )
+      const user = userEvent.setup()
+
+      await router.navigate("/recuperar-password/tok-viejo")
+      render(<RouterProvider router={router} />)
+      await user.type(screen.getByLabelText("Contraseña nueva"), "nuevaClave123")
+      await user.type(screen.getByLabelText("Confirmar contraseña nueva"), "nuevaClave123")
+      await user.click(screen.getByRole("button", { name: "Guardar nueva contraseña" }))
+
+      expect(await screen.findByText("Este link ya no es válido")).toBeInTheDocument()
+
+      await user.click(screen.getByRole("link", { name: "Pedir un nuevo link" }))
+      expect(
+        await screen.findByRole("heading", { name: "¿Olvidaste tu contraseña?" }),
+      ).toBeInTheDocument()
+    })
+  })
+
+  describe("Autoregistro (US-ADJ-43)", () => {
+    it("Login → clic en 'Registrate' → elegir perfil Docente → completar → éxito", async () => {
+      vi.mocked(fetch).mockReset()
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(201, {
+          id: "u1",
+          nombre: "Nico",
+          email: "nico@fiuner.edu.ar",
+          tipo_perfil: "docente",
+        }),
+      )
+      const user = userEvent.setup()
+
+      await router.navigate("/login")
+      render(<RouterProvider router={router} />)
+      await screen.findByText("Iniciar sesión")
+
+      await user.click(screen.getByRole("link", { name: "Registrate" }))
+      expect(await screen.findByRole("heading", { name: "Creá tu cuenta" })).toBeInTheDocument()
+
+      await user.click(screen.getByText("Soy Docente"))
+      await screen.findByRole("heading", { name: "Creá tu cuenta de Docente" })
+      await user.type(screen.getByLabelText("Nombre completo"), "Nico")
+      await user.type(screen.getByLabelText("Email"), "nico@fiuner.edu.ar")
+      await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
+      await user.type(screen.getByLabelText("Confirmar contraseña"), "Password#123x")
+      await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
+
+      expect(await screen.findByRole("heading", { name: "Cuenta creada" })).toBeInTheDocument()
+
+      await user.click(screen.getByRole("link", { name: "Iniciar sesión" }))
+      expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+    })
+
+    it("elegir perfil Estudiante y volver a elegir otro perfil vuelve a /autoregistro", async () => {
+      vi.mocked(fetch).mockReset().mockResolvedValue(jsonResponse(200, []))
+      const user = userEvent.setup()
+
+      await router.navigate("/autoregistro")
+      render(<RouterProvider router={router} />)
+      await screen.findByRole("heading", { name: "Creá tu cuenta" })
+
+      await user.click(screen.getByText("Soy Estudiante"))
+      await screen.findByRole("heading", { name: "Creá tu cuenta de Estudiante" })
+
+      await user.click(screen.getByRole("link", { name: "‹ Elegir otro perfil" }))
+      expect(await screen.findByRole("heading", { name: "Creá tu cuenta" })).toBeInTheDocument()
     })
   })
 })

@@ -1,0 +1,82 @@
+{
+    "us_id": "US-ADJ-47",
+    "fecha": "2026-09-14T16:22:00",
+    "componente": "src/analytics (31 archivos, acumulado de la branch US-ADJ-44/45/46/47: errors.py, evaluacion_desempeno_consulta_port.py, evaluacion_desempeno_consulta_port_in_process.py, obtener_completitud_por_actividad.py nuevo, analytics_completitud_controller.py nuevo, analytics_informes_controller.py, dependencies.py, schemas.py, analytics_router.py)",
+    "metricas": {
+        "pylint": 9.69,
+        "cc_promedio": 2.21,
+        "cc_max": 9,
+        "mi_promedio": 87.96,
+        "mi_min_archivo": 47.51,
+        "coverage": 100.0
+    },
+    "umbrales": {
+        "pylint_min": 8.0,
+        "cc_max": 10,
+        "mi_min": 20,
+        "coverage_min": 95.0
+    },
+    "codeguard": {
+        "archivos_analizados": 31,
+        "errors": 24,
+        "warnings": 177,
+        "infos": 222,
+        "checks": {
+            "Security": {
+                "errors": 0,
+                "warnings": 0,
+                "infos": 31
+            },
+            "PEP8": {
+                "errors": 0,
+                "warnings": 2,
+                "infos": 29
+            },
+            "Complexity": {
+                "errors": 0,
+                "warnings": 0,
+                "infos": 31
+            },
+            "DeadCode": {
+                "errors": 14,
+                "warnings": 141,
+                "infos": 10
+            },
+            "Maintainability": {
+                "errors": 0,
+                "warnings": 0,
+                "infos": 31
+            },
+            "Pylint": {
+                "errors": 9,
+                "warnings": 0,
+                "infos": 22
+            },
+            "Spelling": {
+                "errors": 0,
+                "warnings": 34,
+                "infos": 17
+            },
+            "Types": {
+                "errors": 0,
+                "warnings": 0,
+                "infos": 21
+            },
+            "UnusedImports": {
+                "errors": 1,
+                "warnings": 0,
+                "infos": 30
+            }
+        },
+        "reporte": "quality/reports/inc5-adj/US-ADJ-47-codeguard.json"
+    },
+    "estado": "APROBADO",
+    "observaciones": [
+        "Reporte de CodeGuard/pylint/radon corre sobre el acumulado de la branch (US-ADJ-44+45+46+47, implementadas juntas en una sola ejecución/PR por decisión de Víctor) — no solo los archivos que esta US agregó, ya que comparten el mismo diff contra develop.",
+        "DesignReviewer local detectó dos CRITICAL durante la implementación, ambos corregidos antes de este reporte final: (1) CBO=11/10 en AnalyticsInformesController al intentar agregar el 5° Use Case — resuelto con un tercer controller, AnalyticsCompletitudController (un solo Use Case), mismo criterio de separación por responsabilidad ya aplicado en US-ADJ-46; (2) WMC=29/25 en EvaluacionDesempenoConsultaPortInProcess al agregar los 2 métodos nuevos del puerto — resuelto extrayendo _streams_de_estudiante/_resumenes_filtrados como funciones de módulo desde listar_evaluaciones_finalizadas (WMC baja a 23). DesignReviewer final: 0 CRITICAL, 31 warnings.",
+        "Los 14 errores de DeadCode son el mismo falso positivo de vulture sobre parámetros de métodos abstractos ya aceptado en US-ADJ-44/45/46 (EvaluacionDesempenoConsultaPort, ComisionConsultaPort, PreguntaMetadatoConsultaPort, EstudianteConsultaPort) — vulture no reconoce que los parámetros de un método abstracto documentan la interfaz, no código muerto.",
+        "9 errores nuevos 'Could not extract pylint score from output' — CodeGuard corre pylint por archivo y los __init__.py vacíos del BC no producen score alguno; no son errores de código (mypy dedicado y pylint sobre el directorio completo, fuente de verdad local, no reportan ningún problema).",
+        "1 error nuevo 'pylint execution timed out (>5s)' (check UnusedImports) sobre evaluacion_desempeno_consulta_port_in_process.py — mismo patrón de timeout de herramienta ya documentado en CLAUDE.md para el check de tipos de CodeGuard/mypy (software_limpio#70), ahora visto también en este check; sin impacto real, el archivo no tiene imports sin usar (verificado con isort/mypy).",
+        "Coverage medido en entities/use_cases/interface_adapters (100%) — frameworks/ queda fuera del gate por diseño (tool.coverage.run.omit en pyproject.toml)."
+    ]
+}

@@ -102,9 +102,11 @@ def _periodo() -> tuple[str, str]:
     return apertura.isoformat(), cierre.isoformat()
 
 
-async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(
+    client: AsyncClient, admin_headers: dict, docente_headers: dict, cantidad: int
+) -> str:
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
-    creada = await client.post("/materias", json={"nombre": nombre}, headers=headers)
+    creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
 
     for i in range(cantidad):
@@ -119,7 +121,7 @@ async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, canti
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=headers,
+            headers=docente_headers,
         )
 
     return creada.json()["id"]
@@ -186,11 +188,13 @@ class TestNotificarCierreActividadIntegration:
     """Escenarios de `tests/features/inc5/US-5.1.3-notificacion-cierre-actividad.feature`."""
 
     async def test_cierre_restringido_a_comisiones_envia_un_email_por_estudiante(
-        self, session, docente_headers, fake_smtp_server
+        self, session, docente_headers, admin_headers, fake_smtp_server
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             comision_a_id, emails_a = await _crear_comision_con_estudiantes(
                 session, uuid.UUID(materia_id), 2
             )
@@ -216,11 +220,13 @@ class TestNotificarCierreActividadIntegration:
             assert "Parcial 1" in mensaje
 
     async def test_cierre_sin_restriccion_envia_a_todas_las_comisiones_de_la_materia(
-        self, session, docente_headers, fake_smtp_server
+        self, session, docente_headers, admin_headers, fake_smtp_server
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             _comision_id, emails = await _crear_comision_con_estudiantes(
                 session, uuid.UUID(materia_id), 2
             )
@@ -239,11 +245,13 @@ class TestNotificarCierreActividadIntegration:
         assert destinatarios_notificados == set(emails)
 
     async def test_vencimiento_natural_no_dispara_notificacion(
-        self, session, docente_headers, fake_smtp_server
+        self, session, docente_headers, admin_headers, fake_smtp_server
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             await _crear_comision_con_estudiantes(session, uuid.UUID(materia_id), 1)
             actividad_id = await _crear_actividad(client, docente_headers, materia_id)
 
@@ -255,7 +263,7 @@ class TestNotificarCierreActividadIntegration:
         assert _mensajes_de_cierre(fake_smtp_server) == []
 
     async def test_fallo_de_envio_smtp_no_aborta_el_cierre_de_la_actividad(
-        self, session, docente_headers, monkeypatch
+        self, session, docente_headers, admin_headers, monkeypatch
     ):
         # Puerto sin ningún servidor escuchando — el intento de conexión SMTP falla.
         monkeypatch.setattr(settings, "smtp_host", "127.0.0.1")
@@ -263,7 +271,9 @@ class TestNotificarCierreActividadIntegration:
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             await _crear_comision_con_estudiantes(session, uuid.UUID(materia_id), 1)
             actividad_id = await _crear_actividad(client, docente_headers, materia_id)
 

@@ -1,0 +1,96 @@
+{
+  "us_id": "US-ADJ-42",
+  "title": "Autoregistro de Estudiante (endpoint público)",
+  "pylint": {
+    "score": 9.58,
+    "min_required": 8.0,
+    "passed": true
+  },
+  "complexity": {
+    "max_cc": 3,
+    "max_allowed": 10,
+    "passed": true
+  },
+  "maintainability_index": {
+    "grade": "A",
+    "min_required": 20,
+    "passed": true
+  },
+  "mypy": {
+    "errors": 0,
+    "passed": true
+  },
+  "coverage": {
+    "files": {
+      "src/identidad/use_cases/autoregistrar_estudiante.py": 100,
+      "src/identidad/interface_adapters/controllers/autoregistro_controller.py": 100
+    },
+    "min_required": 95.0,
+    "passed": true
+  },
+  "codeguard": {
+    "analysis_type": "full",
+    "errors": 0,
+    "warnings": 135,
+    "infos": 39,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 131,
+        "infos": 1
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 4,
+        "infos": 3
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 5
+      }
+    },
+    "report_path": "quality/reports/inc5-adj/US-ADJ-42-codeguard.json",
+    "observaciones": [
+      "DeadCode: 131 warnings de vulture sobre los 5 archivos analizados (frameworks/dependencies.py incluye el composition root completo del BC, no solo el código nuevo de esta US) — mismo tipo de ruido de baja confianza ya aceptado en US-ADJ-41 (57 warnings), no específico del código de esta US."
+    ]
+  },
+  "tests": {
+    "unit": 6,
+    "integration": 5,
+    "bdd": 5,
+    "full_suite": "unit 492/492, integration 336/336, bdd 240/240"
+  },
+  "estado": "APROBADO",
+  "observaciones": []
+}

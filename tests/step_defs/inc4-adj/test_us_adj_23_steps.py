@@ -81,7 +81,9 @@ async def _crear_materia_real() -> uuid.UUID:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
-            "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=_headers_docente()
+            "/materias",
+            json={"nombre": f"Materia {uuid.uuid4()}"},
+            headers=_headers_administrador(),
         )
     return uuid.UUID(response.json()["id"])
 

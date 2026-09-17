@@ -11,7 +11,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import crear_estudiante, docente_headers
+from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers
 
 scenarios("../../features/inc3/US-3.4.4-detalle-actividad.feature")
 
@@ -45,7 +45,7 @@ def context():
 async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
         for i in range(cantidad):
             await client.post(

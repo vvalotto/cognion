@@ -124,14 +124,14 @@ async def _iniciar_evaluacion(client: AsyncClient, headers: dict, actividad_id: 
 
 
 async def _actividad_vigente(
-    client, docente_headers, cantidad_preguntas: int = 1
+    client, admin_headers, docente_headers, cantidad_preguntas: int = 1
 ) -> tuple[str, str]:
     """Crea materia + banco con `cantidad_preguntas` VF (respuesta correcta True) + actividad.
 
     Carga las preguntas **antes** de crear la actividad — INV-AE-01 exige que
     `cantidad_preguntas` no supere las preguntas activas disponibles al momento de crearla.
     """
-    materia_id, banco_id = await _crear_materia(client, docente_headers)
+    materia_id, banco_id = await _crear_materia(client, admin_headers)
     for _ in range(cantidad_preguntas):
         await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
     apertura = datetime.now(UTC) - timedelta(days=1)
@@ -146,11 +146,13 @@ class TestFinalizarAPIIntegration:
     """Escenarios de finalización de
     `tests/features/inc3/US-3.2.3-finalizar-evaluacion-revision.feature`."""
 
-    async def test_finaliza_una_evaluacion_en_curso(self, session, docente_headers):
+    async def test_finaliza_una_evaluacion_en_curso(self, session, docente_headers, admin_headers):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
             response = await client.post(
@@ -164,11 +166,15 @@ class TestFinalizarAPIIntegration:
         assert stream[-1].event_type == "EvaluacionFinalizada"
         assert stream[-1].payload["actor"] == "estudiante"
 
-    async def test_finaliza_una_evaluacion_suspendida(self, session, docente_headers):
+    async def test_finaliza_una_evaluacion_suspendida(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
             await client.post(
                 f"/evaluaciones/{evaluacion['id']}/suspender", headers=estudiante_headers
@@ -182,12 +188,14 @@ class TestFinalizarAPIIntegration:
         assert response.json()["estado"] == "Finalizada"
 
     async def test_rechazo_al_finalizar_una_evaluacion_ya_finalizada(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
             await client.post(
                 f"/evaluaciones/{evaluacion['id']}/finalizar", headers=estudiante_headers
@@ -231,12 +239,12 @@ class TestRevisionAPIIntegration:
     `tests/features/inc3/US-3.2.3-finalizar-evaluacion-revision.feature`."""
 
     async def test_revision_disponible_tras_finalizar_con_correctas_e_incorrectas(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             pregunta_correcta = await _cargar_verdadero_falso(
                 client, docente_headers, banco_id, True
             )
@@ -288,11 +296,13 @@ class TestRevisionAPIIntegration:
         assert fila_incorrecta["es_correcta"] is False
         assert fila_incorrecta["contenido_correcto"] == {"valor": False}
 
-    async def test_revision_incluye_no_respondidas_como_incorrectas(self, session, docente_headers):
+    async def test_revision_incluye_no_respondidas_como_incorrectas(
+        self, session, docente_headers, admin_headers
+    ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -319,12 +329,12 @@ class TestRevisionAPIIntegration:
         assert fila["contenido_correcto"] == {"valor": True}
 
     async def test_revision_usa_la_respuesta_vigente_ante_reintentos(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -363,12 +373,14 @@ class TestRevisionAPIIntegration:
         assert fila["contenido_correcto"] is None
 
     async def test_rechazo_de_la_revision_antes_de_finalizar_en_curso(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
 
             response = await client.get(
@@ -378,12 +390,14 @@ class TestRevisionAPIIntegration:
         assert response.status_code == 422
 
     async def test_rechazo_de_la_revision_antes_de_finalizar_suspendida(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            actividad_id, banco_id = await _actividad_vigente(client, docente_headers)
+            actividad_id, banco_id = await _actividad_vigente(
+                client, admin_headers, docente_headers
+            )
             evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
             await client.post(
                 f"/evaluaciones/{evaluacion['id']}/suspender", headers=estudiante_headers
@@ -412,24 +426,64 @@ class TestRevisionAPIIntegration:
 
         assert response.status_code == 401
 
-    async def test_rechazo_con_rol_insuficiente(self, docente_headers):
+    async def test_rechazo_con_rol_insuficiente(self):
+        """`docente` ya no es rol insuficiente desde `US-ADJ-44` (drill-down de Analytics) —
+        `administrador` sigue sin acceso, ni siquiera al guard de rol."""
+        jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
+        headers = {"Authorization": f"Bearer {jwt_vo.token}"}
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(f"/evaluaciones/{uuid.uuid4()}/revision", headers=headers)
+
+        assert response.status_code == 403
+
+    async def test_docente_puede_pedir_la_revision_de_un_estudiante_ajeno(
+        self, session, docente_headers, admin_headers
+    ):
+        """Drill-down de "Desempeño por comisión" (`US-ADJ-44`, RF-20) — sin verificación de
+        pertenencia Docente↔Materia, mismo precedente de RBAC por rol que `US-4.2.1`."""
+        estudiante, estudiante_headers = await _crear_estudiante(session)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
+            pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
+            apertura = datetime.now(UTC) - timedelta(days=1)
+            cierre = apertura + timedelta(days=7)
+            actividad_id = await _crear_actividad(
+                client, docente_headers, materia_id, 1, apertura, cierre
+            )
+            evaluacion = await _iniciar_evaluacion(client, estudiante_headers, actividad_id)
+            await client.post(
+                f"/evaluaciones/{evaluacion['id']}/finalizar", headers=estudiante_headers
+            )
+
+            response = await client.get(
+                f"/evaluaciones/{evaluacion['id']}/revision", headers=docente_headers
+            )
+
+        assert response.status_code == 200
+        cuerpo = response.json()
+        assert cuerpo["cantidad_preguntas"] == 1
+        assert cuerpo["detalle"][0]["pregunta_id"] == pregunta_id
+
+    async def test_docente_recibe_404_por_evaluacion_inexistente(self, docente_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get(
                 f"/evaluaciones/{uuid.uuid4()}/revision", headers=docente_headers
             )
 
-        assert response.status_code == 403
+        assert response.status_code == 404
 
     async def test_revision_de_opcion_multiple_expone_el_texto_de_las_opciones(
-        self, session, docente_headers
+        self, session, docente_headers, admin_headers
     ):
         """`US-3.4.7` — `contenido_propio`/`contenido_correcto` traen `opcion_indice`, y
         `opciones` permite resolver su texto real sin conocer el tipo de pregunta."""
         estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id, banco_id = await _crear_materia(client, docente_headers)
+            materia_id, banco_id = await _crear_materia(client, admin_headers)
             pregunta_id, opciones_texto = await _cargar_opcion_multiple(
                 client, docente_headers, banco_id, indice_correcto=1
             )

@@ -63,7 +63,7 @@ async def _crear_admin_id() -> str:
         {
             "nombre": "Admin BDD 212",
             "email": f"admin.bdd212.{uuid.uuid4()}@fiuner.edu.ar",
-            "password": "claveSegura1",
+            "password": "claveSegura1#",
             "perfil": "administrador",
         },
         headers=admin_headers(),

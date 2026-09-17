@@ -23,6 +23,11 @@ def docente_headers() -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
+def admin_headers() -> dict[str, str]:
+    jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
 async def crear_estudiante() -> tuple[str, dict[str, str]]:
     """Crea un `Usuario` real con rol Estudiante y devuelve su id y sus headers de JWT.
 

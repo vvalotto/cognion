@@ -1,0 +1,55 @@
+{
+  "us_id": "US-ADJ-41",
+  "title": "Autoregistro de Docente (endpoint público)",
+  "pylint": {
+    "score": 9.93,
+    "min_required": 8.0,
+    "passed": true
+  },
+  "complexity": {
+    "max_cc": 3,
+    "max_allowed": 10,
+    "passed": true
+  },
+  "maintainability_index": {
+    "grade": "A",
+    "min_required": 20,
+    "passed": true
+  },
+  "mypy": {
+    "errors": 0,
+    "passed": true
+  },
+  "coverage": {
+    "files": {
+      "src/identidad/use_cases/autoregistrar_docente.py": 100,
+      "src/identidad/interface_adapters/controllers/autoregistro_controller.py": 100
+    },
+    "min_required": 95.0,
+    "passed": true
+  },
+  "codeguard": {
+    "analysis_type": "full",
+    "errors": 0,
+    "warnings": 60,
+    "infos": 31,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 4},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 4},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 4},
+      "DeadCode": {"errors": 0, "warnings": 57, "infos": 1},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 4},
+      "Pylint": {"errors": 0, "warnings": 0, "infos": 4},
+      "Spelling": {"errors": 0, "warnings": 3, "infos": 2},
+      "Types": {"errors": 0, "warnings": 0, "infos": 4},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 4}
+    },
+    "report_path": "quality/reports/inc5-adj/US-ADJ-41-codeguard.json"
+  },
+  "tests": {
+    "unit": 4,
+    "integration": 4,
+    "bdd": 4,
+    "full_suite": "1053/1053"
+  }
+}

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 import { Logo } from "@/components/Logo"
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -101,17 +102,33 @@ export function Login() {
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="login-password">Contraseña</Label>
-            <Input
+            <PasswordInput
               id="login-password"
-              type="password"
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
+          <div className="flex items-center justify-end">
+            <Link
+              to="/recuperar-password"
+              className="text-sm font-medium text-muted-foreground underline-offset-2 hover:underline"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
           <Button type="submit">Ingresar</Button>
         </fieldset>
       </form>
+
+      {!bloqueada && (
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          ¿No tenés cuenta?{" "}
+          <Link to="/autoregistro" className="font-medium text-foreground underline-offset-2 hover:underline">
+            Registrate
+          </Link>
+        </p>
+      )}
     </div>
   )
 }

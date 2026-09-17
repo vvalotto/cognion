@@ -55,7 +55,7 @@ export function MiDesempeno() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Mi desempeño" }]} />
+      <Breadcrumb items={[{ label: "Reportes" }, { label: "Mi desempeño" }]} />
       <h1 className="text-lg font-semibold">Mi desempeño</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Historial de tus evaluaciones de período abierto en la materia elegida.

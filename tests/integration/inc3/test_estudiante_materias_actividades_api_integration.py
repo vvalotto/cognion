@@ -22,9 +22,9 @@ def _headers_para(usuario: Usuario) -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
-async def _crear_materia(client: AsyncClient, docente_headers: dict) -> str:
+async def _crear_materia(client: AsyncClient, admin_headers: dict) -> str:
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
-    response = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers)
+    response = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     return response.json()["id"]
 
 
@@ -75,10 +75,10 @@ async def _crear_actividad(
 
 
 async def _crear_materia_con_preguntas(
-    client: AsyncClient, docente_headers: dict, cantidad: int
+    client: AsyncClient, admin_headers: dict, docente_headers: dict, cantidad: int
 ) -> str:
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
-    creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers)
+    creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
     for i in range(cantidad):
         await client.post(
@@ -100,10 +100,10 @@ async def _crear_materia_con_preguntas(
 class TestEstudianteMateriasAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.4.5-mis-materias-actividades.feature`."""
 
-    async def test_estudiante_ve_su_materia(self, session, docente_headers):
+    async def test_estudiante_ve_su_materia(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers)
+            materia_id = await _crear_materia(client, admin_headers)
             _estudiante, estudiante_headers = await _crear_estudiante_de_materia(
                 session, materia_id
             )
@@ -135,10 +135,14 @@ class TestEstudianteMateriasAPIIntegration:
 class TestActividadesVisiblesAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.4.5-mis-materias-actividades.feature`."""
 
-    async def test_actividad_pendiente_dentro_del_periodo(self, session, docente_headers):
+    async def test_actividad_pendiente_dentro_del_periodo(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 5)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 5
+            )
             _estudiante, estudiante_headers = await _crear_estudiante_de_materia(
                 session, materia_id
             )
@@ -157,10 +161,12 @@ class TestActividadesVisiblesAPIIntegration:
         assert data[0]["estado"] == "pendiente"
         assert data[0]["evaluacion_id"] is None
 
-    async def test_actividad_todavia_no_abrio(self, session, docente_headers):
+    async def test_actividad_todavia_no_abrio(self, session, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 5)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 5
+            )
             _estudiante, estudiante_headers = await _crear_estudiante_de_materia(
                 session, materia_id
             )
@@ -176,10 +182,14 @@ class TestActividadesVisiblesAPIIntegration:
         assert response.status_code == 200
         assert response.json()[0]["estado"] == "todavia_no_abrio"
 
-    async def test_actividad_finalizada_por_el_estudiante(self, session, docente_headers):
+    async def test_actividad_finalizada_por_el_estudiante(
+        self, session, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 5)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 5
+            )
             _estudiante, estudiante_headers = await _crear_estudiante_de_materia(
                 session, materia_id
             )

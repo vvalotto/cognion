@@ -2,9 +2,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CambiarPasswordError, cambiarPassword } from "@/lib/cuentas-api"
 
@@ -49,8 +49,8 @@ export function CambiarPassword() {
     event.preventDefault()
     setError(null)
 
-    if (passwordNueva.length < 8) {
-      setError("La contraseña nueva debe tener al menos 8 caracteres.")
+    if (passwordNueva.length < 12) {
+      setError("La contraseña nueva debe tener al menos 12 caracteres.")
       return
     }
     if (passwordNueva !== confirmacion) {
@@ -122,9 +122,8 @@ export function CambiarPassword() {
           <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-actual">Contraseña actual</Label>
-              <Input
+              <PasswordInput
                 id="password-actual"
-                type="password"
                 required
                 disabled={bloqueada}
                 value={passwordActual}
@@ -133,10 +132,11 @@ export function CambiarPassword() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-nueva">Contraseña nueva</Label>
-              <Input
+              <PasswordInput
                 id="password-nueva"
-                type="password"
                 required
+                minLength={12}
+                mostrarFortaleza
                 disabled={bloqueada}
                 value={passwordNueva}
                 onChange={(e) => setPasswordNueva(e.target.value)}
@@ -144,9 +144,8 @@ export function CambiarPassword() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-confirmacion">Confirmar contraseña nueva</Label>
-              <Input
+              <PasswordInput
                 id="password-confirmacion"
-                type="password"
                 required
                 disabled={bloqueada}
                 value={confirmacion}

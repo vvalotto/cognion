@@ -7,6 +7,9 @@ from uuid import UUID
 from src.identidad.entities.errors import UsuarioNoExiste
 from src.identidad.entities.ports.comision_query_port import ComisionQueryPort
 from src.identidad.entities.ports.evaluacion_consulta_port import EvaluacionConsultaPort
+from src.identidad.entities.ports.token_recuperacion_password_repository_port import (
+    TokenRecuperacionPasswordRepositoryPort,
+)
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.usuario import Administrador, Docente, Estudiante, Usuario
 
@@ -26,11 +29,13 @@ class EliminarCuentaUseCase:
         usuario_repositorio: UsuarioRepositoryPort,
         comision_query: ComisionQueryPort,
         evaluacion_consulta: EvaluacionConsultaPort,
+        token_recuperacion_repositorio: TokenRecuperacionPasswordRepositoryPort,
     ) -> None:
         """Recibe el repositorio de usuarios y los puertos de consulta a usar."""
         self._usuario_repositorio = usuario_repositorio
         self._comision_query = comision_query
         self._evaluacion_consulta = evaluacion_consulta
+        self._token_recuperacion_repositorio = token_recuperacion_repositorio
 
     async def execute(self, usuario_id: UUID) -> Usuario | None:
         """Elimina o deshabilita `usuario_id` según tenga datos asociados.
@@ -57,5 +62,6 @@ class EliminarCuentaUseCase:
             await self._usuario_repositorio.actualizar(usuario)
             return usuario
 
+        await self._token_recuperacion_repositorio.eliminar_de(usuario_id)
         await self._usuario_repositorio.eliminar(usuario_id)
         return None

@@ -66,6 +66,11 @@ def _headers_docente() -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
+def _headers_administrador() -> dict[str, str]:
+    jwt_vo = PyJWTIssuer().emitir(uuid4(), TipoPerfil.ADMINISTRADOR)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
 def _headers_estudiante() -> dict[str, str]:
     jwt_vo = PyJWTIssuer().emitir(uuid4(), TipoPerfil.ESTUDIANTE)
     return {"Authorization": f"Bearer {jwt_vo.token}"}
@@ -86,7 +91,9 @@ async def _crear_materia_real() -> uuid.UUID:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
-            "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=_headers_docente()
+            "/materias",
+            json={"nombre": f"Materia {uuid.uuid4()}"},
+            headers=_headers_administrador(),
         )
     return uuid.UUID(response.json()["id"])
 

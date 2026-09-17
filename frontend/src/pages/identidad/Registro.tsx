@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router"
 
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -43,8 +44,8 @@ export function Registro() {
     event.preventDefault()
     setError(null)
 
-    if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.")
+    if (password.length < 12) {
+      setError("La contraseña debe tener al menos 12 caracteres.")
       return
     }
     if (password !== confirmarPassword) {
@@ -110,22 +111,21 @@ export function Registro() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="registro-password">Contraseña</Label>
-          <Input
+          <PasswordInput
             id="registro-password"
-            type="password"
             required
-            minLength={8}
+            minLength={12}
+            mostrarFortaleza
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="registro-confirmar-password">Confirmar contraseña</Label>
-          <Input
+          <PasswordInput
             id="registro-confirmar-password"
-            type="password"
             required
-            minLength={8}
+            minLength={12}
             value={confirmarPassword}
             onChange={(event) => setConfirmarPassword(event.target.value)}
           />

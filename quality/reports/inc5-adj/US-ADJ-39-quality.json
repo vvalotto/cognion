@@ -1,0 +1,50 @@
+{
+  "us_id": "US-ADJ-39",
+  "titulo": "Confirmar nueva contraseña con token de recuperación (endpoint público)",
+  "fecha": "2026-09-13T00:00:00-03:00",
+  "componente": "src/identidad/entities/errors.py + eventos.py + token_recuperacion_password.py (modificados) + usuario.py (modificado) + confirmar_nueva_password.py (nuevo) + recuperacion_password_controller.py (modificado) + frameworks/api/schemas.py + recuperacion_password_router.py + dependencies.py (modificados)",
+  "metricas": {
+    "pylint": 9.96,
+    "cc_promedio": 1.6,
+    "cc_maximo": 8,
+    "mi_promedio": 84.67,
+    "mi_minimo": 57.53,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "mypy_dedicado": {
+    "comando": "mypy sobre los 9 archivos modificados/agregados (fuente de verdad de tipos, ver CLAUDE.md — el check Types de CodeGuard puede quedar mudo por timeout en frío)",
+    "resultado": "Success: no issues found in 9 source files"
+  },
+  "codeguard": {
+    "archivos_analizados": 9,
+    "errors": 18,
+    "warnings": 2,
+    "infos": 61,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 9},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 9},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 9},
+      "DeadCode": {"errors": 9, "warnings": 0, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 9},
+      "Pylint": {"errors": 0, "warnings": 2, "infos": 7},
+      "Spelling": {"errors": 9, "warnings": 0, "infos": 0},
+      "Types": {"errors": 0, "warnings": 0, "infos": 9},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 9}
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-39-codeguard.json",
+    "nota": "Los 9 errores de DeadCode y los 9 de Spelling son 'vulture not installed'/'codespell not installed' — herramientas no instaladas en este entorno, mismo gap preexistente ya visto en US-ADJ-38 (no introducido por esta US). Los 2 warnings de Pylint son `recuperacion_password_router.py` (6.88/10) y `schemas.py` (7.14/10) evaluados aisladamente, un artefacto de correr pylint archivo por archivo en vez de sobre el módulo completo — el mismo pylint corrido junto con el resto de los archivos tocados (comando de abajo) da 10.00/10 sobre ambos. La fuente de verdad real es el pylint (9.96/10) y mypy (0 issues) corridos directo sobre el mismo set de archivos, ver arriba."
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "4 líneas sin cubrir en usuario.py (117-118, 127, 135) — editar_datos()/deshabilitar()/activar(), pre-existentes y sin relación con esta US; todo el código nuevo/modificado de esta US (errors.py, eventos.py, token_recuperacion_password.py, confirmar_nueva_password.py, recuperacion_password_controller.py) está en 100%.",
+    "R0902 (too-many-instance-attributes, 10/7) en Usuario — pre-existente, confirmado contra develop antes de esta US, no introducido por ella.",
+    "R0903 (too-few-public-methods) en ConfirmarNuevaPasswordUseCase (1 método público) — mismo patrón ya aceptado en el proyecto para Use Cases de un solo comando.",
+    "src/*/frameworks/* queda fuera del gate de coverage por [tool.coverage.run] omit en pyproject.toml — router.py/schemas.py/dependencies.py no se miden."
+  ]
+}

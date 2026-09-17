@@ -74,6 +74,20 @@ class UsuarioRegistrado:
 
 
 @dataclass(frozen=True)
+class UsuarioAutoregistrado:
+    """Un Docente o Estudiante creó su propia cuenta sin invitación ni Administrador (`US-ADJ-41`).
+
+    Distinto de `UsuarioCreado` (alta por Administrador, autenticada) — mismo shape, actor
+    distinto (`BC-identidad-modelo.md` §13.2).
+    """
+
+    usuario_id: UUID
+    email: str
+    tipo_perfil: str
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
 class SesionIniciada:
     """Un Usuario se autenticó exitosamente y recibió un JWT con su rol (RF-02)."""
 
@@ -117,6 +131,18 @@ class CuentaDesbloqueada:
 @dataclass(frozen=True)
 class PasswordCambiada:
     """Un Usuario cambió su propia contraseña (RF-19, `US-2.2.5`)."""
+
+    usuario_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class PasswordRecuperada:
+    """Un Usuario recuperó el acceso a su cuenta con un token de recuperación (`US-ADJ-39`).
+
+    Autoservicio, sin intervención de un Administrador — a diferencia de `PasswordReseteada`,
+    no lleva `administrador_id`.
+    """
 
     usuario_id: UUID
     ocurrido_en: datetime = field(default_factory=_ahora)

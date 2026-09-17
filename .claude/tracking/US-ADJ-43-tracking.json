@@ -1,0 +1,269 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-43",
+    "us_title": "Pantallas de autoregistro con selección de perfil",
+    "us_points": 5,
+    "producto": "identidad",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-13T20:09:29.434788+00:00",
+    "completed_at": "2026-09-13T20:44:44.043464+00:00",
+    "total_elapsed_seconds": 2114,
+    "effective_seconds": 2114,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto y assessment",
+      "started_at": "2026-09-13T20:09:34.278924+00:00",
+      "completed_at": "2026-09-13T20:10:08.135403+00:00",
+      "elapsed_seconds": 33,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-13T20:10:12.871640+00:00",
+      "completed_at": "2026-09-13T20:10:42.386739+00:00",
+      "elapsed_seconds": 29,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-13T20:10:48.202960+00:00",
+      "completed_at": "2026-09-13T20:13:34.778761+00:00",
+      "elapsed_seconds": 166,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-09-13T20:13:34.897630+00:00",
+      "completed_at": "2026-09-13T20:18:34.112440+00:00",
+      "elapsed_seconds": 299,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "1",
+          "task_name": "MateriaPort.listar()",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-13T20:13:39.862241+00:00",
+          "completed_at": "2026-09-13T20:14:03.630527+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -4.62,
+          "file_created": "src/identidad/entities/ports/materia_port.py,src/identidad/frameworks/adapters/materia_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "2",
+          "task_name": "Schemas de respuesta para autoregistro",
+          "task_type": "backend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-13T20:14:10.229825+00:00",
+          "completed_at": "2026-09-13T20:14:19.934022+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -4.85,
+          "file_created": "src/identidad/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "3",
+          "task_name": "AutoregistroController: listar_materias/listar_comisiones_por_materia",
+          "task_type": "backend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-13T20:14:21.946854+00:00",
+          "completed_at": "2026-09-13T20:14:37.463022+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -7.75,
+          "file_created": "src/identidad/interface_adapters/controllers/autoregistro_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "4",
+          "task_name": "Router público + wiring de dependencias",
+          "task_type": "backend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-13T20:14:39.392426+00:00",
+          "completed_at": "2026-09-13T20:15:09.824049+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -7.5,
+          "file_created": "src/identidad/frameworks/api/autoregistro_router.py,src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "5",
+          "task_name": "Cliente API identidad-autoregistro-api.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-13T20:15:20.619235+00:00",
+          "completed_at": "2026-09-13T20:15:47.738799+00:00",
+          "elapsed_seconds": 27,
+          "actual_minutes": 0.45,
+          "variance_minutes": -9.55,
+          "file_created": "frontend/src/lib/identidad-autoregistro-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "6",
+          "task_name": "AutoregistroPerfil.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-13T20:15:49.903761+00:00",
+          "completed_at": "2026-09-13T20:16:20.398723+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -7.5,
+          "file_created": "frontend/src/pages/identidad/AutoregistroPerfil.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "7",
+          "task_name": "AutoregistroDocente.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 12.0,
+          "started_at": "2026-09-13T20:16:22.285883+00:00",
+          "completed_at": "2026-09-13T20:16:51.395856+00:00",
+          "elapsed_seconds": 29,
+          "actual_minutes": 0.48,
+          "variance_minutes": -11.52,
+          "file_created": "frontend/src/pages/identidad/AutoregistroDocente.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "8",
+          "task_name": "AutoregistroEstudiante.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-13T20:16:53.479275+00:00",
+          "completed_at": "2026-09-13T20:17:28.679510+00:00",
+          "elapsed_seconds": 35,
+          "actual_minutes": 0.58,
+          "variance_minutes": -14.42,
+          "file_created": "frontend/src/pages/identidad/AutoregistroEstudiante.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "9",
+          "task_name": "AutoregistroExito.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-13T20:17:30.529548+00:00",
+          "completed_at": "2026-09-13T20:17:44.253654+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -4.78,
+          "file_created": "frontend/src/pages/identidad/AutoregistroExito.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "10",
+          "task_name": "Integración: link en Login.tsx + rutas en router.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-13T20:17:46.383920+00:00",
+          "completed_at": "2026-09-13T20:18:25.172980+00:00",
+          "elapsed_seconds": 38,
+          "actual_minutes": 0.63,
+          "variance_minutes": -9.37,
+          "file_created": "frontend/src/pages/identidad/Login.tsx,frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-13T20:18:49.496665+00:00",
+      "completed_at": "2026-09-13T20:22:37.121139+00:00",
+      "elapsed_seconds": 227,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-13T20:22:39.575734+00:00",
+      "completed_at": "2026-09-13T20:25:23.608473+00:00",
+      "elapsed_seconds": 164,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-13T20:25:25.961854+00:00",
+      "completed_at": "2026-09-13T20:30:05.651413+00:00",
+      "elapsed_seconds": 279,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-13T20:30:11.156834+00:00",
+      "completed_at": "2026-09-13T20:42:41.126748+00:00",
+      "elapsed_seconds": 749,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-13T20:42:47.722567+00:00",
+      "completed_at": "2026-09-13T20:43:40.670647+00:00",
+      "elapsed_seconds": 52,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-13T20:43:40.776456+00:00",
+      "completed_at": "2026-09-13T20:44:41.943029+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 10,
+    "completed_tasks": 10,
+    "total_phases": 10,
+    "estimated_total_minutes": 86.0,
+    "actual_total_minutes": 4.15,
+    "variance_minutes": -81.85,
+    "variance_percent": -95.17
+  }
+}

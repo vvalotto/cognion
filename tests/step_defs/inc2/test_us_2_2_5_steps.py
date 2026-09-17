@@ -132,7 +132,7 @@ def ejecuta_cambiar_password_exitoso(context, password_nueva):
 @when("ejecuta CambiarPassword con la contraseña actual incorrecta")
 def ejecuta_cambiar_password_actual_incorrecta(context):
     context["response"] = run_async(
-        _put_cambiar_password(context["usuario_id"], "incorrecta", "nuevaClave123", context)
+        _put_cambiar_password(context["usuario_id"], "incorrecta", "nuevaClave123#", context)
     )
 
 
@@ -147,7 +147,7 @@ def ejecuta_cambiar_password_nueva_corta(context, largo):
 @when("ejecuta CambiarPassword con cualquier dato")
 def ejecuta_cambiar_password_cuenta_bloqueada(context):
     context["response"] = run_async(
-        _put_cambiar_password(context["usuario_id"], "cualquiera", "nuevaClave123", context)
+        _put_cambiar_password(context["usuario_id"], "cualquiera", "nuevaClave123#", context)
     )
 
 

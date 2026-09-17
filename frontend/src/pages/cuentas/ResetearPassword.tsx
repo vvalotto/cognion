@@ -2,9 +2,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { PasswordInput } from "@/components/PasswordInput"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { obtenerCuenta, resetearPassword, type CuentaDetalleResponse } from "@/lib/cuentas-api"
 
@@ -46,8 +46,8 @@ export function ResetearPassword() {
 
     if (!usuarioId) return
 
-    if (passwordNueva.length < 8) {
-      setError("La contraseña nueva debe tener al menos 8 caracteres.")
+    if (passwordNueva.length < 12) {
+      setError("La contraseña nueva debe tener al menos 12 caracteres.")
       return
     }
     if (passwordNueva !== confirmacion) {
@@ -110,10 +110,11 @@ export function ResetearPassword() {
           <form className="mt-4 flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-nueva">Nueva contraseña temporal</Label>
-              <Input
+              <PasswordInput
                 id="password-nueva"
-                type="password"
                 required
+                minLength={12}
+                mostrarFortaleza
                 value={passwordNueva}
                 onChange={(e) => setPasswordNueva(e.target.value)}
               />
@@ -124,10 +125,10 @@ export function ResetearPassword() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password-confirmacion">Confirmar contraseña</Label>
-              <Input
+              <PasswordInput
                 id="password-confirmacion"
-                type="password"
                 required
+                minLength={12}
                 value={confirmacion}
                 onChange={(e) => setConfirmacion(e.target.value)}
               />

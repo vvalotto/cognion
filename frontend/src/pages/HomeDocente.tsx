@@ -24,15 +24,9 @@ const CARDS: CardAcceso[] = [
   },
   {
     icono: "📊",
-    titulo: "Desempeño por alumno",
-    descripcion: "Consultar el desempeño acumulado de un estudiante",
-    to: "/analytics/desempeno-por-alumno",
-  },
-  {
-    icono: "📈",
-    titulo: "Desempeño por tema",
-    descripcion: "Ver la tasa de error por unidad/tema",
-    to: "/analytics/desempeno-por-tema",
+    titulo: "Reportes",
+    descripcion: "Desempeño por comisión, por alumno, por tema y ranking de preguntas falladas",
+    to: "/analytics",
   },
 ]
 

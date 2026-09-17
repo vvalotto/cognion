@@ -127,7 +127,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
             json={
                 "nombre": "Usuario Test",
                 "email": email,
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": perfil,
             },
             headers=admin_headers(),
@@ -142,7 +142,7 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
 
 
 async def _crear_materia_id(nombre: str) -> str:
-    respuesta = await _post("/materias", {"nombre": nombre}, headers=docente_headers())
+    respuesta = await _post("/materias", {"nombre": nombre}, headers=admin_headers())
     return respuesta.json()["id"]
 
 

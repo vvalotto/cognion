@@ -6,7 +6,12 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from src.identidad.entities.errors import EmailYaRegistrado, PasswordDemasiadoCorta, UsuarioNoExiste
+from src.identidad.entities.errors import (
+    EmailYaRegistrado,
+    PasswordDemasiadoCorta,
+    PasswordSinComplejidadSuficiente,
+    UsuarioNoExiste,
+)
 from src.identidad.entities.usuario import Estudiante, Usuario
 from src.identidad.frameworks.api.schemas import (
     CuentaDetalleResponse,
@@ -101,7 +106,7 @@ async def resetear_password(
         )
     except UsuarioNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except PasswordDemasiadoCorta as exc:
+    except (PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

@@ -20,11 +20,11 @@ class TestResetearPasswordUseCase:
         administrador_id = uuid.uuid4()
 
         resultado, _evento_password, _evento_desbloqueo = await use_case.execute(
-            usuario.id, "nuevaClave123", administrador_id
+            usuario.id, "nuevaClave123#", administrador_id
         )
 
-        assert resultado.password_hash == hasher.hash("nuevaClave123")
-        assert repo.usuarios[usuario.id].password_hash == hasher.hash("nuevaClave123")
+        assert resultado.password_hash == hasher.hash("nuevaClave123#")
+        assert repo.usuarios[usuario.id].password_hash == hasher.hash("nuevaClave123#")
 
     async def test_cuenta_bloqueada_se_desbloquea_y_emite_ambos_eventos(self):
         repo = FakeUsuarioRepository()
@@ -37,7 +37,7 @@ class TestResetearPasswordUseCase:
         administrador_id = uuid.uuid4()
 
         resultado, evento_password, evento_desbloqueo = await use_case.execute(
-            usuario.id, "nuevaClave123", administrador_id
+            usuario.id, "nuevaClave123#", administrador_id
         )
 
         assert resultado.bloqueada is False
@@ -57,7 +57,7 @@ class TestResetearPasswordUseCase:
         administrador_id = uuid.uuid4()
 
         _resultado, evento_password, evento_desbloqueo = await use_case.execute(
-            usuario.id, "nuevaClave123", administrador_id
+            usuario.id, "nuevaClave123#", administrador_id
         )
 
         assert isinstance(evento_password, PasswordReseteada)
@@ -70,7 +70,7 @@ class TestResetearPasswordUseCase:
         usuario_id = uuid.uuid4()
 
         with pytest.raises(UsuarioNoExiste) as exc:
-            await use_case.execute(usuario_id, "nuevaClave123", uuid.uuid4())
+            await use_case.execute(usuario_id, "nuevaClave123#", uuid.uuid4())
 
         assert exc.value.usuario_id == usuario_id
 

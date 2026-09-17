@@ -15,3 +15,11 @@ class ComisionNoPerteneceAMateria(Exception):
     def __init__(self, comision_id: UUID, materia_id: UUID) -> None:
         """Registra los ids involucrados para el mensaje de error (US-4.2.4)."""
         super().__init__(f"La comisión {comision_id} no pertenece a la materia {materia_id}.")
+
+
+class ActividadNoExiste(Exception):
+    """No existe ninguna `ActividadEvaluativaPeriodoAbierto` con el id consultado (US-ADJ-47)."""
+
+    def __init__(self, actividad_id: UUID) -> None:
+        """Registra el id de la actividad para el mensaje de error."""
+        super().__init__(f"No existe una actividad con id {actividad_id}.")

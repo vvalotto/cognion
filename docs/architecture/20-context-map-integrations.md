@@ -38,6 +38,7 @@ propia Iteración 0 (ver `docs/architecture/README.md` — "no todas de una vez"
 | Analytics | Identidad (`Comision`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-4.2.1`) | Los selectores en cascada Materia → Comisión → Estudiante de `US-4.2.5`/`US-4.2.6` necesitan listar las comisiones de una materia y los estudiantes de una comisión — consulta nueva de punta a punta, no existía en Identidad. Identidad define `ComisionQueryPort` (separado de `ComisionRepositoryPort` por responsabilidad command/query, mismo criterio que `CuentaQueryPort`/`US-2.2.2`) y lo expone también como `GET /materias/{id}/comisiones`/`GET /comisiones/{id}/estudiantes`. Analytics define su propio `ComisionConsultaPort` (copia propia con DTOs propios) y lo implementa en `frameworks/adapters/comision_consulta_port_in_process.py`, invocando `SQLAlchemyComisionQueryRepository` de Identidad con la misma sesión de BD — sin FK de base entre esquemas de BCs. Consumido desde `US-4.2.4` (`ObtenerTasaErrorPorTemaUseCase`, acotar por comisión). | `docs/specs/inc4/US-4.2.2.md`, `ADR-006` |
 | Analytics | Banco de Preguntas (`PreguntaPlantilla`, metadatos) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-4.2.2`) | La tasa de error por unidad/tema (RF-17, `US-4.2.4`) necesita conocer `unidad_tematica`/`tema` de cada pregunta respondida — dato que no viaja en los eventos de Actividad Evaluativa (solo `pregunta_id`), resuelve la pregunta abierta de la sección "Relaciones pendientes de definir". Analytics define `PreguntaMetadatoConsultaPort` (copia propia, DTO `MetadatoPreguntaResumen`) en `entities/ports/` y lo implementa en `frameworks/adapters/pregunta_metadato_consulta_port_in_process.py`, consultando `PreguntaPlantillaModel` de Banco de Preguntas por lote (`WHERE id IN (...)`) con la misma sesión de BD — sin FK de base entre esquemas de BCs. Consumido desde `US-4.2.4` (`ObtenerTasaErrorPorTemaUseCase`, agrupa respuestas por `unidad_tematica`/`tema`). | `docs/specs/inc4/US-4.2.3.md`, `ADR-006` |
 | Identidad | (servicio externo SMTP) | — | BC Identidad envía el email de invitación con su propio adaptador SMTP, independiente del Servicio Email que usará Notificaciones. | `ADR-012` |
+| Identidad | Notificaciones | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`) | La recuperación de contraseña por autoservicio reusa el canal de envío ya existente de Notificaciones en vez de un segundo adaptador SMTP propio de Identidad (a diferencia de `GenerarInvitacion`, `ADR-012`) — decisión de producto para no esperar la cuenta SMTP real de producción. Identidad define `CanalRecuperacionPort` en `entities/ports/` y lo implementa en `frameworks/adapters/canal_recuperacion_port_in_process.py`, que invoca `SmtpCanalEnvio` de Notificaciones directo (sin pasar por un Use Case de Notificaciones, a diferencia de `NotificacionPort` — acá el destinatario ya lo tiene Identidad, sin necesidad de resolver un roster). Primera vez que la dependencia entre estos dos BC corre en sentido Identidad → Notificaciones (hasta ahora solo existía Actividad Evaluativa → Notificaciones). | `docs/specs/ajustes/US-ADJ-38.md`, `ADR-006` |
 
 ## Relaciones pendientes de definir
 
@@ -78,6 +79,8 @@ flowchart LR
 
     identidad -->|"Customer-Supplier
     MateriaPort in-process (US-2.1.2)"| banco
+    identidad -->|"Customer-Supplier
+    CanalRecuperacionPort (US-ADJ-38)"| notificaciones
 
     actividad -->|"Conformist
     llamada directa (ADR-006)"| notificaciones
@@ -105,6 +108,8 @@ reales — no antes. Actualizada en `US-2.1.2` con la relación Identidad → Ba
 `US-4.2.1` con Analytics → Identidad (`Usuario`, mismo mecanismo, puerto propio de Analytics);
 en `US-4.2.2` con Analytics → Identidad (`Comision`, vía `ComisionConsultaPort`, mismo
 mecanismo); en `US-4.2.3` con Analytics → Banco de Preguntas (`PreguntaPlantilla`, vía
-`PreguntaMetadatoConsultaPort`) — resuelve la última relación que quedaba "a definir". La
-próxima actualización esperada es cuando un incremento futuro introduzca un BC o una relación
-nueva.
+`PreguntaMetadatoConsultaPort`) — resuelve la última relación que quedaba "a definir"; en
+`US-ADJ-38` con Identidad → Notificaciones (`CanalRecuperacionPort`), primera vez que la
+dependencia entre estos dos BC corre en sentido inverso al ya documentado (Actividad
+Evaluativa → Notificaciones, `ADR-006`). La próxima actualización esperada es cuando un
+incremento futuro introduzca un BC o una relación nueva.

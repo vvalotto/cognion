@@ -37,6 +37,18 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         self.ultimo_estudiante_ids = estudiante_ids
         return self._respuestas
 
+    async def listar_actividades_abiertas(self, materia_id, comision_id):
+        raise NotImplementedError
+
+    async def obtener_titulos_actividades(self, actividad_ids):
+        raise NotImplementedError
+
+    async def obtener_actividad_resumen(self, actividad_id):
+        raise NotImplementedError
+
+    async def listar_estados_de_actividad(self, actividad_id, estudiante_ids):
+        raise NotImplementedError
+
 
 class _ComisionConsultaPortFake(ComisionConsultaPort):
     def __init__(
@@ -94,8 +106,12 @@ class TestObtenerTasaErrorPorTemaUseCase:
             RespuestaVigente(pregunta_id=pregunta_b, estudiante_id=uuid4(), es_correcta=True),
         ]
         metadatos = {
-            pregunta_a: MetadatoPreguntaResumen(unidad_tematica="U1", tema="Herencia"),
-            pregunta_b: MetadatoPreguntaResumen(unidad_tematica="U1", tema="Herencia"),
+            pregunta_a: MetadatoPreguntaResumen(
+                unidad_tematica="U1", tema="Herencia", enunciado="Enunciado de prueba"
+            ),
+            pregunta_b: MetadatoPreguntaResumen(
+                unidad_tematica="U1", tema="Herencia", enunciado="Enunciado de prueba"
+            ),
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
@@ -114,7 +130,11 @@ class TestObtenerTasaErrorPorTemaUseCase:
         respuestas = [
             RespuestaVigente(pregunta_id=pregunta_id, estudiante_id=uuid4(), es_correcta=True)
         ]
-        metadatos = {pregunta_id: MetadatoPreguntaResumen(unidad_tematica="U1", tema="T1")}
+        metadatos = {
+            pregunta_id: MetadatoPreguntaResumen(
+                unidad_tematica="U1", tema="T1", enunciado="Enunciado de prueba"
+            )
+        }
         use_case, _ = _use_case(respuestas, metadatos)
 
         resultado = await use_case.execute(uuid4(), None)
@@ -135,7 +155,9 @@ class TestObtenerTasaErrorPorTemaUseCase:
             ),
         ]
         metadatos = {
-            pregunta_con_metadato: MetadatoPreguntaResumen(unidad_tematica="U1", tema="T1")
+            pregunta_con_metadato: MetadatoPreguntaResumen(
+                unidad_tematica="U1", tema="T1", enunciado="Enunciado de prueba"
+            )
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
@@ -152,8 +174,12 @@ class TestObtenerTasaErrorPorTemaUseCase:
             RespuestaVigente(pregunta_id=pregunta_alta, estudiante_id=uuid4(), es_correcta=False),
         ]
         metadatos = {
-            pregunta_baja: MetadatoPreguntaResumen(unidad_tematica="U1", tema="BajaTasa"),
-            pregunta_alta: MetadatoPreguntaResumen(unidad_tematica="U2", tema="AltaTasa"),
+            pregunta_baja: MetadatoPreguntaResumen(
+                unidad_tematica="U1", tema="BajaTasa", enunciado="Enunciado de prueba"
+            ),
+            pregunta_alta: MetadatoPreguntaResumen(
+                unidad_tematica="U2", tema="AltaTasa", enunciado="Enunciado de prueba"
+            ),
         }
         use_case, _ = _use_case(respuestas, metadatos)
 

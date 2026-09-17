@@ -9,7 +9,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc2/US-2.1.1-alta-materia-banco.feature")
 
@@ -38,10 +38,17 @@ def context():
     return {}
 
 
-async def _post_crear_materia(nombre: str):
+async def _post_crear_materia(nombre: str, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        return await client.post(
+            "/materias", json={"nombre": nombre}, headers=headers or admin_headers()
+        )
+
+
+@given("un Administrador autenticado")
+def administrador_autenticado():
+    """No requiere setup — cada request arma su propio JWT vía `admin_headers()`."""
 
 
 @given("un Docente autenticado")
@@ -71,9 +78,14 @@ def ejecuta_crear_materia_nombre_vacio(context):
     context["response"] = run_async(_post_crear_materia(""))
 
 
-@when(parsers.parse('un Docente ejecuta CrearMateria(nombre="{nombre}")'))
-def un_docente_ejecuta_crear_materia(context, nombre):
+@when(parsers.parse('un Administrador ejecuta CrearMateria(nombre="{nombre}")'))
+def un_administrador_ejecuta_crear_materia(context, nombre):
     context["response"] = run_async(_post_crear_materia(nombre))
+
+
+@when(parsers.parse('intenta ejecutar CrearMateria(nombre="{nombre}")'))
+def intenta_ejecutar_crear_materia(context, nombre):
+    context["response"] = run_async(_post_crear_materia(nombre, headers=docente_headers()))
 
 
 @then("el sistema persiste la Materia con ese nombre")
@@ -101,6 +113,11 @@ def valida_rechazo_con_codigo(context, codigo_error):
 @then("el sistema rechaza la operación por nombre inválido")
 def valida_rechazo_nombre_invalido(context):
     assert context["response"].status_code == 422
+
+
+@then("el sistema rechaza la operación por rol insuficiente")
+def valida_rechazo_rol_insuficiente(context):
+    assert context["response"].status_code == 403
 
 
 @then("no se crea ninguna Materia ni Banco nuevos")

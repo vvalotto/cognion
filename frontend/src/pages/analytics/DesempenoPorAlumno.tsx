@@ -105,7 +105,7 @@ export function DesempenoPorAlumno() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Desempeño por alumno" }]} />
+      <Breadcrumb items={[{ label: "Reportes", to: "/analytics" }, { label: "Desempeño por alumno" }]} />
       <h1 className="text-lg font-semibold">Desempeño por alumno</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Elegí una materia, una comisión y un estudiante para ver su desempeño.

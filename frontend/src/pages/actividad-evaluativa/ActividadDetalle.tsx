@@ -145,6 +145,17 @@ export function ActividadDetalle() {
         </div>
       </Card>
 
+      <div className="mt-4 flex flex-col gap-2">
+        <Button
+          variant="outline"
+          onClick={() =>
+            navigate(`/actividad-evaluativa/actividades/${actividad.id}/completitud`)
+          }
+        >
+          Ver completitud
+        </Button>
+      </div>
+
       {!actividad.cerradaManualmente && (
         <div className="mt-4 flex flex-col gap-2">
           <Button

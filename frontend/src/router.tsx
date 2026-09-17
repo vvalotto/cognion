@@ -12,6 +12,7 @@ import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
 import { ActividadDetalle } from "@/pages/actividad-evaluativa/ActividadDetalle"
+import { CompletitudActividad } from "@/pages/analytics/CompletitudActividad"
 import { Banco } from "@/pages/banco-preguntas/Banco"
 import { CambiarPassword } from "@/pages/identidad/CambiarPassword"
 import { CerrarActividad } from "@/pages/actividad-evaluativa/CerrarActividad"
@@ -22,8 +23,13 @@ import { EditarCuenta } from "@/pages/cuentas/EditarCuenta"
 import { EliminarCuenta } from "@/pages/cuentas/EliminarCuenta"
 import { CuentaReseteada } from "@/pages/cuentas/CuentaReseteada"
 import { Cuentas } from "@/pages/cuentas/Cuentas"
+import { Analytics } from "@/pages/analytics/Analytics"
 import { DesempenoPorAlumno } from "@/pages/analytics/DesempenoPorAlumno"
+import { DesempenoPorComision } from "@/pages/analytics/DesempenoPorComision"
+import { DesempenoPorComisionDetalleEstudiante } from "@/pages/analytics/DesempenoPorComisionDetalleEstudiante"
 import { DesempenoPorTema } from "@/pages/analytics/DesempenoPorTema"
+import { EvolucionTemporal } from "@/pages/analytics/EvolucionTemporal"
+import { RankingPreguntasFalladas } from "@/pages/analytics/RankingPreguntasFalladas"
 import { EditarPregunta } from "@/pages/banco-preguntas/EditarPregunta"
 import { EditarTituloActividad } from "@/pages/actividad-evaluativa/EditarTituloActividad"
 import { EliminarPregunta } from "@/pages/banco-preguntas/EliminarPregunta"
@@ -45,12 +51,22 @@ import { NuevaMateria } from "@/pages/banco-preguntas/NuevaMateria"
 import { NuevaPreguntaOpcionMultiple } from "@/pages/banco-preguntas/NuevaPreguntaOpcionMultiple"
 import { NuevaPreguntaTipo } from "@/pages/banco-preguntas/NuevaPreguntaTipo"
 import { NuevaPreguntaVerdaderoFalso } from "@/pages/banco-preguntas/NuevaPreguntaVerdaderoFalso"
+import { RecuperarPasswordExito } from "@/pages/identidad/RecuperarPasswordExito"
+import { RecuperarPasswordNueva } from "@/pages/identidad/RecuperarPasswordNueva"
+import { RecuperarPasswordSolicitado } from "@/pages/identidad/RecuperarPasswordSolicitado"
+import { RecuperarPasswordSolicitar } from "@/pages/identidad/RecuperarPasswordSolicitar"
+import { RecuperarPasswordTokenInvalido } from "@/pages/identidad/RecuperarPasswordTokenInvalido"
+import { AutoregistroDocente } from "@/pages/identidad/AutoregistroDocente"
+import { AutoregistroEstudiante } from "@/pages/identidad/AutoregistroEstudiante"
+import { AutoregistroExito } from "@/pages/identidad/AutoregistroExito"
+import { AutoregistroPerfil } from "@/pages/identidad/AutoregistroPerfil"
 import { Registro } from "@/pages/identidad/Registro"
 import { RegistroError } from "@/pages/identidad/RegistroError"
 import { RegistroExito } from "@/pages/identidad/RegistroExito"
 import { RendirEvaluacion } from "@/pages/actividad-evaluativa/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/cuentas/ResetearPassword"
 import { RevisionEvaluacion } from "@/pages/actividad-evaluativa/RevisionEvaluacion"
+import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionDocente"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -64,9 +80,18 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: "/login", element: <Login /> },
+      { path: "/autoregistro", element: <AutoregistroPerfil /> },
+      { path: "/autoregistro/docente", element: <AutoregistroDocente /> },
+      { path: "/autoregistro/estudiante", element: <AutoregistroEstudiante /> },
+      { path: "/autoregistro/exito", element: <AutoregistroExito /> },
       { path: "/registro", element: <Registro /> },
       { path: "/registro/error", element: <RegistroError /> },
       { path: "/registro/exito", element: <RegistroExito /> },
+      { path: "/recuperar-password", element: <RecuperarPasswordSolicitar /> },
+      { path: "/recuperar-password/solicitado", element: <RecuperarPasswordSolicitado /> },
+      { path: "/recuperar-password/invalido", element: <RecuperarPasswordTokenInvalido /> },
+      { path: "/recuperar-password/exito", element: <RecuperarPasswordExito /> },
+      { path: "/recuperar-password/:token", element: <RecuperarPasswordNueva /> },
     ],
   },
   {
@@ -141,7 +166,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/nueva",
         element: (
-          <RequireRole rol={["docente", "administrador"]}>
+          <RequireRole rol="administrador">
             <NuevaMateria />
           </RequireRole>
         ),
@@ -149,7 +174,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/:materiaId/editar",
         element: (
-          <RequireRole rol={["docente", "administrador"]}>
+          <RequireRole rol="administrador">
             <EditarMateria />
           </RequireRole>
         ),
@@ -165,7 +190,7 @@ export const router = createBrowserRouter([
       {
         path: "/materias/:materiaId/eliminar",
         element: (
-          <RequireRole rol={["docente", "administrador"]}>
+          <RequireRole rol="administrador">
             <EliminarMateria />
           </RequireRole>
         ),
@@ -339,6 +364,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/actividad-evaluativa/actividades/:actividadId/completitud",
+        element: (
+          <RequireRole rol="docente">
+            <CompletitudActividad />
+          </RequireRole>
+        ),
+      },
+      {
         path: "/mis-actividades/materias",
         element: (
           <RequireRole rol="estudiante">
@@ -395,6 +428,46 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/analytics",
+        element: (
+          <RequireRole rol="docente">
+            <Analytics />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision",
+        element: (
+          <RequireRole rol="docente">
+            <DesempenoPorComision />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId",
+        element: (
+          <RequireRole rol="docente">
+            <DesempenoPorComisionDetalleEstudiante />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId/evaluaciones/:evaluacionId/revision",
+        element: (
+          <RequireRole rol="docente">
+            <RevisionEvaluacionDocente />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/desempeno-por-comision/materias/:materiaId/comisiones/:comisionId/estudiantes/:estudianteId/evolucion",
+        element: (
+          <RequireRole rol="docente">
+            <EvolucionTemporal />
+          </RequireRole>
+        ),
+      },
+      {
         path: "/analytics/desempeno-por-alumno",
         element: (
           <RequireRole rol="docente">
@@ -407,6 +480,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <DesempenoPorTema />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/analytics/ranking-preguntas-falladas",
+        element: (
+          <RequireRole rol="docente">
+            <RankingPreguntasFalladas />
           </RequireRole>
         ),
       },

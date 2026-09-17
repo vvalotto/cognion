@@ -57,7 +57,7 @@ class TestRegistroAPIIntegration:
                     "token": invitacion.token,
                     "nombre": "Nico Estudiante",
                     "email": "nico.reg@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                 },
             )
 
@@ -78,7 +78,7 @@ class TestRegistroAPIIntegration:
                     "token": invitacion.token,
                     "nombre": "Nico Estudiante",
                     "email": "duplicado.reg@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                 },
             )
             assert primera.status_code == 201
@@ -90,7 +90,7 @@ class TestRegistroAPIIntegration:
                     "token": otra_invitacion.token,
                     "nombre": "Otro",
                     "email": "duplicado.reg@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                 },
             )
 
@@ -110,7 +110,7 @@ class TestRegistroAPIIntegration:
                     "token": invitacion.token,
                     "nombre": "Nico Estudiante",
                     "email": "vencida.reg@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                 },
             )
 
@@ -130,7 +130,7 @@ class TestRegistroAPIIntegration:
                     "token": invitacion.token,
                     "nombre": "Nico Estudiante",
                     "email": "yausada.reg@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                 },
             )
 
@@ -145,7 +145,25 @@ class TestRegistroAPIIntegration:
                     "token": "token-inexistente",
                     "nombre": "Nico Estudiante",
                     "email": "inexistente.reg@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
+                },
+            )
+
+        assert response.status_code == 422
+
+    async def test_registro_rechaza_password_debil(self, session):
+        """Gap cerrado en US-ADJ-36: antes, este endpoint no validaba INV-ID-11."""
+        invitacion, _ = await _crear_invitacion_vigente(session)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/identidad/registro",
+                json={
+                    "token": invitacion.token,
+                    "nombre": "Nico Estudiante",
+                    "email": "debil.reg@fiuner.edu.ar",
+                    "password": "abc123",
                 },
             )
 

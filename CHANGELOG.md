@@ -9,6 +9,48 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-09-17
+
+### Added
+- **Incremento 5-ADJ — Identidad Autoservicio y Analytics del Docente** (`RF-20` a `RF-25`),
+  cierre de baseline `BL-010`. Insertado fuera de la secuencia numérica de `PLAN_v1.md` (mismo
+  criterio que Incremento 3-ADJ/4-ADJ), agrupa dos frentes: backlog de Identidad relevado por
+  Víctor en revisión manual (contraseña visible/oculta, política segura, descubribilidad de
+  "Cambiar contraseña", recuperación de contraseña por autoservicio, autoregistro con
+  selección de perfil) y los 4 informes de Analytics para el Docente elicitados durante la
+  estabilización post-`BL-007` (desempeño por comisión, evolución temporal, ranking de
+  preguntas falladas, completitud por actividad). Cinco iteraciones, backend + frontend juntos
+  en cada una sin diferir a otra iteración (mismo criterio que Banco de Preguntas/Cuentas).
+  - **Contraseña segura y accesible**: `PasswordInput.tsx` compartido con toggle
+    mostrar/ocultar, reemplaza los 10 inputs de contraseña de los 5 formularios existentes;
+    `Usuario.validar_password_nueva` (`INV-ID-11`) ampliada de 8 a 12 caracteres + mezcla de
+    tipos, cerrando un gap real (`CrearUsuario`/`RegistrarEstudiante` no la invocaban);
+    `UserMenu.tsx` como único punto de entrada por clic a "Cambiar contraseña"/"Cerrar sesión"
+  - **Recuperación de contraseña** (`RF-24`): aggregate `TokenRecuperacionPassword` (expiración
+    1 hora), endpoints públicos `POST /identidad/recuperar-password/{solicitar,confirmar}`,
+    respuesta indistinguible si el email existe o no (`INV-ID-17`) — primera vez que BC
+    Identidad depende de un puerto de BC Notificaciones (`CanalRecuperacionPort`, `ADR-006`)
+  - **Autoregistro con selección de perfil** (`RF-25`): endpoints públicos
+    `POST /identidad/autoregistro/{docente,estudiante}` (Docente activo de inmediato, sin
+    aprobación; Estudiante con `comision_id` obligatorio), pantalla de selección de perfil →
+    formulario dinámico, coexiste con el registro por invitación existente
+  - **Analytics** (`RF-20` a `RF-23`): `ObtenerDesempenoPorComision` (reutiliza
+    `ObtenerDesempenoEstudianteUseCase` de `US-4.1.2` para el drill-down),
+    `ObtenerEvolucionTemporalEstudiante`/`Comision`, `ObtenerRankingPreguntasFalladas`,
+    `ObtenerCompletitudPorActividad` — todas amplían `EvaluacionDesempenoConsultaPort` ya
+    existente, sin puertos nuevos; 4 pantallas nuevas unificadas bajo un único ítem de menú
+    "Reportes" en `AppNav.tsx`, con landing (`Analytics.tsx`) y paginación de 20 ítems
+  - Alta/edición/baja de Materia pasa a ser exclusiva del Administrador (antes también el
+    Docente, RBAC confuso) — hallazgo de la UAT de cierre de la Iteración 4
+  - Iteración 5 — revisión documental de cierre (`US-ADJ-52`, sin código de producción):
+    numeración definitiva de `RF-24`/`RF-25`, `ADR-020` nuevo (autoregistro como tercera vía de
+    alta de cuenta), nota de alcance en `ADR-012`, wireframes reconciliados con el código real
+  - 1197/1197 tests backend (95.49% cobertura), 497/497 frontend (91.72% cobertura
+    statements), `designreviewer` 0 CRITICAL (215 advertencias), `architectanalyst` 7 críticos
+    (mismo "Zone of Pain" aceptado desde `US-ADJ-13`/`19`, sube de 6 a 7 por `notificaciones`
+    como séptimo módulo del patrón). RF-20 a RF-25 pasan a **Validado** en
+    `docs/traceability/matrix.md`
+
 ## [0.7.0] - 2026-09-10
 
 ### Added

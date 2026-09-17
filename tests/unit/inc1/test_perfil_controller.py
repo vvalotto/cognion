@@ -16,8 +16,8 @@ class TestPerfilController:
         usuario_repo.usuarios[usuario.id] = usuario
         controller = PerfilController(CambiarPasswordUseCase(usuario_repo, hasher))
 
-        resultado = await controller.cambiar_password(usuario.id, "ClaveActual1", "nuevaClave123")
+        resultado = await controller.cambiar_password(usuario.id, "ClaveActual1", "nuevaClave123#")
 
         assert isinstance(resultado, PasswordCambiada)
         assert resultado.usuario_id == usuario.id
-        assert usuario_repo.usuarios[usuario.id].password_hash == hasher.hash("nuevaClave123")
+        assert usuario_repo.usuarios[usuario.id].password_hash == hasher.hash("nuevaClave123#")

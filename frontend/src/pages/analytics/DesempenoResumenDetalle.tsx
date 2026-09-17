@@ -1,5 +1,10 @@
+import { useEffect, useState } from "react"
+
 import { Card } from "@/components/ui/card"
+import { Pagination } from "@/components/ui/pagination"
 import type { DesempenoEstudianteResponse } from "@/lib/analytics-api"
+
+const TAMANIO_PAGINA = 20
 
 function formatearFecha(iso: string): string {
   return new Date(iso).toLocaleString(undefined, {
@@ -38,21 +43,34 @@ interface DesempenoResumenDetalleProps {
   desempeno: DesempenoEstudianteResponse
   filas: FilaDesempeno[]
   mensajeVacio: string
+  onFilaClick?: (evaluacionId: string) => void
 }
 
 /**
  * Resumen acumulado + detalle por evaluación — componente visual único compartido por
- * "Mi desempeño" (`US-4.1.3`) y "Desempeño por alumno" (`US-4.2.5`), solo cambia el origen
- * de los datos (wireframes-analytics.md §4, hot spot 2).
+ * "Mi desempeño" (`US-4.1.3`), "Desempeño por alumno" (`US-4.2.5`) y el drill-down 1° de
+ * "Desempeño por comisión" (`US-ADJ-48`), solo cambia el origen de los datos
+ * (wireframes-analytics.md §4, hot spot 2). `onFilaClick` es opcional — sin él, cada
+ * `.eval-item` se muestra sin drill-down 2° (comportamiento sin cambios de `US-4.1.3`/`4.2.5`).
  */
 export function DesempenoResumenDetalle({
   desempeno,
   filas,
   mensajeVacio,
+  onFilaClick,
 }: DesempenoResumenDetalleProps) {
+  const [pagina, setPagina] = useState(1)
+
+  useEffect(() => {
+    setPagina(1)
+  }, [filas])
+
   if (filas.length === 0) {
     return <p className="mt-4 text-sm text-muted-foreground">{mensajeVacio}</p>
   }
+
+  const totalPaginas = Math.ceil(filas.length / TAMANIO_PAGINA)
+  const filasPagina = filas.slice((pagina - 1) * TAMANIO_PAGINA, pagina * TAMANIO_PAGINA)
 
   return (
     <>
@@ -82,8 +100,23 @@ export function DesempenoResumenDetalle({
       <p className="mt-4 mb-2 text-sm text-muted-foreground">Detalle por evaluación</p>
 
       <div className="flex flex-col gap-3">
-        {filas.map((fila) => (
-          <Card key={fila.evaluacionId} className="flex items-center justify-between gap-3 p-4">
+        {filasPagina.map((fila) => (
+          <Card
+            key={fila.evaluacionId}
+            className={`eval-item flex items-center justify-between gap-3 p-4 ${
+              onFilaClick ? "cursor-pointer hover:bg-accent" : ""
+            }`}
+            role={onFilaClick ? "button" : undefined}
+            tabIndex={onFilaClick ? 0 : undefined}
+            onClick={onFilaClick ? () => onFilaClick(fila.evaluacionId) : undefined}
+            onKeyDown={
+              onFilaClick
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") onFilaClick(fila.evaluacionId)
+                  }
+                : undefined
+            }
+          >
             <div>
               <p className="text-sm font-semibold">{fila.titulo}</p>
               <p className="text-xs text-muted-foreground">
@@ -101,6 +134,7 @@ export function DesempenoResumenDetalle({
           </Card>
         ))}
       </div>
+      <Pagination pagina={pagina} totalPaginas={totalPaginas} onCambiarPagina={setPagina} />
     </>
   )
 }

@@ -19,15 +19,14 @@ describe("AppNav", () => {
     cleanup()
   })
 
-  it("Docente ve sus 5 ítems", () => {
+  it("Docente ve sus 4 ítems", () => {
     renderAppNav("docente")
 
     expect(screen.getByText("Inicio")).toBeInTheDocument()
     expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
     expect(screen.getByText("Actividades")).toBeInTheDocument()
-    expect(screen.getByText("Desempeño por alumno")).toBeInTheDocument()
-    expect(screen.getByText("Desempeño por tema")).toBeInTheDocument()
-    expect(screen.getAllByRole("link")).toHaveLength(5)
+    expect(screen.getByText("Reportes")).toBeInTheDocument()
+    expect(screen.getAllByRole("link")).toHaveLength(4)
   })
 
   it("Estudiante ve sus 3 ítems", () => {

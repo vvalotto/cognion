@@ -8,11 +8,11 @@ from src.app import app
 from src.settings import settings
 
 
-async def _crear_materia(client, docente_headers, nombre: str) -> str:
+async def _crear_materia(client, admin_headers, nombre: str) -> str:
     response = await client.post(
         "/materias",
         json={"nombre": nombre},
-        headers=docente_headers,
+        headers=admin_headers,
     )
     return response.json()["id"]
 
@@ -65,14 +65,14 @@ class TestInvitacionesAPIIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
 
             admin_resp = await client.post(
                 "/usuarios",
                 json={
                     "nombre": "Admin",
                     "email": "admin.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -84,7 +84,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -126,14 +126,14 @@ class TestInvitacionesAPIIntegration:
         """`US-ADJ-26`: sin `email_destinatario` no se envía email, pero sí se devuelve el token."""
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
 
             admin_resp = await client.post(
                 "/usuarios",
                 json={
                     "nombre": "Admin",
                     "email": "admin3.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -145,7 +145,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente4.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -188,14 +188,14 @@ class TestInvitacionesAPIIntegration:
     async def test_administrador_no_puede_generar_invitacion(self, admin_headers, docente_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
 
             admin_resp = await client.post(
                 "/usuarios",
                 json={
                     "nombre": "Admin",
                     "email": "admin4.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -207,7 +207,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "docente5.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -244,14 +244,14 @@ class TestInvitacionesAPIIntegration:
     ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia(client, docente_headers, f"IS {uuid.uuid4()}")
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
 
             admin_resp = await client.post(
                 "/usuarios",
                 json={
                     "nombre": "Admin",
                     "email": "admin2.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -263,7 +263,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Docente Sin Asignar",
                     "email": "docente2.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -299,7 +299,7 @@ class TestInvitacionesAPIIntegration:
                 json={
                     "nombre": "Docente",
                     "email": "docente3.inv@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
