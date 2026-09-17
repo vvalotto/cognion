@@ -927,13 +927,24 @@ Analytics reconciliados con el código real (incluida la unificación en "Report
 #370); este mismo bloque de `CLAUDE.md`. Pendiente: confirmación de Víctor en el comentario de
 cierre del Issue #372, y con eso, cerrar `BL-010`.
 
-**Próximo paso:** cerrar `US-ADJ-52` (confirmación de Víctor) → cerrar Incremento 5-ADJ como
-`BL-010` (merge `develop → main`, tag, Milestone) → retomar Incremento 6 (Sesión en Vivo,
-`PLAN_v1.md`).
-**Baseline abierta:** ninguna — `BL-009` cerrada, Incremento 5-ADJ en su última iteración
-(`US-ADJ-52`), sin baseline propia todavía (se abre como `BL-010` al cerrarlo).
-**Branch activo:** `docs/us-adj-52-revision-documental-cierre`, sobre `develop` sincronizado
-con `origin/develop`. `main` al día en `v0.7.0`.
+**`BL-010` — Incremento 5-ADJ cerrada 2026-09-17**
+(`.cm/baselines/BL-010-incremento-5-adj-identidad-autoservicio-analytics.md`): 1197/1197 tests
+backend (95.49% cobertura), 497/497 frontend (91.72% cobertura statements/81.75% branches),
+`designreviewer` 0 CRITICAL (215 advertencias sobre 258 archivos), `architectanalyst` 7
+críticos (mismo "Zone of Pain" aceptado desde `US-ADJ-13`/`19`, sube de 6 a 7 por
+`notificaciones` como séptimo módulo del patrón, `should_block: false`). Sin UAT formal
+consolidada adicional — cada iteración con código de producción (1 a 4) ya había corrido la
+propia (986→1196/1196 tests backend en verde a lo largo del incremento, sin regresiones) más
+un pase de navegador real al cierre de la Iteración 4, mismo criterio documentado en la
+retrospectiva de `BL-010`. RF-20 a RF-25 pasan a **Validado** en `docs/traceability/matrix.md`.
+Merge `develop → main` y tag `v0.7.1` (PATCH, mismo criterio de versionado que `BL-005`/`BL-007`)
+ejecutados el mismo día. Milestone GitHub [Incremento 5-ADJ](https://github.com/vvalotto/cognion/milestone/13)
+cerrado.
+
+**Próximo paso:** retomar Incremento 6 (Sesión en Vivo, `PLAN_v1.md`) — Iteración 0 incluye el
+spike del algoritmo de puntaje en vivo (RF-10, ítem abierto).
+**Baseline abierta:** ninguna — `BL-010` cerrada.
+**Branch activo:** `develop`, sincronizado con `origin/develop`. `main` al día en `v0.7.1`.
 
 ---
 
