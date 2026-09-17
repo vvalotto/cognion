@@ -9,186 +9,47 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-09-17
+
 ### Added
-- [US-ADJ-47] Docente consulta la completitud de una actividad puntual (RF-23)
-  - Backend nuevo (BC Analytics): `GET /analytics/actividades/{actividad_id}/completitud`
-    (rol `docente`) — resumen (`finalizadas`/`en_curso`/`suspendidas`/`sin_iniciar`) y detalle
-    por estudiante del roster aplicable (comisión(es) restringida(s) de la actividad, o toda la
-    materia si no hay restricción); `actividad_id` inexistente → 404
-  - `EvaluacionDesempenoConsultaPort` gana `obtener_actividad_resumen` (reusa
-    `ActividadEvaluativaPeriodoAbierto.reconstruir()`, mismo cruce que
-    `listar_actividades_abiertas`, `US-ADJ-44`) y `listar_estados_de_actividad` (primer método
-    de Analytics que reconstruye `Evaluacion` completa con `.reconstruir()`, en vez de leer el
-    payload crudo, para resolver el estado exacto de cada estudiante)
-  - **Refactor de arquitectura:** tercer controller, `AnalyticsCompletitudController` — agregar
-    este Use Case a `AnalyticsInformesController` disparó CRITICAL de CBO (11/10), mismo
-    criterio de separación por responsabilidad ya aplicado en `US-ADJ-46`
-  - Cuarta y última US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) —
-    backend del par RF-23, consumido por `US-ADJ-51` (frontend, pendiente); cierra completo el
-    backend de la Iteración 4
-  - Implementada junto con `US-ADJ-44`/`45`/`46` en una sola ejecución/PR (decisión de Víctor)
-  - 1196/1196 tests del proyecto en verde, quality gates APROBADO (pylint 9.69/10, coverage 100%)
-
-- [US-ADJ-46] Docente consulta el ranking de preguntas más falladas (RF-22)
-  - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/ranking-preguntas-falladas?comision_id=`
-    (rol `docente`) — una fila por pregunta presentada, ordenada por tasa de error descendente
-    (no conteo bruto), con enunciado
-  - `MetadatoPreguntaResumen`/`PreguntaMetadatoConsultaPort` ganan el campo `enunciado`
-    (mapea a `PreguntaPlantillaModel.texto`, mismo método `obtener_metadatos`)
-  - Reusa exactamente la fuente de `US-4.2.4` (RF-17), agrupando por `pregunta_id` en vez de
-    `(unidad_tematica, tema)`
-  - **Refactor de arquitectura:** `AnalyticsController` separado en dos — desempeño individual
-    (`AnalyticsController`) e informes agregados de comisión/materia
-    (`AnalyticsInformesController`, nuevo) — el 6° Use Case disparó CRITICAL de CBO (13/10),
-    mismo criterio de separación por responsabilidad ya aplicado en Incremento 2
-  - Tercera US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) — backend del
-    par RF-22, consumido por `US-ADJ-50` (frontend, pendiente)
-  - Implementada junto con `US-ADJ-44`/`45`/`47` en una sola ejecución/PR (decisión de Víctor)
-  - 1169/1169 tests del proyecto en verde, quality gates APROBADO (pylint 9.82/10, coverage 100%)
-
-- [US-ADJ-45] Docente consulta la evolución temporal de aciertos (RF-21)
-  - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/estudiantes/{estudiante_id}/evolucion-temporal`
-    (serie individual, ordenada cronológicamente, con título de cada actividad) y
-    `GET /analytics/materias/{materia_id}/comisiones/{comision_id}/evolucion-temporal`
-    (promedio simple por actividad entre quienes la finalizaron), ambos rol `docente`
-  - `EvaluacionDesempenoConsultaPort` gana `obtener_titulos_actividades` — resuelve el
-    `titulo` *actual* de cada actividad (reusa `.reconstruir()`, mismo criterio que
-    `listar_actividades_abiertas`, `US-ADJ-44`)
-  - Segunda US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) — backend del
-    par RF-21, consumido por `US-ADJ-49` (frontend, pendiente)
-  - Implementada junto con `US-ADJ-46`/`47` en una sola ejecución/PR (decisión de Víctor)
-  - 1148/1148 tests del proyecto en verde, quality gates APROBADO (pylint 9.92/10, coverage 100%)
-
-- [US-ADJ-44] Docente consulta el desempeño de una Comisión completa (RF-20)
-  - Backend nuevo (BC Analytics): `GET /analytics/materias/{materia_id}/comisiones/{comision_id}/desempeno`
-    (rol `docente`) — una fila por estudiante del roster: `porcentaje_aciertos_acumulado`
-    (`None` = "Sin datos", nunca `0%`) y `actividades_pendientes` (actividades abiertas ahora
-    sin `Evaluacion` `Finalizada` de ese estudiante)
-  - `EvaluacionDesempenoConsultaPort` gana `listar_actividades_abiertas` — primer método de
-    Analytics que reconstruye `ActividadEvaluativaPeriodoAbierto` completa (reusa
-    `.reconstruir()`, entidad pura de Actividad Evaluativa, en vez de reimplementar el replay)
-  - Guard de `GET /evaluaciones/{id}/revision` (BC Actividad Evaluativa) ampliado a
-    `require_estudiante_o_docente` — el drill-down de "Desempeño por comisión" permite al
-    Docente ver la revisión de cualquier Estudiante, sin verificación de pertenencia
-    Docente↔Materia (mismo precedente de RBAC por rol ya usado en `US-4.2.1`)
-  - Primera US de la Iteración 4 del Incremento 5-ADJ (Analytics RF-20 a RF-23) — backend del
-    par RF-20, consumido por `US-ADJ-48` (frontend, pendiente)
-  - 6 tests unitarios nuevos + 4 modificados (fakes ampliados con el método nuevo del puerto),
-    11 tests de integración nuevos + 4 modificados, 7 escenarios BDD nuevos. 1116/1116 tests
-    del proyecto en verde, quality gates APROBADO (pylint 9.89/10, coverage 100%)
-
-- [US-ADJ-43] Pantallas de autoregistro con selección de perfil
-  - Frontend nuevo — consume `POST /identidad/autoregistro/docente` (`US-ADJ-41`) y
-    `POST /identidad/autoregistro/estudiante` (`US-ADJ-42`), ya cerrados
-  - 4 pantallas nuevas: elegir perfil (`AutoregistroPerfil`, dos tarjetas Docente/Estudiante,
-    sin opción de Administrador, INV-ID-15), formulario de Docente, formulario de Estudiante
-    (selector Materia→Comisión en cascada antes de los datos personales), éxito (única para
-    ambos perfiles, sin login automático)
-  - Link "¿No tenés cuenta? Registrate" nuevo en `Login.tsx`
-  - Gap de backend detectado en Fase 2 (decidido antes de codear): el selector de Materia→
-    Comisión del Estudiante necesita listar sin JWT (todavía no tiene cuenta) — `GET /materias`
-    y `GET /materias/{id}/comisiones` exigen rol `docente`/`administrador`. Resuelto con dos
-    endpoints públicos nuevos y acotados, `GET /identidad/autoregistro/materias` y
-    `GET /identidad/autoregistro/materias/{id}/comisiones`, que exponen solo `id`/`nombre` e
-    `id`/`horario` respectivamente — sin tocar el RBAC de los endpoints protegidos existentes.
-    Reutiliza `MateriaPort`/`ComisionQueryPort` ya existentes (`MateriaPort` gana `listar()`)
-    sin puertos nuevos entre BCs
-  - Cierra completa la Iteración 3 del Incremento 5-ADJ (autoregistro, `US-ADJ-41` a `43`)
-  - 10 tests unitarios backend nuevos (controller + fakes actualizados), 5 de integración
-    backend nuevos, 4 escenarios BDD nuevos (acotados al comportamiento backend testeable — las
-    pantallas en sí son frontend puro, sin BDD, mismo criterio que `US-ADJ-40`), 31 tests
-    Vitest nuevos (incluye 2 tests de integración con el router real), quality gates APROBADO
-    (pylint 10.00/10, CC máx 4, MI mín 59.77, coverage 100% en `entities`/`interface_adapters`,
-    oxlint 0 errores, `tsc -b` 0 errores)
-- [US-ADJ-42] Autoregistro de Estudiante (endpoint público)
-  - `AutoregistrarEstudianteUseCase`: valida email único (`EmailYaRegistrado`), comisión
-    existente (`ComisionNoExiste`, INV-ID-14) y contraseña segura (INV-ID-11 ampliada), crea el
-    `Usuario` con perfil Estudiante vía `Usuario.crear_estudiante()`, activo de inmediato
-    (INV-ID-16)
-  - Endpoint público nuevo `POST /identidad/autoregistro/estudiante`, hermano de
-    `POST /identidad/autoregistro/docente` (`US-ADJ-41`) — mismo `AutoregistroController`,
-    mismo router, sin puertos nuevos (reutiliza `UsuarioRepositoryPort`,
-    `PasswordHasherPort`, `ComisionRepositoryPort`)
-  - Reutiliza el evento `UsuarioAutoregistrado` de `US-ADJ-41` sin cambios de shape
-  - Segunda US de la Iteración 3 del Incremento 5-ADJ (autoregistro con selección de perfil) —
-    `US-ADJ-43` (pantalla con selección de perfil Docente/Estudiante) sigue a esta
-  - 6 tests unitarios, 5 de integración y 5 BDD nuevos, coverage 100% en el código nuevo
-    (`autoregistrar_estudiante.py`, `autoregistro_controller.py`), quality gates APROBADO
-    (pylint 9.58/10, CC máx 3, MI grado A)
-- [US-ADJ-40] Pantallas de recuperación de contraseña
-  - Frontend puro — consume `POST /identidad/recuperar-password/solicitar` (`US-ADJ-38`) y
-    `POST /identidad/recuperar-password/confirmar` (`US-ADJ-39`), ya cerrados
-  - 5 pantallas nuevas: solicitar, email enviado, definir nueva contraseña (token por
-    path param `/recuperar-password/:token`), link inválido/vencido/ya usado, éxito
-  - Link "¿Olvidaste tu contraseña?" nuevo en `Login.tsx`
-  - Distingue el error de política de contraseña del error de token sin código de error
-    estructurado del backend — por el prefijo del mensaje (`"La contraseña debe..."`),
-    encapsulado en un helper local en `RecuperarPasswordNueva.tsx`
-  - Cierra completa la Iteración 2 del Incremento 5-ADJ (`US-ADJ-38` a `40`)
-  - 35 tests nuevos (Vitest — unitarios de pantalla + integración real vía `router.test.tsx`),
-    quality gates APROBADO (oxlint 0 errores, `tsc -b` 0 errores, coverage global 91.28%
-    statements / 81.35% branches / 86.89% functions / 94% lines, por encima del umbral de
-    80% del proyecto)
-- [US-ADJ-38] Solicitar recuperación de contraseña (endpoint público)
-  - Aggregate nuevo `TokenRecuperacionPassword` (token único, expiración a 1 hora, INV-ID-13)
-    y comando `SolicitarRecuperacionPasswordUseCase`: busca el `Usuario` por email, invalida
-    cualquier token activo previo del mismo usuario (INV-ID-12) y genera uno nuevo
-  - Endpoint público `POST /identidad/recuperar-password/solicitar` — responde siempre
-    `202 Accepted` con el mismo mensaje genérico, exista o no la cuenta (INV-ID-17, no
-    filtrar existencia de cuentas)
-  - **Primera vez que BC Identidad depende de un puerto de BC Notificaciones**:
-    `CanalRecuperacionPort`/`CanalRecuperacionPortInProcess` invocan `SmtpCanalEnvio` de
-    Notificaciones directo (`ADR-006`, mismo patrón que `NotificacionPort` en sentido
-    Actividad Evaluativa → Notificaciones); un fallo de envío se loguea sin bloquear la
-    operación (manejo en el Use Case, no en el adapter, consistente con `CanalEnvioPort`)
-  - Primera de la Iteración 2 del Incremento 5-ADJ — `US-ADJ-39` (confirmar token) depende
-    de esta
-  - 12 tests unitarios (100% cobertura en entity/use case/controller), 10 tests de
-    integración (repositorio + endpoint con SMTP fake), 4 escenarios BDD — 99% cobertura
-    total, quality gates APROBADO (pylint 9.75/10, CC máx 3, MI mín 49.97, mypy 0 issues)
-- [US-ADJ-37] Descubribilidad — Cambiar contraseña y Cerrar sesión en el menú
-  - `UserMenu.tsx` (nuevo) — envuelve `Menu` de `@base-ui/react/menu` sobre el trigger de
-    avatar/nombre/rol del header, reemplazando el `<div>` estático de `AppLayout.tsx`
-  - Dos ítems nuevos, únicos puntos de entrada por clic a funciones ya existentes sin punto
-    de entrada visible: "🔑 Cambiar contraseña" (navega a `/mi-cuenta/cambiar-password`,
-    `US-2.2.8`) y "↩ Cerrar sesión" (`clearSession()` + redirige a `/login`, antes solo se
-    invocaba desde el interceptor 401)
-  - Mismo menú para los 3 roles — sin lógica condicional por rol en el contenido
-  - Cierra completa la Iteración 1 del Incremento 5-ADJ (`US-ADJ-35` a `37`)
-  - Verificado en navegador real (Claude Browser): abrir menú, navegar a cambiar contraseña,
-    cerrar sesión limpia la sesión local y redirige a `/login`
-  - 396/396 tests frontend en aislamiento (6 fallos de flake preexistente de contención de
-    CPU al correr la suite completa, confirmado ajeno a esta US), quality gates APROBADO
-    (oxlint 0 errores, `tsc -b` 0 errores, 100% cobertura en `UserMenu.tsx`/`AppLayout.tsx`)
-- [US-ADJ-36] Contraseña segura — política ampliada
-  - `Usuario.validar_password_nueva` (INV-ID-11 ampliada): mínimo sube de 8 a 12 caracteres,
-    agrega mezcla de tipos (mayúscula, número, símbolo) — `PasswordSinComplejidadSuficiente`
-    (nueva) además de `PasswordDemasiadoCorta`
-  - **Gap real cerrado**: `CrearUsuarioUseCase` y `RegistrarEstudianteUseCase` no invocaban
-    `validar_password_nueva` — `POST /usuarios` y `POST /identidad/registro` aceptaban
-    cualquier contraseña del lado del dominio, protegidos solo por `minLength` HTML del
-    cliente. Ahora los 4 endpoints de password (`crear_usuario`, `registro`, `cambiar
-    password`, `resetear password`) validan la misma regla
-  - `PasswordInput` (`US-ADJ-35`) gana el prop `mostrarFortaleza` — indicador de 3 niveles
-    (Débil/Media/Fuerte) + checklist de las 4 reglas, activado en los campos de contraseña
-    nueva de `Registro.tsx`, `CambiarPassword.tsx`, `AltaDocente.tsx`,
-    `cuentas/ResetearPassword.tsx`
-  - Actualizados ~19 archivos de fixtures de tests preexistentes (unit, integration,
-    step_defs) para usar contraseñas que cumplen la política ampliada
-  - 986/986 tests backend (unit + integration + BDD), 385/389 frontend (4 fallos de flake
-    preexistente ajeno, confirmado en aislamiento), quality gates APROBADO (pylint 9.83/10,
-    CC máx 8, MI mín 63.89, coverage 98% backend / 100% en `PasswordInput.tsx`)
-- [US-ADJ-35] Toggle mostrar/ocultar contraseña
-  - Componente compartido `PasswordInput.tsx` (nuevo) — envuelve `Input` agregando un botón
-    de mostrar/ocultar (íconos `Eye`/`EyeOff` de `lucide-react`), sin perder el valor tipeado
-  - Reemplaza los 10 inputs `type="password"` de los 5 formularios existentes: `Login.tsx`,
-    `Registro.tsx` (×2), `CambiarPassword.tsx` (×3), `AltaDocente.tsx` (×2),
-    `cuentas/ResetearPassword.tsx` (×2) — sin cambios de validación ni de backend
-  - Primera US de la Iteración 1 del Incremento 5-ADJ; `US-ADJ-36` reutiliza este componente
-    para el indicador de fortaleza de contraseña
-  - 380/384 tests frontend (4 fallos de flake preexistente de contención de CPU, confirmado
-    ajeno a esta US — los 2 archivos afectados pasan 8/8 en aislamiento), quality gates
-    APROBADO (oxlint 0 errores, `tsc -b` 0 errores, 100% cobertura en `PasswordInput.tsx`)
+- **Incremento 5-ADJ — Identidad Autoservicio y Analytics del Docente** (`RF-20` a `RF-25`),
+  cierre de baseline `BL-010`. Insertado fuera de la secuencia numérica de `PLAN_v1.md` (mismo
+  criterio que Incremento 3-ADJ/4-ADJ), agrupa dos frentes: backlog de Identidad relevado por
+  Víctor en revisión manual (contraseña visible/oculta, política segura, descubribilidad de
+  "Cambiar contraseña", recuperación de contraseña por autoservicio, autoregistro con
+  selección de perfil) y los 4 informes de Analytics para el Docente elicitados durante la
+  estabilización post-`BL-007` (desempeño por comisión, evolución temporal, ranking de
+  preguntas falladas, completitud por actividad). Cinco iteraciones, backend + frontend juntos
+  en cada una sin diferir a otra iteración (mismo criterio que Banco de Preguntas/Cuentas).
+  - **Contraseña segura y accesible**: `PasswordInput.tsx` compartido con toggle
+    mostrar/ocultar, reemplaza los 10 inputs de contraseña de los 5 formularios existentes;
+    `Usuario.validar_password_nueva` (`INV-ID-11`) ampliada de 8 a 12 caracteres + mezcla de
+    tipos, cerrando un gap real (`CrearUsuario`/`RegistrarEstudiante` no la invocaban);
+    `UserMenu.tsx` como único punto de entrada por clic a "Cambiar contraseña"/"Cerrar sesión"
+  - **Recuperación de contraseña** (`RF-24`): aggregate `TokenRecuperacionPassword` (expiración
+    1 hora), endpoints públicos `POST /identidad/recuperar-password/{solicitar,confirmar}`,
+    respuesta indistinguible si el email existe o no (`INV-ID-17`) — primera vez que BC
+    Identidad depende de un puerto de BC Notificaciones (`CanalRecuperacionPort`, `ADR-006`)
+  - **Autoregistro con selección de perfil** (`RF-25`): endpoints públicos
+    `POST /identidad/autoregistro/{docente,estudiante}` (Docente activo de inmediato, sin
+    aprobación; Estudiante con `comision_id` obligatorio), pantalla de selección de perfil →
+    formulario dinámico, coexiste con el registro por invitación existente
+  - **Analytics** (`RF-20` a `RF-23`): `ObtenerDesempenoPorComision` (reutiliza
+    `ObtenerDesempenoEstudianteUseCase` de `US-4.1.2` para el drill-down),
+    `ObtenerEvolucionTemporalEstudiante`/`Comision`, `ObtenerRankingPreguntasFalladas`,
+    `ObtenerCompletitudPorActividad` — todas amplían `EvaluacionDesempenoConsultaPort` ya
+    existente, sin puertos nuevos; 4 pantallas nuevas unificadas bajo un único ítem de menú
+    "Reportes" en `AppNav.tsx`, con landing (`Analytics.tsx`) y paginación de 20 ítems
+  - Alta/edición/baja de Materia pasa a ser exclusiva del Administrador (antes también el
+    Docente, RBAC confuso) — hallazgo de la UAT de cierre de la Iteración 4
+  - Iteración 5 — revisión documental de cierre (`US-ADJ-52`, sin código de producción):
+    numeración definitiva de `RF-24`/`RF-25`, `ADR-020` nuevo (autoregistro como tercera vía de
+    alta de cuenta), nota de alcance en `ADR-012`, wireframes reconciliados con el código real
+  - 1197/1197 tests backend (95.49% cobertura), 497/497 frontend (91.72% cobertura
+    statements), `designreviewer` 0 CRITICAL (215 advertencias), `architectanalyst` 7 críticos
+    (mismo "Zone of Pain" aceptado desde `US-ADJ-13`/`19`, sube de 6 a 7 por `notificaciones`
+    como séptimo módulo del patrón). RF-20 a RF-25 pasan a **Validado** en
+    `docs/traceability/matrix.md`
 
 ## [0.7.0] - 2026-09-10
 
