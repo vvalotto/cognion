@@ -1,13 +1,16 @@
 # BC Actividad Evaluativa — Modelo de Dominio (Event Storming)
 
-> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
-> #137 (US-3.0.1, Iteración 0, Incremento 3, cerrado 2026-08-25). Incremento 3 completo y
-> validado (`BL-004`) — actualizado 2026-09-16 durante la revisión documental transversal del
-> Incremento 5-ADJ.**
-> Alcance de este modelo: exclusivamente el modo **período abierto** (RF-11, RF-11b, RF-12,
-> RF-13). El modo **en vivo** (RF-08 a RF-10) y las notificaciones (RF-14) no forman parte de
-> este incremento (`docs/plans/inc3/inc3-candidatas.md`) — quedan fuera de alcance de este
-> documento.
+> Estado documental: **§§1-9 (modo período abierto) vigentes — aprobado por Víctor en el
+> comentario de cierre del Issue #137 (US-3.0.1, Iteración 0, Incremento 3, cerrado
+> 2026-08-25). Incremento 3 completo y validado (`BL-004`) — actualizado 2026-09-16 durante la
+> revisión documental transversal del Incremento 5-ADJ.**
+> **§§10+ (modo en vivo) — vigente, aprobado por Víctor 2026-09-17 en el comentario de cierre
+> del Issue [#379](https://github.com/vvalotto/cognion/issues/379) (US-6.0.1, Iteración 0,
+> Incremento 6), tras confirmar los 4 hot spots de §17 en una única ronda.**
+> Alcance de §§1-9: exclusivamente el modo **período abierto** (RF-11, RF-11b, RF-12, RF-13).
+> Alcance de §§10+: el modo **en vivo** (RF-08, RF-09, RF-10) — mismo BC (`ADR-015`), agregado
+> nuevo. Las notificaciones (RF-14) siguen fuera de este documento —
+> `docs/design/domain/BC-notificaciones-modelo.md`.
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-11, RF-11b, RF-12, RF-13), `docs/rf/RNF_v1.md` (Confiabilidad
 > — escenario de interrupción durante sesión de período abierto), `ADR-002` (Event Sourcing +
@@ -533,3 +536,396 @@ Modelo completo, sin hot spots abiertos (§8) — pasa a aprobación explícita 
 comentario de cierre del Issue #137 (DoD tipo `Modelado`, `WORKFLOW-DESARROLLO.md` §2). Una vez
 aprobado, es el input de las specs US-IEDD de las Iteraciones 1 a 3
 (`docs/plans/inc3/inc3-candidatas.md`) y del prototipo UX de US-3.0.2 (Issue #138).
+
+---
+---
+
+# Modo en vivo — `ActividadEvaluativaEnVivo` (RF-08, RF-09, RF-10)
+
+> Modelado en conversación con Víctor, 2026-09-17 (Incremento 6, Issue
+> [#379](https://github.com/vvalotto/cognion/issues/379), US-6.0.1). Primera ronda —
+> pendiente de aprobación explícita en el comentario de cierre de ese Issue.
+> Fuente adicional a la de §§1-9: `docs/rf/RF_v1.md` RF-08/RF-09/RF-10, `docs/rf/RNF_v1.md`
+> Rendimiento Escenario 1 (≤100ms server-side, hasta 60 alumnos simultáneos),
+> `docs/plans/inc6/inc6-candidatas.md` §Spike RF-10 (algoritmo de puntaje, ya cerrado con
+> Víctor antes de este modelado).
+
+## 10. Actores (extensión)
+
+| Actor | Rol en el modo en vivo |
+|---|---|
+| Docente | Crea la sesión en vivo (materia, unidad temática/tema opcionales, cantidad de preguntas, tiempo límite por pregunta), la inicia cuando los estudiantes ya se unieron, controla el avance (cierra cada pregunta, avanza a la siguiente), la finaliza |
+| Estudiante | Se une a la sesión desde su portal mientras está en espera (o durante la sesión, unión tardía), responde cada pregunta dentro del tiempo límite configurado |
+| Sistema | Calcula el puntaje de cada respuesta y mantiene el ranking incremental al momento de cada respuesta — no hay disparo automático por tiempo equivalente al `VerificadorDeVencimientos` de §6b: el cierre de cada pregunta es siempre una acción del Docente (confirmado por `RNF_v1.md`, "Estímulo: El docente cierra una pregunta") |
+
+## 11. Concepto central — mismo patrón de dos aggregates que el modo período abierto, por el mismo motivo agravado
+
+El hot spot de §2 (un solo aggregate que acumula el estado de todos los estudiantes crece sin
+límite y genera contención de stream) se agrava en modo en vivo: en período abierto los 30-60
+estudiantes responden de forma asíncrona a lo largo de días; en modo en vivo, hasta 60
+estudiantes pueden responder la **misma pregunta dentro de la misma ventana de segundos** —
+la probabilidad de dos escrituras concurrentes sobre el mismo stream (y el consiguiente
+conflicto de concurrencia optimista, `ADR-009`) es ordenes de magnitud mayor que en período
+abierto. Mismo criterio de §2, aplicado con más razón:
+
+1. **`ActividadEvaluativaEnVivo`** (dueño: Docente) — la sesión en sí: configuración, estado
+   (`EnEspera | EnCurso | Finalizada`), progreso (pregunta actual). Un aggregate por sesión
+   creada, un evento por cada acción del Docente (crear, iniciar, cerrar pregunta, avanzar,
+   finalizar) — nunca un evento por respuesta de estudiante.
+2. **`ParticipacionEnVivo`** (dueño: Estudiante) — la participación de un estudiante particular
+   dentro de una sesión: cuándo se unió y sus respuestas. Un aggregate por
+   `(sesion_id, estudiante_id)`, mismo criterio que `Evaluacion` en §2.
+
+**El ranking en tiempo real (RF-09, RNF Rendimiento Escenario 1) no se calcula cargando los N
+aggregates `ParticipacionEnVivo` de una sesión** — se sostiene con un read model
+(`ranking_por_sesion`, §12) actualizado de forma síncrona en la misma transacción que cada
+`RespuestaEnVivoRegistrada` (mismo patrón CQRS de §6, `ADR-002`). Esto es lo que hace viable el
+presupuesto de ≤100ms server-side al cerrar una pregunta: el puntaje de cada respuesta ya se
+calculó y ya está sumado al ranking en el momento en que se registró — cerrar la pregunta es
+solo dejar de aceptar respuestas nuevas y **leer** un read model ya materializado, no agregar
+sobre la marcha.
+
+**Terminología nueva de este modelado** (a incorporar a `docs/architecture/03-bounded-contexts.md`
+cuando se apruebe): `ParticipacionEnVivo`, `RespuestaEnVivo` (VO, no Entity — ver §13, a
+diferencia de `Respuesta` en §5), `ranking_por_sesion`.
+
+## 12. Línea de tiempo — Eventos de dominio (modo en vivo)
+
+Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 aggregate.
+
+```
+[Docente]
+   |
+🟦 CrearSesionEnVivo(comision_id, unidad_tematica?, tema?,
+                      cantidad_preguntas, tiempo_limite_por_pregunta_segundos)
+   — materia_id se resuelve internamente a partir de comision_id (ComisionConsultaPort)
+   |
+🟧 SesionEnVivoCreada          (fija el set de PreguntaAsignada al azar —         🟨 ActividadEvaluativaEnVivo
+   |                            mismo criterio que EvaluacionIniciada, RF-12 —
+   |                            estado: EnEspera)
+   |
+🟦 IniciarSesionEnVivo(sesion_id)             — cuando el Docente decide arrancar
+   |
+🟧 SesionEnVivoIniciada         (estado: EnCurso, pregunta_actual = 0,            🟨 ActividadEvaluativaEnVivo
+   |                             se presenta el ENUNCIADO de la primera
+   |                             pregunta — sin opciones todavía, §17
+   |                             segunda ronda)
+   |
+   ┌─── se repite por cada pregunta del set ───────────────────────────────────┐
+   |
+🟦 MostrarOpcionesDeLaPregunta(sesion_id)      — Docente, decisión manual,
+   |                                              agregado en la ronda de
+   |                                              wireframing (`US-6.0.2`)
+🟧 OpcionesEnVivoMostradas      (revela las 4 opciones + arranca el             🟨 ActividadEvaluativaEnVivo
+   |                             temporizador — es el punto de referencia
+   |                             real de `tiempo_respuesta`, no
+   |                             SesionEnVivoIniciada/SiguientePreguntaPresentada)
+   |
+🟦 CerrarPreguntaActual(sesion_id)            — Docente, decisión manual
+   |
+🟧 PreguntaEnVivoCerrada        (dispara: histograma de respuestas              🟨 ActividadEvaluativaEnVivo
+   |                             (`distribucion_por_pregunta`, §15) seguido,
+   |                             tras unos segundos en el cliente de
+   |                             proyección, del ranking —
+   |                             `ranking_por_sesion`, §15 — RF-09)
+   |
+🟦 AvanzarSiguientePregunta(sesion_id)         — Docente, si quedan preguntas
+   |                                              — omitido si era la última
+🟧 SiguientePreguntaPresentada  (pregunta_actual += 1, mismo estado inicial      🟨 ActividadEvaluativaEnVivo
+   |                             que SesionEnVivoIniciada: solo el enunciado,
+   |                             opciones ocultas hasta el próximo
+   |                             MostrarOpcionesDeLaPregunta)
+   |
+   └────────────────────────────────────────────────────────────────────────────┘
+   |
+🟦 FinalizarSesionEnVivo(sesion_id)            — Docente, tras cerrar la última pregunta
+   |
+🟧 SesionEnVivoFinalizada       (estado: Finalizada, ranking final)              🟨 ActividadEvaluativaEnVivo
+
+[Estudiante]
+   |
+🟦 UnirseASesionEnVivo(sesion_id, estudiante_id)     — desde el portal, mientras
+   |                                                    la sesión no esté Finalizada
+🟧 EstudianteUnido              (crea ParticipacionEnVivo, o no-op si ya          🟨 ParticipacionEnVivo
+   |                             existe — idempotente, INV-AEV-06)
+   |
+🟦 ResponderPreguntaEnVivo(sesion_id, estudiante_id, pregunta_id, respuesta)
+   |
+🟧 RespuestaEnVivoRegistrada    (tiempo_respuesta medido server-side desde        🟨 ParticipacionEnVivo
+   |                             OpcionesEnVivoMostradas de esa pregunta —
+   |                             no desde que se presentó el enunciado;
+   |                             puntaje calculado ahora con la fórmula del
+   |                             spike RF-10 — nunca lo envía el cliente;
+   |                             actualiza ranking_por_sesion y
+   |                             distribucion_por_pregunta en la misma
+   |                             transacción, §15)
+```
+
+**Sin disparo automático por tiempo equivalente al `VerificadorDeVencimientos` de §6b.** El
+`tiempo_limite_por_pregunta_segundos` (dato de la sesión, fijado en `CrearSesionEnVivo`, mismo
+valor usado como `tiempo_límite_sesión` en la fórmula del spike RF-10) actúa como **corte de
+aceptación de respuestas por estudiante**, contado desde `OpcionesEnVivoMostradas` —
+`ResponderPreguntaEnVivo` se rechaza si `tiempo_respuesta > tiempo_limite_por_pregunta_segundos`
+aunque el Docente todavía no haya emitido `CerrarPreguntaActual` (`TiempoAgotado`, INV-AEV-08).
+**Tres momentos, los tres decisión manual del Docente** (confirmado por `RNF_v1.md` para el
+cierre, y con Víctor en la ronda de wireframing para mostrar opciones y avanzar — no hay
+ninguna Policy que dispare sola ningún paso de la dinámica en vivo, a diferencia de
+`VerificadorDeVencimientos` en período abierto): presentar el enunciado, revelar las opciones
+(arranca el timer), y cerrar la pregunta. El Docente controla el ritmo completo de la sesión.
+
+## 13. Comandos → Eventos (modo en vivo)
+
+| Comando | Actor | Aggregate | Evento(s) | Excepciones |
+|---|---|---|---|---|
+| `CrearSesionEnVivo(comision_id, unidad_tematica?, tema?, cantidad_preguntas, tiempo_limite_por_pregunta_segundos)` | Docente | `ActividadEvaluativaEnVivo` (crea) | `SesionEnVivoCreada` | `ComisionNoExiste`, `PreguntasInsuficientes` (INV-AEV-01), `TiempoLimiteInvalido` (INV-AEV-02, > 0) |
+| `IniciarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (inicia) | `SesionEnVivoIniciada` | `SesionNoExiste`, `SesionYaIniciada` |
+| `MostrarOpcionesDeLaPregunta(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (revela opciones, arranca el timer) | `OpcionesEnVivoMostradas` | `SesionNoExiste`, `SesionNoEnCurso`, `OpcionesYaMostradas` |
+| `CerrarPreguntaActual(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (avanza estado interno) | `PreguntaEnVivoCerrada` | `SesionNoExiste`, `SesionNoEnCurso`, `OpcionesNoMostradasTodavia` (INV-AEV-09), `PreguntaYaCerrada` |
+| `AvanzarSiguientePregunta(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (avanza `pregunta_actual`) | `SiguientePreguntaPresentada` | `SesionNoExiste`, `PreguntaActualNoCerrada` (INV-AEV-03), `NoQuedanPreguntas` |
+| `FinalizarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (finaliza) | `SesionEnVivoFinalizada` | `SesionNoExiste`, `SesionYaFinalizada`, `PreguntaActualNoCerrada` |
+| `UnirseASesionEnVivo(sesion_id, estudiante_id)` | Estudiante | `ParticipacionEnVivo` (crea, o no-op si ya existe — idempotente) | `EstudianteUnido` | `SesionNoExiste`, `SesionYaFinalizada` |
+| `ResponderPreguntaEnVivo(sesion_id, estudiante_id, pregunta_id, respuesta)` | Estudiante | `ParticipacionEnVivo` (agrega una `RespuestaEnVivo`) | `RespuestaEnVivoRegistrada` | `ParticipacionNoExiste` (no se unió), `PreguntaNoActual`, `OpcionesNoMostradasTodavia` (INV-AEV-09 — no se puede responder antes de que el Docente las revele), `PreguntaYaCerrada`, `TiempoAgotado` (INV-AEV-08, medido desde `OpcionesEnVivoMostradas`), `RespuestaYaRegistrada` (INV-AEV-07, un solo intento) |
+
+**Resultado devuelto por `ResponderPreguntaEnVivo` (tercera ronda de wireframing, `US-6.0.2`,
+2026-09-17):** el propio Use Case responde de forma síncrona con `es_correcta`, `puntaje`
+(de esta pregunta) y `puntaje_acumulado` (leído de `ranking_por_sesion` para ese estudiante,
+ya actualizado en la misma transacción, §15) — **no requiere esperar `PreguntaEnVivoCerrada`
+ni un mensaje de WebSocket aparte**: es la respuesta directa (HTTP o ack de WS, según lo que
+defina la Iteración 1) al propio comando del Estudiante, no un broadcast al canal `sesion_id`.
+Es lo que sostiene el feedback personal inmediato de `#est-resultado-pregunta`, sin ranking —
+el ranking completo de todos los estudiantes sigue reservado para `PreguntaEnVivoCerrada`
+(broadcast, §16) y `SesionEnVivoFinalizada`.
+
+**Query — sin comando ni evento de dominio:**
+
+| Query | Actor | Fuente | Resultado |
+|---|---|---|---|
+| `ObtenerRankingDeSesion(sesion_id)` | Docente (proyección, tras cada pregunta), Estudiante (recién al finalizar la sesión, §17 punto 10) | read model `ranking_por_sesion` | Puntaje acumulado por estudiante, ordenado descendente — lo que se transmite por WebSocket tras `PreguntaEnVivoCerrada` (Docente/proyección, RF-09) y tras `SesionEnVivoFinalizada` (Estudiante) |
+| `ListarParticipantesDeSesion(sesion_id)` | Docente | read model `participantes_por_sesion` | Estudiantes unidos, para la sala de espera antes de `IniciarSesionEnVivo` |
+| `ObtenerDistribucionDeRespuestas(sesion_id)` | Docente (proyección) | read model `distribucion_por_pregunta` (§15) | Cantidad de respuestas por opción de la pregunta recién cerrada — histograma que se transmite junto con el ranking tras `PreguntaEnVivoCerrada` (agregado en `US-6.0.2`) |
+
+## 14. Aggregates (modo en vivo)
+
+### `ActividadEvaluativaEnVivo` (Aggregate Root)
+
+| Atributo | Tipo | Notas |
+|---|---|---|
+| `id` | UUID | |
+| `comision_id` | referencia a `Comision` (BC Identidad) | **única y obligatoria** — corrección de la ronda anterior (que tenía `comisiones_ids` opcional/múltiple, igual que período abierto). Confirmado con Víctor: la sesión en vivo se crea entrando primero a una Comisión puntual (pantalla `ComisionDetalleDocente.tsx`, ya existente), nunca desde la Materia en general — no hay "todas las Comisiones" para este modo |
+| `materia_id` | referencia a `Materia` (BC Banco de Preguntas) | **resuelta internamente** a partir de `comision_id` (puerto `ComisionConsultaPort` nuevo, Actividad Evaluativa → Identidad, dirección inversa de `MateriaConsultaPort` — mismo patrón que el puerto homónimo ya existente en Banco de Preguntas/Analytics/Notificaciones), no un parámetro que el Docente elige. Una vez resuelta, `MateriaConsultaPort`/`PreguntaConsultaPort` (§7) se usan igual que en período abierto |
+| `unidad_tematica` / `tema` | string \| null | mismo criterio que `ActividadEvaluativaPeriodoAbierto` (§5) — filtros opcionales combinables del set aleatorio |
+| `preguntas` | lista de `PreguntaAsignada` (VO, mismo tipo que §5) | fijada por completo en `SesionEnVivoCreada` — inmutable en cantidad y orden, RF-08 ("todos reciben el mismo set") |
+| `tiempo_limite_por_pregunta_segundos` | int | fijo para toda la sesión (spike RF-10) — inmutable después de creada |
+| `estado` | `EnEspera \| EnCurso \| Finalizada` | |
+| `pregunta_actual_indice` | int \| null | `null` en `EnEspera`; posición dentro de `preguntas` mientras `EnCurso` |
+| `opciones_mostradas` | bool | `false` al presentar cada pregunta (`SesionEnVivoIniciada`/`SiguientePreguntaPresentada`); `true` tras `MostrarOpcionesDeLaPregunta` (INV-AEV-09) — agregado en la ronda de wireframing (`US-6.0.2`) |
+| `pregunta_actual_cerrada` | bool | controla `AvanzarSiguientePregunta`/`FinalizarSesionEnVivo` (INV-AEV-03) |
+
+**Invariantes:**
+- **INV-AEV-01:** `cantidad_preguntas` ≤ cantidad de `PreguntaPlantilla` activas que matchean
+  `materia_id`/`unidad_tematica`/`tema` al momento de crear la sesión — mismo criterio que
+  INV-AE-01.
+- **INV-AEV-02:** `tiempo_limite_por_pregunta_segundos` > 0.
+- **INV-AEV-03:** `AvanzarSiguientePregunta` y `FinalizarSesionEnVivo` requieren
+  `pregunta_actual_cerrada = true` — no se puede pasar a la siguiente pregunta ni terminar la
+  sesión con la pregunta actual todavía abierta a respuestas.
+- **INV-AEV-09:** `ResponderPreguntaEnVivo` y `CerrarPreguntaActual` requieren
+  `opciones_mostradas = true` de la pregunta actual — no se puede responder ni cerrar una
+  pregunta cuyas opciones el Docente todavía no reveló (`OpcionesNoMostradasTodavia`).
+  `MostrarOpcionesDeLaPregunta` sobre una pregunta que ya las tiene mostradas se rechaza
+  (`OpcionesYaMostradas`, no reemite el evento) — mismo criterio de no-op silencioso que
+  `PreguntaYaCerrada`.
+
+**Sin estado propio de las participaciones de los estudiantes** — mismo criterio que §5, el
+aggregate no crece con la cantidad de alumnos ni de respuestas.
+
+### `ParticipacionEnVivo` (Aggregate Root)
+
+| Atributo | Tipo | Notas |
+|---|---|---|
+| `id` | UUID | |
+| `sesion_id` | referencia a `ActividadEvaluativaEnVivo` | |
+| `estudiante_id` | referencia a `Usuario` (BC Identidad) | vía `EstudianteConsultaPort`, ya existente (§7) |
+| `unido_en` | datetime | |
+| `respuestas` | colección de `RespuestaEnVivo` (Value Object — ver nota) | a lo sumo una por `pregunta_id` (INV-AEV-07) |
+
+**Invariantes:**
+- **INV-AEV-06:** a lo sumo una `ParticipacionEnVivo` por `(sesion_id, estudiante_id)` —
+  `UnirseASesionEnVivo` es idempotente si ya existe (mismo patrón que INV-AE-06).
+- **INV-AEV-07:** a lo sumo una `RespuestaEnVivo` por `pregunta_id` — a diferencia de
+  `Evaluacion` (INV-AE-08, permite reintentos configurables), el modo en vivo es de **un solo
+  intento por pregunta** (estilo Kahoot, ver hot spot 3 más abajo).
+- **INV-AEV-08:** `ResponderPreguntaEnVivo` se rechaza con `TiempoAgotado` si
+  `tiempo_respuesta` (server-side, medido contra `OpcionesEnVivoMostradas` de esa pregunta —
+  no contra `SiguientePreguntaPresentada`/`SesionEnVivoIniciada`, corregido en la ronda de
+  wireframing, `US-6.0.2`) supera `tiempo_limite_por_pregunta_segundos` de la sesión —
+  independiente de si el Docente ya cerró la pregunta o no (§12).
+
+**`RespuestaEnVivo` es Value Object, no Entity — a diferencia de `Respuesta` (§5, §8 punto 6).**
+Diferencia deliberada: en el modo en vivo hay **un solo intento por pregunta** (INV-AEV-07), no
+hace falta distinguir "la más reciente entre varias" — no hay ambigüedad que resolver con una
+identidad propia. Si más adelante se permitiera más de un intento en vivo, este VO debería
+revisarse hacia Entity, mismo razonamiento que ya está documentado en §8 punto 6.
+
+| Atributo (`RespuestaEnVivo`) | Tipo | Notas |
+|---|---|---|
+| `pregunta_id` | referencia a `PreguntaPlantilla` | debe ser la pregunta actual de la sesión al momento de responder |
+| `contenido` | según tipo de pregunta | mismo shape que `Respuesta` (§5) |
+| `es_correcta` | bool | calculada al registrar, mismo criterio que INV-AE-10 |
+| `tiempo_respuesta_segundos` | float | medido server-side (§12) — insumo de `FactorTiempo` |
+| `puntaje` | int | calculado con la fórmula del spike RF-10 al momento de registrar — inmutable después |
+
+## 15. Extensión del event store y de los read models
+
+Misma tabla `events` de §6 (JSONB, PostgreSQL, `ADR-004`) — se agregan dos valores nuevos de
+`aggregate_type`: `"ActividadEvaluativaEnVivo"` y `"ParticipacionEnVivo"`. Mismo mecanismo de
+Unit of Work por Use Case (`ADR-009`) y de concurrencia optimista por `sequence_number` que en
+§6 — acá es el que evita que un doble submit de `ResponderPreguntaEnVivo` (reconexión con
+reintento de red, mismo caso que `RespuestaRegistrada` en §6) duplique una `RespuestaEnVivo`.
+
+**Read models nuevos (CQRS, actualizados síncronamente en la misma transacción del evento):**
+- `ranking_por_sesion` — `(sesion_id, estudiante_id, puntaje_acumulado, ultima_actualizacion)`.
+  Se incrementa con cada `RespuestaEnVivoRegistrada` (§11) — es lo que sostiene el presupuesto
+  de ≤100ms al cerrar una pregunta (`RNF_v1.md`), y lo que se transmite por WebSocket.
+- `participantes_por_sesion` — `(sesion_id, estudiante_id, unido_en)`. Sostiene la sala de
+  espera del Docente antes de `IniciarSesionEnVivo` y la validación de unión tardía.
+- `distribucion_por_pregunta` — `(sesion_id, pregunta_id, opcion, cantidad)`. **Agregado en la
+  ronda de wireframing con Víctor, 2026-09-17** (`US-6.0.2`): cuántos estudiantes eligieron
+  cada opción de la pregunta actual — sostiene el histograma de respuestas que ve la
+  proyección al cerrar la pregunta (`docs/design/ux/wireframes-actividad-evaluativa-en-vivo.md`
+  §2.4). Se incrementa con cada `RespuestaEnVivoRegistrada`, mismo patrón síncrono que
+  `ranking_por_sesion` — el histograma también entra en el presupuesto de ≤100ms al cerrar,
+  por lo que no puede depender de una agregación calculada recién en ese momento.
+  Deliberadamente no expuesto mientras la pregunta sigue abierta (solo el conteo total lo está,
+  §16) — evita el efecto "todos eligen lo que ya va ganando" antes de que todos respondieron.
+
+## 16. Capa de tiempo real (WebSockets) — alcance de este modelado
+
+Este documento fija el **contrato de eventos que la capa de `frameworks/` debe transmitir**, no
+su diseño técnico (eso es alcance de la Iteración 1, "infraestructura WebSockets",
+`docs/plans/inc6/inc6-candidatas.md`). Cada evento de dominio de §12 que afecta lo que ven los
+participantes dispara un mensaje broadcast por canal `sesion_id` inmediatamente después de
+persistirse (mismo patrón que un outbox, sin tabla de outbox propia a esta escala — 30-60
+conexiones concurrentes, mismo criterio de "no sobre-diseñar para el volumen real" ya aplicado
+en `VerificadorDeVencimientos`, §6b):
+
+| Evento de dominio | Mensaje transmitido | A quién |
+|---|---|---|
+| `SesionEnVivoIniciada` / `SiguientePreguntaPresentada` | Solo el **enunciado** de la pregunta actual — sin opciones todavía (§17, segunda ronda) | Todos los conectados al canal `sesion_id` |
+| `OpcionesEnVivoMostradas` | Las 4 opciones (texto, con color sólido de fondo por opción — sin ícono, ver wireframes §1.1) — sin indicar la correcta; arranca el temporizador visible; conteo total de respuestas recibidas, actualizado en vivo a medida que llegan (sin desglose por opción, §15) | Todos los conectados |
+| `PreguntaEnVivoCerrada` | Un único payload con la respuesta correcta + `distribucion_por_pregunta` (histograma, §15) + `ranking_por_sesion` (§15) — **la secuencia histograma → ranking es puramente de presentación**: el cliente de proyección muestra primero el histograma y, tras unos segundos (temporizador local, sin round-trip al servidor — confirmado con Víctor, no es un comando de dominio nuevo), pasa solo a la vista de ranking con los mismos datos ya recibidos | Todos los conectados |
+| `SesionEnVivoFinalizada` | Ranking final | Todos los conectados |
+| `EstudianteUnido` | Conteo/lista de participantes actualizada | Docente (vista de sala de espera) |
+
+**Nota de UX (`US-6.0.2`, 2026-09-17, segunda ronda con Víctor):** la presentación de cada
+pregunta en la proyección queda en **dos pasos manuales del Docente**, no uno: primero el
+enunciado solo (`SesionEnVivoIniciada`/`SiguientePreguntaPresentada`), después
+`MostrarOpcionesDeLaPregunta` revela las 4 opciones y recién ahí arranca el temporizador — la
+primera ronda de este documento asumía que las opciones aparecían junto con el enunciado. Las
+opciones se muestran como **cajas de color sólido** (rojo/azul/amarillo/verde, texto de la
+opción dentro de la caja), **sin ícono de forma** — corrige la primera ronda, que proponía una
+marca `▲◆●■` combinada con color.
+
+**Nota de UX (tercera ronda con Víctor, mismo día) — corrige el alcance de la nota anterior:**
+el color sólido por opción **no es exclusivo de la proyección** — el dispositivo del Estudiante
+también lo usa, en tarjetas grandes táctiles (`.tap-card`, mismos 4 colores que
+`OpcionesEnVivoMostradas`), pensadas para tocar con el pulgar en un celular. Cambia además la
+interacción: **tocar la tarjeta dispara `ResponderPreguntaEnVivo` de inmediato**, sin un paso
+de selección + confirmación separado — el comando en sí no cambia de forma (mismos
+parámetros), solo el gesto de UI que lo invoca. Coherente con INV-AEV-07 (un solo intento): no
+hace falta un paso de confirmación cuando no hay nada que reconsiderar antes de responder.
+
+## 17. Hot spots — resueltos con Víctor (2026-09-17), única ronda
+
+1. **Sala de espera (`EnEspera`) antes de iniciar — confirmado.** El Docente crea la sesión
+   (fija el set de preguntas), los estudiantes se van uniendo mientras está en espera, y recién
+   cuando el Docente decide `IniciarSesionEnVivo` arranca la primera pregunta — mismo flujo que
+   Kahoot real. Descartado: crear = iniciar directo, sin estado intermedio.
+2. **Unión tardía — confirmado, permitida.** Un estudiante puede unirse
+   (`UnirseASesionEnVivo`) en cualquier momento mientras la sesión no esté `Finalizada` —
+   incluso ya `EnCurso`, en cuyo caso participa recién desde la pregunta en la que se unió (las
+   anteriores quedan sin `RespuestaEnVivo` para él, puntaje 0 en esas). Descartado: restringir
+   la unión a la sala de espera únicamente — cubre al alumno que llega tarde a clase.
+3. **Un solo intento por pregunta (INV-AEV-07) — confirmado.** Estilo Kahoot estándar, sin
+   `cantidad_intentos_permitidos` equivalente al de `ActividadEvaluativaPeriodoAbierto`. RF-08 a
+   RF-10 no mencionan reintentos en modo en vivo, a diferencia de RF-11 que sí los define
+   explícitamente para período abierto.
+4. **Avance de pregunta en dos pasos (`CerrarPreguntaActual` + `AvanzarSiguientePregunta`) —
+   confirmado.** Le da al Docente una pausa deliberada entre mostrar el ranking/respuesta
+   correcta de una pregunta y arrancar la siguiente, para comentarla en el aula — mismo ritmo
+   que Kahoot real ("Next"). Descartado: un único comando `CerrarYAvanzar` sin esa pausa.
+5. **`RespuestaEnVivo` como Value Object, no Entity (§14) — se mantiene.** Consecuencia directa
+   del punto 3 (un solo intento, confirmado) — sin ambigüedad de "cuál es la vigente" que
+   resolver con identidad propia, a diferencia de `Respuesta` (§8 punto 6).
+6. **Terminología a incorporar al lenguaje ubicuo** (`docs/architecture/03-bounded-contexts.md`
+   §Actividad Evaluativa), pendiente como tarea de actualización documental, no como decisión
+   abierta: `ParticipacionEnVivo`, `RespuestaEnVivo`, `ranking_por_sesion` — mismo criterio que
+   §8 punto 3.
+
+**Segunda ronda (2026-09-17, durante el wireframing de `US-6.0.2`) — dos correcciones a la
+primera ronda, ambas con impacto en el modelo, no solo en la UI:**
+
+7. **Mostrar opciones es un paso manual separado, no simultáneo con presentar la pregunta —
+   confirmado.** La primera ronda asumía que `SesionEnVivoIniciada`/`SiguientePreguntaPresentada`
+   ya traían las opciones. Corregido: nuevo comando `MostrarOpcionesDeLaPregunta` (§12, §13),
+   nuevo campo `opciones_mostradas` e invariante INV-AEV-09 (§14) — el Docente decide cuándo
+   arranca el timer, después de leer el enunciado en voz alta si quiere. Consecuencia en
+   cascada: el punto de referencia de `tiempo_respuesta` (INV-AEV-08) pasa de
+   `SesionEnVivoIniciada`/`SiguientePreguntaPresentada` a `OpcionesEnVivoMostradas` — la
+   fórmula del spike RF-10 no cambia, solo el evento contra el que se mide.
+8. **Opciones en color sólido, sin ícono de forma — confirmado.** La primera ronda proponía
+   una marca `▲◆●■` combinada con color (§1 de los wireframes, versión anterior). Corregido:
+   cada caja de opción es un color sólido (rojo/azul/amarillo/verde) con el texto completo
+   dentro — sin ícono aparte.
+
+**Tercera ronda (2026-09-17, mismo día) — una corrección más, sobre el alcance del punto 8:**
+
+9. **El color sólido se comparte entre proyección y celular del Estudiante — corrige el punto
+   8.** La segunda ronda había acotado el color a "solo proyección" ("todo es para el
+   docente"). Corregido: la pantalla de responder (`#est-pregunta`) pasa a 4 tarjetas grandes
+   táctiles (`.tap-card`), mismos 4 colores que la proyección, pensadas para tocar con el
+   pulgar. Además, **tocar la tarjeta responde al instante** — sin paso de selección +
+   confirmación separado, coherente con INV-AEV-07 (un solo intento). El comando
+   `ResponderPreguntaEnVivo` no cambia de forma, solo el gesto de UI que lo dispara.
+10. **Feedback personal inmediato, sin ranking — el ranking queda reservado para el final de
+    la sesión.** Confirmado con Víctor: tras responder, el Estudiante ve al instante si acertó
+    y cuántos puntos lleva acumulados (`puntaje_acumulado`, propio, ver nota debajo de la
+    tabla de §13) — pero **no** el ranking de la sesión (posiciones de sus compañeros). El
+    ranking completo (`ObtenerRankingDeSesion`) solo se le muestra al Estudiante en
+    `SesionEnVivoFinalizada` (resultado final), nunca pregunta por pregunta — a diferencia de
+    la proyección, que sí lo muestra tras cada `PreguntaEnVivoCerrada` (RF-09, para el aula
+    completa). Elimina la pantalla intermedia `#est-esperando` ("esperando cierre") de las
+    rondas anteriores: como el resultado personal no depende de que el Docente cierre la
+    pregunta, no hay nada que esperar.
+11. **La sesión en vivo se crea desde una Comisión puntual, no desde la Materia — corrige una
+    primera respuesta de esta misma ronda que había propuesto `comisiones_ids` opcional/
+    múltiple (mismo campo que período abierto).** Confirmado con Víctor: a diferencia de
+    `ActividadEvaluativaPeriodoAbierto` (que sí admite "todas las Comisiones de la Materia"
+    como default razonable para un examen asíncrono), una sesión en vivo se da en el momento,
+    en la clase de una Comisión concreta — no tiene sentido "todas" como opción. El campo pasa
+    a `comision_id` **única y obligatoria** (§14), resuelta por el contexto de navegación
+    (igual que `materia_id` ya es implícito en "Nueva actividad" hoy), y `materia_id` se
+    deriva de ahí vía un puerto nuevo, `ComisionConsultaPort` (Actividad Evaluativa →
+    Identidad) — mismo patrón que el puerto homónimo ya existente en Banco de
+    Preguntas/Analytics/Notificaciones, dirección inversa de `MateriaConsultaPort`.
+    **Punto de entrada confirmado en la UI:** el Docente entra al detalle de una Comisión
+    puntual (`ComisionDetalleDocente.tsx`, pantalla ya existente y aprobada) y ahí aparece
+    "+ Nueva sesión en vivo" — no hay cambio en la pantalla "Actividades" (que sigue siendo
+    exclusivamente el listado de período abierto, sin un botón nuevo). Para el Estudiante, las
+    sesiones en vivo de su propia Comisión aparecen junto a las actividades de período abierto
+    que ya ve, en la misma pantalla — un solo lugar donde mirar.
+
+**Pendiente de definir en la spec de implementación (no bloquea la aprobación del modelo):**
+- Formato exacto del canal WebSocket por `sesion_id` (§16) — protocolo de mensajes, manejo de
+  reconexión de un cliente ya unido (no debería perder su `ParticipacionEnVivo`, solo re-
+  suscribirse al canal).
+- Valor por defecto sugerido (no impuesto) de `tiempo_limite_por_pregunta_segundos` en la UI de
+  creación de sesión — el spike RF-10 ya cerró que el campo es obligatorio sin default a nivel
+  de dominio (`docs/plans/inc6/inc6-candidatas.md`).
+
+## 18. Próximo paso
+
+Modelo completo, sin hot spots abiertos (§17, resueltos en una única ronda) — aprobado por
+Víctor 2026-09-17 en el comentario de cierre del Issue
+[#379](https://github.com/vvalotto/cognion/issues/379). Es el input de las specs US-IEDD de
+las Iteraciones 1 y 2 (`docs/plans/inc6/inc6-candidatas.md`) y del prototipo UX de US-6.0.2.

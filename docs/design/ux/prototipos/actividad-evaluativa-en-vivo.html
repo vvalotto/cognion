@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cognión — Prototipo UX: Actividad Evaluativa, Sesión en Vivo (Incremento 6)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /*
+    Mismos tokens que actividad-evaluativa-periodo-abierto.html (paleta institucional UNER,
+    tipografía Roboto) — continuidad visual entre BCs e iteraciones. Primitivas nuevas de este
+    prototipo: pantallas de PROYECCIÓN (.stage-*), con su propia escala tipográfica pensada
+    para verse desde el fondo de un aula (RNF_v1.md, Usabilidad — criterios de legibilidad en
+    proyección, ver wireframes §1.1).
+  */
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+    --muted: #f4f7f9;
+    --muted-foreground: #707070;
+    --border: #e2e6e9;
+    --primary: #1d75b5;
+    --primary-dark: #145683;
+    --primary-foreground: #ffffff;
+    --accent: #53aa74;
+    --accent-foreground: #ffffff;
+    --destructive: #dc2626;
+    --destructive-bg: #fef2f2;
+    --destructive-border: #fecaca;
+    --success: #53aa74;
+    --success-bg: #eef7f1;
+    --success-border: #bfe2cc;
+    --warning: #b5791d;
+    --warning-bg: #fdf5e8;
+    --warning-border: #f0ddb3;
+    --ring: #1d75b5;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --topstrip: #1d75b5;
+    /* Tokens de proyección — fondo oscuro, contraste alto (RNF Usabilidad) */
+    --stage-bg: #0f1b24;
+    --stage-fg: #ffffff;
+    --stage-muted: #9fb3c0;
+    --stage-accent: #6fe39a;
+    --stage-primary: #4fb4f0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, 'Segoe UI', sans-serif;
+    background: var(--muted);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-strip {
+    background: var(--topstrip);
+    color: #eaf3fa;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    padding: 7px 16px;
+    text-align: right;
+  }
+
+  .proto-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+  }
+  .proto-nav strong { margin-right: 8px; }
+  .proto-nav button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .proto-nav button:hover { background: rgba(255,255,255,0.22); }
+  .proto-nav button.active { background: #fff; color: var(--primary); font-weight: 600; }
+  .proto-nav .sep { width: 1px; align-self: stretch; background: rgba(255,255,255,0.24); margin: 0 2px; }
+
+  .screen { display: none; min-height: calc(100vh - 74px); }
+  .screen.active { display: block; }
+
+  .app-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header .brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  .app-header .brand-mini svg { width: 26px; height: 26px; }
+  .app-header .who {
+    font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-header .who .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .app-body { padding: 28px 16px 60px; max-width: 900px; margin: 0 auto; }
+  .app-body.narrow { max-width: 560px; }
+  .breadcrumb { font-size: 12px; color: var(--muted-foreground); margin-bottom: 6px; }
+  .breadcrumb .current { color: var(--foreground); font-weight: 500; }
+  .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .page-subtitle { font-size: 14px; color: var(--muted-foreground); margin: 0 0 24px; }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn.outline { background: var(--background); color: var(--foreground); border: 1px solid var(--border); }
+  .btn.destructive { background: var(--destructive); color: #fff; }
+  .btn.accent { background: var(--accent); color: #fff; }
+  .btn.full { width: 100%; }
+  .btn.sm { padding: 6px 12px; font-size: 12px; }
+  .btn.lg { padding: 16px 28px; font-size: 18px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .form-card, .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .result-card { max-width: 480px; margin: 40px auto 0; text-align: center; }
+
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+  }
+  .field .hint { font-size: 12px; color: var(--muted-foreground); margin-top: 4px; }
+  .field-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .field-row .field { flex: 1; min-width: 180px; }
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .center-icon { text-align: center; font-size: 40px; margin-bottom: 8px; }
+
+  .alert {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 12px 14px; border-radius: 8px; font-size: 13px;
+    margin-bottom: 20px; border: 1px solid; text-align: left;
+  }
+  .alert.success { background: var(--success-bg); border-color: var(--success-border); color: #14532d; }
+  .alert.warning { background: var(--warning-bg); border-color: var(--warning-border); color: #7a5210; }
+  .alert .icon { flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .alert .body strong { display: block; margin-bottom: 2px; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 18px; cursor: pointer;
+  }
+  .card:hover { border-color: var(--primary); }
+  .card .card-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .card .card-meta { font-size: 12px; color: var(--muted-foreground); margin-bottom: 10px; }
+  .card .card-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .badge.disponible { background: var(--success-bg); color: #14532d; }
+  .badge.espera { background: var(--warning-bg); color: #7a5210; }
+  .badge.finalizada { background: #eaf2f8; color: var(--primary-dark); }
+
+  .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--muted-foreground); }
+  .detail-row .v { font-weight: 500; text-align: right; }
+
+  /* Lista de participantes (sala de espera) */
+  .participant-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 12px 6px 6px; font-size: 13px; margin: 0 8px 8px 0;
+  }
+  .participant-chip .av {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;
+  }
+
+  /* Ranking (app normal, no proyección) */
+  .ranking-list { list-style: none; margin: 0; padding: 0; }
+  .ranking-list li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 14px;
+  }
+  .ranking-list li:last-child { border-bottom: none; }
+  .ranking-list .pos { width: 24px; font-weight: 700; color: var(--muted-foreground); text-align: center; }
+  .ranking-list li.yo { background: #eaf2f8; border-radius: 8px; font-weight: 700; }
+  .ranking-list .pts { margin-left: auto; font-weight: 700; color: var(--primary-dark); }
+
+  /* ============== PANTALLAS DE PROYECCIÓN (aula) ============== */
+  .stage {
+    background: var(--stage-bg); color: var(--stage-fg);
+    min-height: calc(100vh - 74px);
+    padding: 48px 40px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .stage-eyebrow { font-size: 20px; color: var(--stage-muted); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 14px; }
+  .stage-question {
+    font-size: 40px; font-weight: 700; line-height: 1.25; max-width: 1000px; margin: 0 0 36px;
+  }
+  .stage-timer {
+    font-size: 64px; font-weight: 900; color: var(--stage-accent);
+    font-variant-numeric: tabular-nums; margin-bottom: 24px;
+  }
+  .stage-bar { width: 100%; max-width: 700px; height: 14px; background: rgba(255,255,255,0.12); border-radius: 999px; overflow: hidden; margin-bottom: 30px; }
+  .stage-bar .fill { height: 100%; background: var(--stage-accent); }
+  .stage-count { font-size: 28px; font-weight: 700; color: var(--stage-fg); }
+  .stage-count .n { color: var(--stage-primary); font-size: 34px; }
+  .stage-options {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 900px; margin-top: 10px;
+  }
+  /* Cajas de opción — color sólido, sin ícono, el texto entra dentro de la caja */
+  .stage-option {
+    border-radius: 14px; padding: 22px 24px; font-size: 25px; font-weight: 700; text-align: left;
+    display: flex; align-items: center; min-height: 88px; line-height: 1.25;
+    border: 3px solid transparent;
+  }
+  .stage-option.color-a { background: #c93a3e; color: #fff; }
+  .stage-option.color-b { background: #2f8fc7; color: #fff; }
+  .stage-option.color-c { background: #d9a324; color: #2a1c00; }
+  .stage-option.color-d { background: #3f9463; color: #fff; }
+  .stage-option.correcta { border-color: #ffffff; box-shadow: 0 0 0 2px rgba(255,255,255,0.5) inset; }
+
+  /* Tarjetas táctiles — pregunta activa del Estudiante (§3.3 wireframes), mismos colores que
+     las cajas de opción de la proyección (.color-a/b/c/d) — tocar responde al instante, sin
+     paso de confirmación aparte. */
+  .tap-options {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;
+  }
+  .tap-card {
+    border-radius: 14px; padding: 18px 14px; font-size: 16px; font-weight: 700; color: #fff;
+    text-align: left; line-height: 1.25; min-height: 110px; border: none; cursor: pointer;
+    display: flex; align-items: center; font-family: inherit;
+    -webkit-tap-highlight-color: transparent; transition: transform 0.08s ease;
+  }
+  .tap-card:active { transform: scale(0.96); }
+  .tap-card.color-a { background: #c93a3e; }
+  .tap-card.color-b { background: #2f8fc7; }
+  .tap-card.color-c { background: #d9a324; color: #2a1c00; }
+  .tap-card.color-d { background: #3f9463; }
+
+  /* Histograma de respuestas (§2.4 wireframes) — misma paleta que las cajas de opción */
+  .stage-histograma { width: 100%; max-width: 760px; margin: 10px 0 0; }
+  .histo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+  .histo-row .label {
+    flex: 0 0 220px; font-size: 19px; font-weight: 700; text-align: left; border-radius: 8px;
+    padding: 10px 14px; line-height: 1.2;
+  }
+  .histo-row.color-a .label { background: #c93a3e; color: #fff; }
+  .histo-row.color-b .label { background: #2f8fc7; color: #fff; }
+  .histo-row.color-c .label { background: #d9a324; color: #2a1c00; }
+  .histo-row.color-d .label { background: #3f9463; color: #fff; }
+  .histo-row .track { flex: 1; height: 30px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
+  .histo-row .track .fill { height: 100%; background: var(--stage-primary); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-weight: 800; font-size: 15px; }
+  .histo-row.correcta .track .fill { background: var(--stage-accent); }
+  .histo-row.correcta .label { outline: 3px solid #ffffff; outline-offset: 2px; }
+  .stage-ranking { list-style: none; padding: 0; margin: 30px 0 0; width: 100%; max-width: 640px; }
+  .stage-ranking li {
+    display: flex; align-items: center; gap: 18px; font-size: 26px; font-weight: 600;
+    padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.12); text-align: left;
+  }
+  .stage-ranking .pos { font-size: 30px; font-weight: 900; color: var(--stage-primary); width: 44px; }
+  .stage-ranking .pts { margin-left: auto; color: var(--stage-accent); font-weight: 900; }
+  .stage-podio { display: flex; align-items: flex-end; gap: 24px; margin: 20px 0 40px; }
+  .stage-podio .step { text-align: center; }
+  .stage-podio .step .bar { width: 120px; border-radius: 10px 10px 0 0; background: var(--stage-primary); display: flex; align-items: flex-start; justify-content: center; padding-top: 10px; font-size: 32px; font-weight: 900; }
+  .stage-podio .step.n1 .bar { height: 150px; background: #f5c542; color: #3a2c00; }
+  .stage-podio .step.n2 .bar { height: 110px; background: #c8d2d8; color: #1b1b1b; }
+  .stage-podio .step.n3 .bar { height: 80px; background: #cf8a4a; color: #2a1600; }
+  .stage-podio .name { font-size: 18px; font-weight: 700; margin-top: 8px; }
+  .stage-podio .pts { font-size: 15px; color: var(--stage-accent); }
+  .stage-actions { margin-top: 36px; display: flex; gap: 14px; }
+  .stage-actions .btn.lg { font-size: 20px; padding: 18px 34px; }
+
+  @media (max-width: 560px) {
+    .detail-row { flex-direction: column; gap: 2px; }
+    .detail-row .v { text-align: left; }
+    .card-grid { grid-template-columns: 1fr; }
+    .field-row { flex-direction: column; gap: 0; }
+    .stage-question { font-size: 26px; }
+    .stage-timer { font-size: 44px; }
+    .stage-options { grid-template-columns: 1fr; }
+    .stage-option { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">FACULTAD DE INGENIERÍA · UNER</div>
+
+<nav class="proto-nav">
+  <strong>Sesión en Vivo —</strong>
+  <button data-target="doc-nueva-sesion" class="active">1. Docente — Nueva sesión</button>
+  <button data-target="doc-sala-espera">2. Sala de espera</button>
+  <button data-target="stage-pregunta-sola">3. Proyección — pregunta</button>
+  <button data-target="stage-pregunta-opciones">4. Proyección — con opciones</button>
+  <button data-target="stage-histograma">5. Proyección — histograma</button>
+  <button data-target="stage-ranking">6. Proyección — ranking</button>
+  <button data-target="stage-final">7. Proyección — resultado final</button>
+  <span class="sep"></span>
+  <button data-target="est-sesiones">8. Estudiante — Sesiones</button>
+  <button data-target="est-sala-espera">9. Sala de espera</button>
+  <button data-target="est-pregunta">10. Pregunta activa</button>
+  <button data-target="est-resultado-pregunta">11. Resultado de la pregunta</button>
+  <button data-target="est-resultado-final">12. Resultado final</button>
+</nav>
+
+<!-- 1. DOCENTE — NUEVA SESIÓN -->
+<section class="screen active" id="doc-nueva-sesion">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Lunes 18-20hs &nbsp;›&nbsp; <span class="current">Nueva sesión en vivo</span></div>
+    <h1 class="page-title">Nueva sesión en vivo</h1>
+    <p class="page-subtitle">Para la comisión Lunes 18-20hs — todos sus estudiantes reciben el mismo set de preguntas, en el mismo momento.</p>
+    <div class="form-card">
+      <div class="field">
+        <label>Unidad temática (opcional)</label>
+        <input type="text" placeholder="Ej. Arquitectura de software" />
+      </div>
+      <div class="field">
+        <label>Tema (opcional)</label>
+        <input type="text" placeholder="Ej. Bounded Contexts" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Cantidad de preguntas</label>
+          <input type="number" value="10" min="1" />
+        </div>
+        <div class="field">
+          <label>Tiempo límite por pregunta (segundos)</label>
+          <input type="number" value="20" min="1" />
+          <div class="hint">Sin valor por defecto — definilo según el nivel de dificultad del grupo.</div>
+        </div>
+      </div>
+      <div class="hint" style="margin-bottom:16px;">El puntaje de cada respuesta correcta combina velocidad, dificultad e importancia de la pregunta (spike RF-10) — se muestra en el ranking tras cada pregunta.</div>
+      <div class="form-actions">
+        <button class="btn full" onclick="go('doc-sala-espera')">Crear sesión</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. DOCENTE — SALA DE ESPERA -->
+<section class="screen" id="doc-sala-espera">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; <span class="current">Sala de espera</span></div>
+    <h1 class="page-title">Esperando participantes</h1>
+    <p class="page-subtitle">Compartí la pantalla de proyección con el aula. Iniciá cuando estén todos.</p>
+    <div class="form-card">
+      <div class="detail-row"><span class="k">Preguntas</span><span class="v">10 · Ingeniería de Software</span></div>
+      <div class="detail-row"><span class="k">Tiempo por pregunta</span><span class="v">20s</span></div>
+      <div class="detail-row"><span class="k">Participantes unidos</span><span class="v">14</span></div>
+      <div style="margin:18px 0;">
+        <span class="participant-chip"><span class="av">JP</span>Juan Pérez</span>
+        <span class="participant-chip"><span class="av">MG</span>María Gómez</span>
+        <span class="participant-chip"><span class="av">LR</span>Lucía Ramos</span>
+        <span class="participant-chip"><span class="av">+11</span>otros</span>
+      </div>
+      <div class="hint" style="margin-bottom:16px;">Se pueden seguir sumando mientras la sesión no arranque — y también después, ya en curso.</div>
+      <div class="form-actions">
+        <button class="btn accent full" onclick="go('stage-pregunta-sola')">Iniciar sesión</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. PROYECCIÓN — PREGUNTA SOLA -->
+<section class="screen" id="stage-pregunta-sola">
+  <div class="stage">
+    <div class="stage-eyebrow">Pregunta 3 de 10</div>
+    <div class="stage-question">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta en vez de una abstracción?</div>
+    <div class="stage-actions">
+      <button class="btn lg" onclick="go('stage-pregunta-opciones')">Mostrar opciones</button>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PROYECCIÓN — PREGUNTA CON OPCIONES -->
+<section class="screen" id="stage-pregunta-opciones">
+  <div class="stage">
+    <div class="stage-eyebrow">Pregunta 3 de 10</div>
+    <div class="stage-question" style="font-size:30px;margin-bottom:20px;">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta en vez de una abstracción?</div>
+    <div class="stage-timer">00:14</div>
+    <div class="stage-bar"><div class="fill" style="width:70%"></div></div>
+    <div class="stage-options">
+      <div class="stage-option color-a">Principio de sustitución de Liskov</div>
+      <div class="stage-option color-b">Inversión de dependencias</div>
+      <div class="stage-option color-c">Segregación de interfaces</div>
+      <div class="stage-option color-d">Responsabilidad única</div>
+    </div>
+    <div class="stage-count" style="margin-top:26px;"><span class="n">11</span> / 14 ya respondieron</div>
+    <div class="stage-actions">
+      <button class="btn destructive lg" onclick="go('stage-histograma')">Cerrar pregunta</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PROYECCIÓN — HISTOGRAMA -->
+<section class="screen" id="stage-histograma">
+  <div class="stage">
+    <div class="stage-eyebrow">Pregunta 3 de 10 — cerrada · así respondió el aula</div>
+    <div class="stage-histograma">
+      <div class="histo-row color-a"><div class="label">Liskov</div><div class="track"><div class="fill" style="width:14%">2</div></div></div>
+      <div class="histo-row color-b correcta"><div class="label">Inversión de dependencias ✓</div><div class="track"><div class="fill" style="width:79%">11</div></div></div>
+      <div class="histo-row color-c"><div class="label">Segregación</div><div class="track"><div class="fill" style="width:7%">1</div></div></div>
+      <div class="histo-row color-d"><div class="label">Responsabilidad única</div><div class="track"><div class="fill" style="width:0%">0</div></div></div>
+    </div>
+    <div class="stage-eyebrow" style="margin-top:10px;">Pasando al ranking en unos segundos…</div>
+    <div class="stage-actions">
+      <button class="btn outline lg" onclick="go('stage-ranking')" style="color:#fff;border-color:rgba(255,255,255,0.4);background:transparent;">Ver ranking ahora →</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PROYECCIÓN — RANKING -->
+<section class="screen" id="stage-ranking">
+  <div class="stage">
+    <div class="stage-eyebrow">Ranking — tras la pregunta 3 de 10</div>
+    <ol class="stage-ranking">
+      <li><span class="pos">1</span>Lucía Ramos<span class="pts">7420</span></li>
+      <li><span class="pos">2</span>Juan Pérez<span class="pts">6980</span></li>
+      <li><span class="pos">3</span>María Gómez<span class="pts">6510</span></li>
+    </ol>
+    <div class="stage-actions">
+      <button class="btn lg" onclick="go('stage-pregunta-sola')">Siguiente pregunta</button>
+      <button class="btn accent lg" onclick="go('stage-final')">Finalizar sesión</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PROYECCIÓN — RESULTADO FINAL -->
+<section class="screen" id="stage-final">
+  <div class="stage">
+    <div class="stage-eyebrow">Sesión finalizada</div>
+    <div class="stage-podio">
+      <div class="step n2"><div class="bar">2°</div><div class="name">Juan Pérez</div><div class="pts">15 620 pts</div></div>
+      <div class="step n1"><div class="bar">1°</div><div class="name">Lucía Ramos</div><div class="pts">17 340 pts</div></div>
+      <div class="step n3"><div class="bar">3°</div><div class="name">María Gómez</div><div class="pts">13 990 pts</div></div>
+    </div>
+    <div class="stage-eyebrow">¡Gracias por participar!</div>
+  </div>
+</section>
+
+<!-- 6. ESTUDIANTE — SESIONES DISPONIBLES -->
+<section class="screen" id="est-sesiones">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; <span class="current">Sesiones en vivo</span></div>
+    <h1 class="page-title">Sesiones en vivo</h1>
+    <p class="page-subtitle">Uníte a una sesión de tu materia mientras esté en espera o en curso.</p>
+    <div class="card-grid">
+      <div class="card" onclick="go('est-sala-espera')">
+        <div class="card-title">Ingeniería de Software</div>
+        <div class="card-meta">10 preguntas · 20s cada una</div>
+        <div class="card-foot"><span class="badge espera">En espera</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gestión de Proyectos</div>
+        <div class="card-meta">Sin sesión activa</div>
+        <div class="card-foot"><span class="badge finalizada">—</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ESTUDIANTE — SALA DE ESPERA -->
+<section class="screen" id="est-sala-espera">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card">
+      <div class="center-icon">🎮</div>
+      <h1 class="page-title">¡Te uniste!</h1>
+      <p class="page-subtitle">Esperando que el docente inicie la sesión — mirá la proyección del aula.</p>
+      <div class="alert success"><span class="icon">✓</span><div class="body"><strong>14 participantes</strong>ya en la sala</div></div>
+      <button class="btn full" onclick="go('est-pregunta')" disabled>Esperando al docente…</button>
+    </div>
+  </div>
+</section>
+
+<!-- 8. ESTUDIANTE — PREGUNTA ACTIVA -->
+<section class="screen" id="est-pregunta">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="progress-bar" style="height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:6px;"><div style="height:100%;width:70%;background:var(--accent);"></div></div>
+    <div class="page-subtitle" style="display:flex;justify-content:space-between;">Pregunta 3 de 10 <strong style="color:var(--destructive);">00:14</strong></div>
+    <div style="font-size:17px;font-weight:600;margin-bottom:14px;">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta?</div>
+    <div class="tap-options">
+      <button class="tap-card color-a" onclick="go('est-resultado-pregunta')">Principio de sustitución de Liskov</button>
+      <button class="tap-card color-b" onclick="go('est-resultado-pregunta')">Inversión de dependencias</button>
+      <button class="tap-card color-c" onclick="go('est-resultado-pregunta')">Segregación de interfaces</button>
+      <button class="tap-card color-d" onclick="go('est-resultado-pregunta')">Responsabilidad única</button>
+    </div>
+    <div class="hint" style="margin-top:14px;text-align:center;">Tocá una tarjeta para responder — un solo intento, no se puede cambiar después.</div>
+  </div>
+</section>
+
+<!-- 9. ESTUDIANTE — RESULTADO DE LA PREGUNTA (inmediato al tocar, sin ranking) -->
+<section class="screen" id="est-resultado-pregunta">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card">
+      <div class="center-icon">✅</div>
+      <h1 class="page-title">¡Correcto!</h1>
+      <p class="page-subtitle">+ 1850 puntos en esta pregunta</p>
+      <div class="detail-row" style="justify-content:center;gap:10px;border:none;padding-top:0;">
+        <span class="k">Llevás acumulados</span>
+        <span class="v" style="font-size:22px;color:var(--primary-dark);">7420 pts</span>
+      </div>
+      <p class="hint" style="margin-top:18px;">Esperando la próxima pregunta — el ranking se ve recién al final de la sesión.</p>
+      <button class="btn full" style="margin-top:12px;" onclick="go('est-pregunta')">Simular próxima pregunta →</button>
+      <button class="btn outline full" style="margin-top:8px;" onclick="go('est-resultado-final')">Simular fin de sesión →</button>
+    </div>
+  </div>
+</section>
+
+<!-- 11. ESTUDIANTE — RESULTADO FINAL -->
+<section class="screen" id="est-resultado-final">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card">
+      <div class="center-icon">🏆</div>
+      <h1 class="page-title">¡Terminó la sesión!</h1>
+      <p class="page-subtitle">Quedaste 1° con 17 340 puntos</p>
+      <ol class="ranking-list" style="text-align:left;">
+        <li class="yo"><span class="pos">1</span>Vos<span class="pts">17 340</span></li>
+        <li><span class="pos">2</span>Juan Pérez<span class="pts">15 620</span></li>
+        <li><span class="pos">3</span>María Gómez<span class="pts">13 990</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  var autoAdvanceTimer = null;
+  function go(id) {
+    if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+    var navBtn = document.querySelector('.proto-nav button[data-target="' + id + '"]');
+    if (navBtn) navBtn.classList.add('active');
+    window.scrollTo(0, 0);
+    // Histograma → Ranking: automático a los pocos segundos, no requiere acción del
+    // Docente (confirmado con Víctor) — el botón "Ver ranking ahora" solo adelanta la espera.
+    if (id === 'stage-histograma') {
+      autoAdvanceTimer = setTimeout(function () { go('stage-ranking'); }, 5000);
+    }
+  }
+  document.querySelectorAll('.proto-nav button').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(btn.dataset.target); });
+  });
+</script>
+
+</body>
+</html>

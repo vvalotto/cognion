@@ -941,7 +941,7 @@ Merge `develop → main` y tag `v0.7.1` (PATCH, mismo criterio de versionado que
 ejecutados el mismo día. Milestone GitHub [Incremento 5-ADJ](https://github.com/vvalotto/cognion/milestone/13)
 cerrado.
 
-Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10), período abierto — en curso
+Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10) — en curso
 (`docs/plans/inc6/inc6-candidatas.md`, Milestone GitHub
 [Incremento 6](https://github.com/vvalotto/cognion/milestone/8)). Incremento de mayor riesgo
 técnico del proyecto (`PLAN_v1.md`): primer uso real de WebSockets, primer agregado
@@ -951,11 +951,26 @@ BC nuevo, agregado hermano `ActividadEvaluativaEnVivo` ya reservado por `ADR-015
 de modelar. **Spike RF-10 (algoritmo de puntaje) resuelto con Víctor 2026-09-17**, antes de
 arrancar el event storming — ver `docs/plans/inc6/inc6-candidatas.md` §Spike RF-10 para el
 detalle y el razonamiento de las 4 decisiones de producto.
-**Iteración 0 — Modelado, en curso**: event storming de `ActividadEvaluativaEnVivo`
-(`US-6.0.1`) y wireframes de la pantalla en vivo/proyección (`US-6.0.2`) todavía sin arrancar
-— Issues por crear.
+**Iteración 0 — Modelado, cerrada 2026-09-17**: `US-6.0.1` (event storming, Issue #379,
+`docs/design/domain/BC-actividad-evaluativa-modelo.md` §§10-18) y `US-6.0.2` (wireframes +
+prototipo, Issue #380, `docs/design/ux/wireframes-actividad-evaluativa-en-vivo.md` +
+`docs/design/ux/prototipos/actividad-evaluativa-en-vivo.html`), ambas aprobadas por Víctor.
+`US-6.0.2` pasó por seis rondas de ajuste — la más significativa cambió el modelo de dominio
+después de aprobado: la sesión en vivo se crea desde el detalle de **una** Comisión puntual
+(`comision_id` única y obligatoria, vía `ComisionDetalleDocente.tsx`, puerto nuevo
+`ComisionConsultaPort` Actividad Evaluativa → Identidad), no desde la Materia con un checklist
+opcional de Comisiones como período abierto — una sesión en vivo se da en el momento, en la
+clase de una Comisión concreta, sin sentido de "todas". Otras correcciones: histograma de
+respuestas separado del ranking; presentar la pregunta y mostrar sus opciones son dos pasos
+manuales del Docente (opciones en cajas de color sólido, sin ícono); el celular del Estudiante
+también usa tarjetas táctiles de color, respuesta inmediata al tocar, sin botón de
+confirmación; feedback personal (acierto + puntos) inmediato al responder, sin ranking hasta
+el resultado final de la sesión. Criterios de legibilidad en proyección definidos (ítem
+abierto de `RNF_v1.md` resuelto). RF-08, RF-09 y RF-10 pasan de Planificado a Especificado en
+`docs/traceability/matrix.md`.
 
-**Próximo paso:** event storming de `ActividadEvaluativaEnVivo` con Víctor (`US-6.0.1`).
+**Próximo paso:** especificar y crear los Issues de la Iteración 1 (RF-08, infraestructura
+WebSockets) — `docs/plans/inc6/inc6-candidatas.md`.
 **Baseline abierta:** ninguna — `BL-010` cerrada.
 **Branch activo:** `develop`, sincronizado con `origin/develop`. `main` al día en `v0.7.1`.
 
