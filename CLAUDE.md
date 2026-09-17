@@ -941,8 +941,21 @@ Merge `develop → main` y tag `v0.7.1` (PATCH, mismo criterio de versionado que
 ejecutados el mismo día. Milestone GitHub [Incremento 5-ADJ](https://github.com/vvalotto/cognion/milestone/13)
 cerrado.
 
-**Próximo paso:** retomar Incremento 6 (Sesión en Vivo, `PLAN_v1.md`) — Iteración 0 incluye el
-spike del algoritmo de puntaje en vivo (RF-10, ítem abierto).
+Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10), período abierto — en curso
+(`docs/plans/inc6/inc6-candidatas.md`, Milestone GitHub
+[Incremento 6](https://github.com/vvalotto/cognion/milestone/8)). Incremento de mayor riesgo
+técnico del proyecto (`PLAN_v1.md`): primer uso real de WebSockets, primer agregado
+sincrónico multi-participante, primer RNF de rendimiento duro verificado con datos reales
+(≤100ms server-side, `RNF_v1.md`). Mismo BC que el Incremento 3 (`Actividad Evaluativa`) — sin
+BC nuevo, agregado hermano `ActividadEvaluativaEnVivo` ya reservado por `ADR-015` desde antes
+de modelar. **Spike RF-10 (algoritmo de puntaje) resuelto con Víctor 2026-09-17**, antes de
+arrancar el event storming — ver `docs/plans/inc6/inc6-candidatas.md` §Spike RF-10 para el
+detalle y el razonamiento de las 4 decisiones de producto.
+**Iteración 0 — Modelado, en curso**: event storming de `ActividadEvaluativaEnVivo`
+(`US-6.0.1`) y wireframes de la pantalla en vivo/proyección (`US-6.0.2`) todavía sin arrancar
+— Issues por crear.
+
+**Próximo paso:** event storming de `ActividadEvaluativaEnVivo` con Víctor (`US-6.0.1`).
 **Baseline abierta:** ninguna — `BL-010` cerrada.
 **Branch activo:** `develop`, sincronizado con `origin/develop`. `main` al día en `v0.7.1`.
 
@@ -1188,7 +1201,13 @@ Decidir el track **antes de codear**:
 
 ## Ítems abiertos que requieren decisión
 
-- **Algoritmo de puntaje en modo en vivo** (RF-10): combina tiempo, corrección, dificultad e importancia. Se cierra como spike en Incremento 6, Iteración 0.
+- ~~**Algoritmo de puntaje en modo en vivo** (RF-10)~~ — **resuelto 2026-09-17** con Víctor,
+  antes del event storming del Incremento 6, Iteración 0
+  (`docs/plans/inc6/inc6-candidatas.md` §Spike RF-10): `Puntaje = 1000 × FactorTiempo ×
+  FactorDificultad × FactorImportancia` (0 si incorrecta), `FactorTiempo` lineal en `[0.5, 1.0]`
+  según `tiempo_respuesta`/`tiempo_límite_sesión` (fijo por sesión, sin default),
+  `FactorDificultad`/`FactorImportancia` en `{1.0, 1.5, 2.0}` por nivel BAJO/MEDIO/ALTO,
+  ranking = suma simple sin bonus por racha.
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
 - **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción
   pendiente de decisión institucional (nube vs. servidor FIUNER) y del mecanismo de backup
