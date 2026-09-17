@@ -97,8 +97,19 @@ inmutable durante la sesión.
 
 | US | Tipo | Descripción | Postcondición (DoD) | Path del artefacto | Issue |
 |---|---|---|---|---|---|
-| US-6.0.1 | Modelado | Event storming de `ActividadEvaluativaEnVivo`: eventos de tiempo real, invariantes de sincronización y de ranking, incorporando la fórmula de puntaje ya resuelta arriba | Víctor aprueba el modelo en el comentario de cierre del Issue | `docs/design/domain/BC-actividad-evaluativa-modelo.md` (sección nueva — no se reescribe la de `ActividadEvaluativaPeriodoAbierto`) | pendiente |
-| US-6.0.2 | UX | Wireframes/prototipo de la pantalla en vivo (estudiante) y de proyección (aula) | Víctor aprueba el artefacto en el comentario de cierre del Issue | `docs/design/ux/wireframes-actividad-evaluativa-en-vivo.md` + prototipo HTML | pendiente |
+| US-6.0.1 | Modelado | Event storming de `ActividadEvaluativaEnVivo`: eventos de tiempo real, invariantes de sincronización y de ranking, incorporando la fórmula de puntaje ya resuelta arriba | Víctor aprueba el modelo en el comentario de cierre del Issue | `docs/design/domain/BC-actividad-evaluativa-modelo.md` §§10-18 (sección nueva — no se reescribe la de `ActividadEvaluativaPeriodoAbierto`) | [#379](https://github.com/vvalotto/cognion/issues/379) |
+| US-6.0.2 | UX | Wireframes/prototipo de la pantalla en vivo (estudiante) y de proyección (aula) | Víctor aprueba el artefacto en el comentario de cierre del Issue | `docs/design/ux/wireframes-actividad-evaluativa-en-vivo.md` + prototipo HTML | [#380](https://github.com/vvalotto/cognion/issues/380) |
+
+~~US-6.0.1~~ Cerrada 2026-09-17, Issue #379 — 4 hot spots confirmados en una única ronda (sala
+de espera, unión tardía permitida, un solo intento por pregunta, avance en dos pasos).
+
+~~US-6.0.2~~ Cerrada 2026-09-17, Issue #380 — seis rondas de ajuste con Víctor: histograma +
+ranking separados; presentar pregunta y mostrar opciones en dos pasos manuales (color sólido,
+sin ícono); tarjetas táctiles de color también en el celular del Estudiante, respuesta
+inmediata al tocar; feedback personal sin ranking hasta el resultado final; y el cambio más
+importante de modelo — la sesión se crea desde **una** Comisión puntual (`comision_id` única y
+obligatoria vía `ComisionDetalleDocente.tsx`), no desde la Materia con comisiones opcionales
+como período abierto. **Cierra completa la Iteración 0 del Incremento 6.**
 
 Al cerrar la Iteración 0: actualizar `docs/traceability/matrix.md` — RF-08, RF-09 y RF-10
 pasan de *Planificado* a *Especificado*.

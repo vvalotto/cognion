@@ -3,7 +3,13 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-17 — Cierre del Incremento 5-ADJ completo (Identidad
+> Última actualización: 2026-09-17 — Cierre de la Iteración 0 (Modelado) del Incremento 6
+> (Sesión en Vivo): `US-6.0.1` (event storming, Issue #379) y `US-6.0.2` (wireframes/prototipo,
+> Issue #380, seis rondas de ajuste con Víctor) aprobadas. **RF-08, RF-09 y RF-10 pasan de
+> "Planificado" a "Especificado"** — el modelo de dominio y la UX ya están aprobados, aunque las
+> US-IEDD de feature de las Iteraciones 1 y 2 todavía no se escribieron.
+>
+> 2026-09-17 — Cierre del Incremento 5-ADJ completo (Identidad
 > Autoservicio y Analytics del Docente, 5 iteraciones: Modelado, contraseña segura y accesible,
 > recuperación de contraseña, autoregistro, Analytics). Cada iteración con código de producción
 > (1 a 4) ya había corrido su propia verificación (986→1196/1196 tests backend en verde a lo
@@ -165,9 +171,9 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Validado |
 | RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Validado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
-| RF-08 | Actividad Evaluativa | 6 | — | Planificado |
-| RF-09 | Actividad Evaluativa | 6 | — | Planificado |
-| RF-10 | Actividad Evaluativa | 6 | — | Planificado |
+| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado) | Especificado |
+| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado) | Especificado |
+| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado) | Especificado |
 | RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.2 (backend); US-3.4.3 (frontend) | Validado |
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
