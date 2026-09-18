@@ -1,0 +1,44 @@
+{
+  "us_id": "US-6.1.1",
+  "fecha": "2026-09-18T11:10:00",
+  "componente": "src/actividad_evaluativa (entities/ports, frameworks/websockets, frameworks/adapters, frameworks/api, frameworks/dependencies.py, src/app.py)",
+  "metricas": {
+    "pylint": 9.41,
+    "cc_max": 5,
+    "mi_promedio": 96.72,
+    "coverage_entities": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 9,
+    "errors": 5,
+    "warnings": 43,
+    "infos": 62,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 9},
+      "PEP8": {"errors": 0, "warnings": 1, "infos": 8},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 9},
+      "DeadCode": {"errors": 3, "warnings": 28, "infos": 1},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 9},
+      "Pylint": {"errors": 2, "warnings": 0, "infos": 7},
+      "Spelling": {"errors": 0, "warnings": 14, "infos": 2},
+      "Types": {"errors": 0, "warnings": 0, "infos": 8},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 9}
+    },
+    "reporte": "quality/reports/inc6/US-6.1.1-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "DeadCode (vulture) marca como error 'no usado' los parámetros de los dos métodos abstractos nuevos (CanalTiempoRealPort.publicar, ComisionConsultaPort.obtener_materia_id) — mismo falso positivo 100% confidence ya presente y aceptado en todos los puertos ABC existentes del proyecto (verificado corriendo codeguard sobre materia_consulta_port.py: mismo patrón exacto). No requiere acción.",
+    "Pylint reporta 2 errores de herramienta, no de código: 'Could not extract pylint score' sobre frameworks/websockets/__init__.py (archivo de un solo docstring, nada que puntuar) y 'pylint execution timed out (>10s)' sobre src/app.py (archivo con la cadena de imports más larga del proyecto) — mismo patrón de timeout de herramienta ya documentado en CLAUDE.md para el check de Types de CodeGuard/mypy. pylint corrido directamente (sin timeout) sobre los 7 archivos de código nuevo da 9.41/10.",
+    "CC máximo real: 5 (canal_sesion_en_vivo, el endpoint WS con la lógica de rechazo de auth) — muy por debajo del umbral de 10.",
+    "MI mínimo real: 87.61 (connection_manager.py) — muy por encima del umbral de 20/25.",
+    "Coverage: el proyecto excluye frameworks/* del gate de cobertura (pyproject.toml [tool.coverage.run] omit) — mismo criterio aplicado a todas las US anteriores de este BC. Los dos archivos de entities/ports nuevos (los únicos que cuentan para el gate) están al 100%. Los componentes de frameworks/ (ConnectionManager, WebSocketCanalTiempoReal, ComisionConsultaPortInProcess, el router WS) tienen tests unitarios propios (12/12 pasando, tests/unit/inc6/) y de integración (5/5 pasando, tests/integration/inc6/test_canal_tiempo_real.py) igualmente, aunque no cuenten para el porcentaje.",
+    "Suite completa del proyecto (tests/unit/ + tests/integration/) corrida sin acotar: 946 passed, sin regresiones."
+  ]
+}

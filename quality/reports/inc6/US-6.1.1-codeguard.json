@@ -1,0 +1,2352 @@
+{
+  "summary": {
+    "total_files": 9,
+    "checks_executed": 9,
+    "elapsed_seconds": 62.61,
+    "timestamp": "2026-09-18T11:07:34.999216",
+    "total_issues": 110,
+    "errors": 5,
+    "warnings": 43,
+    "infos": 62
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CanalTiempoRealPort' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": 15
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'publicar' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": 18
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'mensaje' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": 19
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": 19
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.33/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'cliente' should be 'client,'",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": 23
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": 17
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_materia_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": 20
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": 21
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": 1
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": 18
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 20
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'obtener_materia_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 27
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 95.1 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.23/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 24
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 29
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 30
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 32
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'logger' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 20
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'canal_sesion_en_vivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 25
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 91.2 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Suscribe' should be 'Subscribe'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 29
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'cliente' should be 'client,'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 29
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 54
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 103
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 108
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 131
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 140
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 158
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 161
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante_o_docente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 164
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 173
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 187
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 197
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 204
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_connection_manager' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 232
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_canal_tiempo_real' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 237
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 242
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.90/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'accesible' should be 'accessible'",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 168
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'hace' should be 'have'",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 169
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ No complex functions detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "Could not extract pylint score from output",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ConnectionManager' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": 20
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'conectar' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'enviar_a_sesion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": 45
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 87.6 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.63/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'cliente' should be 'client,'",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": 48
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'ignora' should be 'ignore'",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": 49
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'WebSocketCanalTiempoReal' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": 12
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'publicar' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": 19
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'health' is never used (60% confidence)",
+      "file": "src/app.py",
+      "line": 105
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'mata' should be 'meta,'",
+      "file": "src/app.py",
+      "line": 53
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/app.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/app.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'mensaje' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 19
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 19
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 21
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "Could not extract pylint score from output",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/app.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CanalTiempoRealPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'publicar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 18
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 20
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 1
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 18
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 27
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 24
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 29
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 30
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'logger' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'canal_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 25
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Suscribe' should be 'Subscribe'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 29
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 29
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 54
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 103
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 108
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 131
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 140
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 158
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 161
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante_o_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 164
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 173
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 187
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 197
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 204
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_connection_manager' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 232
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_canal_tiempo_real' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 237
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 242
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'accesible' should be 'accessible'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 168
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 169
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ConnectionManager' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'conectar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'enviar_a_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 45
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 48
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ignora' should be 'ignore'",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'WebSocketCanalTiempoReal' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": 12
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'publicar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": 19
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'health' is never used (60% confidence)",
+        "file": "src/app.py",
+        "line": 105
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'mata' should be 'meta,'",
+        "file": "src/app.py",
+        "line": 53
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.33/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 95.1 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.23/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 91.2 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.90/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ No complex functions detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 87.6 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.63/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/app.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/comision_consulta_port_in_process.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 27
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 95.1 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.23/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 24
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 29
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 30
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 32
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "api/sesiones_en_vivo_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'logger' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'canal_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 25
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 91.2 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Suscribe' should be 'Subscribe'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 29
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 29
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 54
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 103
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 108
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 131
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 140
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 158
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 161
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante_o_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 164
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 173
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 187
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 197
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 204
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_connection_manager' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 232
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_canal_tiempo_real' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 237
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 242
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.90/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'accesible' should be 'accessible'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 168
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 169
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "ports/canal_tiempo_real_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CanalTiempoRealPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'publicar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 18
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'mensaje' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 19
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 19
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.33/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": 23
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/canal_tiempo_real_port.py",
+        "line": null
+      }
+    ],
+    "ports/comision_consulta_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 17
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'obtener_materia_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 21
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 1
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": 18
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py",
+        "line": null
+      }
+    ],
+    "src/app.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'health' is never used (60% confidence)",
+        "file": "src/app.py",
+        "line": 105
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'mata' should be 'meta,'",
+        "file": "src/app.py",
+        "line": 53
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/app.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/app.py",
+        "line": null
+      }
+    ],
+    "websockets/__init__.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ No complex functions detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "Could not extract pylint score from output",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/__init__.py",
+        "line": null
+      }
+    ],
+    "websockets/connection_manager.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ConnectionManager' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 20
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'conectar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'enviar_a_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 45
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 87.6 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.63/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 48
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ignora' should be 'ignore'",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": 49
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/connection_manager.py",
+        "line": null
+      }
+    ],
+    "websockets/websocket_canal_tiempo_real.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'WebSocketCanalTiempoReal' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": 12
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'publicar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": 19
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/websockets/websocket_canal_tiempo_real.py",
+        "line": null
+      }
+    ]
+  }
+}
