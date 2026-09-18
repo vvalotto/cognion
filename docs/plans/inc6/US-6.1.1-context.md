@@ -30,9 +30,9 @@
   - cobertura ≥ 95.0%
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-6.1.1-context.md
+- Contexto: docs/plans/inc6/US-6.1.1-context.md
 - BDD feature: tests/features/inc6/US-6.1.1.feature
-- Plan: docs/plans/US-6.1.1-plan.md
+- Plan: docs/plans/inc6/US-6.1.1-plan.md
 - Reporte: docs/reports/inc6/US-6.1.1-report.md
 - Quality report: quality/reports/inc6/US-6.1.1-quality.json
 
