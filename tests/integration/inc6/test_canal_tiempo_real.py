@@ -61,9 +61,7 @@ class TestAislamientoEntreCanales:
                 client.websocket_connect(_url_canal(sesion_a, _token())) as ws_a,
                 client.websocket_connect(_url_canal(sesion_b, _token())) as ws_b,
             ):
-                client.portal.call(
-                    connection_manager.enviar_a_sesion, sesion_a, {"tipo": "solo-a"}
-                )
+                client.portal.call(connection_manager.enviar_a_sesion, sesion_a, {"tipo": "solo-a"})
                 client.portal.call(
                     connection_manager.enviar_a_sesion,
                     sesion_b,

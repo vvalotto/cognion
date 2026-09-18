@@ -17,5 +17,5 @@ class WebSocketCanalTiempoReal(CanalTiempoRealPort):
         self._connection_manager = connection_manager
 
     async def publicar(self, sesion_id: UUID, mensaje: dict[str, Any]) -> None:
-        """Transmite `mensaje` a todas las conexiones activas del canal de `sesion_id`."""
+        """Transmitir `mensaje` a todas las conexiones activas del canal de `sesion_id`."""
         await self._connection_manager.enviar_a_sesion(sesion_id, mensaje)
