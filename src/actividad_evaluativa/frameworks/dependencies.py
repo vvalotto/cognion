@@ -13,10 +13,15 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
+from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.frameworks.adapters.actividad_query_repository import (
     SQLAlchemyActividadQueryRepository,
+)
+from src.actividad_evaluativa.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
 )
 from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
@@ -38,6 +43,10 @@ from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_proc
 )
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.websockets.connection_manager import ConnectionManager
+from src.actividad_evaluativa.frameworks.websockets.websocket_canal_tiempo_real import (
+    WebSocketCanalTiempoReal,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
@@ -211,3 +220,25 @@ def build_verificar_vencimientos_use_case(session: AsyncSession) -> VerificarVen
         FinalizarEvaluacionUseCase(event_store),
         umbral_inactividad,
     )
+
+
+_connection_manager = ConnectionManager()
+"""Singleton del proceso (`US-6.1.1`) — vive fuera del ciclo de request/response de FastAPI,
+mismo criterio que el background task de `VerificarVencimientosUseCase` (`US-3.2.4`): las
+conexiones WebSocket de una sesión deben sobrevivir a cada request individual, no solo a la
+sesión de base de datos de un endpoint."""
+
+
+def get_connection_manager() -> ConnectionManager:
+    """Provee el `ConnectionManager` singleton del proceso."""
+    return _connection_manager
+
+
+def get_canal_tiempo_real() -> CanalTiempoRealPort:
+    """Provee la implementación de `CanalTiempoRealPort` sobre el `ConnectionManager` singleton."""
+    return WebSocketCanalTiempoReal(_connection_manager)
+
+
+def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
+    """Provee `ComisionConsultaPort` (Actividad Evaluativa → Identidad, `US-6.1.1`)."""
+    return ComisionConsultaPortInProcess(session)

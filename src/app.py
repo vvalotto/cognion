@@ -14,6 +14,9 @@ from src.actividad_evaluativa.frameworks.api.evaluaciones_router import (
     router as evaluaciones_router,
 )
 from src.actividad_evaluativa.frameworks.api.revision_router import router as revision_router
+from src.actividad_evaluativa.frameworks.api.sesiones_en_vivo_router import (
+    router as sesiones_en_vivo_router,
+)
 from src.actividad_evaluativa.frameworks.dependencies import (
     build_verificar_vencimientos_use_case,
 )
@@ -95,6 +98,7 @@ app.include_router(bancos_router)
 app.include_router(actividades_router)
 app.include_router(evaluaciones_router)
 app.include_router(revision_router)
+app.include_router(sesiones_en_vivo_router)
 app.include_router(analytics_router)
 
 
