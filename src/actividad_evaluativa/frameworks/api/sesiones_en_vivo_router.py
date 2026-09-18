@@ -1,7 +1,7 @@
 """Router de infraestructura de tiempo real de sesiones en vivo (`US-6.1.1`).
 
-Arranca solo con el canal de broadcast por WebSocket — `US-6.1.2` a `US-6.1.4` agregan acá los
-endpoints HTTP de negocio (crear, unirse, iniciar).
+Arrancó con el canal de broadcast por WebSocket; `US-6.1.2` agrega `POST /sesiones-en-vivo`
+(crear) y `US-6.1.3`/`US-6.1.4` agregan acá el resto de los endpoints HTTP (unirse, iniciar).
 """
 
 from __future__ import annotations
@@ -9,17 +9,69 @@ from __future__ import annotations
 import logging
 from uuid import UUID
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, status
+from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect, status
 
+from src.actividad_evaluativa.entities.errors import (
+    ComisionNoExiste,
+    PreguntasInsuficientes,
+    TiempoLimiteInvalido,
+)
+from src.actividad_evaluativa.frameworks.api.schemas import (
+    CrearSesionEnVivoRequest,
+    SesionEnVivoResponse,
+)
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_connection_manager,
     get_jwt_issuer,
+    get_sesiones_en_vivo_controller,
+    require_docente,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
+    SesionesEnVivoController,
 )
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/sesiones-en-vivo", tags=["actividad_evaluativa_en_vivo"])
+
+
+@router.post(
+    "",
+    response_model=SesionEnVivoResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_docente)],
+)
+async def crear_sesion_en_vivo(
+    body: CrearSesionEnVivoRequest,
+    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Crea una sesión en vivo para una Comisión; responde 404/422 ante los rechazos de dominio."""
+    try:
+        sesion = await controller.crear(
+            body.comision_id,
+            body.cantidad_preguntas,
+            body.tiempo_limite_por_pregunta_segundos,
+            body.unidad_tematica,
+            body.tema,
+        )
+    except ComisionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (PreguntasInsuficientes, TiempoLimiteInvalido) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return SesionEnVivoResponse(
+        id=sesion.id,
+        comision_id=sesion.comision_id,
+        materia_id=sesion.materia_id,
+        unidad_tematica=sesion.unidad_tematica,
+        tema=sesion.tema,
+        cantidad_preguntas=len(sesion.preguntas),
+        tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
+        estado=sesion.estado.value,
+    )
 
 
 @router.websocket("/{sesion_id}/canal")

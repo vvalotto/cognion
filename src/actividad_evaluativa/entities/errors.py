@@ -221,3 +221,24 @@ class EvaluacionNoFinalizada(Exception):
             f"La evaluación '{evaluacion_id}' todavía no fue finalizada — la revisión no está "
             "disponible."
         )
+
+
+class ComisionNoExiste(Exception):
+    """`comision_id` no corresponde a ninguna `Comision` existente en BC Identidad (`US-6.1.2`)."""
+
+    def __init__(self, comision_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.comision_id = comision_id
+        super().__init__(f"La comisión '{comision_id}' no existe.")
+
+
+class TiempoLimiteInvalido(Exception):
+    """`tiempo_limite_por_pregunta_segundos` no es mayor a 0 (INV-AEV-02)."""
+
+    def __init__(self, tiempo_limite_segundos: int) -> None:
+        """Guarda el valor inválido y arma el mensaje de la excepción."""
+        self.tiempo_limite_segundos = tiempo_limite_segundos
+        super().__init__(
+            f"El tiempo límite por pregunta debe ser mayor a 0 segundos, se recibió "
+            f"{tiempo_limite_segundos}."
+        )

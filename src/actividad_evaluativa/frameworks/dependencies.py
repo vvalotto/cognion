@@ -63,10 +63,14 @@ from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_contro
 from src.actividad_evaluativa.interface_adapters.controllers.revision_controller import (
     RevisionController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
+    SesionesEnVivoController,
+)
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
@@ -242,3 +246,14 @@ def get_canal_tiempo_real() -> CanalTiempoRealPort:
 def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
     """Provee `ComisionConsultaPort` (Actividad Evaluativa → Identidad, `US-6.1.1`)."""
     return ComisionConsultaPortInProcess(session)
+
+
+def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
+    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2`)."""
+    return SesionesEnVivoController(
+        CrearSesionEnVivoUseCase(
+            ComisionConsultaPortInProcess(session),
+            PreguntaConsultaPortInProcess(session),
+            SQLAlchemyEventStore(session),
+        )
+    )

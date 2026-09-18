@@ -1,6 +1,6 @@
 # US-6.1.2: Docente crea una sesión en vivo desde el detalle de una Comisión
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.1`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`

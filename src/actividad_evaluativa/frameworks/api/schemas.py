@@ -201,3 +201,32 @@ class RevisionEvaluacionResponse(BaseModel):
     cantidad_correctas: int
     cantidad_incorrectas: int
     detalle: list[DetallePreguntaRevisionResponse]
+
+
+class CrearSesionEnVivoRequest(BaseModel):
+    """Body de la request de alta de una sesión en vivo (`US-6.1.2`, RF-08).
+
+    `tiempo_limite_por_pregunta_segundos` no lleva `gt=0` a propósito: INV-AEV-02 se valida en
+    el aggregate (`TiempoLimiteInvalido`, 422), no con el 422 genérico de Pydantic.
+    """
+
+    comision_id: UUID
+    cantidad_preguntas: int = Field(..., ge=1)
+    tiempo_limite_por_pregunta_segundos: int
+    unidad_tematica: str | None = None
+    """`None`/omitido (default) = las preguntas salen de cualquier unidad temática del banco."""
+    tema: str | None = None
+    """`None`/omitido (default) = las preguntas salen de cualquier tema del banco."""
+
+
+class SesionEnVivoResponse(BaseModel):
+    """Resumen de una `ActividadEvaluativaEnVivo` recién creada (sin las preguntas, `US-6.1.2`)."""
+
+    id: UUID
+    comision_id: UUID
+    materia_id: UUID
+    unidad_tematica: str | None
+    tema: str | None
+    cantidad_preguntas: int
+    tiempo_limite_por_pregunta_segundos: int
+    estado: str
