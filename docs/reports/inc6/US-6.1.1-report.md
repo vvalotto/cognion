@@ -122,8 +122,8 @@ sin regresiones.
 
 ### Documentación
 
-- `docs/plans/US-6.1.1-context.md`
-- `docs/plans/US-6.1.1-plan.md`
+- `docs/plans/inc6/US-6.1.1-context.md`
+- `docs/plans/inc6/US-6.1.1-plan.md`
 - `docs/reports/inc6/US-6.1.1-report.md` (este archivo)
 - `quality/reports/inc6/US-6.1.1-quality.json`
 - `quality/reports/inc6/US-6.1.1-codeguard.json`
