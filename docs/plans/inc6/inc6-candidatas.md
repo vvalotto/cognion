@@ -118,7 +118,23 @@ pasan de *Planificado* a *Especificado*.
 
 ## Iteración 1 — RF-08: creación de sesión en vivo + infraestructura WebSockets
 
-Sin especificar todavía — depende del cierre de la Iteración 0.
+Backend únicamente — mismo criterio de diferir frontend que la Iteración 1 del Incremento 3
+(sin frontend propio todavía en `inc6-candidatas.md`). Alcance: hasta que la sesión queda
+`EnCurso` con el enunciado de la primera pregunta transmitido — mostrar opciones, responder,
+cerrar, avanzar, finalizar y el cálculo de puntaje/ranking quedan en la Iteración 2 (RF-09,
+RF-10).
+
+| US | Tipo | Comando/Evento | Actor | Invariantes | Issue |
+|---|---|---|---|---|---|
+| **US-6.1.1** *(técnica)* | Infraestructura: canal WebSocket por `sesion_id` (`CanalTiempoRealPort`), autenticación JWT sobre WS por query param, `ComisionConsultaPort` nuevo (Actividad Evaluativa → Identidad) para resolver `materia_id` desde `comision_id` (§16, §17 punto 11) | — (sin comando de negocio propio) | — | — | [#382](https://github.com/vvalotto/cognion/issues/382) |
+| **US-6.1.2** | Docente crea una sesión en vivo desde el detalle de una Comisión | `CrearSesionEnVivo(comision_id, unidad_tematica?, tema?, cantidad_preguntas, tiempo_limite_por_pregunta_segundos)` → `SesionEnVivoCreada` | Docente | INV-AEV-01, INV-AEV-02 | [#383](https://github.com/vvalotto/cognion/issues/383) |
+| **US-6.1.3** | Estudiante se une a la sesión (sala de espera o unión tardía ya `EnCurso`) | `UnirseASesionEnVivo(sesion_id, estudiante_id)` → `EstudianteUnido` | Estudiante | INV-AEV-06 (idempotente) | [#384](https://github.com/vvalotto/cognion/issues/384) |
+| **US-6.1.4** | Docente inicia la sesión — se presenta el enunciado de la primera pregunta | `IniciarSesionEnVivo(sesion_id)` → `SesionEnVivoIniciada` | Docente | — | [#385](https://github.com/vvalotto/cognion/issues/385) |
+
+**Orden de implementación:** US-6.1.1 primero (bloquea todo el resto). US-6.1.2 antes que
+US-6.1.3/US-6.1.4 (no se puede unir ni iniciar una sesión que no existe).
+
+Specs en `docs/specs/inc6/US-6.1.1.md` a `US-6.1.4.md`.
 
 ## Iteración 2 — RF-09, RF-10: dinámica en tiempo real, ranking, cálculo de puntaje
 
