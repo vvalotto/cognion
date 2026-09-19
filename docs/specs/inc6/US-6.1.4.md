@@ -1,6 +1,6 @@
 # US-6.1.4: Docente inicia la sesión en vivo — se presenta la primera pregunta
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.1`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`

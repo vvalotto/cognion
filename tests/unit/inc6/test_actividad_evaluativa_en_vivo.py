@@ -193,3 +193,75 @@ class TestValidarParaUnirse:
 
         with pytest.raises(SesionYaFinalizada):
             sesion.validar_para_unirse()
+
+
+class TestIniciar:
+    def test_pasa_a_en_curso_con_la_primera_pregunta_actual(self):
+        preguntas = _preguntas(3)
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), preguntas, 30)
+
+        sesion.iniciar()
+
+        assert sesion.estado == EstadoSesionEnVivo.EN_CURSO
+        assert sesion.pregunta_actual_indice == 0
+        assert sesion.opciones_mostradas is False
+        assert sesion.pregunta_actual_cerrada is False
+        assert sesion.pregunta_actual() == preguntas[0]
+
+    @pytest.mark.parametrize("estado", [EstadoSesionEnVivo.EN_CURSO, EstadoSesionEnVivo.FINALIZADA])
+    def test_rechaza_si_ya_no_esta_en_espera(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionYaIniciada):
+            sesion.iniciar()
+
+    def test_no_muta_si_se_rechaza(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = EstadoSesionEnVivo.FINALIZADA
+
+        with pytest.raises(SesionYaIniciada):
+            sesion.iniciar()
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+        assert sesion.pregunta_actual_indice is None
+
+    def test_pregunta_actual_sin_iniciar_levanta(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        with pytest.raises(ValueError):
+            sesion.pregunta_actual()
+
+
+class TestReconstruirConInicioReal:
+    def test_toma_la_pregunta_actual_del_payload(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
+
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        iniciada = EventoAlmacenado(
+            sequence_number=2,
+            event_type="SesionEnVivoIniciada",
+            payload={"sesion_id": str(original.id), "pregunta_actual_indice": 0},
+            occurred_at=datetime.now(UTC),
+        )
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir([_evento_creada(original), iniciada])
+
+        assert sesion.estado == EstadoSesionEnVivo.EN_CURSO
+        assert sesion.pregunta_actual_indice == 0
+        assert sesion.pregunta_actual() == original.preguntas[0]
+
+    def test_payload_minimo_sembrado_asume_la_primera_pregunta(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [_evento_creada(original), _evento("SesionEnVivoIniciada", 2)]
+        )
+
+        assert sesion.pregunta_actual_indice == 0

@@ -17,6 +17,7 @@ from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
+    iniciar_sesion,
     preparar_sesion,
     sembrar_evento_de_sesion,
 )
@@ -72,11 +73,17 @@ async def _eventos_de_participacion(sesion_id: str) -> list[dict]:
         return [fila[0] for fila in resultado.all()]
 
 
-def _preparar(context, *, sembrar: tuple[str, ...] = ()) -> None:
-    """Crea la sesión (US-6.1.2) y un Estudiante de su Comisión; siembra estados posteriores."""
+def _preparar(context, *, iniciada: bool = False, finalizada: bool = False) -> None:
+    """Crea la sesión (US-6.1.2) y un Estudiante de su Comisión.
+
+    `iniciada` usa el endpoint real (US-6.1.4); `finalizada` siembra el evento, porque
+    `FinalizarSesionEnVivo` es de la Iteración 2.
+    """
     context["sesion_id"], comision_id = run_async(preparar_sesion())
-    for secuencia, tipo in enumerate(sembrar, start=2):
-        run_async(sembrar_evento_de_sesion(context["sesion_id"], tipo, secuencia))
+    if iniciada or finalizada:
+        run_async(iniciar_sesion(context["sesion_id"]))
+    if finalizada:
+        run_async(sembrar_evento_de_sesion(context["sesion_id"], "SesionEnVivoFinalizada", 3))
     context["estudiante_id"], context["headers"] = run_async(crear_estudiante(comision_id))
 
 
@@ -87,12 +94,12 @@ def sesion_en_espera(context):
 
 @given("una sesión en vivo en estado EnCurso, en la tercera pregunta")
 def sesion_en_curso(context):
-    _preparar(context, sembrar=("SesionEnVivoIniciada",))
+    _preparar(context, iniciada=True)
 
 
 @given("una sesión en vivo en estado Finalizada")
 def sesion_finalizada(context):
-    _preparar(context, sembrar=("SesionEnVivoIniciada", "SesionEnVivoFinalizada"))
+    _preparar(context, finalizada=True)
 
 
 @given("un Estudiante ya unido a una sesión")

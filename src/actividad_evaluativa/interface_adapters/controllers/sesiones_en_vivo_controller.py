@@ -9,6 +9,9 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 )
 from src.actividad_evaluativa.entities.participacion_en_vivo import ParticipacionEnVivo
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
+from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
+    IniciarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     UnirseASesionEnVivoUseCase,
 )
@@ -18,11 +21,15 @@ class SesionesEnVivoController:
     """Adapta requests HTTP a los casos de uso sobre sesiones en vivo."""
 
     def __init__(
-        self, crear_sesion: CrearSesionEnVivoUseCase, unirse: UnirseASesionEnVivoUseCase
+        self,
+        crear_sesion: CrearSesionEnVivoUseCase,
+        unirse: UnirseASesionEnVivoUseCase,
+        iniciar: IniciarSesionEnVivoUseCase,
     ) -> None:
-        """Recibe los casos de uso de creación de sesión y de unión de un Estudiante."""
+        """Recibe los casos de uso de crear la sesión, unir a un Estudiante e iniciarla."""
         self._crear_sesion = crear_sesion
         self._unirse = unirse
+        self._iniciar = iniciar
 
     async def crear(
         self,
@@ -44,3 +51,7 @@ class SesionesEnVivoController:
     async def unirse(self, sesion_id: UUID, estudiante_id: UUID) -> ParticipacionEnVivo:
         """Delega la unión del Estudiante a la sesión en el caso de uso correspondiente."""
         return await self._unirse.execute(sesion_id, estudiante_id)
+
+    async def iniciar(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+        """Delega el inicio de la sesión en el caso de uso correspondiente."""
+        return await self._iniciar.execute(sesion_id)
