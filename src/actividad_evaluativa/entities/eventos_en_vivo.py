@@ -65,3 +65,33 @@ class EstudianteUnido:
             estudiante_id=participacion.estudiante_id,
             unido_en=participacion.unido_en,
         )
+
+
+@dataclass(frozen=True)
+class SesionEnVivoIniciada:
+    """El Docente inició la sesión — se presenta el enunciado de la primera pregunta.
+
+    Segundo evento del stream de la sesión. Solo el enunciado, sin las opciones: revelarlas es
+    `MostrarOpcionesDeLaPregunta` (Iteración 2). La pregunta se persiste tal como se presentó.
+    """
+
+    sesion_id: UUID
+    pregunta_actual_indice: int
+    pregunta_id: UUID
+    enunciado: str
+    tipo: str
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_sesion(
+        cls, sesion: ActividadEvaluativaEnVivo, enunciado: str, tipo: str
+    ) -> SesionEnVivoIniciada:
+        """Construye el evento a partir de una sesión recién iniciada y el enunciado presentado."""
+        pregunta = sesion.pregunta_actual()  # levanta si la sesión no fue iniciada
+        return cls(
+            sesion_id=sesion.id,
+            pregunta_actual_indice=sesion.pregunta_actual_indice or 0,
+            pregunta_id=pregunta.pregunta_id,
+            enunciado=enunciado,
+            tipo=tipo,
+        )

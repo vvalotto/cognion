@@ -6,7 +6,11 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from uuid import UUID, uuid4
 
-from src.actividad_evaluativa.entities.errors import SesionYaFinalizada, TiempoLimiteInvalido
+from src.actividad_evaluativa.entities.errors import (
+    SesionYaFinalizada,
+    SesionYaIniciada,
+    TiempoLimiteInvalido,
+)
 from src.actividad_evaluativa.entities.evaluacion import PreguntaAsignada
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 
@@ -76,8 +80,9 @@ class ActividadEvaluativaEnVivo:
         """Reconstruye la sesión reproduciendo su stream completo (replay, `ADR-002`).
 
         El primer evento es siempre `SesionEnVivoCreada` (arma los campos base). Los siguientes
-        se aplican según su `event_type`; por ahora solo modifican `estado` — los demás campos
-        de cada transición los define la US que emite el evento (`US-6.1.4` y la Iteración 2).
+        se aplican según su `event_type`; modifican `estado` y, con `SesionEnVivoIniciada`, la
+        pregunta actual. Los demás campos de cada transición los define la US que emite el
+        evento (Iteración 2).
         """
         payload = eventos[0].payload
         sesion = ActividadEvaluativaEnVivo(
@@ -105,6 +110,26 @@ class ActividadEvaluativaEnVivo:
         if self.estado == EstadoSesionEnVivo.FINALIZADA:
             raise SesionYaFinalizada(self.id)
 
+    def iniciar(self) -> None:
+        """Pasa la sesión de `EnEspera` a `EnCurso` con la primera pregunta como actual.
+
+        Levanta `SesionYaIniciada` si ya no está `EnEspera` (`EnCurso` o `Finalizada`) — no hay
+        caso de uso de "reiniciar" una sesión ya arrancada. No exige participantes: el dominio no
+        impone un mínimo (`US-6.1.4`).
+        """
+        if self.estado != EstadoSesionEnVivo.EN_ESPERA:
+            raise SesionYaIniciada(self.id)
+        self.estado = EstadoSesionEnVivo.EN_CURSO
+        self.pregunta_actual_indice = 0
+        self.opciones_mostradas = False
+        self.pregunta_actual_cerrada = False
+
+    def pregunta_actual(self) -> PreguntaAsignada:
+        """Devuelve la pregunta actual — solo válido con la sesión ya iniciada."""
+        if self.pregunta_actual_indice is None:
+            raise ValueError("La sesión todavía no tiene una pregunta actual.")
+        return self.preguntas[self.pregunta_actual_indice]
+
 
 _ESTADO_POR_EVENTO = {
     "SesionEnVivoIniciada": EstadoSesionEnVivo.EN_CURSO,
@@ -117,3 +142,7 @@ def _aplicar_evento(sesion: ActividadEvaluativaEnVivo, evento: EventoAlmacenado)
     nuevo_estado = _ESTADO_POR_EVENTO.get(evento.event_type)
     if nuevo_estado is not None:
         sesion.estado = nuevo_estado
+    if evento.event_type == "SesionEnVivoIniciada":
+        # Default 0: la primera pregunta — mantiene compatibles los streams sembrados con
+        # payload mínimo en los tests de `US-6.1.3`.
+        sesion.pregunta_actual_indice = evento.payload.get("pregunta_actual_indice", 0)

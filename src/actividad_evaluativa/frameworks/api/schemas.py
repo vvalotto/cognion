@@ -220,7 +220,7 @@ class CrearSesionEnVivoRequest(BaseModel):
 
 
 class SesionEnVivoResponse(BaseModel):
-    """Resumen de una `ActividadEvaluativaEnVivo` recién creada (sin las preguntas, `US-6.1.2`)."""
+    """Resumen de una `ActividadEvaluativaEnVivo`, sin las preguntas (`US-6.1.2`/`US-6.1.4`)."""
 
     id: UUID
     comision_id: UUID
@@ -230,6 +230,8 @@ class SesionEnVivoResponse(BaseModel):
     cantidad_preguntas: int
     tiempo_limite_por_pregunta_segundos: int
     estado: str
+    pregunta_actual_indice: int | None = None
+    """`None` con la sesión `EnEspera`; posición de la pregunta actual una vez iniciada."""
 
 
 class ParticipacionEnVivoResponse(BaseModel):

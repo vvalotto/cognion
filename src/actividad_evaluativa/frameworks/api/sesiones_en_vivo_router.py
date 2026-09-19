@@ -11,12 +11,16 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect, status
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+    ActividadEvaluativaEnVivo,
+)
 from src.actividad_evaluativa.entities.errors import (
     ComisionNoExiste,
     EstudianteNoExiste,
     PreguntasInsuficientes,
     SesionNoExiste,
     SesionYaFinalizada,
+    SesionYaIniciada,
     TiempoLimiteInvalido,
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
@@ -41,6 +45,21 @@ from src.shared.entities.jwt import JWTPayload
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/sesiones-en-vivo", tags=["actividad_evaluativa_en_vivo"])
+
+
+def _a_sesion_response(sesion: ActividadEvaluativaEnVivo) -> SesionEnVivoResponse:
+    """Arma el `SesionEnVivoResponse` — compartido por crear e iniciar."""
+    return SesionEnVivoResponse(
+        id=sesion.id,
+        comision_id=sesion.comision_id,
+        materia_id=sesion.materia_id,
+        unidad_tematica=sesion.unidad_tematica,
+        tema=sesion.tema,
+        cantidad_preguntas=len(sesion.preguntas),
+        tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
+        estado=sesion.estado.value,
+        pregunta_actual_indice=sesion.pregunta_actual_indice,
+    )
 
 
 @router.post(
@@ -69,16 +88,29 @@ async def crear_sesion_en_vivo(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
 
-    return SesionEnVivoResponse(
-        id=sesion.id,
-        comision_id=sesion.comision_id,
-        materia_id=sesion.materia_id,
-        unidad_tematica=sesion.unidad_tematica,
-        tema=sesion.tema,
-        cantidad_preguntas=len(sesion.preguntas),
-        tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
-        estado=sesion.estado.value,
-    )
+    return _a_sesion_response(sesion)
+
+
+@router.post(
+    "/{sesion_id}/iniciar",
+    response_model=SesionEnVivoResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def iniciar_sesion_en_vivo(
+    sesion_id: UUID,
+    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Inicia la sesión (`EnEspera` → `EnCurso`) y presenta el enunciado; 404/422 si se rechaza."""
+    try:
+        sesion = await controller.iniciar(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except SesionYaIniciada as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_sesion_response(sesion)
 
 
 @router.post(

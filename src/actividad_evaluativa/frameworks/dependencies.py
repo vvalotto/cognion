@@ -76,6 +76,9 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
+    IniciarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
 from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
@@ -255,7 +258,7 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2`/`6.1.3`)."""
+    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.1.4`)."""
     event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
@@ -267,6 +270,11 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             EstudianteConsultaPortInProcess(session),
             event_store,
             SQLAlchemyParticipantesSesionQueryRepository(session),
+            get_canal_tiempo_real(),
+        ),
+        IniciarSesionEnVivoUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),
     )

@@ -260,3 +260,12 @@ class SesionYaFinalizada(Exception):
         """Guarda el id de la sesión y arma el mensaje de la excepción."""
         self.sesion_id = sesion_id
         super().__init__(f"La sesión en vivo '{sesion_id}' ya está finalizada.")
+
+
+class SesionYaIniciada(Exception):
+    """La sesión en vivo ya no está `EnEspera` — está `EnCurso` o `Finalizada` (`US-6.1.4`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' ya fue iniciada.")
