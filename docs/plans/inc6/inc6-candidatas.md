@@ -1,10 +1,9 @@
 # Incremento 6 — Sesión en Vivo — US candidatas
 
-> Estado documental: **Iteración 0 — Modelado en curso.** Spike del algoritmo de puntaje
-> (RF-10) resuelto con Víctor 2026-09-17 (detalle más abajo). Event storming y wireframes
-> todavía no arrancados. Milestone
-> [`Incremento 6 — Sesión en Vivo`](https://github.com/vvalotto/cognion/milestone/8) (abierto,
-> vacío).
+> Estado documental: **Iteración 0 (Modelado) e Iteración 1 (RF-08 + infraestructura
+> WebSockets) cerradas; Iteración 2 (RF-09, RF-10) especificada 2026-09-19.** Spike del
+> algoritmo de puntaje (RF-10) resuelto con Víctor 2026-09-17 (detalle más abajo). Milestone
+> [`Incremento 6 — Sesión en Vivo`](https://github.com/vvalotto/cognion/milestone/8).
 >
 > Fuente: `docs/rf/PLAN_v1.md` §Incremento 6, `docs/rf/RF_v1.md` (RF-08, RF-09, RF-10),
 > `docs/rf/RNF_v1.md` (Rendimiento, Escenario 1 — ranking en vivo), `ADR-015` (BC Actividad
@@ -138,8 +137,50 @@ Specs en `docs/specs/inc6/US-6.1.1.md` a `US-6.1.4.md`.
 
 ## Iteración 2 — RF-09, RF-10: dinámica en tiempo real, ranking, cálculo de puntaje
 
-Sin especificar todavía — depende del cierre de la Iteración 0 y de la Iteración 1
-(infraestructura WebSockets).
+Backend únicamente — mismo criterio de diferir frontend que la Iteración 1 (el frontend del modo
+en vivo todavía no tiene iteración asignada). Alcance: todo lo que sigue a `SesionEnVivoIniciada`
+— mostrar opciones, responder con puntaje server-side, cerrar (respuesta correcta + histograma +
+ranking), avanzar, finalizar, consultas de estado/ranking para reconexión, y la **verificación**
+del RNF de rendimiento y de la sesión completa.
+
+Decisiones de Víctor (2026-09-19, al especificar la iteración): read models como **tablas
+propias** (modelo §15, no query sobre `events`); incluir la US de consultas/reconexión (`6.2.8`);
+la medición del RNF va como **US de verificación propia** (`6.2.9`).
+
+| US | Tipo | Comando/Evento | Actor | Invariantes | Issue |
+|---|---|---|---|---|---|
+| **US-6.2.1** *(técnica)* | Cálculo de puntaje server-side (fórmula del spike RF-10) + dificultad/importancia por `PreguntaConsultaPort` | — (servicio de dominio puro) | — | — | [#392](https://github.com/vvalotto/cognion/issues/392) |
+| **US-6.2.2** | Docente muestra las opciones de la pregunta actual (arranca el temporizador) | `MostrarOpcionesDeLaPregunta(sesion_id)` → `OpcionesEnVivoMostradas` | Docente | INV-AEV-09 (parte) | [#393](https://github.com/vvalotto/cognion/issues/393) |
+| **US-6.2.3** *(técnica)* | Read models `ranking_por_sesion` y `distribucion_por_pregunta` (tablas + migración, atómicos con el evento) | — | — | contrato de atomicidad evento + proyección | [#394](https://github.com/vvalotto/cognion/issues/394) |
+| **US-6.2.4** | Estudiante responde una pregunta (un intento, tiempo medido por el servidor, feedback personal) | `ResponderPreguntaEnVivo(...)` → `RespuestaEnVivoRegistrada` | Estudiante | INV-AEV-07/08/09 | [#395](https://github.com/vvalotto/cognion/issues/395) |
+| **US-6.2.5** | Docente cierra la pregunta: respuesta correcta + histograma + ranking (RNF ≤100 ms) | `CerrarPreguntaActual(sesion_id)` → `PreguntaEnVivoCerrada` | Docente | INV-AEV-09 (parte) | [#396](https://github.com/vvalotto/cognion/issues/396) |
+| **US-6.2.6** | Docente avanza a la siguiente pregunta | `AvanzarSiguientePregunta(sesion_id)` → `SiguientePreguntaPresentada` | Docente | INV-AEV-03 | [#397](https://github.com/vvalotto/cognion/issues/397) |
+| **US-6.2.7** | Docente finaliza la sesión: ranking final | `FinalizarSesionEnVivo(sesion_id)` → `SesionEnVivoFinalizada` | Docente | INV-AEV-03 | [#398](https://github.com/vvalotto/cognion/issues/398) |
+| **US-6.2.8** | Consultar estado de la sesión, participantes y ranking (reconexión, ranking final del Estudiante) | queries — sin comando ni evento | Docente / Estudiante | — | [#399](https://github.com/vvalotto/cognion/issues/399) |
+| **US-6.2.9** *(verificación)* | Sesión completa por la API real + medición del RNF (p95 ≤100 ms, 60 participantes) + revisión manual | — | Docente | — | [#400](https://github.com/vvalotto/cognion/issues/400) |
+
+**Orden de implementación:** `6.2.1` y `6.2.3` primero (bases técnicas, independientes entre sí) →
+`6.2.2` → `6.2.4` (necesita 1, 2 y 3) → `6.2.5` → `6.2.6` → `6.2.7` → `6.2.8` (necesita 3 y 7) →
+`6.2.9` (cierra la iteración).
+
+**Riesgos técnicos identificados al especificar** (resueltos como diseño en cada spec, no como
+decisión abierta):
+- `SQLAlchemyEventStore.append` hace `commit` sobre la sesión: la proyección se escribe **antes**
+  del `append` y queda pendiente en la misma sesión, así el `commit` confirma ambas (`6.2.3`).
+- 60 alumnos incrementando el mismo contador del histograma → `UPDATE` atómico en la base
+  (`ON CONFLICT DO UPDATE SET cantidad = cantidad + 1`), nunca leer-modificar-escribir (`6.2.3`).
+- `SesionesEnVivoController` ya tiene 3 use cases: separar por responsabilidad al acercarse al
+  umbral de CBO (comandos / respuestas / consultas).
+- El RNF se mide en una máquina local con conexiones simuladas: es una cota de referencia, no una
+  garantía del despliegue final (`6.2.9`).
+
+**Ítems abiertos que esta iteración deja para el frontend** (no bloquean el backend):
+- Nombres de los estudiantes en la sala de espera y el ranking: hoy solo viajan `estudiante_id`.
+  Resolver nombres requiere un puerto nuevo Actividad Evaluativa → Identidad.
+- Confirmar con Víctor si `FinalizarSesionEnVivo` exige que sea la última pregunta o admite
+  finalizar antes (`US-6.2.7`, decisión de spec: sin esa restricción, el modelo no la lista).
+
+Specs en `docs/specs/inc6/US-6.2.1.md` a `US-6.2.9.md`.
 
 **Hito del incremento:** el docente conduce una sesión en vivo completa en el aula, con
 ranking actualizado en tiempo real dentro del umbral de ≤100ms server-side acordado en RNF.
