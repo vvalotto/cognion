@@ -93,3 +93,53 @@ class TestErrores:
 
         assert error.sesion_id == sesion_id
         assert "finalizada" in str(error)
+
+
+class TestSesionYaIniciada:
+    def test_guarda_el_id_y_arma_mensaje(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion_id = uuid4()
+
+        error = SesionYaIniciada(sesion_id)
+
+        assert error.sesion_id == sesion_id
+        assert "iniciada" in str(error)
+
+
+class TestSesionEnVivoIniciada:
+    def test_desde_sesion_copia_la_pregunta_presentada(self):
+        from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+            ActividadEvaluativaEnVivo,
+        )
+        from src.actividad_evaluativa.entities.evaluacion import Evaluacion
+        from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoIniciada
+
+        preguntas = Evaluacion.armar_preguntas_asignadas([uuid4(), uuid4()])
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), preguntas, 30)
+        sesion.iniciar()
+
+        evento = SesionEnVivoIniciada.desde_sesion(
+            sesion, "¿Qué es un aggregate?", "opcion_multiple"
+        )
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 0
+        assert evento.pregunta_id == preguntas[0].pregunta_id
+        assert evento.enunciado == "¿Qué es un aggregate?"
+        assert evento.tipo == "opcion_multiple"
+
+    def test_desde_sesion_sin_iniciar_levanta(self):
+        import pytest
+
+        from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+            ActividadEvaluativaEnVivo,
+        )
+        from src.actividad_evaluativa.entities.evaluacion import Evaluacion
+        from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoIniciada
+
+        preguntas = Evaluacion.armar_preguntas_asignadas([uuid4()])
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), preguntas, 30)
+
+        with pytest.raises(ValueError):
+            SesionEnVivoIniciada.desde_sesion(sesion, "x", "verdadero_falso")

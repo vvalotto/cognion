@@ -96,11 +96,21 @@ async def preparar_sesion(cantidad_preguntas: int = 10) -> tuple[str, str]:
     return respuesta.json()["id"], str(comision.id)
 
 
+async def iniciar_sesion(sesion_id: str) -> None:
+    """Inicia la sesión por la API real (US-6.1.4) — reemplaza la siembra de `SesionEnVivoIniciada`."""
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        respuesta = await client.post(
+            f"/sesiones-en-vivo/{sesion_id}/iniciar",
+            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+        )
+    assert respuesta.status_code == 200, respuesta.text
+
+
 async def sembrar_evento_de_sesion(sesion_id: str, tipo: str, secuencia: int) -> None:
     """Agrega un evento posterior al stream de la sesión, directo en el event store.
 
-    `SesionEnVivoIniciada` (US-6.1.4) y `SesionEnVivoFinalizada` (Iteración 2) todavía no se
-    emiten por API — los tests de unión tardía y de sesión finalizada los siembran a mano.
+    `SesionEnVivoFinalizada` (Iteración 2) todavía no se emite por API — los tests de sesión
+    finalizada lo siembran a mano. `SesionEnVivoIniciada` ya sale de `iniciar_sesion` (US-6.1.4).
     """
     async with SessionLocal() as session:
         await SQLAlchemyEventStore(session).append(
