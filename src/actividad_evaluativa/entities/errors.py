@@ -242,3 +242,21 @@ class TiempoLimiteInvalido(Exception):
             f"El tiempo límite por pregunta debe ser mayor a 0 segundos, se recibió "
             f"{tiempo_limite_segundos}."
         )
+
+
+class SesionNoExiste(Exception):
+    """`sesion_id` no corresponde a ninguna `ActividadEvaluativaEnVivo` (`US-6.1.3`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' no existe.")
+
+
+class SesionYaFinalizada(Exception):
+    """La sesión en vivo ya está `Finalizada` — no admite nuevas uniones (`US-6.1.3`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' ya está finalizada.")

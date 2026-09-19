@@ -10,6 +10,7 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
 from src.actividad_evaluativa.entities.evaluacion import PreguntaAsignada
+from src.actividad_evaluativa.entities.participacion_en_vivo import ParticipacionEnVivo
 
 
 def _ahora() -> datetime:
@@ -45,4 +46,22 @@ class SesionEnVivoCreada:
             tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
             unidad_tematica=sesion.unidad_tematica,
             tema=sesion.tema,
+        )
+
+
+@dataclass(frozen=True)
+class EstudianteUnido:
+    """Un Estudiante se unió a una sesión en vivo — primer evento de su `ParticipacionEnVivo`."""
+
+    sesion_id: UUID
+    estudiante_id: UUID
+    unido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_participacion(cls, participacion: ParticipacionEnVivo) -> EstudianteUnido:
+        """Construye el evento a partir de una `ParticipacionEnVivo` recién creada."""
+        return cls(
+            sesion_id=participacion.sesion_id,
+            estudiante_id=participacion.estudiante_id,
+            unido_en=participacion.unido_en,
         )

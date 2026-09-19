@@ -1,6 +1,6 @@
 # US-6.1.3: Estudiante se une a una sesión en vivo
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.1`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ParticipacionEnVivo`

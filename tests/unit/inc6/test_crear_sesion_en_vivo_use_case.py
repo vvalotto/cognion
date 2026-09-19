@@ -17,8 +17,19 @@ from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import (
     AGGREGATE_TYPE,
     CrearSesionEnVivoUseCase,
 )
-from tests.unit.inc3._fakes import FakeEventStore, FakePreguntaConsultaPort
-from tests.unit.inc6._fakes import FakeComisionConsultaPort
+from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
+    UnirseASesionEnVivoUseCase,
+)
+from tests.unit.inc3._fakes import (
+    FakeEstudianteConsultaPort,
+    FakeEventStore,
+    FakePreguntaConsultaPort,
+)
+from tests.unit.inc6._fakes import (
+    FakeCanalTiempoReal,
+    FakeComisionConsultaPort,
+    FakeParticipantesSesionQueryPort,
+)
 
 
 def _escenario(cantidad_ids: int = 20):
@@ -115,7 +126,13 @@ class TestCrearSesionEnVivoUseCase:
 class TestSesionesEnVivoController:
     async def test_crear_delega_en_el_use_case(self):
         use_case, _, _, comision_id, materia_id = _escenario()
-        controller = SesionesEnVivoController(use_case)
+        unirse = UnirseASesionEnVivoUseCase(
+            FakeEstudianteConsultaPort(),
+            FakeEventStore(),
+            FakeParticipantesSesionQueryPort(FakeEventStore()),
+            FakeCanalTiempoReal(),
+        )
+        controller = SesionesEnVivoController(use_case, unirse)
 
         sesion = await controller.crear(comision_id, 10, 30)
 

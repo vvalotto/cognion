@@ -230,3 +230,11 @@ class SesionEnVivoResponse(BaseModel):
     cantidad_preguntas: int
     tiempo_limite_por_pregunta_segundos: int
     estado: str
+
+
+class ParticipacionEnVivoResponse(BaseModel):
+    """Confirmación de unión de un Estudiante a una sesión en vivo (`US-6.1.3`)."""
+
+    sesion_id: UUID
+    estudiante_id: UUID
+    unido_en: datetime
