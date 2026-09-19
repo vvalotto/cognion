@@ -7,15 +7,22 @@ from uuid import UUID
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
+from src.actividad_evaluativa.entities.participacion_en_vivo import ParticipacionEnVivo
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
+from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
+    UnirseASesionEnVivoUseCase,
+)
 
 
 class SesionesEnVivoController:
     """Adapta requests HTTP a los casos de uso sobre sesiones en vivo."""
 
-    def __init__(self, crear_sesion: CrearSesionEnVivoUseCase) -> None:
-        """Recibe el caso de uso de creación de sesión."""
+    def __init__(
+        self, crear_sesion: CrearSesionEnVivoUseCase, unirse: UnirseASesionEnVivoUseCase
+    ) -> None:
+        """Recibe los casos de uso de creación de sesión y de unión de un Estudiante."""
         self._crear_sesion = crear_sesion
+        self._unirse = unirse
 
     async def crear(
         self,
@@ -33,3 +40,7 @@ class SesionesEnVivoController:
             unidad_tematica,
             tema,
         )
+
+    async def unirse(self, sesion_id: UUID, estudiante_id: UUID) -> ParticipacionEnVivo:
+        """Delega la unión del Estudiante a la sesión en el caso de uso correspondiente."""
+        return await self._unirse.execute(sesion_id, estudiante_id)

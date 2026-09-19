@@ -38,6 +38,9 @@ from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_proce
 from src.actividad_evaluativa.frameworks.adapters.notificacion_port_in_process import (
     NotificacionPortInProcess,
 )
+from src.actividad_evaluativa.frameworks.adapters.participantes_sesion_query_repository import (
+    SQLAlchemyParticipantesSesionQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
@@ -90,6 +93,9 @@ from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
 from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
 from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
+    UnirseASesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.verificar_vencimientos import (
     VerificarVencimientosUseCase,
 )
@@ -249,11 +255,18 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2`)."""
+    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2`/`6.1.3`)."""
+    event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
             ComisionConsultaPortInProcess(session),
             PreguntaConsultaPortInProcess(session),
-            SQLAlchemyEventStore(session),
-        )
+            event_store,
+        ),
+        UnirseASesionEnVivoUseCase(
+            EstudianteConsultaPortInProcess(session),
+            event_store,
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            get_canal_tiempo_real(),
+        ),
     )

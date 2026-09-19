@@ -6,8 +6,9 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from uuid import UUID, uuid4
 
-from src.actividad_evaluativa.entities.errors import TiempoLimiteInvalido
+from src.actividad_evaluativa.entities.errors import SesionYaFinalizada, TiempoLimiteInvalido
 from src.actividad_evaluativa.entities.evaluacion import PreguntaAsignada
+from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 
 
 class EstadoSesionEnVivo(StrEnum):
@@ -69,3 +70,50 @@ class ActividadEvaluativaEnVivo:
             unidad_tematica=unidad_tematica or None,
             tema=tema or None,
         )
+
+    @staticmethod
+    def reconstruir(eventos: list[EventoAlmacenado]) -> ActividadEvaluativaEnVivo:
+        """Reconstruye la sesión reproduciendo su stream completo (replay, `ADR-002`).
+
+        El primer evento es siempre `SesionEnVivoCreada` (arma los campos base). Los siguientes
+        se aplican según su `event_type`; por ahora solo modifican `estado` — los demás campos
+        de cada transición los define la US que emite el evento (`US-6.1.4` y la Iteración 2).
+        """
+        payload = eventos[0].payload
+        sesion = ActividadEvaluativaEnVivo(
+            id=UUID(payload["sesion_id"]),
+            comision_id=UUID(payload["comision_id"]),
+            materia_id=UUID(payload["materia_id"]),
+            preguntas=[
+                PreguntaAsignada(pregunta_id=UUID(p["pregunta_id"]), orden=p["orden"])
+                for p in payload["preguntas"]
+            ],
+            tiempo_limite_por_pregunta_segundos=int(payload["tiempo_limite_por_pregunta_segundos"]),
+            unidad_tematica=payload.get("unidad_tematica") or None,
+            tema=payload.get("tema") or None,
+        )
+        for evento in eventos[1:]:
+            _aplicar_evento(sesion, evento)
+        return sesion
+
+    def validar_para_unirse(self) -> None:
+        """Valida que la sesión admita nuevas uniones — solo se rechaza si está `Finalizada`.
+
+        Una sesión `EnEspera` o ya `EnCurso` admite la unión (unión tardía, `US-6.1.3`). No muta
+        `self` (mismo criterio que `Evaluacion.validar_para_suspender`).
+        """
+        if self.estado == EstadoSesionEnVivo.FINALIZADA:
+            raise SesionYaFinalizada(self.id)
+
+
+_ESTADO_POR_EVENTO = {
+    "SesionEnVivoIniciada": EstadoSesionEnVivo.EN_CURSO,
+    "SesionEnVivoFinalizada": EstadoSesionEnVivo.FINALIZADA,
+}
+
+
+def _aplicar_evento(sesion: ActividadEvaluativaEnVivo, evento: EventoAlmacenado) -> None:
+    """Aplica un evento posterior a `SesionEnVivoCreada`; los `event_type` sin efecto se ignoran."""
+    nuevo_estado = _ESTADO_POR_EVENTO.get(evento.event_type)
+    if nuevo_estado is not None:
+        sesion.estado = nuevo_estado

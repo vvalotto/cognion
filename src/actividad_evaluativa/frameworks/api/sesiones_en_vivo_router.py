@@ -13,23 +13,30 @@ from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisco
 
 from src.actividad_evaluativa.entities.errors import (
     ComisionNoExiste,
+    EstudianteNoExiste,
     PreguntasInsuficientes,
+    SesionNoExiste,
+    SesionYaFinalizada,
     TiempoLimiteInvalido,
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
     CrearSesionEnVivoRequest,
+    ParticipacionEnVivoResponse,
     SesionEnVivoResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_connection_manager,
+    get_current_user,
     get_jwt_issuer,
     get_sesiones_en_vivo_controller,
     require_docente,
+    require_estudiante,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
+from src.shared.entities.jwt import JWTPayload
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +78,33 @@ async def crear_sesion_en_vivo(
         cantidad_preguntas=len(sesion.preguntas),
         tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
         estado=sesion.estado.value,
+    )
+
+
+@router.post(
+    "/{sesion_id}/unirse",
+    response_model=ParticipacionEnVivoResponse,
+    dependencies=[Depends(require_estudiante)],
+)
+async def unirse_a_sesion_en_vivo(
+    sesion_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
+    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+) -> ParticipacionEnVivoResponse:
+    """Une al Estudiante autenticado a la sesión (idempotente, 200); 404/422 si se rechaza."""
+    try:
+        participacion = await controller.unirse(sesion_id, usuario.usuario_id)
+    except (SesionNoExiste, EstudianteNoExiste) as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except SesionYaFinalizada as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return ParticipacionEnVivoResponse(
+        sesion_id=participacion.sesion_id,
+        estudiante_id=participacion.estudiante_id,
+        unido_en=participacion.unido_en,
     )
 
 
