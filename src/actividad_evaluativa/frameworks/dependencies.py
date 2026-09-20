@@ -44,6 +44,9 @@ from src.actividad_evaluativa.frameworks.adapters.participantes_sesion_query_rep
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
+from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
+    SQLAlchemyProyeccionesEnVivo,
+)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
 )
@@ -271,6 +274,7 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             event_store,
             SQLAlchemyParticipantesSesionQueryRepository(session),
             get_canal_tiempo_real(),
+            SQLAlchemyProyeccionesEnVivo(session),
         ),
         IniciarSesionEnVivoUseCase(
             event_store,

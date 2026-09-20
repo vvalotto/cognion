@@ -30,6 +30,7 @@ from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
     FakeParticipantesSesionQueryPort,
+    FakeProyeccionesEnVivo,
 )
 
 
@@ -165,6 +166,7 @@ class TestSesionesEnVivoControllerIniciar:
             event_store,
             FakeParticipantesSesionQueryPort(event_store),
             FakeCanalTiempoReal(),
+            FakeProyeccionesEnVivo(),
         )
         controller = SesionesEnVivoController(crear, unirse, use_case)
 

@@ -1,6 +1,6 @@
 # US-6.2.3: Read models de ranking e histograma de la sesión en vivo
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `infra backend` (técnica — sin comando de negocio propio, sin endpoint)
 **Agregado principal afectado**: — (proyecciones CQRS de `ParticipacionEnVivo`)
