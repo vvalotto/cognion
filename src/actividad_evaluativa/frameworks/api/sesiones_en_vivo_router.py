@@ -17,7 +17,9 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 from src.actividad_evaluativa.entities.errors import (
     ComisionNoExiste,
     EstudianteNoExiste,
+    OpcionesYaMostradas,
     PreguntasInsuficientes,
+    SesionNoEnCurso,
     SesionNoExiste,
     SesionYaFinalizada,
     SesionYaIniciada,
@@ -106,6 +108,28 @@ async def iniciar_sesion_en_vivo(
     except SesionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except SesionYaIniciada as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_sesion_response(sesion)
+
+
+@router.post(
+    "/{sesion_id}/mostrar-opciones",
+    response_model=SesionEnVivoResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def mostrar_opciones_en_vivo(
+    sesion_id: UUID,
+    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Revela las opciones de la pregunta actual; 404/422 si se rechaza."""
+    try:
+        sesion = await controller.mostrar_opciones(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (SesionNoEnCurso, OpcionesYaMostradas) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

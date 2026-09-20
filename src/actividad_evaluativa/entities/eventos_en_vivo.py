@@ -95,3 +95,34 @@ class SesionEnVivoIniciada:
             enunciado=enunciado,
             tipo=tipo,
         )
+
+
+@dataclass(frozen=True)
+class OpcionesEnVivoMostradas:
+    """El Docente reveló las opciones de la pregunta actual — arranca el temporizador.
+
+    `opciones` es `None` para Verdadero/Falso. Nunca indica cuál es la correcta.
+    """
+
+    sesion_id: UUID
+    pregunta_actual_indice: int
+    pregunta_id: UUID
+    opciones: list[str] | None
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_sesion(
+        cls,
+        sesion: ActividadEvaluativaEnVivo,
+        opciones: list[str] | None,
+        ocurrido_en: datetime,
+    ) -> OpcionesEnVivoMostradas:
+        """Construye el evento a partir de la sesión y las opciones de la pregunta actual."""
+        pregunta = sesion.pregunta_actual()
+        return cls(
+            sesion_id=sesion.id,
+            pregunta_actual_indice=sesion.pregunta_actual_indice or 0,
+            pregunta_id=pregunta.pregunta_id,
+            opciones=opciones,
+            ocurrido_en=ocurrido_en,
+        )

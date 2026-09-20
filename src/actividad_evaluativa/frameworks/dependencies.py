@@ -92,6 +92,9 @@ from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import 
 from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
     ModificarTituloActividadUseCase,
 )
+from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
+    MostrarOpcionesEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
@@ -261,7 +264,7 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.1.4`)."""
+    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.2.2`)."""
     event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
@@ -277,6 +280,11 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             SQLAlchemyProyeccionesEnVivo(session),
         ),
         IniciarSesionEnVivoUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+        ),
+        MostrarOpcionesEnVivoUseCase(
             event_store,
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),

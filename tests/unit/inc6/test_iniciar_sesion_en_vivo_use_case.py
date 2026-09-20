@@ -20,6 +20,9 @@ from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     AGGREGATE_TYPE_SESION,
     IniciarSesionEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
+    MostrarOpcionesEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import UnirseASesionEnVivoUseCase
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
@@ -168,7 +171,10 @@ class TestSesionesEnVivoControllerIniciar:
             FakeCanalTiempoReal(),
             FakeProyeccionesEnVivo(),
         )
-        controller = SesionesEnVivoController(crear, unirse, use_case)
+        mostrar = MostrarOpcionesEnVivoUseCase(
+            FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
+        )
+        controller = SesionesEnVivoController(crear, unirse, use_case, mostrar)
 
         resultado = await controller.iniciar(sesion.id)
 
