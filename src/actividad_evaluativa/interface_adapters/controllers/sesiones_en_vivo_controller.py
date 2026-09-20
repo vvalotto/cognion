@@ -12,6 +12,9 @@ from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionE
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
+    MostrarOpcionesEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     UnirseASesionEnVivoUseCase,
 )
@@ -25,11 +28,13 @@ class SesionesEnVivoController:
         crear_sesion: CrearSesionEnVivoUseCase,
         unirse: UnirseASesionEnVivoUseCase,
         iniciar: IniciarSesionEnVivoUseCase,
+        mostrar_opciones: MostrarOpcionesEnVivoUseCase,
     ) -> None:
-        """Recibe los casos de uso de crear la sesión, unir a un Estudiante e iniciarla."""
+        """Recibe los casos de uso de crear, unirse, iniciar y mostrar opciones."""
         self._crear_sesion = crear_sesion
         self._unirse = unirse
         self._iniciar = iniciar
+        self._mostrar_opciones = mostrar_opciones
 
     async def crear(
         self,
@@ -55,3 +60,7 @@ class SesionesEnVivoController:
     async def iniciar(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Delega el inicio de la sesión en el caso de uso correspondiente."""
         return await self._iniciar.execute(sesion_id)
+
+    async def mostrar_opciones(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+        """Delega la revelación de opciones en el caso de uso correspondiente."""
+        return await self._mostrar_opciones.execute(sesion_id)

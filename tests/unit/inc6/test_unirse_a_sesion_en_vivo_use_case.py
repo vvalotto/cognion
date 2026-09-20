@@ -20,6 +20,9 @@ from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionE
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
+    MostrarOpcionesEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     AGGREGATE_TYPE_PARTICIPACION,
     AGGREGATE_TYPE_SESION,
@@ -231,7 +234,10 @@ class TestSesionesEnVivoControllerUnirse:
         iniciar = IniciarSesionEnVivoUseCase(
             FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
         )
-        controller = SesionesEnVivoController(_crear_sesion_stub(), use_case, iniciar)
+        mostrar = MostrarOpcionesEnVivoUseCase(
+            FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
+        )
+        controller = SesionesEnVivoController(_crear_sesion_stub(), use_case, iniciar, mostrar)
 
         participacion = await controller.unirse(sesion.id, estudiante_id)
 

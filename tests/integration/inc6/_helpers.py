@@ -45,10 +45,13 @@ async def crear_estudiante(comision_id: str) -> tuple[str, dict[str, str]]:
     return str(estudiante.id), headers_de(estudiante.id, TipoPerfil.ESTUDIANTE)
 
 
-async def preparar_sesion(cantidad_preguntas: int = 10) -> tuple[str, str]:
+async def preparar_sesion(
+    cantidad_preguntas: int = 10, opcion_multiple: bool = False
+) -> tuple[str, str]:
     """Crea materia con preguntas, Comisión y una sesión en vivo `EnEspera` (US-6.1.2).
 
-    Devuelve `(sesion_id, comision_id)`. Usa la API real para crear la sesión.
+    Devuelve `(sesion_id, comision_id)`. Usa la API real para crear la sesión. Las preguntas son
+    de Verdadero/Falso salvo que `opcion_multiple` sea `True` (opciones "A" a "D", la "B" correcta).
     """
     admin = headers_de(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
     docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
@@ -59,19 +62,24 @@ async def preparar_sesion(cantidad_preguntas: int = 10) -> tuple[str, str]:
         banco_id = creada.json()["banco_id"]
         materia_id = creada.json()["id"]
         for i in range(cantidad_preguntas):
-            await client.post(
-                "/preguntas/verdadero-falso",
-                json={
-                    "banco_id": banco_id,
-                    "texto": f"Pregunta {i}",
-                    "respuesta_correcta": True,
-                    "unidad_tematica": "Unidad 1",
-                    "tema": "Tema",
-                    "dificultad": "medio",
-                    "importancia": "alto",
-                },
-                headers=docente,
-            )
+            comun = {
+                "banco_id": banco_id,
+                "texto": f"Pregunta {i}",
+                "unidad_tematica": "Unidad 1",
+                "tema": "Tema",
+                "dificultad": "medio",
+                "importancia": "alto",
+            }
+            if opcion_multiple:
+                ruta = "/preguntas/opcion-multiple"
+                cuerpo = {
+                    **comun,
+                    "opciones": [{"texto": letra, "es_correcta": letra == "B"} for letra in "ABCD"],
+                }
+            else:
+                ruta = "/preguntas/verdadero-falso"
+                cuerpo = {**comun, "respuesta_correcta": True}
+            await client.post(ruta, json=cuerpo, headers=docente)
 
         async with SessionLocal() as session:
             admin_usuario = Usuario.crear(

@@ -269,3 +269,23 @@ class SesionYaIniciada(Exception):
         """Guarda el id de la sesión y arma el mensaje de la excepción."""
         self.sesion_id = sesion_id
         super().__init__(f"La sesión en vivo '{sesion_id}' ya fue iniciada.")
+
+
+class SesionNoEnCurso(Exception):
+    """La sesión en vivo no está `EnCurso` — está `EnEspera` o `Finalizada` (`US-6.2.2`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' no está en curso.")
+
+
+class OpcionesYaMostradas(Exception):
+    """Las opciones de la pregunta actual ya se mostraron (`US-6.2.2`, INV-AEV-09)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"Las opciones de la pregunta actual de la sesión '{sesion_id}' ya se mostraron."
+        )

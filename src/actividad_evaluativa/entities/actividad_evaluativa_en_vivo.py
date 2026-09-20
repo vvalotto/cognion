@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import StrEnum
 from uuid import UUID, uuid4
 
 from src.actividad_evaluativa.entities.errors import (
+    OpcionesYaMostradas,
+    SesionNoEnCurso,
     SesionYaFinalizada,
     SesionYaIniciada,
     TiempoLimiteInvalido,
@@ -45,6 +48,8 @@ class ActividadEvaluativaEnVivo:
     estado: EstadoSesionEnVivo = field(default=EstadoSesionEnVivo.EN_ESPERA)
     pregunta_actual_indice: int | None = field(default=None)
     opciones_mostradas: bool = field(default=False)
+    opciones_mostradas_en: datetime | None = field(default=None)
+    """Instante de `OpcionesEnVivoMostradas`: referencia de `tiempo_respuesta` (INV-AEV-08)."""
     pregunta_actual_cerrada: bool = field(default=False)
 
     @staticmethod
@@ -124,6 +129,19 @@ class ActividadEvaluativaEnVivo:
         self.opciones_mostradas = False
         self.pregunta_actual_cerrada = False
 
+    def mostrar_opciones(self, ahora: datetime) -> None:
+        """Revela las opciones de la pregunta actual y arranca el temporizador (`US-6.2.2`).
+
+        Levanta `SesionNoEnCurso` si la sesión no está `EnCurso` y `OpcionesYaMostradas`
+        (INV-AEV-09) si ya se mostraron — sin mutar en ninguno de los dos casos.
+        """
+        if self.estado != EstadoSesionEnVivo.EN_CURSO:
+            raise SesionNoEnCurso(self.id)
+        if self.opciones_mostradas:
+            raise OpcionesYaMostradas(self.id)
+        self.opciones_mostradas = True
+        self.opciones_mostradas_en = ahora
+
     def pregunta_actual(self) -> PreguntaAsignada:
         """Devuelve la pregunta actual — solo válido con la sesión ya iniciada."""
         if self.pregunta_actual_indice is None:
@@ -146,3 +164,6 @@ def _aplicar_evento(sesion: ActividadEvaluativaEnVivo, evento: EventoAlmacenado)
         # Default 0: la primera pregunta — mantiene compatibles los streams sembrados con
         # payload mínimo en los tests de `US-6.1.3`.
         sesion.pregunta_actual_indice = evento.payload.get("pregunta_actual_indice", 0)
+    if evento.event_type == "OpcionesEnVivoMostradas":
+        sesion.opciones_mostradas = True
+        sesion.opciones_mostradas_en = datetime.fromisoformat(evento.payload["ocurrido_en"])

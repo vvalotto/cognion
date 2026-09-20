@@ -118,13 +118,16 @@ def _evento_creada(sesion):
     )
 
 
-def _evento(tipo: str, secuencia: int):
+def _evento(tipo: str, secuencia: int, payload: dict | None = None):
     from datetime import UTC, datetime
 
     from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 
     return EventoAlmacenado(
-        sequence_number=secuencia, event_type=tipo, payload={}, occurred_at=datetime.now(UTC)
+        sequence_number=secuencia,
+        event_type=tipo,
+        payload=payload or {},
+        occurred_at=datetime.now(UTC),
     )
 
 
@@ -171,7 +174,7 @@ class TestReconstruir:
         original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
 
         sesion = ActividadEvaluativaEnVivo.reconstruir(
-            [_evento_creada(original), _evento("OpcionesEnVivoMostradas", 2)]
+            [_evento_creada(original), _evento("PreguntaEnVivoCerrada", 2)]
         )
 
         assert sesion.estado == EstadoSesionEnVivo.EN_ESPERA
@@ -265,3 +268,88 @@ class TestReconstruirConInicioReal:
         )
 
         assert sesion.pregunta_actual_indice == 0
+
+
+class TestMostrarOpciones:
+    def _en_curso(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        return sesion
+
+    def test_marca_las_opciones_y_registra_el_instante(self):
+        from datetime import UTC, datetime
+
+        sesion = self._en_curso()
+        ahora = datetime.now(UTC)
+
+        sesion.mostrar_opciones(ahora)
+
+        assert sesion.opciones_mostradas is True
+        assert sesion.opciones_mostradas_en == ahora
+
+    @pytest.mark.parametrize(
+        "estado", [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.FINALIZADA]
+    )
+    def test_rechaza_si_no_esta_en_curso(self, estado):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.mostrar_opciones(datetime.now(UTC))
+
+        assert sesion.opciones_mostradas is False
+        assert sesion.opciones_mostradas_en is None
+
+    def test_rechaza_si_ya_estaban_mostradas_sin_pisar_el_instante(self):
+        from datetime import UTC, datetime, timedelta
+
+        from src.actividad_evaluativa.entities.errors import OpcionesYaMostradas
+
+        sesion = self._en_curso()
+        primero = datetime.now(UTC)
+        sesion.mostrar_opciones(primero)
+
+        with pytest.raises(OpcionesYaMostradas):
+            sesion.mostrar_opciones(primero + timedelta(seconds=5))
+
+        assert sesion.opciones_mostradas_en == primero
+
+    def test_reconstruir_aplica_el_evento_de_opciones_mostradas(self):
+        from datetime import UTC, datetime
+
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        ocurrido = datetime.now(UTC)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [
+                _evento_creada(original),
+                _evento("SesionEnVivoIniciada", 2),
+                _evento("OpcionesEnVivoMostradas", 3, {"ocurrido_en": ocurrido.isoformat()}),
+            ]
+        )
+
+        assert sesion.opciones_mostradas is True
+        assert sesion.opciones_mostradas_en == ocurrido
+
+
+class TestEventoOpcionesMostradas:
+    def test_desde_sesion_toma_la_pregunta_actual(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.eventos_en_vivo import OpcionesEnVivoMostradas
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        ahora = datetime.now(UTC)
+
+        evento = OpcionesEnVivoMostradas.desde_sesion(sesion, ["a", "b"], ahora)
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 0
+        assert evento.pregunta_id == sesion.pregunta_actual().pregunta_id
+        assert evento.opciones == ["a", "b"]
+        assert evento.ocurrido_en == ahora
