@@ -207,3 +207,5 @@ def _aplicar_evento(sesion: ActividadEvaluativaEnVivo, evento: EventoAlmacenado)
     if evento.event_type == "OpcionesEnVivoMostradas":
         sesion.opciones_mostradas = True
         sesion.opciones_mostradas_en = datetime.fromisoformat(evento.payload["ocurrido_en"])
+    if evento.event_type == "PreguntaEnVivoCerrada":
+        sesion.pregunta_actual_cerrada = True

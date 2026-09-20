@@ -131,6 +131,29 @@ class TestValidarParaResponder:
         assert sesion.validar_para_responder(sesion.preguntas[0].pregunta_id, ahora) == LIMITE
 
 
+class TestReconstruirPreguntaCerrada:
+    def test_el_evento_de_cierre_marca_la_pregunta_como_cerrada(self):
+        sesion = _sesion_en_curso()
+        ahora = datetime.now(UTC)
+        creada = EventoAlmacenado(
+            1,
+            "SesionEnVivoCreada",
+            {
+                "sesion_id": str(sesion.id),
+                "comision_id": str(sesion.comision_id),
+                "materia_id": str(sesion.materia_id),
+                "preguntas": [
+                    {"pregunta_id": str(p.pregunta_id), "orden": p.orden} for p in sesion.preguntas
+                ],
+                "tiempo_limite_por_pregunta_segundos": LIMITE,
+            },
+            ahora,
+        )
+        cerrada = EventoAlmacenado(2, "PreguntaEnVivoCerrada", {}, ahora)
+
+        assert ActividadEvaluativaEnVivo.reconstruir([creada, cerrada]).pregunta_actual_cerrada
+
+
 class TestParticipacionResponder:
     def test_registra_la_respuesta_y_suma_el_puntaje(self):
         participacion = ParticipacionEnVivo.unirse(uuid4(), uuid4())
