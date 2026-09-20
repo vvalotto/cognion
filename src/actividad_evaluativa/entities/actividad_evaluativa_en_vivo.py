@@ -135,10 +135,7 @@ class ActividadEvaluativaEnVivo:
         Levanta `SesionNoEnCurso` si la sesión no está `EnCurso` y `OpcionesYaMostradas`
         (INV-AEV-09) si ya se mostraron — sin mutar en ninguno de los dos casos.
         """
-        if self.estado != EstadoSesionEnVivo.EN_CURSO:
-            raise SesionNoEnCurso(self.id)
-        if self.opciones_mostradas:
-            raise OpcionesYaMostradas(self.id)
+        _validar_para_mostrar_opciones(self)
         self.opciones_mostradas = True
         self.opciones_mostradas_en = ahora
 
@@ -147,6 +144,18 @@ class ActividadEvaluativaEnVivo:
         if self.pregunta_actual_indice is None:
             raise ValueError("La sesión todavía no tiene una pregunta actual.")
         return self.preguntas[self.pregunta_actual_indice]
+
+
+def _validar_para_mostrar_opciones(sesion: ActividadEvaluativaEnVivo) -> None:
+    """Rechaza si la sesión no está `EnCurso` o si las opciones ya se mostraron (INV-AEV-09).
+
+    Vive fuera de la clase para no sumar `SesionNoEnCurso`/`OpcionesYaMostradas` a su acoplamiento
+    (CBO, `feedback_cbo_pre_push_no_fase7`).
+    """
+    if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
+        raise SesionNoEnCurso(sesion.id)
+    if sesion.opciones_mostradas:
+        raise OpcionesYaMostradas(sesion.id)
 
 
 _ESTADO_POR_EVENTO = {
