@@ -1,6 +1,6 @@
 # US-6.2.4: Estudiante responde una pregunta en vivo
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ParticipacionEnVivo`

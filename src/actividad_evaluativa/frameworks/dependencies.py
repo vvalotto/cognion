@@ -46,6 +46,7 @@ from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_proc
 )
 from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
     SQLAlchemyProyeccionesEnVivo,
+    SQLAlchemyProyeccionesEnVivoQuery,
 )
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
@@ -65,6 +66,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_c
 )
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
+    ParticipacionesEnVivoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.revision_controller import (
     RevisionController,
@@ -101,6 +105,9 @@ from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
 )
 from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
+from src.actividad_evaluativa.use_cases.responder_pregunta_en_vivo import (
+    ResponderPreguntaEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     UnirseASesionEnVivoUseCase,
@@ -289,4 +296,17 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),
+    )
+
+
+def get_participaciones_en_vivo_controller(session: SessionDep) -> ParticipacionesEnVivoController:
+    """Arma el `ParticipacionesEnVivoController` con sus dependencias concretas (`US-6.2.4`)."""
+    return ParticipacionesEnVivoController(
+        ResponderPreguntaEnVivoUseCase(
+            SQLAlchemyEventStore(session),
+            PreguntaConsultaPortInProcess(session),
+            SQLAlchemyProyeccionesEnVivo(session),
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            get_canal_tiempo_real(),
+        )
     )

@@ -240,3 +240,35 @@ class ParticipacionEnVivoResponse(BaseModel):
     sesion_id: UUID
     estudiante_id: UUID
     unido_en: datetime
+
+
+class ResponderEnVivoRequest(BaseModel):
+    """Body de la respuesta a una pregunta en vivo — `estudiante_id` sale del JWT (`US-6.2.4`).
+
+    `contenido` debe ser exactamente `{"opcion_indice": int}` (opción múltiple) o
+    `{"valor": bool}` (Verdadero/Falso), el mismo shape que `Respuesta.contenido`.
+    """
+
+    pregunta_id: UUID
+    contenido: dict[str, Any]
+
+    @field_validator("contenido")
+    @classmethod
+    def _validar_contenido(cls, contenido: dict[str, Any]) -> dict[str, Any]:
+        """Rechaza (422) cualquier `contenido` que no tenga uno de los dos shapes válidos."""
+        es_opcion = contenido.keys() == {"opcion_indice"} and (
+            isinstance(contenido["opcion_indice"], int)
+            and not isinstance(contenido["opcion_indice"], bool)
+        )
+        es_valor = contenido.keys() == {"valor"} and isinstance(contenido["valor"], bool)
+        if not (es_opcion or es_valor):
+            raise ValueError('contenido debe ser {"opcion_indice": int} o {"valor": bool}')
+        return contenido
+
+
+class RespuestaEnVivoResponse(BaseModel):
+    """Feedback personal de una respuesta en vivo — sin ranking (`US-6.2.4`)."""
+
+    es_correcta: bool
+    puntaje: int
+    puntaje_acumulado: int

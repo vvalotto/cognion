@@ -4,13 +4,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from typing import Any
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
 from src.actividad_evaluativa.entities.evaluacion import PreguntaAsignada
-from src.actividad_evaluativa.entities.participacion_en_vivo import ParticipacionEnVivo
+from src.actividad_evaluativa.entities.participacion_en_vivo import (
+    ParticipacionEnVivo,
+    RespuestaEnVivo,
+)
 
 
 def _ahora() -> datetime:
@@ -125,4 +129,33 @@ class OpcionesEnVivoMostradas:
             pregunta_id=pregunta.pregunta_id,
             opciones=opciones,
             ocurrido_en=ocurrido_en,
+        )
+
+
+@dataclass(frozen=True)
+class RespuestaEnVivoRegistrada:
+    """Un Estudiante respondió la pregunta actual — evento repetible de su `ParticipacionEnVivo`."""
+
+    sesion_id: UUID
+    estudiante_id: UUID
+    pregunta_id: UUID
+    contenido: dict[str, Any]
+    es_correcta: bool
+    tiempo_respuesta_segundos: float
+    puntaje: int
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_respuesta(
+        cls, participacion: ParticipacionEnVivo, respuesta: RespuestaEnVivo
+    ) -> RespuestaEnVivoRegistrada:
+        """Construye el evento a partir de la participación y la respuesta recién registrada."""
+        return cls(
+            sesion_id=participacion.sesion_id,
+            estudiante_id=participacion.estudiante_id,
+            pregunta_id=respuesta.pregunta_id,
+            contenido=respuesta.contenido,
+            es_correcta=respuesta.es_correcta,
+            tiempo_respuesta_segundos=respuesta.tiempo_respuesta_segundos,
+            puntaje=respuesta.puntaje,
         )

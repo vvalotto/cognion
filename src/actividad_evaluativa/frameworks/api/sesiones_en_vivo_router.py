@@ -17,26 +17,38 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 from src.actividad_evaluativa.entities.errors import (
     ComisionNoExiste,
     EstudianteNoExiste,
+    OpcionesNoMostradasTodavia,
     OpcionesYaMostradas,
+    ParticipacionNoExiste,
+    PreguntaNoActual,
     PreguntasInsuficientes,
+    PreguntaYaCerrada,
+    RespuestaYaRegistrada,
     SesionNoEnCurso,
     SesionNoExiste,
     SesionYaFinalizada,
     SesionYaIniciada,
+    TiempoAgotado,
     TiempoLimiteInvalido,
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
     CrearSesionEnVivoRequest,
     ParticipacionEnVivoResponse,
+    ResponderEnVivoRequest,
+    RespuestaEnVivoResponse,
     SesionEnVivoResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_connection_manager,
     get_current_user,
     get_jwt_issuer,
+    get_participaciones_en_vivo_controller,
     get_sesiones_en_vivo_controller,
     require_docente,
     require_estudiante,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
+    ParticipacionesEnVivoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
@@ -161,6 +173,43 @@ async def unirse_a_sesion_en_vivo(
         sesion_id=participacion.sesion_id,
         estudiante_id=participacion.estudiante_id,
         unido_en=participacion.unido_en,
+    )
+
+
+@router.post(
+    "/{sesion_id}/responder",
+    response_model=RespuestaEnVivoResponse,
+    dependencies=[Depends(require_estudiante)],
+)
+async def responder_pregunta_en_vivo(
+    sesion_id: UUID,
+    body: ResponderEnVivoRequest,
+    usuario: JWTPayload = Depends(get_current_user),
+    controller: ParticipacionesEnVivoController = Depends(get_participaciones_en_vivo_controller),
+) -> RespuestaEnVivoResponse:
+    """Registra la respuesta del Estudiante y devuelve su feedback; 404/422 si se rechaza."""
+    try:
+        resultado = await controller.responder(
+            sesion_id, usuario.usuario_id, body.pregunta_id, body.contenido
+        )
+    except (SesionNoExiste, ParticipacionNoExiste) as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (
+        SesionNoEnCurso,
+        PreguntaNoActual,
+        OpcionesNoMostradasTodavia,
+        PreguntaYaCerrada,
+        TiempoAgotado,
+        RespuestaYaRegistrada,
+    ) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return RespuestaEnVivoResponse(
+        es_correcta=resultado.es_correcta,
+        puntaje=resultado.puntaje,
+        puntaje_acumulado=resultado.puntaje_acumulado,
     )
 
 

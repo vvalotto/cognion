@@ -137,3 +137,61 @@ async def sembrar_evento_de_sesion(sesion_id: str, tipo: str, secuencia: int) ->
 def correr(coro):
     """`asyncio.run` — para tests sincrónicos (WebSocket) que necesitan preparar datos async."""
     return asyncio.run(coro)
+
+
+async def unirse_a_sesion(sesion_id: str, headers: dict[str, str]) -> None:
+    """Une al Estudiante a la sesión por la API real (US-6.1.3)."""
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        respuesta = await client.post(f"/sesiones-en-vivo/{sesion_id}/unirse", headers=headers)
+    assert respuesta.status_code == 200, respuesta.text
+
+
+async def mostrar_opciones(sesion_id: str) -> None:
+    """Muestra las opciones de la pregunta actual por la API real (US-6.2.2)."""
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        respuesta = await client.post(
+            f"/sesiones-en-vivo/{sesion_id}/mostrar-opciones",
+            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+        )
+    assert respuesta.status_code == 200, respuesta.text
+
+
+async def sembrar_opciones_mostradas_hace(sesion_id: str, segundos: float) -> None:
+    """Siembra `OpcionesEnVivoMostradas` con `ocurrido_en` en el pasado (para `TiempoAgotado`).
+
+    Reemplaza `mostrar_opciones` cuando el test necesita controlar el instante de referencia.
+    """
+    from datetime import timedelta
+
+    async with SessionLocal() as session:
+        store = SQLAlchemyEventStore(session)
+        eventos = await store.load("ActividadEvaluativaEnVivo", uuid.UUID(sesion_id))
+        pregunta = eventos[0].payload["preguntas"][0]["pregunta_id"]
+        await store.append(
+            "ActividadEvaluativaEnVivo",
+            uuid.UUID(sesion_id),
+            len(eventos),
+            [
+                EventoParaAlmacenar(
+                    event_type="OpcionesEnVivoMostradas",
+                    payload={
+                        "sesion_id": sesion_id,
+                        "pregunta_actual_indice": 0,
+                        "pregunta_id": pregunta,
+                        "opciones": None,
+                        "ocurrido_en": (
+                            datetime.now(UTC) - timedelta(seconds=segundos)
+                        ).isoformat(),
+                    },
+                )
+            ],
+        )
+
+
+async def pregunta_actual_de(sesion_id: str) -> str:
+    """Devuelve el `pregunta_id` de la primera pregunta de la sesión (la actual tras iniciar)."""
+    async with SessionLocal() as session:
+        eventos = await SQLAlchemyEventStore(session).load(
+            "ActividadEvaluativaEnVivo", uuid.UUID(sesion_id)
+        )
+    return eventos[0].payload["preguntas"][0]["pregunta_id"]
