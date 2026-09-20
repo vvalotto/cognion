@@ -1,6 +1,6 @@
 # US-6.2.2: Docente muestra las opciones de la pregunta actual
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`

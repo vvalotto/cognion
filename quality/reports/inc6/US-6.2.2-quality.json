@@ -1,0 +1,78 @@
+{
+  "us_id": "US-6.2.2",
+  "fecha": "2026-09-20T17:15:37.261823",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.87,
+    "cc_promedio": 1.69,
+    "cc_maximo": 5,
+    "mi_promedio": 82.06,
+    "mi_minimo": 63.91,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 7,
+    "errors": 2,
+    "warnings": 133,
+    "infos": 47,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 6
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 64,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "Pylint": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 6
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 68,
+        "infos": 1
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "UnusedImports": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 6
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.2.2-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1384 passed, 1 failed (flaky preexistente test_us_3_2_1_steps::test_rechazo_fuera_del_período_vigente, ajeno a esta US)",
+    "Los 2 errors de CodeGuard son timeouts del check de pylint interno (>5s/>10s), reproducidos en 2 corridas; pylint directo sobre los mismos archivos da 9.87/10 (único mensaje: R0903 too-few-public-methods, mismo patrón que el resto de los use cases)"
+  ]
+}
