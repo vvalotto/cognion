@@ -1,6 +1,6 @@
 # US-6.2.1: Cálculo de puntaje server-side de una respuesta en vivo
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `domain service backend` (técnica — sin comando de negocio propio, sin endpoint)
 **Agregado principal afectado**: — (servicio de dominio puro, lo consume `ParticipacionEnVivo` en `US-6.2.4`)
