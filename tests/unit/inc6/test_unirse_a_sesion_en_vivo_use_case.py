@@ -34,6 +34,7 @@ from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
     FakeParticipantesSesionQueryPort,
+    FakeProyeccionesEnVivo,
 )
 
 
@@ -51,8 +52,13 @@ async def _escenario():
 
     estudiantes = FakeEstudianteConsultaPort()
     canal = FakeCanalTiempoReal()
+    proyecciones = FakeProyeccionesEnVivo()
     use_case = UnirseASesionEnVivoUseCase(
-        estudiantes, event_store, FakeParticipantesSesionQueryPort(event_store), canal
+        estudiantes,
+        event_store,
+        FakeParticipantesSesionQueryPort(event_store),
+        canal,
+        proyecciones,
     )
     return use_case, event_store, estudiantes, canal, sesion
 
@@ -238,3 +244,50 @@ def _crear_sesion_stub() -> CrearSesionEnVivoUseCase:
     return CrearSesionEnVivoUseCase(
         FakeComisionConsultaPort(), FakePreguntaConsultaPort(), FakeEventStore()
     )
+
+
+class TestProyeccionRanking:
+    async def test_unirse_deja_al_participante_en_el_ranking_con_cero_puntos(self):
+        use_case, _, estudiantes, _, sesion = await _escenario()
+        estudiante_id = uuid4()
+        estudiantes.estudiantes.add(estudiante_id)
+
+        await use_case.execute(sesion.id, estudiante_id)
+
+        ranking = await use_case._proyecciones.ranking(sesion.id)
+        assert [(r.estudiante_id, r.puntaje_acumulado) for r in ranking] == [(estudiante_id, 0)]
+
+    async def test_reunirse_no_reinicia_ni_duplica_la_fila(self):
+        use_case, _, estudiantes, _, sesion = await _escenario()
+        estudiante_id = uuid4()
+        estudiantes.estudiantes.add(estudiante_id)
+        await use_case.execute(sesion.id, estudiante_id)
+        await use_case._proyecciones.registrar_respuesta(
+            sesion.id, estudiante_id, uuid4(), "1", 1500
+        )
+
+        await use_case.execute(sesion.id, estudiante_id)
+
+        ranking = await use_case._proyecciones.ranking(sesion.id)
+        assert [(r.estudiante_id, r.puntaje_acumulado) for r in ranking] == [(estudiante_id, 1500)]
+
+    async def test_al_perder_la_carrera_descarta_la_proyeccion_pendiente(self):
+        use_case, event_store, estudiantes, _, sesion = await _escenario()
+        estudiante_id = uuid4()
+        estudiantes.estudiantes.add(estudiante_id)
+        original = event_store.append
+
+        async def append_que_pierde_la_carrera(aggregate_type, aggregate_id, esperado, eventos):
+            if aggregate_type == AGGREGATE_TYPE_PARTICIPACION:
+                await original(aggregate_type, aggregate_id, esperado, eventos)
+                raise ConcurrenciaOptimistaError(
+                    aggregate_type, aggregate_id, esperado, esperado + 1
+                )
+            await original(aggregate_type, aggregate_id, esperado, eventos)
+
+        event_store.append = append_que_pierde_la_carrera
+
+        participacion = await use_case.execute(sesion.id, estudiante_id)
+
+        assert use_case._proyecciones.descartes == 1
+        assert participacion.estudiante_id == estudiante_id

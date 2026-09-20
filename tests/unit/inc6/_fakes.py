@@ -12,6 +12,12 @@ from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port imp
     ParticipanteResumen,
     ParticipantesSesionQueryPort,
 )
+from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
+    OpcionDistribuida,
+    ParticipanteEnRanking,
+    ProyeccionesEnVivoPort,
+    ProyeccionesEnVivoQueryPort,
+)
 from tests.unit.inc3._fakes import FakeEventStore
 
 
@@ -64,3 +70,50 @@ class FakeParticipantesSesionQueryPort(ParticipantesSesionQueryPort):
             and evento.payload["sesion_id"] == str(sesion_id)
         ]
         return sorted(participantes, key=lambda p: p.unido_en)
+
+
+class FakeProyeccionesEnVivo(ProyeccionesEnVivoPort, ProyeccionesEnVivoQueryPort):
+    """Read models en memoria — aplican de inmediato (la atomicidad real se prueba en integración)."""
+
+    def __init__(self) -> None:
+        """Inicializa el ranking, la distribución y el contador de descartes."""
+        self.puntajes: dict[tuple[UUID, UUID], int] = {}
+        self.conteos: dict[tuple[UUID, UUID, str], int] = {}
+        self.descartes = 0
+
+    async def inicializar_participante(self, sesion_id: UUID, estudiante_id: UUID) -> None:
+        """Deja al participante con 0 puntos si todavía no tiene fila."""
+        self.puntajes.setdefault((sesion_id, estudiante_id), 0)
+
+    async def registrar_respuesta(
+        self, sesion_id: UUID, estudiante_id: UUID, pregunta_id: UUID, opcion: str, puntaje: int
+    ) -> None:
+        """Suma el puntaje e incrementa la opción elegida."""
+        clave = (sesion_id, estudiante_id)
+        self.puntajes[clave] = self.puntajes.get(clave, 0) + puntaje
+        clave_opcion = (sesion_id, pregunta_id, opcion)
+        self.conteos[clave_opcion] = self.conteos.get(clave_opcion, 0) + 1
+
+    async def descartar_pendientes(self) -> None:
+        """Registra que se pidió descartar lo pendiente."""
+        self.descartes += 1
+
+    async def ranking(self, sesion_id: UUID) -> list[ParticipanteEnRanking]:
+        """Ranking por puntaje descendente (sin desempate temporal: el fake no lo modela)."""
+        filas = sorted(
+            ((e, p) for (s, e), p in self.puntajes.items() if s == sesion_id),
+            key=lambda fila: (-fila[1], str(fila[0])),
+        )
+        return [ParticipanteEnRanking(i, e, p) for i, (e, p) in enumerate(filas, start=1)]
+
+    async def distribucion(self, sesion_id: UUID, pregunta_id: UUID) -> list[OpcionDistribuida]:
+        """Cantidad por opción ordenada por opción."""
+        return [
+            OpcionDistribuida(opcion, cantidad)
+            for (s, p, opcion), cantidad in sorted(self.conteos.items())
+            if s == sesion_id and p == pregunta_id
+        ]
+
+    async def cantidad_respuestas(self, sesion_id: UUID, pregunta_id: UUID) -> int:
+        """Total de respuestas de la pregunta."""
+        return sum(o.cantidad for o in await self.distribucion(sesion_id, pregunta_id))

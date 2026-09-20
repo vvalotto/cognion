@@ -9,6 +9,8 @@ from src.shared.frameworks.db import SessionLocal
 async def _limpiar_tablas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM events"))
+        await session.execute(text("DELETE FROM ranking_por_sesion"))
+        await session.execute(text("DELETE FROM distribucion_por_pregunta"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
         await session.execute(text("DELETE FROM materia"))

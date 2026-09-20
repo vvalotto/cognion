@@ -27,6 +27,9 @@ from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port imp
     ParticipanteResumen,
     ParticipantesSesionQueryPort,
 )
+from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
+    ProyeccionesEnVivoPort,
+)
 
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 AGGREGATE_TYPE_PARTICIPACION = "ParticipacionEnVivo"
@@ -53,12 +56,14 @@ class UnirseASesionEnVivoUseCase:
         event_store: EventStorePort,
         participantes_query: ParticipantesSesionQueryPort,
         canal: CanalTiempoRealPort,
+        proyecciones: ProyeccionesEnVivoPort,
     ) -> None:
-        """Recibe los puertos de Identidad, el event store, el read model y el canal en vivo."""
+        """Recibe los puertos de Identidad, el event store, los read models y el canal en vivo."""
         self._estudiante_consulta = estudiante_consulta
         self._event_store = event_store
         self._participantes_query = participantes_query
         self._canal = canal
+        self._proyecciones = proyecciones
 
     async def execute(self, sesion_id: UUID, estudiante_id: UUID) -> ParticipacionEnVivo:
         """Une al Estudiante a la sesión, o devuelve su participación existente (INV-AEV-06).
@@ -97,6 +102,8 @@ class UnirseASesionEnVivoUseCase:
             "estudiante_id": str(evento.estudiante_id),
             "unido_en": evento.unido_en.isoformat(),
         }
+        # La fila del ranking queda pendiente y la confirma el `commit` del `append` (US-6.2.3).
+        await self._proyecciones.inicializar_participante(sesion_id, estudiante_id)
         try:
             await self._event_store.append(
                 AGGREGATE_TYPE_PARTICIPACION,
@@ -105,6 +112,7 @@ class UnirseASesionEnVivoUseCase:
                 [EventoParaAlmacenar(event_type="EstudianteUnido", payload=payload)],
             )
         except ConcurrenciaOptimistaError:
+            await self._proyecciones.descartar_pendientes()
             # Otra unión concurrente (mismo Estudiante, misma sesión) ganó la carrera de insertar
             # el primer evento — releer y devolver esa participación en vez de propagar el error
             # (INV-AEV-06, idempotencia real ante escrituras concurrentes, no solo secuenciales).

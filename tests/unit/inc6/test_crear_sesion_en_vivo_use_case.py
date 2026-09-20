@@ -32,6 +32,7 @@ from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
     FakeParticipantesSesionQueryPort,
+    FakeProyeccionesEnVivo,
 )
 
 
@@ -134,6 +135,7 @@ class TestSesionesEnVivoController:
             FakeEventStore(),
             FakeParticipantesSesionQueryPort(FakeEventStore()),
             FakeCanalTiempoReal(),
+            FakeProyeccionesEnVivo(),
         )
         iniciar = IniciarSesionEnVivoUseCase(
             FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
