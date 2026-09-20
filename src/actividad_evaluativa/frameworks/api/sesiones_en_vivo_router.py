@@ -187,7 +187,7 @@ async def responder_pregunta_en_vivo(
     usuario: JWTPayload = Depends(get_current_user),
     controller: ParticipacionesEnVivoController = Depends(get_participaciones_en_vivo_controller),
 ) -> RespuestaEnVivoResponse:
-    """Registra la respuesta del Estudiante y devuelve su feedback personal; 404/422 si se rechaza."""
+    """Registra la respuesta del Estudiante y devuelve su feedback; 404/422 si se rechaza."""
     try:
         resultado = await controller.responder(
             sesion_id, usuario.usuario_id, body.pregunta_id, body.contenido

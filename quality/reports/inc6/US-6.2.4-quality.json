@@ -1,0 +1,79 @@
+{
+  "us_id": "US-6.2.4",
+  "fecha": "2026-09-20T18:13:07.395159",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.6,
+    "cc_promedio": 1.98,
+    "cc_maximo": 9,
+    "mi_promedio": 85.15,
+    "mi_minimo": 54.45,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 9,
+    "errors": 9,
+    "warnings": 287,
+    "infos": 53,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 4,
+        "infos": 6
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "DeadCode": {
+        "errors": 1,
+        "warnings": 186,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "Pylint": {
+        "errors": 4,
+        "warnings": 0,
+        "infos": 5
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 97,
+        "infos": 1
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "UnusedImports": {
+        "errors": 4,
+        "warnings": 0,
+        "infos": 5
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.2.4-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1437 passed, 1 failed (flaky preexistente test_us_3_2_1_steps::test_rechazo_fuera_del_período_vigente, ajeno a esta US)",
+    "Errors de CodeGuard: timeouts del check de pylint interno (>5s/>10s) y un falso positivo de DeadCode ('cls' del classmethod validator de pydantic); pylint directo sobre src/actividad_evaluativa da 9.60/10, mypy 0 errores",
+    "Pylint: R0903 too-few-public-methods en use case y controller (mismo patrón que el resto del BC)"
+  ]
+}

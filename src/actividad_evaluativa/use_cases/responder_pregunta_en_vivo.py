@@ -1,4 +1,4 @@
-"""Caso de uso: un Estudiante responde la pregunta actual de una sesión en vivo (US-6.2.4, RF-09)."""
+"""Caso de uso: un Estudiante responde la pregunta actual de la sesión en vivo (US-6.2.4)."""
 
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ AGGREGATE_TYPE_PARTICIPACION = "ParticipacionEnVivo"
 
 @dataclass(frozen=True)
 class ResultadoRespuestaEnVivo:
-    """Feedback personal de la respuesta: acierto, puntos de la pregunta y acumulado (sin ranking)."""
+    """Feedback personal de la respuesta: acierto, puntos y acumulado (sin ranking)."""
 
     es_correcta: bool
     puntaje: int
@@ -109,8 +109,9 @@ class ResponderPreguntaEnVivoUseCase:
         eventos_sesion = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
         if not eventos_sesion:
             raise SesionNoExiste(sesion_id)
-        participacion_id = ParticipacionEnVivo.id_para(sesion_id, estudiante_id)
-        eventos = await self._event_store.load(AGGREGATE_TYPE_PARTICIPACION, participacion_id)
+        eventos = await self._event_store.load(
+            AGGREGATE_TYPE_PARTICIPACION, ParticipacionEnVivo.id_para(sesion_id, estudiante_id)
+        )
         if not eventos:
             raise ParticipacionNoExiste(sesion_id, estudiante_id)
 
@@ -119,15 +120,7 @@ class ResponderPreguntaEnVivoUseCase:
         tiempo = sesion.validar_para_responder(pregunta_id, datetime.now(UTC))
         participacion.validar_para_responder(pregunta_id)
 
-        es_correcta = await self._pregunta_consulta.evaluar_correccion(pregunta_id, contenido)
-        niveles = await self._pregunta_consulta.obtener_niveles(pregunta_id)
-        puntaje = calcular_puntaje(
-            es_correcta,
-            tiempo,
-            sesion.tiempo_limite_por_pregunta_segundos,
-            niveles.dificultad,
-            niveles.importancia,
-        )
+        es_correcta, puntaje = await self._corregir(sesion, pregunta_id, contenido, tiempo)
         respuesta = participacion.responder(pregunta_id, contenido, es_correcta, tiempo, puntaje)
         evento = RespuestaEnVivoRegistrada.desde_respuesta(participacion, respuesta)
 
@@ -137,6 +130,25 @@ class ResponderPreguntaEnVivoUseCase:
             sesion_id, _mensaje_conteo(sesion.pregunta_actual_indice, cantidad)
         )
         return ResultadoRespuestaEnVivo(es_correcta, puntaje, participacion.puntaje_acumulado)
+
+    async def _corregir(
+        self,
+        sesion: ActividadEvaluativaEnVivo,
+        pregunta_id: UUID,
+        contenido: dict[str, Any],
+        tiempo: float,
+    ) -> tuple[bool, int]:
+        """Corrige la respuesta contra Banco de Preguntas y calcula su puntaje (RF-10)."""
+        es_correcta = await self._pregunta_consulta.evaluar_correccion(pregunta_id, contenido)
+        niveles = await self._pregunta_consulta.obtener_niveles(pregunta_id)
+        puntaje = calcular_puntaje(
+            es_correcta,
+            tiempo,
+            sesion.tiempo_limite_por_pregunta_segundos,
+            niveles.dificultad,
+            niveles.importancia,
+        )
+        return es_correcta, puntaje
 
     async def _persistir(
         self,
