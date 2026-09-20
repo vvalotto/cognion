@@ -1,0 +1,1817 @@
+{
+  "summary": {
+    "total_files": 4,
+    "checks_executed": 9,
+    "elapsed_seconds": 37.62,
+    "timestamp": "2026-09-20T08:44:59.630901",
+    "total_issues": 85,
+    "errors": 14,
+    "warnings": 44,
+    "infos": 27
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'posicion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 24
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 25
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'puntaje_acumulado' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 26
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'opcion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 33
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 34
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ProyeccionesEnVivoPort' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 37
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'inicializar_participante' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 40
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'estudiante_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 41
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 41
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'registrar_respuesta' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 47
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'estudiante_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 48
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 49
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'opcion' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 50
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'puntaje' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 51
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'descartar_pendientes' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 60
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ProyeccionesEnVivoQueryPort' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 65
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'ranking' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 68
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 69
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'distribucion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 76
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 77
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 77
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'cantidad_respuestas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 80
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 81
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 81
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'momento' should be 'memento'",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 5
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'hace' should be 'have'",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 42
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'falso' should be 'false'",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 56
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Falso' should be 'False'",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": 56
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SQLAlchemyProyeccionesEnVivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 31
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'inicializar_participante' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 38
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'registrar_respuesta' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 51
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'descartar_pendientes' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 87
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SQLAlchemyProyeccionesEnVivoQuery' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 92
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'cantidad_respuestas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 134
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 63.2 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Hace' should be 'Have'",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": 88
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'UnirseASesionEnVivoUseCase' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": 50
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'execute' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": 68
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 74.0 (grade A)",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.80/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EventoModel' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 41
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'aggregate_type' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'aggregate_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 45
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'sequence_number' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 46
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'event_type' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 47
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'payload' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 48
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'occurred_at' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 49
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'RankingPorSesionModel' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 52
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'sesion_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 57
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 58
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'puntaje_acumulado' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 59
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'ultima_actualizacion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 60
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'DistribucionPorPreguntaModel' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 63
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'sesion_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 68
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 69
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'opcion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 70
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'cantidad' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": 71
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.03/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "error",
+      "message": "pylint execution timed out (>5s)",
+      "file": "src/actividad_evaluativa/frameworks/db/models.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'estudiante_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'estudiante_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'opcion' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 50
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'puntaje' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 81
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 81
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'posicion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'puntaje_acumulado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opcion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ProyeccionesEnVivoPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 37
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'inicializar_participante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'registrar_respuesta' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'descartar_pendientes' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ProyeccionesEnVivoQueryPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 65
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'ranking' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'distribucion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 76
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'cantidad_respuestas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 80
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 5
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 42
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'falso' should be 'false'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 56
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 56
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyProyeccionesEnVivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'inicializar_participante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 38
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'registrar_respuesta' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'descartar_pendientes' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 87
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyProyeccionesEnVivoQuery' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 92
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'cantidad_respuestas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 134
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Hace' should be 'Have'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 88
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'UnirseASesionEnVivoUseCase' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": 50
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'execute' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EventoModel' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'aggregate_type' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'aggregate_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'sequence_number' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'event_type' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'payload' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'occurred_at' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RankingPorSesionModel' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'sesion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'puntaje_acumulado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 59
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'ultima_actualizacion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'DistribucionPorPreguntaModel' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 63
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'sesion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opcion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 70
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 71
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 63.2 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 74.0 (grade A)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.80/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.03/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/proyecciones_en_vivo_repository.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyProyeccionesEnVivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'inicializar_participante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 38
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'registrar_respuesta' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'descartar_pendientes' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 87
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyProyeccionesEnVivoQuery' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 92
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'cantidad_respuestas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 134
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 63.2 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Hace' should be 'Have'",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": 88
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/adapters/proyecciones_en_vivo_repository.py",
+        "line": null
+      }
+    ],
+    "db/models.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EventoModel' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'aggregate_type' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'aggregate_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'sequence_number' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'event_type' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'payload' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'occurred_at' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'RankingPorSesionModel' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'sesion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'puntaje_acumulado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 59
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'ultima_actualizacion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'DistribucionPorPreguntaModel' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 63
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'sesion_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opcion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 70
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": 71
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.03/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/actividad_evaluativa/frameworks/db/models.py",
+        "line": null
+      }
+    ],
+    "ports/proyecciones_en_vivo_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'posicion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'puntaje_acumulado' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opcion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 33
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'cantidad' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ProyeccionesEnVivoPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 37
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'inicializar_participante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'estudiante_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 41
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'registrar_respuesta' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'estudiante_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'opcion' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 50
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'puntaje' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'descartar_pendientes' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ProyeccionesEnVivoQueryPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 65
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'ranking' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 68
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 69
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'distribucion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 76
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 77
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'cantidad_respuestas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 80
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'pregunta_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 81
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'sesion_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 81
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 5
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 42
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'falso' should be 'false'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 56
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": 56
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/proyecciones_en_vivo_port.py",
+        "line": null
+      }
+    ],
+    "use_cases/unirse_a_sesion_en_vivo.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'UnirseASesionEnVivoUseCase' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": 50
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'execute' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": 68
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 74.0 (grade A)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.80/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/use_cases/unirse_a_sesion_en_vivo.py",
+        "line": null
+      }
+    ]
+  }
+}
