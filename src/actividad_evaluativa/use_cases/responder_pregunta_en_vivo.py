@@ -73,6 +73,80 @@ def _mensaje_conteo(pregunta_actual_indice: int | None, cantidad: int) -> dict[s
     }
 
 
+async def _cargar(
+    event_store: EventStorePort, sesion_id: UUID, estudiante_id: UUID
+) -> tuple[ActividadEvaluativaEnVivo, ParticipacionEnVivo, int]:
+    """Reconstruye la sesión y la participación; devuelve además el largo del stream de esta.
+
+    Levanta `SesionNoExiste` o `ParticipacionNoExiste`. Vive fuera de la clase para no sumar
+    esas entidades y errores a su CBO (`feedback_cbo_pre_push_no_fase7`).
+    """
+    eventos_sesion = await event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
+    if not eventos_sesion:
+        raise SesionNoExiste(sesion_id)
+    eventos = await event_store.load(
+        AGGREGATE_TYPE_PARTICIPACION, ParticipacionEnVivo.id_para(sesion_id, estudiante_id)
+    )
+    if not eventos:
+        raise ParticipacionNoExiste(sesion_id, estudiante_id)
+    return (
+        ActividadEvaluativaEnVivo.reconstruir(eventos_sesion),
+        ParticipacionEnVivo.reconstruir(eventos),
+        len(eventos),
+    )
+
+
+async def _corregir(
+    pregunta_consulta: PreguntaConsultaPort,
+    sesion: ActividadEvaluativaEnVivo,
+    pregunta_id: UUID,
+    contenido: dict[str, Any],
+    tiempo: float,
+) -> tuple[bool, int]:
+    """Corrige la respuesta contra Banco de Preguntas y calcula su puntaje (RF-10)."""
+    es_correcta = await pregunta_consulta.evaluar_correccion(pregunta_id, contenido)
+    niveles = await pregunta_consulta.obtener_niveles(pregunta_id)
+    puntaje = calcular_puntaje(
+        es_correcta,
+        tiempo,
+        sesion.tiempo_limite_por_pregunta_segundos,
+        niveles.dificultad,
+        niveles.importancia,
+    )
+    return es_correcta, puntaje
+
+
+async def _persistir(
+    event_store: EventStorePort,
+    proyecciones: ProyeccionesEnVivoPort,
+    participacion: ParticipacionEnVivo,
+    largo_stream: int,
+    evento: RespuestaEnVivoRegistrada,
+) -> None:
+    """Escribe la proyección (sin commit) y el evento; el `append` confirma ambos juntos.
+
+    Ante `ConcurrenciaOptimistaError` descarta la proyección pendiente y levanta
+    `RespuestaYaRegistrada` (contrato de atomicidad de `US-6.2.3`).
+    """
+    await proyecciones.registrar_respuesta(
+        evento.sesion_id,
+        evento.estudiante_id,
+        evento.pregunta_id,
+        _opcion_de(evento.contenido),
+        evento.puntaje,
+    )
+    try:
+        await event_store.append(
+            AGGREGATE_TYPE_PARTICIPACION,
+            participacion.id,
+            largo_stream,
+            [EventoParaAlmacenar(event_type="RespuestaEnVivoRegistrada", payload=_payload(evento))],
+        )
+    except ConcurrenciaOptimistaError as exc:
+        await proyecciones.descartar_pendientes()
+        raise RespuestaYaRegistrada(evento.sesion_id, evento.pregunta_id) from exc
+
+
 class ResponderPreguntaEnVivoUseCase:
     """Orquesta la respuesta: validación, corrección, puntaje, proyecciones y broadcast."""
 
@@ -106,77 +180,21 @@ class ResponderPreguntaEnVivoUseCase:
         incluido el doble envío concurrente, que resuelve el chequeo optimista del stream).
         Proyecciones y evento se confirman juntos; el broadcast va después y es best-effort.
         """
-        eventos_sesion = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
-        if not eventos_sesion:
-            raise SesionNoExiste(sesion_id)
-        eventos = await self._event_store.load(
-            AGGREGATE_TYPE_PARTICIPACION, ParticipacionEnVivo.id_para(sesion_id, estudiante_id)
+        sesion, participacion, largo_stream = await _cargar(
+            self._event_store, sesion_id, estudiante_id
         )
-        if not eventos:
-            raise ParticipacionNoExiste(sesion_id, estudiante_id)
-
-        sesion = ActividadEvaluativaEnVivo.reconstruir(eventos_sesion)
-        participacion = ParticipacionEnVivo.reconstruir(eventos)
         tiempo = sesion.validar_para_responder(pregunta_id, datetime.now(UTC))
         participacion.validar_para_responder(pregunta_id)
 
-        es_correcta, puntaje = await self._corregir(sesion, pregunta_id, contenido, tiempo)
+        es_correcta, puntaje = await _corregir(
+            self._pregunta_consulta, sesion, pregunta_id, contenido, tiempo
+        )
         respuesta = participacion.responder(pregunta_id, contenido, es_correcta, tiempo, puntaje)
         evento = RespuestaEnVivoRegistrada.desde_respuesta(participacion, respuesta)
 
-        await self._persistir(sesion_id, estudiante_id, participacion, eventos, evento)
+        await _persistir(self._event_store, self._proyecciones, participacion, largo_stream, evento)
         cantidad = await self._proyecciones_query.cantidad_respuestas(sesion_id, pregunta_id)
         await self._canal.publicar(
             sesion_id, _mensaje_conteo(sesion.pregunta_actual_indice, cantidad)
         )
         return ResultadoRespuestaEnVivo(es_correcta, puntaje, participacion.puntaje_acumulado)
-
-    async def _corregir(
-        self,
-        sesion: ActividadEvaluativaEnVivo,
-        pregunta_id: UUID,
-        contenido: dict[str, Any],
-        tiempo: float,
-    ) -> tuple[bool, int]:
-        """Corrige la respuesta contra Banco de Preguntas y calcula su puntaje (RF-10)."""
-        es_correcta = await self._pregunta_consulta.evaluar_correccion(pregunta_id, contenido)
-        niveles = await self._pregunta_consulta.obtener_niveles(pregunta_id)
-        puntaje = calcular_puntaje(
-            es_correcta,
-            tiempo,
-            sesion.tiempo_limite_por_pregunta_segundos,
-            niveles.dificultad,
-            niveles.importancia,
-        )
-        return es_correcta, puntaje
-
-    async def _persistir(
-        self,
-        sesion_id: UUID,
-        estudiante_id: UUID,
-        participacion: ParticipacionEnVivo,
-        eventos_previos: list[Any],
-        evento: RespuestaEnVivoRegistrada,
-    ) -> None:
-        """Escribe la proyección (sin commit) y el evento; el `append` confirma ambos juntos."""
-        await self._proyecciones.registrar_respuesta(
-            sesion_id,
-            estudiante_id,
-            evento.pregunta_id,
-            _opcion_de(evento.contenido),
-            evento.puntaje,
-        )
-        try:
-            await self._event_store.append(
-                AGGREGATE_TYPE_PARTICIPACION,
-                participacion.id,
-                len(eventos_previos),
-                [
-                    EventoParaAlmacenar(
-                        event_type="RespuestaEnVivoRegistrada", payload=_payload(evento)
-                    )
-                ],
-            )
-        except ConcurrenciaOptimistaError as exc:
-            await self._proyecciones.descartar_pendientes()
-            raise RespuestaYaRegistrada(sesion_id, evento.pregunta_id) from exc

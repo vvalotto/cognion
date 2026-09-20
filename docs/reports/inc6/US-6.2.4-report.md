@@ -88,7 +88,7 @@ El fallo es `tests/step_defs/inc3/test_us_3_2_1_steps.py::test_rechazo_fuera_del
 
 ## Decisiones y notas
 
-- **Controller propio:** un solo use case en `ParticipacionesEnVivoController`, en vez de un 5.º en `SesionesEnVivoController` — evita el patrón de CRITICAL de CBO de US anteriores y no obligó a tocar los 4 tests que construyen el controller existente. El CBO real del use case nuevo se confirma en el pre-push.
+- **Controller propio:** un solo use case en `ParticipacionesEnVivoController`, en vez de un 5.º en `SesionesEnVivoController` — evita el patrón de CRITICAL de CBO de US anteriores y no obligó a tocar los 4 tests que construyen el controller existente. El pre-push detectó CRITICAL de CBO (14/10) en `ResponderPreguntaEnVivoUseCase` — mismo patrón que `US-6.2.2`, no cubierto por los quality gates de Fase 7 — y se resolvió moviendo `_cargar`, `_corregir` y `_persistir` a funciones de módulo (DesignReviewer: 0 CRITICAL tras el fix).
 - **`contenido` validado en el borde HTTP**, sin excepción de dominio nueva (la spec no la lista).
 - **`PreguntaEnVivoCerrada` en `reconstruir()`** — fuera del plan: sin esto `PreguntaYaCerrada` no era verificable de punta a punta antes de `US-6.2.5`, que es quien emite el evento.
 - **Escenario "Una sesión en la pregunta 2":** `AvanzarSiguientePregunta` es `US-6.2.6`; el step prepara la sesión en su pregunta actual y responde con el id de otra pregunta del set. Verifica `PreguntaNoActual`, no con el estado literal del Gherkin — conviene re-verificarlo con el flujo real en `US-6.2.9`.
