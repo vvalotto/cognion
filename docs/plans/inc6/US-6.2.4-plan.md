@@ -83,4 +83,36 @@
   estudiantes y doble envío del mismo) contra la DB. Recordar: vacía la DB local compartida.
 - BDD: step defs de `tests/features/inc6/US-6.2.4-responder-pregunta-en-vivo.feature`.
 
-**Estado:** 4/4 secciones completadas (Fase 3)
+**Estado:** ✅ COMPLETADO
+**Fecha completado:** 2026-09-20
+**Tareas:** 4/4 secciones completadas
+
+## Desvíos respecto del plan
+
+- Las 10 decisiones de diseño se implementaron como se aprobaron.
+- Fuera del checklist:
+  - `ActividadEvaluativaEnVivo.reconstruir()` aplica `PreguntaEnVivoCerrada` (marca
+    `pregunta_actual_cerrada`) — sin eso `PreguntaYaCerrada` no se podía verificar de punta a
+    punta antes de `US-6.2.5`, que es quien emite ese evento.
+  - `execute` se partió en `_corregir` y `_persistir` (pylint R0914, too-many-locals).
+  - Helpers nuevos en `tests/integration/inc6/_helpers.py`: `unirse_a_sesion`,
+    `mostrar_opciones`, `sembrar_opciones_mostradas_hace`, `pregunta_actual_de`.
+- Escenario "Una sesión en la pregunta 2": `AvanzarSiguientePregunta` es `US-6.2.6`, así que el
+  step prepara la sesión en su pregunta actual y responde con el id de otra pregunta del set.
+  Verifica `PreguntaNoActual` pero no con el estado literal del Gherkin.
+
+## Métricas de Tiempo
+
+Tiempos medidos por el tracker (PRIN-001). Detalle en `docs/reports/inc6/US-6.2.4-report.md`.
+
+## Lecciones Aprendidas
+
+- ✅ Un controller propio para las respuestas evitó tocar la firma de `SesionesEnVivoController`
+  (4 tests menos que actualizar) y no llegó al umbral de CBO.
+- ✅ La concurrencia real (60 respuestas simultáneas + doble envío) confirmó el contrato de
+  atomicidad evento + proyección de `US-6.2.3` sin cambios.
+- ⚠️ En el test de 60 respuestas, crear 60 cuentas (bcrypt) tarda más que el tiempo límite de la
+  pregunta: las opciones se muestran **después** de unir a todos, si no todas dan `TiempoAgotado`.
+- ⚠️ El flaky preexistente de `US-3.2.1` volvió a fallar en la suite completa, ajeno a esta US.
+- ⚠️ Los errors de CodeGuard son timeouts de su check de pylint interno y un falso positivo de
+  DeadCode (`cls` de un `@classmethod` validator de pydantic); pylint directo da 9.60/10.
