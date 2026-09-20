@@ -8,10 +8,14 @@ from enum import StrEnum
 from uuid import UUID, uuid4
 
 from src.actividad_evaluativa.entities.errors import (
+    OpcionesNoMostradasTodavia,
     OpcionesYaMostradas,
+    PreguntaNoActual,
+    PreguntaYaCerrada,
     SesionNoEnCurso,
     SesionYaFinalizada,
     SesionYaIniciada,
+    TiempoAgotado,
     TiempoLimiteInvalido,
 )
 from src.actividad_evaluativa.entities.evaluacion import PreguntaAsignada
@@ -139,6 +143,15 @@ class ActividadEvaluativaEnVivo:
         self.opciones_mostradas = True
         self.opciones_mostradas_en = ahora
 
+    def validar_para_responder(self, pregunta_id: UUID, ahora: datetime) -> float:
+        """Valida que `pregunta_id` admita una respuesta y devuelve el tiempo de respuesta (s).
+
+        No muta `self`. El tiempo se mide en el servidor desde `opciones_mostradas_en`
+        (`US-6.2.4`); el rechazo por `TiempoAgotado` (INV-AEV-08) no depende de que el Docente
+        haya cerrado la pregunta.
+        """
+        return _validar_para_responder(self, pregunta_id, ahora)
+
     def pregunta_actual(self) -> PreguntaAsignada:
         """Devuelve la pregunta actual — solo válido con la sesión ya iniciada."""
         if self.pregunta_actual_indice is None:
@@ -156,6 +169,24 @@ def _validar_para_mostrar_opciones(sesion: ActividadEvaluativaEnVivo) -> None:
         raise SesionNoEnCurso(sesion.id)
     if sesion.opciones_mostradas:
         raise OpcionesYaMostradas(sesion.id)
+
+
+def _validar_para_responder(
+    sesion: ActividadEvaluativaEnVivo, pregunta_id: UUID, ahora: datetime
+) -> float:
+    """Aplica las reglas de `validar_para_responder` — fuera de la clase por CBO."""
+    if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
+        raise SesionNoEnCurso(sesion.id)
+    if sesion.pregunta_actual().pregunta_id != pregunta_id:
+        raise PreguntaNoActual(sesion.id, pregunta_id)
+    if sesion.pregunta_actual_cerrada:
+        raise PreguntaYaCerrada(sesion.id)
+    if not sesion.opciones_mostradas or sesion.opciones_mostradas_en is None:
+        raise OpcionesNoMostradasTodavia(sesion.id)
+    tiempo = (ahora - sesion.opciones_mostradas_en).total_seconds()
+    if tiempo > sesion.tiempo_limite_por_pregunta_segundos:
+        raise TiempoAgotado(sesion.id, tiempo)
+    return tiempo
 
 
 _ESTADO_POR_EVENTO = {

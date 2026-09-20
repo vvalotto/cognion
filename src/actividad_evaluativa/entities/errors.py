@@ -289,3 +289,73 @@ class OpcionesYaMostradas(Exception):
         super().__init__(
             f"Las opciones de la pregunta actual de la sesión '{sesion_id}' ya se mostraron."
         )
+
+
+class ParticipacionNoExiste(Exception):
+    """El Estudiante no se unió a la sesión en vivo — no tiene `ParticipacionEnVivo` (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object, estudiante_id: object) -> None:
+        """Guarda los ids y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.estudiante_id = estudiante_id
+        super().__init__(
+            f"El estudiante '{estudiante_id}' no se unió a la sesión en vivo '{sesion_id}'."
+        )
+
+
+class PreguntaNoActual(Exception):
+    """`pregunta_id` no es la pregunta actual de la sesión en vivo (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object, pregunta_id: object) -> None:
+        """Guarda los ids y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.pregunta_id = pregunta_id
+        super().__init__(
+            f"La pregunta '{pregunta_id}' no es la pregunta actual de la sesión '{sesion_id}'."
+        )
+
+
+class OpcionesNoMostradasTodavia(Exception):
+    """El Docente todavía no mostró las opciones de la pregunta actual (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"Las opciones de la pregunta actual de la sesión '{sesion_id}' todavía no se "
+            "mostraron."
+        )
+
+
+class PreguntaYaCerrada(Exception):
+    """El Docente ya cerró la pregunta actual de la sesión en vivo (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La pregunta actual de la sesión '{sesion_id}' ya fue cerrada.")
+
+
+class TiempoAgotado(Exception):
+    """La respuesta llegó después del tiempo límite de la pregunta (`US-6.2.4`, INV-AEV-08)."""
+
+    def __init__(self, sesion_id: object, tiempo_respuesta_segundos: float) -> None:
+        """Guarda los datos del rechazo y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.tiempo_respuesta_segundos = tiempo_respuesta_segundos
+        super().__init__(
+            f"La respuesta llegó a los {tiempo_respuesta_segundos:.1f}s, fuera del tiempo límite "
+            f"de la pregunta de la sesión '{sesion_id}'."
+        )
+
+
+class RespuestaYaRegistrada(Exception):
+    """El Estudiante ya respondió esta pregunta — un solo intento (`US-6.2.4`, INV-AEV-07)."""
+
+    def __init__(self, sesion_id: object, pregunta_id: object) -> None:
+        """Guarda los ids y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.pregunta_id = pregunta_id
+        super().__init__(
+            f"Ya registraste tu respuesta a la pregunta '{pregunta_id}' de la sesión '{sesion_id}'."
+        )
