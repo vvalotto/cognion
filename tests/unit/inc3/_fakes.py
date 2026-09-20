@@ -24,6 +24,7 @@ from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     DetalleCorreccionPregunta,
     PreguntaConsultaPort,
 )
+from src.actividad_evaluativa.entities.puntaje_en_vivo import NivelesDePregunta, NivelPregunta
 
 
 class FakeEstudianteConsultaPort(EstudianteConsultaPort):
@@ -69,6 +70,7 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         self.correcciones: dict[UUID, bool] = {}
         self.detalles: dict[UUID, DetalleCorreccionPregunta] = {}
         self.contenidos: dict[UUID, ContenidoPregunta] = {}
+        self.niveles: dict[UUID, NivelesDePregunta] = {}
 
     async def contar_activas_por_materia(
         self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
@@ -106,6 +108,12 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:
         """Devuelve el contenido precargado para la pregunta, o uno vacío si no se precargó."""
         return self.contenidos.get(pregunta_id, ContenidoPregunta(texto="", opciones=None))
+
+    async def obtener_niveles(self, pregunta_id: UUID) -> NivelesDePregunta:
+        """Devuelve los niveles precargados, o `BAJO`/`BAJO` si no se precargó nada."""
+        return self.niveles.get(
+            pregunta_id, NivelesDePregunta(NivelPregunta.BAJO, NivelPregunta.BAJO)
+        )
 
 
 class FakeNotificacionPort(NotificacionPort):
