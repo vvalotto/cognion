@@ -969,10 +969,26 @@ el resultado final de la sesión. Criterios de legibilidad en proyección defini
 abierto de `RNF_v1.md` resuelto). RF-08, RF-09 y RF-10 pasan de Planificado a Especificado en
 `docs/traceability/matrix.md`.
 
-**Próximo paso:** especificar y crear los Issues de la Iteración 1 (RF-08, infraestructura
-WebSockets) — `docs/plans/inc6/inc6-candidatas.md`.
-**Baseline abierta:** ninguna — `BL-010` cerrada.
-**Branch activo:** `develop`, sincronizado con `origin/develop`. `main` al día en `v0.7.1`.
+**Iteración 1 — RF-08: creación de sesión en vivo + infraestructura WebSockets, cerrada**
+(backend únicamente, frontend del modo en vivo sin iteración asignada todavía): `US-6.1.1`
+(canal WebSocket por `sesion_id`, JWT por query param, `ComisionConsultaPort` hacia Identidad,
+Issue #382) a `US-6.1.4` (crear sesión, unirse, iniciar; Issues #383-#385). Reportes en
+`docs/reports/inc6/`.
+**Iteración 2 — RF-09, RF-10: dinámica en tiempo real, ranking y puntaje, en curso** (backend
+únicamente; specs `US-6.2.1` a `US-6.2.9` en `docs/specs/inc6/`, Issues #392-#400). Cerradas:
+`US-6.2.1` (cálculo de puntaje server-side), `US-6.2.2` (mostrar opciones, PR #405),
+`US-6.2.3` (read models `ranking_por_sesion`/`distribucion_por_pregunta`) y `US-6.2.4`
+(responder pregunta con feedback personal, PR #406; el pre-push gate detectó CBO en el use
+case, corregido extrayendo helpers). Pendientes: `US-6.2.5` (cerrar pregunta), `6.2.6`
+(avanzar), `6.2.7` (finalizar sesión), `6.2.8` (consultas/reconexión) y `6.2.9` (verificación
+del RNF p95 ≤100 ms con 60 participantes).
+
+**Próximo paso:** `US-6.2.5`. Antes de arrancar, dos decisiones de diseño: separar
+`SesionesEnVivoController` por responsabilidad (comandos / respuestas / consultas) para no
+repetir el CRITICAL de CBO en pre-push, y confirmar con Víctor si `FinalizarSesionEnVivo`
+(`US-6.2.7`) exige estar en la última pregunta o admite finalizar antes.
+**Baseline abierta:** ninguna — `BL-010` cerrada (`BL-011` se abre al cerrar el Incremento 6).
+**Branch activo:** `develop`. `main` al día en `v0.7.1`.
 
 ---
 
