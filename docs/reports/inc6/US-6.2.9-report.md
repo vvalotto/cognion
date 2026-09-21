@@ -4,7 +4,7 @@
 
 - **Historia de Usuario:** US-6.2.9 — Verificación de la sesión en vivo completa y del RNF de rendimiento
 - **Puntos estimados:** 3 (la spec no lo declara)
-- **Tiempo real:** ~30 min (tracker; ~13 min son las dos corridas de la suite completa con cobertura y CodeGuard en Fase 7 — PRIN-001, tiempo real de ejecución del agente, no comparable contra estimación humana). Detalle en `.claude/tracking/US-6.2.9-tracking.json`
+- **Tiempo real:** 35 min (tracker; ~13 min son las dos corridas de la suite completa con cobertura y CodeGuard en Fase 7 — PRIN-001, tiempo real de ejecución del agente, no comparable contra estimación humana). Detalle en `.claude/tracking/US-6.2.9-tracking.json`
 - **Estado:** ✅ COMPLETADO en lo automatizado — **revisión manual de Víctor pendiente**
 - **Fecha completado:** 2026-09-21
 - **Aporta:** evidencia, no código de producción. Verifica de punta a punta la sesión en vivo (API y WebSockets reales) y mide por primera vez con datos reales un RNF de rendimiento duro: el cierre de pregunta con 60 participantes cumple con `p95 = 43,81 ms` contra el umbral de 100 ms.
