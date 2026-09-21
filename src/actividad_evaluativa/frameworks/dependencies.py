@@ -80,6 +80,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_co
     SesionesEnVivoController,
 )
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
+from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import (
+    CerrarPreguntaActualUseCase,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
@@ -299,9 +302,16 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
 
 def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoController:
     """Arma el `ConduccionEnVivoController` con sus dependencias concretas (`US-6.2.2` en adelante)."""
+    event_store = SQLAlchemyEventStore(session)
     return ConduccionEnVivoController(
         MostrarOpcionesEnVivoUseCase(
-            SQLAlchemyEventStore(session),
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+        ),
+        CerrarPreguntaActualUseCase(
+            event_store,
+            SQLAlchemyProyeccionesEnVivoQuery(session),
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),

@@ -154,6 +154,28 @@ async def mostrar_opciones_en_vivo(
 
 
 @router.post(
+    "/{sesion_id}/cerrar-pregunta",
+    response_model=SesionEnVivoResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def cerrar_pregunta_en_vivo(
+    sesion_id: UUID,
+    controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Cierra la pregunta actual y transmite el resultado; 404/422 si se rechaza."""
+    try:
+        sesion = await controller.cerrar_pregunta(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (SesionNoEnCurso, OpcionesNoMostradasTodavia, PreguntaYaCerrada) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_sesion_response(sesion)
+
+
+@router.post(
     "/{sesion_id}/unirse",
     response_model=ParticipacionEnVivoResponse,
     dependencies=[Depends(require_estudiante)],

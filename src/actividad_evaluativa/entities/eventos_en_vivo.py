@@ -133,6 +133,31 @@ class OpcionesEnVivoMostradas:
 
 
 @dataclass(frozen=True)
+class PreguntaEnVivoCerrada:
+    """El Docente cerró la pregunta actual (`US-6.2.5`).
+
+    Payload mínimo: el ranking y el histograma no se persisten, viven en los read models.
+    """
+
+    sesion_id: UUID
+    pregunta_actual_indice: int
+    pregunta_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_sesion(
+        cls, sesion: ActividadEvaluativaEnVivo, ocurrido_en: datetime
+    ) -> PreguntaEnVivoCerrada:
+        """Construye el evento a partir de la sesión y su pregunta actual."""
+        return cls(
+            sesion_id=sesion.id,
+            pregunta_actual_indice=sesion.pregunta_actual_indice or 0,
+            pregunta_id=sesion.pregunta_actual().pregunta_id,
+            ocurrido_en=ocurrido_en,
+        )
+
+
+@dataclass(frozen=True)
 class RespuestaEnVivoRegistrada:
     """Un Estudiante respondió la pregunta actual — evento repetible de su `ParticipacionEnVivo`."""
 

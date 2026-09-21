@@ -143,6 +143,15 @@ class ActividadEvaluativaEnVivo:
         self.opciones_mostradas = True
         self.opciones_mostradas_en = ahora
 
+    def cerrar_pregunta(self) -> None:
+        """Cierra la pregunta actual: deja de aceptar respuestas (`US-6.2.5`).
+
+        Levanta `SesionNoEnCurso`, `OpcionesNoMostradasTodavia` (INV-AEV-09) o `PreguntaYaCerrada`
+        sin mutar. El cierre es manual: es independiente del corte por `TiempoAgotado`.
+        """
+        _validar_para_cerrar(self)
+        self.pregunta_actual_cerrada = True
+
     def validar_para_responder(self, pregunta_id: UUID, ahora: datetime) -> float:
         """Valida que `pregunta_id` admita una respuesta y devuelve el tiempo de respuesta (s).
 
@@ -169,6 +178,16 @@ def _validar_para_mostrar_opciones(sesion: ActividadEvaluativaEnVivo) -> None:
         raise SesionNoEnCurso(sesion.id)
     if sesion.opciones_mostradas:
         raise OpcionesYaMostradas(sesion.id)
+
+
+def _validar_para_cerrar(sesion: ActividadEvaluativaEnVivo) -> None:
+    """Rechaza el cierre si la sesión no está `EnCurso`, sin opciones mostradas o ya cerrada."""
+    if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
+        raise SesionNoEnCurso(sesion.id)
+    if not sesion.opciones_mostradas:
+        raise OpcionesNoMostradasTodavia(sesion.id)
+    if sesion.pregunta_actual_cerrada:
+        raise PreguntaYaCerrada(sesion.id)
 
 
 def _validar_para_responder(

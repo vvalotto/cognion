@@ -1,5 +1,6 @@
 """Tests unitarios de `MostrarOpcionesEnVivoUseCase` y de su método en el controller (US-6.2.2)."""
 
+from unittest.mock import AsyncMock
 from uuid import uuid4
 
 import pytest
@@ -161,7 +162,7 @@ class TestRechazos:
 class TestSesionesEnVivoControllerMostrarOpciones:
     async def test_mostrar_opciones_delega_en_el_use_case(self):
         use_case, event_store, _, sesion, pregunta_consulta = await _escenario(OPCIONES)
-        controller = ConduccionEnVivoController(use_case)
+        controller = ConduccionEnVivoController(use_case, AsyncMock())
 
         resultado = await controller.mostrar_opciones(sesion.id)
 
