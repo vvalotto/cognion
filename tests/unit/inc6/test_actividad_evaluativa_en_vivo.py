@@ -419,3 +419,107 @@ class TestCerrarPregunta:
         assert evento.pregunta_actual_indice == 0
         assert evento.pregunta_id == sesion.pregunta_actual().pregunta_id
         assert evento.ocurrido_en == ahora
+
+
+class TestAvanzar:
+    def _cerrada(self, cantidad: int = 3, indice: int = 0):
+        from datetime import UTC, datetime
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(cantidad), 30)
+        sesion.iniciar()
+        sesion.pregunta_actual_indice = indice
+        sesion.mostrar_opciones(datetime.now(UTC))
+        sesion.cerrar_pregunta()
+        return sesion
+
+    def test_pasa_a_la_siguiente_con_el_estado_inicial(self):
+        sesion = self._cerrada()
+
+        sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 1
+        assert sesion.opciones_mostradas is False
+        assert sesion.opciones_mostradas_en is None
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_avanza_hasta_la_ultima_pregunta(self):
+        sesion = self._cerrada(cantidad=5, indice=3)
+
+        sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 4
+
+    @pytest.mark.parametrize(
+        "estado", [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.FINALIZADA]
+    )
+    def test_rechaza_si_no_esta_en_curso(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = self._cerrada()
+        sesion.estado = estado
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 0
+
+    def test_rechaza_si_la_pregunta_no_fue_cerrada_sin_mutar(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.errors import PreguntaActualNoCerrada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        sesion.mostrar_opciones(datetime.now(UTC))
+
+        with pytest.raises(PreguntaActualNoCerrada):
+            sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 0
+        assert sesion.opciones_mostradas is True
+
+    def test_rechaza_en_la_ultima_pregunta_sin_mutar(self):
+        from src.actividad_evaluativa.entities.errors import NoQuedanPreguntas
+
+        sesion = self._cerrada(cantidad=3, indice=2)
+
+        with pytest.raises(NoQuedanPreguntas):
+            sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 2
+        assert sesion.pregunta_actual_cerrada is True
+
+    def test_evento_toma_la_nueva_pregunta_actual(self):
+        from src.actividad_evaluativa.entities.eventos_en_vivo import SiguientePreguntaPresentada
+
+        sesion = self._cerrada()
+        sesion.avanzar()
+
+        evento = SiguientePreguntaPresentada.desde_sesion(sesion, "Enunciado 2", "opcion_multiple")
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 1
+        assert evento.pregunta_id == sesion.preguntas[1].pregunta_id
+        assert evento.enunciado == "Enunciado 2"
+        assert evento.tipo == "opcion_multiple"
+
+    def test_reconstruir_aplica_el_evento_y_resetea_el_estado_de_la_pregunta(self):
+        from datetime import UTC, datetime
+        from types import SimpleNamespace
+
+        sesion = self._cerrada()
+        sesion.opciones_mostradas_en = datetime.now(UTC)
+        evento = SimpleNamespace(
+            event_type="SiguientePreguntaPresentada", payload={"pregunta_actual_indice": 1}
+        )
+
+        from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+            _aplicar_evento,
+        )
+
+        _aplicar_evento(sesion, evento)  # type: ignore[arg-type]
+
+        assert sesion.pregunta_actual_indice == 1
+        assert sesion.opciones_mostradas is False
+        assert sesion.opciones_mostradas_en is None
+        assert sesion.pregunta_actual_cerrada is False

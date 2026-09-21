@@ -1,4 +1,4 @@
-"""Caso de uso: el Docente inicia una sesión en vivo (US-6.1.4, RF-08)."""
+"""Caso de uso: el Docente avanza a la siguiente pregunta de la sesión en vivo (US-6.2.6, RF-09)."""
 
 from __future__ import annotations
 
@@ -9,10 +9,10 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 )
 from src.actividad_evaluativa.entities.errors import (
     ConcurrenciaOptimistaError,
+    PreguntaActualNoCerrada,
     SesionNoExiste,
-    SesionYaIniciada,
 )
-from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoIniciada
+from src.actividad_evaluativa.entities.eventos_en_vivo import SiguientePreguntaPresentada
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
@@ -28,8 +28,8 @@ from src.actividad_evaluativa.use_cases.pregunta_presentada import (
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 
 
-class IniciarSesionEnVivoUseCase:
-    """Orquesta el inicio de la sesión: transición a `EnCurso`, persistencia y broadcast."""
+class AvanzarSiguientePreguntaUseCase:
+    """Orquesta el avance: validación, persistencia y broadcast del nuevo enunciado."""
 
     def __init__(
         self,
@@ -43,28 +43,24 @@ class IniciarSesionEnVivoUseCase:
         self._canal = canal
 
     async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
-        """Inicia la sesión y publica el enunciado de la primera pregunta a todos los conectados.
+        """Avanza a la siguiente pregunta y publica su enunciado a todos los conectados.
 
-        Levanta `SesionNoExiste` si `sesion_id` no tiene stream y `SesionYaIniciada` si ya no
-        está `EnEspera` — incluida la carrera de dos inicios simultáneos, que el chequeo
-        optimista del event store resuelve dejando ganar a uno solo. El `tipo` de la pregunta se
-        deriva de `opciones` (`None` = Verdadero/Falso, ver `ContenidoPregunta`); las opciones no
-        viajan ni se persisten: las revela `MostrarOpcionesDeLaPregunta` (Iteración 2).
-
-        Publica recién después de persistir; el canal es best-effort, así que un fallo de
-        broadcast no revierte el inicio.
+        Levanta `SesionNoExiste`, `SesionNoEnCurso`, `PreguntaActualNoCerrada` o
+        `NoQuedanPreguntas`. Dos avances concurrentes: el segundo choca con el chequeo optimista
+        y se traduce a `PreguntaActualNoCerrada` (el primero ya dejó la pregunta nueva sin
+        cerrar). Publica recién después de persistir; el canal es best-effort.
         """
         eventos = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
         if not eventos:
             raise SesionNoExiste(sesion_id)
 
         sesion = ActividadEvaluativaEnVivo.reconstruir(eventos)
-        sesion.iniciar()
+        sesion.avanzar()
 
         contenido = await self._pregunta_consulta.obtener_contenido(
             sesion.pregunta_actual().pregunta_id
         )
-        evento = SesionEnVivoIniciada.desde_sesion(
+        evento = SiguientePreguntaPresentada.desde_sesion(
             sesion, contenido.texto, tipo_de_pregunta(contenido)
         )
 
@@ -75,15 +71,13 @@ class IniciarSesionEnVivoUseCase:
                 len(eventos),
                 [
                     EventoParaAlmacenar(
-                        event_type="SesionEnVivoIniciada",
+                        event_type="SiguientePreguntaPresentada",
                         payload=payload_pregunta_presentada(evento),
                     )
                 ],
             )
         except ConcurrenciaOptimistaError as exc:
-            # Otro inicio concurrente ganó la carrera de insertar el evento — es exactamente el
-            # caso "ya iniciada", no un error de infraestructura.
-            raise SesionYaIniciada(sesion_id) from exc
+            raise PreguntaActualNoCerrada(sesion_id) from exc
 
         await self._canal.publicar(sesion_id, mensaje_pregunta_presentada(evento))
         return sesion

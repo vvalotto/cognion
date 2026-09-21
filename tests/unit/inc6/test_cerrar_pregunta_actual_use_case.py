@@ -204,7 +204,11 @@ class TestRechazos:
 class TestConduccionEnVivoControllerCerrar:
     async def test_cerrar_pregunta_delega_en_el_use_case(self):
         use_case, _, _, sesion, _ = await _escenario()
-        controller = ConduccionEnVivoController(mostrar_opciones=None, cerrar_pregunta=use_case)  # type: ignore[arg-type]
+        controller = ConduccionEnVivoController(
+            mostrar_opciones=None,  # type: ignore[arg-type]
+            cerrar_pregunta=use_case,
+            avanzar_siguiente_pregunta=None,  # type: ignore[arg-type]
+        )
 
         resultado = await controller.cerrar_pregunta(sesion.id)
 

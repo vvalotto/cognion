@@ -17,9 +17,11 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 from src.actividad_evaluativa.entities.errors import (
     ComisionNoExiste,
     EstudianteNoExiste,
+    NoQuedanPreguntas,
     OpcionesNoMostradasTodavia,
     OpcionesYaMostradas,
     ParticipacionNoExiste,
+    PreguntaActualNoCerrada,
     PreguntaNoActual,
     PreguntasInsuficientes,
     PreguntaYaCerrada,
@@ -168,6 +170,28 @@ async def cerrar_pregunta_en_vivo(
     except SesionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except (SesionNoEnCurso, OpcionesNoMostradasTodavia, PreguntaYaCerrada) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_sesion_response(sesion)
+
+
+@router.post(
+    "/{sesion_id}/avanzar",
+    response_model=SesionEnVivoResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def avanzar_siguiente_pregunta_en_vivo(
+    sesion_id: UUID,
+    controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Avanza a la siguiente pregunta y transmite su enunciado; 404/422 si se rechaza."""
+    try:
+        sesion = await controller.avanzar_siguiente_pregunta(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (SesionNoEnCurso, PreguntaActualNoCerrada, NoQuedanPreguntas) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

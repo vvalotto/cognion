@@ -102,6 +102,35 @@ class SesionEnVivoIniciada:
 
 
 @dataclass(frozen=True)
+class SiguientePreguntaPresentada:
+    """El Docente avanzó — se presenta el enunciado de la siguiente pregunta (`US-6.2.6`).
+
+    Mismo shape que `SesionEnVivoIniciada`: solo el enunciado, sin opciones.
+    """
+
+    sesion_id: UUID
+    pregunta_actual_indice: int
+    pregunta_id: UUID
+    enunciado: str
+    tipo: str
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_sesion(
+        cls, sesion: ActividadEvaluativaEnVivo, enunciado: str, tipo: str
+    ) -> SiguientePreguntaPresentada:
+        """Construye el evento a partir de una sesión ya avanzada y el enunciado presentado."""
+        pregunta = sesion.pregunta_actual()
+        return cls(
+            sesion_id=sesion.id,
+            pregunta_actual_indice=sesion.pregunta_actual_indice or 0,
+            pregunta_id=pregunta.pregunta_id,
+            enunciado=enunciado,
+            tipo=tipo,
+        )
+
+
+@dataclass(frozen=True)
 class OpcionesEnVivoMostradas:
     """El Docente reveló las opciones de la pregunta actual — arranca el temporizador.
 
