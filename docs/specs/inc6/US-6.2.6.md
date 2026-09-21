@@ -1,6 +1,6 @@
 # US-6.2.6: Docente avanza a la siguiente pregunta
 
-**Estado**: `Especificada`
+**Estado**: `Implementada` (2026-09-21)
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`

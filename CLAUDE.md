@@ -982,11 +982,16 @@ Issue #382) a `US-6.1.4` (crear sesión, unirse, iniciar; Issues #383-#385). Rep
 case, corregido extrayendo helpers) y `US-6.2.5` (Docente cierra la pregunta: un único
 broadcast con respuesta correcta + histograma + ranking leídos de los read models,
 `ConduccionEnVivoController` separado antes de sumar el use case, sin CRITICAL de CBO;
-1475/1475 tests, quality gates APROBADO, `docs/reports/inc6/US-6.2.5-report.md`). Pendientes:
-`US-6.2.6` (avanzar), `6.2.7` (finalizar sesión), `6.2.8` (consultas/reconexión) y `6.2.9`
-(verificación del RNF p95 ≤100 ms con 60 participantes).
+1475/1475 tests, quality gates APROBADO, `docs/reports/inc6/US-6.2.5-report.md`). `US-6.2.6` (Docente avanza a la siguiente pregunta: `avanzar()`
+en el aggregate con INV-AEV-03, evento `SiguientePreguntaPresentada`, `AvanzarSiguientePreguntaUseCase`
+sobre el `ConduccionEnVivoController` ya separado, endpoint `POST /sesiones-en-vivo/{id}/avanzar`;
+el armado del mensaje `pregunta_presentada` se extrajo a `use_cases/pregunta_presentada.py` y lo
+comparten el inicio y el avance; 1511/1512 tests — el único fallo es el flake preexistente de
+`US-3.2.1` —, cobertura 100% del BC, quality gates APROBADO,
+`docs/reports/inc6/US-6.2.6-report.md`). Pendientes: `6.2.7` (finalizar sesión), `6.2.8`
+(consultas/reconexión) y `6.2.9` (verificación del RNF p95 ≤100 ms con 60 participantes).
 
-**Próximo paso:** `US-6.2.6` (avanzar a la siguiente pregunta). `FinalizarSesionEnVivo` (`US-6.2.7`)
+**Próximo paso:** `US-6.2.7` (finalizar la sesión). `FinalizarSesionEnVivo`
 admite finalizar antes de agotar el set, sin restricción de última pregunta (decidido 2026-09-21).
 
 ---
