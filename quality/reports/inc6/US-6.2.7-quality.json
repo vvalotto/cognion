@@ -1,0 +1,80 @@
+{
+  "us_id": "US-6.2.7",
+  "fecha": "2026-09-21T16:01:42.452873",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.79,
+    "cc_promedio": 2.08,
+    "cc_maximo": 7,
+    "mi_promedio": 79.0,
+    "mi_minimo": 52.94,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 6,
+    "errors": 0,
+    "warnings": 168,
+    "infos": 39,
+    "checks_ejecutados": 9,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 6
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 4,
+        "infos": 3
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 6
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 46,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 6
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 6
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 118,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 6
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 6
+      }
+    }
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1542 passed, 0 failed (9m11s). Cobertura 100% de src/actividad_evaluativa (1754 stmts); total src 96%.",
+    "CodeGuard --analysis-type full sobre los 6 archivos de src/ modificados/agregados: 9 checks ejecutados, 0 errors.",
+    "Pylint directo: R0902 en eventos_en_vivo (preexistente), C0301 preexistentes, R0903 del use case (mismo patrón del BC); la línea larga propia del docstring se corrigió.",
+    "mypy src/: 0 errores; ruff check limpio."
+  ]
+}

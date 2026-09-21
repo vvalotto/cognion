@@ -1,4 +1,4 @@
-"""Caso de uso: el Docente finaliza la sesión en vivo y todos ven el ranking final (US-6.2.7, RF-09)."""
+"""Caso de uso: el Docente finaliza la sesión en vivo y todos ven el ranking (US-6.2.7)."""
 
 from __future__ import annotations
 
