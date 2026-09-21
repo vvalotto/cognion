@@ -57,6 +57,44 @@ def _cliente_async() -> AsyncClient:
     return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
 
 
+def _presentar(client, base: str, docente: dict, sockets: list, indice: int) -> None:
+    """Inicia (índice 0) o avanza a la pregunta `indice` y verifica el broadcast a todos."""
+    accion = "iniciar" if indice == 0 else "avanzar"
+    assert client.post(f"{base}/{accion}", headers=docente).status_code == 200
+    presentadas = [_leer(ws, "pregunta_presentada") for ws in sockets]
+    assert all(m == presentadas[0] for m in presentadas)
+    assert presentadas[0]["pregunta_actual_indice"] == indice
+
+
+def _mostrar_y_responder(
+    client, base: str, docente: dict, sockets: list, estudiantes: list, pregunta_id: str
+) -> dict[str, int]:
+    """Muestra las opciones, hace responder a todos (pares aciertan) y devuelve sus puntajes."""
+    assert client.post(f"{base}/mostrar-opciones", headers=docente).status_code == 200
+    assert all(_leer(ws, "opciones_mostradas")["opciones"] for ws in sockets)
+    puntos: dict[str, int] = {}
+    for posicion, (estudiante_id, headers) in enumerate(estudiantes):
+        respuesta = client.post(
+            f"{base}/responder",
+            json={
+                "pregunta_id": pregunta_id,
+                "contenido": CORRECTA if posicion % 2 == 0 else INCORRECTA,
+            },
+            headers=headers,
+        )
+        assert respuesta.status_code == 200, respuesta.text
+        puntos[estudiante_id] = respuesta.json()["puntaje"]
+    return puntos
+
+
+def _cerrar(client, base: str, docente: dict, sockets: list) -> dict[str, int]:
+    """Cierra la pregunta, verifica el broadcast idéntico y devuelve el ranking acumulado."""
+    assert client.post(f"{base}/cerrar-pregunta", headers=docente).status_code == 200
+    cierres = [_leer(ws, "pregunta_cerrada") for ws in sockets]
+    assert all(m == cierres[0] for m in cierres)
+    return {r["estudiante_id"]: r["puntaje_acumulado"] for r in cierres[0]["ranking"]}
+
+
 class TestSesionCompletaDePuntaAPunta:
     """Escenario 1: 5 Estudiantes, 3 preguntas, finalización y ranking final."""
 
@@ -65,7 +103,7 @@ class TestSesionCompletaDePuntaAPunta:
         estudiantes = correr(crear_estudiantes(comision_id, 5))
         docente = _docente()
         base = f"/sesiones-en-vivo/{sesion_id}"
-        puntos_por_estudiante = {estudiante_id: 0 for estudiante_id, _ in estudiantes}
+        acumulado = {estudiante_id: 0 for estudiante_id, _ in estudiantes}
 
         with TestClient(app) as client, ExitStack() as stack:
             sockets = [
@@ -74,56 +112,33 @@ class TestSesionCompletaDePuntaAPunta:
             ]
             for _, headers in estudiantes:
                 assert client.post(f"{base}/unirse", headers=headers).status_code == 200
-            assert client.post(f"{base}/iniciar", headers=docente).status_code == 200
-            presentadas = [_leer(ws, "pregunta_presentada") for ws in sockets]
-            assert all(m == presentadas[0] for m in presentadas)
-            assert presentadas[0]["pregunta_actual_indice"] == 0
 
             for indice in range(3):
-                if indice > 0:
-                    assert client.post(f"{base}/avanzar", headers=docente).status_code == 200
-                    assert all(
-                        _leer(ws, "pregunta_presentada")["pregunta_actual_indice"] == indice
-                        for ws in sockets
-                    )
-                assert client.post(f"{base}/mostrar-opciones", headers=docente).status_code == 200
-                assert all(_leer(ws, "opciones_mostradas")["opciones"] for ws in sockets)
-
+                _presentar(client, base, docente, sockets, indice)
                 pregunta_id = correr(pregunta_actual_de_indice(sesion_id, indice))
-                for posicion, (estudiante_id, headers) in enumerate(estudiantes):
-                    contenido = CORRECTA if posicion % 2 == 0 else INCORRECTA
-                    respuesta = client.post(
-                        f"{base}/responder",
-                        json={"pregunta_id": pregunta_id, "contenido": contenido},
-                        headers=headers,
-                    )
-                    assert respuesta.status_code == 200, respuesta.text
-                    puntos_por_estudiante[estudiante_id] += respuesta.json()["puntaje"]
-
-                assert client.post(f"{base}/cerrar-pregunta", headers=docente).status_code == 200
-                cierres = [_leer(ws, "pregunta_cerrada") for ws in sockets]
-                assert all(m == cierres[0] for m in cierres)
-                acumulado = {
-                    r["estudiante_id"]: r["puntaje_acumulado"] for r in cierres[0]["ranking"]
-                }
-                assert acumulado == puntos_por_estudiante
+                puntos = _mostrar_y_responder(
+                    client, base, docente, sockets, estudiantes, pregunta_id
+                )
+                for estudiante_id, puntaje in puntos.items():
+                    acumulado[estudiante_id] += puntaje
+                assert _cerrar(client, base, docente, sockets) == acumulado
 
             # El Estudiante ve el ranking solo después de finalizar.
             _, un_estudiante = estudiantes[0]
             assert client.get(f"{base}/ranking", headers=un_estudiante).status_code == 403
             assert client.post(f"{base}/finalizar", headers=docente).status_code == 200
             finales = [_leer(ws, "sesion_finalizada") for ws in sockets]
-            assert all(m == finales[0] for m in finales)
             ranking_final = client.get(f"{base}/ranking", headers=un_estudiante)
 
+        assert all(m == finales[0] for m in finales)
         assert ranking_final.status_code == 200
         puntajes = [fila["puntaje_acumulado"] for fila in finales[0]["ranking"]]
         assert puntajes == sorted(puntajes, reverse=True)
         assert {r["estudiante_id"]: r["puntaje_acumulado"] for r in finales[0]["ranking"]} == (
-            puntos_por_estudiante
+            acumulado
         )
         assert ranking_final.json() == finales[0]["ranking"]
-        assert sum(puntajes) == sum(puntos_por_estudiante.values()) > 0
+        assert sum(puntajes) == sum(acumulado.values()) > 0
 
 
 async def pregunta_actual_de_indice(sesion_id: str, indice: int) -> str:

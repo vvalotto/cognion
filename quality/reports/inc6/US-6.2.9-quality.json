@@ -1,0 +1,81 @@
+{
+  "us_id": "US-6.2.9",
+  "fecha": "2026-09-21T17:33:54.764701",
+  "componente": "src/actividad_evaluativa/ (sin cambios de producción)",
+  "metricas": {
+    "pylint": null,
+    "cc_promedio": null,
+    "cc_maximo": null,
+    "mi_promedio": null,
+    "mi_minimo": null,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 3,
+    "errors": 1,
+    "warnings": 42,
+    "infos": 59,
+    "checks_ejecutados": 9,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 46
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 2,
+        "infos": 1
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 6,
+        "infos": 1
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 2,
+        "infos": 2
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "Pylint": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 2
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 9,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 22,
+        "infos": 1
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      }
+    },
+    "nota": "Sin .py de src/ modificados: CodeGuard se corrió sobre los 3 archivos Python nuevos de tests/ (no son código de producción)."
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1590 passed, 0 failed (9m30s). Cobertura 100% de src/actividad_evaluativa (1873 stmts, sin cambios respecto de US-6.2.8); total src 97%.",
+    "Sin cambios en src/: pylint/CC/MI de producción no cambian y no se recalculan; mypy src/ 0 errores.",
+    "CodeGuard marcó CC 35 (grado E) en el test de sesión completa; se partió en helpers y quedó en 0 errors.",
+    "RNF de rendimiento: p95 43.81 ms del use case CerrarPreguntaActual con 60 participantes (n=30) contra umbral 100 ms — CUMPLE. Evidencia en quality/reports/uat/inc6/rendimiento-cierre.json."
+  ]
+}
