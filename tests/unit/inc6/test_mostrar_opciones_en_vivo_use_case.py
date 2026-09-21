@@ -162,7 +162,7 @@ class TestRechazos:
 class TestSesionesEnVivoControllerMostrarOpciones:
     async def test_mostrar_opciones_delega_en_el_use_case(self):
         use_case, event_store, _, sesion, pregunta_consulta = await _escenario(OPCIONES)
-        controller = ConduccionEnVivoController(use_case, AsyncMock())
+        controller = ConduccionEnVivoController(use_case, AsyncMock(), AsyncMock())
 
         resultado = await controller.mostrar_opciones(sesion.id)
 
