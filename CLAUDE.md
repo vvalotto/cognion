@@ -983,12 +983,10 @@ case, corregido extrayendo helpers). Pendientes: `US-6.2.5` (cerrar pregunta), `
 (avanzar), `6.2.7` (finalizar sesión), `6.2.8` (consultas/reconexión) y `6.2.9` (verificación
 del RNF p95 ≤100 ms con 60 participantes).
 
-**Próximo paso:** `US-6.2.5`. Antes de arrancar, dos decisiones de diseño: separar
-`SesionesEnVivoController` por responsabilidad (comandos / respuestas / consultas) para no
-repetir el CRITICAL de CBO en pre-push, y confirmar con Víctor si `FinalizarSesionEnVivo`
-(`US-6.2.7`) exige estar en la última pregunta o admite finalizar antes.
-**Baseline abierta:** ninguna — `BL-010` cerrada (`BL-011` se abre al cerrar el Incremento 6).
-**Branch activo:** `develop`. `main` al día en `v0.7.1`.
+**Próximo paso:** `US-6.2.5`. Decisiones de diseño ya resueltas 2026-09-21: `SesionesEnVivoController`
+se separó por responsabilidad (`ConduccionEnVivoController` nuevo para los comandos del Docente,
+commit `992b0ea` en `feature/US-6.2.5-cerrar-pregunta-en-vivo`) y `FinalizarSesionEnVivo`
+(`US-6.2.7`) admite finalizar antes de agotar el set, sin restricción de última pregunta.
 
 ---
 

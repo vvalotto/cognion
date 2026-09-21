@@ -28,13 +28,13 @@ produce por API y esa siembra puede reemplazarse por el endpoint real.
 Es también el momento en que el **Estudiante ve el ranking completo** por primera vez (§17 punto
 10): durante la sesión solo ve su feedback personal.
 
-### Decisión de spec (a confirmar)
+### Decisión de spec (confirmada por Víctor 2026-09-21)
 
 El modelo (§12) dice "tras cerrar la última pregunta", pero la tabla de excepciones (§13) **no**
 incluye ninguna restricción de "quedan preguntas". Se especifica **sin** esa restricción: el
 Docente puede finalizar **antes de agotar el set**, siempre que la pregunta actual esté cerrada
-(INV-AEV-03) — cubre el caso de terminar la clase antes de tiempo. Si Víctor prefiere exigir que
-sea la última, se agrega `QuedanPreguntas` sin cambiar el resto.
+(INV-AEV-03) — cubre el caso de terminar la clase antes de tiempo. Víctor confirmó
+esta opción el 2026-09-21: finalizar antes, sin restricción de última pregunta.
 
 ### Modelo involucrado
 

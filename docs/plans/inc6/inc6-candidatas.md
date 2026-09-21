@@ -177,8 +177,8 @@ decisión abierta):
 **Ítems abiertos que esta iteración deja para el frontend** (no bloquean el backend):
 - Nombres de los estudiantes en la sala de espera y el ranking: hoy solo viajan `estudiante_id`.
   Resolver nombres requiere un puerto nuevo Actividad Evaluativa → Identidad.
-- Confirmar con Víctor si `FinalizarSesionEnVivo` exige que sea la última pregunta o admite
-  finalizar antes (`US-6.2.7`, decisión de spec: sin esa restricción, el modelo no la lista).
+- ~~Confirmar si `FinalizarSesionEnVivo` exige última pregunta~~ — resuelto 2026-09-21 con
+  Víctor: se puede finalizar antes, sin restricción (`US-6.2.7`).
 
 Specs en `docs/specs/inc6/US-6.2.1.md` a `US-6.2.9.md`.
 
