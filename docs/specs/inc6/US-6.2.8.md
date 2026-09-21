@@ -1,6 +1,6 @@
 # US-6.2.8: Consultar el estado de la sesión, sus participantes y su ranking
 
-**Estado**: `Especificada`
+**Estado**: `Implementada` (2026-09-21)
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `feature backend` (consultas — sin comando ni evento de dominio)
 **Agregado principal afectado**: — (lecturas sobre `ActividadEvaluativaEnVivo` y los read models de `US-6.2.3`)

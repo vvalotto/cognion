@@ -994,11 +994,17 @@ evento `SesionEnVivoFinalizada`, `FinalizarSesionEnVivoUseCase` que publica `ses
 con el ranking final leído del read model, endpoint `POST /sesiones-en-vivo/{id}/finalizar`; la
 siembra de `Finalizada` en los tests de `US-6.1.3`/`6.1.4`/`6.2.x` se reemplazó por el endpoint
 real; 1542/1542 tests, cobertura 100% del BC, quality gates APROBADO,
-`docs/reports/inc6/US-6.2.7-report.md`). Pendientes: `6.2.8` (consultas/reconexión) y `6.2.9`
-(verificación del RNF p95 ≤100 ms con 60 participantes).
+`docs/reports/inc6/US-6.2.7-report.md`). `US-6.2.8` (consultas de estado, participantes y
+ranking para reconexión y sala de espera: `GET /sesiones-en-vivo/{id}` — nunca expone opciones
+antes de mostrarlas ni la correcta antes de cerrar, y suma `ya_respondio`/`puntaje_acumulado` al
+Estudiante —, `GET .../participantes` (docente) y `GET .../ranking` (el Estudiante solo con la
+sesión `Finalizada`, `RankingNoDisponible` → 403); tres use cases de lectura y
+`SesionesEnVivoQueryController` propio, sin puertos ni escrituras nuevas; 1586/1586 tests,
+cobertura 100% del BC, quality gates APROBADO, `docs/reports/inc6/US-6.2.8-report.md`).
+Pendiente: `6.2.9` (verificación del RNF p95 ≤100 ms con 60 participantes).
 
-**Próximo paso:** `US-6.2.8` (consultar el estado de la sesión, sus participantes y su ranking;
-reconexión).
+**Próximo paso:** `US-6.2.9` (verificación E2E y del RNF de rendimiento con 60 participantes;
+re-verificar el escenario "sesión en la pregunta 2" de `6.2.4`).
 
 ---
 
