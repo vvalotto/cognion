@@ -75,7 +75,7 @@
   "observaciones": [
     "Suite completa: 1590 passed, 0 failed (9m30s). Cobertura 100% de src/actividad_evaluativa (1873 stmts, sin cambios respecto de US-6.2.8); total src 97%.",
     "Sin cambios en src/: pylint/CC/MI de producción no cambian y no se recalculan; mypy src/ 0 errores.",
-    "CodeGuard marcó CC 35 (grado E) en el test de sesión completa; se partió en helpers y quedó en 0 errors.",
+    "CodeGuard marcó CC 35 (grado E) en el test de sesión completa; se partió en helpers y ese error desapareció. El único error restante es un timeout del pylint interno de CodeGuard (>10 s), bug conocido software_limpio#70/#71, no un hallazgo de código.",
     "RNF de rendimiento: p95 43.81 ms del use case CerrarPreguntaActual con 60 participantes (n=30) contra umbral 100 ms — CUMPLE. Evidencia en quality/reports/uat/inc6/rendimiento-cierre.json."
   ]
 }

@@ -1,6 +1,6 @@
 # US-6.2.9: Verificación de la sesión en vivo completa y del RNF de rendimiento
 
-**Estado**: `Especificada`
+**Estado**: `Implementada` (2026-09-21) — revisión manual de Víctor pendiente
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `verificación` (UAT backend — sin código de producción)
 **Agregado principal afectado**: — (recorre ambos aggregates de punta a punta)

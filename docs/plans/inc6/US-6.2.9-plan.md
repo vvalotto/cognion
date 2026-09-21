@@ -68,4 +68,28 @@
 - Sin Fase 4 (unitarios) ni 6 (BDD). Fase 5 = el propio test de integración de arriba.
 - La suite completa corre en Fase 7 (vacía la DB local).
 
-**Estado:** 5/5 secciones completadas (evidencia final en Fase 7)
+**Estado:** ✅ COMPLETADO (a falta de la revisión manual de Víctor)
+**Fecha completado:** 2026-09-21
+**Tareas:** 5/5 secciones completadas
+
+## Desvíos respecto del plan
+
+- Las 8 decisiones de diseño se implementaron como se aprobaron. **Sin código de producción tocado.**
+- Se agregó `tests/uat/inc6/limpiar_uat.sh` (no listado): el guion deja datos sembrados y necesitaba su
+  script de limpieza, como los de inc3/inc4.
+- El test de sesión completa se partió en helpers (`_presentar`, `_mostrar_y_responder`, `_cerrar`) porque
+  CodeGuard marcó CC 35 (grado E) en la versión monolítica.
+- Fase 7: sin `.py` de `src/` modificados, CodeGuard se corrió sobre los 3 archivos Python nuevos de `tests/`.
+
+## Métricas de Tiempo
+
+Tiempos medidos por el tracker (PRIN-001). Detalle en `docs/reports/inc6/US-6.2.9-report.md`.
+
+## Lecciones Aprendidas
+
+- ✅ El RNF se cumple con margen: p95 43,81 ms (use case) contra 100 ms, y 49,51 ms por HTTP completo.
+- ✅ Correr el guion manual entero antes de dárselo a Víctor detectó problemas de formato de salida.
+- ⚠️ `crear_estudiante` hashea bcrypt por llamada: para 60 participantes hace falta `crear_estudiantes`.
+- ⚠️ En zsh, `codeguard $FILES` con una variable de varios archivos los pasa como un solo argumento:
+  usar `${=FILES}`.
+- ⚠️ Las 60 conexiones son simuladas: el checkpoint de staging (Fly.io, WSS real) sigue pendiente.

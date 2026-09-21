@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "us_id": "US-6.2.9",
+    "us_title": "Verificación E2E y RNF de rendimiento de la sesión en vivo",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-21T19:59:30.509630+00:00",
+    "completed_at": "2026-09-21T20:35:08.214540+00:00",
+    "total_elapsed_seconds": 2137,
+    "effective_seconds": 2137,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-21T19:59:30.743222+00:00",
+      "completed_at": "2026-09-21T20:00:36.812651+00:00",
+      "elapsed_seconds": 66,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de Implementación",
+      "started_at": "2026-09-21T20:00:36.935635+00:00",
+      "completed_at": "2026-09-21T20:11:22.878381+00:00",
+      "elapsed_seconds": 645,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-09-21T20:11:23.000704+00:00",
+      "completed_at": "2026-09-21T20:19:15.088003+00:00",
+      "elapsed_seconds": 472,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-21T20:19:15.210098+00:00",
+      "completed_at": "2026-09-21T20:21:11.660613+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-21T20:21:11.809799+00:00",
+      "completed_at": "2026-09-21T20:33:56.919181+00:00",
+      "elapsed_seconds": 765,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-21T20:33:57.054038+00:00",
+      "completed_at": "2026-09-21T20:35:07.809388+00:00",
+      "elapsed_seconds": 70,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-21T20:35:07.938639+00:00",
+      "completed_at": "2026-09-21T20:35:08.088372+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 7,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
