@@ -353,3 +353,69 @@ class TestEventoOpcionesMostradas:
         assert evento.pregunta_id == sesion.pregunta_actual().pregunta_id
         assert evento.opciones == ["a", "b"]
         assert evento.ocurrido_en == ahora
+
+
+class TestCerrarPregunta:
+    def _con_opciones_mostradas(self):
+        from datetime import UTC, datetime
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        sesion.mostrar_opciones(datetime.now(UTC))
+        return sesion
+
+    def test_marca_la_pregunta_como_cerrada(self):
+        sesion = self._con_opciones_mostradas()
+
+        sesion.cerrar_pregunta()
+
+        assert sesion.pregunta_actual_cerrada is True
+
+    @pytest.mark.parametrize(
+        "estado", [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.FINALIZADA]
+    )
+    def test_rechaza_si_no_esta_en_curso(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.cerrar_pregunta()
+
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_rechaza_si_las_opciones_no_se_mostraron(self):
+        from src.actividad_evaluativa.entities.errors import OpcionesNoMostradasTodavia
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+
+        with pytest.raises(OpcionesNoMostradasTodavia):
+            sesion.cerrar_pregunta()
+
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_rechaza_si_ya_estaba_cerrada(self):
+        from src.actividad_evaluativa.entities.errors import PreguntaYaCerrada
+
+        sesion = self._con_opciones_mostradas()
+        sesion.cerrar_pregunta()
+
+        with pytest.raises(PreguntaYaCerrada):
+            sesion.cerrar_pregunta()
+
+    def test_evento_toma_la_pregunta_actual(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.eventos_en_vivo import PreguntaEnVivoCerrada
+
+        sesion = self._con_opciones_mostradas()
+        ahora = datetime.now(UTC)
+
+        evento = PreguntaEnVivoCerrada.desde_sesion(sesion, ahora)
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 0
+        assert evento.pregunta_id == sesion.pregunta_actual().pregunta_id
+        assert evento.ocurrido_en == ahora
