@@ -20,9 +20,6 @@ from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionE
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
 )
-from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
-    MostrarOpcionesEnVivoUseCase,
-)
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     AGGREGATE_TYPE_PARTICIPACION,
     AGGREGATE_TYPE_SESION,
@@ -68,7 +65,8 @@ async def _escenario():
 
 async def _sembrar_evento_de_sesion(event_store, sesion_id, tipo: str, secuencia: int) -> None:
     """Siembra un evento posterior en el stream de la sesión — `US-6.1.4`/Iteración 2 todavía no
-    los emiten por API, así que los tests los agregan directamente."""
+    los emiten por API, así que los tests los agregan directamente.
+    """
     await event_store.append(
         AGGREGATE_TYPE_SESION,
         sesion_id,
@@ -234,10 +232,7 @@ class TestSesionesEnVivoControllerUnirse:
         iniciar = IniciarSesionEnVivoUseCase(
             FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
         )
-        mostrar = MostrarOpcionesEnVivoUseCase(
-            FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
-        )
-        controller = SesionesEnVivoController(_crear_sesion_stub(), use_case, iniciar, mostrar)
+        controller = SesionesEnVivoController(_crear_sesion_stub(), use_case, iniciar)
 
         participacion = await controller.unirse(sesion.id, estudiante_id)
 

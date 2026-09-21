@@ -39,6 +39,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     SesionEnVivoResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
+    get_conduccion_en_vivo_controller,
     get_connection_manager,
     get_current_user,
     get_jwt_issuer,
@@ -46,6 +47,9 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     get_sesiones_en_vivo_controller,
     require_docente,
     require_estudiante,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
+    ConduccionEnVivoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
     ParticipacionesEnVivoController,
@@ -134,7 +138,7 @@ async def iniciar_sesion_en_vivo(
 )
 async def mostrar_opciones_en_vivo(
     sesion_id: UUID,
-    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+    controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Revela las opciones de la pregunta actual; 404/422 si se rechaza."""
     try:
@@ -142,6 +146,28 @@ async def mostrar_opciones_en_vivo(
     except SesionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except (SesionNoEnCurso, OpcionesYaMostradas) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_sesion_response(sesion)
+
+
+@router.post(
+    "/{sesion_id}/cerrar-pregunta",
+    response_model=SesionEnVivoResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def cerrar_pregunta_en_vivo(
+    sesion_id: UUID,
+    controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Cierra la pregunta actual y transmite el resultado; 404/422 si se rechaza."""
+    try:
+        sesion = await controller.cerrar_pregunta(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (SesionNoEnCurso, OpcionesNoMostradasTodavia, PreguntaYaCerrada) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

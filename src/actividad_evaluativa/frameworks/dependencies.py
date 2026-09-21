@@ -64,6 +64,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudia
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
+    ConduccionEnVivoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
 )
@@ -77,6 +80,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_co
     SesionesEnVivoController,
 )
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
+from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import (
+    CerrarPreguntaActualUseCase,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
@@ -271,7 +277,7 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.2.2`)."""
+    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.1.4`)."""
     event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
@@ -291,8 +297,21 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),
+    )
+
+
+def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoController:
+    """Arma el `ConduccionEnVivoController` con sus dependencias (`US-6.2.2`, `US-6.2.5`)."""
+    event_store = SQLAlchemyEventStore(session)
+    return ConduccionEnVivoController(
         MostrarOpcionesEnVivoUseCase(
             event_store,
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+        ),
+        CerrarPreguntaActualUseCase(
+            event_store,
+            SQLAlchemyProyeccionesEnVivoQuery(session),
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),
