@@ -8,8 +8,10 @@ from enum import StrEnum
 from uuid import UUID, uuid4
 
 from src.actividad_evaluativa.entities.errors import (
+    NoQuedanPreguntas,
     OpcionesNoMostradasTodavia,
     OpcionesYaMostradas,
+    PreguntaActualNoCerrada,
     PreguntaNoActual,
     PreguntaYaCerrada,
     SesionNoEnCurso,
@@ -152,6 +154,15 @@ class ActividadEvaluativaEnVivo:
         _validar_para_cerrar(self)
         self.pregunta_actual_cerrada = True
 
+    def avanzar(self) -> None:
+        """Pasa a la siguiente pregunta, con las opciones ocultas y sin cerrar (`US-6.2.6`).
+
+        Levanta `SesionNoEnCurso`, `PreguntaActualNoCerrada` (INV-AEV-03) o `NoQuedanPreguntas`
+        sin mutar.
+        """
+        _validar_para_avanzar(self)
+        _pasar_a_pregunta(self, (self.pregunta_actual_indice or 0) + 1)
+
     def validar_para_responder(self, pregunta_id: UUID, ahora: datetime) -> float:
         """Valida que `pregunta_id` admita una respuesta y devuelve el tiempo de respuesta (s).
 
@@ -188,6 +199,24 @@ def _validar_para_cerrar(sesion: ActividadEvaluativaEnVivo) -> None:
         raise OpcionesNoMostradasTodavia(sesion.id)
     if sesion.pregunta_actual_cerrada:
         raise PreguntaYaCerrada(sesion.id)
+
+
+def _validar_para_avanzar(sesion: ActividadEvaluativaEnVivo) -> None:
+    """Rechaza avanzar si no está `EnCurso`, la pregunta no se cerró o era la última."""
+    if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
+        raise SesionNoEnCurso(sesion.id)
+    if not sesion.pregunta_actual_cerrada:
+        raise PreguntaActualNoCerrada(sesion.id)
+    if (sesion.pregunta_actual_indice or 0) + 1 >= len(sesion.preguntas):
+        raise NoQuedanPreguntas(sesion.id)
+
+
+def _pasar_a_pregunta(sesion: ActividadEvaluativaEnVivo, indice: int) -> None:
+    """Deja la sesión en el estado inicial de la pregunta `indice`: solo el enunciado."""
+    sesion.pregunta_actual_indice = indice
+    sesion.opciones_mostradas = False
+    sesion.opciones_mostradas_en = None
+    sesion.pregunta_actual_cerrada = False
 
 
 def _validar_para_responder(
@@ -228,3 +257,5 @@ def _aplicar_evento(sesion: ActividadEvaluativaEnVivo, evento: EventoAlmacenado)
         sesion.opciones_mostradas_en = datetime.fromisoformat(evento.payload["ocurrido_en"])
     if evento.event_type == "PreguntaEnVivoCerrada":
         sesion.pregunta_actual_cerrada = True
+    if evento.event_type == "SiguientePreguntaPresentada":
+        _pasar_a_pregunta(sesion, evento.payload["pregunta_actual_indice"])

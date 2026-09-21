@@ -359,3 +359,21 @@ class RespuestaYaRegistrada(Exception):
         super().__init__(
             f"Ya registraste tu respuesta a la pregunta '{pregunta_id}' de la sesión '{sesion_id}'."
         )
+
+
+class PreguntaActualNoCerrada(Exception):
+    """La pregunta actual no fue cerrada, no se puede avanzar (INV-AEV-03, `US-6.2.6`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La pregunta actual de la sesión '{sesion_id}' todavía no fue cerrada.")
+
+
+class NoQuedanPreguntas(Exception):
+    """La pregunta actual es la última del set — el Docente debe finalizar (`US-6.2.6`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión '{sesion_id}' no tiene más preguntas: debe finalizarse.")
