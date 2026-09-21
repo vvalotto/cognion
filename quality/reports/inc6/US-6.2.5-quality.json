@@ -1,0 +1,80 @@
+{
+  "us_id": "US-6.2.5",
+  "fecha": "2026-09-21T07:58:14.031479",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.8,
+    "cc_promedio": 1.98,
+    "cc_maximo": 7,
+    "mi_promedio": 79.4,
+    "mi_minimo": 57.98,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 7,
+    "errors": 3,
+    "warnings": 132,
+    "infos": 45,
+    "checks_ejecutados": 9,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 4,
+        "infos": 5
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 42,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "Pylint": {
+        "errors": 2,
+        "warnings": 0,
+        "infos": 5
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 86,
+        "infos": 1
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 7
+      },
+      "UnusedImports": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 6
+      }
+    }
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1475 passed, 0 failed (16m25s). Cobertura 100% de src/actividad_evaluativa (1623 stmts).",
+    "Errors de CodeGuard: los 3 son 'pylint execution timed out' de sus checks internos (Pylint >10s, UnusedImports >5s), bug conocido software_limpio#70/#71, no hallazgos del código. Reporte completo: los 9 checks corrieron con --analysis-type full.",
+    "Pylint directo sobre los 7 archivos: 9.77/10 -> 9.8 tras corregir la línea larga propia; quedan C0301 preexistentes en dependencies.py:61/73 (imports de US anteriores) y R0903 en el use case (mismo patrón que el resto del BC).",
+    "mypy src/: 0 errores; ruff: limpio. CC máx 7, MI mín 57.98."
+  ]
+}

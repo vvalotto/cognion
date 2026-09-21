@@ -301,7 +301,7 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
 
 
 def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoController:
-    """Arma el `ConduccionEnVivoController` con sus dependencias concretas (`US-6.2.2` en adelante)."""
+    """Arma el `ConduccionEnVivoController` con sus dependencias (`US-6.2.2`, `US-6.2.5`)."""
     event_store = SQLAlchemyEventStore(session)
     return ConduccionEnVivoController(
         MostrarOpcionesEnVivoUseCase(
