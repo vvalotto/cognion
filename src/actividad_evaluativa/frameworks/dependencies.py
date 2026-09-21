@@ -79,6 +79,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.revision_controller
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
+    SesionesEnVivoQueryController,
+)
 from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
     AvanzarSiguientePreguntaUseCase,
 )
@@ -102,6 +105,7 @@ from src.actividad_evaluativa.use_cases.listar_actividades import ListarActivida
 from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
 )
+from src.actividad_evaluativa.use_cases.listar_participantes import ListarParticipantesUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
@@ -112,6 +116,8 @@ from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     MostrarOpcionesEnVivoUseCase,
 )
 from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
+from src.actividad_evaluativa.use_cases.obtener_estado_sesion import ObtenerEstadoSesionUseCase
+from src.actividad_evaluativa.use_cases.obtener_ranking import ObtenerRankingUseCase
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
@@ -331,6 +337,18 @@ def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoCo
             SQLAlchemyProyeccionesEnVivoQuery(session),
             get_canal_tiempo_real(),
         ),
+    )
+
+
+def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivoQueryController:
+    """Arma el `SesionesEnVivoQueryController` con sus dependencias de lectura (`US-6.2.8`)."""
+    event_store = SQLAlchemyEventStore(session)
+    return SesionesEnVivoQueryController(
+        ObtenerEstadoSesionUseCase(event_store, PreguntaConsultaPortInProcess(session)),
+        ListarParticipantesUseCase(
+            event_store, SQLAlchemyParticipantesSesionQueryRepository(session)
+        ),
+        ObtenerRankingUseCase(event_store, SQLAlchemyProyeccionesEnVivoQuery(session)),
     )
 
 

@@ -25,6 +25,7 @@ from src.actividad_evaluativa.entities.errors import (
     PreguntaNoActual,
     PreguntasInsuficientes,
     PreguntaYaCerrada,
+    RankingNoDisponible,
     RespuestaYaRegistrada,
     SesionNoEnCurso,
     SesionNoExiste,
@@ -35,8 +36,13 @@ from src.actividad_evaluativa.entities.errors import (
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
     CrearSesionEnVivoRequest,
+    EstadoSesionEnVivoResponse,
     ParticipacionEnVivoResponse,
+    ParticipanteResponse,
+    PreguntaActualResponse,
+    RankingItemResponse,
     ResponderEnVivoRequest,
+    RespuestaCorrectaResponse,
     RespuestaEnVivoResponse,
     SesionEnVivoResponse,
 )
@@ -47,8 +53,10 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     get_jwt_issuer,
     get_participaciones_en_vivo_controller,
     get_sesiones_en_vivo_controller,
+    get_sesiones_en_vivo_query_controller,
     require_docente,
     require_estudiante,
+    require_estudiante_o_docente,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
     ConduccionEnVivoController,
@@ -59,8 +67,13 @@ from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
+    SesionesEnVivoQueryController,
+)
+from src.actividad_evaluativa.use_cases.obtener_estado_sesion import EstadoSesion
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
 from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +92,39 @@ def _a_sesion_response(sesion: ActividadEvaluativaEnVivo) -> SesionEnVivoRespons
         tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
         estado=sesion.estado.value,
         pregunta_actual_indice=sesion.pregunta_actual_indice,
+    )
+
+
+def _a_estado_response(estado: EstadoSesion) -> EstadoSesionEnVivoResponse:
+    """Arma el `EstadoSesionEnVivoResponse` a partir del estado consultado (`US-6.2.8`)."""
+    sesion = estado.sesion
+    pregunta = estado.pregunta_actual
+    return EstadoSesionEnVivoResponse(
+        estado=sesion.estado.value,
+        comision_id=sesion.comision_id,
+        cantidad_preguntas=len(sesion.preguntas),
+        tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
+        pregunta_actual_indice=sesion.pregunta_actual_indice,
+        opciones_mostradas=sesion.opciones_mostradas,
+        opciones_mostradas_en=sesion.opciones_mostradas_en,
+        pregunta_actual_cerrada=sesion.pregunta_actual_cerrada,
+        pregunta_actual=(
+            None
+            if pregunta is None
+            else PreguntaActualResponse(
+                pregunta_id=pregunta.pregunta_id,
+                enunciado=pregunta.enunciado,
+                tipo=pregunta.tipo,
+                opciones=pregunta.opciones,
+                respuesta_correcta=(
+                    None
+                    if pregunta.respuesta_correcta is None
+                    else RespuestaCorrectaResponse(**pregunta.respuesta_correcta)
+                ),
+            )
+        ),
+        ya_respondio=estado.ya_respondio,
+        puntaje_acumulado=estado.puntaje_acumulado,
     )
 
 
@@ -313,3 +359,61 @@ async def canal_sesion_en_vivo(
             await websocket.receive_text()
     except WebSocketDisconnect:
         connection_manager.desconectar(sesion_id, websocket)
+
+
+@router.get("/{sesion_id}", response_model=EstadoSesionEnVivoResponse)
+async def obtener_estado_sesion_en_vivo(
+    sesion_id: UUID,
+    usuario: JWTPayload = Depends(require_estudiante_o_docente),
+    controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
+) -> EstadoSesionEnVivoResponse:
+    """Devuelve el estado de la sesión para reconectarse; al Estudiante suma su avance propio."""
+    estudiante_id = usuario.usuario_id if usuario.rol == TipoPerfil.ESTUDIANTE else None
+    try:
+        estado = await controller.obtener_estado(sesion_id, estudiante_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    return _a_estado_response(estado)
+
+
+@router.get(
+    "/{sesion_id}/participantes",
+    response_model=list[ParticipanteResponse],
+    dependencies=[Depends(require_docente)],
+)
+async def listar_participantes_de_sesion(
+    sesion_id: UUID,
+    controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
+) -> list[ParticipanteResponse]:
+    """Lista los Estudiantes unidos, en orden de unión, para la sala de espera del Docente."""
+    try:
+        participantes = await controller.listar_participantes(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    return [
+        ParticipanteResponse(estudiante_id=p.estudiante_id, unido_en=p.unido_en)
+        for p in participantes
+    ]
+
+
+@router.get("/{sesion_id}/ranking", response_model=list[RankingItemResponse])
+async def obtener_ranking_de_sesion(
+    sesion_id: UUID,
+    usuario: JWTPayload = Depends(require_estudiante_o_docente),
+    controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
+) -> list[RankingItemResponse]:
+    """Devuelve el ranking; el Estudiante solo lo ve con la sesión finalizada (403 antes)."""
+    try:
+        ranking = await controller.obtener_ranking(sesion_id, usuario.rol == TipoPerfil.ESTUDIANTE)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except RankingNoDisponible as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    return [
+        RankingItemResponse(
+            posicion=r.posicion,
+            estudiante_id=r.estudiante_id,
+            puntaje_acumulado=r.puntaje_acumulado,
+        )
+        for r in ranking
+    ]
