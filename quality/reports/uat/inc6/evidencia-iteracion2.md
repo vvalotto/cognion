@@ -4,7 +4,7 @@
 |-------|-------|
 | Diseño | `quality/reports/uat/inc6/design-iteracion2.md` |
 | Fecha ejecución | 2026-09-21 |
-| Ejecutor | Sesión de Claude Code (Capa 1 + Capa 2). **Revisión manual de Víctor: pendiente** — sin ella RF-08/09/10 no pasan a Implementado |
+| Ejecutor | Sesión de Claude Code (Capa 1 + Capa 2). Revisión manual de Víctor: ✅ validada (2026-09-21) |
 
 ---
 
@@ -61,12 +61,21 @@ a la base por operación) también queda muy por debajo del umbral.
 
 ## 3. Revisión manual
 
-`tests/uat/inc6/guion_manual_iteracion2.sh` — **pendiente de la validación de Víctor.**
+`tests/uat/inc6/guion_manual_iteracion2.sh` — **ejecutado por Víctor el 2026-09-21 y validado sin
+hallazgos.** Un Docente y tres Estudiantes conectados por WebSocket real, 13 pasos:
 
-El guion se ejecutó de punta a punta durante su desarrollo para verificar que funciona (un Docente y
-tres Estudiantes por WebSocket real): todos los pasos respondieron como se espera. Esa corrida fue
-del ejecutor, **no** es la revisión manual; los datos sembrados se limpiaron con `limpiar_uat.sh`.
-Hallazgos de la revisión: `quality/reports/uat/inc6/hallazgos-revision-manual.md` (plantilla vacía).
+- Sala de espera en orden de unión; `participantes_actualizados` creciendo (1, 2, 3) en los 4 clientes.
+- Enunciado sin opciones, luego opciones sin indicar la correcta; feedback personal sin ranking
+  (est1 2981, est2 2980, est3 0); repetir la respuesta da 422.
+- Cierre con un único mensaje idéntico a los 4 clientes; el Estudiante recibe 403 al pedir el ranking
+  y el Docente lo ve.
+- Reconexión de est1: recupera pregunta, opciones, respuesta correcta y puntaje; `unirse` devuelve la
+  misma participación; recibe el siguiente broadcast.
+- Avanzar sin cerrar da 422; finalizar con 3 preguntas sin presentar funciona y el ranking por
+  WebSocket coincide con el del GET; unirse y finalizar de nuevo dan 422; RBAC 403 y sesión inexistente 404.
+
+Hallazgos: ninguno (`quality/reports/uat/inc6/hallazgos-revision-manual.md`). Los datos de la corrida
+se limpiaron con `limpiar_uat.sh`.
 
 ---
 
@@ -76,5 +85,6 @@ Hallazgos de la revisión: `quality/reports/uat/inc6/hallazgos-revision-manual.m
 |------|--------|
 | Capa 1 | ✅ |
 | Capa 2 (RNF p95 ≤ 100 ms) | ✅ CUMPLE (43,81 ms) |
-| Revisión manual de Víctor | ⏳ pendiente |
-| RF-08/09/10 → Implementado en la matriz | ⏳ tras la revisión manual |
+| Revisión manual de Víctor | ✅ sin hallazgos |
+| RF-08/09/10 → Implementado en la matriz | ✅ (no Validado: espera el cierre de baseline del Incremento 6) |
+| Checkpoint de staging del RNF (Fly.io, WSS real) | ⏳ pendiente |

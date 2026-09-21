@@ -87,5 +87,5 @@ Los hallazgos van en `quality/reports/uat/inc6/hallazgos-revision-manual.md`, co
   entorno propio, como fija la spec de US-6.2.9.
 - Las 60 conexiones son simuladas en memoria: no ejercitan keepalive/timeouts de un balanceador ni
   la escritura real a 60 sockets TCP.
-- RF-08/09/10 pasan a **Implementado** en `docs/traceability/matrix.md` solo tras la validación
-  manual del guion por Víctor.
+- RF-08/09/10 pasaron a **Implementado** en `docs/traceability/matrix.md` tras la validación
+  manual del guion por Víctor (2026-09-21).

@@ -5,7 +5,7 @@
 - **Historia de Usuario:** US-6.2.9 — Verificación de la sesión en vivo completa y del RNF de rendimiento
 - **Puntos estimados:** 3 (la spec no lo declara)
 - **Tiempo real:** 35 min (tracker; ~13 min son las dos corridas de la suite completa con cobertura y CodeGuard en Fase 7 — PRIN-001, tiempo real de ejecución del agente, no comparable contra estimación humana). Detalle en `.claude/tracking/US-6.2.9-tracking.json`
-- **Estado:** ✅ COMPLETADO en lo automatizado — **revisión manual de Víctor pendiente**
+- **Estado:** ✅ COMPLETADO — revisión manual de Víctor validada sin hallazgos (2026-09-21)
 - **Fecha completado:** 2026-09-21
 - **Aporta:** evidencia, no código de producción. Verifica de punta a punta la sesión en vivo (API y WebSockets reales) y mide por primera vez con datos reales un RNF de rendimiento duro: el cierre de pregunta con 60 participantes cumple con `p95 = 43,81 ms` contra el umbral de 100 ms.
 
@@ -86,7 +86,7 @@ CodeGuard se corrió sobre los 3 archivos Python nuevos de `tests/` (no hay `.py
 ## Decisiones y notas
 
 - **El criterio mide el use case**, como dice la spec; la medición por HTTP es complementaria y no decide el veredicto, pero se reporta al lado para no ocultar el costo de la conexión nueva por operación.
-- **`matrix.md` no se tocó:** RF-08/09/10 pasan a Implementado **solo tras la validación manual de Víctor**.
-- **El guion se corrió de punta a punta** antes de entregarlo, con todos los pasos respondiendo como se espera; esa corrida fue del ejecutor y **no** es la revisión manual. Los datos se limpiaron con `limpiar_uat.sh`.
+- **`matrix.md`:** RF-08/09/10 pasaron a **Implementado** tras la validación manual de Víctor (no Validado: espera el cierre de baseline del Incremento 6).
+- **El guion se corrió de punta a punta** antes de entregarlo, con todos los pasos respondiendo como se espera; esa corrida fue del ejecutor. La revisión manual la hizo después Víctor con el mismo guion, sin hallazgos. Los datos de ambas corridas se limpiaron con `limpiar_uat.sh`.
 - **Escenario "sesión en la pregunta 2" de `US-6.2.4`:** reproducible con el endpoint real desde `US-6.2.6`; el test de sesión completa lo ejercita (avanza por 3 preguntas y responde en cada una).
-- **Pendiente:** revisión manual de Víctor, matriz de trazabilidad y checkpoint de staging.
+- **Pendiente:** checkpoint de staging del RNF y el frontend del modo en vivo (sin iteración asignada).

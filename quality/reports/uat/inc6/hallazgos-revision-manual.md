@@ -5,4 +5,4 @@
 
 | # | Paso | Severidad | Hallazgo | Estado |
 |---|------|-----------|----------|--------|
-| — | — | — | (pendiente de la revisión manual de Víctor) | — |
+| — | 1 a 12 | — | Sin hallazgos de ninguna severidad. Víctor corrió `guion_manual_iteracion2.sh` el 2026-09-21 y validó el resultado | — |
