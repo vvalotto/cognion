@@ -231,6 +231,7 @@ class TestConduccionEnVivoControllerAvanzar:
             mostrar_opciones=None,  # type: ignore[arg-type]
             cerrar_pregunta=None,  # type: ignore[arg-type]
             avanzar_siguiente_pregunta=use_case,
+            finalizar_sesion=None,  # type: ignore[arg-type]
         )
 
         resultado = await controller.avanzar_siguiente_pregunta(sesion.id)

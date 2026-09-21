@@ -163,6 +163,15 @@ class ActividadEvaluativaEnVivo:
         _validar_para_avanzar(self)
         _pasar_a_pregunta(self, (self.pregunta_actual_indice or 0) + 1)
 
+    def finalizar(self) -> None:
+        """Da por terminada la sesión: pasa a `Finalizada` (`US-6.2.7`).
+
+        Levanta `SesionYaFinalizada`, `SesionNoEnCurso` o `PreguntaActualNoCerrada` (INV-AEV-03)
+        sin mutar. Se puede finalizar antes de agotar el set de preguntas.
+        """
+        _validar_para_finalizar(self)
+        self.estado = EstadoSesionEnVivo.FINALIZADA
+
     def validar_para_responder(self, pregunta_id: UUID, ahora: datetime) -> float:
         """Valida que `pregunta_id` admita una respuesta y devuelve el tiempo de respuesta (s).
 
@@ -209,6 +218,16 @@ def _validar_para_avanzar(sesion: ActividadEvaluativaEnVivo) -> None:
         raise PreguntaActualNoCerrada(sesion.id)
     if (sesion.pregunta_actual_indice or 0) + 1 >= len(sesion.preguntas):
         raise NoQuedanPreguntas(sesion.id)
+
+
+def _validar_para_finalizar(sesion: ActividadEvaluativaEnVivo) -> None:
+    """Rechaza finalizar si ya estaba `Finalizada`, nunca se inició o la pregunta sigue abierta."""
+    if sesion.estado == EstadoSesionEnVivo.FINALIZADA:
+        raise SesionYaFinalizada(sesion.id)
+    if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
+        raise SesionNoEnCurso(sesion.id)
+    if not sesion.pregunta_actual_cerrada:
+        raise PreguntaActualNoCerrada(sesion.id)
 
 
 def _pasar_a_pregunta(sesion: ActividadEvaluativaEnVivo, indice: int) -> None:

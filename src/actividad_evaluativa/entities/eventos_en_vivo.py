@@ -187,6 +187,24 @@ class PreguntaEnVivoCerrada:
 
 
 @dataclass(frozen=True)
+class SesionEnVivoFinalizada:
+    """El Docente dio por terminada la sesión (`US-6.2.7`).
+
+    Payload mínimo: el ranking final no se persiste, vive en el read model.
+    """
+
+    sesion_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+    @classmethod
+    def desde_sesion(
+        cls, sesion: ActividadEvaluativaEnVivo, ocurrido_en: datetime
+    ) -> SesionEnVivoFinalizada:
+        """Construye el evento a partir de la sesión finalizada."""
+        return cls(sesion_id=sesion.id, ocurrido_en=ocurrido_en)
+
+
+@dataclass(frozen=True)
 class RespuestaEnVivoRegistrada:
     """Un Estudiante respondió la pregunta actual — evento repetible de su `ParticipacionEnVivo`."""
 

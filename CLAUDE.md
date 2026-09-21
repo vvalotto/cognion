@@ -988,11 +988,17 @@ sobre el `ConduccionEnVivoController` ya separado, endpoint `POST /sesiones-en-v
 el armado del mensaje `pregunta_presentada` se extrajo a `use_cases/pregunta_presentada.py` y lo
 comparten el inicio y el avance; 1511/1512 tests — el único fallo es el flake preexistente de
 `US-3.2.1` —, cobertura 100% del BC, quality gates APROBADO,
-`docs/reports/inc6/US-6.2.6-report.md`). Pendientes: `6.2.7` (finalizar sesión), `6.2.8`
-(consultas/reconexión) y `6.2.9` (verificación del RNF p95 ≤100 ms con 60 participantes).
+`docs/reports/inc6/US-6.2.6-report.md`). `US-6.2.7` (Docente finaliza la sesión: `finalizar()`
+en el aggregate con INV-AEV-03 — sin restricción de última pregunta, decidido 2026-09-21 —,
+evento `SesionEnVivoFinalizada`, `FinalizarSesionEnVivoUseCase` que publica `sesion_finalizada`
+con el ranking final leído del read model, endpoint `POST /sesiones-en-vivo/{id}/finalizar`; la
+siembra de `Finalizada` en los tests de `US-6.1.3`/`6.1.4`/`6.2.x` se reemplazó por el endpoint
+real; 1542/1542 tests, cobertura 100% del BC, quality gates APROBADO,
+`docs/reports/inc6/US-6.2.7-report.md`). Pendientes: `6.2.8` (consultas/reconexión) y `6.2.9`
+(verificación del RNF p95 ≤100 ms con 60 participantes).
 
-**Próximo paso:** `US-6.2.7` (finalizar la sesión). `FinalizarSesionEnVivo`
-admite finalizar antes de agotar el set, sin restricción de última pregunta (decidido 2026-09-21).
+**Próximo paso:** `US-6.2.8` (consultar el estado de la sesión, sus participantes y su ranking;
+reconexión).
 
 ---
 

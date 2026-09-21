@@ -114,24 +114,35 @@ async def iniciar_sesion(sesion_id: str) -> None:
     assert respuesta.status_code == 200, respuesta.text
 
 
-async def sembrar_evento_de_sesion(sesion_id: str, tipo: str, secuencia: int) -> None:
-    """Agrega un evento posterior al stream de la sesión, directo en el event store.
-
-    `SesionEnVivoFinalizada` (Iteración 2) todavía no se emite por API — los tests de sesión
-    finalizada lo siembran a mano. `SesionEnVivoIniciada` ya sale de `iniciar_sesion` (US-6.1.4).
-    """
-    async with SessionLocal() as session:
-        await SQLAlchemyEventStore(session).append(
-            "ActividadEvaluativaEnVivo",
-            uuid.UUID(sesion_id),
-            secuencia - 1,
-            [
-                EventoParaAlmacenar(
-                    event_type=tipo,
-                    payload={"sesion_id": sesion_id, "ocurrido_en": datetime.now(UTC).isoformat()},
-                )
-            ],
+async def cerrar_pregunta_actual(sesion_id: str) -> None:
+    """Cierra la pregunta actual por la API real (US-6.2.5); requiere las opciones ya mostradas."""
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        respuesta = await client.post(
+            f"/sesiones-en-vivo/{sesion_id}/cerrar-pregunta",
+            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
         )
+    assert respuesta.status_code == 200, respuesta.text
+
+
+async def finalizar_sesion(sesion_id: str) -> None:
+    """Finaliza la sesión por la API real (US-6.2.7) — reemplaza la siembra de `Finalizada`.
+
+    Requiere la sesión `EnCurso` con la pregunta actual cerrada.
+    """
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        respuesta = await client.post(
+            f"/sesiones-en-vivo/{sesion_id}/finalizar",
+            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+        )
+    assert respuesta.status_code == 200, respuesta.text
+
+
+async def iniciar_y_finalizar(sesion_id: str) -> None:
+    """Lleva una sesión `EnEspera` a `Finalizada`: iniciar, mostrar, cerrar y finalizar (API real)."""
+    await iniciar_sesion(sesion_id)
+    await mostrar_opciones(sesion_id)
+    await cerrar_pregunta_actual(sesion_id)
+    await finalizar_sesion(sesion_id)
 
 
 def correr(coro):

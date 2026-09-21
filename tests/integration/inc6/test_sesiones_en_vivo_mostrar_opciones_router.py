@@ -20,8 +20,8 @@ from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
     iniciar_sesion,
+    iniciar_y_finalizar,
     preparar_sesion,
-    sembrar_evento_de_sesion,
 )
 
 
@@ -106,8 +106,7 @@ class TestMostrarOpcionesAPIIntegration:
 
     async def test_rechazo_si_la_sesion_esta_finalizada(self):
         sesion_id, _ = await preparar_sesion()
-        await iniciar_sesion(sesion_id)
-        await sembrar_evento_de_sesion(sesion_id, "SesionEnVivoFinalizada", 3)
+        await iniciar_y_finalizar(sesion_id)
 
         async with _cliente() as client:
             response = await client.post(_url(sesion_id), headers=_docente())
