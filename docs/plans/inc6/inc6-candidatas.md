@@ -1,7 +1,8 @@
 # Incremento 6 — Sesión en Vivo — US candidatas
 
-> Estado documental: **Iteración 0 (Modelado) e Iteración 1 (RF-08 + infraestructura
-> WebSockets) cerradas; Iteración 2 (RF-09, RF-10) especificada 2026-09-19.** Spike del
+> Estado documental: **Iteraciones 0 (Modelado), 1 (RF-08 + infraestructura WebSockets) y 2
+> (RF-09, RF-10, backend) cerradas; Iteración 3 (frontend del modo en vivo) especificada
+> 2026-09-21.** Spike del
 > algoritmo de puntaje (RF-10) resuelto con Víctor 2026-09-17 (detalle más abajo). Milestone
 > [`Incremento 6 — Sesión en Vivo`](https://github.com/vvalotto/cognion/milestone/8).
 >
@@ -138,7 +139,7 @@ Specs en `docs/specs/inc6/US-6.1.1.md` a `US-6.1.4.md`.
 ## Iteración 2 — RF-09, RF-10: dinámica en tiempo real, ranking, cálculo de puntaje
 
 Backend únicamente — mismo criterio de diferir frontend que la Iteración 1 (el frontend del modo
-en vivo todavía no tiene iteración asignada). Alcance: todo lo que sigue a `SesionEnVivoIniciada`
+en vivo se especificó después como Iteración 3). Alcance: todo lo que sigue a `SesionEnVivoIniciada`
 — mostrar opciones, responder con puntaje server-side, cerrar (respuesta correcta + histograma +
 ranking), avanzar, finalizar, consultas de estado/ranking para reconexión, y la **verificación**
 del RNF de rendimiento y de la sesión completa.
@@ -179,8 +180,75 @@ decisión abierta):
   Resolver nombres requiere un puerto nuevo Actividad Evaluativa → Identidad.
 - ~~Confirmar si `FinalizarSesionEnVivo` exige última pregunta~~ — resuelto 2026-09-21 con
   Víctor: se puede finalizar antes, sin restricción (`US-6.2.7`).
+- ~~Nombres de los estudiantes~~ — resuelto 2026-09-21 con Víctor: los agrega el backend (`US-6.3.1`).
 
 Specs en `docs/specs/inc6/US-6.2.1.md` a `US-6.2.9.md`.
 
 **Hito del incremento:** el docente conduce una sesión en vivo completa en el aula, con
 ranking actualizado en tiempo real dentro del umbral de ≤100ms server-side acordado en RNF.
+
+---
+
+## Iteración 3 — Frontend del modo en vivo (RF-08, RF-09, RF-10)
+
+Backend + frontend **juntos** en una única iteración (decisión de Víctor, 2026-09-21), mismo criterio que Banco de
+Preguntas y Cuentas: el frontend de un incremento ya no se difiere a otra iteración cuando el backend está completo.
+Las pantallas ya están aprobadas (`wireframes-actividad-evaluativa-en-vivo.md`, 12 pantallas, seis rondas de
+`US-6.0.2`); esta iteración las implementa y cierra los huecos entre lo aprobado y lo que el backend real admite.
+
+**Decisiones de Víctor (2026-09-21, al especificar la iteración):**
+- **Los nombres de los Estudiantes los agrega el backend** (puerto Actividad Evaluativa → Identidad, cambio aditivo de
+  contrato en HTTP y WebSocket) — no los resuelve el frontend ni se usan alias.
+- **El ranking muestra Top 3 en todas las pantallas** (proyección y resultado final); resuelve el "a definir en la spec"
+  de `wireframes…` §2.6. Al Estudiante, además, su posición exacta.
+- Una sola pasada de UAT en navegador real **al cierre de la iteración** (`US-6.3.10`), no US por US.
+
+**Huecos detectados** entre los wireframes aprobados y el backend real (detalle y propuesta en `US-6.3.0`, que pasa por
+el gate de diseño antes de codear las pantallas):
+
+| # | Hueco | Resolución |
+|---|---|---|
+| H1 | Verdadero/Falso: el prototipo solo dibuja 4 opciones (el banco real tiene V/F) | 2 tarjetas, colores `b` y `c` |
+| H2 | 3 opciones (el banco real tiene 10 de 36; el backend no fija máximo) | N opciones (2 a 4) toman los colores en orden |
+| H3-H5 | Falta la pantalla del Estudiante entre "presentada" y "opciones mostradas", la de "no respondió" y la de "tiempo agotado" | `#est-espera-opciones`, `#est-sin-respuesta` |
+| H6 | La sesión creada no se puede recuperar si se cierra la pestaña | Bloque "Sesiones en vivo activas" en el detalle de la Comisión (`US-6.3.2`) |
+| H7-H9 | Salida de la pantalla terminal, indicador de conexión, menos de 3 participantes | Ver `US-6.3.0` |
+
+| US | Tipo | Alcance | Actor | Issue |
+|---|---|---|---|---|
+| **US-6.3.0** *(UX)* | Ampliación de wireframes y prototipo (H1 a H9) — **gate de diseño** previo a `6.3.5` a `6.3.9` | `wireframes…-en-vivo.md` §6 + prototipo | — | [#422](https://github.com/vvalotto/cognion/issues/422) |
+| **US-6.3.1** *(técnica backend)* | Nombres de los Estudiantes en sala de espera y ranking (puerto nuevo hacia Identidad; `nombre` en HTTP y broadcasts) | Backend | — | [#412](https://github.com/vvalotto/cognion/issues/412) |
+| **US-6.3.2** *(backend)* | Listar las sesiones en vivo de una Comisión (`GET /sesiones-en-vivo`) | Backend | Docente / Estudiante | [#413](https://github.com/vvalotto/cognion/issues/413) |
+| **US-6.3.3** *(backend)* | Estado completo de la sesión para reconectar la proyección (conteo, total, histograma y ranking tras el cierre) | Backend | Docente | [#414](https://github.com/vvalotto/cognion/issues/414) |
+| **US-6.3.4** *(técnica frontend)* | Cliente API, canal WebSocket (primero del frontend, con reconexión), hook, `StageLayout`, rutas | Frontend | — | [#415](https://github.com/vvalotto/cognion/issues/415) |
+| **US-6.3.5** | Docente crea la sesión desde una Comisión, sala de espera y sesiones activas (`§2.1`, `§2.2`) | Frontend | Docente | [#416](https://github.com/vvalotto/cognion/issues/416) |
+| **US-6.3.6** | Docente proyecta la pregunta, muestra las opciones (temporizador, conteo) y la cierra (`§2.3`, `§2.4`) | Frontend | Docente | [#417](https://github.com/vvalotto/cognion/issues/417) |
+| **US-6.3.7** | Docente proyecta histograma, ranking Top 3 y podio final; avanza o finaliza (`§2.5` a `§2.7`) | Frontend | Docente | [#418](https://github.com/vvalotto/cognion/issues/418) |
+| **US-6.3.8** | Estudiante ve las sesiones disponibles, se une y espera en la sala (`§3.1`, `§3.2`) | Frontend | Estudiante | [#419](https://github.com/vvalotto/cognion/issues/419) |
+| **US-6.3.9** | Estudiante responde con tarjetas táctiles, ve su resultado y el final (`§3.3` a `§3.5`, reconexión) | Frontend | Estudiante | [#420](https://github.com/vvalotto/cognion/issues/420) |
+| **US-6.3.10** *(verificación)* | UAT en navegador real: proyección + celulares (uno real), legibilidad, reconexión, `StrictMode` | Verificación | Docente | [#421](https://github.com/vvalotto/cognion/issues/421) |
+
+**Orden de implementación:** `6.3.0` (gate UX, en paralelo con el backend) · backend `6.3.1` → `6.3.2` y `6.3.3`
+(`6.3.3` necesita `6.3.1`) · `6.3.4` (necesita `6.3.1` para los tipos) · Docente `6.3.5` → `6.3.6` → `6.3.7` ·
+Estudiante `6.3.8` → `6.3.9` (comparte con `6.3.6` los módulos `temporizador-pregunta` y `opciones-en-vivo`) · `6.3.10` cierra.
+
+**Riesgos técnicos identificados al especificar** (resueltos como diseño en cada spec, no como decisión abierta):
+- **Primer WebSocket del frontend**: el socket se crea dentro de `useEffect` y se cierra en el cleanup (lección `US-ADJ-20`,
+  invisible a Vitest, se verifica en `npm run dev`); reconexión con backoff y **re-sincronización con `GET estado`** en
+  cada reconexión (`US-6.3.4`).
+- **El RNF ≤ 100 ms no debe degradarse**: `US-6.3.1` suma una consulta de nombres al cierre de pregunta; se **re-mide** con
+  `tests/uat/inc6/medir_rendimiento_cierre.py` (p95 actual 43,81 ms).
+- **CBO**: `UnirseASesionEnVivoUseCase` ya tiene 5 dependencias y `SesionesEnVivoQueryController` 3 use cases; los nombres se
+  resuelven por función de módulo y el listado vigila el umbral (el CBO solo se mide en el pre-push).
+- **El temporizador del cliente es informativo**: el corte es del servidor (INV-AEV-08); un reloj desfasado no cambia qué se acepta.
+- **Legibilidad en proyección y uso con el pulgar** solo se validan en el dispositivo real (`US-6.3.10`); jsdom no calcula estilos.
+
+**Ítems abiertos que esta iteración deja** (no bloquean el frontend):
+- `UnirseASesionEnVivo` **no valida que el Estudiante pertenezca a la Comisión de la sesión** (`US-6.1.3`): `US-6.3.2` limita lo
+  que cada Estudiante *ve*, no lo que puede *alcanzar* conociendo un `sesion_id`. A decidir con Víctor (posible `US-ADJ`).
+- Checkpoint de staging del RNF en Fly.io (`PROCEDIMIENTO-UAT.md` §4).
+
+Specs en `docs/specs/inc6/US-6.3.0.md` a `US-6.3.10.md`.
+
+**Hito de la iteración:** el Docente conduce una sesión en vivo completa desde la pantalla de proyección, con los
+Estudiantes participando desde el celular, sin salir del navegador.

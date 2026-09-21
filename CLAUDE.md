@@ -1011,9 +1011,23 @@ RF-08/09/10 pasan a **Implementado** en la matriz (no Validado: espera el cierre
 Incremento 6). El checkpoint de staging (Fly.io, WSS real) del RNF sigue pendiente
 (`PROCEDIMIENTO-UAT.md` §4).
 
-**Próximo paso:** decidir con Víctor cómo sigue el Incremento 6 — el frontend del modo en vivo no tiene
-iteración asignada (las pantallas ya están aprobadas en
-`docs/design/ux/wireframes-actividad-evaluativa-en-vivo.md`); después, cierre de baseline (`BL-011`).
+**Iteración 3 del Incremento 6 — Frontend del modo en vivo, especificada 2026-09-21**
+(`docs/plans/inc6/inc6-candidatas.md` §Iteración 3, specs `docs/specs/inc6/US-6.3.0.md` a `US-6.3.10.md`,
+Issues #412 a #422). Backend + frontend juntos. 11 US: `6.3.0` (UX — ampliación de wireframes, gate de diseño previo a
+las pantallas), backend `6.3.1` (nombres de los Estudiantes en HTTP y broadcasts), `6.3.2` (listar sesiones de una
+Comisión), `6.3.3` (estado completo para reconectar la proyección); frontend `6.3.4` (cliente API, primer canal
+WebSocket del frontend, `StageLayout`, rutas), `6.3.5` a `6.3.7` (Docente: crear + sala, proyección de la pregunta,
+histograma/ranking/podio), `6.3.8` y `6.3.9` (Estudiante: sesiones + sala, responder + resultado + final); `6.3.10`
+(UAT en navegador real, un celular real). **Decisiones de Víctor (2026-09-21):** los nombres los agrega el backend;
+el ranking muestra **Top 3 en todas las pantallas**; una sola pasada de UAT al cierre. **Huecos detectados** entre los
+wireframes aprobados y el backend real (Verdadero/Falso, 3 opciones, pantallas intermedias del celular, recuperar una
+sesión creada) se cierran en `US-6.3.0` antes de codear. Ítem abierto: `UnirseASesionEnVivo` no valida que el Estudiante
+pertenezca a la Comisión de la sesión (posible `US-ADJ`). Sin cambio de estado de RF.
+
+**Próximo paso:** revisión y aprobación de Víctor de las specs de la Iteración 3 (`US-6.3.0` incluida, que necesita su
+aprobación de las ampliaciones de diseño); después `US-6.3.0` (wireframes/prototipo) en paralelo con el backend
+`6.3.1` → `6.3.2`/`6.3.3`, y el frontend. Cierre de baseline `BL-011` al terminar la iteración. Ítem abierto aparte:
+checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
 
 ---
 
