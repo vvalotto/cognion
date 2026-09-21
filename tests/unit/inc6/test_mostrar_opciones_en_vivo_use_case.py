@@ -12,8 +12,8 @@ from src.actividad_evaluativa.entities.errors import (
 )
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import ContenidoPregunta
-from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
-    SesionesEnVivoController,
+from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
+    ConduccionEnVivoController,
 )
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSesionEnVivoUseCase
@@ -21,17 +21,13 @@ from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     AGGREGATE_TYPE_SESION,
     MostrarOpcionesEnVivoUseCase,
 )
-from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import UnirseASesionEnVivoUseCase
 from tests.unit.inc3._fakes import (
-    FakeEstudianteConsultaPort,
     FakeEventStore,
     FakePreguntaConsultaPort,
 )
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
-    FakeParticipantesSesionQueryPort,
-    FakeProyeccionesEnVivo,
 )
 
 OPCIONES = ["A", "B", "C", "D"]
@@ -165,16 +161,7 @@ class TestRechazos:
 class TestSesionesEnVivoControllerMostrarOpciones:
     async def test_mostrar_opciones_delega_en_el_use_case(self):
         use_case, event_store, _, sesion, pregunta_consulta = await _escenario(OPCIONES)
-        crear = CrearSesionEnVivoUseCase(FakeComisionConsultaPort(), pregunta_consulta, event_store)
-        unirse = UnirseASesionEnVivoUseCase(
-            FakeEstudianteConsultaPort(),
-            event_store,
-            FakeParticipantesSesionQueryPort(event_store),
-            FakeCanalTiempoReal(),
-            FakeProyeccionesEnVivo(),
-        )
-        iniciar = IniciarSesionEnVivoUseCase(event_store, pregunta_consulta, FakeCanalTiempoReal())
-        controller = SesionesEnVivoController(crear, unirse, iniciar, use_case)
+        controller = ConduccionEnVivoController(use_case)
 
         resultado = await controller.mostrar_opciones(sesion.id)
 

@@ -64,6 +64,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudia
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
+    ConduccionEnVivoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
 )
@@ -271,7 +274,7 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.2.2`)."""
+    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.1.4`)."""
     event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
@@ -291,8 +294,14 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),
+    )
+
+
+def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoController:
+    """Arma el `ConduccionEnVivoController` con sus dependencias concretas (`US-6.2.2` en adelante)."""
+    return ConduccionEnVivoController(
         MostrarOpcionesEnVivoUseCase(
-            event_store,
+            SQLAlchemyEventStore(session),
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
         ),

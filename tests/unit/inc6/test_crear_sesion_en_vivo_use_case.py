@@ -20,9 +20,6 @@ from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import (
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
 )
-from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
-    MostrarOpcionesEnVivoUseCase,
-)
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     UnirseASesionEnVivoUseCase,
 )
@@ -143,10 +140,7 @@ class TestSesionesEnVivoController:
         iniciar = IniciarSesionEnVivoUseCase(
             FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
         )
-        mostrar = MostrarOpcionesEnVivoUseCase(
-            FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
-        )
-        controller = SesionesEnVivoController(use_case, unirse, iniciar, mostrar)
+        controller = SesionesEnVivoController(use_case, unirse, iniciar)
 
         sesion = await controller.crear(comision_id, 10, 30)
 

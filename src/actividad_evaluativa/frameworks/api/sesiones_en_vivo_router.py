@@ -39,6 +39,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     SesionEnVivoResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
+    get_conduccion_en_vivo_controller,
     get_connection_manager,
     get_current_user,
     get_jwt_issuer,
@@ -46,6 +47,9 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     get_sesiones_en_vivo_controller,
     require_docente,
     require_estudiante,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
+    ConduccionEnVivoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
     ParticipacionesEnVivoController,
@@ -134,7 +138,7 @@ async def iniciar_sesion_en_vivo(
 )
 async def mostrar_opciones_en_vivo(
     sesion_id: UUID,
-    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+    controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Revela las opciones de la pregunta actual; 404/422 si se rechaza."""
     try:
