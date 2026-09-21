@@ -4,7 +4,7 @@
 
 - **Historia de Usuario:** US-6.2.8 — Consultar el estado de la sesión, sus participantes y su ranking
 - **Puntos estimados:** 3 (la spec no lo declara)
-- **Tiempo real:** ~28 min (tracker; ~12 min son la suite completa con cobertura y CodeGuard en Fase 7 — PRIN-001, tiempo real de ejecución del agente, no comparable contra estimación humana). Detalle en `.claude/tracking/US-6.2.8-tracking.json`
+- **Tiempo real:** 19 min (tracker; ~12 min son la suite completa con cobertura y CodeGuard en Fase 7 — PRIN-001, tiempo real de ejecución del agente, no comparable contra estimación humana). Detalle en `.claude/tracking/US-6.2.8-tracking.json`
 - **Estado:** ✅ COMPLETADO
 - **Fecha completado:** 2026-09-21
 - **Aporta:** el hueco de reconexión de RF-09. Todo el estado en vivo viaja por WebSocket como broadcast, así que un cliente que se cae o entra tarde no recibe lo anterior: ahora reconstruye su pantalla con una sola llamada HTTP. También expone la sala de espera del Docente y el ranking (al Estudiante solo cuando la sesión finalizó).
