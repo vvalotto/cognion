@@ -41,23 +41,23 @@
 ## Componentes a Implementar
 
 ### 1. Entities
-- [ ] `src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py`
+- [x] `src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py`
   - `cerrar_pregunta()` + helper `_validar_para_cerrar`
-- [ ] `src/actividad_evaluativa/entities/eventos_en_vivo.py`
+- [x] `src/actividad_evaluativa/entities/eventos_en_vivo.py`
   - `PreguntaEnVivoCerrada` + `desde_sesion`
 
 ### 2. Use Case
-- [ ] `src/actividad_evaluativa/use_cases/cerrar_pregunta_actual.py`
+- [x] `src/actividad_evaluativa/use_cases/cerrar_pregunta_actual.py`
   - `CerrarPreguntaActualUseCase`
 
 ### 3. Interface Adapter
-- [ ] `src/actividad_evaluativa/interface_adapters/controllers/conduccion_en_vivo_controller.py`
+- [x] `src/actividad_evaluativa/interface_adapters/controllers/conduccion_en_vivo_controller.py`
   - `cerrar_pregunta(sesion_id)`
 
 ### 4. Frameworks
-- [ ] `src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py`
+- [x] `src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py`
   - `POST /{sesion_id}/cerrar-pregunta` (rol `docente`)
-- [ ] `src/actividad_evaluativa/frameworks/dependencies.py`
+- [x] `src/actividad_evaluativa/frameworks/dependencies.py`
   - wiring del use case en `get_conduccion_en_vivo_controller`
 
 ## Tests (Fases 4–6, no forman parte de las tareas de Fase 3)
@@ -66,3 +66,36 @@
 - Integración: HTTP + mensaje completo a **dos WebSockets** + doble cierre simultáneo. Recordar:
   vacía la DB local compartida.
 - BDD: step defs de `tests/features/inc6/US-6.2.5-cerrar-pregunta-en-vivo.feature`.
+
+**Estado:** ✅ COMPLETADO
+**Fecha completado:** 2026-09-21
+**Tareas:** 4/4 secciones completadas
+
+## Desvíos respecto del plan
+
+- Las 10 decisiones de diseño se implementaron como se aprobaron; no hubo errores, puertos ni
+  migraciones nuevos.
+- Fuera del checklist: el refactor previo `992b0ea` (mover `mostrar_opciones` a
+  `ConduccionEnVivoController`) fue el primer commit del branch, decidido antes de la Fase 0 para
+  dejar margen de CBO. `ConduccionEnVivoController` recibe ahora dos use cases.
+- Test de integración del broadcast: los Estudiantes se crean y unen **antes** de mostrar las
+  opciones (bcrypt es lento y correría el temporizador de 30 s).
+
+## Métricas de Tiempo
+
+Tiempos medidos por el tracker (PRIN-001). Detalle en `docs/reports/inc6/US-6.2.5-report.md`.
+
+## Lecciones Aprendidas
+
+- ✅ Separar el controller por responsabilidad **antes** de sumar use cases evitó el CRITICAL de
+  CBO en pre-push que aparecía en las US anteriores: DesignReviewer 0 CRITICAL a la primera.
+- ✅ Reutilizar `obtener_detalle_correccion` como fuente de la respuesta correcta evitó un puerto
+  nuevo hacia Banco de Preguntas.
+- ✅ El cierre no agrega trabajo pesado (3 lecturas + 1 broadcast); la medición formal del RNF
+  ≤100 ms queda para `US-6.2.9`.
+- ⚠️ La suite completa tarda ~16 min (1475 tests), casi todo integración/BDD contra la DB real;
+  CodeGuard `full` sobre 7 archivos tarda ~70 s.
+- ⚠️ Los 3 "errors" de CodeGuard son timeouts de su pylint interno (software_limpio#70/#71), no
+  hallazgos del código; pylint directo da 9.8/10.
+- ⚠️ En zsh, `$(cat archivo)` no se divide en palabras para pasar a una variable: expandir con
+  `${=VAR}` o pasar el `$(cat ...)` directo.

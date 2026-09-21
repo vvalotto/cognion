@@ -1,6 +1,6 @@
 # US-6.2.5: Docente cierra la pregunta actual — respuesta correcta, histograma y ranking
 
-**Estado**: `Especificada`
+**Estado**: `Implementada` (2026-09-21)
 **Iteracion / Sprint**: `INC-6.2`
 **Tipo**: `feature backend`
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`

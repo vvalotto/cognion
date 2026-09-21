@@ -979,14 +979,15 @@ Issue #382) a `US-6.1.4` (crear sesión, unirse, iniciar; Issues #383-#385). Rep
 `US-6.2.1` (cálculo de puntaje server-side), `US-6.2.2` (mostrar opciones, PR #405),
 `US-6.2.3` (read models `ranking_por_sesion`/`distribucion_por_pregunta`) y `US-6.2.4`
 (responder pregunta con feedback personal, PR #406; el pre-push gate detectó CBO en el use
-case, corregido extrayendo helpers). Pendientes: `US-6.2.5` (cerrar pregunta), `6.2.6`
-(avanzar), `6.2.7` (finalizar sesión), `6.2.8` (consultas/reconexión) y `6.2.9` (verificación
-del RNF p95 ≤100 ms con 60 participantes).
+case, corregido extrayendo helpers) y `US-6.2.5` (Docente cierra la pregunta: un único
+broadcast con respuesta correcta + histograma + ranking leídos de los read models,
+`ConduccionEnVivoController` separado antes de sumar el use case, sin CRITICAL de CBO;
+1475/1475 tests, quality gates APROBADO, `docs/reports/inc6/US-6.2.5-report.md`). Pendientes:
+`US-6.2.6` (avanzar), `6.2.7` (finalizar sesión), `6.2.8` (consultas/reconexión) y `6.2.9`
+(verificación del RNF p95 ≤100 ms con 60 participantes).
 
-**Próximo paso:** `US-6.2.5`. Decisiones de diseño ya resueltas 2026-09-21: `SesionesEnVivoController`
-se separó por responsabilidad (`ConduccionEnVivoController` nuevo para los comandos del Docente,
-commit `992b0ea` en `feature/US-6.2.5-cerrar-pregunta-en-vivo`) y `FinalizarSesionEnVivo`
-(`US-6.2.7`) admite finalizar antes de agotar el set, sin restricción de última pregunta.
+**Próximo paso:** `US-6.2.6` (avanzar a la siguiente pregunta). `FinalizarSesionEnVivo` (`US-6.2.7`)
+admite finalizar antes de agotar el set, sin restricción de última pregunta (decidido 2026-09-21).
 
 ---
 
