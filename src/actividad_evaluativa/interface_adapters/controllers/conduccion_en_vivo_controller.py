@@ -7,6 +7,9 @@ from uuid import UUID
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
+from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
+    AvanzarSiguientePreguntaUseCase,
+)
 from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import (
     CerrarPreguntaActualUseCase,
 )
@@ -22,10 +25,12 @@ class ConduccionEnVivoController:
         self,
         mostrar_opciones: MostrarOpcionesEnVivoUseCase,
         cerrar_pregunta: CerrarPreguntaActualUseCase,
+        avanzar_siguiente_pregunta: AvanzarSiguientePreguntaUseCase,
     ) -> None:
-        """Recibe los casos de uso de mostrar opciones y cerrar la pregunta actual."""
+        """Recibe los casos de uso de mostrar opciones, cerrar la pregunta y avanzar."""
         self._mostrar_opciones = mostrar_opciones
         self._cerrar_pregunta = cerrar_pregunta
+        self._avanzar_siguiente_pregunta = avanzar_siguiente_pregunta
 
     async def mostrar_opciones(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Delega la revelación de opciones en el caso de uso correspondiente."""
@@ -34,3 +39,7 @@ class ConduccionEnVivoController:
     async def cerrar_pregunta(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Delega el cierre de la pregunta actual en el caso de uso correspondiente."""
         return await self._cerrar_pregunta.execute(sesion_id)
+
+    async def avanzar_siguiente_pregunta(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+        """Avanza a la siguiente pregunta de la sesión."""
+        return await self._avanzar_siguiente_pregunta.execute(sesion_id)
