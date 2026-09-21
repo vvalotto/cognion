@@ -208,6 +208,7 @@ class TestConduccionEnVivoControllerCerrar:
             mostrar_opciones=None,  # type: ignore[arg-type]
             cerrar_pregunta=use_case,
             avanzar_siguiente_pregunta=None,  # type: ignore[arg-type]
+            finalizar_sesion=None,  # type: ignore[arg-type]
         )
 
         resultado = await controller.cerrar_pregunta(sesion.id)
