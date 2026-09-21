@@ -377,3 +377,14 @@ class NoQuedanPreguntas(Exception):
         """Guarda el id de la sesión y arma el mensaje de la excepción."""
         self.sesion_id = sesion_id
         super().__init__(f"La sesión '{sesion_id}' no tiene más preguntas: debe finalizarse.")
+
+
+class RankingNoDisponible(Exception):
+    """Un Estudiante pidió el ranking con la sesión en vivo todavía no `Finalizada` (`US-6.2.8`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"El ranking de la sesión en vivo '{sesion_id}' se publica al finalizarla."
+        )
