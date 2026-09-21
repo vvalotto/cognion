@@ -1001,10 +1001,19 @@ Estudiante —, `GET .../participantes` (docente) y `GET .../ranking` (el Estudi
 sesión `Finalizada`, `RankingNoDisponible` → 403); tres use cases de lectura y
 `SesionesEnVivoQueryController` propio, sin puertos ni escrituras nuevas; 1586/1586 tests,
 cobertura 100% del BC, quality gates APROBADO, `docs/reports/inc6/US-6.2.8-report.md`).
-Pendiente: `6.2.9` (verificación del RNF p95 ≤100 ms con 60 participantes).
+`US-6.2.9` (verificación E2E y del RNF de rendimiento, sin código de producción: sesión completa por API
+y WebSockets reales, 60 respuestas simultáneas, reconexión y respuesta tardía; **p95 43,81 ms** del use
+case `CerrarPreguntaActual` con 60 participantes sobre 30 cierres contra el umbral de 100 ms — CUMPLE,
+49,51 ms por HTTP completo incluido; 1590/1590 tests, `docs/reports/inc6/US-6.2.9-report.md`,
+evidencia en `quality/reports/uat/inc6/`). **Cierra la Iteración 2 del Incremento 6 (backend)**: revisión manual de Víctor
+(`tests/uat/inc6/guion_manual_iteracion2.sh`) validada sin hallazgos el 2026-09-21, y
+RF-08/09/10 pasan a **Implementado** en la matriz (no Validado: espera el cierre de baseline del
+Incremento 6). El checkpoint de staging (Fly.io, WSS real) del RNF sigue pendiente
+(`PROCEDIMIENTO-UAT.md` §4).
 
-**Próximo paso:** `US-6.2.9` (verificación E2E y del RNF de rendimiento con 60 participantes;
-re-verificar el escenario "sesión en la pregunta 2" de `6.2.4`).
+**Próximo paso:** decidir con Víctor cómo sigue el Incremento 6 — el frontend del modo en vivo no tiene
+iteración asignada (las pantallas ya están aprobadas en
+`docs/design/ux/wireframes-actividad-evaluativa-en-vivo.md`); después, cierre de baseline (`BL-011`).
 
 ---
 

@@ -45,6 +45,30 @@ async def crear_estudiante(comision_id: str) -> tuple[str, dict[str, str]]:
     return str(estudiante.id), headers_de(estudiante.id, TipoPerfil.ESTUDIANTE)
 
 
+async def crear_estudiantes(comision_id: str, cantidad: int) -> list[tuple[str, dict[str, str]]]:
+    """Crea `cantidad` Estudiantes reales en una sola sesión de DB, hasheando la clave una vez.
+
+    A diferencia de `crear_estudiante` (un bcrypt por llamada), sirve para los 60 participantes
+    de la verificación de rendimiento sin gastar ~15 s solo en preparar los datos (US-6.2.9).
+    Devuelve `[(estudiante_id, headers)]`.
+    """
+    password_hash = BcryptPasswordHasher().hash("x")
+    estudiantes = [
+        Usuario.crear_estudiante(
+            f"Estudiante {i}",
+            f"estudiante.{uuid.uuid4()}@fiuner.edu.ar",
+            password_hash,
+            uuid.UUID(comision_id),
+        )
+        for i in range(cantidad)
+    ]
+    async with SessionLocal() as session:
+        repositorio = SQLAlchemyUsuarioRepository(session)
+        for estudiante in estudiantes:
+            await repositorio.guardar(estudiante)
+    return [(str(e.id), headers_de(e.id, TipoPerfil.ESTUDIANTE)) for e in estudiantes]
+
+
 async def preparar_sesion(
     cantidad_preguntas: int = 10, opcion_multiple: bool = False
 ) -> tuple[str, str]:
