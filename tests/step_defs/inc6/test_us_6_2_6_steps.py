@@ -22,11 +22,11 @@ from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
+    finalizar_sesion,
     headers_de,
     iniciar_sesion,
     mostrar_opciones,
     preparar_sesion,
-    sembrar_evento_de_sesion,
 )
 
 scenarios("../../features/inc6/US-6.2.6-avanzar-siguiente-pregunta.feature")
@@ -128,7 +128,7 @@ def sesion_en_espera_o_finalizada(context):
         await iniciar_sesion(finalizada)
         await mostrar_opciones(finalizada)
         await _post(finalizada, "cerrar-pregunta", _docente())
-        await sembrar_evento_de_sesion(finalizada, "SesionEnVivoFinalizada", 5)
+        await finalizar_sesion(finalizada)
         return [en_espera, finalizada]
 
     context["sesiones"] = run_async(_armar_ambas())

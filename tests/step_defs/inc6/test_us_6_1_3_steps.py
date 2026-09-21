@@ -18,8 +18,8 @@ from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
     iniciar_sesion,
+    iniciar_y_finalizar,
     preparar_sesion,
-    sembrar_evento_de_sesion,
 )
 
 scenarios("../../features/inc6/US-6.1.3-unirse-sesion-en-vivo.feature")
@@ -76,14 +76,13 @@ async def _eventos_de_participacion(sesion_id: str) -> list[dict]:
 def _preparar(context, *, iniciada: bool = False, finalizada: bool = False) -> None:
     """Crea la sesión (US-6.1.2) y un Estudiante de su Comisión.
 
-    `iniciada` usa el endpoint real (US-6.1.4); `finalizada` siembra el evento, porque
-    `FinalizarSesionEnVivo` es de la Iteración 2.
+    `iniciada` y `finalizada` usan los endpoints reales (US-6.1.4 y US-6.2.7).
     """
     context["sesion_id"], comision_id = run_async(preparar_sesion())
-    if iniciada or finalizada:
-        run_async(iniciar_sesion(context["sesion_id"]))
     if finalizada:
-        run_async(sembrar_evento_de_sesion(context["sesion_id"], "SesionEnVivoFinalizada", 3))
+        run_async(iniciar_y_finalizar(context["sesion_id"]))
+    elif iniciada:
+        run_async(iniciar_sesion(context["sesion_id"]))
     context["estudiante_id"], context["headers"] = run_async(crear_estudiante(comision_id))
 
 

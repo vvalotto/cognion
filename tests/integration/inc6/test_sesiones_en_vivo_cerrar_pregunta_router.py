@@ -16,14 +16,15 @@ from sqlalchemy import text
 from src.app import app
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.inc6._helpers import (
+    cerrar_pregunta_actual,
     correr,
     crear_estudiante,
+    finalizar_sesion,
     headers_de,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
     preparar_sesion,
-    sembrar_evento_de_sesion,
     unirse_a_sesion,
 )
 
@@ -156,7 +157,8 @@ class TestCerrarPreguntaAPIIntegration:
 
     async def test_rechazo_si_la_sesion_esta_finalizada(self):
         sesion_id, _ = await _sesion_lista()
-        await sembrar_evento_de_sesion(sesion_id, "SesionEnVivoFinalizada", 4)
+        await cerrar_pregunta_actual(sesion_id)
+        await finalizar_sesion(sesion_id)
 
         async with _cliente() as client:
             response = await client.post(_url(sesion_id), headers=_docente())

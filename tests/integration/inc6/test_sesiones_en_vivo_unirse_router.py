@@ -1,9 +1,8 @@
 """Tests HTTP + WebSocket de `POST /sesiones-en-vivo/{sesion_id}/unirse` (US-6.1.3).
 
 Cubre uno a uno los escenarios de `tests/features/inc6/US-6.1.3-unirse-sesion-en-vivo.feature`
-contra la app real y la base de datos local. Los estados `EnCurso`/`Finalizada` se siembran
-directo en el event store (ver `_helpers.sembrar_evento_de_sesion`); `EnCurso` se logra
-iniciando la sesión por la API real (`_helpers.iniciar_sesion`).
+contra la app real y la base de datos local. Los estados `EnCurso`/`Finalizada` se logran por
+la API real (`_helpers.iniciar_sesion` e `_helpers.iniciar_y_finalizar`).
 """
 
 from __future__ import annotations
@@ -24,8 +23,8 @@ from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
     iniciar_sesion,
+    iniciar_y_finalizar,
     preparar_sesion,
-    sembrar_evento_de_sesion,
 )
 
 
@@ -88,8 +87,7 @@ class TestUnirseAPIIntegration:
 
     async def test_rechazo_por_sesion_finalizada(self, session):
         sesion_id, comision_id = await preparar_sesion()
-        await iniciar_sesion(sesion_id)
-        await sembrar_evento_de_sesion(sesion_id, "SesionEnVivoFinalizada", 3)
+        await iniciar_y_finalizar(sesion_id)
         _, headers = await crear_estudiante(comision_id)
 
         async with _cliente() as client:
