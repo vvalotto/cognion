@@ -272,3 +272,54 @@ class RespuestaEnVivoResponse(BaseModel):
     es_correcta: bool
     puntaje: int
     puntaje_acumulado: int
+
+
+class RespuestaCorrectaResponse(BaseModel):
+    """Respuesta correcta de la pregunta actual — solo con la pregunta cerrada (`US-6.2.8`)."""
+
+    contenido: dict[str, Any]
+    texto: str
+    opciones: list[str] | None
+
+
+class PreguntaActualResponse(BaseModel):
+    """Pregunta actual de la sesión en vivo según lo que ya se reveló (`US-6.2.8`)."""
+
+    pregunta_id: UUID
+    enunciado: str
+    tipo: str
+    opciones: list[str] | None = None
+    respuesta_correcta: RespuestaCorrectaResponse | None = None
+
+
+class EstadoSesionEnVivoResponse(BaseModel):
+    """Estado consultable de una sesión en vivo, para reconexión y sala de espera (`US-6.2.8`)."""
+
+    estado: str
+    comision_id: UUID
+    cantidad_preguntas: int
+    tiempo_limite_por_pregunta_segundos: int
+    pregunta_actual_indice: int | None
+    opciones_mostradas: bool
+    opciones_mostradas_en: datetime | None
+    pregunta_actual_cerrada: bool
+    pregunta_actual: PreguntaActualResponse | None
+    ya_respondio: bool | None = None
+    """Solo para el Estudiante: si ya respondió la pregunta actual."""
+    puntaje_acumulado: int | None = None
+    """Solo para el Estudiante: su puntaje acumulado."""
+
+
+class ParticipanteResponse(BaseModel):
+    """Un Estudiante unido a la sesión, para la sala de espera del Docente (`US-6.2.8`)."""
+
+    estudiante_id: UUID
+    unido_en: datetime
+
+
+class RankingItemResponse(BaseModel):
+    """Una fila del ranking de la sesión en vivo (`US-6.2.8`)."""
+
+    posicion: int
+    estudiante_id: UUID
+    puntaje_acumulado: int

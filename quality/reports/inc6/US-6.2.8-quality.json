@@ -1,0 +1,81 @@
+{
+  "us_id": "US-6.2.8",
+  "fecha": "2026-09-21T16:42:18.375558",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.87,
+    "cc_promedio": 1.67,
+    "cc_maximo": 7,
+    "mi_promedio": 72.72,
+    "mi_minimo": 46.86,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 1,
+    "warnings": 299,
+    "infos": 54,
+    "checks_ejecutados": 9,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 6,
+        "infos": 5
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "DeadCode": {
+        "errors": 1,
+        "warnings": 213,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 80,
+        "infos": 1
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      }
+    }
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1586 passed, 0 failed (10m11s). Cobertura 100% de src/actividad_evaluativa (1873 stmts); total src 97%.",
+    "CodeGuard --analysis-type full sobre los 8 archivos de src/ modificados/agregados: 9 checks ejecutados, 1 error.",
+    "El único error de CodeGuard es DeadCode 'variable cls is never used' en schemas.py:257 — un @classmethod de US-6.2.4, preexistente y no tocado por esta US.",
+    "Pylint directo: C0301 preexistentes (imports largos, errors.py:295) y R0903 (1 método público) en los 3 use cases nuevos, mismo patrón que el resto del BC.",
+    "mypy src/: 0 errores; ruff check limpio. CC máx 7, MI mín 46.86 (sesiones_en_vivo_router.py, preexistente)."
+  ]
+}
