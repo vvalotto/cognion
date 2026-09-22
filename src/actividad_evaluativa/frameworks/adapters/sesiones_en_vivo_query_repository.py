@@ -16,8 +16,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
 from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import (
-    SesionesEnVivoQueryPort,
     SesionEnVivoResumen,
+    SesionesEnVivoQueryPort,
 )
 from src.actividad_evaluativa.frameworks.db.models import EventoModel
 

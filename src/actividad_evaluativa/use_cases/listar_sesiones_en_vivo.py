@@ -12,8 +12,8 @@ from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
 )
 from src.actividad_evaluativa.entities.ports.materia_consulta_port import MateriaConsultaPort
 from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import (
-    SesionesEnVivoQueryPort,
     SesionEnVivoResumen,
+    SesionesEnVivoQueryPort,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 
