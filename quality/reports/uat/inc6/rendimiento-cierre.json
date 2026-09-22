@@ -1,6 +1,6 @@
 {
-  "us": "US-6.2.9",
-  "fecha": "2026-09-21T20:15:51.554584+00:00",
+  "us": "US-6.2.9 (re-medido por US-6.3.1, resolución de nombres sumada al camino)",
+  "fecha": "2026-09-22T12:18:43.967467+00:00",
   "entorno": {
     "maquina": "macOS-15.8-x86_64-i386-64bit",
     "python": "3.12.0",
@@ -14,19 +14,19 @@
   "participantes": 60,
   "use_case": {
     "n": 30,
-    "mediana_ms": 32.06,
-    "p95_ms": 43.81,
-    "maximo_ms": 50.25,
-    "minimo_ms": 26.24,
-    "desvio_ms": 5.38
+    "mediana_ms": 71.75,
+    "p95_ms": 79.09,
+    "maximo_ms": 81.29,
+    "minimo_ms": 53.19,
+    "desvio_ms": 6.15
   },
   "http_complementaria": {
     "n": 30,
-    "mediana_ms": 39.39,
-    "p95_ms": 49.51,
-    "maximo_ms": 53.18,
-    "minimo_ms": 31.82,
-    "desvio_ms": 5.14
+    "mediana_ms": 81.76,
+    "p95_ms": 124.22,
+    "maximo_ms": 156.97,
+    "minimo_ms": 58.84,
+    "desvio_ms": 18.13
   },
   "veredicto": "CUMPLE"
 }
