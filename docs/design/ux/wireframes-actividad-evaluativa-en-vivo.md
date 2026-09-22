@@ -13,7 +13,8 @@
 > `docs/plans/inc6/inc6-candidatas.md` §Spike RF-10 (fórmula de puntaje).
 >
 > Prototipo: `docs/design/ux/prototipos/actividad-evaluativa-en-vivo.html` — navegable,
-> 12 pantallas (7 Docente/proyección, 5 Estudiante). Seis rondas con Víctor (2026-09-17):
+> 12 pantallas aprobadas (7 Docente/proyección, 5 Estudiante) + 7 pantallas/variantes
+> agregadas por `US-6.3.0` (§6, huecos H1 a H9). Seis rondas con Víctor (2026-09-17):
 > (1) el cierre de cada pregunta se separa en histograma de respuestas + ranking, no un único
 > paso combinado; (2) presentar la pregunta y mostrar sus opciones son dos pasos manuales
 > separados — el temporizador arranca recién al mostrar las opciones, que se ven como cajas de
@@ -260,7 +261,138 @@ pantalla reemplaza tanto a `#est-esperando` como al contenido con ranking de la 
 
 ---
 
-## 5. Próximo paso
+## 6. Ampliaciones de la Iteración 3 (`US-6.3.0`)
+
+> Sección agregada por `US-6.3.0` (`docs/specs/inc6/US-6.3.0.md`, Issue #422). Cierra los
+> huecos H1 a H9 detectados al especificar el frontend del modo en vivo contra el backend real
+> (`US-6.1.x`/`US-6.2.x`) — casos que el backend admite y que §1 a §5 (aprobadas el 2026-09-17)
+> no resolvían. No reabre ninguna de las seis rondas de decisión de la Iteración 0 — todas las
+> pantallas de §1 a §5 quedan sin cambios, salvo el agregado puntual de H7 sobre `#stage-final`.
+
+### 6.1 H1 — Preguntas Verdadero/Falso
+
+**Actor:** Docente (proyección), Estudiante (celular).
+**Contexto:** pregunta con `tipo = verdadero_falso` (`opciones = null`, respuesta `{valor: bool}`)
+— 5 de las 36 preguntas reales del banco de "Ingeniería de Software".
+
+| Elemento | Detalle |
+|---|---|
+| Proyección (variante de `#stage-pregunta-opciones`) | 2 cajas grandes "Verdadero" / "Falso" en vez de 4 — colores `b` (azul) y `c` (amarillo), **no** rojo/verde, para no sugerir cuál es la correcta antes de cerrar la pregunta |
+| Estudiante (variante de `#est-pregunta`) | 2 tarjetas táctiles, mismos colores `b`/`c` que la proyección — mismo criterio de §3.3 (color compartido entre proyección y celular) |
+| Histograma (variante de `#stage-histograma`) | 2 barras en vez de 4, misma paleta |
+| Transiciones | Idénticas al flujo estándar (`MostrarOpcionesDeLaPregunta` → responder → `CerrarPreguntaActual` → histograma → ranking) — sin comando ni evento nuevo |
+| Errores | Los mismos de §3.3 (`TiempoAgotado`, `RespuestaYaRegistrada`, `PreguntaYaCerrada`) — el tipo de pregunta no cambia el comando `ResponderPreguntaEnVivo`, solo la forma de la respuesta enviada |
+
+### 6.2 H2 — Preguntas con 3 opciones (y con más de 4, caso no presente en los datos reales)
+
+**Actor:** Docente (proyección), Estudiante (celular).
+**Contexto:** el backend exige ≥ 2 opciones y no fija un máximo — 10 de las 36 preguntas reales
+tienen 3.
+
+| Elemento | Detalle |
+|---|---|
+| Grilla de 3 | Toma los colores `a`, `b`, `c` en orden; la tercera ocupa el ancho completo de la grilla (en vez de quedar una celda vacía) |
+| Grilla de más de 4 | Los colores se repiten cíclicamente (`a, b, c, d, a, b, …`) — caso no presente en `preguntas_gestion.json`, se documenta para no dejarlo indefinido si aparece en el futuro |
+| Transiciones / errores | Idénticos a §2.4/§3.3 — sin cambio de comando |
+
+### 6.3 H3 — Pantalla del Estudiante entre "pregunta presentada" y "opciones mostradas"
+
+**Pantalla nueva:** `#est-espera-opciones`.
+**Actor:** Estudiante.
+**Evento esperado:** el equivalente de `MostrarOpcionesDeLaPregunta` visto por el Estudiante
+(vía WebSocket) — dispara la transición automática a `#est-pregunta`.
+
+| Elemento | Detalle |
+|---|---|
+| Contenido | "Pregunta N de total" + el enunciado completo (mismo texto que el Docente ya ve en `#stage-pregunta-sola`) + mensaje "Esperá a que el Docente muestre las opciones" |
+| Por qué hace falta | §3.1 mencionaba "una pantalla de espera si está entre preguntas" sin dibujarla — el Docente tiene dos pasos manuales (§2.3) entre mostrar la pregunta y mostrar las opciones; durante esa ventana el Estudiante no tenía ninguna pantalla definida |
+| Transición | Automática, sin botón — mismo criterio que `#est-sala-espera` (§3.2) |
+| Errores | Ninguno propio — pantalla puramente de espera, no dispara comandos |
+
+### 6.4 H4 — Estudiante que no respondió y la pregunta se cerró
+
+**Pantalla nueva:** `#est-sin-respuesta` (variante "cierre").
+**Actor:** Estudiante.
+
+| Elemento | Detalle |
+|---|---|
+| Mensaje | "Se cerró la pregunta — no respondiste (+0)" |
+| Puntaje acumulado | "Llevás acumulados: X pts" — mismo dato que `#est-resultado-pregunta` (§3.4), sin cambio (no suma ni resta nada) |
+| Por qué hace falta | Desde la cuarta ronda de la Iteración 0, `#est-esperando` fue eliminada (el resultado ahora es inmediato al responder) — pero eso dejó sin pantalla al Estudiante que **no** llega a responder antes de `CerrarPreguntaActual` |
+| Transición | Automática a `#est-espera-opciones`/`#est-pregunta` (siguiente pregunta) o `#est-resultado-final` (fin de sesión) — mismo patrón que `#est-resultado-pregunta` |
+| Errores | Ninguno propio |
+
+### 6.5 H5 — Tiempo agotado al tocar
+
+**Misma pantalla que H4** (`#est-sin-respuesta`, variante "tiempo"), mensaje distinto.
+**Actor:** Estudiante.
+
+| Elemento | Detalle |
+|---|---|
+| Mensaje | "Se acabó el tiempo antes de tu respuesta (+0)" |
+| Por qué hace falta | §3.3 menciona el 422 `TiempoAgotado` (INV-AEV-08, cuando el timer local del Estudiante se desincronizó y tocó tarde) sin pantalla que lo muestre |
+| Diferencia con H4 | H4 es el Docente cerrando la pregunta antes de que el Estudiante toque; H5 es el propio toque del Estudiante llegando tarde al servidor — mismo resultado visual, origen distinto |
+| Transiciones / errores | Iguales a H4 — esta pantalla **es** la reacción al error 422, no genera uno nuevo |
+
+### 6.6 H6 — Recuperar una sesión ya creada (Docente)
+
+**Bloque nuevo**, dentro de `ComisionDetalleDocente.tsx` (pantalla existente y aprobada,
+`US-ADJ-26`, wireframe propio en `wireframes-portal-entrada.md`) — no una pantalla nueva de
+este documento. Este prototipo agrega una muestra del bloque (`#doc-comision-sesiones`), sin
+repetir la pantalla completa de detalle de Comisión.
+
+| Elemento | Detalle |
+|---|---|
+| Actor | Docente |
+| Query | Listado de sesiones en vivo de la Comisión en estado `EnEspera`/`EnCurso` (`US-6.3.2`, `GET /sesiones-en-vivo`) |
+| Contenido | Bloque "Sesiones en vivo activas": una fila por sesión (fecha/hora de creación, cantidad de preguntas, `Badge` de estado) + botón "Continuar" |
+| Por qué hace falta | La sesión solo se llega a ver justo después de crearla (`#doc-sala-espera` → proyección); si el Docente cierra la pestaña o se cae el navegador no hay forma de volver |
+| Transición | "Continuar" navega a `#doc-sala-espera` si `EnEspera`, o a la proyección de la pregunta actual si `EnCurso` (recupera el estado completo con `US-6.3.3`) — mismas pantallas de siempre, sin comando nuevo |
+| Errores | Sesiones `Finalizada` no aparecen en el bloque — mismo criterio que `#est-sesiones` (§3.1) |
+
+### 6.7 H7 — Salida de la pantalla terminal
+
+**Elemento agregado a `#stage-final`** (única modificación sobre una pantalla ya aprobada,
+explícitamente permitida por esta US).
+
+| Elemento | Detalle |
+|---|---|
+| Actor | Docente |
+| Contenido | Enlace discreto "‹ Volver a la Comisión" — tipografía chica, esquina superior, fuera del foco visual central (contraste bajo deliberado: no compite con el podio ni forma parte de lo que ve el aula) |
+| Por qué hace falta | §2.7 decía "sin acción, pantalla terminal" — el Docente quedaba sin forma de salir de la proyección salvo cerrar la pestaña |
+| Transición | Navega a `ComisionDetalleDocente` (mismo destino que "Continuar" en H6) |
+| Errores | Ninguno |
+
+### 6.8 H8 — Estado de conexión
+
+**Elemento transversal** — no una pantalla nueva, un indicador que aplica a toda pantalla que
+depende del canal WebSocket.
+
+| Elemento | Detalle |
+|---|---|
+| Actor | Docente y Estudiante |
+| Alcance | Docente: sala de espera y las 5 pantallas `stage-*`. Estudiante: sala de espera, espera de opciones, pregunta activa, sin respuesta, resultado de pregunta |
+| Contenido | Chip discreto "Reconectando…" (esquina superior) |
+| Comportamiento | Aparece al perder la conexión, desaparece al recuperarla — **nunca bloquea la pantalla ni oculta contenido** (no es un modal, no interrumpe la dinámica del aula) |
+| Por qué hace falta | Ninguna pantalla de §1 a §5 decía qué ve el usuario si se cae el WebSocket |
+| Demostración en el prototipo | Sobre 2 pantallas representativas (`#stage-pregunta-opciones`, `#est-pregunta`) con un botón que alterna el estado — no se duplica en las 12 pantallas restantes, la regla es la misma |
+
+### 6.9 H9 — Sin participantes / menos de 3
+
+**Elemento** — variante de contenido de `#stage-ranking`, `#stage-final` y
+`#est-resultado-final` (§2.6, §2.7, §3.5), no una pantalla nueva de flujo distinto.
+
+| Elemento | Detalle |
+|---|---|
+| Actor | toda el aula (observa) |
+| Contenido | Se muestran tantos puestos como participantes haya (1 o 2, no se fuerzan 3 filas vacías) |
+| Caso 0 participantes | "Nadie participó" — caso límite (sesión finalizada sin que nadie respondiera nunca) |
+| Por qué hace falta | §2.6/§2.7 asumían un Top 3 completo — una sesión con pocos Estudiantes unidos (grupo chico, prueba, primeras respuestas de una sesión recién iniciada) rompía ese supuesto |
+| Demostración en el prototipo | Variante navegable del ranking (`#stage-ranking-pocos`, 2 participantes) — no se duplica en cada pantalla de ranking, la regla es la misma en las tres |
+
+---
+
+## 7. Próximo paso
 
 Prototipo navegable (§0, HTML) y esta spec listos para la revisión de Víctor — pasa a
 aprobación explícita en el comentario de cierre del Issue #380 (DoD tipo `UX`,
@@ -268,3 +400,13 @@ aprobación explícita en el comentario de cierre del Issue #380 (DoD tipo `UX`,
 (`BC-actividad-evaluativa-modelo.md` §§10-18, Issue #379), es el input completo de las specs
 US-IEDD de las Iteraciones 1 y 2 (`docs/plans/inc6/inc6-candidatas.md`) — y cierra la
 Iteración 0 del Incremento 6.
+
+**Ampliación de la Iteración 3 (`US-6.3.0`, §6):** pasa a aprobación explícita de Víctor en el
+comentario de cierre del Issue #422, incluida la validación de legibilidad en el dispositivo
+real (celular y proyector) que exige el gate de diseño para este escenario (`CLAUDE.md`
+§"Gate de diseño UX"). Una vez aprobada, es el input completo de `US-6.3.5` a `US-6.3.9`.
+
+**Decisión de Víctor (2026-09-22):** la validación en dispositivo real de §6 se difiere al
+momento de implementar `US-6.3.5` a `US-6.3.9` (frontend real, no el prototipo estático) — no
+bloquea el arranque del backend (`US-6.3.1` a `US-6.3.3`) ni el resto de la Iteración 3. La
+aprobación explícita en el Issue #422 sigue pendiente hasta ese momento.
