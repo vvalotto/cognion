@@ -16,10 +16,15 @@ from uuid import UUID
 
 @dataclass(frozen=True)
 class ParticipanteResumen:
-    """Un Estudiante unido a una sesión en vivo."""
+    """Un Estudiante unido a una sesión en vivo.
+
+    `nombre` queda vacío en las instancias que arma este read model local — lo resuelve el use
+    case contra Identidad (`US-6.3.1`), nunca este puerto ni su adapter.
+    """
 
     estudiante_id: UUID
     unido_en: datetime
+    nombre: str = ""
 
 
 class ParticipantesSesionQueryPort(ABC):

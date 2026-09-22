@@ -326,6 +326,7 @@ def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoCo
             SQLAlchemyProyeccionesEnVivoQuery(session),
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
+            EstudianteConsultaPortInProcess(session),
         ),
         AvanzarSiguientePreguntaUseCase(
             event_store,
@@ -336,6 +337,7 @@ def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoCo
             event_store,
             SQLAlchemyProyeccionesEnVivoQuery(session),
             get_canal_tiempo_real(),
+            EstudianteConsultaPortInProcess(session),
         ),
     )
 
@@ -346,9 +348,15 @@ def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivo
     return SesionesEnVivoQueryController(
         ObtenerEstadoSesionUseCase(event_store, PreguntaConsultaPortInProcess(session)),
         ListarParticipantesUseCase(
-            event_store, SQLAlchemyParticipantesSesionQueryRepository(session)
+            event_store,
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            EstudianteConsultaPortInProcess(session),
         ),
-        ObtenerRankingUseCase(event_store, SQLAlchemyProyeccionesEnVivoQuery(session)),
+        ObtenerRankingUseCase(
+            event_store,
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            EstudianteConsultaPortInProcess(session),
+        ),
     )
 
 

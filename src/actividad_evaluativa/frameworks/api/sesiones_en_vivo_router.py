@@ -391,7 +391,7 @@ async def listar_participantes_de_sesion(
     except SesionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     return [
-        ParticipanteResponse(estudiante_id=p.estudiante_id, unido_en=p.unido_en)
+        ParticipanteResponse(estudiante_id=p.estudiante_id, unido_en=p.unido_en, nombre=p.nombre)
         for p in participantes
     ]
 
@@ -414,6 +414,7 @@ async def obtener_ranking_de_sesion(
             posicion=r.posicion,
             estudiante_id=r.estudiante_id,
             puntaje_acumulado=r.puntaje_acumulado,
+            nombre=r.nombre,
         )
         for r in ranking
     ]

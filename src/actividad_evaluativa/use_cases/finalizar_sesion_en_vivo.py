@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
@@ -16,6 +17,9 @@ from src.actividad_evaluativa.entities.errors import (
 )
 from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoFinalizada
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
+from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
+    EstudianteConsultaPort,
+)
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
@@ -24,6 +28,7 @@ from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ParticipanteEnRanking,
     ProyeccionesEnVivoQueryPort,
 )
+from src.actividad_evaluativa.use_cases._resolucion_nombres import resolver_nombres
 
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 
@@ -45,6 +50,7 @@ def _mensaje_final(ranking: list[ParticipanteEnRanking]) -> dict[str, Any]:
                 "posicion": r.posicion,
                 "estudiante_id": str(r.estudiante_id),
                 "puntaje_acumulado": r.puntaje_acumulado,
+                "nombre": r.nombre,
             }
             for r in ranking
         ],
@@ -59,11 +65,15 @@ class FinalizarSesionEnVivoUseCase:
         event_store: EventStorePort,
         proyecciones: ProyeccionesEnVivoQueryPort,
         canal: CanalTiempoRealPort,
+        estudiante_consulta: EstudianteConsultaPort,
     ) -> None:
-        """Recibe el event store, la lectura de proyecciones y el canal de tiempo real."""
+        """Recibe el event store, la lectura de proyecciones, el canal y la consulta de
+        Identidad.
+        """
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._canal = canal
+        self._estudiante_consulta = estudiante_consulta
 
     async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Finaliza la sesión y transmite el ranking final a todos los conectados.
@@ -95,5 +105,9 @@ class FinalizarSesionEnVivoUseCase:
             raise SesionYaFinalizada(sesion_id) from exc
 
         ranking = await self._proyecciones.ranking(sesion_id)
-        await self._canal.publicar(sesion_id, _mensaje_final(ranking))
+        nombres = await resolver_nombres(
+            self._estudiante_consulta, (r.estudiante_id for r in ranking)
+        )
+        ranking_con_nombre = [replace(r, nombre=nombres[r.estudiante_id]) for r in ranking]
+        await self._canal.publicar(sesion_id, _mensaje_final(ranking_con_nombre))
         return sesion
