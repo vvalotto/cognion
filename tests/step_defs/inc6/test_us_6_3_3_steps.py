@@ -67,7 +67,9 @@ async def _get(sesion_id: str, headers: dict[str, str]):
         return await client.get(f"/sesiones-en-vivo/{sesion_id}", headers=headers)
 
 
-async def _responder(sesion_id: str, headers: dict[str, str], pregunta_id: str, opcion: int) -> dict:
+async def _responder(
+    sesion_id: str, headers: dict[str, str], pregunta_id: str, opcion: int
+) -> dict:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/responder",

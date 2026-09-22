@@ -293,9 +293,7 @@ class TestObtenerEstado:
         estado = await e.estado.execute(e.sesion.id)
 
         assert estado.resultado_pregunta is not None
-        assert estado.resultado_pregunta.distribucion == [
-            OpcionDistribuida(opcion="2", cantidad=1)
-        ]
+        assert estado.resultado_pregunta.distribucion == [OpcionDistribuida(opcion="2", cantidad=1)]
         assert estado.resultado_pregunta.ranking[0].nombre == "Ana Torres"
 
     async def test_sin_resultado_con_la_pregunta_abierta(self):
