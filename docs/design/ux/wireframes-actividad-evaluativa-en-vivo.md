@@ -405,3 +405,8 @@ Iteración 0 del Incremento 6.
 comentario de cierre del Issue #422, incluida la validación de legibilidad en el dispositivo
 real (celular y proyector) que exige el gate de diseño para este escenario (`CLAUDE.md`
 §"Gate de diseño UX"). Una vez aprobada, es el input completo de `US-6.3.5` a `US-6.3.9`.
+
+**Decisión de Víctor (2026-09-22):** la validación en dispositivo real de §6 se difiere al
+momento de implementar `US-6.3.5` a `US-6.3.9` (frontend real, no el prototipo estático) — no
+bloquea el arranque del backend (`US-6.3.1` a `US-6.3.3`) ni el resto de la Iteración 3. La
+aprobación explícita en el Issue #422 sigue pendiente hasta ese momento.
