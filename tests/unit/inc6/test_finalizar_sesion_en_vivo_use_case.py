@@ -75,9 +75,7 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
             event_store, proyecciones, pregunta_consulta, canal, estudiante_consulta
         ).execute(sesion.id)
     canal.publicados.clear()
-    use_case = FinalizarSesionEnVivoUseCase(
-        event_store, proyecciones, canal, estudiante_consulta
-    )
+    use_case = FinalizarSesionEnVivoUseCase(event_store, proyecciones, canal, estudiante_consulta)
     return use_case, event_store, canal, sesion, proyecciones, estudiante_consulta
 
 

@@ -74,7 +74,11 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
         await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
     if iniciada and cerrada:
         await CerrarPreguntaActualUseCase(
-            event_store, FakeProyeccionesEnVivo(), pregunta_consulta, canal, FakeEstudianteConsultaPort()
+            event_store,
+            FakeProyeccionesEnVivo(),
+            pregunta_consulta,
+            canal,
+            FakeEstudianteConsultaPort(),
         ).execute(sesion.id)
     canal.publicados.clear()
     use_case = AvanzarSiguientePreguntaUseCase(event_store, pregunta_consulta, canal)
@@ -218,7 +222,11 @@ async def _mostrar_y_cerrar(event_store, canal, sesion_id):
     )
     await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion_id)
     await CerrarPreguntaActualUseCase(
-        event_store, FakeProyeccionesEnVivo(), pregunta_consulta, canal, FakeEstudianteConsultaPort()
+        event_store,
+        FakeProyeccionesEnVivo(),
+        pregunta_consulta,
+        canal,
+        FakeEstudianteConsultaPort(),
     ).execute(sesion_id)
 
 

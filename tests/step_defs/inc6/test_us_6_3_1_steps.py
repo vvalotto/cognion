@@ -105,9 +105,7 @@ async def _responder(sesion_id: str, headers: dict[str, str], opcion: int = 1) -
 async def _eliminar_cuenta(estudiante_id: str) -> None:
     """Borra el `Usuario` real — simula una cuenta que ya no existe (H4 del hueco de nombres)."""
     async with SessionLocal() as session:
-        await session.execute(
-            text("DELETE FROM estudiante WHERE id = :id"), {"id": estudiante_id}
-        )
+        await session.execute(text("DELETE FROM estudiante WHERE id = :id"), {"id": estudiante_id})
         await session.execute(text("DELETE FROM usuario WHERE id = :id"), {"id": estudiante_id})
         await session.commit()
 
