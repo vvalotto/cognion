@@ -11,6 +11,7 @@ from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     ContenidoPregunta,
     DetalleCorreccionPregunta,
 )
+from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import OpcionDistribuida
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
     SesionesEnVivoListadoController,
 )
@@ -82,7 +83,13 @@ class _Escenario:
             await IniciarSesionEnVivoUseCase(
                 self.event_store, self.pregunta_consulta, self.canal
             ).execute(self.sesion.id)
-        self.estado = ObtenerEstadoSesionUseCase(self.event_store, self.pregunta_consulta)
+        self.estado = ObtenerEstadoSesionUseCase(
+            self.event_store,
+            self.pregunta_consulta,
+            self.proyecciones,
+            self.participantes,
+            self.estudiantes,
+        )
         self.listar = ListarParticipantesUseCase(
             self.event_store, self.participantes, self.estudiantes
         )
@@ -251,6 +258,65 @@ class TestObtenerEstado:
 
         with pytest.raises(SesionNoExiste):
             await e.estado.execute(uuid4())
+
+    async def test_total_participantes_y_cantidad_respuestas(self):
+        e = await _escenario(iniciada=True)
+        await e.mostrar()
+        pregunta_id = e.sesion.preguntas[0].pregunta_id
+        for _ in range(5):
+            await e.unir()
+        for _ in range(3):
+            await e.proyecciones.registrar_respuesta(e.sesion.id, uuid4(), pregunta_id, "2", 900)
+
+        estado = await e.estado.execute(e.sesion.id)
+
+        assert estado.total_participantes == 5
+        assert estado.cantidad_respuestas == 3
+
+    async def test_sin_pregunta_actual_cantidad_respuestas_es_cero(self):
+        e = await _escenario()
+
+        estado = await e.estado.execute(e.sesion.id)
+
+        assert estado.cantidad_respuestas == 0
+        assert estado.resultado_pregunta is None
+
+    async def test_docente_recupera_histograma_y_ranking_con_la_pregunta_cerrada(self):
+        e = await _escenario(iniciada=True)
+        await e.mostrar()
+        pregunta_id = e.sesion.preguntas[0].pregunta_id
+        ana = uuid4()
+        await e.proyecciones.registrar_respuesta(e.sesion.id, ana, pregunta_id, "2", 900)
+        e.estudiantes.nombres_por_estudiante[ana] = "Ana Torres"
+        await e.cerrar()
+
+        estado = await e.estado.execute(e.sesion.id)
+
+        assert estado.resultado_pregunta is not None
+        assert estado.resultado_pregunta.distribucion == [
+            OpcionDistribuida(opcion="2", cantidad=1)
+        ]
+        assert estado.resultado_pregunta.ranking[0].nombre == "Ana Torres"
+
+    async def test_sin_resultado_con_la_pregunta_abierta(self):
+        e = await _escenario(iniciada=True)
+        await e.mostrar()
+
+        estado = await e.estado.execute(e.sesion.id)
+
+        assert estado.resultado_pregunta is None
+
+    async def test_el_estudiante_nunca_recibe_resultado_pregunta(self):
+        e = await _escenario(iniciada=True)
+        await e.mostrar()
+        estudiante_id = await e.unir()
+        pregunta_id = e.sesion.preguntas[0].pregunta_id
+        await e.proyecciones.registrar_respuesta(e.sesion.id, estudiante_id, pregunta_id, "2", 900)
+        await e.cerrar()
+
+        estado = await e.estado.execute(e.sesion.id, estudiante_id)
+
+        assert estado.resultado_pregunta is None
 
 
 class TestListarParticipantes:
