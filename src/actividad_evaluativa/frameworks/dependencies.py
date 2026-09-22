@@ -353,7 +353,13 @@ def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivo
     """Arma el `SesionesEnVivoQueryController` con sus dependencias de lectura (`US-6.2.8`)."""
     event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoQueryController(
-        ObtenerEstadoSesionUseCase(event_store, PreguntaConsultaPortInProcess(session)),
+        ObtenerEstadoSesionUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            EstudianteConsultaPortInProcess(session),
+        ),
         ListarParticipantesUseCase(
             event_store,
             SQLAlchemyParticipantesSesionQueryRepository(session),
