@@ -48,6 +48,9 @@ from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repositor
     SQLAlchemyProyeccionesEnVivo,
     SQLAlchemyProyeccionesEnVivoQuery,
 )
+from src.actividad_evaluativa.frameworks.adapters.sesiones_en_vivo_query_repository import (
+    SQLAlchemySesionesEnVivoQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
 )
@@ -79,6 +82,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.revision_controller
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
+    SesionesEnVivoListadoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
 )
@@ -106,6 +112,7 @@ from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
 )
 from src.actividad_evaluativa.use_cases.listar_participantes import ListarParticipantesUseCase
+from src.actividad_evaluativa.use_cases.listar_sesiones_en_vivo import ListarSesionesEnVivoUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
@@ -357,6 +364,19 @@ def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivo
             SQLAlchemyProyeccionesEnVivoQuery(session),
             EstudianteConsultaPortInProcess(session),
         ),
+    )
+
+
+def get_sesiones_en_vivo_listado_controller(
+    session: SessionDep,
+) -> SesionesEnVivoListadoController:
+    """Arma el `SesionesEnVivoListadoController`, separado del `...QueryController` (`US-6.3.2`)."""
+    return SesionesEnVivoListadoController(
+        ListarSesionesEnVivoUseCase(
+            EstudianteConsultaPortInProcess(session),
+            SQLAlchemySesionesEnVivoQueryRepository(session),
+            MateriaConsultaPortInProcess(session),
+        )
     )
 
 

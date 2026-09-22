@@ -9,13 +9,16 @@ from __future__ import annotations
 import logging
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect, status
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect, status
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
+    EstadoSesionEnVivo,
 )
 from src.actividad_evaluativa.entities.errors import (
+    ComisionNoAutorizada,
     ComisionNoExiste,
+    ComisionRequerida,
     EstudianteNoExiste,
     NoQuedanPreguntas,
     OpcionesNoMostradasTodavia,
@@ -45,6 +48,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     RespuestaCorrectaResponse,
     RespuestaEnVivoResponse,
     SesionEnVivoResponse,
+    SesionEnVivoResumenResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
     get_conduccion_en_vivo_controller,
@@ -53,6 +57,7 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     get_jwt_issuer,
     get_participaciones_en_vivo_controller,
     get_sesiones_en_vivo_controller,
+    get_sesiones_en_vivo_listado_controller,
     get_sesiones_en_vivo_query_controller,
     require_docente,
     require_estudiante,
@@ -66,6 +71,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
+    SesionesEnVivoListadoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
@@ -359,6 +367,46 @@ async def canal_sesion_en_vivo(
             await websocket.receive_text()
     except WebSocketDisconnect:
         connection_manager.desconectar(sesion_id, websocket)
+
+
+@router.get("", response_model=list[SesionEnVivoResumenResponse])
+async def listar_sesiones_en_vivo(
+    comision_id: UUID | None = None,
+    estado: list[EstadoSesionEnVivo] = Query(
+        default=[EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.EN_CURSO]
+    ),
+    usuario: JWTPayload = Depends(require_estudiante_o_docente),
+    controller: SesionesEnVivoListadoController = Depends(get_sesiones_en_vivo_listado_controller),
+) -> list[SesionEnVivoResumenResponse]:
+    """Lista las sesiones en vivo de una Comisión (la del Estudiante, o la que indique el Docente).
+
+    422 si el Docente no indica `comision_id`; 403 si el Estudiante pide la de otro.
+    """
+    try:
+        sesiones = await controller.listar_sesiones(
+            usuario.usuario_id, usuario.rol, comision_id, estado
+        )
+    except ComisionRequerida as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+    except ComisionNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    return [
+        SesionEnVivoResumenResponse(
+            id=s.id,
+            comision_id=s.comision_id,
+            materia_id=s.materia_id,
+            materia_nombre=s.materia_nombre,
+            cantidad_preguntas=s.cantidad_preguntas,
+            tiempo_limite_por_pregunta_segundos=s.tiempo_limite_por_pregunta_segundos,
+            estado=s.estado.value,
+            unidad_tematica=s.unidad_tematica,
+            tema=s.tema,
+            creada_en=s.creada_en,
+        )
+        for s in sesiones
+    ]
 
 
 @router.get("/{sesion_id}", response_model=EstadoSesionEnVivoResponse)

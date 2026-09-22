@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "us_id": "US-6.3.2",
+    "us_title": "Listar las sesiones en vivo de una Comisión",
+    "us_points": 3,
+    "producto": "Cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-22T15:46:01.353268+00:00",
+    "completed_at": "2026-09-22T17:04:42.203482+00:00",
+    "total_elapsed_seconds": 4720,
+    "effective_seconds": 4720,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-22T15:46:01.643567+00:00",
+      "completed_at": "2026-09-22T15:46:21.228138+00:00",
+      "elapsed_seconds": 19,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-22T15:46:21.423857+00:00",
+      "completed_at": "2026-09-22T15:48:52.586982+00:00",
+      "elapsed_seconds": 151,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-22T15:48:52.956133+00:00",
+      "completed_at": "2026-09-22T15:52:16.832149+00:00",
+      "elapsed_seconds": 203,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-22T15:52:17.107744+00:00",
+      "completed_at": "2026-09-22T15:57:31.356511+00:00",
+      "elapsed_seconds": 314,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Agregar ComisionRequerida y ComisionNoAutorizada",
+          "task_type": "entities",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-22T15:52:20.108708+00:00",
+          "completed_at": "2026-09-22T15:52:29.682227+00:00",
+          "elapsed_seconds": 9,
+          "actual_minutes": 0.15,
+          "variance_minutes": -7.85,
+          "file_created": "src/actividad_evaluativa/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Crear SesionesEnVivoQueryPort y SesionEnVivoResumen",
+          "task_type": "entities",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-22T15:52:32.871212+00:00",
+          "completed_at": "2026-09-22T15:52:43.781518+00:00",
+          "elapsed_seconds": 10,
+          "actual_minutes": 0.17,
+          "variance_minutes": -9.83,
+          "file_created": "src/actividad_evaluativa/entities/ports/sesiones_en_vivo_query_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Crear ListarSesionesEnVivoUseCase",
+          "task_type": "use_cases",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-22T15:52:46.709497+00:00",
+          "completed_at": "2026-09-22T15:53:00.826241+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -14.77,
+          "file_created": "src/actividad_evaluativa/use_cases/listar_sesiones_en_vivo.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Agregar listar_sesiones al SesionesEnVivoQueryController",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-22T15:53:03.399584+00:00",
+          "completed_at": "2026-09-22T15:53:23.217718+00:00",
+          "elapsed_seconds": 19,
+          "actual_minutes": 0.32,
+          "variance_minutes": -7.68,
+          "file_created": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_query_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Crear SQLAlchemySesionesEnVivoQueryRepository",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-22T15:53:26.124043+00:00",
+          "completed_at": "2026-09-22T15:53:51.416452+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -14.58,
+          "file_created": "src/actividad_evaluativa/frameworks/adapters/sesiones_en_vivo_query_repository.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Agregar schema y endpoint GET /sesiones-en-vivo",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-22T15:53:54.328623+00:00",
+          "completed_at": "2026-09-22T15:54:38.699210+00:00",
+          "elapsed_seconds": 44,
+          "actual_minutes": 0.73,
+          "variance_minutes": -14.27,
+          "file_created": "src/actividad_evaluativa/frameworks/api/schemas.py,src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Wiring en dependencies.py",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-22T15:54:41.510300+00:00",
+          "completed_at": "2026-09-22T15:55:09.775944+00:00",
+          "elapsed_seconds": 28,
+          "actual_minutes": 0.47,
+          "variance_minutes": -9.53,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "Actualizar fakes y construcciones existentes del controller",
+          "task_type": "tests",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-22T15:55:13.390530+00:00",
+          "completed_at": "2026-09-22T15:57:17.274560+00:00",
+          "elapsed_seconds": 123,
+          "actual_minutes": 2.05,
+          "variance_minutes": -12.95,
+          "file_created": "tests/unit/inc6/_fakes.py,tests/unit/inc6/test_consultas_sesion_en_vivo_use_case.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-22T15:57:34.755150+00:00",
+      "completed_at": "2026-09-22T15:59:01.693133+00:00",
+      "elapsed_seconds": 86,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-22T15:59:07.236881+00:00",
+      "completed_at": "2026-09-22T16:04:11.673324+00:00",
+      "elapsed_seconds": 304,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-22T16:04:14.126349+00:00",
+      "completed_at": "2026-09-22T16:06:36.257788+00:00",
+      "elapsed_seconds": 142,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-22T16:06:40.453787+00:00",
+      "completed_at": "2026-09-22T16:09:20.355146+00:00",
+      "elapsed_seconds": 159,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-22T16:09:23.635355+00:00",
+      "completed_at": "2026-09-22T16:09:34.663121+00:00",
+      "elapsed_seconds": 11,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-22T16:31:26.554922+00:00",
+      "completed_at": "2026-09-22T17:04:42.058988+00:00",
+      "elapsed_seconds": 1995,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 10,
+    "estimated_total_minutes": 96.0,
+    "actual_total_minutes": 4.53,
+    "variance_minutes": -91.47,
+    "variance_percent": -95.28
+  }
+}

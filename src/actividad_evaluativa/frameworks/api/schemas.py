@@ -329,3 +329,18 @@ class RankingItemResponse(BaseModel):
     nombre: str
     """Resuelto contra Identidad — `"Estudiante sin nombre"` si la cuenta ya no existe
     (`US-6.3.1`)."""
+
+
+class SesionEnVivoResumenResponse(BaseModel):
+    """Una sesión en vivo, para el listado por Comisión (`US-6.3.2`)."""
+
+    id: UUID
+    comision_id: UUID
+    materia_id: UUID
+    materia_nombre: str
+    cantidad_preguntas: int
+    tiempo_limite_por_pregunta_segundos: int
+    estado: str
+    unidad_tematica: str | None
+    tema: str | None
+    creada_en: datetime

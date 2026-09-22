@@ -1,0 +1,80 @@
+{
+  "us_id": "US-6.3.2",
+  "fecha": "2026-09-22T17:13:32.540268+00:00",
+  "componente": "src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.81,
+    "cc_promedio": 2.0,
+    "cc_max": 7,
+    "mi_promedio": 76.6,
+    "mi_minimo": 46.55,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 10,
+    "warnings": 305,
+    "infos": 48,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 8,
+        "infos": 5
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "DeadCode": {
+        "errors": 3,
+        "warnings": 237,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Pylint": {
+        "errors": 4,
+        "warnings": 0,
+        "infos": 4
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 60,
+        "infos": 2
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "UnusedImports": {
+        "errors": 3,
+        "warnings": 0,
+        "infos": 5
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.3.2-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage 99% sobre src/actividad_evaluativa completo — el 1% no cubierto (2 líneas) es de actividad_evaluativa_periodo_abierto.py, archivo preexistente no tocado por esta US; los 8 archivos modificados/agregados tienen 100%.",
+    "Los 10 errores de codeguard son ruido de entorno: 2 DeadCode falsos positivos de vulture sobre los parámetros del método abstracto SesionesEnVivoQueryPort.listar (ABC), 1 DeadCode preexistente (@classmethod de US-6.2.4 en schemas.py, no tocado por esta US) y 7 timeouts intermitentes de Pylint/UnusedImports en la corrida interna de codeguard (bug conocido del proyecto, ver CLAUDE.md). Verificado aparte: mypy src/ completo 0 errores, pylint dedicado 9.81/10.",
+    "R0902 (too-many-instance-attributes, 10/7) en SesionEnVivoResumen: DTO de solo datos con 10 campos, aceptado — mismo criterio que otros read models del BC.",
+    "DesignReviewer (pre-push) marcó CRITICAL de CBO (11/10) en SesionesEnVivoQueryController al llegar a 4 use cases — resuelto separando listar_sesiones en SesionesEnVivoListadoController propio; 0 CRITICAL confirmado tras el cambio."
+  ]
+}
