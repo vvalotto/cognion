@@ -1,9 +1,9 @@
 {
   "us_id": "US-6.3.2",
-  "fecha": "2026-09-22T16:09:17.896392+00:00",
+  "fecha": "2026-09-22T17:13:32.540268+00:00",
   "componente": "src/actividad_evaluativa",
   "metricas": {
-    "pylint": 9.86,
+    "pylint": 9.81,
     "cc_promedio": 2.0,
     "cc_max": 7,
     "mi_promedio": 76.6,
@@ -18,9 +18,9 @@
   },
   "codeguard": {
     "archivos_analizados": 8,
-    "errors": 4,
-    "warnings": 303,
-    "infos": 54,
+    "errors": 10,
+    "warnings": 305,
+    "infos": 48,
     "checks": {
       "Security": {
         "errors": 0,
@@ -29,7 +29,7 @@
       },
       "PEP8": {
         "errors": 0,
-        "warnings": 6,
+        "warnings": 8,
         "infos": 5
       },
       "Complexity": {
@@ -39,7 +39,7 @@
       },
       "DeadCode": {
         "errors": 3,
-        "warnings": 236,
+        "warnings": 237,
         "infos": 0
       },
       "Maintainability": {
@@ -48,13 +48,13 @@
         "infos": 8
       },
       "Pylint": {
-        "errors": 0,
+        "errors": 4,
         "warnings": 0,
-        "infos": 8
+        "infos": 4
       },
       "Spelling": {
         "errors": 0,
-        "warnings": 61,
+        "warnings": 60,
         "infos": 2
       },
       "Types": {
@@ -63,9 +63,9 @@
         "infos": 8
       },
       "UnusedImports": {
-        "errors": 1,
+        "errors": 3,
         "warnings": 0,
-        "infos": 7
+        "infos": 5
       }
     },
     "reporte": "quality/reports/inc6/US-6.3.2-codeguard.json"
@@ -73,7 +73,8 @@
   "estado": "APROBADO",
   "observaciones": [
     "Coverage 99% sobre src/actividad_evaluativa completo — el 1% no cubierto (2 líneas) es de actividad_evaluativa_periodo_abierto.py, archivo preexistente no tocado por esta US; los 8 archivos modificados/agregados tienen 100%.",
-    "Los 4 errores de codeguard: 2 DeadCode son falsos positivos de vulture sobre los parámetros de un método abstracto ABC (SesionesEnVivoQueryPort.listar), mismo patrón ya documentado en US-6.3.1; 1 DeadCode es un @classmethod preexistente de US-6.2.4 no tocado por esta US; 1 es un timeout intermitente de Pylint en UnusedImports (bug conocido del proyecto). Verificado aparte: mypy src/ completo 0 errores, pylint dedicado 9.86/10.",
-    "R0902 (too-many-instance-attributes, 10/7) en SesionEnVivoResumen: DTO de solo datos con 10 campos, aceptado — mismo criterio que otros read models del BC (no es un objeto con comportamiento, es una fila de resumen)."
+    "Los 10 errores de codeguard son ruido de entorno: 2 DeadCode falsos positivos de vulture sobre los parámetros del método abstracto SesionesEnVivoQueryPort.listar (ABC), 1 DeadCode preexistente (@classmethod de US-6.2.4 en schemas.py, no tocado por esta US) y 7 timeouts intermitentes de Pylint/UnusedImports en la corrida interna de codeguard (bug conocido del proyecto, ver CLAUDE.md). Verificado aparte: mypy src/ completo 0 errores, pylint dedicado 9.81/10.",
+    "R0902 (too-many-instance-attributes, 10/7) en SesionEnVivoResumen: DTO de solo datos con 10 campos, aceptado — mismo criterio que otros read models del BC.",
+    "DesignReviewer (pre-push) marcó CRITICAL de CBO (11/10) en SesionesEnVivoQueryController al llegar a 4 use cases — resuelto separando listar_sesiones en SesionesEnVivoListadoController propio; 0 CRITICAL confirmado tras el cambio."
   ]
 }

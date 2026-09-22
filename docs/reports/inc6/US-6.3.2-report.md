@@ -34,8 +34,12 @@
 
 ### Interface Adapters
 
-- ✅ **`SesionesEnVivoQueryController`** — gana el 4° use case (`listar_sesiones`); no hizo
-  falta separarlo en un controller propio, el pre-push no marcó CRITICAL de CBO
+- ✅ **`SesionesEnVivoListadoController`** (nuevo) — el pre-push (DesignReviewer) marcó
+  CRITICAL de CBO (11/10) al sumar `ListarSesionesEnVivoUseCase` como 4° use case de
+  `SesionesEnVivoQueryController` (mismo patrón que `BancosController`/`US-2.1.7`, que la spec
+  pedía vigilar). Se separó en un controller propio con el único use case de listado;
+  `SesionesEnVivoQueryController` vuelve a sus 3 use cases originales (`US-6.2.8`). 0 CRITICAL
+  confirmado tras el cambio.
 
 ### Frameworks
 
@@ -117,7 +121,8 @@ Fuente: `quality/reports/inc6/US-6.3.2-codeguard.json` → `quality.codeguard.ch
   la lógica de negocio testeable sin un cliente HTTP.
 - **Sin puertos nuevos hacia otros BCs:** reutiliza `EstudianteConsultaPort` y
   `MateriaConsultaPort`, ambos ya existentes.
-- **`SesionesEnVivoQueryController` no necesitó separarse:** llegó a 4 use cases sin CRITICAL de
-  CBO en el pre-push, a diferencia de lo que la spec pedía vigilar.
+- **`SesionesEnVivoListadoController` separado del `QueryController`:** el pre-push sí marcó
+  CRITICAL de CBO al llegar a 4 use cases (11/10) — exactamente el riesgo que la spec pedía
+  vigilar.
 - **Desbloquea:** `US-6.3.3` (estado completo para reconectar la proyección) y el arranque del
   frontend (`US-6.3.4` en adelante).

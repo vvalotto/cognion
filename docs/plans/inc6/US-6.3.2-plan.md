@@ -89,6 +89,7 @@
   `preparar_sesion`) — el helper existente siempre crea una Comisión nueva por sesión.
 - 💡 También hizo falta un helper para "Comisión sin sesiones" (`_crear_comision_sin_sesion`):
   `preparar_sesion()` siempre crea una sesión, así que no servía para el caso vacío.
-- ⚠️ `SesionesEnVivoQueryController` llegó a 4 use cases inyectados sin marcar CRITICAL de CBO
-  en el pre-push — no hizo falta separar en un controller propio, a diferencia de lo que pedía
-  vigilar la spec.
+- ⚠️ `SesionesEnVivoQueryController` con 4 use cases inyectados sí marcó CRITICAL de CBO
+  (11/10) recién en el pre-push (no en Fase 7, que no mide CBO) — exactamente el riesgo que
+  pedía vigilar la spec. Se resolvió separando `listar_sesiones` en
+  `SesionesEnVivoListadoController` propio, mismo patrón que `BancosController` (`US-2.1.7`).
