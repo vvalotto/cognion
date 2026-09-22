@@ -201,9 +201,7 @@ def estudiante_lista_sesiones(context):
 
 @when("el Docente lista las sesiones pasando la Comisión")
 def docente_lista_pasando_comision(context):
-    context["response"] = run_async(
-        _get({"comision_id": context["comision_id"]}, _docente())
-    )
+    context["response"] = run_async(_get({"comision_id": context["comision_id"]}, _docente()))
 
 
 @when("el Docente lista con estado Finalizada")

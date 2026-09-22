@@ -335,9 +335,7 @@ class TestControllerDeConsultas:
         e = await _escenario(iniciada=True)
         estudiante_id = await e.unir()
         e.estudiantes.comisiones_por_estudiante[estudiante_id] = e.sesion.comision_id
-        controller = SesionesEnVivoQueryController(
-            e.estado, e.listar, e.ranking, e.listar_sesiones
-        )
+        controller = SesionesEnVivoQueryController(e.estado, e.listar, e.ranking, e.listar_sesiones)
 
         estado = await controller.obtener_estado(e.sesion.id, estudiante_id)
         participantes = await controller.listar_participantes(e.sesion.id)

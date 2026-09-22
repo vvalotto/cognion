@@ -9,8 +9,8 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import Estad
 from src.actividad_evaluativa.entities.errors import ComisionNoAutorizada, ComisionRequerida
 from src.actividad_evaluativa.entities.ports.materia_consulta_port import MateriaDTO
 from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import (
-    SesionesEnVivoQueryPort,
     SesionEnVivoResumen,
+    SesionesEnVivoQueryPort,
 )
 from src.actividad_evaluativa.use_cases.listar_sesiones_en_vivo import ListarSesionesEnVivoUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -108,9 +108,7 @@ class TestEstudiante:
     async def test_sin_comision_propia_devuelve_lista_vacia(self):
         use_case, _, _, _ = _armar()
 
-        resultado = await use_case.execute(
-            uuid4(), TipoPerfil.ESTUDIANTE, None, DEFAULT_ESTADOS
-        )
+        resultado = await use_case.execute(uuid4(), TipoPerfil.ESTUDIANTE, None, DEFAULT_ESTADOS)
 
         assert resultado == []
 

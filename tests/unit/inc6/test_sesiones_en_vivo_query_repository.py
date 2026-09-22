@@ -43,8 +43,11 @@ class TestResumenDeStream:
         creada_en = datetime(2026, 1, 1, tzinfo=UTC)
         eventos = [
             _evento(
-                sesion_id, "SesionEnVivoCreada", _payload_creada(comision_id, materia_id),
-                creada_en, 1,
+                sesion_id,
+                "SesionEnVivoCreada",
+                _payload_creada(comision_id, materia_id),
+                creada_en,
+                1,
             )
         ]
 
@@ -62,8 +65,11 @@ class TestResumenDeStream:
         sesion_id, comision_id, materia_id = uuid4(), uuid4(), uuid4()
         eventos = [
             _evento(
-                sesion_id, "SesionEnVivoCreada", _payload_creada(comision_id, materia_id),
-                datetime(2026, 1, 1, tzinfo=UTC), 1,
+                sesion_id,
+                "SesionEnVivoCreada",
+                _payload_creada(comision_id, materia_id),
+                datetime(2026, 1, 1, tzinfo=UTC),
+                1,
             ),
             _evento(sesion_id, "SesionEnVivoIniciada", {}, datetime(2026, 1, 1, 12, tzinfo=UTC), 2),
         ]
@@ -76,12 +82,19 @@ class TestResumenDeStream:
         sesion_id, comision_id, materia_id = uuid4(), uuid4(), uuid4()
         eventos = [
             _evento(
-                sesion_id, "SesionEnVivoCreada", _payload_creada(comision_id, materia_id),
-                datetime(2026, 1, 1, tzinfo=UTC), 1,
+                sesion_id,
+                "SesionEnVivoCreada",
+                _payload_creada(comision_id, materia_id),
+                datetime(2026, 1, 1, tzinfo=UTC),
+                1,
             ),
             _evento(sesion_id, "SesionEnVivoIniciada", {}, datetime(2026, 1, 1, 12, tzinfo=UTC), 2),
-            _evento(sesion_id, "OpcionesEnVivoMostradas", {}, datetime(2026, 1, 1, 13, tzinfo=UTC), 3),
-            _evento(sesion_id, "PreguntaEnVivoCerrada", {}, datetime(2026, 1, 1, 14, tzinfo=UTC), 4),
+            _evento(
+                sesion_id, "OpcionesEnVivoMostradas", {}, datetime(2026, 1, 1, 13, tzinfo=UTC), 3
+            ),
+            _evento(
+                sesion_id, "PreguntaEnVivoCerrada", {}, datetime(2026, 1, 1, 14, tzinfo=UTC), 4
+            ),
         ]
 
         resumen = _resumen_de_stream(eventos)
@@ -92,11 +105,16 @@ class TestResumenDeStream:
         sesion_id, comision_id, materia_id = uuid4(), uuid4(), uuid4()
         eventos = [
             _evento(
-                sesion_id, "SesionEnVivoCreada", _payload_creada(comision_id, materia_id),
-                datetime(2026, 1, 1, tzinfo=UTC), 1,
+                sesion_id,
+                "SesionEnVivoCreada",
+                _payload_creada(comision_id, materia_id),
+                datetime(2026, 1, 1, tzinfo=UTC),
+                1,
             ),
             _evento(sesion_id, "SesionEnVivoIniciada", {}, datetime(2026, 1, 1, 12, tzinfo=UTC), 2),
-            _evento(sesion_id, "SesionEnVivoFinalizada", {}, datetime(2026, 1, 1, 13, tzinfo=UTC), 3),
+            _evento(
+                sesion_id, "SesionEnVivoFinalizada", {}, datetime(2026, 1, 1, 13, tzinfo=UTC), 3
+            ),
         ]
 
         resumen = _resumen_de_stream(eventos)

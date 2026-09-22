@@ -20,8 +20,8 @@ from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ProyeccionesEnVivoQueryPort,
 )
 from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import (
-    SesionesEnVivoQueryPort,
     SesionEnVivoResumen,
+    SesionesEnVivoQueryPort,
 )
 from tests.unit.inc3._fakes import FakeEventStore
 
