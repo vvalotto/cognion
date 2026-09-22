@@ -34,6 +34,7 @@ class FakeEstudianteConsultaPort(EstudianteConsultaPort):
         """Inicializa el almacenamiento en memoria."""
         self.estudiantes: set[UUID] = set()
         self.comisiones_por_estudiante: dict[UUID, UUID] = {}
+        self.nombres_por_estudiante: dict[UUID, str] = {}
 
     async def existe(self, estudiante_id: UUID) -> bool:
         """Indica si el estudiante fue precargado como válido."""
@@ -42,6 +43,18 @@ class FakeEstudianteConsultaPort(EstudianteConsultaPort):
     async def obtener_comision_id(self, estudiante_id: UUID) -> UUID | None:
         """Devuelve la comisión precargada en `comisiones_por_estudiante`, si hay alguna."""
         return self.comisiones_por_estudiante.get(estudiante_id)
+
+    async def obtener_nombres(self, ids: list[UUID]) -> dict[UUID, str]:
+        """Devuelve los nombres precargados en `nombres_por_estudiante` (`US-6.3.1`).
+
+        Ids sin nombre precargado simplemente no aparecen en el resultado, igual que el
+        adapter real.
+        """
+        return {
+            estudiante_id: self.nombres_por_estudiante[estudiante_id]
+            for estudiante_id in ids
+            if estudiante_id in self.nombres_por_estudiante
+        }
 
 
 class FakeMateriaConsultaPort(MateriaConsultaPort):

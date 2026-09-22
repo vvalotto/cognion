@@ -17,6 +17,9 @@ Uso (desde la raíz del repo, con Postgres corriendo):
 ATENCIÓN: vacía la DB local antes y después (mismo criterio que la suite de tests). Corre en la
 máquina de desarrollo, no en producción: los números son una cota de referencia, no una garantía
 del despliegue final.
+
+Re-usado por `US-6.3.1` para re-medir el RNF tras sumar la resolución de nombres (una consulta
+por lote más al camino de `CerrarPreguntaActual`) — mismo script, sin cambios de metodología.
 """
 
 from __future__ import annotations
@@ -36,6 +39,9 @@ from typing import Any
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
+from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
+    EstudianteConsultaPortInProcess,
+)
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
@@ -131,6 +137,7 @@ async def _cierre_use_case(sesion_id: str) -> float:
             SQLAlchemyProyeccionesEnVivoQuery(session),
             PreguntaConsultaPortInProcess(session),
             WebSocketCanalTiempoReal(get_connection_manager()),
+            EstudianteConsultaPortInProcess(session),
         )
         inicio = time.perf_counter()
         await use_case.execute(uuid.UUID(sesion_id))
@@ -221,7 +228,7 @@ async def main() -> int:
 
     veredicto = "CUMPLE" if use_case["p95_ms"] <= UMBRAL_MS else "NO CUMPLE"
     evidencia = {
-        "us": "US-6.2.9",
+        "us": "US-6.2.9 (re-medido por US-6.3.1, resolución de nombres sumada al camino)",
         "fecha": datetime.now(UTC).isoformat(),
         "entorno": {
             "maquina": platform.platform(),

@@ -73,8 +73,10 @@ class _Escenario:
                 self.event_store, self.pregunta_consulta, self.canal
             ).execute(self.sesion.id)
         self.estado = ObtenerEstadoSesionUseCase(self.event_store, self.pregunta_consulta)
-        self.listar = ListarParticipantesUseCase(self.event_store, self.participantes)
-        self.ranking = ObtenerRankingUseCase(self.event_store, self.proyecciones)
+        self.listar = ListarParticipantesUseCase(
+            self.event_store, self.participantes, self.estudiantes
+        )
+        self.ranking = ObtenerRankingUseCase(self.event_store, self.proyecciones, self.estudiantes)
         return self
 
     async def unir(self) -> object:
@@ -96,13 +98,17 @@ class _Escenario:
 
     async def cerrar(self) -> None:
         await CerrarPreguntaActualUseCase(
-            self.event_store, self.proyecciones, self.pregunta_consulta, self.canal
+            self.event_store,
+            self.proyecciones,
+            self.pregunta_consulta,
+            self.canal,
+            self.estudiantes,
         ).execute(self.sesion.id)
 
     async def finalizar(self) -> None:
-        await FinalizarSesionEnVivoUseCase(self.event_store, self.proyecciones, self.canal).execute(
-            self.sesion.id
-        )
+        await FinalizarSesionEnVivoUseCase(
+            self.event_store, self.proyecciones, self.canal, self.estudiantes
+        ).execute(self.sesion.id)
 
     async def registrar_respuesta(self, estudiante_id, pregunta_id, puntaje: int) -> None:
         """Siembra una `RespuestaEnVivoRegistrada` en el stream del Estudiante."""
@@ -249,6 +255,23 @@ class TestListarParticipantes:
         with pytest.raises(SesionNoExiste):
             await e.listar.execute(uuid4())
 
+    async def test_trae_el_nombre_resuelto_de_cada_participante(self):
+        e = await _escenario()
+        estudiante_id = await e.unir()
+        e.estudiantes.nombres_por_estudiante[estudiante_id] = "Juan Pérez"
+
+        participantes = await e.listar.execute(e.sesion.id)
+
+        assert participantes[0].nombre == "Juan Pérez"
+
+    async def test_participante_sin_nombre_resoluble(self):
+        e = await _escenario()
+        estudiante_id = await e.unir()
+
+        participantes = await e.listar.execute(e.sesion.id)
+
+        assert participantes[0].nombre == "Estudiante sin nombre"
+
 
 class TestObtenerRanking:
     async def test_docente_lo_ve_en_cualquier_momento(self):
@@ -261,6 +284,16 @@ class TestObtenerRanking:
         assert [(r.posicion, r.estudiante_id, r.puntaje_acumulado) for r in ranking] == [
             (1, ana, 500)
         ]
+
+    async def test_trae_el_nombre_resuelto_del_estudiante(self):
+        e = await _escenario(iniciada=True)
+        ana = uuid4()
+        await e.proyecciones.registrar_respuesta(e.sesion.id, ana, uuid4(), "A", 500)
+        e.estudiantes.nombres_por_estudiante[ana] = "Ana Torres"
+
+        ranking = await e.ranking.execute(e.sesion.id, es_estudiante=False)
+
+        assert ranking[0].nombre == "Ana Torres"
 
     async def test_estudiante_no_lo_ve_antes_de_finalizar(self):
         e = await _escenario(iniciada=True)

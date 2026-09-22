@@ -32,7 +32,11 @@ from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSes
 from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     MostrarOpcionesEnVivoUseCase,
 )
-from tests.unit.inc3._fakes import FakeEventStore, FakePreguntaConsultaPort
+from tests.unit.inc3._fakes import (
+    FakeEstudianteConsultaPort,
+    FakeEventStore,
+    FakePreguntaConsultaPort,
+)
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
@@ -70,7 +74,7 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
         await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
     if iniciada and cerrada:
         await CerrarPreguntaActualUseCase(
-            event_store, FakeProyeccionesEnVivo(), pregunta_consulta, canal
+            event_store, FakeProyeccionesEnVivo(), pregunta_consulta, canal, FakeEstudianteConsultaPort()
         ).execute(sesion.id)
     canal.publicados.clear()
     use_case = AvanzarSiguientePreguntaUseCase(event_store, pregunta_consulta, canal)
@@ -214,7 +218,7 @@ async def _mostrar_y_cerrar(event_store, canal, sesion_id):
     )
     await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion_id)
     await CerrarPreguntaActualUseCase(
-        event_store, FakeProyeccionesEnVivo(), pregunta_consulta, canal
+        event_store, FakeProyeccionesEnVivo(), pregunta_consulta, canal, FakeEstudianteConsultaPort()
     ).execute(sesion_id)
 
 
