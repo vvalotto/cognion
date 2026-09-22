@@ -4,6 +4,7 @@ from uuid import uuid4
 
 import pytest
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
 from src.actividad_evaluativa.entities.errors import RankingNoDisponible, SesionNoExiste
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
@@ -20,6 +21,7 @@ from src.actividad_evaluativa.use_cases.finalizar_sesion_en_vivo import (
 )
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.listar_participantes import ListarParticipantesUseCase
+from src.actividad_evaluativa.use_cases.listar_sesiones_en_vivo import ListarSesionesEnVivoUseCase
 from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     MostrarOpcionesEnVivoUseCase,
 )
@@ -29,9 +31,11 @@ from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     AGGREGATE_TYPE_PARTICIPACION,
     UnirseASesionEnVivoUseCase,
 )
+from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
+    FakeMateriaConsultaPort,
     FakePreguntaConsultaPort,
 )
 from tests.unit.inc6._fakes import (
@@ -39,6 +43,7 @@ from tests.unit.inc6._fakes import (
     FakeComisionConsultaPort,
     FakeParticipantesSesionQueryPort,
     FakeProyeccionesEnVivo,
+    FakeSesionesEnVivoQueryPort,
 )
 
 OPCIONES = ["A", "B", "C", "D"]
@@ -68,6 +73,8 @@ class _Escenario:
         self.canal = FakeCanalTiempoReal()
         self.proyecciones = FakeProyeccionesEnVivo()
         self.participantes = FakeParticipantesSesionQueryPort(self.event_store)
+        self.sesiones_query = FakeSesionesEnVivoQueryPort(self.event_store)
+        self.materia_consulta = FakeMateriaConsultaPort()
         if iniciada:
             await IniciarSesionEnVivoUseCase(
                 self.event_store, self.pregunta_consulta, self.canal
@@ -77,6 +84,9 @@ class _Escenario:
             self.event_store, self.participantes, self.estudiantes
         )
         self.ranking = ObtenerRankingUseCase(self.event_store, self.proyecciones, self.estudiantes)
+        self.listar_sesiones = ListarSesionesEnVivoUseCase(
+            self.estudiantes, self.sesiones_query, self.materia_consulta
+        )
         return self
 
     async def unir(self) -> object:
@@ -321,15 +331,25 @@ class TestObtenerRanking:
 
 
 class TestControllerDeConsultas:
-    async def test_delega_en_los_tres_use_cases(self):
+    async def test_delega_en_los_cuatro_use_cases(self):
         e = await _escenario(iniciada=True)
         estudiante_id = await e.unir()
-        controller = SesionesEnVivoQueryController(e.estado, e.listar, e.ranking)
+        e.estudiantes.comisiones_por_estudiante[estudiante_id] = e.sesion.comision_id
+        controller = SesionesEnVivoQueryController(
+            e.estado, e.listar, e.ranking, e.listar_sesiones
+        )
 
         estado = await controller.obtener_estado(e.sesion.id, estudiante_id)
         participantes = await controller.listar_participantes(e.sesion.id)
         ranking = await controller.obtener_ranking(e.sesion.id, es_estudiante=False)
+        sesiones = await controller.listar_sesiones(
+            estudiante_id,
+            TipoPerfil.ESTUDIANTE,
+            None,
+            [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.EN_CURSO],
+        )
 
         assert estado.ya_respondio is False
         assert [p.estudiante_id for p in participantes] == [estudiante_id]
         assert len(ranking) == 1
+        assert [s.id for s in sesiones] == [e.sesion.id]

@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
 from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port import (
@@ -18,7 +19,16 @@ from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ProyeccionesEnVivoPort,
     ProyeccionesEnVivoQueryPort,
 )
+from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import (
+    SesionesEnVivoQueryPort,
+    SesionEnVivoResumen,
+)
 from tests.unit.inc3._fakes import FakeEventStore
+
+_ESTADO_POR_EVENTO_FAKE = {
+    "SesionEnVivoIniciada": EstadoSesionEnVivo.EN_CURSO,
+    "SesionEnVivoFinalizada": EstadoSesionEnVivo.FINALIZADA,
+}
 
 
 class FakeComisionConsultaPort(ComisionConsultaPort):
@@ -70,6 +80,51 @@ class FakeParticipantesSesionQueryPort(ParticipantesSesionQueryPort):
             and evento.payload["sesion_id"] == str(sesion_id)
         ]
         return sorted(participantes, key=lambda p: p.unido_en)
+
+
+class FakeSesionesEnVivoQueryPort(SesionesEnVivoQueryPort):
+    """Read model en memoria — deriva las sesiones de los eventos del `FakeEventStore`.
+
+    Igual que el adapter real, agrupa los eventos de `ActividadEvaluativaEnVivo` por stream en
+    vez de mantener una proyección aparte.
+    """
+
+    def __init__(self, event_store: FakeEventStore) -> None:
+        """Recibe el event store del que leer los streams de `ActividadEvaluativaEnVivo`."""
+        self._event_store = event_store
+
+    async def listar(
+        self, comision_id: UUID, estados: list[EstadoSesionEnVivo]
+    ) -> list[SesionEnVivoResumen]:
+        """Devuelve las sesiones de `comision_id` cuyo estado está en `estados`."""
+        resumenes = []
+        for (aggregate_type, aggregate_id), stream in self._event_store._streams.items():
+            if aggregate_type != "ActividadEvaluativaEnVivo" or not stream:
+                continue
+            primero = stream[0]
+            if primero.payload["comision_id"] != str(comision_id):
+                continue
+            estado = EstadoSesionEnVivo.EN_ESPERA
+            for evento in stream:
+                estado = _ESTADO_POR_EVENTO_FAKE.get(evento.event_type, estado)
+            if estado not in estados:
+                continue
+            resumenes.append(
+                SesionEnVivoResumen(
+                    id=aggregate_id,
+                    comision_id=comision_id,
+                    materia_id=UUID(primero.payload["materia_id"]),
+                    cantidad_preguntas=len(primero.payload["preguntas"]),
+                    tiempo_limite_por_pregunta_segundos=primero.payload[
+                        "tiempo_limite_por_pregunta_segundos"
+                    ],
+                    estado=estado,
+                    creada_en=primero.occurred_at,
+                    unidad_tematica=primero.payload.get("unidad_tematica"),
+                    tema=primero.payload.get("tema"),
+                )
+            )
+        return sorted(resumenes, key=lambda resumen: resumen.creada_en, reverse=True)
 
 
 class FakeProyeccionesEnVivo(ProyeccionesEnVivoPort, ProyeccionesEnVivoQueryPort):
