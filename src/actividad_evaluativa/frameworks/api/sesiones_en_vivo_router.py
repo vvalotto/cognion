@@ -46,9 +46,9 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     PreguntaActualResponse,
     RankingItemResponse,
     ResponderEnVivoRequest,
-    ResultadoPreguntaResponse,
     RespuestaCorrectaResponse,
     RespuestaEnVivoResponse,
+    ResultadoPreguntaResponse,
     SesionEnVivoResponse,
     SesionEnVivoResumenResponse,
 )
