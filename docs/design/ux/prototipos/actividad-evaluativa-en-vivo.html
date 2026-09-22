@@ -244,6 +244,7 @@
     padding: 48px 40px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
+    position: relative;
   }
   .stage-eyebrow { font-size: 20px; color: var(--stage-muted); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 14px; }
   .stage-question {
@@ -323,6 +324,41 @@
   .stage-actions { margin-top: 36px; display: flex; gap: 14px; }
   .stage-actions .btn.lg { font-size: 20px; padding: 18px 34px; }
 
+  /* ============== AMPLIACIONES US-6.3.0 (huecos H1-H9) ============== */
+  .span-full { grid-column: 1 / -1; }
+
+  /* H8 — indicador de conexión, discreto, nunca bloquea la pantalla */
+  .conn-indicator {
+    position: absolute; top: 14px; right: 18px;
+    display: none; align-items: center; gap: 6px;
+    background: rgba(0,0,0,0.55); color: #fff; font-size: 12px;
+    padding: 5px 10px; border-radius: 999px; z-index: 5;
+  }
+  .conn-indicator.show { display: inline-flex; }
+  .conn-indicator .dot { width: 7px; height: 7px; border-radius: 50%; background: #f2b705; animation: conn-pulse 1s infinite; }
+  @keyframes conn-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .conn-toggle { margin-top: 18px; font-size: 12px; opacity: 0.65; background: transparent; border: 1px solid rgba(255,255,255,0.3); color: inherit; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  .app-body .conn-indicator { background: rgba(43,43,43,0.85); }
+  .app-body .conn-toggle { color: var(--muted-foreground); border-color: var(--border); opacity: 1; }
+
+  /* H7 — salida discreta de la pantalla terminal, fuera del foco visual del aula */
+  .stage-back-link {
+    position: absolute; top: 14px; left: 18px; font-size: 12px;
+    color: rgba(255,255,255,0.35); text-decoration: none;
+  }
+  .stage-back-link:hover { color: rgba(255,255,255,0.65); }
+
+  /* H3 — espera de opciones (Estudiante) */
+  .waiting-card { text-align: center; }
+
+  /* H6 — bloque "Sesiones en vivo activas" (muestra del detalle de Comisión) */
+  .sesiones-activas-list { list-style: none; padding: 0; margin: 0 0 20px; }
+  .sesiones-activas-list li {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px;
+  }
+  .sesiones-activas-list .meta { font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
+
   @media (max-width: 560px) {
     .detail-row { flex-direction: column; gap: 2px; }
     .detail-row .v { text-align: left; }
@@ -354,6 +390,15 @@
   <button data-target="est-pregunta">10. Pregunta activa</button>
   <button data-target="est-resultado-pregunta">11. Resultado de la pregunta</button>
   <button data-target="est-resultado-final">12. Resultado final</button>
+  <span class="sep"></span>
+  <strong>Ampliaciones US-6.3.0 —</strong>
+  <button data-target="stage-pregunta-vf">13. Proyección — V/F (H1)</button>
+  <button data-target="stage-pregunta-3op">14. Proyección — 3 opciones (H2)</button>
+  <button data-target="est-espera-opciones">15. Estudiante — espera opciones (H3)</button>
+  <button data-target="est-pregunta-vf">16. Estudiante — pregunta V/F (H1)</button>
+  <button data-target="est-sin-respuesta">17. Estudiante — sin respuesta (H4/H5)</button>
+  <button data-target="doc-comision-sesiones">18. Docente — sesiones activas (H6)</button>
+  <button data-target="stage-ranking-pocos">19. Proyección — ranking, pocos (H9)</button>
 </nav>
 
 <!-- 1. DOCENTE — NUEVA SESIÓN -->
@@ -436,6 +481,7 @@
 <!-- 4. PROYECCIÓN — PREGUNTA CON OPCIONES -->
 <section class="screen" id="stage-pregunta-opciones">
   <div class="stage">
+    <div class="conn-indicator" id="conn-stage-opciones"><span class="dot"></span>Reconectando…</div>
     <div class="stage-eyebrow">Pregunta 3 de 10</div>
     <div class="stage-question" style="font-size:30px;margin-bottom:20px;">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta en vez de una abstracción?</div>
     <div class="stage-timer">00:14</div>
@@ -450,6 +496,7 @@
     <div class="stage-actions">
       <button class="btn destructive lg" onclick="go('stage-histograma')">Cerrar pregunta</button>
     </div>
+    <button class="conn-toggle" onclick="toggleConn('conn-stage-opciones')">Simular desconexión (H8)</button>
   </div>
 </section>
 
@@ -489,6 +536,7 @@
 <!-- 5. PROYECCIÓN — RESULTADO FINAL -->
 <section class="screen" id="stage-final">
   <div class="stage">
+    <a href="#" class="stage-back-link" onclick="go('doc-comision-sesiones');return false;">‹ Volver a la Comisión</a>
     <div class="stage-eyebrow">Sesión finalizada</div>
     <div class="stage-podio">
       <div class="step n2"><div class="bar">2°</div><div class="name">Juan Pérez</div><div class="pts">15 620 pts</div></div>
@@ -548,6 +596,7 @@
     <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
   </div>
   <div class="app-body narrow">
+    <div class="conn-indicator" id="conn-est-pregunta"><span class="dot"></span>Reconectando…</div>
     <div class="progress-bar" style="height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:6px;"><div style="height:100%;width:70%;background:var(--accent);"></div></div>
     <div class="page-subtitle" style="display:flex;justify-content:space-between;">Pregunta 3 de 10 <strong style="color:var(--destructive);">00:14</strong></div>
     <div style="font-size:17px;font-weight:600;margin-bottom:14px;">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta?</div>
@@ -558,6 +607,7 @@
       <button class="tap-card color-d" onclick="go('est-resultado-pregunta')">Responsabilidad única</button>
     </div>
     <div class="hint" style="margin-top:14px;text-align:center;">Tocá una tarjeta para responder — un solo intento, no se puede cambiar después.</div>
+    <div style="text-align:center;"><button class="conn-toggle" onclick="toggleConn('conn-est-pregunta')">Simular desconexión (H8)</button></div>
   </div>
 </section>
 
@@ -603,6 +653,148 @@
   </div>
 </section>
 
+<!-- ============== AMPLIACIONES US-6.3.0 (huecos H1-H9) ============== -->
+
+<!-- 13. PROYECCIÓN — PREGUNTA CON OPCIONES, VARIANTE VERDADERO/FALSO (H1) -->
+<section class="screen" id="stage-pregunta-vf">
+  <div class="stage">
+    <div class="conn-indicator" id="conn-stage-vf"><span class="dot"></span>Reconectando…</div>
+    <div class="stage-eyebrow">Pregunta 5 de 10 · Verdadero o Falso</div>
+    <div class="stage-question" style="font-size:30px;margin-bottom:20px;">La inversión de dependencias implica que los módulos de alto nivel dependan de abstracciones, no de implementaciones concretas.</div>
+    <div class="stage-timer">00:09</div>
+    <div class="stage-bar"><div class="fill" style="width:45%"></div></div>
+    <div class="stage-options" style="max-width:640px;">
+      <div class="stage-option color-b">Verdadero</div>
+      <div class="stage-option color-c">Falso</div>
+    </div>
+    <div class="stage-count" style="margin-top:26px;"><span class="n">9</span> / 14 ya respondieron</div>
+    <div class="stage-actions">
+      <button class="btn destructive lg" onclick="go('stage-histograma')">Cerrar pregunta</button>
+    </div>
+  </div>
+</section>
+
+<!-- 14. PROYECCIÓN — PREGUNTA CON OPCIONES, VARIANTE 3 OPCIONES (H2) -->
+<section class="screen" id="stage-pregunta-3op">
+  <div class="stage">
+    <div class="stage-eyebrow">Pregunta 7 de 10 · 3 opciones</div>
+    <div class="stage-question" style="font-size:30px;margin-bottom:20px;">¿Cuál de los siguientes NO es un principio SOLID?</div>
+    <div class="stage-timer">00:11</div>
+    <div class="stage-bar"><div class="fill" style="width:55%"></div></div>
+    <div class="stage-options" style="max-width:760px;">
+      <div class="stage-option color-a">Herencia múltiple</div>
+      <div class="stage-option color-b">Responsabilidad única</div>
+      <div class="stage-option color-c span-full">Segregación de interfaces</div>
+    </div>
+    <div class="stage-count" style="margin-top:26px;"><span class="n">8</span> / 14 ya respondieron</div>
+    <div class="stage-actions">
+      <button class="btn destructive lg" onclick="go('stage-histograma')">Cerrar pregunta</button>
+    </div>
+  </div>
+</section>
+
+<!-- 15. ESTUDIANTE — ESPERA DE OPCIONES (H3) -->
+<section class="screen" id="est-espera-opciones">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="conn-indicator" id="conn-est-espera"><span class="dot"></span>Reconectando…</div>
+    <div class="progress-bar" style="height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:6px;"><div style="height:100%;width:70%;background:var(--accent);"></div></div>
+    <div class="page-subtitle">Pregunta 3 de 10</div>
+    <div style="font-size:17px;font-weight:600;margin-bottom:20px;">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta?</div>
+    <div class="result-card waiting-card">
+      <div class="center-icon">⏳</div>
+      <p class="page-subtitle" style="margin:0;">Esperá a que el Docente muestre las opciones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16. ESTUDIANTE — PREGUNTA ACTIVA, VARIANTE VERDADERO/FALSO (H1) -->
+<section class="screen" id="est-pregunta-vf">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="progress-bar" style="height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:6px;"><div style="height:100%;width:45%;background:var(--accent);"></div></div>
+    <div class="page-subtitle" style="display:flex;justify-content:space-between;">Pregunta 5 de 10 · Verdadero o Falso <strong style="color:var(--destructive);">00:09</strong></div>
+    <div style="font-size:17px;font-weight:600;margin-bottom:14px;">La inversión de dependencias implica que los módulos de alto nivel dependan de abstracciones, no de implementaciones concretas.</div>
+    <div class="tap-options">
+      <button class="tap-card color-b" onclick="go('est-resultado-pregunta')">Verdadero</button>
+      <button class="tap-card color-c" onclick="go('est-resultado-pregunta')">Falso</button>
+    </div>
+    <div class="hint" style="margin-top:14px;text-align:center;">Tocá una tarjeta para responder — un solo intento, no se puede cambiar después.</div>
+  </div>
+</section>
+
+<!-- 17. ESTUDIANTE — SIN RESPUESTA (H4 pregunta cerrada / H5 tiempo agotado) -->
+<section class="screen" id="est-sin-respuesta">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card">
+      <div class="center-icon">⏱️</div>
+      <h1 class="page-title" id="sinresp-titulo">Se cerró la pregunta</h1>
+      <p class="page-subtitle" id="sinresp-detalle">No respondiste (+0)</p>
+      <div class="detail-row" style="justify-content:center;gap:10px;border:none;padding-top:0;">
+        <span class="k">Llevás acumulados</span>
+        <span class="v" style="font-size:22px;color:var(--primary-dark);">7420 pts</span>
+      </div>
+      <p class="hint" style="margin-top:18px;">Esperando la próxima pregunta — el ranking se ve recién al final de la sesión.</p>
+      <button class="btn full" style="margin-top:12px;" onclick="go('est-pregunta')">Simular próxima pregunta →</button>
+      <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn outline sm" onclick="setSinRespuesta('cierre')">Ver variante: pregunta cerrada (H4)</button>
+        <button class="btn outline sm" onclick="setSinRespuesta('tiempo')">Ver variante: tiempo agotado (H5)</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18. DOCENTE — SESIONES EN VIVO ACTIVAS (H6, muestra del bloque en ComisionDetalleDocente) -->
+<section class="screen" id="doc-comision-sesiones">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Lunes 18-20hs</span></div>
+    <h1 class="page-title">Lunes 18-20hs</h1>
+    <p class="page-subtitle">Extracto del detalle de la Comisión (<code>ComisionDetalleDocente</code>, <code>US-ADJ-26</code>) — bloque nuevo de esta US, sin repetir toda la pantalla.</p>
+    <h2 style="font-size:15px;margin:24px 0 10px;">Sesiones en vivo activas</h2>
+    <ul class="sesiones-activas-list">
+      <li>
+        <div><strong>Hoy 18:05</strong><div class="meta">10 preguntas &middot; <span class="badge espera">En espera</span></div></div>
+        <button class="btn sm" onclick="go('doc-sala-espera')">Continuar</button>
+      </li>
+      <li>
+        <div><strong>Ayer 18:10</strong><div class="meta">8 preguntas &middot; <span class="badge disponible">En curso</span></div></div>
+        <button class="btn sm" onclick="go('stage-pregunta-opciones')">Continuar</button>
+      </li>
+    </ul>
+    <button class="btn accent" onclick="go('doc-nueva-sesion')">+ Nueva sesión en vivo</button>
+  </div>
+</section>
+
+<!-- 19. PROYECCIÓN — RANKING CON POCOS PARTICIPANTES (H9) -->
+<section class="screen" id="stage-ranking-pocos">
+  <div class="stage">
+    <div class="stage-eyebrow">Ranking — tras la pregunta 1 de 10 (sesión recién empezada)</div>
+    <ol class="stage-ranking">
+      <li><span class="pos">1</span>Juan Pérez<span class="pts">980</span></li>
+      <li><span class="pos">2</span>María Gómez<span class="pts">610</span></li>
+    </ol>
+    <div class="stage-eyebrow" style="margin-top:16px;font-size:14px;">Se muestran tantos puestos como participantes haya — con 0, "Nadie participó".</div>
+    <div class="stage-actions">
+      <button class="btn lg" onclick="go('stage-pregunta-sola')">Siguiente pregunta</button>
+      <button class="btn accent lg" onclick="go('stage-final')">Finalizar sesión</button>
+    </div>
+  </div>
+</section>
+
 <script>
   var autoAdvanceTimer = null;
   function go(id) {
@@ -622,6 +814,26 @@
   document.querySelectorAll('.proto-nav button').forEach(function (btn) {
     btn.addEventListener('click', function () { go(btn.dataset.target); });
   });
+
+  // H8 — alterna el indicador "Reconectando…" en las pantallas de demostración.
+  function toggleConn(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('show');
+  }
+
+  // H4/H5 — alterna el mensaje de #est-sin-respuesta entre las dos variantes.
+  function setSinRespuesta(variante) {
+    var titulo = document.getElementById('sinresp-titulo');
+    var detalle = document.getElementById('sinresp-detalle');
+    if (!titulo || !detalle) return;
+    if (variante === 'tiempo') {
+      titulo.textContent = 'Se acabó el tiempo';
+      detalle.textContent = 'No llegaste a responder a tiempo (+0)';
+    } else {
+      titulo.textContent = 'Se cerró la pregunta';
+      detalle.textContent = 'No respondiste (+0)';
+    }
+  }
 </script>
 
 </body>
