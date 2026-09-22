@@ -1,0 +1,34 @@
+{
+  "us_id": "US-6.3.4",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-6.3.4-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 6, "detalle": "warnings preexistentes (button.tsx, badge.tsx, AuthLayout.tsx, DesempenoResumenDetalle.tsx, RendirEvaluacion.test.tsx x2), no introducidos por esta US" },
+      "tsc_b": { "errores": 0, "nota": "tsc -b, no tsc --noEmit — lección US-ADJ-23 (tsconfig raíz usa references/files:[])" },
+      "vitest": {
+        "test_files": 86,
+        "tests": 532,
+        "passed": 532,
+        "failed": 0,
+        "nota": "corrida con --testTimeout=20000 para evitar timeouts de 5000ms por sobrecarga de instrumentación v8 bajo --coverage en el suite completo; sin --coverage el suite corre en verde con el timeout default"
+      },
+      "coverage_archivos_nuevos": {
+        "sesion-en-vivo-api.ts_statements_pct": 100.0,
+        "canal-sesion-en-vivo.ts_statements_pct": 95.08,
+        "use-canal-sesion-en-vivo.ts_statements_pct": 100.0,
+        "StageLayout.tsx_statements_pct": 100.0,
+        "_placeholders-en-vivo.tsx_statements_pct": 100.0
+      },
+      "coverage_global": {
+        "statements_pct": 91.96,
+        "branches_pct": 81.88,
+        "functions_pct": 88.08,
+        "lines_pct": 94.69,
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

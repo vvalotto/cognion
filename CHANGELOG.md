@@ -9,6 +9,14 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- **US-6.3.4** (Infraestructura de frontend del modo en vivo): primer uso de WebSockets del
+  frontend — cliente API tipado (`sesion-en-vivo-api.ts`, 12 funciones), canal WebSocket con
+  reconexión y backoff exponencial (`canal-sesion-en-vivo.ts`), hook seguro ante `StrictMode`
+  (`use-canal-sesion-en-vivo.ts`), layout de proyección `StageLayout` con la paleta oscura
+  `--stage-*`, y las 4 rutas del modo en vivo protegidas por rol con placeholders. Base para
+  `US-6.3.5` a `US-6.3.9`.
+
 ## [0.7.1] - 2026-09-17
 
 ### Added
