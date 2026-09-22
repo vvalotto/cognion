@@ -67,9 +67,7 @@ class FinalizarSesionEnVivoUseCase:
         canal: CanalTiempoRealPort,
         estudiante_consulta: EstudianteConsultaPort,
     ) -> None:
-        """Recibe el event store, la lectura de proyecciones, el canal y la consulta de
-        Identidad.
-        """
+        """Recibe el event store, las proyecciones, el canal y la consulta de Identidad."""
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._canal = canal

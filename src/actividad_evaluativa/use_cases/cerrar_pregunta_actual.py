@@ -87,9 +87,7 @@ class CerrarPreguntaActualUseCase:
         canal: CanalTiempoRealPort,
         estudiante_consulta: EstudianteConsultaPort,
     ) -> None:
-        """Recibe el event store, la lectura de proyecciones, la consulta de Banco, el canal y la
-        consulta de Identidad.
-        """
+        """Recibe el event store, las proyecciones, las consultas de Banco/Identidad y el canal."""
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._pregunta_consulta = pregunta_consulta
