@@ -376,9 +376,7 @@ async def listar_sesiones_en_vivo(
         default=[EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.EN_CURSO]
     ),
     usuario: JWTPayload = Depends(require_estudiante_o_docente),
-    controller: SesionesEnVivoListadoController = Depends(
-        get_sesiones_en_vivo_listado_controller
-    ),
+    controller: SesionesEnVivoListadoController = Depends(get_sesiones_en_vivo_listado_controller),
 ) -> list[SesionEnVivoResumenResponse]:
     """Lista las sesiones en vivo de una Comisión (la del Estudiante, o la que indique el Docente).
 
