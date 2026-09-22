@@ -794,4 +794,72 @@ describe("router (integración)", () => {
       expect(await screen.findByRole("heading", { name: "Creá tu cuenta" })).toBeInTheDocument()
     })
   })
+
+  describe("Sesión en Vivo (US-6.3.4)", () => {
+    it("la ruta de nueva sesión redirige a login sin sesión", async () => {
+      await router.navigate("/sesiones-en-vivo/comisiones/c1/nueva")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+    })
+
+    it("la ruta de nueva sesión renderiza con sesión de docente", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/sesiones-en-vivo/comisiones/c1/nueva")
+      render(<RouterProvider router={router} />)
+
+      expect(
+        await screen.findByText(/Nueva sesión en vivo/),
+      ).toBeInTheDocument()
+    })
+
+    it("la sala del Docente renderiza con sesión de docente", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/sesiones-en-vivo/s1/sala")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText(/Sala de espera de la sesión en vivo/)).toBeInTheDocument()
+    })
+
+    it("un Estudiante no puede abrir la sala del Docente", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/sesiones-en-vivo/s1/sala")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+    })
+
+    it("un Estudiante no puede abrir la proyección del Docente", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/sesiones-en-vivo/s1/proyeccion")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+    })
+
+    it("la ruta de proyección usa StageLayout, sin el menú de navegación", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/sesiones-en-vivo/s1/proyeccion")
+      render(<RouterProvider router={router} />)
+
+      await screen.findByText(/Proyección de la sesión en vivo/)
+      expect(screen.queryByRole("navigation")).not.toBeInTheDocument()
+    })
+
+    it("la ruta de mi sesión en vivo del Estudiante requiere sesión de estudiante", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/mis-sesiones-en-vivo/s1")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+    })
+
+    it("la ruta de mi sesión en vivo renderiza con sesión de estudiante", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/mis-sesiones-en-vivo/s1")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText(/Mi sesión en vivo/)).toBeInTheDocument()
+    })
+  })
 })
