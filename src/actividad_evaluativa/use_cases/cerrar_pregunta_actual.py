@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
@@ -16,6 +17,9 @@ from src.actividad_evaluativa.entities.errors import (
 )
 from src.actividad_evaluativa.entities.eventos_en_vivo import PreguntaEnVivoCerrada
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
+from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
+    EstudianteConsultaPort,
+)
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
@@ -29,6 +33,7 @@ from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ParticipanteEnRanking,
     ProyeccionesEnVivoQueryPort,
 )
+from src.actividad_evaluativa.use_cases._resolucion_nombres import resolver_nombres
 
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 
@@ -64,6 +69,7 @@ def _mensaje_cierre(
                 "posicion": r.posicion,
                 "estudiante_id": str(r.estudiante_id),
                 "puntaje_acumulado": r.puntaje_acumulado,
+                "nombre": r.nombre,
             }
             for r in ranking
         ],
@@ -79,12 +85,14 @@ class CerrarPreguntaActualUseCase:
         proyecciones: ProyeccionesEnVivoQueryPort,
         pregunta_consulta: PreguntaConsultaPort,
         canal: CanalTiempoRealPort,
+        estudiante_consulta: EstudianteConsultaPort,
     ) -> None:
-        """Recibe el event store, la lectura de proyecciones, la consulta de Banco y el canal."""
+        """Recibe el event store, las proyecciones, las consultas de Banco/Identidad y el canal."""
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._pregunta_consulta = pregunta_consulta
         self._canal = canal
+        self._estudiante_consulta = estudiante_consulta
 
     async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Cierra la pregunta actual y transmite el resultado a todos los conectados.
@@ -115,7 +123,11 @@ class CerrarPreguntaActualUseCase:
         detalle = await self._pregunta_consulta.obtener_detalle_correccion(evento.pregunta_id)
         distribucion = await self._proyecciones.distribucion(sesion_id, evento.pregunta_id)
         ranking = await self._proyecciones.ranking(sesion_id)
+        nombres = await resolver_nombres(
+            self._estudiante_consulta, (r.estudiante_id for r in ranking)
+        )
+        ranking_con_nombre = [replace(r, nombre=nombres[r.estudiante_id]) for r in ranking]
         await self._canal.publicar(
-            sesion_id, _mensaje_cierre(evento, detalle, distribucion, ranking)
+            sesion_id, _mensaje_cierre(evento, detalle, distribucion, ranking_con_nombre)
         )
         return sesion

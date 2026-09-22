@@ -105,6 +105,17 @@ class TestUnirse:
         assert mensaje["cantidad"] == 1
         assert mensaje["participantes"][0]["estudiante_id"] == str(estudiante_id)
 
+    async def test_el_broadcast_de_participantes_trae_el_nombre(self):
+        use_case, _, estudiantes, canal, sesion = await _escenario()
+        estudiante_id = uuid4()
+        estudiantes.estudiantes.add(estudiante_id)
+        estudiantes.nombres_por_estudiante[estudiante_id] = "Juan Pérez"
+
+        await use_case.execute(sesion.id, estudiante_id)
+
+        mensaje = canal.publicados[0][1]
+        assert mensaje["participantes"][0]["nombre"] == "Juan Pérez"
+
     async def test_union_tardia_con_la_sesion_en_curso(self):
         use_case, event_store, estudiantes, _, sesion = await _escenario()
         await _sembrar_evento_de_sesion(event_store, sesion.id, "SesionEnVivoIniciada", 2)

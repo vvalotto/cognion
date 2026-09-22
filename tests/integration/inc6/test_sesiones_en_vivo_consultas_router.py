@@ -173,6 +173,15 @@ class TestParticipantesAPIIntegration:
 
         assert response.json() == []
 
+    async def test_participante_trae_el_nombre_real_resuelto_contra_identidad(self):
+        sesion_id, comision_id = await preparar_sesion()
+        _, headers = await crear_estudiante(comision_id)
+        await unirse_a_sesion(sesion_id, headers)
+
+        response = await _get(f"/sesiones-en-vivo/{sesion_id}/participantes", _docente())
+
+        assert response.json()[0]["nombre"] == "Estudiante"
+
     async def test_rechazo_por_rol_estudiante(self):
         sesion_id, comision_id = await preparar_sesion()
         _, headers = await crear_estudiante(comision_id)
@@ -203,9 +212,11 @@ class TestRankingAPIIntegration:
         response = await _get(f"/sesiones-en-vivo/{sesion_id}/ranking", _docente())
 
         assert response.status_code == 200
-        assert response.json() == [
-            {"posicion": 1, "estudiante_id": estudiante_id, "puntaje_acumulado": puntaje}
-        ]
+        fila = response.json()[0]
+        assert fila["posicion"] == 1
+        assert fila["estudiante_id"] == estudiante_id
+        assert fila["puntaje_acumulado"] == puntaje
+        assert fila["nombre"] == "Estudiante"
 
     async def test_estudiante_no_lo_ve_hasta_que_finaliza(self):
         sesion_id, _, headers, puntaje = await self._sesion_con_puntaje()

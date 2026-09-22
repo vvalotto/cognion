@@ -315,6 +315,9 @@ class ParticipanteResponse(BaseModel):
 
     estudiante_id: UUID
     unido_en: datetime
+    nombre: str
+    """Resuelto contra Identidad — `"Estudiante sin nombre"` si la cuenta ya no existe
+    (`US-6.3.1`)."""
 
 
 class RankingItemResponse(BaseModel):
@@ -323,3 +326,6 @@ class RankingItemResponse(BaseModel):
     posicion: int
     estudiante_id: UUID
     puntaje_acumulado: int
+    nombre: str
+    """Resuelto contra Identidad — `"Estudiante sin nombre"` si la cuenta ya no existe
+    (`US-6.3.1`)."""

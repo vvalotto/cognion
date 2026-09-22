@@ -30,18 +30,28 @@ from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port imp
 from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ProyeccionesEnVivoPort,
 )
+from src.actividad_evaluativa.use_cases._resolucion_nombres import resolver_nombres
 
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 AGGREGATE_TYPE_PARTICIPACION = "ParticipacionEnVivo"
 
 
-def _mensaje_participantes(participantes: list[ParticipanteResumen]) -> dict[str, Any]:
-    """Arma el mensaje de broadcast con la lista de participantes actualizada (§16)."""
+def _mensaje_participantes(
+    participantes: list[ParticipanteResumen], nombres: dict[UUID, str]
+) -> dict[str, Any]:
+    """Arma el mensaje de broadcast con la lista de participantes actualizada.
+
+    `nombre` agregado por `US-6.3.1` (§16 del modelo).
+    """
     return {
         "tipo": "participantes_actualizados",
         "cantidad": len(participantes),
         "participantes": [
-            {"estudiante_id": str(p.estudiante_id), "unido_en": p.unido_en.isoformat()}
+            {
+                "estudiante_id": str(p.estudiante_id),
+                "unido_en": p.unido_en.isoformat(),
+                "nombre": nombres[p.estudiante_id],
+            }
             for p in participantes
         ],
     }
@@ -85,7 +95,10 @@ class UnirseASesionEnVivoUseCase:
         participacion = await self._unir_o_reutilizar(sesion_id, estudiante_id)
 
         participantes = await self._participantes_query.listar(sesion_id)
-        await self._canal.publicar(sesion_id, _mensaje_participantes(participantes))
+        nombres = await resolver_nombres(
+            self._estudiante_consulta, (p.estudiante_id for p in participantes)
+        )
+        await self._canal.publicar(sesion_id, _mensaje_participantes(participantes, nombres))
         return participacion
 
     async def _unir_o_reutilizar(self, sesion_id: UUID, estudiante_id: UUID) -> ParticipacionEnVivo:

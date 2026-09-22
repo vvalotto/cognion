@@ -19,11 +19,16 @@ from uuid import UUID
 
 @dataclass(frozen=True)
 class ParticipanteEnRanking:
-    """Una fila del ranking: posición (1, 2, 3…, calculada al leer), participante y puntaje."""
+    """Una fila del ranking: posición (1, 2, 3…, calculada al leer), participante y puntaje.
+
+    `nombre` queda vacío en las instancias que arma este read model local — lo resuelve el use
+    case contra Identidad (`US-6.3.1`), nunca este puerto ni su adapter.
+    """
 
     posicion: int
     estudiante_id: UUID
     puntaje_acumulado: int
+    nombre: str = ""
 
 
 @dataclass(frozen=True)

@@ -265,7 +265,12 @@ class TestRespuestaTardia:
         assert respuesta.status_code == 422
         assert "fuera del tiempo límite" in respuesta.json()["detail"]
         assert ranking.json() == [
-            {"posicion": 1, "estudiante_id": estudiante_id, "puntaje_acumulado": 0}
+            {
+                "posicion": 1,
+                "estudiante_id": estudiante_id,
+                "puntaje_acumulado": 0,
+                "nombre": "Estudiante 0",
+            }
         ]
         resultado = await session.execute(
             text(
