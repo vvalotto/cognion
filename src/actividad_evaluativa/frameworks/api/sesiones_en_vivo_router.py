@@ -57,6 +57,7 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     get_jwt_issuer,
     get_participaciones_en_vivo_controller,
     get_sesiones_en_vivo_controller,
+    get_sesiones_en_vivo_listado_controller,
     get_sesiones_en_vivo_query_controller,
     require_docente,
     require_estudiante,
@@ -70,6 +71,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
+    SesionesEnVivoListadoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
@@ -372,7 +376,9 @@ async def listar_sesiones_en_vivo(
         default=[EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.EN_CURSO]
     ),
     usuario: JWTPayload = Depends(require_estudiante_o_docente),
-    controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
+    controller: SesionesEnVivoListadoController = Depends(
+        get_sesiones_en_vivo_listado_controller
+    ),
 ) -> list[SesionEnVivoResumenResponse]:
     """Lista las sesiones en vivo de una Comisión (la del Estudiante, o la que indique el Docente).
 

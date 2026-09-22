@@ -82,6 +82,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.revision_controller
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
+    SesionesEnVivoListadoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
 )
@@ -361,11 +364,19 @@ def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivo
             SQLAlchemyProyeccionesEnVivoQuery(session),
             EstudianteConsultaPortInProcess(session),
         ),
+    )
+
+
+def get_sesiones_en_vivo_listado_controller(
+    session: SessionDep,
+) -> SesionesEnVivoListadoController:
+    """Arma el `SesionesEnVivoListadoController`, separado del `...QueryController` (`US-6.3.2`)."""
+    return SesionesEnVivoListadoController(
         ListarSesionesEnVivoUseCase(
             EstudianteConsultaPortInProcess(session),
             SQLAlchemySesionesEnVivoQueryRepository(session),
             MateriaConsultaPortInProcess(session),
-        ),
+        )
     )
 
 

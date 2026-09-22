@@ -11,6 +11,9 @@ from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     ContenidoPregunta,
     DetalleCorreccionPregunta,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
+    SesionesEnVivoListadoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
 )
@@ -331,15 +334,27 @@ class TestObtenerRanking:
 
 
 class TestControllerDeConsultas:
-    async def test_delega_en_los_cuatro_use_cases(self):
+    async def test_delega_en_los_tres_use_cases(self):
         e = await _escenario(iniciada=True)
         estudiante_id = await e.unir()
-        e.estudiantes.comisiones_por_estudiante[estudiante_id] = e.sesion.comision_id
-        controller = SesionesEnVivoQueryController(e.estado, e.listar, e.ranking, e.listar_sesiones)
+        controller = SesionesEnVivoQueryController(e.estado, e.listar, e.ranking)
 
         estado = await controller.obtener_estado(e.sesion.id, estudiante_id)
         participantes = await controller.listar_participantes(e.sesion.id)
         ranking = await controller.obtener_ranking(e.sesion.id, es_estudiante=False)
+
+        assert estado.ya_respondio is False
+        assert [p.estudiante_id for p in participantes] == [estudiante_id]
+        assert len(ranking) == 1
+
+
+class TestControllerDeListado:
+    async def test_delega_en_el_use_case_de_listado(self):
+        e = await _escenario(iniciada=True)
+        estudiante_id = await e.unir()
+        e.estudiantes.comisiones_por_estudiante[estudiante_id] = e.sesion.comision_id
+        controller = SesionesEnVivoListadoController(e.listar_sesiones)
+
         sesiones = await controller.listar_sesiones(
             estudiante_id,
             TipoPerfil.ESTUDIANTE,
@@ -347,7 +362,4 @@ class TestControllerDeConsultas:
             [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.EN_CURSO],
         )
 
-        assert estado.ya_respondio is False
-        assert [p.estudiante_id for p in participantes] == [estudiante_id]
-        assert len(ranking) == 1
         assert [s.id for s in sesiones] == [e.sesion.id]
