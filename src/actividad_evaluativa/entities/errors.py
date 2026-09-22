@@ -388,3 +388,20 @@ class RankingNoDisponible(Exception):
         super().__init__(
             f"El ranking de la sesión en vivo '{sesion_id}' se publica al finalizarla."
         )
+
+
+class ComisionRequerida(Exception):
+    """El Docente listó sesiones en vivo sin indicar `comision_id` (`US-6.3.2`)."""
+
+    def __init__(self) -> None:
+        """Arma el mensaje de la excepción."""
+        super().__init__("El Docente debe indicar comision_id para listar sesiones en vivo.")
+
+
+class ComisionNoAutorizada(Exception):
+    """El Estudiante pidió sesiones en vivo de una Comisión que no es la propia (`US-6.3.2`)."""
+
+    def __init__(self, comision_id: object) -> None:
+        """Guarda el id pedido y arma el mensaje de la excepción."""
+        self.comision_id = comision_id
+        super().__init__(f"No podés ver las sesiones en vivo de la comisión '{comision_id}'.")

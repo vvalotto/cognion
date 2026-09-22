@@ -48,6 +48,9 @@ from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repositor
     SQLAlchemyProyeccionesEnVivo,
     SQLAlchemyProyeccionesEnVivoQuery,
 )
+from src.actividad_evaluativa.frameworks.adapters.sesiones_en_vivo_query_repository import (
+    SQLAlchemySesionesEnVivoQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
 )
@@ -106,6 +109,7 @@ from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
 )
 from src.actividad_evaluativa.use_cases.listar_participantes import ListarParticipantesUseCase
+from src.actividad_evaluativa.use_cases.listar_sesiones_en_vivo import ListarSesionesEnVivoUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
@@ -356,6 +360,11 @@ def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivo
             event_store,
             SQLAlchemyProyeccionesEnVivoQuery(session),
             EstudianteConsultaPortInProcess(session),
+        ),
+        ListarSesionesEnVivoUseCase(
+            EstudianteConsultaPortInProcess(session),
+            SQLAlchemySesionesEnVivoQueryRepository(session),
+            MateriaConsultaPortInProcess(session),
         ),
     )
 
