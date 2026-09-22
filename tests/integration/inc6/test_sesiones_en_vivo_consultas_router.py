@@ -124,6 +124,80 @@ class TestEstadoAPIIntegration:
         assert despues["ya_respondio"] is True
         assert despues["puntaje_acumulado"] == feedback["puntaje_acumulado"] > 0
 
+    async def test_total_participantes_y_cantidad_respuestas(self):
+        sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
+        pregunta_id = await pregunta_actual_de(sesion_id)
+        for _ in range(3):
+            _, headers = await crear_estudiante(comision_id)
+            await unirse_a_sesion(sesion_id, headers)
+            await _responder(sesion_id, headers, pregunta_id, 1)
+        _, headers_sin_responder = await crear_estudiante(comision_id)
+        await unirse_a_sesion(sesion_id, headers_sin_responder)
+
+        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+
+        assert cuerpo["total_participantes"] == 4
+        assert cuerpo["cantidad_respuestas"] == 3
+
+    async def test_sin_pregunta_actual_cantidad_respuestas_es_cero(self):
+        sesion_id, _ = await preparar_sesion(opcion_multiple=True)
+
+        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+
+        assert cuerpo["cantidad_respuestas"] == 0
+        assert cuerpo["resultado_pregunta"] is None
+
+    async def test_docente_recupera_histograma_y_ranking_con_la_pregunta_cerrada(self):
+        sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
+        _, headers = await crear_estudiante(comision_id)
+        await unirse_a_sesion(sesion_id, headers)
+        await _responder(sesion_id, headers, await pregunta_actual_de(sesion_id), 1)
+        await cerrar_pregunta_actual(sesion_id)
+
+        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+
+        resultado = cuerpo["resultado_pregunta"]
+        assert resultado is not None
+        assert resultado["distribucion"] == [{"opcion": "1", "cantidad": 1}]
+        assert len(resultado["ranking"]) == 1
+        assert resultado["ranking"][0]["nombre"] == "Estudiante"
+
+    async def test_sin_resultado_con_la_pregunta_abierta(self):
+        sesion_id, _ = await preparar_sesion(opcion_multiple=True)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
+
+        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+
+        assert cuerpo["resultado_pregunta"] is None
+
+    async def test_el_estudiante_nunca_recibe_resultado_pregunta(self):
+        sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
+        _, headers = await crear_estudiante(comision_id)
+        await unirse_a_sesion(sesion_id, headers)
+        await _responder(sesion_id, headers, await pregunta_actual_de(sesion_id), 1)
+        await cerrar_pregunta_actual(sesion_id)
+
+        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", headers)).json()
+
+        assert cuerpo["resultado_pregunta"] is None
+
+    async def test_estado_anterior_sigue_funcionando(self):
+        sesion_id, _ = await preparar_sesion(opcion_multiple=True)
+
+        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+
+        assert cuerpo["estado"] == "EnEspera"
+        assert cuerpo["pregunta_actual"] is None
+        assert cuerpo["cantidad_preguntas"] == 5
+        assert cuerpo["ya_respondio"] is None
+
     async def test_consultar_no_escribe_eventos(self, session):
         sesion_id, _ = await preparar_sesion(opcion_multiple=True)
         await iniciar_sesion(sesion_id)

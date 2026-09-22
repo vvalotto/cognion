@@ -308,6 +308,12 @@ class EstadoSesionEnVivoResponse(BaseModel):
     """Solo para el Estudiante: si ya respondió la pregunta actual."""
     puntaje_acumulado: int | None = None
     """Solo para el Estudiante: su puntaje acumulado."""
+    total_participantes: int = 0
+    """Cantidad de Estudiantes unidos a la sesión (`US-6.3.3`)."""
+    cantidad_respuestas: int = 0
+    """Respuestas registradas a la pregunta actual, `0` sin pregunta actual (`US-6.3.3`)."""
+    resultado_pregunta: ResultadoPreguntaResponse | None = None
+    """Solo para el Docente, y solo con la pregunta actual cerrada (`US-6.3.3`)."""
 
 
 class ParticipanteResponse(BaseModel):
@@ -344,3 +350,17 @@ class SesionEnVivoResumenResponse(BaseModel):
     unidad_tematica: str | None
     tema: str | None
     creada_en: datetime
+
+
+class OpcionDistribuidaResponse(BaseModel):
+    """Cantidad de respuestas de una opción de la pregunta cerrada (`US-6.3.3`)."""
+
+    opcion: str
+    cantidad: int
+
+
+class ResultadoPreguntaResponse(BaseModel):
+    """Histograma + ranking de la pregunta actual ya cerrada (`US-6.3.3`)."""
+
+    distribucion: list[OpcionDistribuidaResponse]
+    ranking: list[RankingItemResponse]

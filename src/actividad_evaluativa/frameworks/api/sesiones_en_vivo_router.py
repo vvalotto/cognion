@@ -40,6 +40,7 @@ from src.actividad_evaluativa.entities.errors import (
 from src.actividad_evaluativa.frameworks.api.schemas import (
     CrearSesionEnVivoRequest,
     EstadoSesionEnVivoResponse,
+    OpcionDistribuidaResponse,
     ParticipacionEnVivoResponse,
     ParticipanteResponse,
     PreguntaActualResponse,
@@ -47,6 +48,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     ResponderEnVivoRequest,
     RespuestaCorrectaResponse,
     RespuestaEnVivoResponse,
+    ResultadoPreguntaResponse,
     SesionEnVivoResponse,
     SesionEnVivoResumenResponse,
 )
@@ -78,7 +80,7 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_li
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
 )
-from src.actividad_evaluativa.use_cases.obtener_estado_sesion import EstadoSesion
+from src.actividad_evaluativa.use_cases.obtener_estado_sesion import EstadoSesion, ResultadoPregunta
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -100,6 +102,27 @@ def _a_sesion_response(sesion: ActividadEvaluativaEnVivo) -> SesionEnVivoRespons
         tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
         estado=sesion.estado.value,
         pregunta_actual_indice=sesion.pregunta_actual_indice,
+    )
+
+
+def _a_resultado_response(resultado: ResultadoPregunta | None) -> ResultadoPreguntaResponse | None:
+    """Arma el `ResultadoPreguntaResponse` — `None` sin resultado todavía (`US-6.3.3`)."""
+    if resultado is None:
+        return None
+    return ResultadoPreguntaResponse(
+        distribucion=[
+            OpcionDistribuidaResponse(opcion=d.opcion, cantidad=d.cantidad)
+            for d in resultado.distribucion
+        ],
+        ranking=[
+            RankingItemResponse(
+                posicion=r.posicion,
+                estudiante_id=r.estudiante_id,
+                puntaje_acumulado=r.puntaje_acumulado,
+                nombre=r.nombre,
+            )
+            for r in resultado.ranking
+        ],
     )
 
 
@@ -133,6 +156,9 @@ def _a_estado_response(estado: EstadoSesion) -> EstadoSesionEnVivoResponse:
         ),
         ya_respondio=estado.ya_respondio,
         puntaje_acumulado=estado.puntaje_acumulado,
+        total_participantes=estado.total_participantes,
+        cantidad_respuestas=estado.cantidad_respuestas,
+        resultado_pregunta=_a_resultado_response(estado.resultado_pregunta),
     )
 
 
