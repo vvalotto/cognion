@@ -35,6 +35,15 @@ function renderDetalle(comisionId = "c1") {
           path="/actividad-evaluativa/comisiones/:comisionId"
           element={<ComisionDetalleDocente />}
         />
+        <Route path="/sesiones-en-vivo/:sesionId/sala" element={<p>Sala de espera (destino)</p>} />
+        <Route
+          path="/sesiones-en-vivo/:sesionId/proyeccion"
+          element={<p>Proyección (destino)</p>}
+        />
+        <Route
+          path="/sesiones-en-vivo/comisiones/:comisionId/nueva"
+          element={<p>Nueva sesión (destino)</p>}
+        />
       </Routes>
     </MemoryRouter>,
   )
@@ -71,6 +80,7 @@ describe("ComisionDetalleDocente", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(
         jsonResponse(201, {
           id: "i1",
@@ -91,13 +101,14 @@ describe("ComisionDetalleDocente", () => {
     expect(screen.getByRole("button", { name: "Generar un link nuevo" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Copiar" })).toBeInTheDocument()
 
-    const [, init] = vi.mocked(fetch).mock.calls[2]
+    const [, init] = vi.mocked(fetch).mock.calls[3]
     expect(JSON.parse(init?.body as string)).toEqual({ docente_id: "d1" })
   })
 
   it("copia el link generado al portapapeles", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(
         jsonResponse(201, {
@@ -126,6 +137,7 @@ describe("ComisionDetalleDocente", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(errorResponse(422, "El docente no está asignado a esta comisión"))
 
     renderDetalle()
@@ -143,6 +155,7 @@ describe("ComisionDetalleDocente", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, [{ id: "e1", nombre: "Ana Gómez" }]))
+      .mockResolvedValueOnce(jsonResponse(200, []))
 
     renderDetalle()
 
@@ -153,6 +166,7 @@ describe("ComisionDetalleDocente", () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
 
     renderDetalle()
 
@@ -161,5 +175,102 @@ describe("ComisionDetalleDocente", () => {
         screen.getByText("Esta comisión todavía no tiene estudiantes inscriptos."),
       ).toBeInTheDocument(),
     )
+  })
+
+  it("el botón + Nueva sesión en vivo navega al formulario", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+
+    renderDetalle()
+    await screen.findByRole("heading", { name: "Lunes 18-20hs" })
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "+ Nueva sesión en vivo" }))
+
+    expect(await screen.findByText("Nueva sesión (destino)")).toBeInTheDocument()
+  })
+
+  it("muestra el bloque de sesiones en vivo activas, excluyendo las finalizadas", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "s1",
+            comision_id: "c1",
+            materia_id: "m1",
+            materia_nombre: "Ingeniería de Software",
+            cantidad_preguntas: 5,
+            tiempo_limite_por_pregunta_segundos: 20,
+            estado: "en_espera",
+            unidad_tematica: null,
+            tema: null,
+            creada_en: "2026-09-23T10:00:00Z",
+          },
+          {
+            id: "s2",
+            comision_id: "c1",
+            materia_id: "m1",
+            materia_nombre: "Ingeniería de Software",
+            cantidad_preguntas: 5,
+            tiempo_limite_por_pregunta_segundos: 20,
+            estado: "finalizada",
+            unidad_tematica: null,
+            tema: null,
+            creada_en: "2026-09-23T09:00:00Z",
+          },
+        ]),
+      )
+
+    renderDetalle()
+
+    expect(await screen.findByText("Sesiones en vivo activas")).toBeInTheDocument()
+    expect(screen.getByText("En espera")).toBeInTheDocument()
+    expect(screen.getAllByRole("button", { name: "Continuar" })).toHaveLength(1)
+  })
+
+  it("Continuar navega a la sala si la sesión está EnEspera, o a la proyección si está EnCurso", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            id: "s-en-curso",
+            comision_id: "c1",
+            materia_id: "m1",
+            materia_nombre: "Ingeniería de Software",
+            cantidad_preguntas: 5,
+            tiempo_limite_por_pregunta_segundos: 20,
+            estado: "en_curso",
+            unidad_tematica: null,
+            tema: null,
+            creada_en: "2026-09-23T10:00:00Z",
+          },
+        ]),
+      )
+
+    renderDetalle()
+    await screen.findByText("Sesiones en vivo activas")
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Continuar" }))
+
+    expect(await screen.findByText("Proyección (destino)")).toBeInTheDocument()
+  })
+
+  it("no muestra el bloque de sesiones activas si no hay ninguna", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+
+    renderDetalle()
+    await screen.findByRole("heading", { name: "Lunes 18-20hs" })
+
+    expect(screen.queryByText("Sesiones en vivo activas")).not.toBeInTheDocument()
   })
 })

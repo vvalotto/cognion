@@ -16,6 +16,11 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   (`use-canal-sesion-en-vivo.ts`), layout de proyección `StageLayout` con la paleta oscura
   `--stage-*`, y las 4 rutas del modo en vivo protegidas por rol con placeholders. Base para
   `US-6.3.5` a `US-6.3.9`.
+- **US-6.3.5** (Docente crea la sesión en vivo y abre la sala de espera): primera pantalla real
+  del modo en vivo — formulario de creación desde el detalle de una Comisión
+  (`NuevaSesionEnVivo.tsx`), sala de espera como primer consumidor real del canal WebSocket
+  (`SalaEsperaDocente.tsx`: participantes en vivo, reconexión, iniciar sesión), y bloque
+  "Sesiones en vivo activas" en `ComisionDetalleDocente.tsx` para recuperar una sesión creada.
 
 ## [0.7.1] - 2026-09-17
 
