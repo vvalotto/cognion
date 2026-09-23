@@ -21,6 +21,13 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   (`NuevaSesionEnVivo.tsx`), sala de espera como primer consumidor real del canal WebSocket
   (`SalaEsperaDocente.tsx`: participantes en vivo, reconexión, iniciar sesión), y bloque
   "Sesiones en vivo activas" en `ComisionDetalleDocente.tsx` para recuperar una sesión creada.
+- **US-6.3.6** (Docente proyecta la pregunta, muestra las opciones y la cierra): contenedor
+  `ProyeccionSesionEnVivo.tsx` con su máquina de etapas (estado del servidor + mensajes del
+  canal, recálculo al reconectar y ante `422`) y las etapas `#stage-pregunta-sola` /
+  `#stage-pregunta-opciones` (cajas de color sin marcar la correcta, Verdadero/Falso, temporizador
+  informativo, conteo en vivo, "Cerrar pregunta"). Nuevos `lib/opciones-en-vivo.ts` y
+  `lib/temporizador-pregunta.ts` (compartidos con `US-6.3.9`) y `IndicadorConexion.tsx`
+  (chip "Reconectando…" extraído de la sala de espera). Frontend puro.
 
 ## [0.7.1] - 2026-09-17
 
