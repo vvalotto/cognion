@@ -68,10 +68,8 @@ import { RendirEvaluacion } from "@/pages/actividad-evaluativa/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/cuentas/ResetearPassword"
 import { RevisionEvaluacion } from "@/pages/actividad-evaluativa/RevisionEvaluacion"
 import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionDocente"
-import {
-  MiSesionEnVivoPlaceholder,
-  ProyeccionSesionEnVivoPlaceholder,
-} from "@/pages/actividad-evaluativa/_placeholders-en-vivo"
+import { MiSesionEnVivoPlaceholder } from "@/pages/actividad-evaluativa/_placeholders-en-vivo"
+import { ProyeccionSesionEnVivo } from "@/pages/actividad-evaluativa/ProyeccionSesionEnVivo"
 import { NuevaSesionEnVivo } from "@/pages/actividad-evaluativa/NuevaSesionEnVivo"
 import { SalaEsperaDocente } from "@/pages/actividad-evaluativa/SalaEsperaDocente"
 
@@ -531,7 +529,7 @@ export const router = createBrowserRouter([
         path: "/sesiones-en-vivo/:sesionId/proyeccion",
         element: (
           <RequireRole rol="docente">
-            <ProyeccionSesionEnVivoPlaceholder />
+            <ProyeccionSesionEnVivo />
           </RequireRole>
         ),
       },

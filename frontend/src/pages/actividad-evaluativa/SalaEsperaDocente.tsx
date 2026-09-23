@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { IndicadorConexion } from "@/components/IndicadorConexion"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ApiError } from "@/lib/api-client"
@@ -137,14 +138,7 @@ export function SalaEsperaDocente() {
       />
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">Sala de espera</h1>
-        {estadoCanal === "reconectando" && (
-          <span
-            role="status"
-            className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800"
-          >
-            Reconectando…
-          </span>
-        )}
+        <IndicadorConexion estado={estadoCanal} />
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
         Materia: {materia.nombre} — {estado.cantidadPreguntas} preguntas —{" "}
