@@ -70,10 +70,10 @@ import { RevisionEvaluacion } from "@/pages/actividad-evaluativa/RevisionEvaluac
 import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionDocente"
 import {
   MiSesionEnVivoPlaceholder,
-  NuevaSesionEnVivoPlaceholder,
   ProyeccionSesionEnVivoPlaceholder,
-  SalaSesionEnVivoPlaceholder,
 } from "@/pages/actividad-evaluativa/_placeholders-en-vivo"
+import { NuevaSesionEnVivo } from "@/pages/actividad-evaluativa/NuevaSesionEnVivo"
+import { SalaEsperaDocente } from "@/pages/actividad-evaluativa/SalaEsperaDocente"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -502,7 +502,7 @@ export const router = createBrowserRouter([
         path: "/sesiones-en-vivo/comisiones/:comisionId/nueva",
         element: (
           <RequireRole rol="docente">
-            <NuevaSesionEnVivoPlaceholder />
+            <NuevaSesionEnVivo />
           </RequireRole>
         ),
       },
@@ -510,7 +510,7 @@ export const router = createBrowserRouter([
         path: "/sesiones-en-vivo/:sesionId/sala",
         element: (
           <RequireRole rol="docente">
-            <SalaSesionEnVivoPlaceholder />
+            <SalaEsperaDocente />
           </RequireRole>
         ),
       },

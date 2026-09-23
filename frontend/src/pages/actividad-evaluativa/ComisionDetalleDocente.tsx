@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ApiError } from "@/lib/api-client"
@@ -12,7 +13,24 @@ import {
   type ComisionDetalleResponse,
   type EstudianteResumenResponse,
 } from "@/lib/identidad-comisiones-api"
+import {
+  listarSesionesEnVivo,
+  type EstadoSesionEnVivo,
+  type SesionEnVivoResumenResponse,
+} from "@/lib/sesion-en-vivo-api"
 import { obtenerUsuarioId } from "@/lib/session"
+
+const ETIQUETA_ESTADO_SESION: Record<EstadoSesionEnVivo, string> = {
+  en_espera: "En espera",
+  en_curso: "En curso",
+  finalizada: "Finalizada",
+}
+
+const VARIANTE_ESTADO_SESION: Record<EstadoSesionEnVivo, "estado-en-espera" | "estado-en-curso" | "estado-cerrada"> = {
+  en_espera: "estado-en-espera",
+  en_curso: "estado-en-curso",
+  finalizada: "estado-cerrada",
+}
 
 /**
  * Detalle de Comisión — vista Docente, generar invitación (§3.4 `wireframes-portal-entrada.md`,
@@ -26,6 +44,9 @@ export function ComisionDetalleDocente() {
 
   const [comision, setComision] = useState<ComisionDetalleResponse | null>(null)
   const [estudiantes, setEstudiantes] = useState<EstudianteResumenResponse[] | null>(null)
+  const [sesionesActivas, setSesionesActivas] = useState<SesionEnVivoResumenResponse[] | null>(
+    null,
+  )
   const [link, setLink] = useState<string | null>(null)
   const [generando, setGenerando] = useState(false)
   const [copiado, setCopiado] = useState(false)
@@ -44,6 +65,9 @@ export function ComisionDetalleDocente() {
     obtenerComision(comisionId, controller.signal).then(setComision).catch(() => {})
     listarEstudiantesDeComision(comisionId, controller.signal)
       .then(setEstudiantes)
+      .catch(() => {})
+    listarSesionesEnVivo(comisionId, controller.signal)
+      .then((sesiones) => setSesionesActivas(sesiones.filter((s) => s.estado !== "finalizada")))
       .catch(() => {})
 
     return () => controller.abort()
@@ -92,10 +116,55 @@ export function ComisionDetalleDocente() {
       />
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">{comision?.horario ?? "Cargando…"}</h1>
-        <Button variant="outline" onClick={() => navigate(-1)}>
-          ‹ Volver
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            onClick={() => navigate(`/sesiones-en-vivo/comisiones/${comisionId}/nueva`)}
+          >
+            + Nueva sesión en vivo
+          </Button>
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            ‹ Volver
+          </Button>
+        </div>
       </div>
+
+      {sesionesActivas !== null && sesionesActivas.length > 0 && (
+        <Card className="mt-4 p-4">
+          <h2 className="text-sm font-semibold">Sesiones en vivo activas</h2>
+          <div className="mt-2 flex flex-col gap-2">
+            {sesionesActivas.map((sesion) => (
+              <div
+                key={sesion.id}
+                className="flex items-center justify-between rounded-lg border border-border px-3 py-2"
+              >
+                <div className="flex items-center gap-3">
+                  <Badge variant={VARIANTE_ESTADO_SESION[sesion.estado]}>
+                    {ETIQUETA_ESTADO_SESION[sesion.estado]}
+                  </Badge>
+                  <span className="text-sm">
+                    {sesion.cantidadPreguntas} preguntas —{" "}
+                    {new Date(sesion.creadaEn).toLocaleString()}
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    navigate(
+                      sesion.estado === "en_curso"
+                        ? `/sesiones-en-vivo/${sesion.id}/proyeccion`
+                        : `/sesiones-en-vivo/${sesion.id}/sala`,
+                    )
+                  }
+                >
+                  Continuar
+                </Button>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       <Card className="mt-4 p-4">
         <h2 className="text-sm font-semibold">Invitación</h2>

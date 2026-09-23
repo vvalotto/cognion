@@ -805,20 +805,70 @@ describe("router (integración)", () => {
 
     it("la ruta de nueva sesión renderiza con sesión de docente", async () => {
       setSession({ token: "t", rol: "docente" })
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(
+          jsonResponse(200, {
+            id: "c1",
+            materia_id: "m1",
+            horario: "Lunes 18-20hs",
+            administrador_id: "a1",
+            docentes_asignados: ["d1"],
+          }),
+        )
+        .mockResolvedValueOnce(
+          jsonResponse(200, [
+            { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 10, activa: true },
+          ]),
+        )
+        .mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
       await router.navigate("/sesiones-en-vivo/comisiones/c1/nueva")
       render(<RouterProvider router={router} />)
 
       expect(
-        await screen.findByText(/Nueva sesión en vivo/),
+        await screen.findByRole("heading", { name: "Nueva sesión en vivo" }),
       ).toBeInTheDocument()
     })
 
     it("la sala del Docente renderiza con sesión de docente", async () => {
       setSession({ token: "t", rol: "docente" })
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(
+          jsonResponse(200, {
+            estado: "en_espera",
+            comision_id: "c1",
+            cantidad_preguntas: 5,
+            tiempo_limite_por_pregunta_segundos: 20,
+            pregunta_actual_indice: null,
+            opciones_mostradas: false,
+            opciones_mostradas_en: null,
+            pregunta_actual_cerrada: false,
+            pregunta_actual: null,
+            ya_respondio: null,
+            puntaje_acumulado: null,
+            total_participantes: 0,
+            cantidad_respuestas: 0,
+            resultado_pregunta: null,
+          }),
+        )
+        .mockResolvedValueOnce(jsonResponse(200, []))
+        .mockResolvedValueOnce(
+          jsonResponse(200, {
+            id: "c1",
+            materia_id: "m1",
+            horario: "Lunes 18-20hs",
+            administrador_id: "a1",
+            docentes_asignados: ["d1"],
+          }),
+        )
+        .mockResolvedValueOnce(
+          jsonResponse(200, [
+            { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 10, activa: true },
+          ]),
+        )
       await router.navigate("/sesiones-en-vivo/s1/sala")
       render(<RouterProvider router={router} />)
 
-      expect(await screen.findByText(/Sala de espera de la sesión en vivo/)).toBeInTheDocument()
+      expect(await screen.findByRole("heading", { name: "Sala de espera" })).toBeInTheDocument()
     })
 
     it("un Estudiante no puede abrir la sala del Docente", async () => {
