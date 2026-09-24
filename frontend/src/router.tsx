@@ -68,10 +68,10 @@ import { RendirEvaluacion } from "@/pages/actividad-evaluativa/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/cuentas/ResetearPassword"
 import { RevisionEvaluacion } from "@/pages/actividad-evaluativa/RevisionEvaluacion"
 import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionDocente"
-import { MiSesionEnVivoPlaceholder } from "@/pages/actividad-evaluativa/_placeholders-en-vivo"
 import { ProyeccionSesionEnVivo } from "@/pages/actividad-evaluativa/ProyeccionSesionEnVivo"
 import { NuevaSesionEnVivo } from "@/pages/actividad-evaluativa/NuevaSesionEnVivo"
 import { SalaEsperaDocente } from "@/pages/actividad-evaluativa/SalaEsperaDocente"
+import { SesionEnVivoEstudiante } from "@/pages/actividad-evaluativa/SesionEnVivoEstudiante"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -516,7 +516,7 @@ export const router = createBrowserRouter([
         path: "/mis-sesiones-en-vivo/:sesionId",
         element: (
           <RequireRole rol="estudiante">
-            <MiSesionEnVivoPlaceholder />
+            <SesionEnVivoEstudiante />
           </RequireRole>
         ),
       },

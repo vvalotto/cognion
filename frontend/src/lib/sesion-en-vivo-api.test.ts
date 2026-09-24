@@ -362,5 +362,14 @@ describe("sesion-en-vivo-api", () => {
         },
       ])
     })
+
+    it("sin comisionId no manda el query param (el backend resuelve la Comisión del Estudiante)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      await listarSesionesEnVivo()
+
+      const [url] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toMatch(/\/sesiones-en-vivo$/)
+    })
   })
 })

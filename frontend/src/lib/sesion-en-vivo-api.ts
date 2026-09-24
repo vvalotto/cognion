@@ -445,14 +445,17 @@ export async function obtenerRankingSesion(
   return response.map(mapearRankingItem)
 }
 
+/**
+ * Sin `comisionId` no manda el query param: para el Estudiante el backend resuelve su propia
+ * Comisión (`US-6.3.2`); el Docente siempre la indica.
+ */
 export async function listarSesionesEnVivo(
-  comisionId: string,
+  comisionId?: string,
   signal?: AbortSignal,
 ): Promise<SesionEnVivoResumenResponse[]> {
-  const params = new URLSearchParams({ comision_id: comisionId })
-  const response = await apiFetch<SesionEnVivoResumenApiResponse[]>(
-    `/sesiones-en-vivo?${params}`,
-    { signal },
-  )
+  const query = comisionId ? `?${new URLSearchParams({ comision_id: comisionId })}` : ""
+  const response = await apiFetch<SesionEnVivoResumenApiResponse[]>(`/sesiones-en-vivo${query}`, {
+    signal,
+  })
   return response.map(mapearSesionResumen)
 }

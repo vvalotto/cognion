@@ -43,6 +43,11 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   los `*.test.tsx` (verificar un valor que llega después de que aparece el elemento); 6 carreras reales corregidas
   con `waitFor` sobre el dato (`EditarCuenta`, `EditarMateria`, `EditarComision`, `MateriasActividades`,
   `ComisionesDeMateria`, `RendirEvaluacion`) y 42 descartadas con su motivo en el plan. Solo archivos de test.
+- **US-6.3.8** (Estudiante ve las sesiones disponibles, se une y espera en la sala): bloque "Sesiones en vivo" en
+  `MisActividades.tsx` (tarjetas de la Comisión del Estudiante para esa materia, refresco cada 10 s, unirse con manejo
+  de `422`/`404`) y contenedor `SesionEnVivoEstudiante.tsx` (se une al abrir —reunión idempotente, sin guardar nada en
+  el cliente—, sala de espera `SalaEsperaEstudiante` con el conteo en vivo, paso automático a la pregunta al iniciar el
+  Docente). `listarSesionesEnVivo` acepta `comisionId` opcional. Reemplaza el último placeholder del modo en vivo.
 
 ## [0.7.1] - 2026-09-17
 
