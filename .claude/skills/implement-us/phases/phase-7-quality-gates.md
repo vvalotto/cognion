@@ -431,6 +431,27 @@ def generar_reporte_quality(us_id, component_path, metricas):
 
 ---
 
+### 5. Frontend (perfil `clean-architecture-bc`)
+
+Cuando la US toca `frontend/`, los gates se corren desde `frontend/` (`US-ADJ-53`):
+
+```bash
+cd frontend
+npx oxlint src          # 0 errores (los warnings preexistentes no bloquean)
+npx tsc -b              # 0 errores — `-b`, no `--noEmit` (el tsconfig raíz solo tiene references)
+npm run test:coverage   # suite completa con cobertura; umbral 80% en vite.config.ts
+```
+
+- **Sin flags manuales:** `testTimeout` y `coverage.reportOnFailure` ya están en `frontend/vite.config.ts`. No agregar
+  `--testTimeout` ni limitar `--maxWorkers`: las mediciones de `US-ADJ-53` mostraron que limitar workers solo alarga la
+  corrida (`docs/plans/inc6/US-ADJ-53-plan.md`).
+- **Antes de correrla, mirar la carga de la máquina** (`uptime`): si está alta sin tests corriendo (por ejemplo, en los
+  primeros minutos tras encender la máquina), esperar a que baje. Con carga ajena alta aparecen timeouts que no son del
+  código.
+- **Cobertura de los archivos de la US:** además del global, reportar la de los archivos nuevos o modificados con
+  `npx vitest run --coverage --coverage.include='<ruta>' <tests>`.
+- El CI corre `npm run test` (sin cobertura).
+
 ## Criterio de Éxito
 
 **Todas las métricas deben superar los umbrales:**

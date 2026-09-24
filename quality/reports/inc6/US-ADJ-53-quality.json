@@ -1,0 +1,25 @@
+{
+  "us_id": "US-ADJ-53",
+  "stack": "frontend (React 19 + TypeScript + Vite) — solo configuración de tests",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-ADJ-53-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 6, "detalle": "warnings preexistentes, sin cambios" },
+      "tsc_b": { "errores": 0 },
+      "test_coverage_3_corridas": [
+        { "corrida": 1, "duracion_s": 176, "tests": 639, "passed": 639 },
+        { "corrida": 2, "duracion_s": 138, "tests": 639, "passed": 639 },
+        { "corrida": 3, "duracion_s": 106, "tests": 639, "passed": 639 }
+      ],
+      "test_ci": { "comando": "npm run test", "duracion_s": 124, "tests": 639, "passed": 639 },
+      "coverage_global": { "statements_pct": 92.32, "branches_pct": 83.03, "umbral_referencia_pct": 80 },
+      "flags_manuales": "ninguno"
+    }
+  },
+  "evidencia": [
+    "quality/reports/inc6/US-ADJ-53-mediciones.txt",
+    "quality/reports/inc6/US-ADJ-53-verificacion.txt"
+  ],
+  "estado": "APROBADO"
+}
