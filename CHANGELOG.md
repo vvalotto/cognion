@@ -35,6 +35,10 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   quedan, "Finalizar sesión" siempre) y `StageFinal` (podio 2°-1°-3°, "¡Gracias por participar!",
   "‹ Volver a la Comisión"). Nuevos `filasHistograma` (`lib/opciones-en-vivo.ts`) y `lib/ranking-en-vivo.ts`
   (`top3`, compartido con `US-6.3.9`). Frontend puro.
+- **US-ADJ-53** (suite frontend con cobertura estable): `npm run test:coverage` como comando único de la Fase 7
+  del frontend, `testTimeout: 20000` y `coverage.reportOnFailure` en `frontend/vite.config.ts`, sin flags manuales.
+  Mediciones (8 corridas, 4 configuraciones de workers) mostraron que la saturación venía de carga ajena a Vitest y
+  que limitar workers solo alarga la corrida; se documenta el comando en `phase-7-quality-gates.md`.
 
 ## [0.7.1] - 2026-09-17
 
