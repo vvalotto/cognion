@@ -33,3 +33,46 @@ export function estiloOpcion(color: ColorOpcion): { background: string; color: s
     color: color === "c" ? "#2a1c00" : "#ffffff",
   }
 }
+
+export interface FilaHistograma extends OpcionEnVivo {
+  cantidad: number
+  esCorrecta: boolean
+}
+
+interface RespuestaCorrectaEnVivo {
+  contenido: Record<string, unknown>
+  opciones: string[] | null
+}
+
+interface OpcionDistribuida {
+  opcion: string
+  cantidad: number
+}
+
+/**
+ * Una fila por **cada** opción de la pregunta, con su cantidad y si es la correcta. El servidor solo
+ * manda las opciones elegidas al menos una vez (clave = índice como texto, o `verdadero`/`falso`): las
+ * que faltan se completan en 0.
+ */
+export function filasHistograma(
+  tipo: string,
+  respuestaCorrecta: RespuestaCorrectaEnVivo | null,
+  distribucion: OpcionDistribuida[],
+): FilaHistograma[] {
+  const cantidades = new Map(distribucion.map((fila) => [fila.opcion, fila.cantidad]))
+  const contenido = respuestaCorrecta?.contenido ?? {}
+
+  if (tipo === TIPO_VERDADERO_FALSO) {
+    return opcionesEnVivo(tipo, null).map((opcion, indice) => {
+      const valor = indice === 0
+      const clave = valor ? "verdadero" : "falso"
+      return { ...opcion, cantidad: cantidades.get(clave) ?? 0, esCorrecta: contenido.valor === valor }
+    })
+  }
+
+  return opcionesEnVivo(tipo, respuestaCorrecta?.opciones ?? null).map((opcion, indice) => ({
+    ...opcion,
+    cantidad: cantidades.get(String(indice)) ?? 0,
+    esCorrecta: contenido.opcion_indice === indice,
+  }))
+}

@@ -8,6 +8,7 @@ const ahora = new Date("2026-09-23T10:00:00Z").getTime()
 
 const vista: VistaProyeccion = {
   etapa: "pregunta-opciones",
+  comisionId: "c1",
   indice: 2,
   cantidadPreguntas: 10,
   enunciado: "¿Qué es SOLID?",

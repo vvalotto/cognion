@@ -1,0 +1,39 @@
+{
+  "us_id": "US-6.3.7",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-6.3.7-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": {
+        "errores": 0,
+        "warnings": 6,
+        "detalle": "warnings preexistentes (button.tsx, badge.tsx, AuthLayout.tsx, DesempenoResumenDetalle.tsx, RendirEvaluacion.test.tsx x2), no introducidos por esta US"
+      },
+      "tsc_b": {
+        "errores": 0
+      },
+      "vitest": {
+        "test_files": 99,
+        "tests": 639,
+        "passed": 639,
+        "failed": 0,
+        "nota": "suite completa con --testTimeout=30000. Con la máquina cargada, 2-3 tests distintos por corrida en archivos que esta US no toca (banco-preguntas, cuentas/EditarCuenta, MateriasActividades) expiran o pierden la carrera async; pasan aislados. Aislamiento por archivo por defecto, sin estado compartido con los tests nuevos."
+      },
+      "coverage_global": {
+        "statements_pct": 92.32,
+        "branches_pct": 83.03,
+        "functions_pct": 88.29,
+        "lines_pct": 95.07,
+        "umbral_referencia_pct": 80
+      },
+      "coverage_archivos_nuevos": {
+        "statements_pct": 98.11,
+        "branches_pct": 94.4,
+        "functions_pct": 100,
+        "lines_pct": 100
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

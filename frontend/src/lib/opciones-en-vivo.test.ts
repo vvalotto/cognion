@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { estiloOpcion, opcionesEnVivo } from "@/lib/opciones-en-vivo"
+import { estiloOpcion, filasHistograma, opcionesEnVivo } from "@/lib/opciones-en-vivo"
 
 describe("opcionesEnVivo", () => {
   it("reparte los colores a, b, c, d en orden", () => {
@@ -43,5 +43,34 @@ describe("estiloOpcion", () => {
 
   it("el amarillo lleva texto oscuro", () => {
     expect(estiloOpcion("c").color).toBe("#2a1c00")
+  })
+})
+
+describe("filasHistograma", () => {
+  const correcta = { contenido: { opcion_indice: 1 }, opciones: ["uno", "dos", "tres"] }
+
+  it("una fila por opción, con las que nadie eligió en 0 y la correcta marcada", () => {
+    const filas = filasHistograma("opcion_multiple", correcta, [{ opcion: "1", cantidad: 4 }])
+    expect(filas).toEqual([
+      { texto: "uno", color: "a", cantidad: 0, esCorrecta: false },
+      { texto: "dos", color: "b", cantidad: 4, esCorrecta: true },
+      { texto: "tres", color: "c", cantidad: 0, esCorrecta: false },
+    ])
+  })
+
+  it("Verdadero/Falso usa las claves verdadero/falso y el valor correcto", () => {
+    const filas = filasHistograma("verdadero_falso", { contenido: { valor: false }, opciones: null }, [
+      { opcion: "verdadero", cantidad: 2 },
+      { opcion: "falso", cantidad: 5 },
+    ])
+    expect(filas).toEqual([
+      { texto: "Verdadero", color: "b", cantidad: 2, esCorrecta: false },
+      { texto: "Falso", color: "c", cantidad: 5, esCorrecta: true },
+    ])
+  })
+
+  it("sin respuesta correcta no marca ninguna ni inventa opciones", () => {
+    expect(filasHistograma("opcion_multiple", null, [])).toEqual([])
+    expect(filasHistograma("verdadero_falso", null, []).every((f) => !f.esCorrecta)).toBe(true)
   })
 })

@@ -7,6 +7,7 @@ import type { VistaProyeccion } from "@/pages/actividad-evaluativa/proyeccion/vi
 
 const vista: VistaProyeccion = {
   etapa: "pregunta-sola",
+  comisionId: "c1",
   indice: 0,
   cantidadPreguntas: 5,
   enunciado: "¿Qué principio viola depender de una clase concreta?",

@@ -28,6 +28,13 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   informativo, conteo en vivo, "Cerrar pregunta"). Nuevos `lib/opciones-en-vivo.ts` y
   `lib/temporizador-pregunta.ts` (compartidos con `US-6.3.9`) y `IndicadorConexion.tsx`
   (chip "Reconectando…" extraído de la sala de espera). Frontend puro.
+- **US-6.3.7** (Docente proyecta histograma, ranking y resultado final; avanza o finaliza): completa la
+  máquina de etapas de `ProyeccionSesionEnVivo.tsx` con `StageHistograma` (una barra por opción,
+  incluidas las no elegidas, la correcta con borde blanco y ✓, paso automático al ranking a los 6 s o con
+  "Ver ranking ahora"), `StageRanking` (Top 3 con nombres o "Nadie participó", "Siguiente pregunta" si
+  quedan, "Finalizar sesión" siempre) y `StageFinal` (podio 2°-1°-3°, "¡Gracias por participar!",
+  "‹ Volver a la Comisión"). Nuevos `filasHistograma` (`lib/opciones-en-vivo.ts`) y `lib/ranking-en-vivo.ts`
+  (`top3`, compartido con `US-6.3.9`). Frontend puro.
 
 ## [0.7.1] - 2026-09-17
 
