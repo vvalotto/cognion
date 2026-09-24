@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react"
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -96,9 +96,10 @@ describe("MateriasActividades", () => {
     renderMateriasActividades()
     await screen.findByText("Ingeniería de Software")
 
+    // La fila sale con "…" y los conteos llegan en otro pedido: esperar los números, no solo la fila.
     const fila = await screen.findByRole("row", { name: /Ingeniería de Software/ })
     const celdas = within(fila).getAllByRole("cell")
-    expect(celdas[1]).toHaveTextContent("2") // comisiones
+    await waitFor(() => expect(celdas[1]).toHaveTextContent("2")) // comisiones
     expect(celdas[2]).toHaveTextContent("1") // en curso
     expect(celdas[3]).toHaveTextContent("1") // planificadas
     expect(celdas[4]).toHaveTextContent("3") // totales
