@@ -48,6 +48,9 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   de `422`/`404`) y contenedor `SesionEnVivoEstudiante.tsx` (se une al abrir —reunión idempotente, sin guardar nada en
   el cliente—, sala de espera `SalaEsperaEstudiante` con el conteo en vivo, paso automático a la pregunta al iniciar el
   Docente). `listarSesionesEnVivo` acepta `comisionId` opcional. Reemplaza el último placeholder del modo en vivo.
+- **US-ADJ-55** (espera máxima de Testing Library acorde a la suite completa): `asyncUtilTimeout: 5000` en
+  `frontend/src/test/setup.ts`. Medición de 646 esperas `findBy*`/`waitFor` por corrida (p99 ~1,9 s, máximo ~4 s bajo
+  la carga de la suite): el default de 1 s se agotaba en tests que esperaban bien el dato.
 
 ## [0.7.1] - 2026-09-17
 
