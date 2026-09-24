@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-55",
+    "us_title": "Espera máxima de Testing Library acorde a la suite completa",
+    "us_points": 1,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-24T21:43:36.372166+00:00",
+    "completed_at": "2026-09-24T23:20:03.664503+00:00",
+    "total_elapsed_seconds": 5787,
+    "effective_seconds": 5787,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-24T21:43:36.967032+00:00",
+      "completed_at": "2026-09-24T22:52:10.632431+00:00",
+      "elapsed_seconds": 4113,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-24T22:52:10.759331+00:00",
+      "completed_at": "2026-09-24T22:52:10.886680+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan",
+      "started_at": "2026-09-24T22:52:11.015651+00:00",
+      "completed_at": "2026-09-24T22:52:11.141955+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-09-24T22:52:11.269087+00:00",
+      "completed_at": "2026-09-24T22:52:31.818957+00:00",
+      "elapsed_seconds": 20,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-24T22:52:32.009921+00:00",
+      "completed_at": "2026-09-24T23:07:47.327499+00:00",
+      "elapsed_seconds": 915,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-24T23:07:47.466977+00:00",
+      "completed_at": "2026-09-24T23:20:03.285932+00:00",
+      "elapsed_seconds": 735,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-24T23:20:03.416912+00:00",
+      "completed_at": "2026-09-24T23:20:03.540533+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 7,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

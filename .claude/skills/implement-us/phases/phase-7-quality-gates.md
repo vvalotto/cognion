@@ -442,7 +442,8 @@ npx tsc -b              # 0 errores — `-b`, no `--noEmit` (el tsconfig raíz s
 npm run test:coverage   # suite completa con cobertura; umbral 80% en vite.config.ts
 ```
 
-- **Sin flags manuales:** `testTimeout` y `coverage.reportOnFailure` ya están en `frontend/vite.config.ts`. No agregar
+- **Sin flags manuales:** `testTimeout` y `coverage.reportOnFailure` ya están en `frontend/vite.config.ts`, y la espera
+  máxima de `findBy*`/`waitFor` (`asyncUtilTimeout: 5000`) en `frontend/src/test/setup.ts` (`US-ADJ-55`). No agregar
   `--testTimeout` ni limitar `--maxWorkers`: las mediciones de `US-ADJ-53` mostraron que limitar workers solo alarga la
   corrida (`docs/plans/inc6/US-ADJ-53-plan.md`).
 - **Antes de correrla, mirar la carga de la máquina** (`uptime`): si está alta sin tests corriendo (por ejemplo, en los
