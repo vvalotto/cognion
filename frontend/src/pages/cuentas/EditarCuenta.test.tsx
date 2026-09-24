@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -48,7 +48,9 @@ describe("EditarCuenta", () => {
 
     renderEditarCuenta()
 
-    expect(await screen.findByLabelText("Nombre completo")).toHaveValue("Ana Docente")
+    // El formulario se dibuja antes de que llegue la cuenta: esperar el valor, no solo el campo.
+    const nombre = await screen.findByLabelText("Nombre completo")
+    await waitFor(() => expect(nombre).toHaveValue("Ana Docente"))
     expect(screen.getByLabelText("Email")).toHaveValue("ana@fiuner.edu.ar")
   })
 

@@ -39,6 +39,10 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   del frontend, `testTimeout: 20000` y `coverage.reportOnFailure` en `frontend/vite.config.ts`, sin flags manuales.
   Mediciones (8 corridas, 4 configuraciones de workers) mostraron que la saturación venía de carga ajena a Vitest y
   que limitar workers solo alarga la corrida; se documenta el comando en `phase-7-quality-gates.md`.
+- **US-ADJ-54** (esperas asincrónicas correctas en los tests del frontend): barrido de 48 casos sospechosos en todos
+  los `*.test.tsx` (verificar un valor que llega después de que aparece el elemento); 6 carreras reales corregidas
+  con `waitFor` sobre el dato (`EditarCuenta`, `EditarMateria`, `EditarComision`, `MateriasActividades`,
+  `ComisionesDeMateria`, `RendirEvaluacion`) y 42 descartadas con su motivo en el plan. Solo archivos de test.
 
 ## [0.7.1] - 2026-09-17
 

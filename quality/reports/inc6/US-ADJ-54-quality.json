@@ -1,0 +1,25 @@
+{
+  "us_id": "US-ADJ-54",
+  "stack": "frontend (React 19 + TypeScript + Vite) — solo archivos de test",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-ADJ-54-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 6, "detalle": "warnings preexistentes, sin cambios" },
+      "tsc_b": { "errores": 0 },
+      "corridas": [
+        { "comando": "npm run test", "corrida": 1, "duracion_s": 127, "tests": 639, "passed": 639 },
+        { "comando": "npm run test:coverage", "corrida": 1, "duracion_s": 129, "tests": 639, "passed": 639 },
+        { "comando": "npm run test", "corrida": 2, "duracion_s": 106, "tests": 639, "passed": 639 },
+        { "comando": "npm run test:coverage", "corrida": 2, "duracion_s": 126, "tests": 639, "passed": 639 },
+        { "comando": "npm run test", "corrida": 3, "duracion_s": 141, "tests": 639, "passed": 639 },
+        { "comando": "npm run test:coverage", "corrida": 3, "duracion_s": 162, "tests": 639, "passed": 639 }
+      ],
+      "coverage_global": { "statements_pct": 92.32, "branches_pct": 83.03, "umbral_referencia_pct": 80 },
+      "barrido": { "casos_revisados": 48, "carreras_corregidas": 6, "descartados": 42 },
+      "archivos_de_produccion_modificados": 0
+    }
+  },
+  "evidencia": ["quality/reports/inc6/US-ADJ-54-verificacion.txt", "docs/plans/inc6/US-ADJ-54-plan.md"],
+  "estado": "APROBADO"
+}
