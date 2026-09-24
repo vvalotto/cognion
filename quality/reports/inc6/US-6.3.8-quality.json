@@ -1,0 +1,23 @@
+{
+  "us_id": "US-6.3.8",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-6.3.8-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 6, "detalle": "warnings preexistentes, sin cambios" },
+      "tsc_b": { "errores": 0 },
+      "test_coverage": {
+        "comando": "npm run test:coverage",
+        "corridas": [
+          { "corrida": 1, "tests": 671, "passed": 670, "failed": 1, "detalle": "AutoregistroEstudiante 'puebla el selector de Materia al montar' — findByRole agotó el asyncUtilTimeout de 1 s (tardó 1,76 s); archivo no tocado por esta US, pasa 5/5 aislado" },
+          { "corrida": 2, "tests": 671, "passed": 671, "failed": 0 }
+        ]
+      },
+      "coverage_global": { "statements_pct": 92.36, "branches_pct": 83.35, "functions_pct": 88.56, "lines_pct": 95.2, "umbral_referencia_pct": 80 },
+      "coverage_archivos_de_la_us": { "statements_pct": 96.1, "branches_pct": 89.47, "functions_pct": 96.49, "lines_pct": 100 }
+    }
+  },
+  "hallazgo_fuera_de_alcance": "El asyncUtilTimeout de Testing Library (1 s por defecto, findBy*/waitFor) no lo cubrió US-ADJ-53: bajo la carga que genera la propia suite (load ~35) una espera correcta puede agotarse.",
+  "estado": "APROBADO"
+}

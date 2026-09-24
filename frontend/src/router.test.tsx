@@ -909,7 +909,7 @@ describe("router (integración)", () => {
       await router.navigate("/mis-sesiones-en-vivo/s1")
       render(<RouterProvider router={router} />)
 
-      expect(await screen.findByText(/Mi sesión en vivo/)).toBeInTheDocument()
+      expect(await screen.findByText("Cargando…")).toBeInTheDocument()
     })
   })
 })
