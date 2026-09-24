@@ -6,7 +6,16 @@ import type {
 } from "@/lib/canal-sesion-en-vivo"
 import type { EstadoSesionEnVivoResponse } from "@/lib/sesion-en-vivo-api"
 
-export type EtapaProyeccion = "pregunta-sola" | "pregunta-opciones" | "cerrada" | "finalizada"
+/**
+ * `histograma` y `ranking` son dos vistas del mismo estado de dominio (pregunta cerrada): el paso de
+ * una a otra es presentación local, sin comando (`US-6.3.7`).
+ */
+export type EtapaProyeccion =
+  | "pregunta-sola"
+  | "pregunta-opciones"
+  | "histograma"
+  | "ranking"
+  | "finalizada"
 
 /** Resultado de la pregunta cerrada o de la sesión — lo consume `US-6.3.7`. */
 export interface ResultadoProyeccion {
@@ -17,6 +26,7 @@ export interface ResultadoProyeccion {
 
 export interface VistaProyeccion {
   etapa: EtapaProyeccion
+  comisionId: string
   /** Índice 0-based de la pregunta actual (el eyebrow muestra `indice + 1`). */
   indice: number
   cantidadPreguntas: number
@@ -46,12 +56,13 @@ export function calcularVista(estado: EstadoSesionEnVivoResponse): VistaProyecci
 
   let etapa: EtapaProyeccion
   if (estado.estado === "finalizada") etapa = "finalizada"
-  else if (estado.preguntaActualCerrada) etapa = "cerrada"
+  else if (estado.preguntaActualCerrada) etapa = "histograma"
   else if (estado.opcionesMostradas) etapa = "pregunta-opciones"
   else etapa = "pregunta-sola"
 
   return {
     etapa,
+    comisionId: estado.comisionId,
     indice: estado.preguntaActualIndice ?? 0,
     cantidadPreguntas: estado.cantidadPreguntas,
     enunciado: pregunta?.enunciado ?? "",
@@ -107,7 +118,7 @@ export function aplicarMensaje(
       if (mensaje.preguntaActualIndice !== vista.indice) return "recalcular"
       return {
         ...vista,
-        etapa: "cerrada",
+        etapa: "histograma",
         resultado: {
           respuestaCorrecta: mensaje.respuestaCorrecta,
           distribucion: mensaje.distribucion,
@@ -121,4 +132,9 @@ export function aplicarMensaje(
         resultado: { respuestaCorrecta: null, distribucion: [], ranking: mensaje.ranking },
       }
   }
+}
+
+/** Paso del histograma al ranking — local, sin comando; fuera del histograma no hace nada. */
+export function verRanking(vista: VistaProyeccion): VistaProyeccion {
+  return vista.etapa === "histograma" ? { ...vista, etapa: "ranking" } : vista
 }

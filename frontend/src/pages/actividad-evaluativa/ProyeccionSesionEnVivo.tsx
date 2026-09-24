@@ -5,26 +5,33 @@ import { IndicadorConexion } from "@/components/IndicadorConexion"
 import { ApiError } from "@/lib/api-client"
 import type { MensajeSesionEnVivo } from "@/lib/canal-sesion-en-vivo"
 import {
+  avanzarPregunta,
   cerrarPregunta,
+  finalizarSesion,
   mostrarOpciones,
   obtenerEstadoSesion,
+  obtenerRankingSesion,
 } from "@/lib/sesion-en-vivo-api"
 import { useCanalSesionEnVivo } from "@/lib/use-canal-sesion-en-vivo"
+import { StageFinal } from "./proyeccion/StageFinal"
+import { StageHistograma } from "./proyeccion/StageHistograma"
 import { StagePreguntaOpciones } from "./proyeccion/StagePreguntaOpciones"
 import { StagePreguntaSola } from "./proyeccion/StagePreguntaSola"
+import { StageRanking } from "./proyeccion/StageRanking"
 import {
   aplicarMensaje,
   calcularVista,
   type EtapaProyeccion,
   type VistaProyeccion,
+  verRanking,
 } from "./proyeccion/vista-proyeccion"
 
 const ESPERA_MENSAJE_MS = 2000
 
 /**
- * Contenedor de la proyección del modo en vivo (`US-6.3.6`): calcula la etapa desde `GET estado`
- * (al montar y al reconectar) y la mantiene con los mensajes del canal. `US-6.3.7` agrega las
- * etapas de resultado sobre este mismo contenedor.
+ * Contenedor de la proyección del modo en vivo: calcula la etapa desde `GET estado` (al montar y
+ * al reconectar) y la mantiene con los mensajes del canal. Pregunta sola/con opciones
+ * (`US-6.3.6`); histograma, ranking y podio final (`US-6.3.7`).
  */
 export function ProyeccionSesionEnVivo() {
   const { sesionId } = useParams<{ sesionId: string }>()
@@ -53,10 +60,14 @@ export function ProyeccionSesionEnVivo() {
     if (!sesionId) return
     try {
       const estado = await obtenerEstadoSesion(sesionId, controladorRef.current?.signal)
-      const nueva = calcularVista(estado)
+      let nueva = calcularVista(estado)
       if (nueva === null) {
         void navigate(`/sesiones-en-vivo/${sesionId}/sala`)
         return
+      }
+      if (nueva.etapa === "finalizada") {
+        const ranking = await obtenerRankingSesion(sesionId, controladorRef.current?.signal)
+        nueva = { ...nueva, resultado: { respuestaCorrecta: null, distribucion: [], ranking } }
       }
       setVista(nueva)
     } catch {
@@ -90,6 +101,10 @@ export function ProyeccionSesionEnVivo() {
   )
 
   const estadoCanal = useCanalSesionEnVivo(sesionId ?? "", onMensaje, () => void recalcular())
+
+  const onVerRanking = useCallback(() => {
+    setVista((actual) => (actual ? verRanking(actual) : actual))
+  }, [])
 
   async function ejecutar(accion: typeof mostrarOpciones, etapaEsperada: EtapaProyeccion) {
     if (!sesionId || enviandoRef.current) return
@@ -140,14 +155,21 @@ export function ProyeccionSesionEnVivo() {
         <StagePreguntaOpciones
           vista={vista}
           enviando={enviando}
-          onCerrarPregunta={() => void ejecutar(cerrarPregunta, "cerrada")}
+          onCerrarPregunta={() => void ejecutar(cerrarPregunta, "histograma")}
         />
       )}
-      {(vista.etapa === "cerrada" || vista.etapa === "finalizada") && (
-        <p className="p-8 text-xl" style={{ color: "var(--stage-muted)" }}>
-          Resultado — pendiente de la etapa de resultado (US-6.3.7)
-        </p>
+      {vista.etapa === "histograma" && (
+        <StageHistograma vista={vista} onVerRanking={onVerRanking} />
       )}
+      {vista.etapa === "ranking" && (
+        <StageRanking
+          vista={vista}
+          enviando={enviando}
+          onSiguiente={() => void ejecutar(avanzarPregunta, "pregunta-sola")}
+          onFinalizar={() => void ejecutar(finalizarSesion, "finalizada")}
+        />
+      )}
+      {vista.etapa === "finalizada" && <StageFinal vista={vista} />}
       {errorAccion && (
         <p role="alert" className="fixed bottom-4 left-1/2 -translate-x-1/2 text-lg text-amber-300">
           No se pudo enviar el comando. Reintentá.

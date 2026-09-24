@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -81,6 +81,46 @@ const sesionResponse = {
   estado: "en_curso",
   pregunta_actual_indice: 0,
 }
+
+function rankingApi(n: number) {
+  return Array.from({ length: n }, (_, i) => ({
+    posicion: i + 1,
+    estudiante_id: `e${i + 1}`,
+    puntaje_acumulado: 4000 - i * 500,
+    nombre: `Estudiante ${i + 1}`,
+  }))
+}
+
+function rankingCanal(n: number) {
+  return rankingApi(n).map((r) => ({
+    posicion: r.posicion,
+    estudianteId: r.estudiante_id,
+    puntajeAcumulado: r.puntaje_acumulado,
+    nombre: r.nombre,
+  }))
+}
+
+const estadoCerrada = (extra: Record<string, unknown> = {}) =>
+  estadoOpciones({
+    pregunta_actual_cerrada: true,
+    pregunta_actual: {
+      ...preguntaSola,
+      opciones: ["Liskov", "DIP", "ISP", "SRP"],
+      respuesta_correcta: {
+        contenido: { opcion_indice: 1 },
+        texto: preguntaSola.enunciado,
+        opciones: ["Liskov", "DIP", "ISP", "SRP"],
+      },
+    },
+    resultado_pregunta: {
+      distribucion: [
+        { opcion: "0", cantidad: 1 },
+        { opcion: "1", cantidad: 3 },
+      ],
+      ranking: rankingApi(6),
+    },
+    ...extra,
+  })
 
 function llamadasA(fragmento: string, metodo?: string) {
   return vi
@@ -319,7 +359,7 @@ describe("ProyeccionSesionEnVivo", () => {
     })
 
     expect(screen.queryByRole("button", { name: "Cerrar pregunta" })).not.toBeInTheDocument()
-    expect(screen.getByText(/US-6.3.7/)).toBeInTheDocument()
+    expect(screen.getByText(/así respondió el aula/)).toBeInTheDocument()
   })
 
   it("422 PreguntaYaCerrada recalcula con el estado del servidor", async () => {
@@ -339,7 +379,7 @@ describe("ProyeccionSesionEnVivo", () => {
     renderProyeccion()
     fireEvent.click(await screen.findByRole("button", { name: "Cerrar pregunta" }))
 
-    expect(await screen.findByText(/US-6.3.7/)).toBeInTheDocument()
+    expect(await screen.findByText(/así respondió el aula/)).toBeInTheDocument()
   })
 
   it("un error inesperado al enviar el comando avisa y deja reintentar", async () => {
@@ -425,14 +465,17 @@ describe("ProyeccionSesionEnVivo", () => {
     )
   })
 
-  it("una sesión finalizada muestra la etapa final", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, { ...estadoBase, estado: "finalizada" }),
-    )
+  it("recargar con la sesión finalizada muestra el podio con el ranking del servidor", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "finalizada" }))
+      .mockResolvedValueOnce(jsonResponse(200, rankingApi(4)))
 
     renderProyeccion()
 
-    expect(await screen.findByText(/US-6.3.7/)).toBeInTheDocument()
+    expect(await screen.findByText("¡Gracias por participar!")).toBeInTheDocument()
+    expect(within(screen.getByRole("list", { name: "Podio" })).getAllByRole("listitem")).toHaveLength(3)
+    expect(screen.getByText("Estudiante 1")).toBeInTheDocument()
+    expect(llamadasA("/sesiones-en-vivo/s1/ranking")).toHaveLength(1)
   })
 
   it("si falla el estado inicial queda en 'Cargando…'", async () => {
@@ -442,5 +485,84 @@ describe("ProyeccionSesionEnVivo", () => {
 
     await waitFor(() => expect(fetch).toHaveBeenCalled())
     expect(screen.getByText("Cargando…")).toBeInTheDocument()
+  })
+
+  it("recargar tras el cierre recupera el histograma con sus datos y pasa al ranking", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
+
+    renderProyeccion()
+
+    await screen.findByText(/así respondió el aula/)
+    expect(screen.getAllByTestId("barra-histograma").map((b) => b.textContent)).toEqual([
+      "1",
+      "3",
+      "0",
+      "0",
+    ])
+    fireEvent.click(screen.getByRole("button", { name: /Ver ranking ahora/ }))
+
+    expect(screen.getByText(/Ranking — tras la pregunta 1 de 5/)).toBeInTheDocument()
+    expect(screen.getAllByRole("listitem")).toHaveLength(3)
+  })
+
+  it("siguiente pregunta envía el comando y vuelve a la pregunta sola con el mensaje del canal", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
+      .mockResolvedValueOnce(jsonResponse(200, { ...sesionResponse, pregunta_actual_indice: 1 }))
+
+    renderProyeccion()
+    fireEvent.click(await screen.findByRole("button", { name: /Ver ranking ahora/ }))
+    const siguiente = screen.getByRole("button", { name: "Siguiente pregunta" })
+    fireEvent.click(siguiente)
+    fireEvent.click(siguiente)
+    await waitFor(() => expect(llamadasA("/avanzar", "POST")).toHaveLength(1))
+
+    act(() => {
+      hookState.onMensaje({
+        tipo: "pregunta_presentada",
+        preguntaActualIndice: 1,
+        pregunta: { preguntaId: "p2", enunciado: "Segunda pregunta", tipo: "opcion_multiple" },
+      })
+    })
+
+    expect(screen.getByText("Pregunta 2 de 5")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Segunda pregunta" })).toBeInTheDocument()
+  })
+
+  it("422 NoQuedanPreguntas al avanzar recalcula con el estado del servidor", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
+      .mockResolvedValueOnce(jsonResponse(422, { detail: "NoQuedanPreguntas" }))
+      .mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
+
+    renderProyeccion()
+    fireEvent.click(await screen.findByRole("button", { name: /Ver ranking ahora/ }))
+    fireEvent.click(screen.getByRole("button", { name: "Siguiente pregunta" }))
+
+    await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalledTimes(3))
+    expect(await screen.findByText(/así respondió el aula/)).toBeInTheDocument()
+  })
+
+  it("finalizar antes de tiempo muestra el podio con el ranking del mensaje", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, estadoCerrada({ pregunta_actual_indice: 1 })))
+      .mockResolvedValueOnce(jsonResponse(200, { ...sesionResponse, estado: "finalizada" }))
+
+    renderProyeccion()
+    fireEvent.click(await screen.findByRole("button", { name: /Ver ranking ahora/ }))
+    expect(screen.getByText(/tras la pregunta 2 de 5/)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar sesión" }))
+    await waitFor(() => expect(llamadasA("/finalizar", "POST")).toHaveLength(1))
+
+    act(() => {
+      hookState.onMensaje({ tipo: "sesion_finalizada", ranking: rankingCanal(2) })
+    })
+
+    expect(screen.getByText("¡Gracias por participar!")).toBeInTheDocument()
+    expect(within(screen.getByRole("list", { name: "Podio" })).getAllByRole("listitem")).toHaveLength(2)
+    expect(screen.getByRole("link", { name: /Volver a la Comisión/ })).toHaveAttribute(
+      "href",
+      "/actividad-evaluativa/comisiones/c1",
+    )
   })
 })

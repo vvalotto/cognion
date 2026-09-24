@@ -5,6 +5,7 @@ import {
   aplicarMensaje,
   calcularVista,
   type VistaProyeccion,
+  verRanking,
 } from "@/pages/actividad-evaluativa/proyeccion/vista-proyeccion"
 
 const estadoBase: EstadoSesionEnVivoResponse = {
@@ -32,6 +33,7 @@ const estadoBase: EstadoSesionEnVivoResponse = {
 
 const vistaBase: VistaProyeccion = {
   etapa: "pregunta-opciones",
+  comisionId: "c1",
   indice: 2,
   cantidadPreguntas: 5,
   enunciado: "¿Qué es SOLID?",
@@ -72,7 +74,7 @@ describe("calcularVista", () => {
       preguntaActualCerrada: true,
       resultadoPregunta: { distribucion: [{ opcion: "a", cantidad: 2 }], ranking: [] },
     })
-    expect(vista?.etapa).toBe("cerrada")
+    expect(vista?.etapa).toBe("histograma")
     expect(vista?.resultado?.distribucion).toEqual([{ opcion: "a", cantidad: 2 }])
   })
 
@@ -182,7 +184,7 @@ describe("aplicarMensaje", () => {
       },
       0,
     ) as VistaProyeccion
-    expect(vista.etapa).toBe("cerrada")
+    expect(vista.etapa).toBe("histograma")
     expect(vista.resultado?.respuestaCorrecta?.texto).toBe("a")
   })
 
@@ -213,5 +215,21 @@ describe("aplicarMensaje", () => {
     ) as VistaProyeccion
     expect(vista.etapa).toBe("finalizada")
     expect(vista.resultado?.ranking).toHaveLength(1)
+  })
+})
+
+describe("verRanking", () => {
+  it("pasa del histograma al ranking", () => {
+    expect(verRanking({ ...vistaBase, etapa: "histograma" }).etapa).toBe("ranking")
+  })
+
+  it("fuera del histograma no cambia nada", () => {
+    expect(verRanking(vistaBase)).toBe(vistaBase)
+  })
+})
+
+describe("calcularVista — comisión", () => {
+  it("conserva la Comisión de la sesión", () => {
+    expect(calcularVista(estadoBase)?.comisionId).toBe("c1")
   })
 })
