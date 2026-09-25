@@ -263,3 +263,11 @@ en el Incremento 4 porque el modo en vivo no existía, y ningún incremento lo r
 especificarlo como **`US-ADJ-56`** (`docs/specs/ajustes/US-ADJ-56.md`) e implementarlo **después** del cierre de
 `BL-011`, sin frenar la baseline.
 
+## Hallazgo de autorización durante la validación de `US-6.3.10` (2026-09-25)
+
+Un Docente ve y puede operar sobre materias que no tiene asignadas (Banco de Preguntas, Comisiones, actividades,
+sesiones en vivo, reportes): ningún BC filtra por la asignación Docente ↔ Comisión, porque el sistema nació con un
+único Docente y el autoregistro (`RF-25`) habilitó varios. **Decisión de Víctor (opción a):** cada Docente ve y opera
+solo sobre las materias de sus Comisiones; especificado como **`US-ADJ-57`** (`docs/specs/ajustes/US-ADJ-57.md`),
+se implementa **después** del cierre de `BL-011`. Absorbe el ítem abierto "sin ownership de sesión".
+
