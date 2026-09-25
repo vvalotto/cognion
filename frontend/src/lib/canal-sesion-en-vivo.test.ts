@@ -69,12 +69,13 @@ describe("CanalSesionEnVivo", () => {
     const socket = WebSocketFalso.instancias[0]
     socket.simularApertura()
 
+    // Formato real del backend (snake_case), no el del cliente.
     socket.simularMensaje({
       tipo: "pregunta_cerrada",
-      preguntaActualIndice: 0,
-      respuestaCorrecta: { contenido: { opcion_indice: 1 }, texto: "b", opciones: ["a", "b"] },
+      pregunta_actual_indice: 0,
+      respuesta_correcta: { contenido: { opcion_indice: 1 }, texto: "b", opciones: ["a", "b"] },
       distribucion: [{ opcion: "1", cantidad: 3 }],
-      ranking: [{ posicion: 1, estudianteId: "e1", nombre: "Ana", puntajeAcumulado: 950 }],
+      ranking: [{ posicion: 1, estudiante_id: "e1", nombre: "Ana", puntaje_acumulado: 950 }],
     })
 
     expect(mensajes).toHaveLength(1)
@@ -143,31 +144,54 @@ describe("CanalSesionEnVivo", () => {
     socket.simularMensaje({
       tipo: "participantes_actualizados",
       cantidad: 1,
-      participantes: [{ estudianteId: "e1", nombre: "Ana", unidoEn: "2026-09-22T10:00:00Z" }],
+      participantes: [{ estudiante_id: "e1", nombre: "Ana", unido_en: "2026-09-22T10:00:00Z" }],
     })
     socket.simularMensaje({
       tipo: "pregunta_presentada",
-      preguntaActualIndice: 0,
-      pregunta: { preguntaId: "p1", enunciado: "¿SOLID?", tipo: "opcion_multiple" },
+      pregunta_actual_indice: 0,
+      pregunta: { pregunta_id: "p1", enunciado: "¿SOLID?", tipo: "opcion_multiple" },
     })
     socket.simularMensaje({
       tipo: "opciones_mostradas",
-      preguntaActualIndice: 0,
+      pregunta_actual_indice: 0,
       opciones: ["a", "b"],
-      tiempoLimitePorPreguntaSegundos: 20,
-      cantidadRespuestas: 0,
+      tiempo_limite_por_pregunta_segundos: 20,
+      cantidad_respuestas: 0,
     })
     socket.simularMensaje({
       tipo: "conteo_respuestas_actualizado",
-      preguntaActualIndice: 0,
-      cantidadRespuestas: 2,
+      pregunta_actual_indice: 0,
+      cantidad_respuestas: 2,
+    })
+    socket.simularMensaje({
+      tipo: "sesion_finalizada",
+      ranking: [{ posicion: 1, estudiante_id: "e1", nombre: "Ana", puntaje_acumulado: 950 }],
     })
 
-    expect(mensajes.map((m) => m.tipo)).toEqual([
-      "participantes_actualizados",
-      "pregunta_presentada",
-      "opciones_mostradas",
-      "conteo_respuestas_actualizado",
+    // El backend manda snake_case (hallazgo UAT E2E US-6.3.10); el cliente recibe camelCase.
+    expect(mensajes).toEqual([
+      {
+        tipo: "participantes_actualizados",
+        cantidad: 1,
+        participantes: [{ estudianteId: "e1", nombre: "Ana", unidoEn: "2026-09-22T10:00:00Z" }],
+      },
+      {
+        tipo: "pregunta_presentada",
+        preguntaActualIndice: 0,
+        pregunta: { preguntaId: "p1", enunciado: "¿SOLID?", tipo: "opcion_multiple" },
+      },
+      {
+        tipo: "opciones_mostradas",
+        preguntaActualIndice: 0,
+        opciones: ["a", "b"],
+        tiempoLimitePorPreguntaSegundos: 20,
+        cantidadRespuestas: 0,
+      },
+      { tipo: "conteo_respuestas_actualizado", preguntaActualIndice: 0, cantidadRespuestas: 2 },
+      {
+        tipo: "sesion_finalizada",
+        ranking: [{ posicion: 1, estudianteId: "e1", nombre: "Ana", puntajeAcumulado: 950 }],
+      },
     ])
   })
 
