@@ -834,7 +834,7 @@ describe("router (integración)", () => {
       vi.mocked(fetch)
         .mockResolvedValueOnce(
           jsonResponse(200, {
-            estado: "en_espera",
+            estado: "EnEspera",
             comision_id: "c1",
             cantidad_preguntas: 5,
             tiempo_limite_por_pregunta_segundos: 20,

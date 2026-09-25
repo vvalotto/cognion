@@ -46,7 +46,7 @@ const preguntaSola = {
 }
 
 const estadoBase = {
-  estado: "en_curso",
+  estado: "EnCurso",
   comision_id: "c1",
   cantidad_preguntas: 5,
   tiempo_limite_por_pregunta_segundos: 20,
@@ -78,7 +78,7 @@ const sesionResponse = {
   tema: null,
   cantidad_preguntas: 5,
   tiempo_limite_por_pregunta_segundos: 20,
-  estado: "en_curso",
+  estado: "EnCurso",
   pregunta_actual_indice: 0,
 }
 
@@ -167,7 +167,7 @@ describe("ProyeccionSesionEnVivo", () => {
 
   it("una sesión en espera redirige a la sala", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse(200, { ...estadoBase, estado: "en_espera", pregunta_actual: null }),
+      jsonResponse(200, { ...estadoBase, estado: "EnEspera", pregunta_actual: null }),
     )
 
     renderProyeccion()
@@ -467,7 +467,7 @@ describe("ProyeccionSesionEnVivo", () => {
 
   it("recargar con la sesión finalizada muestra el podio con el ranking del servidor", async () => {
     vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "finalizada" }))
+      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "Finalizada" }))
       .mockResolvedValueOnce(jsonResponse(200, rankingApi(4)))
 
     renderProyeccion()
@@ -546,7 +546,7 @@ describe("ProyeccionSesionEnVivo", () => {
   it("finalizar antes de tiempo muestra el podio con el ranking del mensaje", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, estadoCerrada({ pregunta_actual_indice: 1 })))
-      .mockResolvedValueOnce(jsonResponse(200, { ...sesionResponse, estado: "finalizada" }))
+      .mockResolvedValueOnce(jsonResponse(200, { ...sesionResponse, estado: "Finalizada" }))
 
     renderProyeccion()
     fireEvent.click(await screen.findByRole("button", { name: /Ver ranking ahora/ }))

@@ -88,7 +88,7 @@ describe("NuevaSesionEnVivo", () => {
           tema: null,
           cantidad_preguntas: 5,
           tiempo_limite_por_pregunta_segundos: 20,
-          estado: "en_espera",
+          estado: "EnEspera",
           pregunta_actual_indice: null,
         }),
       )

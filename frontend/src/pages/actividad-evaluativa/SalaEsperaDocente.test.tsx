@@ -39,7 +39,7 @@ function jsonResponse(status: number, body: unknown): Response {
 }
 
 const estadoBase = {
-  estado: "en_espera",
+  estado: "EnEspera",
   comision_id: "c1",
   cantidad_preguntas: 5,
   tiempo_limite_por_pregunta_segundos: 20,
@@ -109,7 +109,7 @@ describe("SalaEsperaDocente", () => {
       .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, materias))
-      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "en_curso" }))
+      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "EnCurso" }))
 
     renderSala()
     await screen.findByRole("alert")
@@ -154,7 +154,7 @@ describe("SalaEsperaDocente", () => {
       .mockResolvedValueOnce(
         jsonResponse(200, {
           ...estadoBase,
-          estado: "en_curso",
+          estado: "EnCurso",
         }),
       )
 
@@ -191,7 +191,7 @@ describe("SalaEsperaDocente", () => {
 
   it("recuperar la sala con la sesión ya en curso redirige a la proyección", async () => {
     vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "en_curso" }))
+      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "EnCurso" }))
       .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, materias))
@@ -205,7 +205,7 @@ describe("SalaEsperaDocente", () => {
 
   it("la sesión finalizada redirige al detalle de la Comisión", async () => {
     vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "finalizada" }))
+      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "Finalizada" }))
       .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, materias))

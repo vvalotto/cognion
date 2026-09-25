@@ -42,7 +42,7 @@ function jsonResponse(status: number, body: unknown): Response {
 const participacion = { sesion_id: "s1", estudiante_id: "e1", unido_en: "2026-09-24T10:00:00+00:00" }
 
 const estadoApi = (extra: Record<string, unknown> = {}) => ({
-  estado: "en_espera",
+  estado: "EnEspera",
   comision_id: "c1",
   cantidad_preguntas: 5,
   tiempo_limite_por_pregunta_segundos: 20,
@@ -69,7 +69,7 @@ const preguntaApi = {
 
 const estadoEnCurso = (extra: Record<string, unknown> = {}) =>
   estadoApi({
-    estado: "en_curso",
+    estado: "EnCurso",
     pregunta_actual_indice: 0,
     opciones_mostradas: true,
     opciones_mostradas_en: new Date().toISOString(),
@@ -197,7 +197,7 @@ describe("SesionEnVivoEstudiante", () => {
   it("una sesión ya finalizada (422 al unirse) no corta: el estado lleva al final", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(422, { detail: "SesionYaFinalizada" }))
-      .mockResolvedValueOnce(jsonResponse(200, estadoApi({ estado: "finalizada" })))
+      .mockResolvedValueOnce(jsonResponse(200, estadoApi({ estado: "Finalizada" })))
       .mockResolvedValueOnce(jsonResponse(200, rankingApi))
 
     renderSesion()
@@ -491,7 +491,7 @@ describe("SesionEnVivoEstudiante", () => {
       setSession({ token: jwtFalso({ sub: "e5" }), rol: "estudiante" })
       vi.mocked(fetch)
         .mockResolvedValueOnce(jsonResponse(200, participacion))
-        .mockResolvedValueOnce(jsonResponse(200, estadoApi({ estado: "finalizada" })))
+        .mockResolvedValueOnce(jsonResponse(200, estadoApi({ estado: "Finalizada" })))
         .mockResolvedValueOnce(jsonResponse(200, rankingApi))
 
       renderSesion()

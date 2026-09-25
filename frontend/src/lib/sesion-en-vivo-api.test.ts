@@ -35,7 +35,7 @@ const SESION_API = {
   tema: null,
   cantidad_preguntas: 5,
   tiempo_limite_por_pregunta_segundos: 20,
-  estado: "en_espera",
+  estado: "EnEspera",
   pregunta_actual_indice: null,
 }
 
@@ -195,11 +195,23 @@ describe("sesion-en-vivo-api", () => {
     })
   })
 
+  describe("estado de la sesión (hallazgo UAT E2E US-6.3.10)", () => {
+    it.each([
+      ["EnEspera", "en_espera"],
+      ["EnCurso", "en_curso"],
+      ["Finalizada", "finalizada"],
+    ])("traduce %s del backend a %s", async (api, cliente) => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { ...SESION_API, estado: api }))
+      const sesion = await iniciarSesion("s1")
+      expect(sesion.estado).toBe(cliente)
+    })
+  })
+
   describe("obtenerEstadoSesion", () => {
     it("hace GET /sesiones-en-vivo/{id} y mapea el estado completo", async () => {
       vi.mocked(fetch).mockResolvedValueOnce(
         jsonResponse(200, {
-          estado: "en_curso",
+          estado: "EnCurso",
           comision_id: "c1",
           cantidad_preguntas: 5,
           tiempo_limite_por_pregunta_segundos: 20,
@@ -242,7 +254,7 @@ describe("sesion-en-vivo-api", () => {
     it("mapea resultadoPregunta con distribución y ranking cuando la pregunta está cerrada", async () => {
       vi.mocked(fetch).mockResolvedValueOnce(
         jsonResponse(200, {
-          estado: "en_curso",
+          estado: "EnCurso",
           comision_id: "c1",
           cantidad_preguntas: 5,
           tiempo_limite_por_pregunta_segundos: 20,
@@ -335,7 +347,7 @@ describe("sesion-en-vivo-api", () => {
             materia_nombre: "Ingeniería de Software",
             cantidad_preguntas: 5,
             tiempo_limite_por_pregunta_segundos: 20,
-            estado: "finalizada",
+            estado: "Finalizada",
             unidad_tematica: null,
             tema: null,
             creada_en: "2026-09-22T09:00:00Z",
