@@ -155,7 +155,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
   })
 
   it("muestra la sesión de la materia junto a las actividades, con su Badge", async () => {
-    mockPorUrl({ sesiones: [sesionApi("s1", "en_espera")] })
+    mockPorUrl({ sesiones: [sesionApi("s1", "EnEspera")] })
 
     renderMisActividades()
 
@@ -170,7 +170,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
 
   it("no muestra sesiones de otra materia ni finalizadas", async () => {
     mockPorUrl({
-      sesiones: [sesionApi("s2", "en_espera", "otra"), sesionApi("s3", "finalizada")],
+      sesiones: [sesionApi("s2", "EnEspera", "otra"), sesionApi("s3", "Finalizada")],
     })
 
     renderMisActividades()
@@ -180,7 +180,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
   })
 
   it("una sesión en curso lleva el Badge 'En curso'", async () => {
-    mockPorUrl({ sesiones: [sesionApi("s1", "en_curso")] })
+    mockPorUrl({ sesiones: [sesionApi("s1", "EnCurso")] })
 
     renderMisActividades()
 
@@ -197,7 +197,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
     const { unmount } = renderMisActividades()
     await screen.findByText("Por ahora no hay sesiones en vivo.")
 
-    estado.sesiones = [sesionApi("s1", "en_espera")]
+    estado.sesiones = [sesionApi("s1", "EnEspera")]
     await act(async () => {
       vi.advanceTimersByTime(10_000)
     })
@@ -227,7 +227,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
   })
 
   it("tocar la tarjeta une al Estudiante (una sola vez aunque toque dos) y abre su sesión", async () => {
-    mockPorUrl({ sesiones: [sesionApi("s1", "en_espera")] })
+    mockPorUrl({ sesiones: [sesionApi("s1", "EnEspera")] })
 
     renderMisActividades()
     const tarjeta = await screen.findByRole("button", { name: /Ingeniería de Software/ })
@@ -240,7 +240,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
 
   it("una sesión ya finalizada (422) muestra el mensaje y refresca la lista", async () => {
     const estado = {
-      sesiones: [sesionApi("s1", "en_espera")] as unknown[],
+      sesiones: [sesionApi("s1", "EnEspera")] as unknown[],
       unirse: jsonResponse(422, { detail: "SesionYaFinalizada" }),
     }
     mockPorUrl(estado)
@@ -256,7 +256,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
 
   it("una sesión que no existe (404) muestra el mismo mensaje", async () => {
     mockPorUrl({
-      sesiones: [sesionApi("s1", "en_espera")],
+      sesiones: [sesionApi("s1", "EnEspera")],
       unirse: jsonResponse(404, { detail: "SesionNoEncontrada" }),
     })
 
@@ -268,7 +268,7 @@ describe("MisActividades — sesiones en vivo (US-6.3.8)", () => {
 
   it("un error inesperado al unirse avisa y deja reintentar", async () => {
     mockPorUrl({
-      sesiones: [sesionApi("s1", "en_espera")],
+      sesiones: [sesionApi("s1", "EnEspera")],
       unirse: jsonResponse(500, { detail: "boom" }),
     })
 

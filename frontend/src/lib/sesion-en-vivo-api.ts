@@ -2,6 +2,24 @@ import { apiFetch } from "@/lib/api-client"
 
 export type EstadoSesionEnVivo = "en_espera" | "en_curso" | "finalizada"
 
+/** Valor que manda el backend (`EstadoSesionEnVivo` de `actividad_evaluativa_en_vivo.py`). */
+type EstadoSesionEnVivoApi = "EnEspera" | "EnCurso" | "Finalizada"
+
+const ESTADO_DESDE_API: Record<EstadoSesionEnVivoApi, EstadoSesionEnVivo> = {
+  EnEspera: "en_espera",
+  EnCurso: "en_curso",
+  Finalizada: "finalizada",
+}
+
+/**
+ * Traduce el estado del backend al del cliente. Hallazgo de la UAT E2E de `US-6.3.10`: el cliente
+ * tipaba `en_espera`/`en_curso`/`finalizada` pero el backend manda `EnEspera`/`EnCurso`/`Finalizada`,
+ * y ninguna comparación de estado funcionaba en el navegador real (los mocks usaban el formato del cliente).
+ */
+function mapearEstado(estado: EstadoSesionEnVivoApi): EstadoSesionEnVivo {
+  return ESTADO_DESDE_API[estado]
+}
+
 export interface CrearSesionBody {
   comisionId: string
   cantidadPreguntas: number
@@ -109,7 +127,7 @@ interface SesionEnVivoApiResponse {
   tema: string | null
   cantidad_preguntas: number
   tiempo_limite_por_pregunta_segundos: number
-  estado: EstadoSesionEnVivo
+  estado: EstadoSesionEnVivoApi
   pregunta_actual_indice: number | null
 }
 
@@ -157,7 +175,7 @@ interface ResultadoPreguntaApiResponse {
 }
 
 interface EstadoSesionEnVivoApiResponse {
-  estado: EstadoSesionEnVivo
+  estado: EstadoSesionEnVivoApi
   comision_id: string
   cantidad_preguntas: number
   tiempo_limite_por_pregunta_segundos: number
@@ -186,7 +204,7 @@ interface SesionEnVivoResumenApiResponse {
   materia_nombre: string
   cantidad_preguntas: number
   tiempo_limite_por_pregunta_segundos: number
-  estado: EstadoSesionEnVivo
+  estado: EstadoSesionEnVivoApi
   unidad_tematica: string | null
   tema: string | null
   creada_en: string
@@ -201,7 +219,7 @@ function mapearSesion(sesion: SesionEnVivoApiResponse): SesionEnVivoResponse {
     tema: sesion.tema,
     cantidadPreguntas: sesion.cantidad_preguntas,
     tiempoLimitePorPreguntaSegundos: sesion.tiempo_limite_por_pregunta_segundos,
-    estado: sesion.estado,
+    estado: mapearEstado(sesion.estado),
     preguntaActualIndice: sesion.pregunta_actual_indice,
   }
 }
@@ -269,7 +287,7 @@ function mapearResultadoPregunta(
 
 function mapearEstadoSesion(estado: EstadoSesionEnVivoApiResponse): EstadoSesionEnVivoResponse {
   return {
-    estado: estado.estado,
+    estado: mapearEstado(estado.estado),
     comisionId: estado.comision_id,
     cantidadPreguntas: estado.cantidad_preguntas,
     tiempoLimitePorPreguntaSegundos: estado.tiempo_limite_por_pregunta_segundos,
@@ -306,7 +324,7 @@ function mapearSesionResumen(
     materiaNombre: resumen.materia_nombre,
     cantidadPreguntas: resumen.cantidad_preguntas,
     tiempoLimitePorPreguntaSegundos: resumen.tiempo_limite_por_pregunta_segundos,
-    estado: resumen.estado,
+    estado: mapearEstado(resumen.estado),
     unidadTematica: resumen.unidad_tematica,
     tema: resumen.tema,
     creadaEn: resumen.creada_en,

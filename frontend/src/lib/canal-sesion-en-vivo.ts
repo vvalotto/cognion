@@ -162,10 +162,26 @@ export class CanalSesionEnVivo {
   }
 }
 
+type Bruto = Record<string, unknown>
+
+function mapearRanking(bruto: unknown): RankingItemCanal[] {
+  return ((bruto as Bruto[] | undefined) ?? []).map((item) => ({
+    posicion: item.posicion as number,
+    estudianteId: item.estudiante_id as string,
+    nombre: item.nombre as string,
+    puntajeAcumulado: item.puntaje_acumulado as number,
+  }))
+}
+
+/**
+ * Traduce un mensaje del servidor al tipo del cliente. El backend manda **snake_case**
+ * (`pregunta_actual_indice`, `estudiante_id`, …; los arma cada use case de `actividad_evaluativa`):
+ * hallazgo de la UAT E2E de `US-6.3.10` — este parser leía camelCase y todos los campos llegaban vacíos.
+ */
 function parsearMensaje(data: string): MensajeSesionEnVivo | null {
-  let bruto: Record<string, unknown>
+  let bruto: Bruto
   try {
-    bruto = JSON.parse(data) as Record<string, unknown>
+    bruto = JSON.parse(data) as Bruto
   } catch {
     return null
   }
@@ -175,44 +191,50 @@ function parsearMensaje(data: string): MensajeSesionEnVivo | null {
       return {
         tipo: "participantes_actualizados",
         cantidad: bruto.cantidad as number,
-        participantes: (bruto.participantes as Record<string, unknown>[]).map((p) => ({
-          estudianteId: p.estudianteId as string,
+        participantes: ((bruto.participantes as Bruto[] | undefined) ?? []).map((p) => ({
+          estudianteId: p.estudiante_id as string,
           nombre: p.nombre as string,
-          unidoEn: p.unidoEn as string,
+          unidoEn: p.unido_en as string,
         })),
       }
-    case "pregunta_presentada":
+    case "pregunta_presentada": {
+      const pregunta = bruto.pregunta as Bruto
       return {
         tipo: "pregunta_presentada",
-        preguntaActualIndice: bruto.preguntaActualIndice as number,
-        pregunta: bruto.pregunta as PreguntaPresentada,
+        preguntaActualIndice: bruto.pregunta_actual_indice as number,
+        pregunta: {
+          preguntaId: pregunta.pregunta_id as string,
+          enunciado: pregunta.enunciado as string,
+          tipo: pregunta.tipo as string,
+        },
       }
+    }
     case "opciones_mostradas":
       return {
         tipo: "opciones_mostradas",
-        preguntaActualIndice: bruto.preguntaActualIndice as number,
+        preguntaActualIndice: bruto.pregunta_actual_indice as number,
         opciones: bruto.opciones as string[] | null,
-        tiempoLimitePorPreguntaSegundos: bruto.tiempoLimitePorPreguntaSegundos as number,
-        cantidadRespuestas: bruto.cantidadRespuestas as number,
+        tiempoLimitePorPreguntaSegundos: bruto.tiempo_limite_por_pregunta_segundos as number,
+        cantidadRespuestas: bruto.cantidad_respuestas as number,
       }
     case "conteo_respuestas_actualizado":
       return {
         tipo: "conteo_respuestas_actualizado",
-        preguntaActualIndice: bruto.preguntaActualIndice as number,
-        cantidadRespuestas: bruto.cantidadRespuestas as number,
+        preguntaActualIndice: bruto.pregunta_actual_indice as number,
+        cantidadRespuestas: bruto.cantidad_respuestas as number,
       }
     case "pregunta_cerrada":
       return {
         tipo: "pregunta_cerrada",
-        preguntaActualIndice: bruto.preguntaActualIndice as number,
-        respuestaCorrecta: bruto.respuestaCorrecta as RespuestaCorrectaCanal,
+        preguntaActualIndice: bruto.pregunta_actual_indice as number,
+        respuestaCorrecta: bruto.respuesta_correcta as RespuestaCorrectaCanal,
         distribucion: bruto.distribucion as OpcionDistribuidaCanal[],
-        ranking: bruto.ranking as RankingItemCanal[],
+        ranking: mapearRanking(bruto.ranking),
       }
     case "sesion_finalizada":
       return {
         tipo: "sesion_finalizada",
-        ranking: bruto.ranking as RankingItemCanal[],
+        ranking: mapearRanking(bruto.ranking),
       }
     default:
       return null
