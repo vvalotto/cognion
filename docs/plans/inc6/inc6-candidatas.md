@@ -252,3 +252,14 @@ Specs en `docs/specs/inc6/US-6.3.0.md` a `US-6.3.10.md`.
 
 **Hito de la iteración:** el Docente conduce una sesión en vivo completa desde la pantalla de proyección, con los
 Estudiantes participando desde el celular, sin salir del navegador.
+
+---
+
+## Hallazgo de alcance durante la validación de `US-6.3.10` (2026-09-25)
+
+Los resultados de las sesiones en vivo **no** llegan al desempeño del Estudiante ni a los reportes del Docente:
+Analytics solo lee período abierto. `RF-15` lo pedía explícitamente; el modelo de Analytics lo había dejado fuera
+en el Incremento 4 porque el modo en vivo no existía, y ningún incremento lo retomó. **Decisión de Víctor:**
+especificarlo como **`US-ADJ-56`** (`docs/specs/ajustes/US-ADJ-56.md`) e implementarlo **después** del cierre de
+`BL-011`, sin frenar la baseline.
+
