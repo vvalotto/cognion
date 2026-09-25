@@ -56,6 +56,12 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   intento, temporizador), resultado inmediato sin ranking, "sin respuesta" por cierre (H4) o tiempo agotado (H5) y
   resultado final con posición y Top 3 con la fila propia resaltada. Los `422` de responder (texto libre en el backend)
   se resuelven recalculando la etapa con el estado del servidor. Frontend puro.
+- **US-6.3.10** (UAT del modo en vivo, tramo automático): circuitos E2E con Playwright (`frontend/e2e/`,
+  `npm run test:e2e`) contra backend y frontend reales — sesión completa, V/F y tres opciones, finalizar antes,
+  unión tardía, bordes al responder, reconexión y recarga, pocos participantes y legibilidad medida en el
+  navegador. **Corrige dos bloqueantes** que Vitest no veía: el estado de la sesión (`EnEspera`/`EnCurso`/
+  `Finalizada` del backend) y los mensajes del WebSocket en snake_case. Proxy de desarrollo de Vite (`/api`)
+  para probar desde un celular de la red.
 
 ## [0.7.1] - 2026-09-17
 
