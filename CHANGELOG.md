@@ -51,6 +51,11 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 - **US-ADJ-55** (espera máxima de Testing Library acorde a la suite completa): `asyncUtilTimeout: 5000` en
   `frontend/src/test/setup.ts`. Medición de 646 esperas `findBy*`/`waitFor` por corrida (p99 ~1,9 s, máximo ~4 s bajo
   la carga de la suite): el default de 1 s se agotaba en tests que esperaban bien el dato.
+- **US-6.3.9** (Estudiante responde desde el celular y ve su resultado y el final): completa `SesionEnVivoEstudiante`
+  con espera de opciones (H3), pregunta con tarjetas táctiles del color de la proyección (V/F, 3 opciones, un solo
+  intento, temporizador), resultado inmediato sin ranking, "sin respuesta" por cierre (H4) o tiempo agotado (H5) y
+  resultado final con posición y Top 3 con la fila propia resaltada. Los `422` de responder (texto libre en el backend)
+  se resuelven recalculando la etapa con el estado del servidor. Frontend puro.
 
 ## [0.7.1] - 2026-09-17
 

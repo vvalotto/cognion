@@ -1,0 +1,16 @@
+{
+  "us_id": "US-6.3.9",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-6.3.9-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 6, "detalle": "warnings preexistentes, sin cambios" },
+      "tsc_b": { "errores": 0 },
+      "test_coverage": { "comando": "npm run test:coverage", "test_files": 103, "tests": 714, "passed": 714, "failed": 0, "nota": "primera corrida, sin flags ni reintentos (US-ADJ-53/54/55)" },
+      "coverage_global": { "statements_pct": 92.47, "branches_pct": 84.08, "functions_pct": 88.5, "lines_pct": 95.31, "umbral_referencia_pct": 80 },
+      "coverage_archivos_de_la_us": { "statements_pct": 95.34, "branches_pct": 93.28, "functions_pct": 96.77, "lines_pct": 100 }
+    }
+  },
+  "estado": "APROBADO"
+}
