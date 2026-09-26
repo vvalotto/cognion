@@ -1,14 +1,17 @@
 import { cleanup, render, screen } from "@testing-library/react"
-import { MemoryRouter } from "react-router"
+import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, describe, expect, it } from "vitest"
 
 import { Inicio } from "@/pages/Inicio"
-import { clearSession, setSession } from "@/lib/session"
+import { clearSession, setSession, type Session } from "@/lib/session"
 
 function renderInicio() {
   return render(
     <MemoryRouter initialEntries={["/"]}>
-      <Inicio />
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/login" element={<p>Página de login</p>} />
+      </Routes>
     </MemoryRouter>,
   )
 }
@@ -43,7 +46,15 @@ describe("Inicio", () => {
     expect(screen.getByRole("heading", { name: "Hola, Administrador" })).toBeInTheDocument()
   })
 
-  it("sin rol reconocido muestra el placeholder (fallback defensivo)", () => {
+  it("sin sesión redirige a /login", () => {
+    renderInicio()
+
+    expect(screen.getByText("Página de login")).toBeInTheDocument()
+  })
+
+  it("con sesión pero rol no reconocido muestra el placeholder (fallback defensivo)", () => {
+    setSession({ token: "t", rol: "invitado" } as unknown as Session)
+
     renderInicio()
 
     expect(screen.getByText("Sesión iniciada — pendiente de pantalla propia")).toBeInTheDocument()
