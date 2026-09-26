@@ -476,6 +476,7 @@ describe("ProyeccionSesionEnVivo", () => {
     expect(within(screen.getByRole("list", { name: "Podio" })).getAllByRole("listitem")).toHaveLength(3)
     expect(screen.getByText("Estudiante 1")).toBeInTheDocument()
     expect(llamadasA("/sesiones-en-vivo/s1/ranking")).toHaveLength(1)
+    expect(screen.queryByRole("link", { name: "‹ Salir" })).not.toBeInTheDocument()
   })
 
   it("si falla el estado inicial queda en 'Cargando…'", async () => {
@@ -561,6 +562,17 @@ describe("ProyeccionSesionEnVivo", () => {
     expect(screen.getByText("¡Gracias por participar!")).toBeInTheDocument()
     expect(within(screen.getByRole("list", { name: "Podio" })).getAllByRole("listitem")).toHaveLength(2)
     expect(screen.getByRole("link", { name: /Volver a la Comisión/ })).toHaveAttribute(
+      "href",
+      "/actividad-evaluativa/comisiones/c1",
+    )
+  })
+
+  it("'Salir' vuelve a la Comisión sin tocar la sesión", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, estadoBase))
+
+    renderProyeccion()
+
+    expect(await screen.findByRole("link", { name: "‹ Salir" })).toHaveAttribute(
       "href",
       "/actividad-evaluativa/comisiones/c1",
     )

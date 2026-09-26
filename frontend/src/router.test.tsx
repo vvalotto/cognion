@@ -588,15 +588,13 @@ describe("router (integración)", () => {
       ).toBeInTheDocument()
     })
 
-    it("Administrador navega a Comisiones por el menú", async () => {
+    it("el menú del Administrador no tiene Comisiones (se gestionan desde Materias)", async () => {
       setSession({ token: "t", rol: "administrador" })
       await router.navigate("/")
       render(<RouterProvider router={router} />)
 
-      const user = userEvent.setup()
-      await user.click(screen.getByRole("link", { name: "Comisiones" }))
-
-      expect(await screen.findByRole("heading", { name: "Comisiones" })).toBeInTheDocument()
+      expect(await screen.findByRole("link", { name: "Materias" })).toBeInTheDocument()
+      expect(screen.queryByRole("link", { name: "Comisiones" })).not.toBeInTheDocument()
     })
 
     it("Estudiante no ve ítems de menú de otros roles", async () => {

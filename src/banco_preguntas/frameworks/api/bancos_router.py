@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from src.banco_preguntas.entities.errors import BancoNoExiste
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
@@ -33,8 +33,8 @@ async def filtrar_preguntas(
     tema: str | None = None,
     dificultad: str | None = None,
     importancia: str | None = None,
-    pagina: int | None = None,
-    tamanio_pagina: int | None = None,
+    pagina: int | None = Query(None, ge=1),
+    tamanio_pagina: int | None = Query(None, ge=1),
     controller: BancosController = Depends(get_bancos_controller),
 ) -> PreguntasPaginadasResponse:
     """Filtra las preguntas activas del banco por cualquier combinación de metadatos.

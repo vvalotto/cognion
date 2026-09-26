@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { rutaMateria, useNombreMateria } from "@/pages/identidad/useNombreMateria"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -21,6 +22,7 @@ export function EliminarComision() {
   const navigate = useNavigate()
 
   const [comision, setComision] = useState<ComisionDetalleResponse | null>(null)
+  const nombreMateria = useNombreMateria(comision?.materiaId)
 
   useEffect(() => {
     if (!comisionId) return undefined
@@ -32,7 +34,7 @@ export function EliminarComision() {
   async function handleEliminar() {
     if (!comisionId) return
     await eliminarComision(comisionId)
-    void navigate("/comisiones")
+    void navigate(rutaMateria(comision?.materiaId))
   }
 
   function handleCancelar() {
@@ -43,7 +45,8 @@ export function EliminarComision() {
     <div>
       <Breadcrumb
         items={[
-          { label: "Comisiones", to: "/comisiones" },
+          { label: "Materias", to: "/materias" },
+          { label: nombreMateria ?? "…", to: rutaMateria(comision?.materiaId) },
           { label: comision?.horario ?? "…", to: comisionId ? `/comisiones/${comisionId}` : undefined },
           { label: "Eliminar" },
         ]}

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 
 from src.identidad.entities.errors import (
     EmailYaRegistrado,
@@ -37,8 +37,8 @@ async def listar_cuentas(
     rol: TipoPerfil | None = None,
     estado: str | None = None,
     busqueda: str | None = None,
-    pagina: int = 1,
-    tamanio_pagina: int = 20,
+    pagina: int = Query(1, ge=1),
+    tamanio_pagina: int = Query(20, ge=1),
     incluir_inactivas: bool = False,
     controller: CuentasController = Depends(get_cuentas_controller),
 ) -> CuentasPaginadasResponse:

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useNavigate, useParams } from "react-router"
+import { Link, useNavigate, useParams } from "react-router"
 
 import { IndicadorConexion } from "@/components/IndicadorConexion"
 import { ApiError } from "@/lib/api-client"
@@ -141,6 +141,17 @@ export function ProyeccionSesionEnVivo() {
 
   return (
     <div className="relative">
+      {/* Salir sin afectar la sesión (revisión manual 2026-09-26): se retoma desde "Sesiones en vivo
+          activas". El podio final ya tiene su propio "Volver a la Comisión" (H7). */}
+      {vista.etapa !== "finalizada" && (
+        <Link
+          to={`/actividad-evaluativa/comisiones/${vista.comisionId}`}
+          className="absolute top-4 left-4 text-sm"
+          style={{ color: "rgba(255,255,255,0.45)" }}
+        >
+          ‹ Salir
+        </Link>
+      )}
       <div className="absolute top-4 right-4">
         <IndicadorConexion estado={estadoCanal} />
       </div>

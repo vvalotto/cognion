@@ -168,13 +168,26 @@ export function SalaEsperaDocente() {
 
       {participantes.length === 0 && (
         <p role="alert" className="mt-4 text-sm text-amber-800">
-          Todavía no se unió nadie — podés iniciar igual.
+          Esperá a que se una al menos un estudiante para iniciar la sesión.
         </p>
       )}
 
-      <div className="mt-4">
-        <Button type="button" disabled={iniciando} onClick={() => void handleIniciar()}>
+      {/* Sin participantes no se inicia (revisión manual 2026-09-26); la regla en el backend queda
+          para US-ADJ-58. "Salir" no toca la sesión: se retoma desde "Sesiones en vivo activas". */}
+      <div className="mt-4 flex gap-2">
+        <Button
+          type="button"
+          disabled={iniciando || participantes.length === 0}
+          onClick={() => void handleIniciar()}
+        >
           {iniciando ? "Iniciando…" : "Iniciar sesión"}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => void navigate(`/actividad-evaluativa/comisiones/${comision.id}`)}
+        >
+          ‹ Salir
         </Button>
       </div>
     </div>
