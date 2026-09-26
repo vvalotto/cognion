@@ -1,25 +1,45 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router"
+import { Link, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
+import {
+  listarComisionesPorMateria,
+  type ComisionResumenResponse,
+} from "@/lib/identidad-comisiones-api"
+
+function textoDocentes(cantidad: number): string {
+  if (cantidad === 0) return "Sin docente asignado"
+  return cantidad === 1 ? "1 docente" : `${cantidad} docentes`
+}
 
 /**
  * Detalle de solo lectura de una Materia — pensado para el Administrador, que no gestiona
  * el banco de preguntas (`Banco.tsx` sigue siendo exclusivo del Docente). Reutiliza
- * `GET /materias` (sin endpoint nuevo), igual que `EditarMateria.tsx`.
+ * `GET /materias` (sin endpoint nuevo), igual que `EditarMateria.tsx`. Lista también las Comisiones
+ * de la materia, activas e inactivas (`GET /materias/{id}/comisiones`, revisión manual 2026-09-26).
  */
 export function VerMateria() {
   const { materiaId } = useParams<{ materiaId: string }>()
   const [materia, setMateria] = useState<MateriaListItemResponse | null>(null)
+  const [comisiones, setComisiones] = useState<ComisionResumenResponse[] | null>(null)
 
   useEffect(() => {
     if (!materiaId) return undefined
     const controller = new AbortController()
     listarMaterias(controller.signal, true)
       .then((materias) => setMateria(materias.find((m) => m.id === materiaId) ?? null))
+      .catch(() => {})
+    return () => controller.abort()
+  }, [materiaId])
+
+  useEffect(() => {
+    if (!materiaId) return undefined
+    const controller = new AbortController()
+    listarComisionesPorMateria(materiaId, controller.signal, true)
+      .then(setComisiones)
       .catch(() => {})
     return () => controller.abort()
   }, [materiaId])
@@ -42,6 +62,32 @@ export function VerMateria() {
                 <Badge variant={materia.activa ? "estado-activa" : "estado-inactiva"}>
                   {materia.activa ? "Activa" : "Inactiva"}
                 </Badge>
+              )}
+            </dd>
+          </div>
+          <div className="flex items-start justify-between gap-6 py-2.5">
+            <dt className="text-muted-foreground">Comisiones</dt>
+            <dd className="text-right">
+              {comisiones === null ? (
+                "…"
+              ) : comisiones.length === 0 ? (
+                <span className="text-muted-foreground">Sin comisiones</span>
+              ) : (
+                <ul aria-label="Comisiones de la materia" className="space-y-1.5">
+                  {comisiones.map((comision) => (
+                    <li key={comision.id} className="flex items-center justify-end gap-2">
+                      <Link to={`/comisiones/${comision.id}`} className="font-medium text-primary hover:underline">
+                        {comision.horario}
+                      </Link>
+                      <span className="text-xs text-muted-foreground">
+                        {textoDocentes(comision.docentesAsignados.length)}
+                      </span>
+                      <Badge variant={comision.activa ? "estado-activa" : "estado-inactiva"}>
+                        {comision.activa ? "Activa" : "Inactiva"}
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
               )}
             </dd>
           </div>
