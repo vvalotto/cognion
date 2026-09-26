@@ -523,4 +523,44 @@ describe("SesionEnVivoEstudiante", () => {
       expect(await screen.findByText("Pregunta 4 de 5")).toBeInTheDocument()
     })
   })
+
+  it("resincronizar (pantalla que vuelve de segundo plano) no pisa el resultado recién mostrado", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, participacion))
+      .mockResolvedValueOnce(jsonResponse(200, estadoEnCurso()))
+      .mockResolvedValueOnce(jsonResponse(200, { es_correcta: true, puntaje: 1850, puntaje_acumulado: 3050 }))
+      .mockResolvedValueOnce(jsonResponse(200, estadoEnCurso({ ya_respondio: true, puntaje_acumulado: 3050 })))
+
+    renderSesion()
+    fireEvent.click(await screen.findByRole("button", { name: "Liskov" }))
+    await screen.findByRole("heading", { name: "¡Correcto!" })
+
+    await act(async () => {
+      hookState.onReconectado()
+    })
+
+    await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalledTimes(4))
+    expect(screen.getByRole("heading", { name: "¡Correcto!" })).toBeInTheDocument()
+    expect(screen.getByText("+ 1850 puntos en esta pregunta")).toBeInTheDocument()
+  })
+
+  it("resincronizar recupera la pregunta siguiente si se perdió el mensaje", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, participacion))
+      .mockResolvedValueOnce(jsonResponse(200, estadoEnCurso({ ya_respondio: true })))
+      .mockResolvedValueOnce(
+        jsonResponse(200, estadoEnCurso({ pregunta_actual_indice: 1, opciones_mostradas: false, ya_respondio: false })),
+      )
+
+    renderSesion()
+    await screen.findByRole("heading", { name: "Ya respondiste" })
+
+    await act(async () => {
+      hookState.onReconectado()
+    })
+
+    expect(await screen.findByText("Esperá a que el Docente muestre las opciones.")).toBeInTheDocument()
+    expect(screen.getByText("Pregunta 2 de 5")).toBeInTheDocument()
+  })
 })
+

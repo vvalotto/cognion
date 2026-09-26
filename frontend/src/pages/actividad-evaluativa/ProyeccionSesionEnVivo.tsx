@@ -22,6 +22,7 @@ import {
   aplicarMensaje,
   calcularVista,
   type EtapaProyeccion,
+  sincronizarVistaProyeccion,
   type VistaProyeccion,
   verRanking,
 } from "./proyeccion/vista-proyeccion"
@@ -69,7 +70,7 @@ export function ProyeccionSesionEnVivo() {
         const ranking = await obtenerRankingSesion(sesionId, controladorRef.current?.signal)
         nueva = { ...nueva, resultado: { respuestaCorrecta: null, distribucion: [], ranking } }
       }
-      setVista(nueva)
+      setVista((actual) => sincronizarVistaProyeccion(actual, nueva))
     } catch {
       // Sin estado no hay nada que recalcular; el próximo mensaje o reconexión reintenta.
     }

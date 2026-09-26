@@ -4,6 +4,7 @@ import type { EstadoSesionEnVivoResponse } from "@/lib/sesion-en-vivo-api"
 import {
   aplicarMensaje,
   calcularVista,
+  sincronizarVistaProyeccion,
   type VistaProyeccion,
   verRanking,
 } from "@/pages/actividad-evaluativa/proyeccion/vista-proyeccion"
@@ -233,3 +234,26 @@ describe("calcularVista — comisión", () => {
     expect(calcularVista(estadoBase)?.comisionId).toBe("c1")
   })
 })
+
+describe("sincronizarVistaProyeccion (hallazgo #7)", () => {
+  it("no vuelve del ranking al histograma, pero actualiza los conteos", () => {
+    const actual = { ...vistaBase, etapa: "ranking" as const }
+    const vista = sincronizarVistaProyeccion(actual, { ...vistaBase, etapa: "histograma", totalParticipantes: 8 })
+    expect(vista).toMatchObject({ etapa: "ranking", totalParticipantes: 8 })
+  })
+
+  it("en la misma etapa manda el servidor (temporizador y conteo)", () => {
+    const vista = sincronizarVistaProyeccion(vistaBase, { ...vistaBase, inicioOpcionesMs: 999, cantidadRespuestas: 4 })
+    expect(vista).toMatchObject({ inicioOpcionesMs: 999, cantidadRespuestas: 4 })
+  })
+
+  it("avanza a otra pregunta", () => {
+    const nueva = { ...vistaBase, etapa: "pregunta-sola" as const, indice: 3 }
+    expect(sincronizarVistaProyeccion({ ...vistaBase, etapa: "ranking" }, nueva)).toBe(nueva)
+  })
+
+  it("sin vista previa toma la del servidor", () => {
+    expect(sincronizarVistaProyeccion(null, vistaBase)).toBe(vistaBase)
+  })
+})
+

@@ -141,3 +141,39 @@ const TIPO_VERDADERO_FALSO = "verdadero_falso"
 export function contenidoRespuesta(tipo: string, indice: number): Record<string, unknown> {
   return tipo === TIPO_VERDADERO_FALSO ? { valor: indice === 0 } : { opcion_indice: indice }
 }
+
+const ORDEN_ETAPA: Record<EtapaEstudiante, number> = {
+  sala: 0,
+  "espera-opciones": 1,
+  pregunta: 2,
+  resultado: 3,
+  "sin-respuesta": 3,
+  finalizada: 4,
+}
+
+/**
+ * Combina la vista que se muestra con la recalculada del servidor sin retroceder dentro de la misma
+ * pregunta (hallazgo #7: la resincronización periódica no debe pisar el "¡Correcto! +N" ni el "Se acabó
+ * el tiempo"). Otra pregunta, o una etapa posterior, toma la del servidor.
+ */
+export function sincronizarVistaEstudiante(
+  actual: VistaEstudiante | null,
+  nueva: VistaEstudiante,
+): VistaEstudiante {
+  if (actual === null) return nueva
+  const mismaPregunta = actual.indice === nueva.indice && actual.etapa !== "sala" && nueva.etapa !== "sala"
+  if (!mismaPregunta) return nueva
+  if (ORDEN_ETAPA[nueva.etapa] < ORDEN_ETAPA[actual.etapa]) {
+    return { ...actual, totalParticipantes: nueva.totalParticipantes }
+  }
+  if (nueva.etapa === actual.etapa) {
+    // Misma etapa: manda el servidor (temporizador, conteos), salvo lo que solo sabe la pantalla.
+    return {
+      ...nueva,
+      resultado: actual.resultado ?? nueva.resultado,
+      motivoSinRespuesta: actual.motivoSinRespuesta,
+      ranking: actual.ranking ?? nueva.ranking,
+    }
+  }
+  return nueva
+}

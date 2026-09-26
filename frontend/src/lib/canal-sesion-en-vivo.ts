@@ -151,6 +151,30 @@ export class CanalSesionEnVivo {
     }
   }
 
+  /**
+   * Rearma la conexión ya y avisa `onReconectado` al abrir. Hallazgo #7 de la revisión manual: Safari en
+   * iOS congela la pestaña y su WebSocket al bloquearse la pantalla, y al volver la conexión puede quedar
+   * "zombi" — abierta en apariencia, sin mensajes ni `onclose` —, así que no se espera al cierre.
+   */
+  reconectarAhora(): void {
+    if (this.cerradoPorLlamador) return
+    if (this.timeoutReconexion) {
+      clearTimeout(this.timeoutReconexion)
+      this.timeoutReconexion = null
+    }
+    const anterior = this.socket
+    if (anterior) {
+      anterior.onopen = null
+      anterior.onmessage = null
+      anterior.onclose = null
+      anterior.close()
+    }
+    this.reconectando = true
+    this.backoffMs = BACKOFF_INICIAL_MS
+    this.onCambioEstado("reconectando")
+    this.conectar()
+  }
+
   cerrar(): void {
     this.cerradoPorLlamador = true
     if (this.timeoutReconexion) {

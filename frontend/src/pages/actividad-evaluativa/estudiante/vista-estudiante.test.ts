@@ -7,6 +7,7 @@ import {
   calcularVistaEstudiante,
   contenidoRespuesta,
   registrarRespuesta,
+  sincronizarVistaEstudiante,
   type VistaEstudiante,
 } from "./vista-estudiante"
 
@@ -236,3 +237,40 @@ describe("registrarRespuesta y contenidoRespuesta", () => {
     expect(contenidoRespuesta("verdadero_falso", 1)).toEqual({ valor: false })
   })
 })
+
+describe("sincronizarVistaEstudiante (hallazgo #7)", () => {
+  it("sin vista previa toma la del servidor", () => {
+    const nueva = vistaEstudiante()
+    expect(sincronizarVistaEstudiante(null, nueva)).toBe(nueva)
+  })
+
+  it("no retrocede del resultado a la pregunta, y conserva el acierto", () => {
+    const actual = vistaEstudiante({ etapa: "resultado", resultado: { esCorrecta: true, puntaje: 1850 } })
+    const vista = sincronizarVistaEstudiante(actual, vistaEstudiante({ etapa: "pregunta", totalParticipantes: 9 }))
+    expect(vista).toMatchObject({ etapa: "resultado", resultado: { esCorrecta: true, puntaje: 1850 }, totalParticipantes: 9 })
+  })
+
+  it("no pisa el 'se acabó el tiempo' con la pregunta todavía abierta en el servidor", () => {
+    const actual = vistaEstudiante({ etapa: "sin-respuesta", motivoSinRespuesta: "tiempo" })
+    expect(sincronizarVistaEstudiante(actual, vistaEstudiante({ etapa: "pregunta" })).etapa).toBe("sin-respuesta")
+  })
+
+  it("avanza si el servidor está más adelante en la misma pregunta (opciones perdidas)", () => {
+    const actual = vistaEstudiante({ etapa: "espera-opciones", opciones: null })
+    const vista = sincronizarVistaEstudiante(actual, vistaEstudiante({ etapa: "pregunta" }))
+    expect(vista.etapa).toBe("pregunta")
+  })
+
+  it("en la misma etapa manda el servidor (temporizador) sin perder el resultado propio", () => {
+    const actual = vistaEstudiante({ etapa: "resultado", resultado: { esCorrecta: false, puntaje: 0 }, inicioOpcionesMs: 1 })
+    const vista = sincronizarVistaEstudiante(actual, vistaEstudiante({ etapa: "resultado", resultado: null, inicioOpcionesMs: 500 }))
+    expect(vista).toMatchObject({ inicioOpcionesMs: 500, resultado: { esCorrecta: false, puntaje: 0 } })
+  })
+
+  it("otra pregunta toma la del servidor", () => {
+    const actual = vistaEstudiante({ etapa: "resultado", indice: 1 })
+    const nueva = vistaEstudiante({ etapa: "espera-opciones", indice: 2 })
+    expect(sincronizarVistaEstudiante(actual, nueva)).toBe(nueva)
+  })
+})
+

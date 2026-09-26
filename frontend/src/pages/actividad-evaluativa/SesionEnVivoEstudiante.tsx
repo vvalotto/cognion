@@ -23,6 +23,7 @@ import {
   aplicarMensajeEstudiante,
   calcularVistaEstudiante,
   registrarRespuesta,
+  sincronizarVistaEstudiante,
   type VistaEstudiante,
 } from "./estudiante/vista-estudiante"
 
@@ -52,7 +53,7 @@ export function SesionEnVivoEstudiante() {
         if (nueva.etapa === "finalizada") {
           nueva = { ...nueva, ranking: await obtenerRankingSesion(sesionId, signal) }
         }
-        setVista(nueva)
+        setVista((actual) => sincronizarVistaEstudiante(actual, nueva))
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) setNoDisponible(true)
       }
