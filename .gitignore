@@ -46,3 +46,8 @@ quality/reports/architectanalyst/history.db
 
 # uv
 .uv-cache/
+
+# Material de cátedra de origen (docx pesados/personales) — solo se versiona lo derivado
+# (preguntas.json, config.json, scripts) en tests/uat/datos-reales/
+tests/uat/datos-reales/*.docx
+tests/uat/datos-reales/config.json
