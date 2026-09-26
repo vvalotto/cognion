@@ -1,11 +1,11 @@
-# US-ADJ-58: Cancelar una sesión en vivo no iniciada, y no iniciar sin participantes (regla de dominio)
+# US-ADJ-58: Cancelar una sesión no iniciada, terminar una en curso en cualquier etapa, y no iniciar sin participantes
 
 **Estado**: `Especificada`
 **Iteracion / Sprint**: sin asignar — a decidir con Víctor (antes o después del cierre de `BL-011`)
 **Tipo**: `feat` backend + frontend
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`
 **Bounded Context**: Actividad Evaluativa
-**Origen**: revisión manual de la app (2026-09-26), hallazgo #4 (`quality/reports/uat/inc6/revision-manual-app.md`).
+**Origen**: revisión manual de la app (2026-09-26), hallazgos #4 y #6 (`quality/reports/uat/inc6/revision-manual-app.md`).
 
 ---
 
@@ -14,6 +14,9 @@
 Como **Docente**,
 quiero **cancelar una sesión en vivo que creé y no voy a dar**,
 para **que deje de figurar como activa y los estudiantes no se queden esperando en la sala**.
+
+Quiero **terminar una sesión en curso en cualquier momento**, aunque la pregunta actual siga abierta,
+para **no tener que mostrar opciones y cerrar una pregunta que no voy a usar**.
 
 Y quiero que **una sesión no pueda iniciarse sin estudiantes unidos**, como regla del sistema y no solo de la pantalla.
 
@@ -32,6 +35,12 @@ Y quiero que **una sesión no pueda iniciarse sin estudiantes unidos**, como reg
    permite a propósito (`ActividadEvaluativaEnVivo.iniciar()`: "no exige participantes", `US-6.1.4`): la API sigue
    aceptándolo.
 
+3. **No se puede terminar desde la pregunta (hallazgo #6).** `FinalizarSesionEnVivo` exige la pregunta actual
+   cerrada (INV-AEV-03), y la proyección solo ofrece "Finalizar sesión" en el ranking. Una sesión que queda en la
+   pregunta sola o con las opciones a la vista obliga al Docente a mostrar opciones, cerrar y pasar al ranking para
+   poder terminarla. Caso real de la revisión: una sesión iniciada quedó en la pregunta 1 de 4 y hubo que cerrarla
+   por API.
+
 **Ya resuelto en frontend (fuera de esta US):** "Iniciar sesión" deshabilitado con 0 participantes y "‹ Salir" en la
 sala y la proyección (salir no toca la sesión; se retoma con "Continuar").
 
@@ -44,6 +53,8 @@ sala y la proyección (salir no toca la sesión; se retoma con "Continuar").
 | Estado | `Cancelada` como nuevo valor de `EstadoSesionEnVivo` (terminal, como `Finalizada`) — o reutilizar `Finalizada` con marca; se decide en la Fase 2. Propuesta: estado propio, para que Analytics (`US-ADJ-56`) no la cuente como sesión jugada |
 | Invariante nuevo | **INV-AEV-10:** `CancelarSesionEnVivo` solo en `EnEspera` (una sesión iniciada se termina con `FinalizarSesionEnVivo`) |
 | Invariante nuevo | **INV-AEV-11:** `IniciarSesionEnVivo` requiere al menos una `ParticipacionEnVivo` (`SinParticipantes`, `422`) |
+| Invariante modificado | **INV-AEV-03:** `FinalizarSesionEnVivo` deja de exigir la pregunta actual cerrada (sigue exigiéndolo `AvanzarSiguientePregunta`). Una pregunta abierta al finalizar queda sin cerrar: no suma al histograma ni cambia el ranking; las respuestas ya registradas cuentan |
+| Frontend | "Finalizar sesión" disponible en **todas** las etapas de la proyección (pregunta sola, con opciones, histograma, ranking), con confirmación |
 | Endpoint | `POST /sesiones-en-vivo/{id}/cancelar` (rol `docente`) |
 | Canal | Broadcast `sesion_cancelada` a los conectados (Estudiantes en la sala) |
 | Listados | Una sesión `Cancelada` no aparece en "Sesiones en vivo activas" ni en las tarjetas del Estudiante |
@@ -60,6 +71,7 @@ sala y la proyección (salir no toca la sesión; se retoma con "Continuar").
 ### Postcondicion
 
 - El Docente cancela una sesión no iniciada; deja de figurar como activa para todos.
+- El Docente termina una sesión en curso desde cualquier etapa de la proyección.
 - La API rechaza iniciar una sesión sin participantes.
 - `BC-actividad-evaluativa-modelo.md` (§§10-18) documenta el comando, el evento, el estado y los dos invariantes.
 - Circuitos E2E (`frontend/e2e/`) ampliados con la cancelación.
@@ -101,6 +113,16 @@ Feature: Cancelar una sesión en vivo y no iniciar sin participantes (US-ADJ-58)
     When el Docente la inicia
     Then pasa a EnCurso
 
+  Scenario: Terminar con la pregunta sin opciones mostradas
+    Given una sesión EnCurso en la pregunta 1 de 4, sin opciones mostradas
+    When el Docente pulsa "Finalizar sesión" y confirma
+    Then la sesión queda Finalizada y se muestra el podio
+
+  Scenario: Terminar con las opciones a la vista
+    Given una sesión EnCurso con las opciones mostradas y dos respuestas registradas
+    When el Docente finaliza la sesión
+    Then la sesión queda Finalizada y el ranking final incluye esas dos respuestas
+
   Scenario: Cancelar dos veces
     Given una sesión ya cancelada
     When se intenta cancelarla de nuevo
@@ -121,6 +143,9 @@ Feature: Cancelar una sesión en vivo y no iniciar sin participantes (US-ADJ-58)
 1. Estado propio `Cancelada` vs. reutilizar `Finalizada`. Propuesta: **propio**.
 2. ¿Se puede cancelar una sesión `EnCurso` (por ejemplo, con 0 respuestas)? Propuesta: **no**, se usa Finalizar.
 3. ¿Se notifica por email a los estudiantes de la Comisión (Notificaciones, `RF-14`)? Propuesta: **no**, solo el canal.
+4. Al finalizar con la pregunta abierta, ¿se cierra primero (con su histograma) o se descarta? Propuesta: **se
+   finaliza sin cerrarla** — las respuestas ya dadas cuentan para el ranking, sin mostrar el histograma de una
+   pregunta cortada.
 
 ---
 
