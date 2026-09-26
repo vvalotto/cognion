@@ -231,4 +231,43 @@ describe("CanalSesionEnVivo", () => {
     vi.advanceTimersByTime(15000)
     expect(WebSocketFalso.instancias).toHaveLength(1)
   })
+
+  it("reconectarAhora descarta el socket actual (aunque parezca abierto) y avisa al reabrir", () => {
+    const onReconectado = vi.fn()
+    const estados: string[] = []
+    const canal = new CanalSesionEnVivo("s1", vi.fn(), onReconectado, (e) => estados.push(e), crearFactory())
+    canal.conectar()
+    const zombi = WebSocketFalso.instancias[0]
+    zombi.simularApertura()
+
+    canal.reconectarAhora()
+
+    expect(zombi.cerrado).toBe(true)
+    expect(zombi.onclose).toBeNull()
+    expect(WebSocketFalso.instancias).toHaveLength(2)
+    expect(estados.at(-1)).toBe("reconectando")
+    WebSocketFalso.instancias[1].simularApertura()
+    expect(onReconectado).toHaveBeenCalledTimes(1)
+    expect(estados.at(-1)).toBe("conectado")
+  })
+
+  it("reconectarAhora cancela una reconexión pendiente y no duplica sockets", () => {
+    const canal = new CanalSesionEnVivo("s1", vi.fn(), vi.fn(), vi.fn(), crearFactory())
+    canal.conectar()
+    WebSocketFalso.instancias[0].simularCierre(1006)
+    canal.reconectarAhora()
+    vi.advanceTimersByTime(20_000)
+
+    expect(WebSocketFalso.instancias).toHaveLength(2)
+  })
+
+  it("reconectarAhora no hace nada después de cerrar el canal", () => {
+    const canal = new CanalSesionEnVivo("s1", vi.fn(), vi.fn(), vi.fn(), crearFactory())
+    canal.conectar()
+    canal.cerrar()
+    canal.reconectarAhora()
+
+    expect(WebSocketFalso.instancias).toHaveLength(1)
+  })
 })
+

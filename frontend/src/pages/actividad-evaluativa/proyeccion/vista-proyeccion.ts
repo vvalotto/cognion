@@ -138,3 +138,31 @@ export function aplicarMensaje(
 export function verRanking(vista: VistaProyeccion): VistaProyeccion {
   return vista.etapa === "histograma" ? { ...vista, etapa: "ranking" } : vista
 }
+
+const ORDEN_ETAPA: Record<EtapaProyeccion, number> = {
+  "pregunta-sola": 0,
+  "pregunta-opciones": 1,
+  histograma: 2,
+  ranking: 3,
+  finalizada: 4,
+}
+
+/**
+ * Combina la vista de la proyección con la recalculada del servidor sin retroceder dentro de la misma
+ * pregunta (hallazgo #7: resincronizar no debe devolver el ranking al histograma ni reiniciar el
+ * temporizador). Actualiza igual los conteos en vivo.
+ */
+export function sincronizarVistaProyeccion(
+  actual: VistaProyeccion | null,
+  nueva: VistaProyeccion,
+): VistaProyeccion {
+  if (actual === null) return nueva
+  if (actual.indice === nueva.indice && ORDEN_ETAPA[nueva.etapa] < ORDEN_ETAPA[actual.etapa]) {
+    return {
+      ...actual,
+      cantidadRespuestas: nueva.cantidadRespuestas,
+      totalParticipantes: nueva.totalParticipantes,
+    }
+  }
+  return nueva
+}

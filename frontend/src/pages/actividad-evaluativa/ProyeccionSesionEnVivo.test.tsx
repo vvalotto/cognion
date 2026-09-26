@@ -530,7 +530,7 @@ describe("ProyeccionSesionEnVivo", () => {
     expect(screen.getByRole("heading", { name: "Segunda pregunta" })).toBeInTheDocument()
   })
 
-  it("422 NoQuedanPreguntas al avanzar recalcula con el estado del servidor", async () => {
+  it("422 NoQuedanPreguntas al avanzar recalcula sin volver del ranking al histograma", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
       .mockResolvedValueOnce(jsonResponse(422, { detail: "NoQuedanPreguntas" }))
@@ -541,7 +541,9 @@ describe("ProyeccionSesionEnVivo", () => {
     fireEvent.click(screen.getByRole("button", { name: "Siguiente pregunta" }))
 
     await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalledTimes(3))
-    expect(await screen.findByText(/así respondió el aula/)).toBeInTheDocument()
+    // El servidor dice "pregunta cerrada" (histograma), pero la proyección ya estaba en el ranking:
+    // resincronizar no retrocede (hallazgo #7).
+    expect(await screen.findByText(/Ranking — tras la pregunta/)).toBeInTheDocument()
   })
 
   it("finalizar antes de tiempo muestra el podio con el ranking del mensaje", async () => {
