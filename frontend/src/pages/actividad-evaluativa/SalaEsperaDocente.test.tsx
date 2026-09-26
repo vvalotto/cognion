@@ -100,24 +100,44 @@ describe("SalaEsperaDocente", () => {
 
     expect(await screen.findByText(/5 preguntas/)).toBeInTheDocument()
     expect(screen.getAllByText(/Todavía no se unió nadie/).length).toBeGreaterThan(0)
-    expect(screen.getByRole("alert")).toHaveTextContent(/podés iniciar igual/)
+    expect(screen.getByRole("alert")).toHaveTextContent(/al menos un estudiante/)
   })
 
-  it("inicia la sesión sin participantes igual, tras ver la advertencia", async () => {
+  it("sin participantes no deja iniciar; se habilita cuando se une el primero", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, estadoBase))
       .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, materias))
-      .mockResolvedValueOnce(jsonResponse(200, { ...estadoBase, estado: "EnCurso" }))
 
     renderSala()
-    await screen.findByRole("alert")
+    expect(await screen.findByRole("alert")).toHaveTextContent(/al menos un estudiante/)
+    expect(screen.getByRole("button", { name: "Iniciar sesión" })).toBeDisabled()
 
+    act(() => {
+      hookState.onMensaje({
+        tipo: "participantes_actualizados",
+        cantidad: 1,
+        participantes: [{ estudianteId: "e1", nombre: "Ana Gómez", unidoEn: "2026-09-23T10:00:00Z" }],
+      })
+    })
+    expect(screen.getByRole("button", { name: "Iniciar sesión" })).toBeEnabled()
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+  })
+
+  it("'Salir' vuelve al detalle de la Comisión sin tocar la sesión", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, estadoBase))
+      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, materias))
+
+    renderSala()
     const user = userEvent.setup()
-    await user.click(screen.getByRole("button", { name: "Iniciar sesión" }))
+    await user.click(await screen.findByRole("button", { name: "‹ Salir" }))
 
-    expect(navigateMock).toHaveBeenCalledWith("/sesiones-en-vivo/s1/proyeccion")
+    expect(navigateMock).toHaveBeenCalledWith("/actividad-evaluativa/comisiones/c1")
+    expect(vi.mocked(fetch).mock.calls.some(([, init]) => (init as RequestInit)?.method === "POST")).toBe(false)
   })
 
   it("los participantes aparecen en vivo por el canal, sin recargar", async () => {
@@ -170,7 +190,9 @@ describe("SalaEsperaDocente", () => {
   it("422 SesionYaIniciada navega igual a la proyección (idempotencia)", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, estadoBase))
-      .mockResolvedValueOnce(jsonResponse(200, []))
+      .mockResolvedValueOnce(
+        jsonResponse(200, [{ estudiante_id: "e1", unido_en: "2026-09-23T10:00:00Z", nombre: "Ana Gómez" }]),
+      )
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, materias))
       .mockResolvedValueOnce(
