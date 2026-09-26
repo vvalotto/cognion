@@ -42,7 +42,8 @@ async function crearPreguntas(bancoId: string, token: string) {
  * Estudiantes. Prefijo único por corrida; `limpiar.ts` borra todo al final.
  */
 export default async function sembrar() {
-  const prefijo = `uat-e2e-${Date.now()}`
+  // `E2E_PREFIJO` corto (ej. "valid") deja emails tipeables desde un celular para la validación manual.
+  const prefijo = process.env.E2E_PREFIJO ?? `uat-e2e-${Date.now()}`
   const email = (rol: string) => `${prefijo}-${rol}@fiuner.edu.ar`
 
   execFileSync(join(RAIZ, ".venv/bin/python"), [join(RAIZ, "scripts/seed_admin.py")], {
