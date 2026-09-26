@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -220,6 +220,35 @@ describe("NuevaActividad", () => {
     expect(
       await screen.findByText("La fecha de cierre debe ser posterior a la de apertura."),
     ).toBeInTheDocument()
+    expect(fetch).toHaveBeenCalledTimes(3)
+  })
+
+  it("no deja tipear un signo menos en las cantidades", async () => {
+    mockListarMaterias()
+    mockListarComisiones()
+    mockFiltrarBanco()
+
+    renderNuevaActividad()
+    const inputPreguntas = await screen.findByLabelText("Cantidad de preguntas")
+    const user = userEvent.setup()
+    await user.clear(inputPreguntas)
+    await user.type(inputPreguntas, "-5")
+
+    expect(inputPreguntas).toHaveValue(5)
+  })
+
+  it("un valor negativo pegado se rechaza en el cliente sin llamar al backend", async () => {
+    mockListarMaterias()
+    mockListarComisiones()
+    mockFiltrarBanco()
+
+    renderNuevaActividad()
+    expect(await screen.findByLabelText("Apertura (fecha y hora)")).toBeInTheDocument()
+    // Pegado (no tipeado): el bloqueo de teclas no lo frena, lo frena la validación al enviar.
+    fireEvent.change(screen.getByLabelText("Cantidad de preguntas"), { target: { value: "-2" } })
+    await completarFormulario({ intentos: "1" })
+
+    expect(await screen.findByText(/cantidad de preguntas debe ser un número entero/)).toBeInTheDocument()
     expect(fetch).toHaveBeenCalledTimes(3)
   })
 

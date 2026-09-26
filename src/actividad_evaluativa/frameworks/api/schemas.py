@@ -156,11 +156,25 @@ class EvaluacionResponse(BaseModel):
     iniciada_en: datetime
 
 
+def _rechazar_opcion_negativa(contenido: dict[str, Any]) -> dict[str, Any]:
+    """Rechaza (422) un `opcion_indice` negativo — nunca es una opción válida (revisión manual)."""
+    indice = contenido.get("opcion_indice")
+    if isinstance(indice, int) and not isinstance(indice, bool) and indice < 0:
+        raise ValueError("opcion_indice no puede ser negativo")
+    return contenido
+
+
 class RegistrarRespuestaRequest(BaseModel):
     """Body de la request de confirmación de una respuesta."""
 
     pregunta_id: UUID
     contenido: dict[str, Any]
+
+    @field_validator("contenido")
+    @classmethod
+    def _validar_contenido(cls, contenido: dict[str, Any]) -> dict[str, Any]:
+        """Rechaza (422) un `opcion_indice` negativo; el resto del shape lo valida el dominio."""
+        return _rechazar_opcion_negativa(contenido)
 
 
 class RespuestaResponse(BaseModel):
@@ -263,7 +277,7 @@ class ResponderEnVivoRequest(BaseModel):
         es_valor = contenido.keys() == {"valor"} and isinstance(contenido["valor"], bool)
         if not (es_opcion or es_valor):
             raise ValueError('contenido debe ser {"opcion_indice": int} o {"valor": bool}')
-        return contenido
+        return _rechazar_opcion_negativa(contenido)
 
 
 class RespuestaEnVivoResponse(BaseModel):

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { esEnteroPositivo, soloEnterosPositivos } from "@/lib/entero-positivo"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -102,8 +103,12 @@ export function NuevaActividad() {
       setError("La fecha de cierre debe ser posterior a la de apertura.")
       return
     }
-    if (cantidadIntentos < 1) {
-      setError("Los intentos permitidos deben ser al menos 1.")
+    if (!esEnteroPositivo(cantidadPreguntas)) {
+      setError("La cantidad de preguntas debe ser un número entero de al menos 1.")
+      return
+    }
+    if (!esEnteroPositivo(cantidadIntentos)) {
+      setError("Los intentos permitidos deben ser un número entero de al menos 1.")
       return
     }
 
@@ -276,9 +281,10 @@ export function NuevaActividad() {
                 <Input
                   id="na-cantidad-preguntas"
                   type="number"
-                  min={1}
+                  inputMode="numeric"
                   required
                   value={cantidadPreguntas}
+                  onKeyDown={soloEnterosPositivos}
                   onChange={(event) => setCantidadPreguntas(Number(event.target.value))}
                 />
                 <p className="text-xs text-muted-foreground">
@@ -292,9 +298,10 @@ export function NuevaActividad() {
                 <Input
                   id="na-cantidad-intentos"
                   type="number"
-                  min={1}
+                  inputMode="numeric"
                   required
                   value={cantidadIntentos}
+                  onKeyDown={soloEnterosPositivos}
                   onChange={(event) => setCantidadIntentos(Number(event.target.value))}
                 />
                 <p className="text-xs text-muted-foreground">
