@@ -21,7 +21,9 @@ def test_rechaza_opcion_indice_negativo(schema: type) -> None:
 @pytest.mark.parametrize("schema", [RegistrarRespuestaRequest, ResponderEnVivoRequest])
 def test_acepta_opcion_indice_cero(schema: type) -> None:
     """El índice 0 (primera opción) es válido."""
-    assert schema(pregunta_id=uuid4(), contenido={"opcion_indice": 0}).contenido == {"opcion_indice": 0}
+    assert schema(pregunta_id=uuid4(), contenido={"opcion_indice": 0}).contenido == {
+        "opcion_indice": 0
+    }
 
 
 def test_periodo_abierto_sigue_aceptando_valor_booleano() -> None:
