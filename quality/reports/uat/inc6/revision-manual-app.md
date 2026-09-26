@@ -19,3 +19,5 @@ backend o cambio funcional relevante → US de ajuste (`US-ADJ-58` en adelante) 
 
 **Estado al pausar la revisión (2026-09-26):** hallazgos 1-6 resueltos o derivados a `US-ADJ-58`; #7 resuelto después
 (pendiente de verificar en el iPhone real). US de ajuste abiertas desde la revisión: `US-ADJ-58` (#445).
+| — | Proyección en vivo (H3/H4 de `US-6.3.10`) | Decisiones pendientes de la UAT automática | Diseño, frontend | **H3 opción b:** cajas azul `#287aaa` y verde `#378257` (≥ 4,5:1, antes 3,57/3,73); también en las tarjetas del celular. **H4 opción a:** enunciado de 30 px con opciones. Wireframe §1.1, prototipo, `index.css` y circuito E2E 8 actualizados |
+
