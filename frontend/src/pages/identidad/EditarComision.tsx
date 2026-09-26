@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { rutaMateria, useNombreMateria } from "@/pages/identidad/useNombreMateria"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,6 +15,7 @@ export function EditarComision() {
   const navigate = useNavigate()
 
   const [comision, setComision] = useState<ComisionDetalleResponse | null>(null)
+  const nombreMateria = useNombreMateria(comision?.materiaId)
   const [horario, setHorario] = useState("")
 
   const controladorSubmitRef = useRef<AbortController | null>(null)
@@ -57,7 +59,8 @@ export function EditarComision() {
     <div>
       <Breadcrumb
         items={[
-          { label: "Comisiones", to: "/comisiones" },
+          { label: "Materias", to: "/materias" },
+          { label: nombreMateria ?? "…", to: rutaMateria(comision?.materiaId) },
           { label: comision?.horario ?? "…", to: comisionId ? `/comisiones/${comisionId}` : undefined },
           { label: "Editar" },
         ]}

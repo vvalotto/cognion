@@ -31,6 +31,7 @@ function mockPorUrl(comisiones: unknown[]) {
     const url = String(input)
     if (url.includes("/comisiones/c1/estudiantes")) return jsonResponse(200, new Array(17).fill({}))
     if (url.includes("/estudiantes")) return jsonResponse(200, [])
+    if (url.includes("/activar")) return jsonResponse(200, {})
     if (url.includes("/comisiones")) return jsonResponse(200, comisiones)
     if (url.includes("/usuarios")) return jsonResponse(200, cuentasResponse)
     return jsonResponse(200, materiasResponse)
@@ -43,6 +44,9 @@ function renderVerMateria() {
       <Routes>
         <Route path="/materias/:materiaId/ver" element={<VerMateria />} />
         <Route path="/comisiones/:comisionId" element={<p>Detalle de comisión</p>} />
+        <Route path="/comisiones/:comisionId/editar" element={<p>Editar comisión</p>} />
+        <Route path="/comisiones/:comisionId/eliminar" element={<p>Eliminar comisión</p>} />
+        <Route path="/comisiones/nueva" element={<p>Nueva comisión</p>} />
       </Routes>
     </MemoryRouter>,
   )
@@ -58,7 +62,7 @@ describe("VerMateria", () => {
     cleanup()
   })
 
-  it("muestra el nombre con su estado y el resumen de la materia, sin acciones de edición", async () => {
+  it("muestra el nombre con su estado y el resumen de la materia", async () => {
     mockPorUrl(comisionesResponse)
 
     renderVerMateria()
@@ -68,7 +72,6 @@ describe("VerMateria", () => {
     expect(screen.getByText("107")).toBeInTheDocument()
     expect(await screen.findByText("1 de 2")).toBeInTheDocument()
     expect(await screen.findByText("Comisiones activas")).toBeInTheDocument()
-    expect(screen.queryByRole("button", { name: /editar|eliminar/i })).not.toBeInTheDocument()
   })
 
   it("lista las comisiones con docentes, estudiantes y estado; activas e inactivas", async () => {
@@ -115,5 +118,39 @@ describe("VerMateria", () => {
 
     expect(await screen.findByText("Esta materia todavía no tiene comisiones.")).toBeInTheDocument()
     expect(await screen.findByText("0 de 0")).toBeInTheDocument()
+  })
+
+  it("'+ Nueva Comisión' abre el alta con la materia preseleccionada", async () => {
+    mockPorUrl(comisionesResponse)
+
+    renderVerMateria()
+    fireEvent.click(await screen.findByRole("button", { name: "+ Nueva Comisión" }))
+
+    expect(await screen.findByText("Nueva comisión")).toBeInTheDocument()
+  })
+
+  it("una comisión activa se puede editar y eliminar desde la fila", async () => {
+    mockPorUrl(comisionesResponse)
+
+    renderVerMateria()
+    const fila = (await screen.findByText("Comision 1 - Martes de 10 a 13:30")).closest("tr") as HTMLElement
+    expect(within(fila).queryByRole("button", { name: "Activar" })).not.toBeInTheDocument()
+    fireEvent.click(within(fila).getByRole("button", { name: "Editar" }))
+
+    expect(await screen.findByText("Editar comisión")).toBeInTheDocument()
+  })
+
+  it("una comisión inactiva se reactiva sin salir de la pantalla", async () => {
+    mockPorUrl(comisionesResponse)
+
+    renderVerMateria()
+    const fila = (await screen.findByText("Jueves - 9:00 a 11:00")).closest("tr") as HTMLElement
+    expect(within(fila).queryByRole("button", { name: "Eliminar" })).not.toBeInTheDocument()
+    fireEvent.click(within(fila).getByRole("button", { name: "Activar" }))
+
+    expect(await within(fila).findByText("Activa")).toBeInTheDocument()
+    const pedido = vi.mocked(fetch).mock.calls.find(([u]) => String(u).includes("/c2/activar"))
+    expect(pedido).toBeDefined()
+    expect((pedido![1] as RequestInit).method).toBe("POST")
   })
 })

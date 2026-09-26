@@ -8,7 +8,6 @@ import { AltaDocente } from "@/pages/identidad/AltaDocente"
 import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
 import { EditarComision } from "@/pages/identidad/EditarComision"
 import { EliminarComision } from "@/pages/identidad/EliminarComision"
-import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
@@ -104,14 +103,6 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Inicio /> },
       { path: "/mi-cuenta/cambiar-password", element: <CambiarPassword /> },
-      {
-        path: "/comisiones",
-        element: (
-          <RequireRole rol="administrador">
-            <Comisiones />
-          </RequireRole>
-        ),
-      },
       {
         path: "/comisiones/nueva",
         element: (

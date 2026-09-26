@@ -1,9 +1,10 @@
-import { Eye } from "lucide-react"
+import { Eye, Pencil, RotateCcw, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { RowActionButton } from "@/components/ui/row-action-button"
 import {
@@ -18,6 +19,7 @@ import {
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import { listarCuentas, type CuentaResponse } from "@/lib/cuentas-api"
 import {
+  activarComision,
   listarComisionesPorMateria,
   listarEstudiantesDeComision,
   type ComisionResumenResponse,
@@ -33,9 +35,10 @@ function Resumen({ valor, etiqueta }: { valor: string; etiqueta: string }) {
 }
 
 /**
- * Detalle de solo lectura de una Materia — pensado para el Administrador, que no gestiona
- * el banco de preguntas (`Banco.tsx` sigue siendo exclusivo del Docente). Resumen de la materia
- * y sus Comisiones, activas e inactivas, con Docentes y estudiantes (revisión manual 2026-09-26).
+ * Detalle de una Materia para el Administrador, que no gestiona el banco de preguntas (`Banco.tsx`
+ * sigue siendo exclusivo del Docente). Resumen de la materia y **gestión de sus Comisiones** — alta,
+ * edición, baja y reactivación —, que antes vivía en una pantalla propia de Comisiones con su ítem de
+ * menú (revisión manual 2026-09-26).
  * Reutiliza `GET /materias`, `GET /materias/{id}/comisiones` y `GET /comisiones/{id}/estudiantes`.
  */
 export function VerMateria() {
@@ -75,21 +78,35 @@ export function VerMateria() {
     return docentes.find((docente) => docente.id === docenteId)?.nombre ?? "…"
   }
 
+  async function handleActivar(comisionId: string) {
+    await activarComision(comisionId)
+    setComisiones(
+      (actual) => actual?.map((c) => (c.id === comisionId ? { ...c, activa: true } : c)) ?? actual,
+    )
+  }
+
   const activas = comisiones?.filter((c) => c.activa).length ?? 0
   const totalEstudiantes = Object.values(estudiantes).reduce((suma, n) => suma + n, 0)
 
   return (
     <div>
       <Breadcrumb items={[{ label: "Materias", to: "/materias" }, { label: materia?.nombre ?? "…" }]} />
-      <div className="flex items-center gap-3">
-        <h1 className="text-lg font-semibold">{materia?.nombre ?? "Cargando…"}</h1>
-        {materia && (
-          <Badge variant={materia.activa ? "estado-activa" : "estado-inactiva"}>
-            {materia.activa ? "Activa" : "Inactiva"}
-          </Badge>
-        )}
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold">{materia?.nombre ?? "Cargando…"}</h1>
+            {materia && (
+              <Badge variant={materia.activa ? "estado-activa" : "estado-inactiva"}>
+                {materia.activa ? "Activa" : "Inactiva"}
+              </Badge>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">Banco de preguntas y comisiones de la materia.</p>
+        </div>
+        <Button onClick={() => navigate(`/comisiones/nueva?materiaId=${materiaId}`)}>
+          + Nueva Comisión
+        </Button>
       </div>
-      <p className="text-sm text-muted-foreground">Banco de preguntas y comisiones de la materia.</p>
 
       <div className="mt-4 grid grid-cols-3 gap-3">
         <Resumen valor={materia ? String(materia.cantidadPreguntasActivas) : "…"} etiqueta="Preguntas activas" />
@@ -143,14 +160,34 @@ export function VerMateria() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <RowActionButton
-                      label="Ver detalle"
-                      icon={Eye}
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        navigate(`/comisiones/${comision.id}`)
-                      }}
-                    />
+                    <div className="flex gap-1.5" onClick={(event) => event.stopPropagation()}>
+                      <RowActionButton
+                        label="Ver detalle"
+                        icon={Eye}
+                        onClick={() => navigate(`/comisiones/${comision.id}`)}
+                      />
+                      {comision.activa ? (
+                        <>
+                          <RowActionButton
+                            label="Editar"
+                            icon={Pencil}
+                            onClick={() => navigate(`/comisiones/${comision.id}/editar`)}
+                          />
+                          <RowActionButton
+                            label="Eliminar"
+                            icon={Trash2}
+                            variant="destructive"
+                            onClick={() => navigate(`/comisiones/${comision.id}/eliminar`)}
+                          />
+                        </>
+                      ) : (
+                        <RowActionButton
+                          label="Activar"
+                          icon={RotateCcw}
+                          onClick={() => void handleActivar(comision.id)}
+                        />
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
