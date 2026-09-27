@@ -28,7 +28,7 @@ class TestInvitacionesController:
         )
 
         invitacion, evento = await controller.generar_invitacion(
-            comision.id, docente_id, "estudiante@fiuner.edu.ar"
+            comision.id, docente_id, "estudiante@fiuner.edu.ar", solicitante_id=docente_id
         )
 
         assert invitacion.docente_id == docente_id
@@ -48,7 +48,9 @@ class TestInvitacionesController:
             GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
         )
 
-        invitacion, evento = await controller.generar_invitacion(comision.id, docente_id, None)
+        invitacion, evento = await controller.generar_invitacion(
+            comision.id, docente_id, None, solicitante_id=docente_id
+        )
 
         assert invitacion.docente_id == docente_id
         assert isinstance(evento, InvitacionGenerada)

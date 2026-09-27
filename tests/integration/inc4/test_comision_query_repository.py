@@ -158,3 +158,114 @@ class TestTieneComisionesCreadas:
         resultado = await query_repo.tiene_comisiones_creadas(admin.id)
 
         assert resultado is False
+
+
+class TestDocentePerteneceAComision:
+    """`US-ADJ-57`: primitiva de pertenencia a una comisión puntual."""
+
+    async def test_docente_asignado_devuelve_true(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear(
+            "Vic", "vic.pertenece1@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear("Doc", "doc.pertenece1@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        resultado = await query_repo.docente_pertenece_a_comision(docente.id, comision.id)
+
+        assert resultado is True
+
+    async def test_docente_no_asignado_devuelve_false(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear(
+            "Vic", "vic.pertenece2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear("Doc", "doc.pertenece2@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+
+        resultado = await query_repo.docente_pertenece_a_comision(docente.id, comision.id)
+
+        assert resultado is False
+
+    async def test_docente_asignado_a_otra_comision_devuelve_false(self, session):
+        """No alcanza con estar asignado a ALGUNA comisión — tiene que ser esta puntual."""
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear(
+            "Vic", "vic.pertenece3@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear("Doc", "doc.pertenece3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision_propia = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        comision_ajena = Comision.crear(uuid.uuid4(), "ma 14-16", admin.id)
+        await comision_repo.guardar(comision_propia)
+        await comision_repo.guardar(comision_ajena)
+        comision_propia.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision_propia)
+
+        resultado = await query_repo.docente_pertenece_a_comision(docente.id, comision_ajena.id)
+
+        assert resultado is False
+
+
+class TestDocenteTieneComisionEnMateria:
+    """`US-ADJ-57`: primitiva de pertenencia a nivel materia (cualquiera de sus comisiones)."""
+
+    async def test_docente_con_una_comision_en_la_materia_devuelve_true(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear("Vic", "vic.materia1@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        docente = Usuario.crear("Doc", "doc.materia1@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        materia_id = uuid.uuid4()
+        comision = Comision.crear(materia_id, "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, materia_id)
+
+        assert resultado is True
+
+    async def test_docente_sin_comisiones_en_la_materia_devuelve_false(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        docente = Usuario.crear("Doc", "doc.materia2@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(docente)
+
+        resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, uuid.uuid4())
+
+        assert resultado is False
+
+    async def test_docente_asignado_en_otra_materia_devuelve_false(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+        admin = Usuario.crear("Vic", "vic.materia3@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        docente = Usuario.crear("Doc", "doc.materia3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, uuid.uuid4())
+
+        assert resultado is False

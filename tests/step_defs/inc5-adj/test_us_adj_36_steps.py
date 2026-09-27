@@ -16,8 +16,17 @@ from src.identidad.entities.errors import PasswordDemasiadoCorta, PasswordSinCom
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.db.models import InvitacionModel
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.step_defs.inc1._auth_headers import admin_headers
+
+
+def _headers_docente(docente_id: str) -> dict[str, str]:
+    """JWT del Docente ya asignado a la comisión (`US-ADJ-57`)."""
+    jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
+
 
 scenarios("../../features/inc5-adj/US-ADJ-36-contrasena-segura.feature")
 
@@ -174,7 +183,7 @@ async def _crear_invitacion_vigente() -> str:
     invitacion_resp = await _post(
         f"/comisiones/{comision_id}/invitaciones",
         {"docente_id": docente["id"], "email_destinatario": "estudiante.bddadj36@fiuner.edu.ar"},
-        headers=docente_headers(),
+        headers=_headers_docente(docente["id"]),
     )
     invitacion_id = invitacion_resp.json()["id"]
     async with SessionLocal() as session:

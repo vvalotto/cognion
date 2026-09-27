@@ -6,12 +6,21 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.identidad.entities.errors import ComisionNoExiste, DocenteNoAsignadoAComision
+from src.identidad.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoExiste,
+    DocenteNoAsignadoAComision,
+)
 from src.identidad.frameworks.api.schemas import GenerarInvitacionRequest, InvitacionResponse
-from src.identidad.frameworks.dependencies import get_invitaciones_controller, require_docente
+from src.identidad.frameworks.dependencies import (
+    get_current_user,
+    get_invitaciones_controller,
+    require_docente,
+)
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
+from src.shared.entities.jwt import JWTPayload
 
 router = APIRouter(prefix="/comisiones", tags=["identidad"])
 
@@ -25,13 +34,19 @@ router = APIRouter(prefix="/comisiones", tags=["identidad"])
 async def generar_invitacion(
     comision_id: UUID,
     body: GenerarInvitacionRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: InvitacionesController = Depends(get_invitaciones_controller),
 ) -> InvitacionResponse:
-    """Genera una invitación para la comisión; responde 422/404 según el error de dominio."""
+    """Genera una invitación para la comisión; responde 422/404/403 según el error de dominio.
+
+    403 si el Docente que llama no está asignado a `comision_id` (`US-ADJ-57`).
+    """
     try:
         invitacion, _evento = await controller.generar_invitacion(
-            comision_id, body.docente_id, body.email_destinatario
+            comision_id, body.docente_id, body.email_destinatario, usuario.usuario_id
         )
+    except ComisionNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except DocenteNoAsignadoAComision as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)

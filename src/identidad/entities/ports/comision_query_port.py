@@ -76,3 +76,23 @@ class ComisionQueryPort(ABC):
         Administrador que ya creó una Comisión violaría esa FK si no se detecta antes.
         """
         ...
+
+    @abstractmethod
+    async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si el docente está asignado a esa comisión puntual (`US-ADJ-57`).
+
+        Primitiva de autorización consumida directamente por los routers de este BC y, vía el
+        `ComisionConsultaPort` propio de cada uno, por Banco de Preguntas, Actividad Evaluativa
+        y Analytics — ninguno de esos BC importa `comision_docentes` directamente.
+        """
+        ...
+
+    @abstractmethod
+    async def docente_tiene_comision_en_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia (`US-ADJ-57`).
+
+        Nivel de autorización más amplio que `docente_pertenece_a_comision` — usado donde la
+        regla es "toda la materia" (banco de preguntas, actividades de período abierto sin
+        restricción de comisión), no una comisión puntual.
+        """
+        ...
