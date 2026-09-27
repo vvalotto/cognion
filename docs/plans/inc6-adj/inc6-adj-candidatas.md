@@ -1,8 +1,8 @@
-# SP-ADJ-02 — Iteración de ajuste del Incremento 6 (antes de `BL-011`)
+# Incremento 6-ADJ — Ajuste técnico y documental (antes de `BL-011`)
 
-**Estado:** en curso (abierta 2026-09-27)
-**Milestone:** [Incremento 6 — Sesión en Vivo](https://github.com/vvalotto/cognion/milestone/8)
-**Política:** `docs/plans/PLAN-CM.md` §12 (SP-ADJ: ajuste técnico y documental antes de cerrar una baseline)
+**Estado:** en curso (abierta 2026-09-27, renombrada de `SP-ADJ-02` el mismo día)
+**Milestone:** [Incremento 6-ADJ — Ajuste técnico y documental](https://github.com/vvalotto/cognion/milestone/14)
+**Política:** `docs/plans/PLAN-CM.md` §12 (ajuste técnico y documental antes de cerrar una baseline), mismo criterio de nomenclatura que `Incremento 3-ADJ`/`4-ADJ`/`5-ADJ` — insertado fuera de la secuencia numérica 0-7 de `PLAN_v1.md`, sin renumerar el Incremento 7 ya mapeado a RF.
 
 ## Origen y decisión de secuencia
 
@@ -11,7 +11,7 @@ la validación de `US-6.3.10` (2026-09-25) dejaron tres ajustes especificados: `
 `57` y `58`. En un principio `56` y `57` iban **después** de `BL-011`; el 2026-09-26 Víctor
 decidió agruparlos en una iteración de ajuste **antes** del cierre, junto con `58` y la revisión
 de los ajustes diferidos de `SP-ADJ-01` (`US-ADJ-06`/`07`/`08`). `BL-011` cierra al terminar
-esta iteración.
+este Incremento de ajuste.
 
 ## Alcance
 

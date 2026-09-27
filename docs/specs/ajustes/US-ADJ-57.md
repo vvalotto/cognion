@@ -1,7 +1,7 @@
 # US-ADJ-57: Cada Docente ve y opera solo sobre las materias de sus Comisiones
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `SP-ADJ-02` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
+**Iteracion / Sprint**: `Incremento 6-ADJ` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
 **Tipo**: `feat` backend + frontend (autorización)
 **Agregado principal afectado**: ninguno nuevo (la asignación Docente ↔ Comisión ya existe en Identidad, `comision_docentes`)
 **Bounded Context**: transversal — Banco de Preguntas, Identidad, Actividad Evaluativa, Analytics

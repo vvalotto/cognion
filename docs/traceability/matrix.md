@@ -185,8 +185,8 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Validado |
 | RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Validado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
-| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, especificadas); US-ADJ-58 (`SP-ADJ-02`: cancelar e iniciar solo con participantes) | Implementado |
-| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, especificadas); US-ADJ-58 (`SP-ADJ-02`: finalizar en cualquier etapa) | Implementado |
+| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, especificadas); US-ADJ-58 (`Incremento 6-ADJ`: cancelar e iniciar solo con participantes) | Implementado |
+| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, especificadas); US-ADJ-58 (`Incremento 6-ADJ`: finalizar en cualquier etapa) | Implementado |
 | RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, especificadas) | Implementado |
 | RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.2 (backend); US-3.4.3 (frontend) | Validado |
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
