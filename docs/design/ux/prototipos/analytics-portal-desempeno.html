@@ -207,6 +207,9 @@
   .eval-item .ei-meta { font-size: 12px; color: var(--muted-foreground); }
   .eval-item .ei-result { display: flex; gap: 14px; align-items: center; }
   .eval-item .ei-result .n-ok { color: var(--success); font-weight: 700; font-size: 14px; }
+  .live-item .ei-pos { font-weight: 700; font-size: 14px; min-width: 70px; text-align: right; }
+  .live-item .ei-pts { font-weight: 600; font-size: 13px; color: var(--muted-foreground); }
+  .section-title { font-size: 15px; font-weight: 600; margin: 28px 0 4px; }
   .eval-item .ei-result .n-error { color: var(--destructive); font-weight: 700; font-size: 14px; }
 
   /* Tasa de error por tema (RF-17) */
@@ -315,7 +318,7 @@
   <div class="app-body">
     <div class="breadcrumb">Analytics &nbsp;›&nbsp; <span class="current">Mi desempeño</span></div>
     <h1 class="page-title">Mi desempeño</h1>
-    <p class="page-subtitle">Historial de tus evaluaciones de período abierto en la materia elegida (RF-15).</p>
+    <p class="page-subtitle">Historial de tus evaluaciones de período abierto y de tus sesiones en vivo en la materia elegida (RF-15).</p>
 
     <div class="filters-row">
       <div class="field">
@@ -366,6 +369,36 @@
       <div class="ei-result">
         <span class="n-ok">8 ✓</span>
         <span class="n-error">3 ✗</span>
+      </div>
+    </div>
+
+    <!-- US-ADJ-56: sección propia de sesiones en vivo, separada del resumen de período abierto -->
+    <h2 class="section-title">Sesiones en vivo</h2>
+    <p class="page-subtitle" style="margin-bottom:10px;">Tu puntaje y tu posición en el ranking final de cada sesión — solo sesiones finalizadas. No suman al resumen de período abierto.</p>
+
+    <div class="eval-item live-item">
+      <div>
+        <div class="ei-title">Sesión en vivo · Comisión A</div>
+        <div class="ei-meta">Finalizada el 22/09 19:40 · 10 preguntas</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">7 ✓</span>
+        <span class="n-error">3 ✗</span>
+        <span class="ei-pts">6 980 pts</span>
+        <span class="ei-pos">3° de 14</span>
+      </div>
+    </div>
+
+    <div class="eval-item live-item">
+      <div>
+        <div class="ei-title">Sesión en vivo · Comisión A</div>
+        <div class="ei-meta">Finalizada el 29/09 19:35 · 8 preguntas</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">0 ✓</span>
+        <span class="n-error">0 ✗</span>
+        <span class="ei-pts">0 pts</span>
+        <span class="ei-pos">14° de 14</span>
       </div>
     </div>
   </div>
@@ -435,6 +468,36 @@
       <div class="ei-result">
         <span class="n-ok">12 ✓</span>
         <span class="n-error">5 ✗</span>
+      </div>
+    </div>
+
+    <!-- US-ADJ-56: sección propia de sesiones en vivo, separada del resumen de período abierto -->
+    <h2 class="section-title">Sesiones en vivo</h2>
+    <p class="page-subtitle" style="margin-bottom:10px;">Puntaje y posición de María González en cada sesión — solo sesiones finalizadas. No suman al resumen de período abierto.</p>
+
+    <div class="eval-item live-item">
+      <div>
+        <div class="ei-title">Sesión en vivo · Comisión A</div>
+        <div class="ei-meta">Finalizada el 22/09 19:40 · 10 preguntas</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">7 ✓</span>
+        <span class="n-error">3 ✗</span>
+        <span class="ei-pts">6 980 pts</span>
+        <span class="ei-pos">3° de 14</span>
+      </div>
+    </div>
+
+    <div class="eval-item live-item">
+      <div>
+        <div class="ei-title">Sesión en vivo · Comisión A</div>
+        <div class="ei-meta">Finalizada el 29/09 19:35 · 8 preguntas</div>
+      </div>
+      <div class="ei-result">
+        <span class="n-ok">0 ✓</span>
+        <span class="n-error">0 ✗</span>
+        <span class="ei-pts">0 pts</span>
+        <span class="ei-pos">14° de 14</span>
       </div>
     </div>
   </div>

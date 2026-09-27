@@ -188,3 +188,31 @@ Issue #228 (`US-4.0.2`, Incremento 4).
 comentario de cierre del Issue [#320](https://github.com/vvalotto/cognion/issues/320)
 (`US-ADJ-34`, DoD tipo `Modelado`, `WORKFLOW-DESARROLLO.md` §2). Una vez aprobada, es el input
 de las specs US-IEDD de la Iteración 4 de `docs/plans/inc5-adj/inc5-adj-candidatas.md`.
+
+---
+
+## 6. Ampliación de `SP-ADJ-02` (`US-ADJ-56`): sesiones en vivo en el desempeño
+
+Origen: validación manual de `US-6.3.10` (2026-09-25). `RF-15` pide, para sesiones en vivo,
+"puntaje y posición en el ranking", y `RF-16` "respuestas correctas e incorrectas por sesión";
+la nota de alcance del Incremento 4 las dejaba afuera porque el modo en vivo todavía no
+existía. Decisiones de Víctor (2026-09-27): los informes RF-17 y RF-20 a RF-23 **no** incluyen
+el vivo; el acumulado de período abierto y el de vivo se muestran **separados**; sin detalle
+pregunta por pregunta de una sesión en vivo. Pantallas 1 y 2 del prototipo, bloque
+"Sesiones en vivo".
+
+### 6.1 Sección "Sesiones en vivo" (agregada a §2.0 y §3.0)
+
+| Elemento | Detalle |
+|---|---|
+| Ubicación | Debajo del detalle por evaluación, con título propio "Sesiones en vivo". Mismo componente compartido (`DesempenoResumenDetalle.tsx`) para el Estudiante y el Docente |
+| Filas | Una `.eval-item` por sesión en vivo **finalizada** en la que participó el estudiante, en la materia elegida, de la más reciente a la más antigua |
+| Datos de cada fila | Comisión, fecha de finalización, cantidad de preguntas, correctas ✓, incorrectas ✗, puntaje final y posición ("3° de 14") |
+| Posición | La misma del ranking final que vio el estudiante al terminar la sesión (desempate igual que `ObtenerRankingDeSesion`) |
+| Se unió y no respondió | La sesión figura con 0 ✓, 0 ✗, 0 pts y su posición |
+| Resumen acumulado | **No cambia**: `.summary-bar` sigue contando solo período abierto. Las sesiones en vivo no suman al acierto ni al total de evaluaciones |
+| Sesiones no finalizadas o canceladas | No aparecen (`EnEspera`, `EnCurso`, `Cancelada` de `US-ADJ-58`) |
+| Estado vacío | Estudiante: "Todavía no participaste en sesiones en vivo de esta materia". Docente: "Este estudiante todavía no participó en sesiones en vivo de esta materia". Es independiente del estado vacío de período abierto (§2.0): un estudiante puede tener una sección vacía y la otra no |
+| Acción | Ninguna. Solo lectura, sin navegación a un detalle de la sesión |
+
+**Aprobación:** aprobado por Víctor 2026-09-27 (gate UX de `US-ADJ-56`).

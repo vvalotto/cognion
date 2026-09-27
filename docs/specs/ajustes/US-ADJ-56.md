@@ -1,7 +1,7 @@
 # US-ADJ-56: El desempeño del Estudiante incluye las sesiones en vivo
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: sin asignar — se implementa **después** del cierre de `BL-011` (decisión de Víctor, 2026-09-25)
+**Iteracion / Sprint**: `SP-ADJ-02` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
 **Tipo**: `feat` backend + frontend
 **Agregado principal afectado**: ninguno nuevo (lectura; Analytics no tiene aggregate propio, `BC-analytics-modelo.md` §2)
 **Bounded Context**: Analytics (lee de Actividad Evaluativa por puerto, `ADR-006`)
@@ -60,7 +60,7 @@ Analytics (`evaluacion_desempeno_consulta_port_in_process.py`) solo lee agregado
 
 ### Precondicion
 
-- `BL-011` cerrada (Incremento 6).
+- `US-6.3.10` cerrada.
 - **Gate UX:** ampliar `docs/design/ux/wireframes-analytics.md` (y su prototipo) con la sección "Sesiones en vivo"
   y aprobarla **antes** de tocar `frontend/`.
 
@@ -134,7 +134,7 @@ Feature: El desempeño incluye las sesiones en vivo (US-ADJ-56)
 
 ---
 
-## Decisiones abiertas (para la Fase 2, con Víctor)
+## Decisiones (resueltas por Víctor 2026-09-27: se aceptan las propuestas por defecto)
 
 1. **RF-17 y RF-20 a RF-23** (tasa de error por tema, desempeño por comisión, evolución, ranking de preguntas
    falladas, completitud): ¿incluyen también las respuestas en vivo? Esta US **no** los cubre; si se decide que sí,
