@@ -215,4 +215,4 @@ pregunta por pregunta de una sesión en vivo. Pantallas 1 y 2 del prototipo, blo
 | Estado vacío | Estudiante: "Todavía no participaste en sesiones en vivo de esta materia". Docente: "Este estudiante todavía no participó en sesiones en vivo de esta materia". Es independiente del estado vacío de período abierto (§2.0): un estudiante puede tener una sección vacía y la otra no |
 | Acción | Ninguna. Solo lectura, sin navegación a un detalle de la sesión |
 
-**Aprobación:** pendiente de Víctor (gate UX de `US-ADJ-56`), antes de tocar `frontend/`.
+**Aprobación:** aprobado por Víctor 2026-09-27 (gate UX de `US-ADJ-56`).

@@ -474,4 +474,4 @@ tiene el mismo efecto que en el ranking.
 | Acciones | "Volver a la pregunta" (vuelve a la etapa en la que estaba) · "Finalizar sesión" → `#stage-final` |
 | Estudiantes | Reciben `sesion_finalizada` como siempre → `#est-resultado-final`; quien tenía la pregunta en pantalla sin responder pasa directo al resultado final |
 
-**Aprobación:** pendiente de Víctor (gate UX de `US-ADJ-58`), antes de tocar `frontend/`.
+**Aprobación:** aprobado por Víctor 2026-09-27 (gate UX de `US-ADJ-58`), incluida la confirmación solo con la pregunta abierta (§8.4).
