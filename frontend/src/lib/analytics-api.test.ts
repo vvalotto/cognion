@@ -49,6 +49,19 @@ describe("analytics-api", () => {
             porcentaje_acierto: 80,
             cantidad_evaluaciones: 1,
           },
+          sesiones_en_vivo: [
+            {
+              sesion_id: "s1",
+              comision_horario: "Lunes 14-16hs",
+              finalizada_en: "2026-09-20T10:00:00Z",
+              cantidad_preguntas: 10,
+              cantidad_correctas: 7,
+              cantidad_incorrectas: 3,
+              puntaje_final: 1200,
+              posicion: 3,
+              total_participantes: 14,
+            },
+          ],
         }),
       )
 
@@ -73,10 +86,23 @@ describe("analytics-api", () => {
           porcentajeAcierto: 80,
           cantidadEvaluaciones: 1,
         },
+        sesionesEnVivo: [
+          {
+            sesionId: "s1",
+            comisionHorario: "Lunes 14-16hs",
+            finalizadaEn: "2026-09-20T10:00:00Z",
+            cantidadPreguntas: 10,
+            cantidadCorrectas: 7,
+            cantidadIncorrectas: 3,
+            puntajeFinal: 1200,
+            posicion: 3,
+            totalParticipantes: 14,
+          },
+        ],
       })
     })
 
-    it("mapea una lista vacía de evaluaciones", async () => {
+    it("mapea una lista vacía de evaluaciones y de sesiones en vivo", async () => {
       vi.mocked(fetch).mockResolvedValueOnce(
         jsonResponse(200, {
           evaluaciones: [],
@@ -86,6 +112,7 @@ describe("analytics-api", () => {
             porcentaje_acierto: 0,
             cantidad_evaluaciones: 0,
           },
+          sesiones_en_vivo: [],
         }),
       )
 
@@ -93,6 +120,7 @@ describe("analytics-api", () => {
 
       expect(desempeno.evaluaciones).toEqual([])
       expect(desempeno.resumen.cantidadEvaluaciones).toBe(0)
+      expect(desempeno.sesionesEnVivo).toEqual([])
     })
   })
 
@@ -115,6 +143,7 @@ describe("analytics-api", () => {
             porcentaje_acierto: 80,
             cantidad_evaluaciones: 1,
           },
+          sesiones_en_vivo: [],
         }),
       )
 
@@ -136,12 +165,14 @@ describe("analytics-api", () => {
             porcentaje_acierto: 0,
             cantidad_evaluaciones: 0,
           },
+          sesiones_en_vivo: [],
         }),
       )
 
       const desempeno = await obtenerDesempenoDeEstudiante("m1", "u2")
 
       expect(desempeno.evaluaciones).toEqual([])
+      expect(desempeno.sesionesEnVivo).toEqual([])
     })
   })
 

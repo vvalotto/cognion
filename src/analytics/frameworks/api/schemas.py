@@ -27,11 +27,28 @@ class ResumenDesempenoResponse(BaseModel):
     cantidad_evaluaciones: int
 
 
+class SesionEnVivoDetalleResponse(BaseModel):
+    """Fila de detalle de una sesión en vivo `Finalizada` en la que participó el Estudiante."""
+
+    sesion_id: UUID
+    comision_horario: str
+    finalizada_en: datetime
+    cantidad_preguntas: int
+    cantidad_correctas: int
+    cantidad_incorrectas: int
+    puntaje_final: int
+    posicion: int
+    total_participantes: int
+
+
 class DesempenoEstudianteResponse(BaseModel):
-    """Respuesta completa de `GET /analytics/materias/{materia_id}/mi-desempeno` (RF-15)."""
+    """Respuesta completa de `GET /analytics/materias/{materia_id}/mi-desempeno` (RF-15).
+
+    `sesiones_en_vivo` (`US-ADJ-56`) va separado de `resumen`, que solo cuenta período abierto."""
 
     evaluaciones: list[EvaluacionDetalleResponse]
     resumen: ResumenDesempenoResponse
+    sesiones_en_vivo: list[SesionEnVivoDetalleResponse]
 
 
 class TasaErrorTemaResponse(BaseModel):
