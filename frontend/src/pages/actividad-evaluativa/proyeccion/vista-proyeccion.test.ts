@@ -52,6 +52,10 @@ describe("calcularVista", () => {
     expect(calcularVista({ ...estadoBase, estado: "en_espera" })).toBeNull()
   })
 
+  it("Cancelada tampoco (la sala la redirige a la Comisión, US-ADJ-58)", () => {
+    expect(calcularVista({ ...estadoBase, estado: "cancelada" })).toBeNull()
+  })
+
   it("sin opciones mostradas es la pregunta sola", () => {
     expect(calcularVista(estadoBase)?.etapa).toBe("pregunta-sola")
   })
@@ -216,6 +220,12 @@ describe("aplicarMensaje", () => {
     ) as VistaProyeccion
     expect(vista.etapa).toBe("finalizada")
     expect(vista.resultado?.ranking).toHaveLength(1)
+  })
+})
+
+describe("aplicarMensaje — sesion_cancelada (US-ADJ-58)", () => {
+  it("pide recalcular: la proyección no muestra sesiones sin iniciar", () => {
+    expect(aplicarMensaje(vistaBase, { tipo: "sesion_cancelada" }, 0)).toBe("recalcular")
   })
 })
 

@@ -42,7 +42,8 @@ export interface VistaProyeccion {
 
 /** Etapa que le corresponde al estado del servidor; `null` si la sesión no arrancó (→ sala). */
 export function calcularVista(estado: EstadoSesionEnVivoResponse): VistaProyeccion | null {
-  if (estado.estado === "en_espera") return null
+  // Cancelada (`US-ADJ-58`) vuelve a la sala, que la redirige al detalle de la Comisión.
+  if (estado.estado === "en_espera" || estado.estado === "cancelada") return null
 
   const pregunta = estado.preguntaActual
   const resultadoServidor = estado.resultadoPregunta
@@ -131,6 +132,9 @@ export function aplicarMensaje(
         etapa: "finalizada",
         resultado: { respuestaCorrecta: null, distribucion: [], ranking: mensaje.ranking },
       }
+    case "sesion_cancelada":
+      // Solo se cancela una sesión `EnEspera`, que la proyección no muestra (`US-ADJ-58`).
+      return "recalcular"
   }
 }
 

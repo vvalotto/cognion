@@ -70,6 +70,7 @@ export type MensajeSesionEnVivo =
       tipo: "sesion_finalizada"
       ranking: RankingItemCanal[]
     }
+  | { tipo: "sesion_cancelada" }
 
 export type EstadoCanal = "conectado" | "reconectando" | "desconectado"
 
@@ -260,6 +261,8 @@ function parsearMensaje(data: string): MensajeSesionEnVivo | null {
         tipo: "sesion_finalizada",
         ranking: mapearRanking(bruto.ranking),
       }
+    case "sesion_cancelada":
+      return { tipo: "sesion_cancelada" }
     default:
       return null
   }

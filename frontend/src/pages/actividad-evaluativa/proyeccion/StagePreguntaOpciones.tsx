@@ -7,10 +7,12 @@ interface Props {
   vista: VistaProyeccion
   enviando: boolean
   onCerrarPregunta: () => void
+  /** Abre la confirmación de finalizar con la pregunta abierta (§8.4, `US-ADJ-58`). */
+  onFinalizar: () => void
 }
 
 /** Proyección — pregunta con opciones, temporizador y conteo (`#stage-pregunta-opciones`, §2.4). */
-export function StagePreguntaOpciones({ vista, enviando, onCerrarPregunta }: Props) {
+export function StagePreguntaOpciones({ vista, enviando, onCerrarPregunta, onFinalizar }: Props) {
   const restantes = useSegundosRestantes(vista.tiempoLimiteSegundos, vista.inicioOpcionesMs)
   const opciones = opcionesEnVivo(vista.tipo, vista.opciones)
   const progreso =
@@ -59,7 +61,7 @@ export function StagePreguntaOpciones({ vista, enviando, onCerrarPregunta }: Pro
         / {vista.totalParticipantes} ya respondieron
       </p>
 
-      <div className="mt-8">
+      <div className="mt-8 flex gap-3.5">
         <Button
           type="button"
           variant="destructive-solid"
@@ -69,6 +71,16 @@ export function StagePreguntaOpciones({ vista, enviando, onCerrarPregunta }: Pro
           onClick={onCerrarPregunta}
         >
           Cerrar pregunta
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className="h-auto border-white/40 bg-transparent px-9 py-4 text-xl text-white hover:bg-white/10"
+          disabled={enviando}
+          onClick={onFinalizar}
+        >
+          Finalizar sesión
         </Button>
       </div>
     </div>

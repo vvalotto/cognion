@@ -70,6 +70,7 @@ import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionD
 import { ProyeccionSesionEnVivo } from "@/pages/actividad-evaluativa/ProyeccionSesionEnVivo"
 import { NuevaSesionEnVivo } from "@/pages/actividad-evaluativa/NuevaSesionEnVivo"
 import { SalaEsperaDocente } from "@/pages/actividad-evaluativa/SalaEsperaDocente"
+import { CancelarSesionEnVivo } from "@/pages/actividad-evaluativa/CancelarSesionEnVivo"
 import { SesionEnVivoEstudiante } from "@/pages/actividad-evaluativa/SesionEnVivoEstudiante"
 
 /**
@@ -500,6 +501,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <SalaEsperaDocente />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/sesiones-en-vivo/:sesionId/cancelar",
+        element: (
+          <RequireRole rol="docente">
+            <CancelarSesionEnVivo />
           </RequireRole>
         ),
       },

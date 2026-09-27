@@ -29,6 +29,7 @@ export function SalaEsperaDocente() {
   const [participantes, setParticipantes] = useState<ParticipanteResponse[]>([])
   const [iniciando, setIniciando] = useState(false)
   const [redirigido, setRedirigido] = useState(false)
+  const [errorInicio, setErrorInicio] = useState<string | null>(null)
 
   const controladorSubmitRef = useRef<AbortController | null>(null)
   if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
@@ -68,7 +69,7 @@ export function SalaEsperaDocente() {
     if (estado.estado === "en_curso") {
       setRedirigido(true)
       void navigate(`/sesiones-en-vivo/${sesionId}/proyeccion`)
-    } else if (estado.estado === "finalizada") {
+    } else if (estado.estado === "finalizada" || estado.estado === "cancelada") {
       setRedirigido(true)
       void navigate(`/actividad-evaluativa/comisiones/${comision.id}`)
     }
@@ -102,12 +103,22 @@ export function SalaEsperaDocente() {
   async function handleIniciar() {
     if (!sesionId || iniciando) return
     setIniciando(true)
+    setErrorInicio(null)
+    const signal = controladorSubmitRef.current?.signal
     try {
-      await iniciarSesion(sesionId, controladorSubmitRef.current?.signal)
+      await iniciarSesion(sesionId, signal)
     } catch (err) {
-      if (controladorSubmitRef.current?.signal.aborted) return
+      if (signal?.aborted) return
       if (err instanceof ApiError && err.status === 422) {
-        void navigate(`/sesiones-en-vivo/${sesionId}/proyeccion`)
+        // Ya iniciada (otra pestaña) → proyección; cancelada → Comisión (efecto de arriba);
+        // sin participantes (US-ADJ-58, INV-AEV-11) → se queda en la sala con el aviso.
+        const actual = await obtenerEstadoSesion(sesionId, signal).catch(() => null)
+        if (actual && actual.estado !== "en_espera") {
+          setEstado(actual)
+          return
+        }
+        setErrorInicio("No se puede iniciar: todavía no hay estudiantes unidos a la sesión.")
+        setIniciando(false)
         return
       }
       setIniciando(false)
@@ -172,9 +183,16 @@ export function SalaEsperaDocente() {
         </p>
       )}
 
-      {/* Sin participantes no se inicia (revisión manual 2026-09-26); la regla en el backend queda
-          para US-ADJ-58. "Salir" no toca la sesión: se retoma desde "Sesiones en vivo activas". */}
-      <div className="mt-4 flex gap-2">
+      {errorInicio && (
+        <p role="alert" className="mt-4 text-sm text-destructive">
+          {errorInicio}
+        </p>
+      )}
+
+      {/* Sin participantes no se inicia (revisión manual 2026-09-26; INV-AEV-11 en el backend desde
+          US-ADJ-58). "Salir" no toca la sesión: se retoma desde "Sesiones en vivo activas".
+          "Cancelar sesión" la descarta (§8.1), separado de "Iniciar" para no tocarlo sin querer. */}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         <Button
           type="button"
           disabled={iniciando || participantes.length === 0}
@@ -188,6 +206,14 @@ export function SalaEsperaDocente() {
           onClick={() => void navigate(`/actividad-evaluativa/comisiones/${comision.id}`)}
         >
           ‹ Salir
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="ml-auto border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={() => void navigate(`/sesiones-en-vivo/${sesionId}/cancelar`)}
+        >
+          Cancelar sesión
         </Button>
       </div>
     </div>

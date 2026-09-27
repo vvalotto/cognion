@@ -206,6 +206,36 @@ describe("SesionEnVivoEstudiante", () => {
     expect(llamadasA("/sesiones-en-vivo/s1/ranking")).toHaveLength(1)
   })
 
+  it("el Docente cancela con el Estudiante en la sala: lo ve y puede volver (US-ADJ-58)", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, participacion))
+      .mockResolvedValueOnce(jsonResponse(200, estadoApi()))
+
+    renderSesion()
+    await screen.findByRole("heading", { name: "¡Te uniste!" })
+
+    act(() => {
+      hookState.onMensaje({ tipo: "sesion_cancelada" })
+    })
+
+    expect(screen.getByRole("heading", { name: "El Docente canceló la sesión" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Volver a mis actividades" })).toHaveAttribute(
+      "href",
+      "/mis-actividades/materias",
+    )
+  })
+
+  it("abrir una sesión cancelada (422 al unirse) muestra la cancelación", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(422, { detail: "SesionYaCancelada" }))
+      .mockResolvedValueOnce(jsonResponse(200, estadoApi({ estado: "Cancelada" })))
+
+    renderSesion()
+
+    expect(await screen.findByRole("heading", { name: "El Docente canceló la sesión" })).toBeInTheDocument()
+    expect(llamadasA("/sesiones-en-vivo/s1/ranking")).toHaveLength(0)
+  })
+
   it("una sesión que no existe (404) avisa y ofrece volver", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(404, { detail: "SesionNoEncontrada" }))
 

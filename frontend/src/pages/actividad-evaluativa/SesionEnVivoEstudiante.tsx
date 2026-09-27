@@ -18,6 +18,7 @@ import { PreguntaActiva } from "./estudiante/PreguntaActiva"
 import { ResultadoFinal } from "./estudiante/ResultadoFinal"
 import { ResultadoPregunta } from "./estudiante/ResultadoPregunta"
 import { SalaEsperaEstudiante } from "./estudiante/SalaEsperaEstudiante"
+import { SesionCancelada } from "./estudiante/SesionCancelada"
 import { SinRespuesta } from "./estudiante/SinRespuesta"
 import {
   aplicarMensajeEstudiante,
@@ -74,7 +75,7 @@ export function SesionEnVivoEstudiante() {
           setNoDisponible(true)
           return
         }
-        // 422 (sesión ya finalizada): no corta — el estado decide la etapa.
+        // 422 (sesión ya finalizada o cancelada): no corta — el estado decide la etapa.
       }
       await recalcular()
     }
@@ -160,6 +161,7 @@ export function SesionEnVivoEstudiante() {
       {vista.etapa === "finalizada" && (
         <ResultadoFinal ranking={vista.ranking ?? []} estudianteId={obtenerUsuarioId()} />
       )}
+      {vista.etapa === "cancelada" && <SesionCancelada />}
       {errorRespuesta && (
         <p role="alert" className="mt-4 text-center text-sm text-destructive">
           No se pudo enviar la respuesta. Tocá de nuevo.

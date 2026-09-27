@@ -51,6 +51,10 @@ describe("calcularVistaEstudiante", () => {
     expect(calcularVistaEstudiante(estado({ estado: "finalizada" })).etapa).toBe("finalizada")
   })
 
+  it("Cancelada es su propia etapa terminal (US-ADJ-58)", () => {
+    expect(calcularVistaEstudiante(estado({ estado: "cancelada", preguntaActual: null })).etapa).toBe("cancelada")
+  })
+
   it("sin opciones mostradas es la espera de opciones", () => {
     expect(calcularVistaEstudiante(estado({ opcionesMostradas: false })).etapa).toBe("espera-opciones")
   })
@@ -212,6 +216,22 @@ describe("aplicarMensajeEstudiante", () => {
     const ranking = [{ posicion: 1, estudianteId: "e1", nombre: "Ana", puntajeAcumulado: 900 }]
     const vista = comoVista(aplicarMensajeEstudiante(vistaEstudiante(), { tipo: "sesion_finalizada", ranking }))
     expect(vista).toMatchObject({ etapa: "finalizada", ranking })
+  })
+
+  it("sesion_cancelada lleva a la etapa cancelada (US-ADJ-58)", () => {
+    const vista = comoVista(aplicarMensajeEstudiante(vistaEstudiante({ etapa: "sala" }), { tipo: "sesion_cancelada" }))
+    expect(vista.etapa).toBe("cancelada")
+  })
+
+  it("una pregunta_presentada tardía no saca de la etapa cancelada", () => {
+    const vista = vistaEstudiante({ etapa: "cancelada" })
+    expect(
+      aplicarMensajeEstudiante(vista, {
+        tipo: "pregunta_presentada",
+        preguntaActualIndice: 0,
+        pregunta: { preguntaId: "p1", enunciado: "¿?", tipo: "verdadero_falso" },
+      }),
+    ).toBe(vista)
   })
 
   it("los mensajes que el celular no usa se ignoran", () => {

@@ -8,6 +8,8 @@ export type EtapaEstudiante =
   | "resultado"
   | "sin-respuesta"
   | "finalizada"
+  /** Terminal: el Docente canceló la sesión antes de iniciarla (`US-ADJ-58`). */
+  | "cancelada"
 
 /** `cierre`: el Docente cerró sin que respondiera (H4); `tiempo`: su toque llegó tarde (H5). */
 export type MotivoSinRespuesta = "cierre" | "tiempo"
@@ -55,8 +57,8 @@ export function calcularVistaEstudiante(
   const etapa: EtapaEstudiante =
     estado.estado === "en_espera"
       ? "sala"
-      : estado.estado === "finalizada"
-        ? "finalizada"
+      : estado.estado === "finalizada" || estado.estado === "cancelada"
+        ? estado.estado
         : etapaEnCurso(estado, trasRechazo)
   const pregunta = estado.preguntaActual
   return {
@@ -90,7 +92,7 @@ export function aplicarMensajeEstudiante(
     case "participantes_actualizados":
       return { ...vista, totalParticipantes: mensaje.cantidad }
     case "pregunta_presentada":
-      if (vista.etapa === "finalizada") return vista
+      if (vista.etapa === "finalizada" || vista.etapa === "cancelada") return vista
       return {
         ...vista,
         etapa: "espera-opciones",
@@ -117,6 +119,8 @@ export function aplicarMensajeEstudiante(
       return { ...vista, etapa: "sin-respuesta", motivoSinRespuesta: "cierre" }
     case "sesion_finalizada":
       return { ...vista, etapa: "finalizada", ranking: mensaje.ranking }
+    case "sesion_cancelada":
+      return { ...vista, etapa: "cancelada" }
     default:
       return vista
   }
@@ -149,6 +153,7 @@ const ORDEN_ETAPA: Record<EtapaEstudiante, number> = {
   resultado: 3,
   "sin-respuesta": 3,
   finalizada: 4,
+  cancelada: 4,
 }
 
 /**
