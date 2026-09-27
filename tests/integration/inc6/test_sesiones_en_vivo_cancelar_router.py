@@ -1,6 +1,6 @@
 """Tests HTTP + WebSocket de `POST /sesiones-en-vivo/{sesion_id}/cancelar` (US-ADJ-58).
 
-Cubre los escenarios backend de `tests/features/sp-adj-02/US-ADJ-58-cancelar-finalizar-sesion.feature`
+Cubre los escenarios backend de `tests/features/inc6-adj/US-ADJ-58-cancelar-finalizar-sesion.feature`
 contra la app real y una base de datos PostgreSQL.
 """
 
