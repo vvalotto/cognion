@@ -17,7 +17,13 @@ class InvitacionesController:
         self._generar_invitacion = generar_invitacion
 
     async def generar_invitacion(
-        self, comision_id: UUID, docente_id: UUID, email_destinatario: str | None
+        self,
+        comision_id: UUID,
+        docente_id: UUID,
+        email_destinatario: str | None,
+        solicitante_id: UUID,
     ) -> tuple[Invitacion, InvitacionGenerada]:
         """Delega la generación de la invitación en el caso de uso correspondiente."""
-        return await self._generar_invitacion.execute(comision_id, docente_id, email_destinatario)
+        return await self._generar_invitacion.execute(
+            comision_id, docente_id, email_destinatario, solicitante_id
+        )

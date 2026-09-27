@@ -5,7 +5,11 @@ from __future__ import annotations
 from uuid import UUID
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.errors import ComisionNoExiste, DocenteNoAsignadoAComision
+from src.identidad.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoExiste,
+    DocenteNoAsignadoAComision,
+)
 from src.identidad.entities.eventos import InvitacionGenerada
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.ports.comision_repository_port import ComisionRepositoryPort
@@ -28,19 +32,28 @@ class GenerarInvitacionUseCase:
         self._notificador = notificador
 
     async def execute(
-        self, comision_id: UUID, docente_id: UUID, email_destinatario: str | None
+        self,
+        comision_id: UUID,
+        docente_id: UUID,
+        email_destinatario: str | None,
+        solicitante_id: UUID,
     ) -> tuple[Invitacion, InvitacionGenerada]:
         """Genera y persiste la invitación, envía el email si corresponde, y devuelve el evento.
 
-        Lanza `ComisionNoExiste` si la comisión no existe, y `DocenteNoAsignadoAComision`
-        si el docente no está en `Comision.docentes_asignados` (INV-ID-08). Si
-        `email_destinatario` es `None` (`US-ADJ-26`, Docente generando un link para copiar
-        manualmente), omite el envío de email — la invitación se genera igual.
+        Lanza `ComisionNoExiste` si la comisión no existe; `ComisionNoAutorizada` (`US-ADJ-57`,
+        403) si quien pide la invitación (`solicitante_id`, del JWT) no está asignado a la
+        comisión; y `DocenteNoAsignadoAComision` (422) si el docente *destino* (`docente_id`,
+        del body) no está en `Comision.docentes_asignados` (INV-ID-08) — son dos validaciones
+        distintas: la primera es autorización de quien llama, la segunda un dato inválido del
+        pedido. Si `email_destinatario` es `None` (`US-ADJ-26`, Docente generando un link para
+        copiar manualmente), omite el envío de email — la invitación se genera igual.
         """
         comision = await self._comision_repositorio.obtener_por_id(comision_id)
         if comision is None:
             raise ComisionNoExiste(comision_id)
 
+        if solicitante_id not in comision.docentes_asignados:
+            raise ComisionNoAutorizada(comision_id)
         self._validar_docente_asignado(comision, docente_id)
 
         invitacion = Invitacion.crear(comision_id, docente_id)

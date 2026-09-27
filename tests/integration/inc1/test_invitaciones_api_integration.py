@@ -6,6 +6,14 @@ from httpx import ASGITransport, AsyncClient
 
 from src.app import app
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+
+
+def _headers_docente(docente_id: str) -> dict[str, str]:
+    """JWT de un Docente puntual (`US-ADJ-57`) — `docente_headers` no está asignado a nada."""
+    jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
 async def _crear_materia(client, admin_headers, nombre: str) -> str:
@@ -111,7 +119,7 @@ class TestInvitacionesAPIIntegration:
             response = await client.post(
                 f"/comisiones/{comision_id}/invitaciones",
                 json={"docente_id": docente_id, "email_destinatario": "estudiante@fiuner.edu.ar"},
-                headers=docente_headers,
+                headers=_headers_docente(docente_id),
             )
 
         assert response.status_code == 201
@@ -172,12 +180,12 @@ class TestInvitacionesAPIIntegration:
             primera = await client.post(
                 f"/comisiones/{comision_id}/invitaciones",
                 json={"docente_id": docente_id},
-                headers=docente_headers,
+                headers=_headers_docente(docente_id),
             )
             segunda = await client.post(
                 f"/comisiones/{comision_id}/invitaciones",
                 json={"docente_id": docente_id},
-                headers=docente_headers,
+                headers=_headers_docente(docente_id),
             )
 
         assert primera.status_code == 201
@@ -239,9 +247,9 @@ class TestInvitacionesAPIIntegration:
 
         assert response.status_code == 403
 
-    async def test_docente_no_asignado_devuelve_422(
-        self, fake_smtp_server, admin_headers, docente_headers
-    ):
+    async def test_docente_no_asignado_devuelve_422(self, fake_smtp_server, admin_headers):
+        """El *destino* de la invitación no está asignado — 422 (distinto del 403 de `US-ADJ-57`,
+        que rechaza a quien *llama* sin estar asignado, ver `test_solicitante_no_asignado_devuelve_403`)."""
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
@@ -257,6 +265,18 @@ class TestInvitacionesAPIIntegration:
                 headers=admin_headers,
             )
             admin_id = admin_resp.json()["id"]
+
+            solicitante_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Docente Solicitante",
+                    "email": "solicitante2.inv@fiuner.edu.ar",
+                    "password": "claveSegura1#",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            solicitante_id = solicitante_resp.json()["id"]
 
             docente_resp = await client.post(
                 "/usuarios",
@@ -281,13 +301,76 @@ class TestInvitacionesAPIIntegration:
             )
             comision_id = comision_resp.json()["id"]
 
+            await client.post(
+                f"/comisiones/{comision_id}/docentes",
+                json={"docente_id": solicitante_id},
+                headers=admin_headers,
+            )
+
+            response = await client.post(
+                f"/comisiones/{comision_id}/invitaciones",
+                json={"docente_id": docente_id, "email_destinatario": "estudiante@fiuner.edu.ar"},
+                headers=_headers_docente(solicitante_id),
+            )
+
+        assert response.status_code == 422
+
+    async def test_solicitante_no_asignado_devuelve_403(
+        self, fake_smtp_server, admin_headers, docente_headers
+    ):
+        """`US-ADJ-57`: quien pide la invitación debe estar asignado, no solo el destino."""
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
+
+            admin_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Admin",
+                    "email": "admin5.inv@fiuner.edu.ar",
+                    "password": "claveSegura1#",
+                    "perfil": "administrador",
+                },
+                headers=admin_headers,
+            )
+            admin_id = admin_resp.json()["id"]
+
+            docente_resp = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Ana Docente",
+                    "email": "docente6.inv@fiuner.edu.ar",
+                    "password": "claveSegura1#",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+            docente_id = docente_resp.json()["id"]
+
+            comision_resp = await client.post(
+                "/comisiones",
+                json={
+                    "materia_id": materia_id,
+                    "horario": "lu 10-12",
+                    "administrador_id": admin_id,
+                },
+                headers=admin_headers,
+            )
+            comision_id = comision_resp.json()["id"]
+
+            await client.post(
+                f"/comisiones/{comision_id}/docentes",
+                json={"docente_id": docente_id},
+                headers=admin_headers,
+            )
+
             response = await client.post(
                 f"/comisiones/{comision_id}/invitaciones",
                 json={"docente_id": docente_id, "email_destinatario": "estudiante@fiuner.edu.ar"},
                 headers=docente_headers,
             )
 
-        assert response.status_code == 422
+        assert response.status_code == 403
 
     async def test_comision_inexistente_devuelve_404(
         self, fake_smtp_server, admin_headers, docente_headers

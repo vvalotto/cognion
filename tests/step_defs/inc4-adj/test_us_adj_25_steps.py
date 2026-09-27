@@ -63,8 +63,12 @@ def _headers(perfil: TipoPerfil) -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
-def _headers_docente() -> dict[str, str]:
-    return _headers(TipoPerfil.DOCENTE)
+def _headers_docente(docente_id: uuid.UUID | None = None) -> dict[str, str]:
+    """`docente_id` (`US-ADJ-57`) — sin indicarlo, un Docente sin comisiones asignadas."""
+    if docente_id is None:
+        return _headers(TipoPerfil.DOCENTE)
+    jwt_vo = PyJWTIssuer().emitir(docente_id, TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
 def _headers_administrador() -> dict[str, str]:
@@ -193,7 +197,8 @@ def administrador_post_docentes(context, resto):
 
 @when("un Docente hace GET /comisiones/{comision_id}")
 def docente_get_comision(context):
-    _get(context, f"/comisiones/{context['comision'].id}", _headers_docente())
+    docente_id = context["docente"].id if "docente" in context else None
+    _get(context, f"/comisiones/{context['comision'].id}", _headers_docente(docente_id))
 
 
 @when("hace GET /comisiones/{comision_id}")

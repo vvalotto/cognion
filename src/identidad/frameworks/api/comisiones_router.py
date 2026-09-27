@@ -6,7 +6,12 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from src.identidad.entities.errors import ComisionNoExiste, MateriaNoExiste, UsuarioNoEsDocente
+from src.identidad.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoExiste,
+    MateriaNoExiste,
+    UsuarioNoEsDocente,
+)
 from src.identidad.frameworks.api.schemas import (
     AsignarDocenteRequest,
     ComisionResponse,
@@ -17,6 +22,7 @@ from src.identidad.frameworks.api.schemas import (
 from src.identidad.frameworks.dependencies import (
     get_comisiones_controller,
     get_comisiones_query_controller,
+    get_current_user,
     require_administrador,
     require_docente_o_administrador,
 )
@@ -24,6 +30,14 @@ from src.identidad.interface_adapters.controllers.comisiones_controller import C
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
 )
+from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
+
+
+def _docente_id_o_none(usuario: JWTPayload) -> UUID | None:
+    """`usuario_id` si es Docente, `None` si es Administrador (sin filtro, ve todo)."""
+    return usuario.usuario_id if usuario.rol is TipoPerfil.DOCENTE else None
+
 
 router = APIRouter(prefix="/comisiones", tags=["identidad"])
 
@@ -65,13 +79,19 @@ async def crear_comision(
 )
 async def obtener_comision(
     comision_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
 ) -> ComisionResponse:
-    """Detalle de una comisión puntual; 404 si `comision_id` no existe (`US-ADJ-25`)."""
+    """Detalle de una comisión puntual; 404 si `comision_id` no existe (`US-ADJ-25`).
+
+    403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
+    """
     try:
-        comision = await controller.obtener_comision(comision_id)
+        comision = await controller.obtener_comision(comision_id, _docente_id_o_none(usuario))
     except ComisionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except ComisionNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     return ComisionResponse(
         id=comision.id,
@@ -90,13 +110,21 @@ async def obtener_comision(
 )
 async def listar_estudiantes(
     comision_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
 ) -> list[EstudianteResumenResponse]:
-    """Estudiantes inscriptos en la comisión; 404 si `comision_id` no existe (`US-4.2.2`)."""
+    """Estudiantes inscriptos en la comisión; 404 si `comision_id` no existe (`US-4.2.2`).
+
+    403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
+    """
     try:
-        estudiantes = await controller.listar_estudiantes(comision_id)
+        estudiantes = await controller.listar_estudiantes(
+            comision_id, _docente_id_o_none(usuario)
+        )
     except ComisionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except ComisionNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     return [EstudianteResumenResponse(id=e.id, nombre=e.nombre) for e in estudiantes]
 

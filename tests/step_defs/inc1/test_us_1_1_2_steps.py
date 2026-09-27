@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
+import uuid
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -11,8 +12,16 @@ from sqlalchemy import select, text
 from src.app import app
 from src.identidad.frameworks.db.models import InvitacionModel
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.step_defs.inc1._auth_headers import admin_headers
+
+
+def _headers_docente(docente_id: str) -> dict[str, str]:
+    """JWT del Docente ya asignado a la comisión (`US-ADJ-57`)."""
+    jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 scenarios("../../features/inc1/US-1.1.2-registro-estudiante.feature")
 
@@ -164,7 +173,7 @@ async def _crear_invitacion_vigente(materia: str) -> dict:
     invitacion_resp = await _post(
         f"/comisiones/{comision_id}/invitaciones",
         {"docente_id": docente["id"], "email_destinatario": "estudiante.bdd112@fiuner.edu.ar"},
-        headers=docente_headers(),
+        headers=_headers_docente(docente["id"]),
     )
     return {"comision_id": comision_id, **invitacion_resp.json()}
 

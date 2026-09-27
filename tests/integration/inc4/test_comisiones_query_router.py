@@ -23,17 +23,28 @@ def _headers_estudiante() -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
+def _headers_docente(docente_id) -> dict[str, str]:
+    """JWT de un Docente puntual (`US-ADJ-57`) — `docente_headers` no está asignado a nada."""
+    jwt_vo = PyJWTIssuer().emitir(docente_id, TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
 async def _crear_materia(client, admin_headers, nombre: str) -> str:
     response = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     return response.json()["id"]
 
 
 class TestListarComisionesPorMateria:
-    async def test_materia_con_comisiones(self, session, docente_headers, admin_headers):
+    async def test_materia_con_comisiones(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
         admin = Usuario.crear(
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
-        await SQLAlchemyUsuarioRepository(session).guardar(admin)
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
@@ -42,14 +53,71 @@ class TestListarComisionesPorMateria:
             comision_2 = Comision.crear(uuid.UUID(materia_id), "ma 14-16", admin.id)
             await comision_repo.guardar(comision_1)
             await comision_repo.guardar(comision_2)
+            comision_1.asignar_docente(docente.id)
+            comision_2.asignar_docente(docente.id)
+            await comision_repo.actualizar(comision_1)
+            await comision_repo.actualizar(comision_2)
 
             response = await client.get(
-                f"/materias/{materia_id}/comisiones", headers=docente_headers
+                f"/materias/{materia_id}/comisiones", headers=_headers_docente(docente.id)
             )
 
         assert response.status_code == 200
         ids = {c["id"] for c in response.json()}
         assert ids == {str(comision_1.id), str(comision_2.id)}
+
+    async def test_docente_sin_ninguna_comision_asignada_devuelve_403(
+        self, session, admin_headers
+    ):
+        """`US-ADJ-57`: el Docente sin comisiones en la materia no puede listarlas."""
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
+        await SQLAlchemyUsuarioRepository(session).guardar(admin)
+        await SQLAlchemyUsuarioRepository(session).guardar(docente)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
+            comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
+            await SQLAlchemyComisionRepository(session).guardar(comision)
+
+            response = await client.get(
+                f"/materias/{materia_id}/comisiones", headers=_headers_docente(docente.id)
+            )
+
+        assert response.status_code == 403
+
+    async def test_docente_ve_solo_su_comision(self, session, admin_headers):
+        """`US-ADJ-57`: con comisiones ajenas en la misma materia, ve solo la propia."""
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
+            comision_repo = SQLAlchemyComisionRepository(session)
+            propia = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
+            ajena = Comision.crear(uuid.UUID(materia_id), "ma 14-16", admin.id)
+            await comision_repo.guardar(propia)
+            await comision_repo.guardar(ajena)
+            propia.asignar_docente(docente.id)
+            await comision_repo.actualizar(propia)
+
+            response = await client.get(
+                f"/materias/{materia_id}/comisiones", headers=_headers_docente(docente.id)
+            )
+
+        assert response.status_code == 200
+        assert [c["id"] for c in response.json()] == [str(propia.id)]
 
     async def test_materia_inexistente_devuelve_404(self, docente_headers):
         transport = ASGITransport(app=app)
@@ -111,15 +179,21 @@ class TestListarComisionesPorMateria:
 
 
 class TestListarEstudiantes:
-    async def test_comision_con_estudiantes(self, session, admin_headers, docente_headers):
+    async def test_comision_con_estudiantes(self, session, admin_headers):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
         await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
         estudiante = Usuario.crear_estudiante(
             "Ana Pérez", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", comision.id
         )
@@ -128,28 +202,55 @@ class TestListarEstudiantes:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get(
-                f"/comisiones/{comision.id}/estudiantes", headers=docente_headers
+                f"/comisiones/{comision.id}/estudiantes", headers=_headers_docente(docente.id)
             )
 
         assert response.status_code == 200
         assert response.json() == [{"id": str(estudiante.id), "nombre": "Ana Pérez"}]
 
-    async def test_comision_sin_estudiantes_devuelve_lista_vacia(
-        self, session, admin_headers, docente_headers
-    ):
+    async def test_docente_no_asignado_devuelve_403(self, session, admin_headers):
+        """`US-ADJ-57`: el Docente que llama debe estar asignado a esta comisión puntual."""
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
         await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get(
-                f"/comisiones/{comision.id}/estudiantes", headers=docente_headers
+                f"/comisiones/{comision.id}/estudiantes", headers=_headers_docente(docente.id)
+            )
+
+        assert response.status_code == 403
+
+    async def test_comision_sin_estudiantes_devuelve_lista_vacia(self, session, admin_headers):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(
+                f"/comisiones/{comision.id}/estudiantes", headers=_headers_docente(docente.id)
             )
 
         assert response.status_code == 200
@@ -252,21 +353,52 @@ class TestObtenerComision:
 
         assert response.status_code == 404
 
-    async def test_docente_tiene_acceso(self, session, admin_headers, docente_headers):
+    async def test_docente_asignado_tiene_acceso(self, session, admin_headers):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
         await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.get(
+                f"/comisiones/{comision.id}", headers=_headers_docente(docente.id)
+            )
+
+        assert response.status_code == 200
+
+    async def test_docente_no_asignado_devuelve_403(self, session, admin_headers):
+        """`US-ADJ-57`: el Docente que llama debe estar asignado a esta comisión puntual."""
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        admin = Usuario.crear(
+            "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
+        docente = Usuario.crear(
+            "Doc", f"doc.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
+        )
+        await usuario_repo.guardar(admin)
+        await usuario_repo.guardar(docente)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.get(f"/comisiones/{comision.id}", headers=docente_headers)
+            response = await client.get(
+                f"/comisiones/{comision.id}", headers=_headers_docente(docente.id)
+            )
 
-        assert response.status_code == 200
+        assert response.status_code == 403
 
     async def test_estudiante_no_tiene_acceso(self, session, admin_headers):
         usuario_repo = SQLAlchemyUsuarioRepository(session)
