@@ -132,9 +132,10 @@ def docente_conectado(context):
 def sesion_con_respuestas(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers)
         context.update(sesion_id=sesion_id, estudiante_id=estudiante_id)
@@ -146,9 +147,10 @@ def sesion_con_respuestas(context):
 def sesion_finalizada_con_puntajes(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers)
         await cerrar_pregunta_actual(sesion_id)
@@ -162,9 +164,10 @@ def sesion_finalizada_con_puntajes(context):
 def sesion_en_curso_con_puntajes(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers)
         await cerrar_pregunta_actual(sesion_id)
@@ -177,9 +180,10 @@ def sesion_en_curso_con_puntajes(context):
 def participante_sin_cuenta(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers)
         await _eliminar_cuenta(estudiante_id)
@@ -198,10 +202,11 @@ def participantes_respondieron(context, cantidad):
 
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         estudiantes = await crear_estudiantes(comision_id, cantidad)
         for _, headers in estudiantes:
             await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         for _, headers in estudiantes:
             await _responder(sesion_id, headers)

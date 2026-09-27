@@ -91,6 +91,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_qu
 from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
     AvanzarSiguientePreguntaUseCase,
 )
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import (
     CerrarPreguntaActualUseCase,
@@ -296,7 +299,7 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.1.4`)."""
+    """Arma el `SesionesEnVivoController` (`US-6.1.2` a `6.1.4`, `US-ADJ-58`)."""
     event_store = SQLAlchemyEventStore(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
@@ -315,7 +318,9 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             event_store,
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
+            SQLAlchemyParticipantesSesionQueryRepository(session),
         ),
+        CancelarSesionEnVivoUseCase(event_store, get_canal_tiempo_real()),
     )
 
 

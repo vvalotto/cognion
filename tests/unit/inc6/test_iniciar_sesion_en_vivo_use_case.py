@@ -1,6 +1,10 @@
-"""Tests unitarios de `IniciarSesionEnVivoUseCase` y de su método en el controller (US-6.1.4)."""
+"""Tests unitarios de `IniciarSesionEnVivoUseCase` y de su método en el controller (US-6.1.4).
 
-from uuid import uuid4
+`US-ADJ-58` suma INV-AEV-11: al menos un Estudiante unido para iniciar.
+"""
+
+from datetime import UTC, datetime
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -8,12 +12,17 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import Estad
 from src.actividad_evaluativa.entities.errors import (
     ConcurrenciaOptimistaError,
     SesionNoExiste,
+    SesionYaCancelada,
     SesionYaIniciada,
+    SinParticipantes,
 )
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import ContenidoPregunta
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
+)
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
 )
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
@@ -34,7 +43,27 @@ from tests.unit.inc6._fakes import (
 )
 
 
-async def _escenario(opciones: list[str] | None = None):
+async def _unir(event_store: FakeEventStore, sesion_id: UUID) -> None:
+    """Siembra un `EstudianteUnido` de un Estudiante nuevo en la sesión (INV-AEV-11)."""
+    estudiante_id = uuid4()
+    await event_store.append(
+        "ParticipacionEnVivo",
+        uuid4(),
+        0,
+        [
+            EventoParaAlmacenar(
+                event_type="EstudianteUnido",
+                payload={
+                    "sesion_id": str(sesion_id),
+                    "estudiante_id": str(estudiante_id),
+                    "unido_en": datetime.now(UTC).isoformat(),
+                },
+            )
+        ],
+    )
+
+
+async def _escenario(opciones: list[str] | None = None, con_participante: bool = True):
     """Crea una sesión (use case real de US-6.1.2) y arma el use case de iniciar a probar."""
     comision_id, materia_id = uuid4(), uuid4()
     comision_consulta = FakeComisionConsultaPort()
@@ -50,8 +79,12 @@ async def _escenario(opciones: list[str] | None = None):
     sesion = await CrearSesionEnVivoUseCase(
         comision_consulta, pregunta_consulta, event_store
     ).execute(comision_id, 3, 30)
+    if con_participante:
+        await _unir(event_store, sesion.id)
     canal = FakeCanalTiempoReal()
-    use_case = IniciarSesionEnVivoUseCase(event_store, pregunta_consulta, canal)
+    use_case = IniciarSesionEnVivoUseCase(
+        event_store, pregunta_consulta, canal, FakeParticipantesSesionQueryPort(event_store)
+    )
     return use_case, event_store, canal, sesion, pregunta_consulta
 
 
@@ -98,7 +131,7 @@ class TestIniciar:
 
         assert canal.publicados[0][1]["pregunta"]["tipo"] == "verdadero_falso"
 
-    async def test_no_exige_participantes(self):
+    async def test_con_un_participante_se_inicia(self):
         use_case, _, _, sesion, _ = await _escenario()
 
         resultado = await use_case.execute(sesion.id)
@@ -107,6 +140,41 @@ class TestIniciar:
 
 
 class TestRechazos:
+    async def test_sin_participantes_se_rechaza_sin_persistir_ni_publicar(self):
+        use_case, event_store, canal, sesion, _ = await _escenario(con_participante=False)
+
+        with pytest.raises(SinParticipantes):
+            await use_case.execute(sesion.id)
+
+        assert len(await event_store.load(AGGREGATE_TYPE_SESION, sesion.id)) == 1
+        assert canal.publicados == []
+
+    async def test_ya_iniciada_tiene_precedencia_sobre_sin_participantes(self):
+        use_case, event_store, _, sesion, _ = await _escenario(con_participante=False)
+        await event_store.append(
+            AGGREGATE_TYPE_SESION,
+            sesion.id,
+            1,
+            [EventoParaAlmacenar(event_type="SesionEnVivoIniciada", payload={})],
+        )
+
+        with pytest.raises(SesionYaIniciada):
+            await use_case.execute(sesion.id)
+
+    async def test_sesion_cancelada_se_rechaza(self):
+        use_case, event_store, canal, sesion, _ = await _escenario()
+        await event_store.append(
+            AGGREGATE_TYPE_SESION,
+            sesion.id,
+            1,
+            [EventoParaAlmacenar(event_type="SesionEnVivoCancelada", payload={})],
+        )
+
+        with pytest.raises(SesionYaCancelada):
+            await use_case.execute(sesion.id)
+
+        assert canal.publicados == []
+
     async def test_sesion_inexistente(self):
         use_case, _, canal, _, _ = await _escenario()
 
@@ -168,7 +236,8 @@ class TestSesionesEnVivoControllerIniciar:
             FakeCanalTiempoReal(),
             FakeProyeccionesEnVivo(),
         )
-        controller = SesionesEnVivoController(crear, unirse, use_case)
+        cancelar = CancelarSesionEnVivoUseCase(event_store, FakeCanalTiempoReal())
+        controller = SesionesEnVivoController(crear, unirse, use_case, cancelar)
 
         resultado = await controller.iniciar(sesion.id)
 

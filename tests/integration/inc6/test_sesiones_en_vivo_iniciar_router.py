@@ -22,6 +22,7 @@ from tests.integration.inc6._helpers import (
     iniciar_sesion,
     iniciar_y_finalizar,
     preparar_sesion,
+    unirse_a_sesion,
 )
 
 
@@ -72,7 +73,8 @@ class TestIniciarAPIIntegration:
         assert pregunta["pregunta_id"] == eventos[0].payload["preguntas"][0]["pregunta_id"]
         assert "opciones" not in pregunta
 
-    async def test_inicio_sin_ningun_estudiante_unido(self):
+    async def test_inicio_sin_ningun_estudiante_unido_se_rechaza(self, session):
+        """Desde `US-ADJ-58` (INV-AEV-11) — antes `US-6.1.4` lo aceptaba."""
         sesion_id, _ = await preparar_sesion()
 
         async with _cliente() as client:
@@ -80,8 +82,9 @@ class TestIniciarAPIIntegration:
                 f"/sesiones-en-vivo/{sesion_id}/iniciar", headers=_docente()
             )
 
-        assert response.status_code == 200
-        assert response.json()["estado"] == "EnCurso"
+        assert response.status_code == 422
+        assert "no tiene participantes" in response.json()["detail"]
+        assert len(await _eventos_de_sesion(session, sesion_id)) == 1
 
     async def test_rechazo_por_sesion_ya_iniciada(self, session):
         sesion_id, _ = await preparar_sesion()
@@ -131,7 +134,9 @@ class TestIniciarAPIIntegration:
         assert response.status_code in (401, 403)
 
     async def test_dos_inicios_simultaneos_dejan_ganar_a_uno_solo(self, session):
-        sesion_id, _ = await preparar_sesion()
+        sesion_id, comision_id = await preparar_sesion()
+        _, headers = await crear_estudiante(comision_id)
+        await unirse_a_sesion(sesion_id, headers)
 
         async with _cliente() as client:
             respuestas = await asyncio.gather(
@@ -161,6 +166,7 @@ class TestBroadcastATodosLosConectados:
         docente = _docente()
         token_docente = docente["Authorization"].split()[1]
         _, headers_estudiante = correr(crear_estudiante(comision_id))
+        correr(unirse_a_sesion(sesion_id, headers_estudiante))
         token_estudiante = headers_estudiante["Authorization"].split()[1]
 
         with TestClient(app) as client:

@@ -207,6 +207,17 @@ describe("CanalSesionEnVivo", () => {
     expect(mensajes).toEqual([{ tipo: "sesion_finalizada", ranking: [] }])
   })
 
+  it("traduce sesion_cancelada (US-ADJ-58)", () => {
+    const mensajes: MensajeSesionEnVivo[] = []
+    const canal = new CanalSesionEnVivo("s1", (m) => mensajes.push(m), vi.fn(), vi.fn(), crearFactory())
+    canal.conectar()
+    const socket = WebSocketFalso.instancias[0]
+
+    socket.simularMensaje({ tipo: "sesion_cancelada" })
+
+    expect(mensajes).toEqual([{ tipo: "sesion_cancelada" }])
+  })
+
   it("un mensaje con tipo desconocido se ignora y los siguientes se procesan", () => {
     const mensajes: MensajeSesionEnVivo[] = []
     const canal = new CanalSesionEnVivo("s1", (m) => mensajes.push(m), vi.fn(), vi.fn(), crearFactory())

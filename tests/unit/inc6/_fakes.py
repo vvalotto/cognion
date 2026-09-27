@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
@@ -80,6 +80,18 @@ class FakeParticipantesSesionQueryPort(ParticipantesSesionQueryPort):
             and evento.payload["sesion_id"] == str(sesion_id)
         ]
         return sorted(participantes, key=lambda p: p.unido_en)
+
+
+class FakeParticipantesAlMenosUno(ParticipantesSesionQueryPort):
+    """Siempre informa un participante — para tests que inician la sesión sin ejercitar INV-AEV-11.
+
+    `IniciarSesionEnVivoUseCase` exige al menos un Estudiante unido desde `US-ADJ-58`; los tests
+    de la dinámica (mostrar, cerrar, avanzar, finalizar) no se ocupan de esa regla.
+    """
+
+    async def listar(self, sesion_id: UUID) -> list[ParticipanteResumen]:
+        """Devuelve un participante cualquiera, sin importar la sesión."""
+        return [ParticipanteResumen(estudiante_id=uuid4(), unido_en=datetime.now())]
 
 
 class FakeSesionesEnVivoQueryPort(SesionesEnVivoQueryPort):

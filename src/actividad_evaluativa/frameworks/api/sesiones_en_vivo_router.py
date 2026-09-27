@@ -32,8 +32,10 @@ from src.actividad_evaluativa.entities.errors import (
     RespuestaYaRegistrada,
     SesionNoEnCurso,
     SesionNoExiste,
+    SesionYaCancelada,
     SesionYaFinalizada,
     SesionYaIniciada,
+    SinParticipantes,
     TiempoAgotado,
     TiempoLimiteInvalido,
 )
@@ -205,7 +207,29 @@ async def iniciar_sesion_en_vivo(
         sesion = await controller.iniciar(sesion_id)
     except SesionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except SesionYaIniciada as exc:
+    except (SesionYaIniciada, SesionYaCancelada, SinParticipantes) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return _a_sesion_response(sesion)
+
+
+@router.post(
+    "/{sesion_id}/cancelar",
+    response_model=SesionEnVivoResponse,
+    dependencies=[Depends(require_docente)],
+)
+async def cancelar_sesion_en_vivo(
+    sesion_id: UUID,
+    controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
+) -> SesionEnVivoResponse:
+    """Cancela una sesión `EnEspera` y avisa a la sala (`US-ADJ-58`); 404/422 si se rechaza."""
+    try:
+        sesion = await controller.cancelar(sesion_id)
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (SesionYaIniciada, SesionYaCancelada) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
@@ -293,7 +317,7 @@ async def finalizar_sesion_en_vivo(
         sesion = await controller.finalizar_sesion(sesion_id)
     except SesionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (SesionYaFinalizada, SesionNoEnCurso, PreguntaActualNoCerrada) as exc:
+    except (SesionYaFinalizada, SesionNoEnCurso) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
@@ -316,7 +340,7 @@ async def unirse_a_sesion_en_vivo(
         participacion = await controller.unirse(sesion_id, usuario.usuario_id)
     except (SesionNoExiste, EstudianteNoExiste) as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except SesionYaFinalizada as exc:
+    except (SesionYaFinalizada, SesionYaCancelada) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

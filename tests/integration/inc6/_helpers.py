@@ -128,8 +128,32 @@ async def preparar_sesion(
     return respuesta.json()["id"], str(comision.id)
 
 
+async def asegurar_participante(sesion_id: str) -> None:
+    """Une a un Estudiante nuevo **solo si** la sesión todavía no tiene ninguno (INV-AEV-11).
+
+    Desde `US-ADJ-58` no se inicia una sesión sin participantes. Los tests que no se ocupan de los
+    participantes siguen iniciando igual; los que ya unen a sus Estudiantes no cambian su conteo.
+    """
+    docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        participantes = await client.get(
+            f"/sesiones-en-vivo/{sesion_id}/participantes", headers=docente
+        )
+        assert participantes.status_code == 200, participantes.text
+        if participantes.json():
+            return
+        estado = await client.get(f"/sesiones-en-vivo/{sesion_id}", headers=docente)
+        assert estado.status_code == 200, estado.text
+    _, headers = await crear_estudiante(estado.json()["comision_id"])
+    await unirse_a_sesion(sesion_id, headers)
+
+
 async def iniciar_sesion(sesion_id: str) -> None:
-    """Inicia la sesión por la API real (US-6.1.4) — reemplaza la siembra de `SesionEnVivoIniciada`."""
+    """Inicia la sesión por la API real (US-6.1.4) — reemplaza la siembra de `SesionEnVivoIniciada`.
+
+    Si nadie se unió todavía, une a un Estudiante antes (`asegurar_participante`, INV-AEV-11).
+    """
+    await asegurar_participante(sesion_id)
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/iniciar",

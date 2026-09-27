@@ -285,10 +285,11 @@ class TestConcurrenciaReal:
 
     async def test_sesenta_respuestas_simultaneas_no_pierden_ninguna(self, session):
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
-        pregunta_id = await pregunta_actual_de(sesion_id)
         estudiantes = await asyncio.gather(*(crear_estudiante(comision_id) for _ in range(60)))
         await asyncio.gather(*(unirse_a_sesion(sesion_id, h) for _, h in estudiantes))
+        # Los 60 se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes.
+        await iniciar_sesion(sesion_id)
+        pregunta_id = await pregunta_actual_de(sesion_id)
         # Recién ahora arranca el temporizador: crear 60 cuentas (bcrypt) tarda más que el límite.
         await mostrar_opciones(sesion_id)
 

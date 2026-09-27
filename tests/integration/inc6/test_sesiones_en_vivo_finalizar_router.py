@@ -103,16 +103,19 @@ class TestFinalizarAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_si_la_pregunta_no_fue_cerrada(self, session):
+    async def test_con_la_pregunta_abierta_finaliza_sin_cerrarla(self, session):
+        """INV-AEV-03 modificado por `US-ADJ-58` (antes rechazaba con `PreguntaActualNoCerrada`)."""
         sesion_id, _ = await preparar_sesion(opcion_multiple=True)
         await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
 
         response = await _finalizar(sesion_id)
 
-        assert response.status_code == 422
-        assert "cerrada" in response.json()["detail"]
-        assert len(await _eventos_de_sesion(session, sesion_id)) == 3
+        assert response.status_code == 200
+        assert response.json()["estado"] == "Finalizada"
+        tipos = [e.event_type for e in await _eventos_de_sesion(session, sesion_id)]
+        assert tipos[-1] == "SesionEnVivoFinalizada"
+        assert "PreguntaEnVivoCerrada" not in tipos
 
     async def test_rechazo_si_la_sesion_esta_en_espera(self, session):
         sesion_id, _ = await preparar_sesion()
@@ -190,4 +193,5 @@ class TestBroadcastDelRankingFinal:
 
         assert recibidos[0] == recibidos[1]
         assert recibidos[0]["tipo"] == "sesion_finalizada"
-        assert recibidos[0]["ranking"] == []
+        # Solo el participante que une `iniciar_sesion` (INV-AEV-11, US-ADJ-58), sin puntos.
+        assert [fila["puntaje_acumulado"] for fila in recibidos[0]["ranking"]] == [0]

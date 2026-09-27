@@ -231,10 +231,12 @@ def rechazo_ya_finalizada_sin_evento(context, codigo):
     assert len(eventos) == context["eventos_antes"]
 
 
-@then(parsers.parse("el sistema rechaza con PreguntaActualNoCerrada ({codigo:d})"))
-def rechazo_no_cerrada(context, codigo):
-    assert context["response"].status_code == codigo
-    assert "cerrada" in context["response"].json()["detail"]
+@then("se acepta sin cerrar la pregunta actual")
+def finalizada_sin_cerrar(context):
+    assert context["response"].status_code == 200
+    sesion, eventos = run_async(_reconstruir(context["sesion_id"]))
+    assert sesion.estado == "Finalizada"
+    assert "PreguntaEnVivoCerrada" not in [e.event_type for e in eventos]
 
 
 @then(parsers.parse("el sistema rechaza con SesionNoEnCurso ({codigo:d})"))

@@ -248,10 +248,11 @@ class TestRespuestaTardia:
 
     async def test_tiempo_agotado_no_altera_el_ranking(self, session):
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
-        await sembrar_opciones_mostradas_hace(sesion_id, 300)
+        # Se une antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         ((estudiante_id, headers),) = await crear_estudiantes(comision_id, 1)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
+        await sembrar_opciones_mostradas_hace(sesion_id, 300)
         pregunta_id = await pregunta_actual_de(sesion_id)
 
         async with _cliente_async() as client:

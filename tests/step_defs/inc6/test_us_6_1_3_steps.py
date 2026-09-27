@@ -158,7 +158,12 @@ def docente_recibe_lista(context):
 @then("su ParticipacionEnVivo se crea igualmente, sin respuestas previas registradas")
 def participacion_tardia_creada(context):
     assert context["response"].status_code == 200
-    eventos = run_async(_eventos_de_participacion(context["sesion_id"]))
+    # Además está el participante que une `iniciar_sesion` (INV-AEV-11, US-ADJ-58).
+    eventos = [
+        e
+        for e in run_async(_eventos_de_participacion(context["sesion_id"]))
+        if e["estudiante_id"] == context["estudiante_id"]
+    ]
     assert len(eventos) == 1
     # Sin respuestas: el único evento del stream es la unión (las respuestas son Iteración 2).
     assert eventos[0]["estudiante_id"] == context["estudiante_id"]
@@ -175,7 +180,11 @@ def idempotente(context, codigo):
 def rechazo_finalizada(context, codigo):
     assert context["response"].status_code == codigo
     assert "finalizada" in context["response"].json()["detail"]
-    assert run_async(_eventos_de_participacion(context["sesion_id"])) == []
+    # Solo el participante que une `iniciar_y_finalizar` (INV-AEV-11, US-ADJ-58), no el rechazado.
+    unidos = [
+        e["estudiante_id"] for e in run_async(_eventos_de_participacion(context["sesion_id"]))
+    ]
+    assert context["estudiante_id"] not in unidos
 
 
 @then(parsers.parse("el sistema rechaza la operación con SesionNoExiste ({codigo:d})"))

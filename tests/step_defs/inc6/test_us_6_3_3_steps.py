@@ -84,14 +84,15 @@ async def _responder(
 def sesion_con_participantes_y_respuestas(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
+        unidos = [await crear_estudiante(comision_id) for _ in range(5)]
+        for _, headers in unidos:
+            await unirse_a_sesion(sesion_id, headers)
         await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         pregunta_id = await pregunta_actual_de(sesion_id)
-        for i in range(5):
-            _, headers = await crear_estudiante(comision_id)
-            await unirse_a_sesion(sesion_id, headers)
-            if i < 3:
-                await _responder(sesion_id, headers, pregunta_id, 1)
+        for _, headers in unidos[:3]:
+            await _responder(sesion_id, headers, pregunta_id, 1)
         context["sesion_id"] = sesion_id
 
     run_async(_armar())
@@ -107,10 +108,11 @@ def sesion_en_espera(context):
 def pregunta_cerrada_con_respuestas(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
-        await mostrar_opciones(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         _, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers, await pregunta_actual_de(sesion_id), 1)
         await cerrar_pregunta_actual(sesion_id)
         context.update(sesion_id=sesion_id, headers_estudiante=headers)
@@ -133,10 +135,11 @@ def pregunta_abierta_sin_cerrar(context):
 def pregunta_cerrada(context):
     async def _armar() -> None:
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
-        await mostrar_opciones(sesion_id)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         _, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers, await pregunta_actual_de(sesion_id), 1)
         await cerrar_pregunta_actual(sesion_id)
         context.update(sesion_id=sesion_id, headers_estudiante=headers)

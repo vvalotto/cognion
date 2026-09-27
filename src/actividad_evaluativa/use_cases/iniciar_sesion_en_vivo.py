@@ -11,12 +11,16 @@ from src.actividad_evaluativa.entities.errors import (
     ConcurrenciaOptimistaError,
     SesionNoExiste,
     SesionYaIniciada,
+    SinParticipantes,
 )
 from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoIniciada
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
+)
+from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port import (
+    ParticipantesSesionQueryPort,
 )
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.use_cases.pregunta_presentada import (
@@ -36,18 +40,22 @@ class IniciarSesionEnVivoUseCase:
         event_store: EventStorePort,
         pregunta_consulta: PreguntaConsultaPort,
         canal: CanalTiempoRealPort,
+        participantes: ParticipantesSesionQueryPort,
     ) -> None:
-        """Recibe el event store, la consulta de preguntas de Banco y el canal en vivo."""
+        """Recibe el event store, las consultas de preguntas y participantes, y el canal."""
         self._event_store = event_store
         self._pregunta_consulta = pregunta_consulta
         self._canal = canal
+        self._participantes = participantes
 
     async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Inicia la sesión y publica el enunciado de la primera pregunta a todos los conectados.
 
         Levanta `SesionNoExiste` si `sesion_id` no tiene stream y `SesionYaIniciada` si ya no
         está `EnEspera` — incluida la carrera de dos inicios simultáneos, que el chequeo
-        optimista del event store resuelve dejando ganar a uno solo. El `tipo` de la pregunta se
+        optimista del event store resuelve dejando ganar a uno solo. Levanta además
+        `SesionYaCancelada` si fue cancelada y `SinParticipantes` si no hay ningún Estudiante
+        unido (INV-AEV-11, `US-ADJ-58`). El `tipo` de la pregunta se
         deriva de `opciones` (`None` = Verdadero/Falso, ver `ContenidoPregunta`); las opciones no
         viajan ni se persisten: las revela `MostrarOpcionesDeLaPregunta` (Iteración 2).
 
@@ -60,6 +68,8 @@ class IniciarSesionEnVivoUseCase:
 
         sesion = ActividadEvaluativaEnVivo.reconstruir(eventos)
         sesion.iniciar()
+        if not await self._participantes.listar(sesion_id):
+            raise SinParticipantes(sesion_id)
 
         contenido = await self._pregunta_consulta.obtener_contenido(
             sesion.pregunta_actual().pregunta_id

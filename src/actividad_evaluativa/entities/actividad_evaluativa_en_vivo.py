@@ -15,6 +15,7 @@ from src.actividad_evaluativa.entities.errors import (
     PreguntaNoActual,
     PreguntaYaCerrada,
     SesionNoEnCurso,
+    SesionYaCancelada,
     SesionYaFinalizada,
     SesionYaIniciada,
     TiempoAgotado,
@@ -30,6 +31,8 @@ class EstadoSesionEnVivo(StrEnum):
     EN_ESPERA = "EnEspera"
     EN_CURSO = "EnCurso"
     FINALIZADA = "Finalizada"
+    CANCELADA = "Cancelada"
+    """Terminal: el Docente la descartó sin iniciarla (`US-ADJ-58`, INV-AEV-10)."""
 
 
 @dataclass
@@ -113,21 +116,24 @@ class ActividadEvaluativaEnVivo:
         return sesion
 
     def validar_para_unirse(self) -> None:
-        """Valida que la sesión admita nuevas uniones — solo se rechaza si está `Finalizada`.
+        """Valida que la sesión admita nuevas uniones — rechaza si está `Finalizada` o `Cancelada`.
 
         Una sesión `EnEspera` o ya `EnCurso` admite la unión (unión tardía, `US-6.1.3`). No muta
         `self` (mismo criterio que `Evaluacion.validar_para_suspender`).
         """
+        _rechazar_si_cancelada(self)
         if self.estado == EstadoSesionEnVivo.FINALIZADA:
             raise SesionYaFinalizada(self.id)
 
     def iniciar(self) -> None:
         """Pasa la sesión de `EnEspera` a `EnCurso` con la primera pregunta como actual.
 
-        Levanta `SesionYaIniciada` si ya no está `EnEspera` (`EnCurso` o `Finalizada`) — no hay
-        caso de uso de "reiniciar" una sesión ya arrancada. No exige participantes: el dominio no
-        impone un mínimo (`US-6.1.4`).
+        Levanta `SesionYaCancelada` si fue cancelada y `SesionYaIniciada` si ya no está `EnEspera`
+        (`EnCurso` o `Finalizada`) — no hay caso de uso de "reiniciar" una sesión ya arrancada.
+        INV-AEV-11 (al menos un participante, `US-ADJ-58`) no se valida acá: las participaciones
+        viven en `ParticipacionEnVivo`, las consulta `IniciarSesionEnVivoUseCase` por puerto.
         """
+        _rechazar_si_cancelada(self)
         if self.estado != EstadoSesionEnVivo.EN_ESPERA:
             raise SesionYaIniciada(self.id)
         self.estado = EstadoSesionEnVivo.EN_CURSO
@@ -163,11 +169,22 @@ class ActividadEvaluativaEnVivo:
         _validar_para_avanzar(self)
         _pasar_a_pregunta(self, (self.pregunta_actual_indice or 0) + 1)
 
+    def cancelar(self) -> None:
+        """Descarta una sesión que nunca se inició: pasa a `Cancelada` (`US-ADJ-58`, INV-AEV-10).
+
+        Levanta `SesionYaCancelada` o `SesionYaIniciada` (ya `EnCurso` o `Finalizada`) sin mutar.
+        Una sesión iniciada se termina con `finalizar()`.
+        """
+        _validar_para_cancelar(self)
+        self.estado = EstadoSesionEnVivo.CANCELADA
+
     def finalizar(self) -> None:
         """Da por terminada la sesión: pasa a `Finalizada` (`US-6.2.7`).
 
-        Levanta `SesionYaFinalizada`, `SesionNoEnCurso` o `PreguntaActualNoCerrada` (INV-AEV-03)
-        sin mutar. Se puede finalizar antes de agotar el set de preguntas.
+        Levanta `SesionYaFinalizada` o `SesionNoEnCurso` sin mutar. Se puede finalizar antes de
+        agotar el set de preguntas y en cualquier etapa de la pregunta actual (INV-AEV-03
+        modificado por `US-ADJ-58`): una pregunta abierta queda sin cerrar, sin histograma, y las
+        respuestas que ya recibió cuentan para el ranking.
         """
         _validar_para_finalizar(self)
         self.estado = EstadoSesionEnVivo.FINALIZADA
@@ -221,13 +238,24 @@ def _validar_para_avanzar(sesion: ActividadEvaluativaEnVivo) -> None:
 
 
 def _validar_para_finalizar(sesion: ActividadEvaluativaEnVivo) -> None:
-    """Rechaza finalizar si ya estaba `Finalizada`, nunca se inició o la pregunta sigue abierta."""
+    """Rechaza finalizar si ya estaba `Finalizada` o si no está `EnCurso` (EnEspera, Cancelada)."""
     if sesion.estado == EstadoSesionEnVivo.FINALIZADA:
         raise SesionYaFinalizada(sesion.id)
     if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
         raise SesionNoEnCurso(sesion.id)
-    if not sesion.pregunta_actual_cerrada:
-        raise PreguntaActualNoCerrada(sesion.id)
+
+
+def _rechazar_si_cancelada(sesion: ActividadEvaluativaEnVivo) -> None:
+    """Levanta `SesionYaCancelada` si la sesión fue cancelada (`US-ADJ-58`)."""
+    if sesion.estado == EstadoSesionEnVivo.CANCELADA:
+        raise SesionYaCancelada(sesion.id)
+
+
+def _validar_para_cancelar(sesion: ActividadEvaluativaEnVivo) -> None:
+    """Rechaza cancelar si ya estaba `Cancelada` o si ya no está `EnEspera` (INV-AEV-10)."""
+    _rechazar_si_cancelada(sesion)
+    if sesion.estado != EstadoSesionEnVivo.EN_ESPERA:
+        raise SesionYaIniciada(sesion.id)
 
 
 def _pasar_a_pregunta(sesion: ActividadEvaluativaEnVivo, indice: int) -> None:
@@ -259,6 +287,7 @@ def _validar_para_responder(
 _ESTADO_POR_EVENTO = {
     "SesionEnVivoIniciada": EstadoSesionEnVivo.EN_CURSO,
     "SesionEnVivoFinalizada": EstadoSesionEnVivo.FINALIZADA,
+    "SesionEnVivoCancelada": EstadoSesionEnVivo.CANCELADA,
 }
 
 

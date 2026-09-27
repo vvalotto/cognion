@@ -10,7 +10,6 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 )
 from src.actividad_evaluativa.entities.errors import (
     ConcurrenciaOptimistaError,
-    PreguntaActualNoCerrada,
     SesionNoEnCurso,
     SesionNoExiste,
     SesionYaFinalizada,
@@ -40,6 +39,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeProyeccionesEnVivo,
 )
 
@@ -67,7 +67,9 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
     proyecciones = FakeProyeccionesEnVivo()
     canal = FakeCanalTiempoReal()
     if iniciada:
-        await IniciarSesionEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+        await IniciarSesionEnVivoUseCase(
+            event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+        ).execute(sesion.id)
         await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
     estudiante_consulta = FakeEstudianteConsultaPort()
     if iniciada and cerrada:
@@ -80,6 +82,21 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
 
 
 class TestFinalizar:
+    async def test_con_la_pregunta_abierta_finaliza_sin_cerrarla(self):
+        """INV-AEV-03 modificado (`US-ADJ-58`): no exige la pregunta cerrada ni la cierra."""
+        use_case, event_store, canal, sesion, proyecciones, _ = await _escenario(cerrada=False)
+        ana = uuid4()
+        await proyecciones.registrar_respuesta(sesion.id, ana, uuid4(), "A", 700)
+
+        resultado = await use_case.execute(sesion.id)
+
+        assert resultado.estado == EstadoSesionEnVivo.FINALIZADA
+        tipos = [e.event_type for e in await event_store.load(AGGREGATE_TYPE_SESION, sesion.id)]
+        assert tipos[-1] == "SesionEnVivoFinalizada"
+        assert "PreguntaEnVivoCerrada" not in tipos
+        assert canal.publicados[-1][1]["tipo"] == "sesion_finalizada"
+        assert canal.publicados[-1][1]["ranking"][0]["puntaje_acumulado"] == 700
+
     async def test_persiste_el_evento_y_pasa_a_finalizada(self):
         use_case, event_store, _, sesion, _, _ = await _escenario()
 
@@ -168,15 +185,6 @@ class TestRechazos:
             await use_case.execute(sesion.id)
 
         assert len(await event_store.load(AGGREGATE_TYPE_SESION, sesion.id)) == 1
-        assert canal.publicados == []
-
-    async def test_pregunta_sin_cerrar(self):
-        use_case, event_store, canal, sesion, _, _ = await _escenario(cerrada=False)
-
-        with pytest.raises(PreguntaActualNoCerrada):
-            await use_case.execute(sesion.id)
-
-        assert len(await event_store.load(AGGREGATE_TYPE_SESION, sesion.id)) == 3
         assert canal.publicados == []
 
     async def test_ya_finalizada_no_emite_otro_evento(self):

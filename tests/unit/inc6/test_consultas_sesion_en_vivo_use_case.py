@@ -45,6 +45,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeParticipantesSesionQueryPort,
     FakeProyeccionesEnVivo,
     FakeSesionesEnVivoQueryPort,
@@ -81,7 +82,10 @@ class _Escenario:
         self.materia_consulta = FakeMateriaConsultaPort()
         if iniciada:
             await IniciarSesionEnVivoUseCase(
-                self.event_store, self.pregunta_consulta, self.canal
+                self.event_store,
+                self.pregunta_consulta,
+                self.canal,
+                FakeParticipantesAlMenosUno(),
             ).execute(self.sesion.id)
         self.estado = ObtenerEstadoSesionUseCase(
             self.event_store,

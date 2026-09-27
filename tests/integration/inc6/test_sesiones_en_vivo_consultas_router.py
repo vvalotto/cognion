@@ -126,15 +126,15 @@ class TestEstadoAPIIntegration:
 
     async def test_total_participantes_y_cantidad_respuestas(self):
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
+        # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
+        unidos = [await crear_estudiante(comision_id) for _ in range(4)]
+        for _, headers in unidos:
+            await unirse_a_sesion(sesion_id, headers)
         await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
         pregunta_id = await pregunta_actual_de(sesion_id)
-        for _ in range(3):
-            _, headers = await crear_estudiante(comision_id)
-            await unirse_a_sesion(sesion_id, headers)
+        for _, headers in unidos[:3]:
             await _responder(sesion_id, headers, pregunta_id, 1)
-        _, headers_sin_responder = await crear_estudiante(comision_id)
-        await unirse_a_sesion(sesion_id, headers_sin_responder)
 
         cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
 
@@ -151,10 +151,11 @@ class TestEstadoAPIIntegration:
 
     async def test_docente_recupera_histograma_y_ranking_con_la_pregunta_cerrada(self):
         sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-        await iniciar_sesion(sesion_id)
-        await mostrar_opciones(sesion_id)
+        # Se une antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
         _, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
+        await iniciar_sesion(sesion_id)
+        await mostrar_opciones(sesion_id)
         await _responder(sesion_id, headers, await pregunta_actual_de(sesion_id), 1)
         await cerrar_pregunta_actual(sesion_id)
 

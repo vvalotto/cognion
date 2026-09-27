@@ -13,6 +13,7 @@ import {
   obtenerRankingSesion,
 } from "@/lib/sesion-en-vivo-api"
 import { useCanalSesionEnVivo } from "@/lib/use-canal-sesion-en-vivo"
+import { StageConfirmarFinalizar } from "./proyeccion/StageConfirmarFinalizar"
 import { StageFinal } from "./proyeccion/StageFinal"
 import { StageHistograma } from "./proyeccion/StageHistograma"
 import { StagePreguntaOpciones } from "./proyeccion/StagePreguntaOpciones"
@@ -41,6 +42,11 @@ export function ProyeccionSesionEnVivo() {
   const [vista, setVista] = useState<VistaProyeccion | null>(null)
   const [enviando, setEnviando] = useState(false)
   const [errorAccion, setErrorAccion] = useState(false)
+  /**
+   * Confirmación de finalizar con la pregunta abierta (§8.5, `US-ADJ-58`). Estado local, no etapa de
+   * `vista-proyeccion.ts`: la resincronización periódica recalcula la vista y no debe pisarla.
+   */
+  const [confirmandoFinalizar, setConfirmandoFinalizar] = useState(false)
 
   const controladorRef = useRef<AbortController | null>(null)
   const etapaRef = useRef<EtapaProyeccion | null>(null)
@@ -132,6 +138,14 @@ export function ProyeccionSesionEnVivo() {
     }
   }
 
+  const preguntaAbierta = vista?.etapa === "pregunta-sola" || vista?.etapa === "pregunta-opciones"
+  const finalizar = () => void ejecutar(finalizarSesion, "finalizada")
+
+  useEffect(() => {
+    // Si la pregunta se cerró o se avanzó (otra pestaña, reconexión), la confirmación ya no aplica.
+    if (!preguntaAbierta) setConfirmandoFinalizar(false)
+  }, [preguntaAbierta])
+
   if (vista === null) {
     return (
       <p className="p-8 text-xl" style={{ color: "var(--stage-muted)" }}>
@@ -156,29 +170,44 @@ export function ProyeccionSesionEnVivo() {
       <div className="absolute top-4 right-4">
         <IndicadorConexion estado={estadoCanal} />
       </div>
-      {vista.etapa === "pregunta-sola" && (
+      {confirmandoFinalizar && preguntaAbierta && (
+        <StageConfirmarFinalizar
+          vista={vista}
+          enviando={enviando}
+          onVolver={() => setConfirmandoFinalizar(false)}
+          onConfirmar={finalizar}
+        />
+      )}
+      {!confirmandoFinalizar && vista.etapa === "pregunta-sola" && (
         <StagePreguntaSola
           vista={vista}
           enviando={enviando}
           onMostrarOpciones={() => void ejecutar(mostrarOpciones, "pregunta-opciones")}
+          onFinalizar={() => setConfirmandoFinalizar(true)}
         />
       )}
-      {vista.etapa === "pregunta-opciones" && (
+      {!confirmandoFinalizar && vista.etapa === "pregunta-opciones" && (
         <StagePreguntaOpciones
           vista={vista}
           enviando={enviando}
           onCerrarPregunta={() => void ejecutar(cerrarPregunta, "histograma")}
+          onFinalizar={() => setConfirmandoFinalizar(true)}
         />
       )}
       {vista.etapa === "histograma" && (
-        <StageHistograma vista={vista} onVerRanking={onVerRanking} />
+        <StageHistograma
+          vista={vista}
+          onVerRanking={onVerRanking}
+          enviando={enviando}
+          onFinalizar={finalizar}
+        />
       )}
       {vista.etapa === "ranking" && (
         <StageRanking
           vista={vista}
           enviando={enviando}
           onSiguiente={() => void ejecutar(avanzarPregunta, "pregunta-sola")}
-          onFinalizar={() => void ejecutar(finalizarSesion, "finalizada")}
+          onFinalizar={finalizar}
         />
       )}
       {vista.etapa === "finalizada" && <StageFinal vista={vista} />}

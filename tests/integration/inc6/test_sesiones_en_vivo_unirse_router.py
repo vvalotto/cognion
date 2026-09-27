@@ -70,7 +70,8 @@ class TestUnirseAPIIntegration:
             response = await client.post(f"/sesiones-en-vivo/{sesion_id}/unirse", headers=headers)
 
         assert response.status_code == 200
-        assert await _contar_participaciones(session, sesion_id) == 1
+        # El de arranque (`iniciar_sesion` une a uno, INV-AEV-11 de US-ADJ-58) y el tardío.
+        assert await _contar_participaciones(session, sesion_id) == 2
 
     async def test_union_idempotente_no_crea_una_segunda_participacion(self, session):
         sesion_id, comision_id = await preparar_sesion()
@@ -89,13 +90,14 @@ class TestUnirseAPIIntegration:
         sesion_id, comision_id = await preparar_sesion()
         await iniciar_y_finalizar(sesion_id)
         _, headers = await crear_estudiante(comision_id)
+        antes = await _contar_participaciones(session, sesion_id)
 
         async with _cliente() as client:
             response = await client.post(f"/sesiones-en-vivo/{sesion_id}/unirse", headers=headers)
 
         assert response.status_code == 422
         assert "finalizada" in response.json()["detail"]
-        assert await _contar_participaciones(session, sesion_id) == 0
+        assert await _contar_participaciones(session, sesion_id) == antes
 
     async def test_sesion_inexistente(self):
         _, comision_id = await preparar_sesion()
