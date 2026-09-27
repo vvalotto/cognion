@@ -44,7 +44,8 @@ class SesionEnVivoDetalleResponse(BaseModel):
 class DesempenoEstudianteResponse(BaseModel):
     """Respuesta completa de `GET /analytics/materias/{materia_id}/mi-desempeno` (RF-15).
 
-    `sesiones_en_vivo` (`US-ADJ-56`) va separado de `resumen`, que solo cuenta período abierto."""
+    `sesiones_en_vivo` (`US-ADJ-56`) va separado de `resumen`, que solo cuenta período abierto.
+    """
 
     evaluaciones: list[EvaluacionDetalleResponse]
     resumen: ResumenDesempenoResponse

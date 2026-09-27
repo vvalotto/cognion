@@ -1,7 +1,8 @@
 """Caso de uso: desempeño del Estudiante en una materia, detalle y acumulado (`US-4.1.2`).
 
 `US-ADJ-56` suma las sesiones en vivo `Finalizada` en las que participó, en una sección propia
-que no se mezcla con el acumulado de período abierto (`resumen` no cambia)."""
+que no se mezcla con el acumulado de período abierto (`resumen` no cambia).
+"""
 
 from __future__ import annotations
 
@@ -59,7 +60,8 @@ class DesempenoEstudiante:
     """Respuesta completa que pide RF-15: detalle fila por fila y resumen acumulado.
 
     `sesiones_en_vivo` (`US-ADJ-56`) no participa de `resumen` — período abierto y modo en vivo
-    se muestran separados, decisión de Víctor."""
+    se muestran separados, decisión de Víctor.
+    """
 
     evaluaciones: list[EvaluacionDetalle]
     resumen: ResumenDesempeno

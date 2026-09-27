@@ -87,7 +87,9 @@ async def _crear_estudiante_de_materia(session, materia_id) -> tuple[Usuario, Co
     return estudiante, comision
 
 
-async def _crear_sesion_en_vivo(store: SQLAlchemyEventStore, sesion_id, comision_id, materia_id) -> None:
+async def _crear_sesion_en_vivo(
+    store: SQLAlchemyEventStore, sesion_id, comision_id, materia_id
+) -> None:
     await store.append(
         AGGREGATE_TYPE_SESION_EN_VIVO,
         sesion_id,
@@ -109,7 +111,9 @@ async def _crear_sesion_en_vivo(store: SQLAlchemyEventStore, sesion_id, comision
     )
 
 
-async def _finalizar_sesion_en_vivo(store: SQLAlchemyEventStore, sesion_id, expected_seq: int) -> None:
+async def _finalizar_sesion_en_vivo(
+    store: SQLAlchemyEventStore, sesion_id, expected_seq: int
+) -> None:
     await store.append(
         AGGREGATE_TYPE_SESION_EN_VIVO,
         sesion_id,

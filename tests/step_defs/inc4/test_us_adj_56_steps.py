@@ -158,7 +158,11 @@ async def _unir(store: SQLAlchemyEventStore, sesion_id, estudiante_id) -> tuple[
 
 
 async def _responder(
-    store: SQLAlchemyEventStore, participacion_id, expected_seq: int, es_correcta: bool, puntaje: int
+    store: SQLAlchemyEventStore,
+    participacion_id,
+    expected_seq: int,
+    es_correcta: bool,
+    puntaje: int,
 ) -> int:
     await store.append(
         AGGREGATE_TYPE_PARTICIPACION,
@@ -188,7 +192,9 @@ async def _seed_ranking(session, sesion_id, estudiante_id, puntaje: int) -> None
     await session.commit()
 
 
-async def _crear_actividad_periodo_abierto(store: SQLAlchemyEventStore, actividad_id, materia_id) -> None:
+async def _crear_actividad_periodo_abierto(
+    store: SQLAlchemyEventStore, actividad_id, materia_id
+) -> None:
     await store.append(
         AGGREGATE_TYPE_ACTIVIDAD,
         actividad_id,
@@ -246,7 +252,11 @@ async def _evaluacion_periodo_abierto_finalizada(
         AGGREGATE_TYPE_EVALUACION,
         evaluacion_id,
         seq,
-        [EventoParaAlmacenar("EvaluacionFinalizada", {"evaluacion_id": str(evaluacion_id), "actor": "estudiante"})],
+        [
+            EventoParaAlmacenar(
+                "EvaluacionFinalizada", {"evaluacion_id": str(evaluacion_id), "actor": "estudiante"}
+            )
+        ],
     )
 
 
@@ -266,7 +276,9 @@ def _get_mi_desempeno(context, materia_id=None) -> None:
 def estudiante_con_dos_sesiones_finalizadas(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
             for _ in range(2):
@@ -280,11 +292,13 @@ def estudiante_con_dos_sesiones_finalizadas(context):
     run_async(_setup())
 
 
-@given('una sesión en la que el Estudiante quedó 3° de 14')
+@given("una sesión en la que el Estudiante quedó 3° de 14")
 def sesion_con_posicion_3_de_14(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
             sesion_id = uuid4()
@@ -307,7 +321,9 @@ def sesion_con_posicion_3_de_14(context):
 def sesion_en_curso(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
             sesion_id = uuid4()
@@ -322,7 +338,9 @@ def sesion_en_curso(context):
 def sesion_cancelada(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
             sesion_id = uuid4()
@@ -338,7 +356,9 @@ def sesion_cancelada(context):
 def estudiante_se_unio_sin_responder(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
             sesion_id = uuid4()
@@ -354,7 +374,9 @@ def estudiante_se_unio_sin_responder(context):
 def estudiante_con_periodo_abierto_y_en_vivo(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
 
@@ -386,7 +408,9 @@ def estudiante_sin_sesiones_en_vivo(context):
 def docente_con_estudiante_elegido(context):
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
             sesion_id = uuid4()
@@ -405,7 +429,9 @@ def estudiante_con_sesiones_en_dos_materias(context):
 
     async def _setup():
         async with SessionLocal() as session:
-            estudiante, comision_x = await _crear_estudiante_de_materia(session, context["materia_id"])
+            estudiante, comision_x = await _crear_estudiante_de_materia(
+                session, context["materia_id"]
+            )
             context["estudiante_id"] = estudiante.id
             store = SQLAlchemyEventStore(session)
 
@@ -420,7 +446,10 @@ def estudiante_con_sesiones_en_dos_materias(context):
             hasher = BcryptPasswordHasher()
             comision_repo = SQLAlchemyComisionRepository(session)
             admin = Usuario.crear(
-                "Admin2", f"admin2.{uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
+                "Admin2",
+                f"admin2.{uuid4()}@fiuner.edu.ar",
+                hasher.hash("x"),
+                TipoPerfil.ADMINISTRADOR,
             )
             usuario_repo = SQLAlchemyUsuarioRepository(session)
             await usuario_repo.guardar(admin)

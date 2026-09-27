@@ -14,9 +14,9 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
 from src.actividad_evaluativa.frameworks.db.models import EventoModel, RankingPorSesionModel
 from src.analytics.frameworks.adapters.sesion_en_vivo_desempeno_consulta_port_in_process import (
-    _SesionFinalizada,
     _resumen_de_participacion,
     _resumenes,
+    _SesionFinalizada,
     _streams_de_estudiante,
 )
 
