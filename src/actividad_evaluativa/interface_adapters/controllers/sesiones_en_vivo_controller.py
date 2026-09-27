@@ -8,6 +8,9 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
 from src.actividad_evaluativa.entities.participacion_en_vivo import ParticipacionEnVivo
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
@@ -25,11 +28,13 @@ class SesionesEnVivoController:
         crear_sesion: CrearSesionEnVivoUseCase,
         unirse: UnirseASesionEnVivoUseCase,
         iniciar: IniciarSesionEnVivoUseCase,
+        cancelar: CancelarSesionEnVivoUseCase,
     ) -> None:
-        """Recibe los casos de uso de crear, unirse e iniciar."""
+        """Recibe los casos de uso previos a la dinámica: crear, unirse, iniciar y cancelar."""
         self._crear_sesion = crear_sesion
         self._unirse = unirse
         self._iniciar = iniciar
+        self._cancelar = cancelar
 
     async def crear(
         self,
@@ -55,3 +60,7 @@ class SesionesEnVivoController:
     async def iniciar(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
         """Delega el inicio de la sesión en el caso de uso correspondiente."""
         return await self._iniciar.execute(sesion_id)
+
+    async def cancelar(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+        """Delega la cancelación de la sesión en el caso de uso correspondiente (`US-ADJ-58`)."""
+        return await self._cancelar.execute(sesion_id)
