@@ -97,12 +97,13 @@ async def _armar(context, contenidos: list[dict | None], mostrar: bool = True) -
     el temporizador). `None` deja al Estudiante sin responder.
     """
     sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-    await iniciar_sesion(sesion_id)
     estudiantes = []
     for _ in contenidos:
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
         estudiantes.append((estudiante_id, headers))
+    # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
+    await iniciar_sesion(sesion_id)
     context.update(sesion_id=sesion_id, estudiantes=[e for e, _ in estudiantes])
     context["headers_estudiante"] = (
         estudiantes[0][1] if estudiantes else (await crear_estudiante(comision_id))[1]

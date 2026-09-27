@@ -168,10 +168,10 @@ def todos_reciben_enunciado(context):
         assert "opciones" not in mensaje["pregunta"]
 
 
-@then("la operación se acepta igual — el dominio no exige un mínimo de participantes")
-def aceptada_sin_participantes(context):
-    assert context["response"].status_code == 200
-    assert context["response"].json()["estado"] == "EnCurso"
+@then(parsers.parse("el sistema rechaza la operación con SinParticipantes ({codigo:d})"))
+def rechazo_sin_participantes(context, codigo):
+    assert context["response"].status_code == codigo
+    assert "no tiene participantes" in context["response"].json()["detail"]
 
 
 @then(parsers.parse("el sistema rechaza la operación con SesionYaIniciada ({codigo:d})"))

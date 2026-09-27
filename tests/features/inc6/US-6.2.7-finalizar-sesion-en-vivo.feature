@@ -23,11 +23,13 @@ Feature: Docente finaliza la sesión en vivo (US-6.2.7)
     When un Estudiante intenta unirse
     Then el sistema rechaza con SesionYaFinalizada (422)
 
-  @backend @error-case
-  Scenario: Rechazo si la pregunta actual no fue cerrada
+  # Reemplaza "Rechazo si la pregunta actual no fue cerrada": desde US-ADJ-58 (INV-AEV-03
+  # modificado) se puede finalizar con la pregunta abierta, que queda sin cerrar.
+  @backend @happy-path
+  Scenario: Finalización con la pregunta actual abierta
     Given una pregunta actual sin cerrar
     When el Docente intenta finalizar
-    Then el sistema rechaza con PreguntaActualNoCerrada (422)
+    Then se acepta sin cerrar la pregunta actual
 
   @backend @error-case
   Scenario: Rechazo si la sesión nunca se inició

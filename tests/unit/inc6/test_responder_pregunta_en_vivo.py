@@ -53,6 +53,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeParticipantesSesionQueryPort,
     FakeProyeccionesEnVivo,
 )
@@ -261,7 +262,9 @@ async def _escenario(mostrar: str | None = "ahora", unirse: bool = True):
     sesion = await CrearSesionEnVivoUseCase(
         comision_consulta, pregunta_consulta, event_store
     ).execute(comision_id, 3, LIMITE)
-    await IniciarSesionEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+    await IniciarSesionEnVivoUseCase(
+        event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+    ).execute(sesion.id)
     pregunta_actual = sesion.preguntas[0].pregunta_id
     if mostrar is not None:
         hace = timedelta(seconds=LIMITE + 60 if mostrar == "viejo" else 2)

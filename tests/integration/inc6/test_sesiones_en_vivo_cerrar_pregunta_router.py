@@ -233,9 +233,9 @@ class TestBroadcastATodosLosConectados:
             {"opcion": "0", "cantidad": 1},
             {"opcion": "1", "cantidad": 1},
         ]
-        posiciones = [(f["posicion"], f["estudiante_id"]) for f in mensaje["ranking"]]
-        assert posiciones == [(1, acierto), (2, error)]
-        assert (
-            mensaje["ranking"][0]["puntaje_acumulado"] > mensaje["ranking"][1]["puntaje_acumulado"]
-        )
+        # El ranking incluye además al participante que une `iniciar_sesion` (INV-AEV-11, US-ADJ-58),
+        # empatado en 0 con `error`: se compara solo el orden entre los dos que respondieron.
+        por_id = {f["estudiante_id"]: f for f in mensaje["ranking"]}
+        assert mensaje["ranking"][0]["estudiante_id"] == acierto
+        assert por_id[acierto]["puntaje_acumulado"] > por_id[error]["puntaje_acumulado"] == 0
         assert mensaje["ranking"][1]["puntaje_acumulado"] == 0

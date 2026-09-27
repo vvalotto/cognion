@@ -36,6 +36,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeProyeccionesEnVivo,
 )
 
@@ -65,7 +66,9 @@ async def _escenario(iniciada: bool = True, opciones_mostradas: bool = True):
     ).execute(comision_id, 3, 45)
     canal = FakeCanalTiempoReal()
     if iniciada:
-        await IniciarSesionEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+        await IniciarSesionEnVivoUseCase(
+            event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+        ).execute(sesion.id)
     if iniciada and opciones_mostradas:
         await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
     canal.publicados.clear()

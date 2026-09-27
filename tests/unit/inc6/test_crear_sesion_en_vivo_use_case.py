@@ -13,6 +13,9 @@ from src.actividad_evaluativa.entities.errors import (
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import (
     AGGREGATE_TYPE,
     CrearSesionEnVivoUseCase,
@@ -31,6 +34,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeParticipantesSesionQueryPort,
     FakeProyeccionesEnVivo,
 )
@@ -138,9 +142,13 @@ class TestSesionesEnVivoController:
             FakeProyeccionesEnVivo(),
         )
         iniciar = IniciarSesionEnVivoUseCase(
-            FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
+            FakeEventStore(),
+            FakePreguntaConsultaPort(),
+            FakeCanalTiempoReal(),
+            FakeParticipantesAlMenosUno(),
         )
-        controller = SesionesEnVivoController(use_case, unirse, iniciar)
+        cancelar = CancelarSesionEnVivoUseCase(FakeEventStore(), FakeCanalTiempoReal())
+        controller = SesionesEnVivoController(use_case, unirse, iniciar, cancelar)
 
         sesion = await controller.crear(comision_id, 10, 30)
 
