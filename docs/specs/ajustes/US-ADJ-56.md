@@ -1,7 +1,7 @@
 # US-ADJ-56: El desempeño del Estudiante incluye las sesiones en vivo
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `SP-ADJ-02` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
+**Iteracion / Sprint**: `Incremento 6-ADJ` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
 **Tipo**: `feat` backend + frontend
 **Agregado principal afectado**: ninguno nuevo (lectura; Analytics no tiene aggregate propio, `BC-analytics-modelo.md` §2)
 **Bounded Context**: Analytics (lee de Actividad Evaluativa por puerto, `ADR-006`)

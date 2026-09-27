@@ -945,7 +945,7 @@ primera ronda, ambas con impacto en el modelo, no solo en la UI:**
 
 ## 18. Próximo paso
 
-**Ampliación de `US-ADJ-58` (`SP-ADJ-02`, 2026-09-27):** comando `CancelarSesionEnVivo`, evento
+**Ampliación de `US-ADJ-58` (`Incremento 6-ADJ`, 2026-09-27):** comando `CancelarSesionEnVivo`, evento
 `SesionEnVivoCancelada`, estado `Cancelada`, INV-AEV-10 e INV-AEV-11 nuevos e INV-AEV-03
 modificado (§§12-14, §16). Decisiones de Víctor: estado propio (no `Finalizada` con marca),
 sin cancelar una sesión `EnCurso`, sin email a los Estudiantes, y al finalizar con la pregunta

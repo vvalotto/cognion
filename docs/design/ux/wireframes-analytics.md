@@ -191,7 +191,7 @@ de las specs US-IEDD de la Iteración 4 de `docs/plans/inc5-adj/inc5-adj-candida
 
 ---
 
-## 6. Ampliación de `SP-ADJ-02` (`US-ADJ-56`): sesiones en vivo en el desempeño
+## 6. Ampliación de `Incremento 6-ADJ` (`US-ADJ-56`): sesiones en vivo en el desempeño
 
 Origen: validación manual de `US-6.3.10` (2026-09-25). `RF-15` pide, para sesiones en vivo,
 "puntaje y posición en el ranking", y `RF-16` "respuestas correctas e incorrectas por sesión";

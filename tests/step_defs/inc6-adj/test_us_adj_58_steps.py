@@ -34,7 +34,7 @@ from tests.integration.inc6._helpers import (
     unirse_a_sesion,
 )
 
-FEATURE = "../../features/sp-adj-02/US-ADJ-58-cancelar-finalizar-sesion.feature"
+FEATURE = "../../features/inc6-adj/US-ADJ-58-cancelar-finalizar-sesion.feature"
 
 # El .feature mezcla escenarios backend y frontend: solo los backend se ejecutan con pytest-bdd
 # (mismo criterio que `US-2.1.9`); los frontend se validan con Vitest y `frontend/e2e/`.

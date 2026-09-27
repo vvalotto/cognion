@@ -415,7 +415,7 @@ aprobación explícita en el Issue #422 sigue pendiente hasta ese momento.
 
 ---
 
-## 8. Ampliaciones de `SP-ADJ-02` (`US-ADJ-58`)
+## 8. Ampliaciones de `Incremento 6-ADJ` (`US-ADJ-58`)
 
 Origen: revisión manual de la app (2026-09-26), hallazgos #4 y #6
 (`quality/reports/uat/inc6/revision-manual-app.md`). Decisiones de Víctor (2026-09-27): estado

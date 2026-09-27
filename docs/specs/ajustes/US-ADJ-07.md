@@ -1,7 +1,7 @@
 # US-ADJ-07: Mostrar la comisión de una cuenta de Estudiante con un nombre legible
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `SP-ADJ-02` (reasignada desde `SP-ADJ-01`, donde quedó diferida). Track informal, solo `frontend/`: `GET /comisiones/{id}` ya existe desde `US-ADJ-25`, la causa raíz de esta spec (no había forma de resolverlo del lado del cliente) ya no aplica
+**Iteracion / Sprint**: `Incremento 6-ADJ` (reasignada desde `SP-ADJ-01`, donde quedó diferida). Track informal, solo `frontend/`: `GET /comisiones/{id}` ya existe desde `US-ADJ-25`, la causa raíz de esta spec (no había forma de resolverlo del lado del cliente) ya no aplica
 **Tipo**: `feature backend + frontend`
 **Agregado principal afectado**: — (consulta de solo lectura, sin cambios de Aggregate)
 **Bounded Context**: Identidad (consulta cruzada de solo lectura hacia Banco de Preguntas, vía
