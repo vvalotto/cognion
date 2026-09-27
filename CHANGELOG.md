@@ -62,6 +62,11 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   navegador. **Corrige dos bloqueantes** que Vitest no veía: el estado de la sesión (`EnEspera`/`EnCurso`/
   `Finalizada` del backend) y los mensajes del WebSocket en snake_case. Proxy de desarrollo de Vite (`/api`)
   para probar desde un celular de la red.
+- **US-ADJ-56** (el desempeño del Estudiante incluye las sesiones en vivo): "Mi desempeño" y "Desempeño por
+  alumno" ganan la sección "Sesiones en vivo" (comisión, fecha, puntaje, posición, correctas/incorrectas),
+  separada del acumulado de período abierto. Segundo puerto de Analytics hacia Actividad Evaluativa
+  (`SesionEnVivoDesempenoConsultaPort`, in-process) que agrupa los streams `ActividadEvaluativaEnVivo`/
+  `ParticipacionEnVivo` y lee `ranking_por_sesion` para la posición — sin endpoint nuevo, sin migración.
 
 ## [0.7.1] - 2026-09-17
 

@@ -6,6 +6,7 @@ import { listarActividadesVisibles } from "@/lib/actividad-evaluativa-api"
 import { listarMisMaterias, type MateriaEstudianteResponse } from "@/lib/identidad-estudiante-api"
 import {
   armarFilas,
+  armarFilasEnVivo,
   DesempenoResumenDetalle,
   type FilaDesempeno,
 } from "@/pages/analytics/DesempenoResumenDetalle"
@@ -95,6 +96,8 @@ export function MiDesempeno() {
           desempeno={desempeno}
           filas={filas}
           mensajeVacio="Todavía no finalizaste ninguna evaluación de esta materia."
+          filasEnVivo={armarFilasEnVivo(desempeno)}
+          mensajeVacioEnVivo="Todavía no participaste en sesiones en vivo de esta materia."
         />
       )}
     </div>

@@ -5,10 +5,14 @@ from uuid import uuid4
 
 import pytest
 
+from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
     RespuestaVigente,
+)
+from src.analytics.entities.ports.sesion_en_vivo_desempeno_consulta_port import (
+    SesionEnVivoDesempenoConsultaPort,
 )
 from src.analytics.interface_adapters.controllers.analytics_controller import (
     AnalyticsController,
@@ -53,6 +57,23 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         raise NotImplementedError
 
 
+class _SesionEnVivoDesempenoConsultaPortFake(SesionEnVivoDesempenoConsultaPort):
+    """Fake sin sesiones en vivo — irrelevante para lo que este archivo verifica (`US-ADJ-56`)."""
+
+    async def listar_sesiones_finalizadas(self, estudiante_id, materia_id):
+        return []
+
+
+class _ComisionConsultaPortFake(ComisionConsultaPort):
+    """Fake sin comisiones — irrelevante para lo que este archivo verifica (`US-ADJ-56`)."""
+
+    async def listar_comisiones_por_materia(self, materia_id):
+        return []
+
+    async def listar_estudiantes(self, comision_id):
+        raise NotImplementedError
+
+
 def _controller(
     evaluacion_desempeno_consulta: EvaluacionDesempenoConsultaPort | None = None,
 ) -> AnalyticsController:
@@ -60,7 +81,11 @@ def _controller(
         evaluacion_desempeno_consulta or _EvaluacionDesempenoConsultaPortFake()
     )
     return AnalyticsController(
-        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerDesempenoEstudianteUseCase(
+            evaluacion_desempeno_consulta,
+            _SesionEnVivoDesempenoConsultaPortFake(),
+            _ComisionConsultaPortFake(),
+        ),
         ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta),
     )
 

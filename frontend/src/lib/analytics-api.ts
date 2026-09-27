@@ -15,9 +15,22 @@ export interface ResumenDesempenoResponse {
   cantidadEvaluaciones: number
 }
 
+export interface SesionEnVivoDesempenoResponse {
+  sesionId: string
+  comisionHorario: string
+  finalizadaEn: string
+  cantidadPreguntas: number
+  cantidadCorrectas: number
+  cantidadIncorrectas: number
+  puntajeFinal: number
+  posicion: number
+  totalParticipantes: number
+}
+
 export interface DesempenoEstudianteResponse {
   evaluaciones: EvaluacionDesempenoResponse[]
   resumen: ResumenDesempenoResponse
+  sesionesEnVivo: SesionEnVivoDesempenoResponse[]
 }
 
 export interface TasaErrorTemaResponse {
@@ -91,9 +104,22 @@ interface ResumenDesempenoApiResponse {
   cantidad_evaluaciones: number
 }
 
+interface SesionEnVivoDesempenoApiResponse {
+  sesion_id: string
+  comision_horario: string
+  finalizada_en: string
+  cantidad_preguntas: number
+  cantidad_correctas: number
+  cantidad_incorrectas: number
+  puntaje_final: number
+  posicion: number
+  total_participantes: number
+}
+
 interface DesempenoEstudianteApiResponse {
   evaluaciones: EvaluacionDesempenoApiResponse[]
   resumen: ResumenDesempenoApiResponse
+  sesiones_en_vivo: SesionEnVivoDesempenoApiResponse[]
 }
 
 interface TasaErrorTemaApiResponse {
@@ -169,6 +195,17 @@ function mapearDesempenoEstudiante(
       porcentajeAcierto: response.resumen.porcentaje_acierto,
       cantidadEvaluaciones: response.resumen.cantidad_evaluaciones,
     },
+    sesionesEnVivo: response.sesiones_en_vivo.map((s) => ({
+      sesionId: s.sesion_id,
+      comisionHorario: s.comision_horario,
+      finalizadaEn: s.finalizada_en,
+      cantidadPreguntas: s.cantidad_preguntas,
+      cantidadCorrectas: s.cantidad_correctas,
+      cantidadIncorrectas: s.cantidad_incorrectas,
+      puntajeFinal: s.puntaje_final,
+      posicion: s.posicion,
+      totalParticipantes: s.total_participantes,
+    })),
   }
 }
 
