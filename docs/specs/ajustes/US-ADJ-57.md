@@ -1,7 +1,7 @@
 # US-ADJ-57: Cada Docente ve y opera solo sobre las materias de sus Comisiones
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: sin asignar — se implementa **después** del cierre de `BL-011` (decisión de Víctor, 2026-09-25)
+**Iteracion / Sprint**: `SP-ADJ-02` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
 **Tipo**: `feat` backend + frontend (autorización)
 **Agregado principal afectado**: ninguno nuevo (la asignación Docente ↔ Comisión ya existe en Identidad, `comision_docentes`)
 **Bounded Context**: transversal — Banco de Preguntas, Identidad, Actividad Evaluativa, Analytics
@@ -66,7 +66,7 @@ asigna Docentes, `PR #370`).
 
 ### Precondicion
 
-- `BL-011` cerrada (Incremento 6).
+- `US-6.3.10` cerrada.
 
 ### Postcondicion
 
@@ -132,7 +132,7 @@ Feature: Cada Docente opera solo sobre sus materias (US-ADJ-57)
 
 ---
 
-## Decisiones abiertas (para la Fase 2, con Víctor)
+## Decisiones (resueltas por Víctor 2026-09-27: se aceptan las propuestas por defecto)
 
 1. `403` o `404` para recursos ajenos (`404` no revela que existen). Esta spec propone **`403`**, consistente con el resto del sistema.
 2. Actividades de período abierto **sin** restricción de Comisión (aplican a toda la materia): ¿las ve y las modifica

@@ -271,3 +271,11 @@ sesiones en vivo, reportes): ningún BC filtra por la asignación Docente ↔ Co
 solo sobre las materias de sus Comisiones; especificado como **`US-ADJ-57`** (`docs/specs/ajustes/US-ADJ-57.md`),
 se implementa **después** del cierre de `BL-011`. Absorbe el ítem abierto "sin ownership de sesión".
 
+
+## Cambio de secuencia: iteración de ajuste `SP-ADJ-02` antes de `BL-011` (2026-09-26)
+
+Tras la revisión manual de la app (2026-09-26), Víctor decidió **no** dejar `US-ADJ-56` y
+`US-ADJ-57` para después de la baseline, como decían las dos notas anteriores. Se agrupan con
+`US-ADJ-58` (cancelar y finalizar sesiones, hallazgos #4 y #6 de la revisión) y con los ajustes
+diferidos de `SP-ADJ-01` (`US-ADJ-07`/`08`) en la iteración de ajuste `SP-ADJ-02`
+(`docs/plans/sp-adj-02/sp-adj-02-candidatas.md`). `BL-011` cierra al terminarla.

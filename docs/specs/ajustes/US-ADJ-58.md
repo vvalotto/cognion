@@ -1,7 +1,7 @@
 # US-ADJ-58: Cancelar una sesión no iniciada, terminar una en curso en cualquier etapa, y no iniciar sin participantes
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: sin asignar — a decidir con Víctor (antes o después del cierre de `BL-011`)
+**Iteracion / Sprint**: `SP-ADJ-02` — iteración de ajuste del Incremento 6, antes del cierre de `BL-011` (decisión de Víctor, 2026-09-26; decisiones abiertas resueltas 2026-09-27)
 **Tipo**: `feat` backend + frontend
 **Agregado principal afectado**: `ActividadEvaluativaEnVivo`
 **Bounded Context**: Actividad Evaluativa
@@ -138,7 +138,7 @@ Feature: Cancelar una sesión en vivo y no iniciar sin participantes (US-ADJ-58)
 
 ---
 
-## Decisiones abiertas (para la Fase 2, con Víctor)
+## Decisiones (resueltas por Víctor 2026-09-27: se aceptan las propuestas por defecto)
 
 1. Estado propio `Cancelada` vs. reutilizar `Finalizada`. Propuesta: **propio**.
 2. ¿Se puede cancelar una sesión `EnCurso` (por ejemplo, con 0 respuestas)? Propuesta: **no**, se usa Finalizar.
