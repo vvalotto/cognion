@@ -27,6 +27,7 @@ def _headers_docente(docente_id: str) -> dict[str, str]:
     jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
+
 scenarios("../../features/inc5-adj/US-ADJ-36-contrasena-segura.feature")
 
 _NOMBRES_EXCEPCION = {

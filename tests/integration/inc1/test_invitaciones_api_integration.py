@@ -249,7 +249,8 @@ class TestInvitacionesAPIIntegration:
 
     async def test_docente_no_asignado_devuelve_422(self, fake_smtp_server, admin_headers):
         """El *destino* de la invitación no está asignado — 422 (distinto del 403 de `US-ADJ-57`,
-        que rechaza a quien *llama* sin estar asignado, ver `test_solicitante_no_asignado_devuelve_403`)."""
+        que rechaza a quien *llama* sin estar asignado, ver `test_solicitante_no_asignado_devuelve_403`).
+        """
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")

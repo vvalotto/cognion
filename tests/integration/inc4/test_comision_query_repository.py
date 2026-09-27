@@ -167,7 +167,9 @@ class TestDocentePerteneceAComision:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         query_repo = SQLAlchemyComisionQueryRepository(session)
-        admin = Usuario.crear("Vic", "vic.pertenece1@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", "vic.pertenece1@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         docente = Usuario.crear("Doc", "doc.pertenece1@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
@@ -184,7 +186,9 @@ class TestDocentePerteneceAComision:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         query_repo = SQLAlchemyComisionQueryRepository(session)
-        admin = Usuario.crear("Vic", "vic.pertenece2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", "vic.pertenece2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         docente = Usuario.crear("Doc", "doc.pertenece2@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
@@ -200,7 +204,9 @@ class TestDocentePerteneceAComision:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         query_repo = SQLAlchemyComisionQueryRepository(session)
-        admin = Usuario.crear("Vic", "vic.pertenece3@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", "vic.pertenece3@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         docente = Usuario.crear("Doc", "doc.pertenece3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)

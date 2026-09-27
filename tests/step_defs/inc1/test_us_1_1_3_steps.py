@@ -24,6 +24,7 @@ def _headers_docente(docente_id: str) -> dict[str, str]:
     jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
+
 FEATURE = "../../features/inc1/US-1.1.3-registro-link-invalido.feature"
 
 

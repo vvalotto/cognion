@@ -66,9 +66,7 @@ class TestListarComisionesPorMateria:
         ids = {c["id"] for c in response.json()}
         assert ids == {str(comision_1.id), str(comision_2.id)}
 
-    async def test_docente_sin_ninguna_comision_asignada_devuelve_403(
-        self, session, admin_headers
-    ):
+    async def test_docente_sin_ninguna_comision_asignada_devuelve_403(self, session, admin_headers):
         """`US-ADJ-57`: el Docente sin comisiones en la materia no puede listarlas."""
         admin = Usuario.crear(
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR

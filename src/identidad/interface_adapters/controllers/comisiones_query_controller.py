@@ -74,9 +74,7 @@ class ComisionesQueryController:
             raise ComisionNoAutorizada(comision_id)
         return await self._comision_query.listar_estudiantes(comision_id)
 
-    async def obtener_comision(
-        self, comision_id: UUID, docente_id: UUID | None = None
-    ) -> Comision:
+    async def obtener_comision(self, comision_id: UUID, docente_id: UUID | None = None) -> Comision:
         """Devuelve una comisión puntual; `ComisionNoExiste` si `comision_id` no existe.
 
         Consulta de lectura simple (`US-ADJ-25`) — pass-through sobre

@@ -118,9 +118,7 @@ async def listar_estudiantes(
     403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
     """
     try:
-        estudiantes = await controller.listar_estudiantes(
-            comision_id, _docente_id_o_none(usuario)
-        )
+        estudiantes = await controller.listar_estudiantes(comision_id, _docente_id_o_none(usuario))
     except ComisionNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except ComisionNoAutorizada as exc:
