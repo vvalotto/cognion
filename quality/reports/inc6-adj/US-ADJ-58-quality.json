@@ -75,7 +75,7 @@
         "infos": 8
       }
     },
-    "reporte": "quality/reports/sp-adj-02/US-ADJ-58-codeguard.json"
+    "reporte": "quality/reports/inc6-adj/US-ADJ-58-codeguard.json"
   },
   "designreviewer": {
     "critical": 0,
