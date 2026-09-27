@@ -19,6 +19,7 @@ from src.analytics.frameworks.api.schemas import (
     EvolucionTemporalPuntoResponse,
     RankingPreguntaFalladaResponse,
     ResumenDesempenoResponse,
+    SesionEnVivoDetalleResponse,
     TasaErrorTemaResponse,
 )
 from src.analytics.frameworks.dependencies import (
@@ -64,6 +65,20 @@ def _a_response(desempeno: DesempenoEstudiante) -> DesempenoEstudianteResponse:
             porcentaje_acierto=desempeno.resumen.porcentaje_acierto,
             cantidad_evaluaciones=desempeno.resumen.cantidad_evaluaciones,
         ),
+        sesiones_en_vivo=[
+            SesionEnVivoDetalleResponse(
+                sesion_id=s.sesion_id,
+                comision_horario=s.comision_horario,
+                finalizada_en=s.finalizada_en,
+                cantidad_preguntas=s.cantidad_preguntas,
+                cantidad_correctas=s.cantidad_correctas,
+                cantidad_incorrectas=s.cantidad_incorrectas,
+                puntaje_final=s.puntaje_final,
+                posicion=s.posicion,
+                total_participantes=s.total_participantes,
+            )
+            for s in desempeno.sesiones_en_vivo
+        ],
     )
 
 
