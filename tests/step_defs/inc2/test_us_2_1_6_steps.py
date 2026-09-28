@@ -10,7 +10,11 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import admin_headers, docente_asignado_a_materia, docente_headers
+from tests.step_defs.inc2._auth_headers import (
+    admin_headers,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc2/US-2.1.6-eliminar-pregunta.feature")
 

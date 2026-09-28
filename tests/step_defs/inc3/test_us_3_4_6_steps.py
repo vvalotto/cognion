@@ -11,7 +11,12 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers, docente_asignado_a_materia
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.4.6-rendir-evaluacion.feature")
 
@@ -58,9 +63,7 @@ async def _crear_materia_con_preguntas(
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers()
         )
         banco_id = creada.json()["banco_id"]
-        _docente_id, headers = await docente_asignado_a_materia(
-            creada.json()["id"]
-        )
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad_verdadero_falso):
             await client.post(
                 "/preguntas/verdadero-falso",

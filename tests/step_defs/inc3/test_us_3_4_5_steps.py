@@ -66,9 +66,7 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
-        _docente_id, headers = await docente_asignado_a_materia(
-            creada.json()["id"]
-        )
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",

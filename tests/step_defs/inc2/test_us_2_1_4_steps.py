@@ -82,9 +82,7 @@ def docente_y_banco_existente(context, nombre_materia):
 @when("ejecuta CargarPreguntaVerdaderoFalso con respuesta_correcta = true")
 def ejecuta_carga_respuesta_verdadero(context):
     context["response"] = run_async(
-        _post_cargar_pregunta_verdadero_falso(
-            context["banco_id"], True, context["docente_headers"]
-        )
+        _post_cargar_pregunta_verdadero_falso(context["banco_id"], True, context["docente_headers"])
     )
 
 

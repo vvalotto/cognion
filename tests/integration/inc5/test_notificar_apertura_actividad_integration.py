@@ -17,7 +17,6 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
-from tests.integration.conftest import asignar_docente_a_materia
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.gateways.comision_repository import (
@@ -26,6 +25,7 @@ from src.identidad.interface_adapters.gateways.comision_repository import (
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 class _BandejaSmtp:

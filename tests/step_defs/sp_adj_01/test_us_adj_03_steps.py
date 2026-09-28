@@ -91,9 +91,7 @@ async def _post_cargar_pregunta(
 async def _get_filtrar_banco(banco_id: str, headers: dict[str, str], **params):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.get(
-            f"/bancos/{banco_id}/preguntas", params=params, headers=headers
-        )
+        return await client.get(f"/bancos/{banco_id}/preguntas", params=params, headers=headers)
 
 
 def _crear_banco_con_preguntas(context, cantidad: int, **kwargs) -> None:

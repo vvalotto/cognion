@@ -41,7 +41,10 @@ async def docente_asignado_a_materia(materia_id: str) -> tuple[str, dict[str, st
         hasher = BcryptPasswordHasher()
 
         admin = Usuario.crear(
-            "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
+            "Admin",
+            f"admin.{uuid.uuid4()}@fiuner.edu.ar",
+            hasher.hash("x"),
+            TipoPerfil.ADMINISTRADOR,
         )
         await usuario_repo.guardar(admin)
         docente = Usuario.crear(

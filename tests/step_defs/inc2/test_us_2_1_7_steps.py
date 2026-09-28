@@ -82,9 +82,7 @@ async def _delete_eliminar_pregunta(pregunta_id: str, headers: dict[str, str]):
 async def _get_filtrar_banco(banco_id: str, headers: dict[str, str], **filtros):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.get(
-            f"/bancos/{banco_id}/preguntas", params=filtros, headers=headers
-        )
+        return await client.get(f"/bancos/{banco_id}/preguntas", params=filtros, headers=headers)
 
 
 @given("un Docente autenticado")
@@ -167,14 +165,14 @@ def ejecuta_filtrar_banco_dificultad_importancia(context):
 
 @when("ejecuta FiltrarBanco sin más filtros que la materia")
 def ejecuta_filtrar_banco_sin_filtros(context):
-    context["response"] = run_async(
-        _get_filtrar_banco(context["banco_id"], context["headers"])
-    )
+    context["response"] = run_async(_get_filtrar_banco(context["banco_id"], context["headers"]))
 
 
 @when('ejecuta FiltrarBanco con dificultad "Bajo"')
 def ejecuta_filtrar_banco_dificultad_bajo(context):
-    context["response"] = run_async(_get_filtrar_banco(context["banco_id"], context["headers"], dificultad="bajo"))
+    context["response"] = run_async(
+        _get_filtrar_banco(context["banco_id"], context["headers"], dificultad="bajo")
+    )
 
 
 @then("el sistema devuelve solo las preguntas activas que matchean ambos filtros")

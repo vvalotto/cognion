@@ -43,8 +43,11 @@ class ListarMateriasUseCase:
 
         resultado: list[tuple[Materia, Banco, int]] = []
         for materia in materias:
-            if docente_id is not None and not await self._comision_consulta.esta_asignado_a_materia(
-                docente_id, materia.id
+            if (
+                docente_id is not None
+                and not await self._comision_consulta.esta_asignado_a_materia(
+                    docente_id, materia.id
+                )
             ):
                 continue
             banco = await self._banco_repositorio.obtener_por_materia_id(materia.id)

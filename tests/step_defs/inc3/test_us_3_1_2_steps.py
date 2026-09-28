@@ -11,7 +11,11 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, docente_headers, docente_asignado_a_materia
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.1.2-crear-actividad-periodo-abierto.feature")
 
@@ -52,9 +56,7 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
-        _docente_id, headers = await docente_asignado_a_materia(
-            creada.json()["id"]
-        )
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",

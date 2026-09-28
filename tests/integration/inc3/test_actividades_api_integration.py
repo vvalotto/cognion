@@ -4,7 +4,6 @@ from datetime import UTC, datetime, timedelta
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
-from tests.integration.conftest import asignar_docente_a_materia
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
@@ -16,6 +15,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
