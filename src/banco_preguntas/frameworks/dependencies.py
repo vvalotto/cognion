@@ -42,6 +42,9 @@ from src.banco_preguntas.use_cases.eliminar_materia import EliminarMateriaUseCas
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
 from src.banco_preguntas.use_cases.listar_materias import ListarMateriasUseCase
+from src.banco_preguntas.use_cases.verificar_autorizacion_materia import (
+    VerificarAutorizacionMateriaService,
+)
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -72,10 +75,11 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
     comision_consulta = ComisionConsultaPortInProcess(session)
+    verificador_autorizacion = VerificarAutorizacionMateriaService(banco_repo, comision_consulta)
     return PreguntasController(
         CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo, comision_consulta),
         CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo, comision_consulta),
-        EditarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
+        EditarPreguntaUseCase(pregunta_repo, verificador_autorizacion),
         EliminarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
     )
 

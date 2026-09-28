@@ -4,16 +4,17 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.banco_preguntas.entities.errors import MateriaNoAutorizada, PreguntaNoExiste
+from src.banco_preguntas.entities.errors import PreguntaNoExiste
 from src.banco_preguntas.entities.eventos import PreguntaEditada
 from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
-from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
-from src.banco_preguntas.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaOpcionMultiple,
     PreguntaPlantillaVerdaderoFalso,
+)
+from src.banco_preguntas.use_cases.verificar_autorizacion_materia import (
+    VerificarAutorizacionMateriaService,
 )
 
 
@@ -23,13 +24,11 @@ class EditarPreguntaUseCase:
     def __init__(
         self,
         pregunta_repositorio: PreguntaRepositoryPort,
-        banco_repositorio: BancoRepositoryPort,
-        comision_consulta: ComisionConsultaPort,
+        verificador_autorizacion: VerificarAutorizacionMateriaService,
     ) -> None:
-        """Recibe el repositorio de preguntas, de bancos y el puerto de Comisión."""
+        """Recibe el repositorio de preguntas y el servicio de autorización por materia."""
         self._pregunta_repositorio = pregunta_repositorio
-        self._banco_repositorio = banco_repositorio
-        self._comision_consulta = comision_consulta
+        self._verificador_autorizacion = verificador_autorizacion
 
     async def execute(
         self,
@@ -49,13 +48,7 @@ class EditarPreguntaUseCase:
         if pregunta is None:
             raise PreguntaNoExiste(pregunta_id)
 
-        if docente_id is not None:
-            banco = await self._banco_repositorio.obtener_por_id(pregunta.banco_id)
-            assert banco is not None, f"Pregunta {pregunta_id} con banco_id inexistente"
-            if not await self._comision_consulta.esta_asignado_a_materia(
-                docente_id, banco.materia_id
-            ):
-                raise MateriaNoAutorizada(banco.materia_id)
+        await self._verificador_autorizacion.verificar(pregunta.banco_id, docente_id)
 
         if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
             pregunta.editar(metadatos=metadatos, opciones=opciones or [])

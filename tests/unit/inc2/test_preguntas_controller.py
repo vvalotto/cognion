@@ -17,6 +17,9 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
 )
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
+from src.banco_preguntas.use_cases.verificar_autorizacion_materia import (
+    VerificarAutorizacionMateriaService,
+)
 from tests.unit.inc2._fakes import (
     FakeBancoRepository,
     FakeComisionConsultaPort,
@@ -26,10 +29,11 @@ from tests.unit.inc2._fakes import (
 
 def _controller(banco_repo: FakeBancoRepository, pregunta_repo: FakePreguntaRepository):
     comision_consulta = FakeComisionConsultaPort()
+    verificador_autorizacion = VerificarAutorizacionMateriaService(banco_repo, comision_consulta)
     return PreguntasController(
         CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo, comision_consulta),
         CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo, comision_consulta),
-        EditarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
+        EditarPreguntaUseCase(pregunta_repo, verificador_autorizacion),
         EliminarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
     )
 

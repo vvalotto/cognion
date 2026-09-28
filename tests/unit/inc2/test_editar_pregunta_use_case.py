@@ -19,6 +19,9 @@ from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaVerdaderoFalso,
 )
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
+from src.banco_preguntas.use_cases.verificar_autorizacion_materia import (
+    VerificarAutorizacionMateriaService,
+)
 from tests.unit.inc2._fakes import (
     FakeBancoRepository,
     FakeComisionConsultaPort,
@@ -63,7 +66,8 @@ class TestEditarPreguntaUseCase:
         pregunta = _pregunta_om()
         await pregunta_repo.guardar(pregunta)
         use_case = EditarPreguntaUseCase(
-            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+            pregunta_repo,
+            VerificarAutorizacionMateriaService(FakeBancoRepository(), FakeComisionConsultaPort()),
         )
         nuevas_opciones = [
             Opcion(texto="Paraná", es_correcta=False),
@@ -94,7 +98,8 @@ class TestEditarPreguntaUseCase:
         pregunta = _pregunta_vf()
         await pregunta_repo.guardar(pregunta)
         use_case = EditarPreguntaUseCase(
-            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+            pregunta_repo,
+            VerificarAutorizacionMateriaService(FakeBancoRepository(), FakeComisionConsultaPort()),
         )
 
         editada, evento = await use_case.execute(
@@ -116,7 +121,8 @@ class TestEditarPreguntaUseCase:
     async def test_rechaza_pregunta_inexistente(self):
         pregunta_repo = FakePreguntaRepository()
         use_case = EditarPreguntaUseCase(
-            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+            pregunta_repo,
+            VerificarAutorizacionMateriaService(FakeBancoRepository(), FakeComisionConsultaPort()),
         )
 
         with pytest.raises(PreguntaNoExiste):
@@ -137,7 +143,8 @@ class TestEditarPreguntaUseCase:
         pregunta = _pregunta_om()
         await pregunta_repo.guardar(pregunta)
         use_case = EditarPreguntaUseCase(
-            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+            pregunta_repo,
+            VerificarAutorizacionMateriaService(FakeBancoRepository(), FakeComisionConsultaPort()),
         )
 
         with pytest.raises(OpcionesInvalidas):
@@ -162,7 +169,8 @@ class TestEditarPreguntaUseCase:
         pregunta.activa = False
         await pregunta_repo.guardar(pregunta)
         use_case = EditarPreguntaUseCase(
-            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+            pregunta_repo,
+            VerificarAutorizacionMateriaService(FakeBancoRepository(), FakeComisionConsultaPort()),
         )
 
         with pytest.raises(PreguntaInactiva):
@@ -188,7 +196,9 @@ class TestEditarPreguntaUseCase:
         pregunta.banco_id = banco.id
         await pregunta_repo.guardar(pregunta)
         await banco_repo.guardar(banco)
-        use_case = EditarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta)
+        use_case = EditarPreguntaUseCase(
+            pregunta_repo, VerificarAutorizacionMateriaService(banco_repo, comision_consulta)
+        )
 
         with pytest.raises(MateriaNoAutorizada):
             await use_case.execute(
