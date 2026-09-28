@@ -60,7 +60,7 @@ def get_materias_controller(session: SessionDep) -> MateriasController:
     comision_consulta = ComisionConsultaPortInProcess(session)
     return MateriasController(
         CrearMateriaUseCase(materia_repo, banco_repo),
-        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
         EditarMateriaUseCase(materia_repo),
         EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
         ActivarMateriaUseCase(materia_repo),
@@ -71,11 +71,12 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
     """Arma el `PreguntasController` con sus dependencias concretas."""
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return PreguntasController(
-        CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo),
-        CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo),
-        EditarPreguntaUseCase(pregunta_repo),
-        EliminarPreguntaUseCase(pregunta_repo),
+        CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo, comision_consulta),
+        CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo, comision_consulta),
+        EditarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
+        EliminarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
     )
 
 
@@ -83,7 +84,8 @@ def get_bancos_controller(session: SessionDep) -> BancosController:
     """Arma el `BancosController` con sus dependencias concretas."""
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
-    return BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    return BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo, comision_consulta))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:

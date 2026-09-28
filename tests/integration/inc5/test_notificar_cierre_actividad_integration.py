@@ -21,6 +21,7 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     build_verificar_vencimientos_use_case,
 )
 from src.app import app
+from tests.integration.conftest import asignar_docente_a_materia
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.gateways.comision_repository import (
@@ -108,6 +109,7 @@ async def _crear_materia_con_preguntas(
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
     creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
+    await asignar_docente_a_materia(creada.json()["id"], docente_headers)
 
     for i in range(cantidad):
         await client.post(

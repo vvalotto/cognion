@@ -21,7 +21,7 @@ from src.actividad_evaluativa.entities.evaluacion import (
 )
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers
+from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers, docente_asignado_a_materia
 
 scenarios("../../features/inc3/US-3.2.1-registrar-respuesta.feature")
 
@@ -80,6 +80,9 @@ async def _crear_materia_con_opcion_multiple() -> tuple[str, str]:
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers()
         )
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(
+            creada.json()["id"]
+        )
         respuesta = await client.post(
             "/preguntas/opcion-multiple",
             json={
@@ -94,7 +97,7 @@ async def _crear_materia_con_opcion_multiple() -> tuple[str, str]:
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
         return creada.json()["id"], respuesta.json()["id"]
 

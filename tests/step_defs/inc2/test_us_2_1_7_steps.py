@@ -9,7 +9,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_asignado_a_materia
 
 scenarios("../../features/inc2/US-2.1.7-filtrar-banco.feature")
 
@@ -23,6 +23,11 @@ async def _limpiar_tablas_banco_preguntas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -46,7 +51,7 @@ async def _post_crear_materia(nombre: str):
 
 
 async def _post_cargar_pregunta_opcion_multiple(
-    banco_id: str, dificultad: str = "medio", importancia: str = "alto"
+    banco_id: str, headers: dict[str, str], dificultad: str = "medio", importancia: str = "alto"
 ):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -64,27 +69,27 @@ async def _post_cargar_pregunta_opcion_multiple(
                 "dificultad": dificultad,
                 "importancia": importancia,
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
-async def _delete_eliminar_pregunta(pregunta_id: str):
+async def _delete_eliminar_pregunta(pregunta_id: str, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.delete(f"/preguntas/{pregunta_id}", headers=docente_headers())
+        return await client.delete(f"/preguntas/{pregunta_id}", headers=headers)
 
 
-async def _get_filtrar_banco(banco_id: str, **filtros):
+async def _get_filtrar_banco(banco_id: str, headers: dict[str, str], **filtros):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.get(
-            f"/bancos/{banco_id}/preguntas", params=filtros, headers=docente_headers()
+            f"/bancos/{banco_id}/preguntas", params=filtros, headers=headers
         )
 
 
 @given("un Docente autenticado")
-def docente_autenticado(context):
-    context["headers"] = docente_headers()
+def docente_autenticado(context) -> None:
+    """No-op: el Docente real y asignado se crea recién en el siguiente Given (`US-ADJ-57`)."""
 
 
 @given("un Banco con preguntas de distinta dificultad e importancia")
@@ -93,15 +98,21 @@ def banco_con_preguntas_mixtas(context):
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
     context["banco_id"] = banco_id
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
     match = run_async(
-        _post_cargar_pregunta_opcion_multiple(banco_id, dificultad="alto", importancia="alto")
+        _post_cargar_pregunta_opcion_multiple(
+            banco_id, headers, dificultad="alto", importancia="alto"
+        )
     )
     assert match.status_code == 201
     context["match_id"] = match.json()["id"]
 
     otra = run_async(
-        _post_cargar_pregunta_opcion_multiple(banco_id, dificultad="bajo", importancia="alto")
+        _post_cargar_pregunta_opcion_multiple(
+            banco_id, headers, dificultad="bajo", importancia="alto"
+        )
     )
     assert otra.status_code == 201
 
@@ -112,18 +123,20 @@ def banco_con_activas_e_inactiva(context):
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
     context["banco_id"] = banco_id
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
     activas_ids = []
     for _ in range(5):
-        respuesta = run_async(_post_cargar_pregunta_opcion_multiple(banco_id))
+        respuesta = run_async(_post_cargar_pregunta_opcion_multiple(banco_id, headers))
         assert respuesta.status_code == 201
         activas_ids.append(respuesta.json()["id"])
     context["activas_ids"] = activas_ids
 
-    inactiva = run_async(_post_cargar_pregunta_opcion_multiple(banco_id))
+    inactiva = run_async(_post_cargar_pregunta_opcion_multiple(banco_id, headers))
     assert inactiva.status_code == 201
     inactiva_id = inactiva.json()["id"]
-    eliminacion = run_async(_delete_eliminar_pregunta(inactiva_id))
+    eliminacion = run_async(_delete_eliminar_pregunta(inactiva_id, headers))
     assert eliminacion.status_code == 204
     context["inactiva_id"] = inactiva_id
 
@@ -134,26 +147,34 @@ def banco_sin_preguntas_bajo(context):
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
     context["banco_id"] = banco_id
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
-    respuesta = run_async(_post_cargar_pregunta_opcion_multiple(banco_id, dificultad="alto"))
+    respuesta = run_async(
+        _post_cargar_pregunta_opcion_multiple(banco_id, headers, dificultad="alto")
+    )
     assert respuesta.status_code == 201
 
 
 @when('ejecuta FiltrarBanco con dificultad "Alto" e importancia "Alto"')
 def ejecuta_filtrar_banco_dificultad_importancia(context):
     context["response"] = run_async(
-        _get_filtrar_banco(context["banco_id"], dificultad="alto", importancia="alto")
+        _get_filtrar_banco(
+            context["banco_id"], context["headers"], dificultad="alto", importancia="alto"
+        )
     )
 
 
 @when("ejecuta FiltrarBanco sin más filtros que la materia")
 def ejecuta_filtrar_banco_sin_filtros(context):
-    context["response"] = run_async(_get_filtrar_banco(context["banco_id"]))
+    context["response"] = run_async(
+        _get_filtrar_banco(context["banco_id"], context["headers"])
+    )
 
 
 @when('ejecuta FiltrarBanco con dificultad "Bajo"')
 def ejecuta_filtrar_banco_dificultad_bajo(context):
-    context["response"] = run_async(_get_filtrar_banco(context["banco_id"], dificultad="bajo"))
+    context["response"] = run_async(_get_filtrar_banco(context["banco_id"], context["headers"], dificultad="bajo"))
 
 
 @then("el sistema devuelve solo las preguntas activas que matchean ambos filtros")

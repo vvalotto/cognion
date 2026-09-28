@@ -21,11 +21,12 @@ def _controller(materia_repo=None, banco_repo=None, pregunta_repo=None):
     materia_repo = materia_repo or FakeMateriaRepository()
     banco_repo = banco_repo or FakeBancoRepository()
     pregunta_repo = pregunta_repo or FakePreguntaRepository()
+    comision_consulta = FakeComisionConsultaPort()
     return MateriasController(
         CrearMateriaUseCase(materia_repo, banco_repo),
-        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
         EditarMateriaUseCase(materia_repo),
-        EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, FakeComisionConsultaPort()),
+        EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
         ActivarMateriaUseCase(materia_repo),
     )
 

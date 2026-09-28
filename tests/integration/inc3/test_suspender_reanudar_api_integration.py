@@ -8,6 +8,7 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
     SQLAlchemyEventStore,
 )
 from src.app import app
+from tests.integration.conftest import asignar_docente_a_materia
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
@@ -106,6 +107,7 @@ async def _preparar_evaluacion_en_curso(
     session,
 ) -> dict:
     materia_id, banco_id = await _crear_materia(client, admin_headers)
+    await asignar_docente_a_materia(materia_id, docente_headers)
     await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
@@ -245,6 +247,7 @@ class TestSuspenderReanudarAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = datetime.now(UTC) + timedelta(seconds=1)
@@ -270,6 +273,7 @@ class TestSuspenderReanudarAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=2)

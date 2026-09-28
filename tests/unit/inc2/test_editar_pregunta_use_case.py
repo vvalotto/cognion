@@ -2,8 +2,10 @@ import uuid
 
 import pytest
 
+from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
 from src.banco_preguntas.entities.errors import (
+    MateriaNoAutorizada,
     OpcionesInvalidas,
     PreguntaInactiva,
     PreguntaNoExiste,
@@ -17,7 +19,11 @@ from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaVerdaderoFalso,
 )
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
-from tests.unit.inc2._fakes import FakePreguntaRepository
+from tests.unit.inc2._fakes import (
+    FakeBancoRepository,
+    FakeComisionConsultaPort,
+    FakePreguntaRepository,
+)
 
 
 def _pregunta_om() -> PreguntaPlantillaOpcionMultiple:
@@ -56,7 +62,9 @@ class TestEditarPreguntaUseCase:
         pregunta_repo = FakePreguntaRepository()
         pregunta = _pregunta_om()
         await pregunta_repo.guardar(pregunta)
-        use_case = EditarPreguntaUseCase(pregunta_repo)
+        use_case = EditarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
         nuevas_opciones = [
             Opcion(texto="Paraná", es_correcta=False),
             Opcion(texto="Concordia", es_correcta=True),
@@ -85,7 +93,9 @@ class TestEditarPreguntaUseCase:
         pregunta_repo = FakePreguntaRepository()
         pregunta = _pregunta_vf()
         await pregunta_repo.guardar(pregunta)
-        use_case = EditarPreguntaUseCase(pregunta_repo)
+        use_case = EditarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         editada, evento = await use_case.execute(
             pregunta_id=pregunta.id,
@@ -105,7 +115,9 @@ class TestEditarPreguntaUseCase:
 
     async def test_rechaza_pregunta_inexistente(self):
         pregunta_repo = FakePreguntaRepository()
-        use_case = EditarPreguntaUseCase(pregunta_repo)
+        use_case = EditarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         with pytest.raises(PreguntaNoExiste):
             await use_case.execute(
@@ -124,7 +136,9 @@ class TestEditarPreguntaUseCase:
         pregunta_repo = FakePreguntaRepository()
         pregunta = _pregunta_om()
         await pregunta_repo.guardar(pregunta)
-        use_case = EditarPreguntaUseCase(pregunta_repo)
+        use_case = EditarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         with pytest.raises(OpcionesInvalidas):
             await use_case.execute(
@@ -147,7 +161,9 @@ class TestEditarPreguntaUseCase:
         pregunta = _pregunta_vf()
         pregunta.activa = False
         await pregunta_repo.guardar(pregunta)
-        use_case = EditarPreguntaUseCase(pregunta_repo)
+        use_case = EditarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         with pytest.raises(PreguntaInactiva):
             await use_case.execute(
@@ -160,4 +176,30 @@ class TestEditarPreguntaUseCase:
                     importancia=pregunta.importancia,
                 ),
                 respuesta_correcta=pregunta.respuesta_correcta,
+            )
+
+    async def test_rechaza_docente_sin_comision_en_la_materia(self):
+        """`US-ADJ-57`: `docente_id` sin ninguna Comisión asignada en la materia del banco."""
+        pregunta_repo = FakePreguntaRepository()
+        banco_repo = FakeBancoRepository()
+        comision_consulta = FakeComisionConsultaPort()
+        pregunta = _pregunta_om()
+        banco = Banco.crear(uuid.uuid4())
+        pregunta.banco_id = banco.id
+        await pregunta_repo.guardar(pregunta)
+        await banco_repo.guardar(banco)
+        use_case = EditarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(
+                pregunta_id=pregunta.id,
+                metadatos=MetadatosPregunta(
+                    texto=pregunta.texto,
+                    unidad_tematica=pregunta.unidad_tematica,
+                    tema=pregunta.tema,
+                    dificultad=pregunta.dificultad,
+                    importancia=pregunta.importancia,
+                ),
+                opciones=pregunta.opciones,
+                docente_id=uuid.uuid4(),
             )

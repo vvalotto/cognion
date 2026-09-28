@@ -76,15 +76,41 @@ async def preparar_sesion(
 
     Devuelve `(sesion_id, comision_id)`. Usa la API real para crear la sesión. Las preguntas son
     de Verdadero/Falso salvo que `opcion_multiple` sea `True` (opciones "A" a "D", la "B" correcta).
+    `US-ADJ-57`: cargar preguntas exige que el Docente tenga una Comisión asignada en la
+    materia — la Comisión se crea y se asigna antes del loop, no después.
     """
     admin = headers_de(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
-    docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         creada = await client.post(
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin
         )
         banco_id = creada.json()["banco_id"]
         materia_id = creada.json()["id"]
+
+        async with SessionLocal() as session:
+            admin_usuario = Usuario.crear(
+                "Admin",
+                f"admin.{uuid.uuid4()}@fiuner.edu.ar",
+                BcryptPasswordHasher().hash("x"),
+                TipoPerfil.ADMINISTRADOR,
+            )
+            await SQLAlchemyUsuarioRepository(session).guardar(admin_usuario)
+            docente_usuario = Usuario.crear(
+                "Docente",
+                f"docente.{uuid.uuid4()}@fiuner.edu.ar",
+                BcryptPasswordHasher().hash("x"),
+                TipoPerfil.DOCENTE,
+            )
+            await SQLAlchemyUsuarioRepository(session).guardar(docente_usuario)
+
+            comision_repo = SQLAlchemyComisionRepository(session)
+            comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin_usuario.id)
+            await comision_repo.guardar(comision)
+            comision.asignar_docente(docente_usuario.id)
+            await comision_repo.actualizar(comision)
+
+        docente = headers_de(docente_usuario.id, TipoPerfil.DOCENTE)
+
         for i in range(cantidad_preguntas):
             comun = {
                 "banco_id": banco_id,
@@ -104,17 +130,6 @@ async def preparar_sesion(
                 ruta = "/preguntas/verdadero-falso"
                 cuerpo = {**comun, "respuesta_correcta": True}
             await client.post(ruta, json=cuerpo, headers=docente)
-
-        async with SessionLocal() as session:
-            admin_usuario = Usuario.crear(
-                "Admin",
-                f"admin.{uuid.uuid4()}@fiuner.edu.ar",
-                BcryptPasswordHasher().hash("x"),
-                TipoPerfil.ADMINISTRADOR,
-            )
-            await SQLAlchemyUsuarioRepository(session).guardar(admin_usuario)
-            comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin_usuario.id)
-            await SQLAlchemyComisionRepository(session).guardar(comision)
 
         respuesta = await client.post(
             "/sesiones-en-vivo",

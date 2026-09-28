@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-09-27T18:48:52.375716+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 9569,
-    "effective_seconds": 9569,
+    "total_elapsed_seconds": 89364,
+    "effective_seconds": 89364,
     "paused_seconds": 0
   },
   "phases": [
@@ -80,6 +80,58 @@
           "variance_minutes": 120.03,
           "file_created": "src/identidad/frameworks/api/materias_comisiones_router.py,src/identidad/frameworks/api/comisiones_router.py,src/identidad/frameworks/api/invitaciones_router.py,src/identidad/interface_adapters/controllers/comisiones_query_controller.py,src/identidad/interface_adapters/controllers/invitaciones_controller.py,src/identidad/use_cases/generar_invitacion.py",
           "status": "completed"
+        },
+        {
+          "task_id": "T3-banco-port",
+          "task_name": "Ampliar ComisionConsultaPort de Banco de Preguntas",
+          "task_type": "entities",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-27T22:06:32.487447+00:00",
+          "completed_at": "2026-09-28T18:45:23.451380+00:00",
+          "elapsed_seconds": 74330,
+          "actual_minutes": 1238.83,
+          "variance_minutes": 1218.83,
+          "file_created": "src/banco_preguntas/entities/ports/comision_consulta_port.py,src/banco_preguntas/frameworks/adapters/comision_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4-listar-materias",
+          "task_name": "ListarMateriasUseCase filtra por docente",
+          "task_type": "use_cases",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-28T18:45:23.742305+00:00",
+          "completed_at": "2026-09-28T18:56:07.724014+00:00",
+          "elapsed_seconds": 643,
+          "actual_minutes": 10.72,
+          "variance_minutes": -9.28,
+          "file_created": "src/banco_preguntas/use_cases/listar_materias.py,tests/unit/inc2/test_listar_materias_use_case.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5-banco-use-cases-mutacion",
+          "task_name": "docente_id + MateriaNoAutorizada en cargar/editar/eliminar/filtrar + routers + dependencies",
+          "task_type": "use_cases,interface_adapters,frameworks",
+          "estimated_minutes": 60.0,
+          "started_at": "2026-09-28T18:56:07.833937+00:00",
+          "completed_at": "2026-09-28T18:56:12.074502+00:00",
+          "elapsed_seconds": 4,
+          "actual_minutes": 0.07,
+          "variance_minutes": -59.93,
+          "file_created": "src/banco_preguntas/use_cases/*.py,src/banco_preguntas/interface_adapters/controllers/*.py,src/banco_preguntas/frameworks/api/*.py,src/banco_preguntas/frameworks/dependencies.py,src/banco_preguntas/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6-regresion-wave2",
+          "task_name": "Fix blast radius: fixtures de otros BC que cargan preguntas sin docente asignado",
+          "task_type": "tests",
+          "estimated_minutes": 90.0,
+          "started_at": "2026-09-28T19:37:07.881042+00:00",
+          "completed_at": "2026-09-28T19:38:16.682799+00:00",
+          "elapsed_seconds": 68,
+          "actual_minutes": 1.13,
+          "variance_minutes": -88.87,
+          "file_created": "tests/step_defs/,tests/integration/inc6/_helpers.py,tests/step_defs/inc2/_auth_headers.py,tests/step_defs/inc3/_auth_headers.py",
+          "status": "completed"
         }
       ],
       "auto_approved": true,
@@ -88,12 +140,12 @@
   ],
   "pauses": [],
   "summary": {
-    "total_tasks": 2,
-    "completed_tasks": 2,
+    "total_tasks": 6,
+    "completed_tasks": 6,
     "total_phases": 4,
-    "estimated_total_minutes": 45.0,
-    "actual_total_minutes": 151.33,
-    "variance_minutes": 106.33,
-    "variance_percent": 236.3
+    "estimated_total_minutes": 235.0,
+    "actual_total_minutes": 1402.08,
+    "variance_minutes": 1167.08,
+    "variance_percent": 496.63
   }
 }

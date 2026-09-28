@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
+from src.banco_preguntas.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.banco_preguntas.entities.ports.materia_repository_port import MateriaRepositoryPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 
@@ -17,24 +20,33 @@ class ListarMateriasUseCase:
         materia_repositorio: MateriaRepositoryPort,
         banco_repositorio: BancoRepositoryPort,
         pregunta_repositorio: PreguntaRepositoryPort,
+        comision_consulta: ComisionConsultaPort,
     ) -> None:
-        """Recibe los repositorios de materias, bancos y preguntas a usar."""
+        """Recibe los repositorios de materias, bancos, preguntas y el puerto de Comisión."""
         self._materia_repositorio = materia_repositorio
         self._banco_repositorio = banco_repositorio
         self._pregunta_repositorio = pregunta_repositorio
+        self._comision_consulta = comision_consulta
 
-    async def execute(self, incluir_inactivas: bool = False) -> list[tuple[Materia, Banco, int]]:
+    async def execute(
+        self, incluir_inactivas: bool = False, docente_id: UUID | None = None
+    ) -> list[tuple[Materia, Banco, int]]:
         """Devuelve cada materia con su banco y la cantidad de preguntas `activa = true`.
 
         Reutiliza `PreguntaRepositoryPort.filtrar()` (`US-2.1.7`) para el conteo, sin agregar
         un método dedicado a ese puerto. `incluir_inactivas` es para la pantalla de gestión
         de Materias — el resto de los consumidores (selectores, flujos de Docente) sigue
-        viendo solo las activas.
+        viendo solo las activas. `docente_id` acota el listado a las materias donde el Docente
+        tiene al menos una Comisión asignada (`US-ADJ-57`); `None` (Administrador) no filtra.
         """
         materias = await self._materia_repositorio.listar(incluir_inactivas)
 
         resultado: list[tuple[Materia, Banco, int]] = []
         for materia in materias:
+            if docente_id is not None and not await self._comision_consulta.esta_asignado_a_materia(
+                docente_id, materia.id
+            ):
+                continue
             banco = await self._banco_repositorio.obtener_por_materia_id(materia.id)
             assert banco is not None, f"Materia {materia.id} sin Banco asociado (INV-BP-01)"
             resultado_preguntas = await self._pregunta_repositorio.filtrar(banco.id)

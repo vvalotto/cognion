@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
+from tests.integration.conftest import asignar_docente_a_materia
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
@@ -121,6 +122,7 @@ class TestAnalyticsRouterDesempenoPorComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id)
             comision_id, estudiante, estudiante_headers = await _comision_con_estudiante(
                 session, materia_id
@@ -161,6 +163,7 @@ class TestAnalyticsRouterDesempenoPorComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             comision_id, estudiante, _headers = await _comision_con_estudiante(session, materia_id)
 
             response = await client.get(
@@ -181,6 +184,7 @@ class TestAnalyticsRouterDesempenoPorComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             otra_materia_id = uuid.uuid4()
             comision_de_otra_materia, _est, _h = await _comision_con_estudiante(
                 session, otra_materia_id

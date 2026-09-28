@@ -23,6 +23,66 @@ def docente_headers() -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
+async def crear_docente() -> tuple[str, dict[str, str]]:
+    """Crea un `Usuario` real con rol Docente y devuelve su id y sus headers de JWT.
+
+    `Comision.actualizar()` exige una fila `DocenteModel` real para persistir una asignación
+    (relación ORM, no INSERT directo) — a diferencia de `docente_headers()`, este id debe
+    existir de verdad en la BD para poder asignarlo con `asignar_docente_a_comision` (`US-ADJ-57`).
+    """
+    async with SessionLocal() as session:
+        docente = Usuario.crear(
+            "Docente",
+            f"docente.{uuid.uuid4()}@fiuner.edu.ar",
+            BcryptPasswordHasher().hash("x"),
+            TipoPerfil.DOCENTE,
+        )
+        await SQLAlchemyUsuarioRepository(session).guardar(docente)
+
+    jwt_vo = PyJWTIssuer().emitir(docente.id, TipoPerfil.DOCENTE)
+    return str(docente.id), {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
+async def asignar_docente_a_comision(comision_id: str, docente_id: str) -> None:
+    """Asigna un `docente_id` real (`crear_docente`) a una Comisión ya persistida (`US-ADJ-57`)."""
+    async with SessionLocal() as session:
+        comision_repo = SQLAlchemyComisionRepository(session)
+        comision = await comision_repo.obtener_por_id(uuid.UUID(comision_id))
+        assert comision is not None
+        comision.asignar_docente(uuid.UUID(docente_id))
+        await comision_repo.actualizar(comision)
+
+
+async def docente_asignado_a_materia(materia_id: str) -> tuple[str, dict[str, str]]:
+    """Crea un Docente real, una Comisión de `materia_id` y lo asigna (`US-ADJ-57`).
+
+    Combina `crear_docente` + `asignar_docente_a_comision` para el caso común de los helpers
+    de seed que solo necesitan un Docente autorizado para cargar preguntas en una materia
+    nueva, sin que a esa Comisión le importe después ningún otro dato (horario, admin dueño).
+    """
+    async with SessionLocal() as session:
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        hasher = BcryptPasswordHasher()
+
+        admin = Usuario.crear(
+            "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
+        )
+        await usuario_repo.guardar(admin)
+        docente = Usuario.crear(
+            "Docente", f"docente.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.DOCENTE
+        )
+        await usuario_repo.guardar(docente)
+
+        comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
+        await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+
+    jwt_vo = PyJWTIssuer().emitir(docente.id, TipoPerfil.DOCENTE)
+    return str(docente.id), {"Authorization": f"Bearer {jwt_vo.token}"}
+
+
 def admin_headers() -> dict[str, str]:
     jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
     return {"Authorization": f"Bearer {jwt_vo.token}"}

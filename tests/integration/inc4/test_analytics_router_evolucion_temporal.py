@@ -13,6 +13,7 @@ from datetime import UTC, datetime, timedelta
 from httpx import ASGITransport, AsyncClient
 
 from src.app import app
+from tests.integration.conftest import asignar_docente_a_materia
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
@@ -114,6 +115,7 @@ class TestAnalyticsRouterEvolucionTemporalEstudiante:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             _estudiante_comision, estudiante, estudiante_headers = await _comision_con_estudiante(
                 session, materia_id
             )
@@ -145,6 +147,7 @@ class TestAnalyticsRouterEvolucionTemporalEstudiante:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             _comision_id, estudiante, _headers = await _comision_con_estudiante(session, materia_id)
 
             response = await client.get(
@@ -194,6 +197,7 @@ class TestAnalyticsRouterEvolucionTemporalComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             comision_id, _e1, headers_1 = await _comision_con_estudiante(session, materia_id)
             _comision_2, _e2, headers_2 = await _comision_con_estudiante(session, materia_id)
 
@@ -218,6 +222,7 @@ class TestAnalyticsRouterEvolucionTemporalComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             otra_materia_id = uuid.uuid4()
             comision_de_otra_materia, _est, _h = await _comision_con_estudiante(
                 session, otra_materia_id
