@@ -37,10 +37,13 @@ class MateriasController:
         return await self._crear_materia.execute(nombre)
 
     async def listar_materias(
-        self, incluir_inactivas: bool = False
+        self, incluir_inactivas: bool = False, docente_id: UUID | None = None
     ) -> list[tuple[Materia, Banco, int]]:
-        """Delega el listado de materias (con conteo de preguntas activas) en el caso de uso."""
-        return await self._listar_materias.execute(incluir_inactivas)
+        """Delega el listado de materias (con conteo de preguntas activas) en el caso de uso.
+
+        `docente_id` acota el listado a las materias del Docente que llama (`US-ADJ-57`).
+        """
+        return await self._listar_materias.execute(incluir_inactivas, docente_id)
 
     async def editar_materia(self, materia_id: UUID, nombre: str) -> Materia:
         """Delega la corrección del nombre de una materia en el caso de uso correspondiente."""

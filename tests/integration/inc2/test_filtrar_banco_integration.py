@@ -22,15 +22,23 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
 from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
+from tests.integration.conftest import asignar_docente_a_materia
 
 
-async def _banco_persistido(session) -> Banco:
+async def _banco_persistido(session, docente_headers: dict[str, str] | None = None) -> Banco:
+    """Persiste una Materia con Banco vacío; asigna el Docente si se indica (`US-ADJ-57`).
+
+    `docente_headers=None` alcanza para los tests que ejercitan el repositorio directo, sin
+    pasar por el endpoint HTTP ni por su chequeo de autorización.
+    """
     materia_repo = SQLAlchemyMateriaRepository(session)
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    if docente_headers is not None:
+        await asignar_docente_a_materia(str(materia.id), docente_headers)
     return banco
 
 
@@ -180,7 +188,7 @@ class TestFiltrarPreguntasAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.7-filtrar-banco.feature`."""
 
     async def test_filtro_combinado_por_dificultad_e_importancia(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         match = await _pregunta_om_persistida(
             session, banco.id, dificultad=Dificultad.ALTO, importancia=Importancia.ALTO
         )
@@ -202,7 +210,7 @@ class TestFiltrarPreguntasAPIIntegration:
         assert data["total"] == 1
 
     async def test_sin_filtros_adicionales(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         for _ in range(5):
             await _pregunta_om_persistida(session, banco.id)
         inactiva = await _pregunta_vf_persistida(session, banco.id)
@@ -221,7 +229,7 @@ class TestFiltrarPreguntasAPIIntegration:
         assert str(inactiva.id) not in [p["id"] for p in data["preguntas"]]
 
     async def test_ningun_resultado(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         await _pregunta_om_persistida(session, banco.id, dificultad=Dificultad.ALTO)
 
         transport = ASGITransport(app=app)
@@ -236,7 +244,7 @@ class TestFiltrarPreguntasAPIIntegration:
         assert response.json() == {"preguntas": [], "total": 0}
 
     async def test_pagina_y_tamanio_pagina_via_api(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         for _ in range(5):
             await _pregunta_om_persistida(session, banco.id)
 

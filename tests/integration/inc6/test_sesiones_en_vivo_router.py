@@ -29,18 +29,44 @@ def _headers(usuario_id: uuid.UUID, rol: TipoPerfil) -> dict[str, str]:
     return {"Authorization": f"Bearer {PyJWTIssuer().emitir(usuario_id, rol).token}"}
 
 
-async def _crear_materia_con_preguntas(
+async def _crear_materia_con_preguntas_y_comision(
     client: AsyncClient,
+    session,
     admin_headers: dict,
-    docente_headers: dict,
     cantidad: int,
     unidad: str = "Unidad 1",
     tema: str = "Tema",
-) -> str:
+) -> tuple[str, str]:
+    """Crea materia, Comisión con Docente real asignado, y carga `cantidad` preguntas.
+
+    `US-ADJ-57`: `POST /preguntas/verdadero-falso` exige que el Docente que llama tenga una
+    Comisión asignada en la materia — se crea y asigna antes de cargar, no con la fixture
+    `docente_headers` (JWT anónimo sin fila `Usuario`, no asignable). Devuelve
+    `(materia_id, comision_id)`.
+    """
     creada = await client.post(
         "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers
     )
     banco_id = creada.json()["banco_id"]
+    materia_id = creada.json()["id"]
+
+    hasher = BcryptPasswordHasher()
+    admin = Usuario.crear(
+        "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
+    )
+    await SQLAlchemyUsuarioRepository(session).guardar(admin)
+    docente_usuario = Usuario.crear(
+        "Docente", f"docente.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.DOCENTE
+    )
+    await SQLAlchemyUsuarioRepository(session).guardar(docente_usuario)
+
+    comision_repo = SQLAlchemyComisionRepository(session)
+    comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
+    await comision_repo.guardar(comision)
+    comision.asignar_docente(docente_usuario.id)
+    await comision_repo.actualizar(comision)
+
+    docente_headers_reales = _headers(docente_usuario.id, TipoPerfil.DOCENTE)
     for i in range(cantidad):
         await client.post(
             "/preguntas/verdadero-falso",
@@ -53,20 +79,9 @@ async def _crear_materia_con_preguntas(
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers,
+            headers=docente_headers_reales,
         )
-    return creada.json()["id"]
-
-
-async def _crear_comision(session, materia_id: str) -> str:
-    hasher = BcryptPasswordHasher()
-    admin = Usuario.crear(
-        "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
-    )
-    await SQLAlchemyUsuarioRepository(session).guardar(admin)
-    comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
-    await SQLAlchemyComisionRepository(session).guardar(comision)
-    return str(comision.id)
+    return materia_id, str(comision.id)
 
 
 async def _contar_streams_de_sesiones(session) -> int:
@@ -81,10 +96,9 @@ class TestCrearSesionEnVivoAPIIntegration:
     async def test_creacion_exitosa(self, session, docente_headers, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(
-                client, admin_headers, docente_headers, 20
+            materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+                client, session, admin_headers, 20
             )
-            comision_id = await _crear_comision(session, materia_id)
 
             response = await client.post(
                 "/sesiones-en-vivo",
@@ -121,10 +135,9 @@ class TestCrearSesionEnVivoAPIIntegration:
 
     async def test_filtra_por_unidad_y_tema(self, session, docente_headers, admin_headers):
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(
-                client, admin_headers, docente_headers, 6, unidad="U9", tema="T9"
+            _materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+                client, session, admin_headers, 6, unidad="U9", tema="T9"
             )
-            comision_id = await _crear_comision(session, materia_id)
 
             response = await client.post(
                 "/sesiones-en-vivo",
@@ -145,10 +158,9 @@ class TestCrearSesionEnVivoAPIIntegration:
     async def test_preguntas_insuficientes(self, session, docente_headers, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(
-                client, admin_headers, docente_headers, 5
+            _materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+                client, session, admin_headers, 5
             )
-            comision_id = await _crear_comision(session, materia_id)
 
             response = await client.post(
                 "/sesiones-en-vivo",
@@ -166,10 +178,9 @@ class TestCrearSesionEnVivoAPIIntegration:
     async def test_tiempo_limite_invalido(self, session, docente_headers, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(
-                client, admin_headers, docente_headers, 20
+            _materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+                client, session, admin_headers, 20
             )
-            comision_id = await _crear_comision(session, materia_id)
 
             response = await client.post(
                 "/sesiones-en-vivo",

@@ -4,14 +4,18 @@ import pytest
 
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.errors import BancoNoExiste
+from src.banco_preguntas.entities.errors import BancoNoExiste, MateriaNoAutorizada
 from src.banco_preguntas.entities.eventos import PreguntaCargada
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
-from tests.unit.inc2._fakes import FakeBancoRepository, FakePreguntaRepository
+from tests.unit.inc2._fakes import (
+    FakeBancoRepository,
+    FakeComisionConsultaPort,
+    FakePreguntaRepository,
+)
 
 
 class TestCargarPreguntaVerdaderoFalsoUseCase:
@@ -20,7 +24,9 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
         pregunta_repo = FakePreguntaRepository()
         banco = Banco.crear(uuid.uuid4())
         await banco_repo.guardar(banco)
-        use_case = CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo)
+        use_case = CargarPreguntaVerdaderoFalsoUseCase(
+            banco_repo, pregunta_repo, FakeComisionConsultaPort()
+        )
 
         pregunta, evento = await use_case.execute(
             banco_id=banco.id,
@@ -46,7 +52,9 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
         pregunta_repo = FakePreguntaRepository()
         banco = Banco.crear(uuid.uuid4())
         await banco_repo.guardar(banco)
-        use_case = CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo)
+        use_case = CargarPreguntaVerdaderoFalsoUseCase(
+            banco_repo, pregunta_repo, FakeComisionConsultaPort()
+        )
 
         pregunta, _evento = await use_case.execute(
             banco_id=banco.id,
@@ -65,7 +73,9 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
     async def test_rechaza_banco_inexistente(self):
         banco_repo = FakeBancoRepository()
         pregunta_repo = FakePreguntaRepository()
-        use_case = CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo)
+        use_case = CargarPreguntaVerdaderoFalsoUseCase(
+            banco_repo, pregunta_repo, FakeComisionConsultaPort()
+        )
 
         with pytest.raises(BancoNoExiste):
             await use_case.execute(
@@ -78,6 +88,31 @@ class TestCargarPreguntaVerdaderoFalsoUseCase:
                     importancia=Importancia.ALTO,
                 ),
                 respuesta_correcta=True,
+            )
+
+        assert len(pregunta_repo.preguntas) == 0
+
+    async def test_rechaza_docente_sin_comision_en_la_materia(self):
+        """`US-ADJ-57`: `docente_id` sin ninguna Comisión asignada en la materia del banco."""
+        banco_repo = FakeBancoRepository()
+        pregunta_repo = FakePreguntaRepository()
+        comision_consulta = FakeComisionConsultaPort()
+        banco = Banco.crear(uuid.uuid4())
+        await banco_repo.guardar(banco)
+        use_case = CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo, comision_consulta)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(
+                banco_id=banco.id,
+                metadatos=MetadatosPregunta(
+                    texto="El sol es una estrella.",
+                    unidad_tematica="Unidad 1",
+                    tema="Astronomía",
+                    dificultad=Dificultad.MEDIO,
+                    importancia=Importancia.ALTO,
+                ),
+                respuesta_correcta=True,
+                docente_id=uuid.uuid4(),
             )
 
         assert len(pregunta_repo.preguntas) == 0

@@ -11,7 +11,12 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.4.4-detalle-actividad.feature")
 
@@ -26,6 +31,12 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -47,6 +58,7 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -59,7 +71,7 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
         return creada.json()["id"]
 

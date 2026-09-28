@@ -41,18 +41,21 @@ class PreguntasController:
         banco_id: UUID,
         metadatos: MetadatosPregunta,
         opciones: list[Opcion],
+        docente_id: UUID | None = None,
     ) -> tuple[PreguntaPlantillaOpcionMultiple, object]:
         """Delega la carga de la pregunta en el caso de uso correspondiente.
 
         El evento se tipa como `object` en esta capa — mismo criterio de reducción de CBO
         aplicado a `editar_pregunta`/`eliminar_pregunta`, extendido acá para bajar el CBO del
         controller de 11/10 a 10/10 tras sumar `EliminarPreguntaUseCase` (`US-2.1.6`). Ningún
-        caller (router) usa la forma concreta del evento hoy.
+        caller (router) usa la forma concreta del evento hoy. `docente_id` acota la carga a
+        materias del Docente que llama (`US-ADJ-57`).
         """
         return await self._cargar_pregunta_opcion_multiple.execute(
             banco_id=banco_id,
             metadatos=metadatos,
             opciones=opciones,
+            docente_id=docente_id,
         )
 
     async def cargar_pregunta_verdadero_falso(
@@ -60,6 +63,7 @@ class PreguntasController:
         banco_id: UUID,
         metadatos: MetadatosPregunta,
         respuesta_correcta: bool,
+        docente_id: UUID | None = None,
     ) -> tuple[PreguntaPlantillaVerdaderoFalso, object]:
         """Delega la carga de la pregunta Verdadero/Falso en el caso de uso correspondiente.
 
@@ -70,6 +74,7 @@ class PreguntasController:
             banco_id=banco_id,
             metadatos=metadatos,
             respuesta_correcta=respuesta_correcta,
+            docente_id=docente_id,
         )
 
     async def editar_pregunta(
@@ -78,6 +83,7 @@ class PreguntasController:
         metadatos: MetadatosPregunta,
         opciones: list[Opcion] | None = None,
         respuesta_correcta: bool | None = None,
+        docente_id: UUID | None = None,
     ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
         """Delega la edición de la pregunta en el caso de uso correspondiente.
 
@@ -91,10 +97,11 @@ class PreguntasController:
             metadatos=metadatos,
             opciones=opciones,
             respuesta_correcta=respuesta_correcta,
+            docente_id=docente_id,
         )
 
     async def eliminar_pregunta(
-        self, pregunta_id: UUID
+        self, pregunta_id: UUID, docente_id: UUID | None = None
     ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
         """Delega la baja lógica de la pregunta en el caso de uso correspondiente.
 
@@ -103,4 +110,4 @@ class PreguntasController:
         que ya está en el límite del umbral por el número de use cases inyectados. El tipo
         preciso sigue disponible en `EliminarPreguntaUseCase.execute`.
         """
-        return await self._eliminar_pregunta.execute(pregunta_id)
+        return await self._eliminar_pregunta.execute(pregunta_id, docente_id=docente_id)

@@ -11,7 +11,11 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.4.2-listado-materias-actividades-docente.feature")
 
@@ -26,6 +30,11 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -54,6 +63,7 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -66,7 +76,7 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
         return creada.json()["id"]
 
@@ -90,10 +100,10 @@ async def _crear_actividad(materia_id: str) -> None:
         )
 
 
-async def _get_materias():
+async def _get_materias(headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.get("/materias", headers=docente_headers())
+        return await client.get("/materias", headers=headers)
 
 
 async def _get_actividades(materia_id: str):
@@ -106,7 +116,9 @@ async def _get_actividades(materia_id: str):
 
 @given("un Docente autenticado con materias asignadas")
 def docente_con_materias(context):
-    run_async(_crear_materia(f"Ingeniería de Software {uuid.uuid4()}"))
+    materia_id = run_async(_crear_materia(f"Ingeniería de Software {uuid.uuid4()}"))
+    _docente_id, headers = run_async(docente_asignado_a_materia(materia_id))
+    context["headers"] = headers
 
 
 @given("un Docente en /actividad-evaluativa/materias")
@@ -124,7 +136,7 @@ def materia_sin_actividades(context):
 
 @when("entra a /actividad-evaluativa/materias")
 def entra_a_materias(context):
-    context["response"] = run_async(_get_materias())
+    context["response"] = run_async(_get_materias(context["headers"]))
 
 
 @when("elige una materia")
