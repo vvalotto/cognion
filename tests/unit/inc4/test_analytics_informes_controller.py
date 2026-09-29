@@ -165,7 +165,9 @@ class TestAnalyticsInformesController:
         comision_consulta.estudiantes = [estudiante]
         controller = _controller(comision_consulta=comision_consulta)
 
-        resultado = await controller.obtener_desempeno_por_comision(materia_id, comision_id, uuid4())
+        resultado = await controller.obtener_desempeno_por_comision(
+            materia_id, comision_id, uuid4()
+        )
 
         assert len(resultado) == 1
         assert resultado[0].estudiante_id == estudiante.id
@@ -178,7 +180,9 @@ class TestAnalyticsInformesController:
         comision_consulta.comisiones = [ComisionResumen(id=comision_id, horario="lu 10-12")]
         controller = _controller(comision_consulta=comision_consulta)
 
-        resultado = await controller.obtener_evolucion_temporal_comision(materia_id, comision_id, uuid4())
+        resultado = await controller.obtener_evolucion_temporal_comision(
+            materia_id, comision_id, uuid4()
+        )
 
         assert resultado == []
 

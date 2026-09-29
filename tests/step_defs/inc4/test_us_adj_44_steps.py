@@ -320,9 +320,7 @@ def comision_con_estudiantes_en_distinto_estado(context):
     ) = run_async(_setup())
     context["headers"] = _headers_docente()
     run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
-    run_async(
-        asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"])
-    )
+    run_async(asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"]))
 
 
 @given("una actividad abierta ahora, visible a la comisión, que el segundo estudiante no rindió")
@@ -352,9 +350,7 @@ def comision_sin_evaluaciones_finalizadas(context):
     context["materia_id"], context["comision_id"] = run_async(_setup())
     context["headers"] = _headers_docente()
     run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
-    run_async(
-        asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"])
-    )
+    run_async(asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"]))
 
 
 @given("una comisión de otra materia")

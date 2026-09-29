@@ -51,9 +51,7 @@ class AnalyticsInformesController:
         self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
     ) -> list[TasaErrorTema]:
         """Tasa de error por tema de una materia, acotada a una comisión si se indica (RF-17)."""
-        return await self._obtener_tasa_error_por_tema.execute(
-            materia_id, comision_id, docente_id
-        )
+        return await self._obtener_tasa_error_por_tema.execute(materia_id, comision_id, docente_id)
 
     async def obtener_desempeno_por_comision(
         self, materia_id: UUID, comision_id: UUID, docente_id: UUID

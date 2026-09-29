@@ -41,9 +41,7 @@ class ComisionConsultaPortInProcess(ComisionConsultaPort):
 
     async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
         """Ver `ComisionConsultaPort.esta_asignado_a_materia` (`US-ADJ-57`)."""
-        return await self._comision_query.docente_tiene_comision_en_materia(
-            docente_id, materia_id
-        )
+        return await self._comision_query.docente_tiene_comision_en_materia(docente_id, materia_id)
 
     async def esta_asignado_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
         """Ver `ComisionConsultaPort.esta_asignado_a_comision` (`US-ADJ-57`)."""

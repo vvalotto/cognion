@@ -160,7 +160,9 @@ class TestAnalyticsController:
         )
         controller = _controller(_EvaluacionDesempenoConsultaPortFake(resumenes=[resumen]))
 
-        resultado = await controller.obtener_evolucion_temporal_estudiante(uuid4(), uuid4(), uuid4())
+        resultado = await controller.obtener_evolucion_temporal_estudiante(
+            uuid4(), uuid4(), uuid4()
+        )
 
         assert len(resultado) == 1
         assert resultado[0].porcentaje_acierto == 100
