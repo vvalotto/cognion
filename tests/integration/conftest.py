@@ -102,3 +102,35 @@ async def asignar_docente_a_materia(materia_id: str, docente_headers: dict[str, 
         await comision_repo.guardar(comision)
         comision.asignar_docente(docente_id)
         await comision_repo.actualizar(comision)
+
+
+async def asignar_docente_a_comision_existente(
+    comision_id: str, docente_headers: dict[str, str]
+) -> None:
+    """Asigna el Docente de `docente_headers` a una Comisión ya creada.
+
+    `US-ADJ-57`: variante de `asignar_docente_a_materia` para endpoints que verifican
+    pertenencia a una `comision_id` puntual (no a "alguna" comisión de la materia) — la
+    Comisión ya existe (creada por el propio test), este helper solo asigna el Docente.
+    Materializa la fila del Docente solo si todavía no existe — combinable con
+    `asignar_docente_a_materia` ya llamado antes en el mismo test (mismo `docente_id`).
+    """
+    docente_id = _id_desde_headers(docente_headers)
+    async with SessionLocal() as session:
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        comision_repo = SQLAlchemyComisionRepository(session)
+
+        if await usuario_repo.obtener_por_id(docente_id) is None:
+            docente = Usuario(
+                id=docente_id,
+                nombre="Docente",
+                email=f"docente.{uuid.uuid4()}@fiuner.edu.ar",
+                password_hash=BcryptPasswordHasher().hash("x"),
+                perfil=Docente(id=docente_id),
+            )
+            await usuario_repo.guardar(docente)
+
+        comision = await comision_repo.obtener_por_id(uuid.UUID(comision_id))
+        assert comision is not None
+        comision.asignar_docente(docente_id)
+        await comision_repo.actualizar(comision)

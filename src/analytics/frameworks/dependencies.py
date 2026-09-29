@@ -110,7 +110,7 @@ def get_analytics_controller(session: SessionDep) -> AnalyticsController:
         ObtenerDesempenoEstudianteUseCase(
             evaluacion_desempeno_consulta, sesion_en_vivo_desempeno_consulta, comision_consulta
         ),
-        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta, comision_consulta),
     )
 
 

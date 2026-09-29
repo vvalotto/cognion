@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
+from src.analytics.entities.errors import MateriaNoAutorizada
+from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
@@ -30,15 +32,26 @@ class ObtenerEvolucionTemporalEstudianteUseCase:
     (`obtener_titulos_actividades`, `US-ADJ-45`).
     """
 
-    def __init__(self, evaluacion_desempeno_consulta: EvaluacionDesempenoConsultaPort) -> None:
-        """Recibe el puerto de consulta de desempeño sobre el event store ajeno."""
+    def __init__(
+        self,
+        evaluacion_desempeno_consulta: EvaluacionDesempenoConsultaPort,
+        comision_consulta: ComisionConsultaPort,
+    ) -> None:
+        """Recibe el puerto de consulta de desempeño y el de pertenencia de Comisión."""
         self._evaluacion_desempeno_consulta = evaluacion_desempeno_consulta
+        self._comision_consulta = comision_consulta
 
-    async def execute(self, estudiante_id: UUID, materia_id: UUID) -> list[EvolucionTemporalPunto]:
+    async def execute(
+        self, estudiante_id: UUID, materia_id: UUID, docente_id: UUID
+    ) -> list[EvolucionTemporalPunto]:
         """Devuelve la serie ordenada por `finalizada_en` ascendente.
 
         Estudiante sin ninguna `Evaluacion` finalizada en la materia → lista vacía.
+        `docente_id` sin Comisión asignada en `materia_id` → `raise MateriaNoAutorizada`
+        (`US-ADJ-57`).
         """
+        if not await self._comision_consulta.esta_asignado_a_materia(docente_id, materia_id):
+            raise MateriaNoAutorizada(materia_id)
         resumenes = await self._evaluacion_desempeno_consulta.listar_evaluaciones_finalizadas(
             estudiante_id, materia_id
         )

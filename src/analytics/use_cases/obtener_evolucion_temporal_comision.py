@@ -9,7 +9,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
-from src.analytics.entities.errors import ComisionNoPerteneceAMateria
+from src.analytics.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoPerteneceAMateria,
+    MateriaNoAutorizada,
+)
 from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
@@ -44,12 +48,18 @@ class ObtenerEvolucionTemporalComisionUseCase:
         self._evaluacion_desempeno_consulta = evaluacion_desempeno_consulta
 
     async def execute(
-        self, materia_id: UUID, comision_id: UUID
+        self, materia_id: UUID, comision_id: UUID, docente_id: UUID
     ) -> list[EvolucionTemporalComisionPunto]:
         """Devuelve la serie ordenada cronológicamente por actividad.
 
         `comision_id` que no pertenece a `materia_id` → `raise ComisionNoPerteneceAMateria`.
+        `docente_id` sin autorización → `MateriaNoAutorizada`/`ComisionNoAutorizada`
+        (`US-ADJ-57`).
         """
+        if not await self._comision_consulta.esta_asignado_a_materia(docente_id, materia_id):
+            raise MateriaNoAutorizada(materia_id)
+        if not await self._comision_consulta.esta_asignado_a_comision(docente_id, comision_id):
+            raise ComisionNoAutorizada(comision_id)
         comisiones = await self._comision_consulta.listar_comisiones_por_materia(materia_id)
         if comision_id not in {comision.id for comision in comisiones}:
             raise ComisionNoPerteneceAMateria(comision_id, materia_id)

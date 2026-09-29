@@ -33,6 +33,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 AGGREGATE_TYPE_EVALUACION = "Evaluacion"
 AGGREGATE_TYPE_ACTIVIDAD = "ActividadEvaluativaPeriodoAbierto"
@@ -403,6 +404,7 @@ class TestAnalyticsRouterDesempenoDeEstudiante:
         estudiante = await _crear_estudiante_real(session)
         store = SQLAlchemyEventStore(session)
         materia_id, actividad_id = uuid4(), uuid4()
+        await asignar_docente_a_materia(str(materia_id), docente_headers)
         await _crear_actividad(store, actividad_id, materia_id)
         await _evaluacion_finalizada(store, actividad_id, estudiante.id, 8, 2)
 
@@ -426,6 +428,7 @@ class TestAnalyticsRouterDesempenoDeEstudiante:
     async def test_estudiante_sin_evaluaciones_finalizadas(self, session, docente_headers):
         estudiante = await _crear_estudiante_real(session)
         materia_id = uuid4()
+        await asignar_docente_a_materia(str(materia_id), docente_headers)
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

@@ -58,6 +58,12 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
     async def listar_estudiantes(self, comision_id) -> list[EstudianteResumen]:
         return self.estudiantes
 
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return True
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return True
+
 
 class TestAnalyticsCompletitudController:
     @pytest.mark.asyncio
@@ -77,7 +83,7 @@ class TestAnalyticsCompletitudController:
             ObtenerCompletitudPorActividadUseCase(evaluacion_desempeno_consulta, comision_consulta)
         )
 
-        resultado = await controller.obtener_completitud_por_actividad(uuid4())
+        resultado = await controller.obtener_completitud_por_actividad(uuid4(), uuid4())
 
         assert resultado.resumen.finalizadas == 1
         assert resultado.detalle[0].estudiante_id == estudiante.id

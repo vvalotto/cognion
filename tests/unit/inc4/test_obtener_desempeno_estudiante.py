@@ -5,6 +5,7 @@ from uuid import uuid4
 
 import pytest
 
+from src.analytics.entities.errors import MateriaNoAutorizada
 from src.analytics.entities.ports.comision_consulta_port import (
     ComisionConsultaPort,
     ComisionResumen,
@@ -64,14 +65,23 @@ class _SesionEnVivoDesempenoConsultaPortFake(SesionEnVivoDesempenoConsultaPort):
 class _ComisionConsultaPortFake(ComisionConsultaPort):
     """Fake del puerto de comisiones — devuelve una lista fija de `ComisionResumen`."""
 
-    def __init__(self, comisiones: list[ComisionResumen] | None = None) -> None:
+    def __init__(
+        self, comisiones: list[ComisionResumen] | None = None, autorizado: bool = True
+    ) -> None:
         self._comisiones = comisiones or []
+        self._autorizado = autorizado
 
     async def listar_comisiones_por_materia(self, materia_id) -> list[ComisionResumen]:
         return self._comisiones
 
     async def listar_estudiantes(self, comision_id):
         raise NotImplementedError
+
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return self._autorizado
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return self._autorizado
 
 
 def _resumen(
@@ -115,11 +125,12 @@ def _use_case(
     resumenes: list[EvaluacionDesempenoResumen] | None = None,
     resumenes_en_vivo: list[SesionEnVivoDesempenoResumen] | None = None,
     comisiones: list[ComisionResumen] | None = None,
+    autorizado: bool = True,
 ) -> ObtenerDesempenoEstudianteUseCase:
     return ObtenerDesempenoEstudianteUseCase(
         _EvaluacionDesempenoConsultaPortFake(resumenes or []),
         _SesionEnVivoDesempenoConsultaPortFake(resumenes_en_vivo),
-        _ComisionConsultaPortFake(comisiones),
+        _ComisionConsultaPortFake(comisiones, autorizado=autorizado),
     )
 
 
@@ -311,3 +322,27 @@ class TestSesionesEnVivo:
         assert detalle.posicion == 3
         assert detalle.total_participantes == 14
         assert detalle.cantidad_preguntas == 10
+
+
+class TestAutorizacionPorComision:
+    """`US-ADJ-57`: `docente_id` habilita la verificación de pertenencia a la materia."""
+
+    @pytest.mark.asyncio
+    async def test_sin_docente_id_no_verifica(self):
+        use_case = _use_case(autorizado=False)
+
+        await use_case.execute(uuid4(), uuid4())
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_levanta_materia_no_autorizada(self):
+        materia_id = uuid4()
+        use_case = _use_case(autorizado=False)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(uuid4(), materia_id, docente_id=uuid4())
+
+    @pytest.mark.asyncio
+    async def test_docente_autorizado_no_levanta(self):
+        use_case = _use_case(autorizado=True)
+
+        await use_case.execute(uuid4(), uuid4(), docente_id=uuid4())

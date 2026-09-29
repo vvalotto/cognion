@@ -5,7 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.analytics.entities.errors import ComisionNoPerteneceAMateria
+from src.analytics.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoPerteneceAMateria,
+    MateriaNoAutorizada,
+)
 from src.analytics.entities.ports.comision_consulta_port import (
     ComisionConsultaPort,
     EstudianteResumen,
@@ -48,12 +52,20 @@ class ObtenerDesempenoPorComisionUseCase:
         self._comision_consulta = comision_consulta
         self._evaluacion_desempeno_consulta = evaluacion_desempeno_consulta
 
-    async def execute(self, materia_id: UUID, comision_id: UUID) -> list[DesempenoComisionFila]:
+    async def execute(
+        self, materia_id: UUID, comision_id: UUID, docente_id: UUID
+    ) -> list[DesempenoComisionFila]:
         """Devuelve una fila por estudiante del roster de `comision_id`.
 
         `comision_id` que no pertenece a `materia_id` → `raise ComisionNoPerteneceAMateria`
         (el router lo mapea a 422, mismo criterio que `ObtenerTasaErrorPorTemaUseCase`).
+        `docente_id` sin autorización → `MateriaNoAutorizada`/`ComisionNoAutorizada`
+        (`US-ADJ-57`).
         """
+        if not await self._comision_consulta.esta_asignado_a_materia(docente_id, materia_id):
+            raise MateriaNoAutorizada(materia_id)
+        if not await self._comision_consulta.esta_asignado_a_comision(docente_id, comision_id):
+            raise ComisionNoAutorizada(comision_id)
         comisiones = await self._comision_consulta.listar_comisiones_por_materia(materia_id)
         if comision_id not in {comision.id for comision in comisiones}:
             raise ComisionNoPerteneceAMateria(comision_id, materia_id)

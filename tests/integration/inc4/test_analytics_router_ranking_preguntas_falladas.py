@@ -47,6 +47,10 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import (
+    asignar_docente_a_comision_existente,
+    asignar_docente_a_materia,
+)
 
 AGGREGATE_TYPE_EVALUACION = "Evaluacion"
 AGGREGATE_TYPE_ACTIVIDAD = "ActividadEvaluativaPeriodoAbierto"
@@ -180,6 +184,7 @@ class TestAnalyticsRouterRankingPreguntasFalladas:
         pregunta_baja = await _pregunta_persistida(session, banco.id, "Unidad 1", "T1")
         pregunta_alta = await _pregunta_persistida(session, banco.id, "Unidad 1", "T2")
         _, estudiante = await _comision_con_estudiante(session, materia.id)
+        await asignar_docente_a_materia(str(materia.id), docente_headers)
 
         store = SQLAlchemyEventStore(session)
         actividad_id = uuid4()
@@ -218,6 +223,7 @@ class TestAnalyticsRouterRankingPreguntasFalladas:
 
         comision_1_id, estudiante_1 = await _comision_con_estudiante(session, materia.id)
         _, estudiante_2 = await _comision_con_estudiante(session, materia.id)
+        await asignar_docente_a_comision_existente(str(comision_1_id), docente_headers)
 
         store = SQLAlchemyEventStore(session)
         actividad_id = uuid4()
@@ -246,6 +252,7 @@ class TestAnalyticsRouterRankingPreguntasFalladas:
 
     async def test_materia_sin_preguntas_presentadas(self, docente_headers):
         materia_id = uuid4()
+        await asignar_docente_a_materia(str(materia_id), docente_headers)
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -272,7 +279,9 @@ class TestAnalyticsRouterRankingPreguntasFalladas:
                 headers=docente_headers,
             )
 
-        assert response.status_code == 422
+        # `US-ADJ-57`: el Docente no está asignado ni a la materia ni a esa comisión — la
+        # autorización (403) se resuelve antes que la validación de negocio.
+        assert response.status_code == 403
 
     async def test_sin_autenticacion(self):
         materia_id = uuid4()

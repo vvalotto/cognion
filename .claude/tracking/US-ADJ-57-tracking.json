@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-09-27T18:48:52.375716+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 151042,
-    "effective_seconds": 151042,
+    "total_elapsed_seconds": 182849,
+    "effective_seconds": 182849,
     "paused_seconds": 0
   },
   "phases": [
@@ -197,6 +197,45 @@
           "variance_minutes": -90.0,
           "file_created": "tests/unit/inc3/_fakes.py,tests/unit/inc6/_fakes.py,tests/integration/inc6/_helpers.py,tests/integration/inc5/test_notificar_apertura_actividad_integration.py,tests/integration/inc5/test_notificar_cierre_actividad_integration.py,frontend/e2e/soporte/sembrar.ts",
           "status": "completed"
+        },
+        {
+          "task_id": "T7-analytics-port",
+          "task_name": "Puerto y adapter de Analytics ampliados",
+          "task_type": "entities",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-29T21:36:21.020017+00:00",
+          "completed_at": "2026-09-29T21:36:21.258888+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -20.0,
+          "file_created": "src/analytics/entities/ports/comision_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8-analytics-use-cases",
+          "task_name": "7 use cases de reportes con verificacion de autorizacion",
+          "task_type": "use_cases",
+          "estimated_minutes": 60.0,
+          "started_at": "2026-09-29T21:36:21.497045+00:00",
+          "completed_at": "2026-09-29T21:36:21.733713+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -60.0,
+          "file_created": "src/analytics/use_cases/*.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9-analytics-router",
+          "task_name": "Router, controllers y dependencies actualizados",
+          "task_type": "interface_adapters,frameworks",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-09-29T21:36:21.966400+00:00",
+          "completed_at": "2026-09-29T21:36:22.195047+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -30.0,
+          "file_created": "src/analytics/frameworks/api/analytics_router.py",
+          "status": "completed"
         }
       ],
       "auto_approved": true,
@@ -205,12 +244,12 @@
   ],
   "pauses": [],
   "summary": {
-    "total_tasks": 11,
-    "completed_tasks": 11,
+    "total_tasks": 14,
+    "completed_tasks": 14,
     "total_phases": 4,
-    "estimated_total_minutes": 435.0,
+    "estimated_total_minutes": 545.0,
     "actual_total_minutes": 1402.08,
-    "variance_minutes": 967.08,
-    "variance_percent": 222.32
+    "variance_minutes": 857.08,
+    "variance_percent": 157.26
   }
 }

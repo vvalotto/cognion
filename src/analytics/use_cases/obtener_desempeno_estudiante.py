@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
+from src.analytics.entities.errors import MateriaNoAutorizada
 from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
@@ -88,8 +89,18 @@ class ObtenerDesempenoEstudianteUseCase:
         self._sesion_en_vivo_desempeno_consulta = sesion_en_vivo_desempeno_consulta
         self._comision_consulta = comision_consulta
 
-    async def execute(self, estudiante_id: UUID, materia_id: UUID) -> DesempenoEstudiante:
-        """Devuelve el detalle ordenado por `finalizada_en` descendente y el resumen acumulado."""
+    async def execute(
+        self, estudiante_id: UUID, materia_id: UUID, docente_id: UUID | None = None
+    ) -> DesempenoEstudiante:
+        """Devuelve el detalle ordenado por `finalizada_en` descendente y el resumen acumulado.
+
+        `docente_id` en `None` (llamada del propio Estudiante) no verifica nada (`US-ADJ-57`);
+        con un `docente_id`, levanta `MateriaNoAutorizada` si no tiene Comisión en `materia_id`.
+        """
+        if docente_id is not None and not await self._comision_consulta.esta_asignado_a_materia(
+            docente_id, materia_id
+        ):
+            raise MateriaNoAutorizada(materia_id)
         resumenes = await self._evaluacion_desempeno_consulta.listar_evaluaciones_finalizadas(
             estudiante_id, materia_id
         )
