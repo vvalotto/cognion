@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-09-27T18:48:52.375716+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 89364,
-    "effective_seconds": 89364,
+    "total_elapsed_seconds": 151042,
+    "effective_seconds": 151042,
     "paused_seconds": 0
   },
   "phases": [
@@ -132,6 +132,71 @@
           "variance_minutes": -88.87,
           "file_created": "tests/step_defs/,tests/integration/inc6/_helpers.py,tests/step_defs/inc2/_auth_headers.py,tests/step_defs/inc3/_auth_headers.py",
           "status": "completed"
+        },
+        {
+          "task_id": "T7-actividad-port",
+          "task_name": "Puerto y adapter de Actividad Evaluativa: esta_asignado_a_materia/esta_asignado_a_comision",
+          "task_type": "entities",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-29T12:45:40.378193+00:00",
+          "completed_at": "2026-09-29T12:45:40.424291+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -15.0,
+          "file_created": "src/actividad_evaluativa/entities/ports/comision_consulta_port.py,src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py,src/actividad_evaluativa/entities/errors.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8-actividad-use-cases-periodo-abierto",
+          "task_name": "Chequeo de pertenencia en los 6 use cases de actividades de período abierto",
+          "task_type": "use_cases",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-09-29T12:45:46.820430+00:00",
+          "completed_at": "2026-09-29T12:45:46.902511+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -30.0,
+          "file_created": "src/actividad_evaluativa/use_cases/listar_actividades.py,src/actividad_evaluativa/use_cases/obtener_actividad.py,src/actividad_evaluativa/use_cases/crear_actividad_periodo_abierto.py,src/actividad_evaluativa/use_cases/modificar_periodo_disponibilidad.py,src/actividad_evaluativa/use_cases/modificar_titulo_actividad.py,src/actividad_evaluativa/use_cases/cerrar_actividad.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9-actividad-use-cases-sesiones-vivo",
+          "task_name": "Chequeo de pertenencia en los 8 use cases de sesiones en vivo",
+          "task_type": "use_cases",
+          "estimated_minutes": 40.0,
+          "started_at": "2026-09-29T12:45:53.974548+00:00",
+          "completed_at": "2026-09-29T12:45:54.050893+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -40.0,
+          "file_created": "src/actividad_evaluativa/use_cases/crear_sesion_en_vivo.py,src/actividad_evaluativa/use_cases/iniciar_sesion_en_vivo.py,src/actividad_evaluativa/use_cases/cancelar_sesion_en_vivo.py,src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py,src/actividad_evaluativa/use_cases/cerrar_pregunta_actual.py,src/actividad_evaluativa/use_cases/avanzar_siguiente_pregunta.py,src/actividad_evaluativa/use_cases/finalizar_sesion_en_vivo.py,src/actividad_evaluativa/use_cases/listar_participantes.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T10-actividad-controllers-routers-dependencies",
+          "task_name": "Controllers, routers y composition root: propagar docente_id y mapear 403",
+          "task_type": "interface_adapters",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-09-29T12:46:00.735581+00:00",
+          "completed_at": "2026-09-29T12:46:00.793252+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -25.0,
+          "file_created": "src/actividad_evaluativa/interface_adapters/controllers/actividades_controller.py,src/actividad_evaluativa/interface_adapters/controllers/actividades_query_controller.py,src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py,src/actividad_evaluativa/interface_adapters/controllers/conduccion_en_vivo_controller.py,src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_query_controller.py,src/actividad_evaluativa/frameworks/api/actividades_router.py,src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py,src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T11-blast-radius-tests",
+          "task_name": "Blast radius: fixtures de tests que cargaban preguntas/creaban actividades y sesiones en vivo con un Docente anónimo sin Comisión asignada",
+          "task_type": "test",
+          "estimated_minutes": 90.0,
+          "started_at": "2026-09-29T12:46:14.426328+00:00",
+          "completed_at": "2026-09-29T12:46:14.473885+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -90.0,
+          "file_created": "tests/unit/inc3/_fakes.py,tests/unit/inc6/_fakes.py,tests/integration/inc6/_helpers.py,tests/integration/inc5/test_notificar_apertura_actividad_integration.py,tests/integration/inc5/test_notificar_cierre_actividad_integration.py,frontend/e2e/soporte/sembrar.ts",
+          "status": "completed"
         }
       ],
       "auto_approved": true,
@@ -140,12 +205,12 @@
   ],
   "pauses": [],
   "summary": {
-    "total_tasks": 6,
-    "completed_tasks": 6,
+    "total_tasks": 11,
+    "completed_tasks": 11,
     "total_phases": 4,
-    "estimated_total_minutes": 235.0,
+    "estimated_total_minutes": 435.0,
     "actual_total_minutes": 1402.08,
-    "variance_minutes": 1167.08,
-    "variance_percent": 496.63
+    "variance_minutes": 967.08,
+    "variance_percent": 222.32
   }
 }

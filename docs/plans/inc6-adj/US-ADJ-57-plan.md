@@ -132,35 +132,35 @@ compartido). Confirmado con `git stash` que el único fallo restante
 combinados (no la suite completa) ya existía antes de esta US.
 
 ### 2. Banco de Preguntas
-- [ ] `src/banco_preguntas/entities/ports/comision_consulta_port.py` — `esta_asignado_a_materia`
-- [ ] `src/banco_preguntas/frameworks/adapters/comision_consulta_port_in_process.py` — reescribir
+- [x] `src/banco_preguntas/entities/ports/comision_consulta_port.py` — `esta_asignado_a_materia`
+- [x] `src/banco_preguntas/frameworks/adapters/comision_consulta_port_in_process.py` — reescribir
   para delegar en `SQLAlchemyComisionQueryRepository` de Identidad (hoy consulta `ComisionModel`
   directo — se corrige de paso, mismo patrón que Actividad Evaluativa/Analytics)
-- [ ] `src/banco_preguntas/use_cases/listar_materias.py` — `docente_id: UUID | None`, filtra si
+- [x] `src/banco_preguntas/use_cases/listar_materias.py` — `docente_id: UUID | None`, filtra si
   se indica
-- [ ] `src/banco_preguntas/use_cases/cargar_pregunta_opcion_multiple.py`,
+- [x] `src/banco_preguntas/use_cases/cargar_pregunta_opcion_multiple.py`,
   `cargar_pregunta_verdadero_falso.py`, `editar_pregunta.py`, `eliminar_pregunta.py` — reciben
   `docente_id`, verifican `esta_asignado_a_materia` antes de mutar, `MateriaNoAutorizada` (403)
-- [ ] `FiltrarBancoUseCase` — mismo chequeo antes de listar
-- [ ] Controllers/routers (`materias_router.py`, `preguntas_router.py`, `bancos_router.py`) —
+- [x] `FiltrarBancoUseCase` — mismo chequeo antes de listar
+- [x] Controllers/routers (`materias_router.py`, `preguntas_router.py`, `bancos_router.py`) —
   inyectan `usuario`, pasan `docente_id` solo si el rol es Docente
-- [ ] `src/banco_preguntas/frameworks/dependencies.py` — cablea el puerto ampliado
+- [x] `src/banco_preguntas/frameworks/dependencies.py` — cablea el puerto ampliado
 
 ### 3. Actividad Evaluativa
-- [ ] `src/actividad_evaluativa/entities/ports/comision_consulta_port.py` —
+- [x] `src/actividad_evaluativa/entities/ports/comision_consulta_port.py` —
   `esta_asignado_a_materia` + `esta_asignado_a_comision`
-- [ ] `src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py` —
+- [x] `src/actividad_evaluativa/frameworks/adapters/comision_consulta_port_in_process.py` —
   agrega los 2 métodos delegando en Identidad
-- [ ] Use cases de actividades (`listar`, `obtener`, `crear`, `modificar_periodo`,
+- [x] Use cases de actividades (`listar`, `obtener`, `crear`, `modificar_periodo`,
   `modificar_titulo`, `cerrar`) — `docente_id` + chequeo de materia; `crear` además valida cada
   id de `comisiones_ids` con `esta_asignado_a_comision`
-- [ ] Use cases de sesiones en vivo (`crear`, `iniciar`, `cancelar`, `mostrar_opciones`,
+- [x] Use cases de sesiones en vivo (`crear`, `iniciar`, `cancelar`, `mostrar_opciones`,
   `cerrar_pregunta_actual`, `avanzar_siguiente_pregunta`, `finalizar`, `listar_participantes`) —
   `docente_id` + `esta_asignado_a_comision`, reutilizando el error `ComisionNoAutorizada` ya
   existente en `entities/errors.py`
-- [ ] Routers (`actividades_router.py`, `sesiones_en_vivo_router.py`) — inyectan `usuario` donde
+- [x] Routers (`actividades_router.py`, `sesiones_en_vivo_router.py`) — inyectan `usuario` donde
   falta
-- [ ] `src/actividad_evaluativa/frameworks/dependencies.py` — cablea el puerto ampliado en los 2
+- [x] `src/actividad_evaluativa/frameworks/dependencies.py` — cablea el puerto ampliado en los 2
   controllers afectados
 
 ### 4. Analytics
@@ -180,4 +180,4 @@ combinados (no la suite completa) ya existía antes de esta US.
 - [ ] Los circuitos E2E de `US-6.3.10` (`frontend/e2e/`) deben seguir en verde — se corren en
   Fase 5/6 como regresión
 
-**Estado:** 0/28 tareas completadas
+**Estado:** 21/28 tareas completadas (secciones 1-3; falta Analytics, sección 4)

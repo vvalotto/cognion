@@ -46,6 +46,20 @@ class MateriaNoExiste(Exception):
         super().__init__(f"La materia '{materia_id}' no existe.")
 
 
+class MateriaNoAutorizada(Exception):
+    """El Docente solicitante no tiene ninguna Comisión asignada en esta materia (`US-ADJ-57`).
+
+    Nivel de autorización de las actividades de período abierto (toda la materia) — mismo
+    criterio que `MateriaNoAutorizada` de Banco de Preguntas; `ComisionNoAutorizada` (abajo)
+    cubre el nivel más estrecho de las sesiones en vivo.
+    """
+
+    def __init__(self, materia_id: object) -> None:
+        """Guarda el id de la materia ajena y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"No tenés ninguna Comisión asignada en la materia '{materia_id}'.")
+
+
 class PreguntasInsuficientes(Exception):
     """`cantidad_preguntas` excede las `PreguntaPlantilla` activas de la materia (INV-AE-01)."""
 

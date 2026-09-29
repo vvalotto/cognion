@@ -30,6 +30,9 @@ from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
 )
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import UnirseASesionEnVivoUseCase
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
@@ -83,7 +86,11 @@ async def _escenario(opciones: list[str] | None = None, con_participante: bool =
         await _unir(event_store, sesion.id)
     canal = FakeCanalTiempoReal()
     use_case = IniciarSesionEnVivoUseCase(
-        event_store, pregunta_consulta, canal, FakeParticipantesSesionQueryPort(event_store)
+        event_store,
+        pregunta_consulta,
+        canal,
+        FakeParticipantesSesionQueryPort(event_store),
+        VerificarAutorizacionComisionService(comision_consulta),
     )
     return use_case, event_store, canal, sesion, pregunta_consulta
 
@@ -236,7 +243,9 @@ class TestSesionesEnVivoControllerIniciar:
             FakeCanalTiempoReal(),
             FakeProyeccionesEnVivo(),
         )
-        cancelar = CancelarSesionEnVivoUseCase(event_store, FakeCanalTiempoReal())
+        cancelar = CancelarSesionEnVivoUseCase(
+            event_store, FakeCanalTiempoReal(), FakeComisionConsultaPort()
+        )
         controller = SesionesEnVivoController(crear, unirse, use_case, cancelar)
 
         resultado = await controller.iniciar(sesion.id)

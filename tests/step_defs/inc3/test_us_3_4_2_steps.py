@@ -58,7 +58,7 @@ async def _crear_materia(nombre: str) -> str:
         return creada.json()["id"]
 
 
-async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
@@ -78,10 +78,10 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                 },
                 headers=headers,
             )
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
-async def _crear_actividad(materia_id: str) -> None:
+async def _crear_actividad(materia_id: str, headers: dict[str, str] | None = None) -> None:
     apertura = datetime.now(UTC)
     cierre = apertura + timedelta(days=7)
     transport = ASGITransport(app=app)
@@ -96,7 +96,7 @@ async def _crear_actividad(materia_id: str) -> None:
                 "cantidad_intentos_permitidos": 1,
                 "titulo": "Parcial 1",
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
 
 
@@ -106,11 +106,11 @@ async def _get_materias(headers: dict[str, str]):
         return await client.get("/materias", headers=headers)
 
 
-async def _get_actividades(materia_id: str):
+async def _get_actividades(materia_id: str, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.get(
-            "/actividades", params={"materia_id": materia_id}, headers=docente_headers()
+            "/actividades", params={"materia_id": materia_id}, headers=headers or docente_headers()
         )
 
 
@@ -123,15 +123,17 @@ def docente_con_materias(context):
 
 @given("un Docente en /actividad-evaluativa/materias")
 def docente_en_materias(context):
-    context["materia_id"] = run_async(
+    context["materia_id"], context["docente_headers"] = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 20)
     )
-    run_async(_crear_actividad(context["materia_id"]))
+    run_async(_crear_actividad(context["materia_id"], context["docente_headers"]))
 
 
 @given("una materia sin actividades creadas")
 def materia_sin_actividades(context):
     context["materia_id"] = run_async(_crear_materia(f"Gestión de Proyectos {uuid.uuid4()}"))
+    _docente_id, headers = run_async(docente_asignado_a_materia(context["materia_id"]))
+    context["docente_headers"] = headers
 
 
 @when("entra a /actividad-evaluativa/materias")
@@ -141,12 +143,16 @@ def entra_a_materias(context):
 
 @when("elige una materia")
 def elige_una_materia(context):
-    context["response"] = run_async(_get_actividades(context["materia_id"]))
+    context["response"] = run_async(
+        _get_actividades(context["materia_id"], context.get("docente_headers"))
+    )
 
 
 @when("el Docente entra a su listado")
 def docente_entra_a_su_listado(context):
-    context["response"] = run_async(_get_actividades(context["materia_id"]))
+    context["response"] = run_async(
+        _get_actividades(context["materia_id"], context.get("docente_headers"))
+    )
 
 
 @then("ve una tarjeta por materia")

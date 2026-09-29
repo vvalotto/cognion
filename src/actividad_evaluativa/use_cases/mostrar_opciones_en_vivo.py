@@ -10,12 +10,14 @@ from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
 from src.actividad_evaluativa.entities.errors import (
+    ComisionNoAutorizada,
     ConcurrenciaOptimistaError,
     OpcionesYaMostradas,
     SesionNoExiste,
 )
 from src.actividad_evaluativa.entities.eventos_en_vivo import OpcionesEnVivoMostradas
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
+from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventoParaAlmacenar,
     EventStorePort,
@@ -57,24 +59,35 @@ class MostrarOpcionesEnVivoUseCase:
         event_store: EventStorePort,
         pregunta_consulta: PreguntaConsultaPort,
         canal: CanalTiempoRealPort,
+        comision_consulta: ComisionConsultaPort,
     ) -> None:
-        """Recibe el event store, la consulta de preguntas de Banco y el canal en vivo."""
+        """Recibe el event store, la consulta de preguntas de Banco, el canal y Comisión."""
         self._event_store = event_store
         self._pregunta_consulta = pregunta_consulta
         self._canal = canal
+        self._comision_consulta = comision_consulta
 
-    async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def execute(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Muestra las opciones de la pregunta actual a todos los conectados.
 
-        Levanta `SesionNoExiste`, `SesionNoEnCurso` u `OpcionesYaMostradas` (incluida la carrera
-        de dos pedidos simultáneos, que el chequeo optimista del event store resuelve dejando
-        ganar a uno). Publica recién después de persistir; el canal es best-effort.
+        Levanta `SesionNoExiste`, `ComisionNoAutorizada` (403) si `docente_id` no está
+        asignado a la Comisión de la sesión (`US-ADJ-57`; `None` = Administrador, sin
+        chequeo), `SesionNoEnCurso` u `OpcionesYaMostradas` (incluida la carrera de dos pedidos
+        simultáneos, que el chequeo optimista del event store resuelve dejando ganar a uno).
+        Publica recién después de persistir; el canal es best-effort.
         """
         eventos = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
         if not eventos:
             raise SesionNoExiste(sesion_id)
 
         sesion = ActividadEvaluativaEnVivo.reconstruir(eventos)
+        if docente_id is not None and not await self._comision_consulta.esta_asignado_a_comision(
+            docente_id, sesion.comision_id
+        ):
+            raise ComisionNoAutorizada(sesion.comision_id)
+
         ahora = datetime.now(UTC)
         sesion.mostrar_opciones(ahora)
 

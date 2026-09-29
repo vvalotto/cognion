@@ -12,11 +12,10 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -59,8 +58,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _post_cerrar(sesion_id: str, headers: dict[str, str]):
@@ -151,7 +151,8 @@ def solo_enunciado(context):
 @given("una pregunta ya cerrada")
 def pregunta_ya_cerrada(context):
     _preparar(context, [None])
-    assert run_async(_post_cerrar(context["sesion_id"], _docente())).status_code == 200
+    sesion_id = context["sesion_id"]
+    assert run_async(_post_cerrar(sesion_id, _docente(sesion_id))).status_code == 200
 
 
 @given("una sesión EnEspera")
@@ -173,8 +174,8 @@ def usuario_estudiante(context):
 @when("el Docente cierra la pregunta")
 def docente_cierra_con_conectados(context):
     """Cierra con el Docente y un Estudiante conectados al canal, para verificar el broadcast."""
-    docente = _docente()
     sesion_id = context["sesion_id"]
+    docente = _docente(sesion_id)
     tokens = [
         docente["Authorization"].split()[1],
         context["headers_estudiante"]["Authorization"].split()[1],
@@ -200,7 +201,9 @@ def docente_cierra_con_conectados(context):
 @when("el Docente intenta cerrarla de nuevo")
 @when("el Docente intenta cerrar la pregunta")
 def docente_intenta_cerrar(context):
-    context["response"] = run_async(_post_cerrar(context["sesion_id"], _docente()))
+    context["response"] = run_async(
+        _post_cerrar(context["sesion_id"], _docente(context["sesion_id"]))
+    )
 
 
 @when("intenta cerrar la pregunta")

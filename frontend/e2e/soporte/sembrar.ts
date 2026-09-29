@@ -71,7 +71,6 @@ export default async function sembrar() {
     nombre: materiaNombre,
   })
   if (materia.status !== 201) throw new Error(`materia: HTTP ${materia.status}`)
-  await crearPreguntas(materia.body.banco_id, docenteToken)
 
   const comision = await api<{ id: string }>("POST", "/comisiones", adminToken, {
     materia_id: materia.body.id,
@@ -80,6 +79,10 @@ export default async function sembrar() {
   })
   if (comision.status !== 201) throw new Error(`comision: HTTP ${comision.status}`)
   await api("POST", `/comisiones/${comision.body.id}/docentes`, adminToken, { docente_id: docente.id })
+
+  // `US-ADJ-57`: cargar preguntas exige que el Docente tenga una Comisión asignada en la
+  // materia del banco — se asigna la Comisión arriba, antes de este paso, no después.
+  await crearPreguntas(materia.body.banco_id, docenteToken)
 
   const estudiantes: Usuario[] = []
   for (let n = 1; n <= CANTIDAD_ESTUDIANTES; n++) {

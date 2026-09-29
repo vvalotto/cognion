@@ -5,13 +5,15 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_c
 )
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
 from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
+from tests.unit.inc3._fakes import FakeComisionConsultaPort
 from tests.unit.inc3.test_listar_actividades_use_case import FakeActividadQueryPort, _resumen
 
 
 def _controller(query_port: FakeActividadQueryPort) -> ActividadesQueryController:
+    comision_consulta = FakeComisionConsultaPort()
     return ActividadesQueryController(
-        ListarActividadesUseCase(query_port),
-        ObtenerActividadUseCase(query_port),
+        ListarActividadesUseCase(query_port, comision_consulta),
+        ObtenerActividadUseCase(query_port, comision_consulta),
     )
 
 

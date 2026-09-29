@@ -45,6 +45,9 @@ from src.actividad_evaluativa.use_cases.responder_pregunta_en_vivo import (
     _opcion_de,
 )
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import UnirseASesionEnVivoUseCase
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
@@ -263,7 +266,11 @@ async def _escenario(mostrar: str | None = "ahora", unirse: bool = True):
         comision_consulta, pregunta_consulta, event_store
     ).execute(comision_id, 3, LIMITE)
     await IniciarSesionEnVivoUseCase(
-        event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+        event_store,
+        pregunta_consulta,
+        canal,
+        FakeParticipantesAlMenosUno(),
+        VerificarAutorizacionComisionService(comision_consulta),
     ).execute(sesion.id)
     pregunta_actual = sesion.preguntas[0].pregunta_id
     if mostrar is not None:

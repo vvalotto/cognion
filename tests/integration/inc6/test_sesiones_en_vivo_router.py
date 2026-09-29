@@ -36,13 +36,13 @@ async def _crear_materia_con_preguntas_y_comision(
     cantidad: int,
     unidad: str = "Unidad 1",
     tema: str = "Tema",
-) -> tuple[str, str]:
+) -> tuple[str, str, dict[str, str]]:
     """Crea materia, Comisión con Docente real asignado, y carga `cantidad` preguntas.
 
-    `US-ADJ-57`: `POST /preguntas/verdadero-falso` exige que el Docente que llama tenga una
-    Comisión asignada en la materia — se crea y asigna antes de cargar, no con la fixture
-    `docente_headers` (JWT anónimo sin fila `Usuario`, no asignable). Devuelve
-    `(materia_id, comision_id)`.
+    `US-ADJ-57`: `POST /preguntas/verdadero-falso` y `POST /sesiones-en-vivo` exigen que el
+    Docente que llama tenga una Comisión asignada en la materia/Comisión — se crea y asigna
+    antes de cargar, no con la fixture `docente_headers` (JWT anónimo sin fila `Usuario`, no
+    asignable). Devuelve `(materia_id, comision_id, headers_del_docente_asignado)`.
     """
     creada = await client.post(
         "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers
@@ -81,7 +81,7 @@ async def _crear_materia_con_preguntas_y_comision(
             },
             headers=docente_headers_reales,
         )
-    return materia_id, str(comision.id)
+    return materia_id, str(comision.id), docente_headers_reales
 
 
 async def _contar_streams_de_sesiones(session) -> int:
@@ -93,10 +93,10 @@ async def _contar_streams_de_sesiones(session) -> int:
 
 
 class TestCrearSesionEnVivoAPIIntegration:
-    async def test_creacion_exitosa(self, session, docente_headers, admin_headers):
+    async def test_creacion_exitosa(self, session, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+            materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
                 client, session, admin_headers, 20
             )
 
@@ -133,9 +133,9 @@ class TestCrearSesionEnVivoAPIIntegration:
         assert len(fila.payload["preguntas"]) == 10
         assert await _contar_streams_de_sesiones(session) == antes + 1
 
-    async def test_filtra_por_unidad_y_tema(self, session, docente_headers, admin_headers):
+    async def test_filtra_por_unidad_y_tema(self, session, admin_headers):
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            _materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+            _materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
                 client, session, admin_headers, 6, unidad="U9", tema="T9"
             )
 
@@ -155,10 +155,10 @@ class TestCrearSesionEnVivoAPIIntegration:
         assert response.json()["unidad_tematica"] == "U9"
         assert response.json()["tema"] == "T9"
 
-    async def test_preguntas_insuficientes(self, session, docente_headers, admin_headers):
+    async def test_preguntas_insuficientes(self, session, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            _materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+            _materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
                 client, session, admin_headers, 5
             )
 
@@ -175,10 +175,10 @@ class TestCrearSesionEnVivoAPIIntegration:
         assert response.status_code == 422
         assert await _contar_streams_de_sesiones(session) == antes
 
-    async def test_tiempo_limite_invalido(self, session, docente_headers, admin_headers):
+    async def test_tiempo_limite_invalido(self, session, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            _materia_id, comision_id = await _crear_materia_con_preguntas_y_comision(
+            _materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
                 client, session, admin_headers, 20
             )
 

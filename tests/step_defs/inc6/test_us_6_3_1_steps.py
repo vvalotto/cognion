@@ -12,6 +12,9 @@ from httpx import ASGITransport, AsyncClient
 from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
+from src.actividad_evaluativa.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
+)
 from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
 )
@@ -29,15 +32,17 @@ from src.actividad_evaluativa.frameworks.websockets.websocket_canal_tiempo_real 
     WebSocketCanalTiempoReal,
 )
 from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import CerrarPreguntaActualUseCase
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     cerrar_pregunta_actual,
     crear_estudiante,
     crear_estudiantes,
     finalizar_sesion,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -80,8 +85,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _get(ruta: str, headers: dict[str, str]):
@@ -219,7 +225,10 @@ def participantes_respondieron(context, cantidad):
 @when("el Docente lista los participantes")
 def docente_lista(context):
     context["response"] = run_async(
-        _get(f"/sesiones-en-vivo/{context['sesion_id']}/participantes", _docente())
+        _get(
+            f"/sesiones-en-vivo/{context['sesion_id']}/participantes",
+            _docente(context["sesion_id"]),
+        )
     )
 
 
@@ -228,7 +237,7 @@ def estudiante_se_une(context):
     estudiante_id, headers = run_async(crear_estudiante(context["comision_id"]))
     context.update(estudiante_id=estudiante_id, headers_estudiante=headers)
 
-    token = _docente()["Authorization"].split()[1]
+    token = _docente(context["sesion_id"])["Authorization"].split()[1]
     with TestClient(app) as client:
         with client.websocket_connect(
             f"/sesiones-en-vivo/{context['sesion_id']}/canal?token={token}"
@@ -242,13 +251,14 @@ def estudiante_se_une(context):
 
 @when("el Docente cierra la pregunta")
 def docente_cierra_pregunta(context):
-    token = _docente()["Authorization"].split()[1]
+    docente = _docente(context["sesion_id"])
+    token = docente["Authorization"].split()[1]
     with TestClient(app) as client:
         with client.websocket_connect(
             f"/sesiones-en-vivo/{context['sesion_id']}/canal?token={token}"
         ) as ws:
             respuesta = client.post(
-                f"/sesiones-en-vivo/{context['sesion_id']}/cerrar-pregunta", headers=_docente()
+                f"/sesiones-en-vivo/{context['sesion_id']}/cerrar-pregunta", headers=docente
             )
             assert respuesta.status_code == 200, respuesta.text
             context["mensaje_ws"] = ws.receive_json()
@@ -257,19 +267,20 @@ def docente_cierra_pregunta(context):
 @when("se consulta el ranking de la sesión")
 def se_consulta_ranking(context):
     context["response"] = run_async(
-        _get(f"/sesiones-en-vivo/{context['sesion_id']}/ranking", _docente())
+        _get(f"/sesiones-en-vivo/{context['sesion_id']}/ranking", _docente(context["sesion_id"]))
     )
 
 
 @when("el Docente finaliza la sesión")
 def docente_finaliza_sesion(context):
-    token = _docente()["Authorization"].split()[1]
+    docente = _docente(context["sesion_id"])
+    token = docente["Authorization"].split()[1]
     with TestClient(app) as client:
         with client.websocket_connect(
             f"/sesiones-en-vivo/{context['sesion_id']}/canal?token={token}"
         ) as ws:
             respuesta = client.post(
-                f"/sesiones-en-vivo/{context['sesion_id']}/finalizar", headers=_docente()
+                f"/sesiones-en-vivo/{context['sesion_id']}/finalizar", headers=docente
             )
             assert respuesta.status_code == 200, respuesta.text
             context["mensaje_ws"] = ws.receive_json()
@@ -279,7 +290,7 @@ def docente_finaliza_sesion(context):
 def se_publica_ranking(context):
     run_async(cerrar_pregunta_actual(context["sesion_id"]))
     context["response"] = run_async(
-        _get(f"/sesiones-en-vivo/{context['sesion_id']}/ranking", _docente())
+        _get(f"/sesiones-en-vivo/{context['sesion_id']}/ranking", _docente(context["sesion_id"]))
     )
 
 
@@ -299,6 +310,7 @@ def se_mide_el_cierre(context, veces):
                 PreguntaConsultaPortInProcess(session),
                 WebSocketCanalTiempoReal(get_connection_manager()),
                 EstudianteConsultaPortInProcess(session),
+                VerificarAutorizacionComisionService(ComisionConsultaPortInProcess(session)),
             )
             inicio = time.perf_counter()
             await use_case.execute(uuid.UUID(context["sesion_id"]))

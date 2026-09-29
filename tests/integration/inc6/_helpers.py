@@ -19,6 +19,7 @@ from src.identidad.frameworks.security.password_hasher import BcryptPasswordHash
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
+from src.identidad.frameworks.db.models import comision_docentes
 from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
@@ -30,6 +31,43 @@ from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 def headers_de(usuario_id: uuid.UUID, rol: TipoPerfil) -> dict[str, str]:
     """Header `Authorization` con un JWT válido del rol indicado."""
     return {"Authorization": f"Bearer {PyJWTIssuer().emitir(usuario_id, rol).token}"}
+
+
+async def headers_docente_de_comision(comision_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión indicada (`US-ADJ-57`).
+
+    Reemplaza `headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)` (anónimo, sin Comisión) al operar
+    sobre una Comisión ya existente — `POST /sesiones-en-vivo` y el resto de los endpoints de
+    conducción exigen que el Docente que llama esté asignado a ella.
+    """
+    async with SessionLocal() as session:
+        resultado = await session.execute(
+            comision_docentes.select().where(
+                comision_docentes.c.comision_id == uuid.UUID(comision_id)
+            )
+        )
+        fila = resultado.first()
+        assert fila is not None, f"Comisión {comision_id} sin Docente asignado"
+        return headers_de(fila.docente_id, TipoPerfil.DOCENTE)
+
+
+async def headers_docente_de_sesion(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`).
+
+    Reemplaza `headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)` (anónimo, sin Comisión) en los
+    helpers que operan sobre una sesión ya creada — los endpoints de conducción ahora exigen
+    que el Docente que llama esté asignado a la Comisión de la sesión. Si `sesion_id` no tiene
+    stream (caso "sesión inexistente" de varios tests), devuelve un Docente anónimo — el
+    endpoint responde `SesionNoExiste` (404) antes de llegar al chequeo de pertenencia.
+    """
+    async with SessionLocal() as session:
+        eventos = await SQLAlchemyEventStore(session).load(
+            "ActividadEvaluativaEnVivo", uuid.UUID(sesion_id)
+        )
+        if not eventos:
+            return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+        comision_id = str(uuid.UUID(eventos[0].payload["comision_id"]))
+    return await headers_docente_de_comision(comision_id)
 
 
 async def crear_estudiante(comision_id: str) -> tuple[str, dict[str, str]]:
@@ -149,7 +187,7 @@ async def asegurar_participante(sesion_id: str) -> None:
     Desde `US-ADJ-58` no se inicia una sesión sin participantes. Los tests que no se ocupan de los
     participantes siguen iniciando igual; los que ya unen a sus Estudiantes no cambian su conteo.
     """
-    docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+    docente = await headers_docente_de_sesion(sesion_id)
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         participantes = await client.get(
             f"/sesiones-en-vivo/{sesion_id}/participantes", headers=docente
@@ -172,7 +210,7 @@ async def iniciar_sesion(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/iniciar",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 
@@ -182,7 +220,7 @@ async def cerrar_pregunta_actual(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/cerrar-pregunta",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 
@@ -195,7 +233,7 @@ async def finalizar_sesion(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/finalizar",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 
@@ -225,7 +263,7 @@ async def mostrar_opciones(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/mostrar-opciones",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 

@@ -35,6 +35,9 @@ from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     AGGREGATE_TYPE_PARTICIPACION,
     UnirseASesionEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
@@ -59,13 +62,14 @@ class _Escenario:
 
     async def armar(self, iniciada: bool = False):
         comision_id, materia_id = uuid4(), uuid4()
-        comision_consulta = FakeComisionConsultaPort()
-        comision_consulta.materias[comision_id] = materia_id
+        self.comision_consulta = FakeComisionConsultaPort()
+        self.comision_consulta.materias[comision_id] = materia_id
+        self.autorizacion = VerificarAutorizacionComisionService(self.comision_consulta)
         self.pregunta_consulta = FakePreguntaConsultaPort()
         self.pregunta_consulta.ids_activas[materia_id] = [uuid4() for _ in range(5)]
         self.event_store = FakeEventStore()
         self.sesion = await CrearSesionEnVivoUseCase(
-            comision_consulta, self.pregunta_consulta, self.event_store
+            self.comision_consulta, self.pregunta_consulta, self.event_store
         ).execute(comision_id, 3, 45)
         for i, asignada in enumerate(self.sesion.preguntas):
             self.pregunta_consulta.contenidos[asignada.pregunta_id] = ContenidoPregunta(
@@ -86,6 +90,7 @@ class _Escenario:
                 self.pregunta_consulta,
                 self.canal,
                 FakeParticipantesAlMenosUno(),
+                self.autorizacion,
             ).execute(self.sesion.id)
         self.estado = ObtenerEstadoSesionUseCase(
             self.event_store,
@@ -95,7 +100,7 @@ class _Escenario:
             self.estudiantes,
         )
         self.listar = ListarParticipantesUseCase(
-            self.event_store, self.participantes, self.estudiantes
+            self.event_store, self.participantes, self.estudiantes, self.comision_consulta
         )
         self.ranking = ObtenerRankingUseCase(self.event_store, self.proyecciones, self.estudiantes)
         self.listar_sesiones = ListarSesionesEnVivoUseCase(
@@ -117,7 +122,7 @@ class _Escenario:
 
     async def mostrar(self) -> None:
         await MostrarOpcionesEnVivoUseCase(
-            self.event_store, self.pregunta_consulta, self.canal
+            self.event_store, self.pregunta_consulta, self.canal, self.comision_consulta
         ).execute(self.sesion.id)
 
     async def cerrar(self) -> None:
@@ -127,11 +132,12 @@ class _Escenario:
             self.pregunta_consulta,
             self.canal,
             self.estudiantes,
+            self.autorizacion,
         ).execute(self.sesion.id)
 
     async def finalizar(self) -> None:
         await FinalizarSesionEnVivoUseCase(
-            self.event_store, self.proyecciones, self.canal, self.estudiantes
+            self.event_store, self.proyecciones, self.canal, self.estudiantes, self.autorizacion
         ).execute(self.sesion.id)
 
     async def registrar_respuesta(self, estudiante_id, pregunta_id, puntaje: int) -> None:

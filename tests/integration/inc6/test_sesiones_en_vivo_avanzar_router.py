@@ -20,6 +20,7 @@ from tests.integration.inc6._helpers import (
     crear_estudiante,
     finalizar_sesion,
     headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     preparar_sesion,
@@ -28,10 +29,6 @@ from tests.integration.inc6._helpers import (
 
 def _cliente() -> AsyncClient:
     return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
-
-
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
 
 
 def _url(sesion_id: str, accion: str = "avanzar") -> str:
@@ -52,13 +49,15 @@ async def _eventos_de_sesion(session, sesion_id: str) -> list:
 
 async def _cerrar(sesion_id: str) -> None:
     async with _cliente() as client:
-        respuesta = await client.post(_url(sesion_id, "cerrar-pregunta"), headers=_docente())
+        respuesta = await client.post(
+            _url(sesion_id, "cerrar-pregunta"), headers=await headers_docente_de_sesion(sesion_id)
+        )
     assert respuesta.status_code == 200, respuesta.text
 
 
 async def _avanzar(sesion_id: str):
     async with _cliente() as client:
-        return await client.post(_url(sesion_id), headers=_docente())
+        return await client.post(_url(sesion_id), headers=await headers_docente_de_sesion(sesion_id))
 
 
 async def _sesion_cerrada() -> tuple[str, str]:
@@ -98,7 +97,9 @@ class TestAvanzarAPIIntegration:
         await _avanzar(sesion_id)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id, "mostrar-opciones"), headers=_docente())
+            response = await client.post(
+                _url(sesion_id, "mostrar-opciones"), headers=await headers_docente_de_sesion(sesion_id)
+            )
 
         assert response.status_code == 200
 
@@ -175,10 +176,11 @@ class TestAvanzarAPIIntegration:
     async def test_dos_avances_simultaneos_dejan_ganar_a_uno_solo(self, session):
         sesion_id, _ = await _sesion_cerrada()
 
+        docente = await headers_docente_de_sesion(sesion_id)
         async with _cliente() as client:
             respuestas = await asyncio.gather(
-                client.post(_url(sesion_id), headers=_docente()),
-                client.post(_url(sesion_id), headers=_docente()),
+                client.post(_url(sesion_id), headers=docente),
+                client.post(_url(sesion_id), headers=docente),
             )
 
         assert sorted(r.status_code for r in respuestas) == [200, 422]
@@ -190,7 +192,7 @@ class TestBroadcastATodosLosConectados:
 
     def test_docente_y_estudiante_reciben_el_enunciado_sin_opciones(self) -> None:
         sesion_id, comision_id = correr(_sesion_cerrada())
-        docente = _docente()
+        docente = correr(headers_docente_de_sesion(sesion_id))
         token_docente = docente["Authorization"].split()[1]
         _, headers_estudiante = correr(crear_estudiante(comision_id))
         token_estudiante = headers_estudiante["Authorization"].split()[1]

@@ -36,7 +36,12 @@ async def _escenario():
         comision_consulta, pregunta_consulta, event_store
     ).execute(comision_id, 3, 30)
     canal = FakeCanalTiempoReal()
-    return CancelarSesionEnVivoUseCase(event_store, canal), event_store, canal, sesion
+    return (
+        CancelarSesionEnVivoUseCase(event_store, canal, comision_consulta),
+        event_store,
+        canal,
+        sesion,
+    )
 
 
 async def _sembrar(event_store: FakeEventStore, sesion_id, tipo: str, secuencia: int) -> None:

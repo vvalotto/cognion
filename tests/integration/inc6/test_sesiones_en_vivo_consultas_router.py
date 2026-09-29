@@ -18,6 +18,7 @@ from tests.integration.inc6._helpers import (
     crear_estudiante,
     finalizar_sesion,
     headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -236,7 +237,9 @@ class TestParticipantesAPIIntegration:
             await unirse_a_sesion(sesion_id, headers)
             ids.append(estudiante_id)
 
-        response = await _get(f"/sesiones-en-vivo/{sesion_id}/participantes", _docente())
+        response = await _get(
+            f"/sesiones-en-vivo/{sesion_id}/participantes", await headers_docente_de_sesion(sesion_id)
+        )
 
         assert response.status_code == 200
         assert [p["estudiante_id"] for p in response.json()] == ids
@@ -244,7 +247,9 @@ class TestParticipantesAPIIntegration:
     async def test_sala_vacia(self):
         sesion_id, _ = await preparar_sesion()
 
-        response = await _get(f"/sesiones-en-vivo/{sesion_id}/participantes", _docente())
+        response = await _get(
+            f"/sesiones-en-vivo/{sesion_id}/participantes", await headers_docente_de_sesion(sesion_id)
+        )
 
         assert response.json() == []
 
@@ -253,7 +258,9 @@ class TestParticipantesAPIIntegration:
         _, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
 
-        response = await _get(f"/sesiones-en-vivo/{sesion_id}/participantes", _docente())
+        response = await _get(
+            f"/sesiones-en-vivo/{sesion_id}/participantes", await headers_docente_de_sesion(sesion_id)
+        )
 
         assert response.json()[0]["nombre"] == "Estudiante"
 

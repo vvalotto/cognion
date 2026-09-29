@@ -14,12 +14,11 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.inc6._helpers import (
     cerrar_pregunta_actual,
     correr,
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     preparar_sesion,
@@ -30,8 +29,8 @@ def _cliente() -> AsyncClient:
     return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+async def _docente(sesion_id: str) -> dict[str, str]:
+    return await headers_docente_de_sesion(sesion_id)
 
 
 def _url(sesion_id: str, accion: str = "finalizar") -> str:
@@ -52,7 +51,7 @@ async def _eventos_de_sesion(session, sesion_id: str) -> list:
 
 async def _finalizar(sesion_id: str):
     async with _cliente() as client:
-        return await client.post(_url(sesion_id), headers=_docente())
+        return await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
 
 async def _sesion_cerrada() -> tuple[str, str]:
@@ -99,7 +98,9 @@ class TestFinalizarAPIIntegration:
         await _finalizar(sesion_id)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id, "iniciar"), headers=_docente())
+            response = await client.post(
+                _url(sesion_id, "iniciar"), headers=await _docente(sesion_id)
+            )
 
         assert response.status_code == 422
 
@@ -159,10 +160,11 @@ class TestFinalizarAPIIntegration:
     async def test_dos_finalizaciones_simultaneas_dejan_ganar_a_una_sola(self, session):
         sesion_id, _ = await _sesion_cerrada()
 
+        docente = await _docente(sesion_id)
         async with _cliente() as client:
             respuestas = await asyncio.gather(
-                client.post(_url(sesion_id), headers=_docente()),
-                client.post(_url(sesion_id), headers=_docente()),
+                client.post(_url(sesion_id), headers=docente),
+                client.post(_url(sesion_id), headers=docente),
             )
 
         assert sorted(r.status_code for r in respuestas) == [200, 422]
@@ -174,7 +176,7 @@ class TestBroadcastDelRankingFinal:
 
     def test_docente_y_estudiante_reciben_el_ranking_final(self) -> None:
         sesion_id, comision_id = correr(_sesion_cerrada())
-        docente = _docente()
+        docente = correr(_docente(sesion_id))
         token_docente = docente["Authorization"].split()[1]
         _, headers_estudiante = correr(crear_estudiante(comision_id))
         token_estudiante = headers_estudiante["Authorization"].split()[1]

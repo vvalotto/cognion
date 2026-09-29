@@ -22,6 +22,9 @@ from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     AGGREGATE_TYPE_SESION,
     MostrarOpcionesEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEventStore,
     FakePreguntaConsultaPort,
@@ -54,10 +57,14 @@ async def _escenario(opciones: list[str] | None = None, iniciada: bool = True):
     canal = FakeCanalTiempoReal()
     if iniciada:
         await IniciarSesionEnVivoUseCase(
-            event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+            event_store,
+            pregunta_consulta,
+            canal,
+            FakeParticipantesAlMenosUno(),
+            VerificarAutorizacionComisionService(comision_consulta),
         ).execute(sesion.id)
         canal.publicados.clear()
-    use_case = MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal)
+    use_case = MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal, comision_consulta)
     return use_case, event_store, canal, sesion, pregunta_consulta
 
 

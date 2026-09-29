@@ -54,7 +54,9 @@ def context():
     return {}
 
 
-async def _crear_materia_con_preguntas(cantidad_correctas: int, cantidad_incorrectas: int) -> str:
+async def _crear_materia_con_preguntas(
+    cantidad_correctas: int, cantidad_incorrectas: int
+) -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post(
@@ -77,10 +79,12 @@ async def _crear_materia_con_preguntas(cantidad_correctas: int, cantidad_incorre
                 headers=headers,
             )
 
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
-async def _crear_actividad(materia_id: str, cantidad_preguntas: int) -> str:
+async def _crear_actividad(
+    materia_id: str, cantidad_preguntas: int, headers: dict[str, str] | None = None
+) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         apertura = datetime.now(UTC) - timedelta(days=1)
@@ -94,7 +98,7 @@ async def _crear_actividad(materia_id: str, cantidad_preguntas: int) -> str:
                 "cantidad_preguntas": cantidad_preguntas,
                 "cantidad_intentos_permitidos": 1,
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
         return response.json()["id"]
 
@@ -138,8 +142,8 @@ async def _obtener_revision(evaluacion_id: str, estudiante_headers: dict):
 
 @given("un Estudiante en la pantalla de rendir con al menos una pregunta respondida")
 def estudiante_con_una_respondida(context):
-    materia_id = run_async(_crear_materia_con_preguntas(1, 0))
-    actividad_id = run_async(_crear_actividad(materia_id, 1))
+    materia_id, docente_headers_ = run_async(_crear_materia_con_preguntas(1, 0))
+    actividad_id = run_async(_crear_actividad(materia_id, 1, docente_headers_))
     _estudiante_id, headers = run_async(crear_estudiante())
     evaluacion = run_async(_iniciar_evaluacion(actividad_id, headers))
     pregunta_id = evaluacion["preguntas_asignadas"][0]["pregunta_id"]
@@ -150,8 +154,8 @@ def estudiante_con_una_respondida(context):
 
 @given("una Evaluacion Finalizada con 7 respuestas correctas y 3 incorrectas")
 def evaluacion_finalizada_7_3(context):
-    materia_id = run_async(_crear_materia_con_preguntas(7, 3))
-    actividad_id = run_async(_crear_actividad(materia_id, 10))
+    materia_id, docente_headers_ = run_async(_crear_materia_con_preguntas(7, 3))
+    actividad_id = run_async(_crear_actividad(materia_id, 10, docente_headers_))
     _estudiante_id, headers = run_async(crear_estudiante())
     evaluacion = run_async(_iniciar_evaluacion(actividad_id, headers))
     preguntas = evaluacion["preguntas_asignadas"]
@@ -166,8 +170,8 @@ def evaluacion_finalizada_7_3(context):
 
 @given("una actividad ya finalizada por el Estudiante")
 def actividad_ya_finalizada(context):
-    materia_id = run_async(_crear_materia_con_preguntas(1, 0))
-    actividad_id = run_async(_crear_actividad(materia_id, 1))
+    materia_id, docente_headers_ = run_async(_crear_materia_con_preguntas(1, 0))
+    actividad_id = run_async(_crear_actividad(materia_id, 1, docente_headers_))
     _estudiante_id, headers = run_async(crear_estudiante())
     evaluacion = run_async(_iniciar_evaluacion(actividad_id, headers))
     pregunta_id = evaluacion["preguntas_asignadas"][0]["pregunta_id"]
