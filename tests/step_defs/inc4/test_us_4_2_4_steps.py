@@ -44,6 +44,10 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import (
+    asignar_docente_a_comision_existente,
+    asignar_docente_a_materia,
+)
 
 scenarios("../../features/inc4/US-4.2.4-tasa-error-por-tema.feature")
 
@@ -63,6 +67,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM banco"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
@@ -220,6 +225,10 @@ def materia_con_evaluaciones_de_dos_comisiones(context):
 
     context["materia_id"], context["comision_id"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
+    run_async(
+        asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"])
+    )
 
 
 @given("la misma materia de arriba")
@@ -233,6 +242,7 @@ def la_misma_materia_de_arriba(context):
 def materia_sin_evaluaciones(context):
     context["materia_id"] = uuid4()
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
 
 
 @given("una comisión de otra materia")
@@ -326,11 +336,6 @@ def valida_200_lista_vacia(context):
     response = context["response"]
     assert response.status_code == 200
     assert response.json() == []
-
-
-@then("recibe 422")
-def valida_422(context):
-    assert context["response"].status_code == 422
 
 
 @then("recibe 401")

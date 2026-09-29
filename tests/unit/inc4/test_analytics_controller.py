@@ -73,6 +73,12 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
     async def listar_estudiantes(self, comision_id):
         raise NotImplementedError
 
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return True
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return True
+
 
 def _controller(
     evaluacion_desempeno_consulta: EvaluacionDesempenoConsultaPort | None = None,
@@ -80,13 +86,14 @@ def _controller(
     evaluacion_desempeno_consulta = (
         evaluacion_desempeno_consulta or _EvaluacionDesempenoConsultaPortFake()
     )
+    comision_consulta = _ComisionConsultaPortFake()
     return AnalyticsController(
         ObtenerDesempenoEstudianteUseCase(
             evaluacion_desempeno_consulta,
             _SesionEnVivoDesempenoConsultaPortFake(),
-            _ComisionConsultaPortFake(),
+            comision_consulta,
         ),
-        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta, comision_consulta),
     )
 
 
@@ -122,7 +129,7 @@ class TestAnalyticsController:
         )
         controller = _controller(_EvaluacionDesempenoConsultaPortFake(resumenes=[resumen]))
 
-        resultado = await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4())
+        resultado = await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4(), uuid4())
 
         assert len(resultado.evaluaciones) == 1
         assert resultado.resumen.total_correctas == 8
@@ -134,7 +141,7 @@ class TestAnalyticsController:
     ):
         controller = _controller()
 
-        resultado = await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4())
+        resultado = await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4(), uuid4())
 
         assert resultado.evaluaciones == []
         assert resultado.resumen.total_correctas == 0
@@ -153,7 +160,7 @@ class TestAnalyticsController:
         )
         controller = _controller(_EvaluacionDesempenoConsultaPortFake(resumenes=[resumen]))
 
-        resultado = await controller.obtener_evolucion_temporal_estudiante(uuid4(), uuid4())
+        resultado = await controller.obtener_evolucion_temporal_estudiante(uuid4(), uuid4(), uuid4())
 
         assert len(resultado) == 1
         assert resultado[0].porcentaje_acierto == 100

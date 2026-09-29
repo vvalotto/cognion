@@ -5,7 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.analytics.entities.errors import ComisionNoPerteneceAMateria
+from src.analytics.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoPerteneceAMateria,
+    MateriaNoAutorizada,
+)
 from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
@@ -49,13 +53,15 @@ class ObtenerRankingPreguntasFalladasUseCase:
         self._pregunta_metadato_consulta = pregunta_metadato_consulta
 
     async def execute(
-        self, materia_id: UUID, comision_id: UUID | None
+        self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
     ) -> list[RankingPreguntaFallada]:
         """Devuelve el ranking ordenado por `tasa_error` descendente.
 
         `comision_id` que no pertenece a `materia_id` → `raise ComisionNoPerteneceAMateria`.
-        Sin `comision_id`, agrega toda la materia.
+        Sin `comision_id`, agrega toda la materia. `docente_id` sin autorización →
+        `MateriaNoAutorizada`/`ComisionNoAutorizada` (`US-ADJ-57`).
         """
+        await self._verificar_autorizacion(materia_id, comision_id, docente_id)
         estudiante_ids = await self._resolver_estudiante_ids(materia_id, comision_id)
         respuestas = (
             await self._evaluacion_desempeno_consulta.listar_respuestas_vigentes_de_materia(
@@ -69,6 +75,17 @@ class ObtenerRankingPreguntasFalladasUseCase:
             list({respuesta.pregunta_id for respuesta in respuestas})
         )
         return _ranking_ordenado(respuestas, metadatos)
+
+    async def _verificar_autorizacion(
+        self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
+    ) -> None:
+        """Materia siempre; comisión puntual además cuando `comision_id` viene informado."""
+        if not await self._comision_consulta.esta_asignado_a_materia(docente_id, materia_id):
+            raise MateriaNoAutorizada(materia_id)
+        if comision_id is not None and not await self._comision_consulta.esta_asignado_a_comision(
+            docente_id, comision_id
+        ):
+            raise ComisionNoAutorizada(comision_id)
 
     async def _resolver_estudiante_ids(
         self, materia_id: UUID, comision_id: UUID | None

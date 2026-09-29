@@ -35,6 +35,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 scenarios("../../features/inc6-adj/US-ADJ-56-desempeno-sesiones-en-vivo.feature")
 
@@ -421,6 +422,8 @@ def docente_con_estudiante_elegido(context):
             await _seed_ranking(session, sesion_id, estudiante.id, 600)
 
     run_async(_setup())
+    context["headers_docente"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers_docente"]))
 
 
 @given("un Estudiante con sesiones en vivo en dos materias")
@@ -488,7 +491,7 @@ def docente_mira_desempeno(context):
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             return await client.get(
                 f"/analytics/materias/{context['materia_id']}/estudiantes/{context['estudiante_id']}/desempeno",
-                headers=_headers_docente(),
+                headers=context["headers_docente"],
             )
 
     context["response"] = run_async(_call())

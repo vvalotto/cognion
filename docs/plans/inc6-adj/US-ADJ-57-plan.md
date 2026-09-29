@@ -164,20 +164,40 @@ combinados (no la suite completa) ya existía antes de esta US.
   controllers afectados
 
 ### 4. Analytics
-- [ ] `src/analytics/entities/ports/comision_consulta_port.py` — `esta_asignado_a_materia` +
+- [x] `src/analytics/entities/ports/comision_consulta_port.py` — `esta_asignado_a_materia` +
   `esta_asignado_a_comision`
-- [ ] `src/analytics/frameworks/adapters/comision_consulta_port_in_process.py` — agrega los 2
+- [x] `src/analytics/frameworks/adapters/comision_consulta_port_in_process.py` — agrega los 2
   métodos (ya delega en el gateway de Identidad, solo se suman los métodos)
-- [ ] Los 6 use cases de reportes — `docente_id` + chequeo (materia siempre; comisión cuando el
-  reporte la recibe)
-- [ ] `analytics_router.py` — inyecta `usuario` en los endpoints que no lo tenían
-- [ ] `frameworks/dependencies.py` — sin cambios de wiring (los use cases ya reciben el puerto)
+- [x] Los 7 use cases de reportes (`ObtenerDesempenoEstudianteUseCase` incluido — compartido
+  con el Estudiante, `docente_id` opcional) — `docente_id` + chequeo (materia siempre; comisión
+  cuando el reporte la recibe)
+- [x] `analytics_router.py` — inyecta `usuario` en los endpoints que no lo tenían
+- [x] `frameworks/dependencies.py` — sin cambios de wiring salvo
+  `ObtenerEvolucionTemporalEstudianteUseCase` (gana `comision_consulta`, no tenía ningún puerto
+  de Comisión antes)
+
+**Blast radius de tests:** ~15 archivos entre `tests/unit/inc4/` (fakes + firmas de
+`execute()`), `tests/integration/inc4/` (6 archivos de router, reusan
+`asignar_docente_a_materia`/`asignar_docente_a_comision_existente` de
+`tests/integration/conftest.py` — el segundo helper es nuevo, variante que asigna sobre una
+Comisión ya creada por el propio test) y `tests/step_defs/inc4/` (6 archivos, mismo patrón +
+fix del mismo bug de orden de `DELETE` — faltaba `DELETE FROM comision_docentes` antes de
+`DELETE FROM comision` — ya visto en `US-ADJ-57` de Actividad Evaluativa). 4 escenarios
+`.feature` ajustados de 422 a 403 (`US-4.2.4`, `US-ADJ-44`, `US-ADJ-45`, `US-ADJ-46`): la
+autorización por Comisión se resuelve antes que la validación de negocio "pertenece a la
+materia" cuando el Docente no está asignado a ninguna de las dos — mismo criterio ya aplicado
+en Identidad/Actividad Evaluativa.
 
 ## Integración
-- [ ] Sin tablas ni eventos nuevos — solo lectura de `comision_docentes`
-- [ ] `docs/architecture/20-context-map-integrations.md` se actualiza en Fase 8 con la
-  primitiva nueva de Identidad
-- [ ] Los circuitos E2E de `US-6.3.10` (`frontend/e2e/`) deben seguir en verde — se corren en
-  Fase 5/6 como regresión
+- [x] Sin tablas ni eventos nuevos — solo lectura de `comision_docentes`
+- [x] `docs/architecture/20-context-map-integrations.md` actualizado con la ampliación del
+  puerto de Analytics
+- [ ] Los circuitos E2E de `US-6.3.10` (`frontend/e2e/`) deben seguir en verde — pendiente de
+  correr como regresión final
+- [ ] El `.feature` cruzado de Fase 1 (`tests/features/inc6-adj/US-ADJ-57-docente-solo-sus-materias.feature`,
+  9 escenarios, cruza los 4 BC) sigue sin `step_defs` — validación final pendiente, ahora que
+  las 4 olas están mergeadas
 
-**Estado:** 21/28 tareas completadas (secciones 1-3; falta Analytics, sección 4)
+**Estado:** 28/28 tareas de implementación completadas (secciones 1-4). Quedan dos ítems de
+verificación final antes de cerrar la US: el `.feature` cruzado y la regresión E2E de
+`US-6.3.10`.
