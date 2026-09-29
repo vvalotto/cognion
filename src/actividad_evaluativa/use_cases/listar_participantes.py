@@ -5,7 +5,11 @@ from __future__ import annotations
 from dataclasses import replace
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.errors import SesionNoExiste
+from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+    ActividadEvaluativaEnVivo,
+)
+from src.actividad_evaluativa.entities.errors import ComisionNoAutorizada, SesionNoExiste
+from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
@@ -27,19 +31,31 @@ class ListarParticipantesUseCase:
         event_store: EventStorePort,
         participantes: ParticipantesSesionQueryPort,
         estudiante_consulta: EstudianteConsultaPort,
+        comision_consulta: ComisionConsultaPort,
     ) -> None:
-        """Recibe el event store, la consulta de participantes y la consulta de Identidad."""
+        """Recibe el event store, las consultas de participantes/Identidad/Comisión."""
         self._event_store = event_store
         self._participantes = participantes
         self._estudiante_consulta = estudiante_consulta
+        self._comision_consulta = comision_consulta
 
-    async def execute(self, sesion_id: UUID) -> list[ParticipanteResumen]:
+    async def execute(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> list[ParticipanteResumen]:
         """Devuelve los Estudiantes unidos en orden de unión, con `nombre` resuelto.
 
-        Levanta `SesionNoExiste`.
+        Levanta `SesionNoExiste`, `ComisionNoAutorizada` (403) si `docente_id` no está
+        asignado a la Comisión de la sesión (`US-ADJ-57`; `None` = Administrador, sin chequeo).
         """
-        if not await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id):
+        eventos = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
+        if not eventos:
             raise SesionNoExiste(sesion_id)
+        if docente_id is not None:
+            sesion = ActividadEvaluativaEnVivo.reconstruir(eventos)
+            if not await self._comision_consulta.esta_asignado_a_comision(
+                docente_id, sesion.comision_id
+            ):
+                raise ComisionNoAutorizada(sesion.comision_id)
         participantes = await self._participantes.listar(sesion_id)
         nombres = await resolver_nombres(
             self._estudiante_consulta, (p.estudiante_id for p in participantes)

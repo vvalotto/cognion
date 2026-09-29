@@ -56,7 +56,7 @@ def context():
 
 async def _crear_materia_con_preguntas(
     cantidad_verdadero_falso: int, con_opcion_multiple: bool
-) -> str:
+) -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post(
@@ -97,10 +97,12 @@ async def _crear_materia_con_preguntas(
                 headers=headers,
             )
 
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
-async def _crear_actividad(materia_id: str, cantidad_preguntas: int) -> str:
+async def _crear_actividad(
+    materia_id: str, cantidad_preguntas: int, headers: dict[str, str] | None = None
+) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         apertura = datetime.now(UTC) - timedelta(days=1)
@@ -114,7 +116,7 @@ async def _crear_actividad(materia_id: str, cantidad_preguntas: int) -> str:
                 "cantidad_preguntas": cantidad_preguntas,
                 "cantidad_intentos_permitidos": 1,
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
         return response.json()["id"]
 
@@ -155,8 +157,10 @@ async def _reanudar(evaluacion_id: str, estudiante_headers: dict):
 
 
 async def _armar_evaluacion_en_curso(cantidad_preguntas: int = 2):
-    materia_id = await _crear_materia_con_preguntas(cantidad_preguntas, con_opcion_multiple=False)
-    actividad_id = await _crear_actividad(materia_id, cantidad_preguntas)
+    materia_id, docente_headers_ = await _crear_materia_con_preguntas(
+        cantidad_preguntas, con_opcion_multiple=False
+    )
+    actividad_id = await _crear_actividad(materia_id, cantidad_preguntas, docente_headers_)
     _estudiante_id, headers = await crear_estudiante()
     evaluacion = await _iniciar_evaluacion(actividad_id, headers)
     return evaluacion, headers
@@ -198,8 +202,10 @@ def estudiante_con_evaluacion_suspendida(context):
 
 @given("una pregunta asignada dentro de una Evaluacion EnCurso")
 def pregunta_asignada_en_evaluacion_en_curso(context):
-    materia_id = run_async(_crear_materia_con_preguntas(0, con_opcion_multiple=True))
-    actividad_id = run_async(_crear_actividad(materia_id, 1))
+    materia_id, docente_headers_ = run_async(
+        _crear_materia_con_preguntas(0, con_opcion_multiple=True)
+    )
+    actividad_id = run_async(_crear_actividad(materia_id, 1, docente_headers_))
     _estudiante_id, headers = run_async(crear_estudiante())
     evaluacion = run_async(_iniciar_evaluacion(actividad_id, headers))
     context["evaluacion"] = evaluacion

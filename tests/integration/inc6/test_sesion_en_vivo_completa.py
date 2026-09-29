@@ -21,6 +21,7 @@ from tests.integration.inc6._helpers import (
     correr,
     crear_estudiantes,
     headers_de,
+    headers_docente_de_comision,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -101,7 +102,7 @@ class TestSesionCompletaDePuntaAPunta:
     def test_recorrido_completo_con_broadcast_a_todos_los_conectados(self) -> None:
         sesion_id, comision_id = correr(preparar_sesion(opcion_multiple=True))
         estudiantes = correr(crear_estudiantes(comision_id, 5))
-        docente = _docente()
+        docente = correr(headers_docente_de_comision(comision_id))
         base = f"/sesiones-en-vivo/{sesion_id}"
         acumulado = {estudiante_id: 0 for estudiante_id, _ in estudiantes}
 
@@ -208,7 +209,7 @@ class TestReconexion:
     def test_recupera_pregunta_tiempo_y_avance_sin_perder_su_participacion(self) -> None:
         sesion_id, comision_id = correr(preparar_sesion(opcion_multiple=True))
         ((estudiante_id, headers),) = correr(crear_estudiantes(comision_id, 1))
-        docente = _docente()
+        docente = correr(headers_docente_de_comision(comision_id))
         base = f"/sesiones-en-vivo/{sesion_id}"
 
         with TestClient(app) as client:

@@ -61,7 +61,7 @@ async def _crear_materia(nombre: str) -> str:
         return creada.json()["id"]
 
 
-async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
@@ -81,11 +81,15 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                 },
                 headers=headers,
             )
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
 async def _crear_actividad(
-    materia_id: str, apertura: datetime, cierre: datetime, cantidad_preguntas: int = 1
+    materia_id: str,
+    apertura: datetime,
+    cierre: datetime,
+    cantidad_preguntas: int = 1,
+    headers: dict[str, str] | None = None,
 ) -> None:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -99,7 +103,7 @@ async def _crear_actividad(
                 "cantidad_intentos_permitidos": 1,
                 "titulo": "Parcial 1",
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
 
 
@@ -140,39 +144,39 @@ def estudiante_con_comision(context):
 
 @given("una actividad dentro de su período vigente, sin Evaluacion Finalizada del Estudiante")
 def actividad_vigente_sin_evaluacion(context):
-    materia_id = run_async(
+    materia_id, docente_headers_ = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 5)
     )
     _estudiante_id, headers = run_async(crear_estudiante_de_materia(materia_id))
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    run_async(_crear_actividad(materia_id, apertura, cierre))
+    run_async(_crear_actividad(materia_id, apertura, cierre, headers=docente_headers_))
     context["materia_id"] = materia_id
     context["estudiante_headers"] = headers
 
 
 @given("una actividad con fecha_apertura futura")
 def actividad_con_apertura_futura(context):
-    materia_id = run_async(
+    materia_id, docente_headers_ = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 5)
     )
     _estudiante_id, headers = run_async(crear_estudiante_de_materia(materia_id))
     apertura = datetime.now(UTC) + timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    run_async(_crear_actividad(materia_id, apertura, cierre))
+    run_async(_crear_actividad(materia_id, apertura, cierre, headers=docente_headers_))
     context["materia_id"] = materia_id
     context["estudiante_headers"] = headers
 
 
 @given("una actividad donde el Estudiante ya tiene una Evaluacion Finalizada")
 def actividad_con_evaluacion_finalizada(context):
-    materia_id = run_async(
+    materia_id, docente_headers_ = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 5)
     )
     _estudiante_id, headers = run_async(crear_estudiante_de_materia(materia_id))
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    run_async(_crear_actividad(materia_id, apertura, cierre))
+    run_async(_crear_actividad(materia_id, apertura, cierre, headers=docente_headers_))
     actividad = run_async(_get_mis_actividades(materia_id, headers))
     actividad_id = actividad.json()[0]["id"]
     run_async(_finalizar_evaluacion(actividad_id, headers))

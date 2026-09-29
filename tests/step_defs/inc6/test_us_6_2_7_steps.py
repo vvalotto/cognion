@@ -18,11 +18,10 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
     SQLAlchemyEventStore,
 )
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     iniciar_y_finalizar,
     mostrar_opciones,
@@ -64,8 +63,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _post(sesion_id: str, accion: str, headers: dict[str, str]):
@@ -83,7 +83,8 @@ async def _reconstruir(sesion_id: str) -> tuple[ActividadEvaluativaEnVivo, list]
 
 async def _mostrar_y_cerrar(sesion_id: str) -> None:
     await mostrar_opciones(sesion_id)
-    assert (await _post(sesion_id, "cerrar-pregunta", _docente())).status_code == 200
+    docente = await headers_docente_de_sesion(sesion_id)
+    assert (await _post(sesion_id, "cerrar-pregunta", docente)).status_code == 200
 
 
 async def _armar(context, avances: int, cerrar: bool = True) -> None:
@@ -94,7 +95,8 @@ async def _armar(context, avances: int, cerrar: bool = True) -> None:
     context.update(sesion_id=sesion_id, headers_estudiante=headers_estudiante)
     for _ in range(avances):
         await _mostrar_y_cerrar(sesion_id)
-        assert (await _post(sesion_id, "avanzar", _docente())).status_code == 200
+        docente = await headers_docente_de_sesion(sesion_id)
+        assert (await _post(sesion_id, "avanzar", docente)).status_code == 200
     if cerrar:
         await _mostrar_y_cerrar(sesion_id)
     else:
@@ -147,8 +149,8 @@ def usuario_estudiante(context):
 @when("el Docente finaliza la sesión")
 def docente_finaliza_con_conectados(context):
     """Finaliza con el Docente y un Estudiante conectados al canal, para verificar el broadcast."""
-    docente = _docente()
     sesion_id = context["sesion_id"]
+    docente = _docente(sesion_id)
     tokens = [
         docente["Authorization"].split()[1],
         context["headers_estudiante"]["Authorization"].split()[1],
@@ -174,7 +176,9 @@ def docente_finaliza_con_conectados(context):
     parsers.re(r"el Docente intenta finalizar( de nuevo)?"),
 )
 def docente_intenta_finalizar(context):
-    context["response"] = run_async(_post(context["sesion_id"], "finalizar", _docente()))
+    context["response"] = run_async(
+        _post(context["sesion_id"], "finalizar", _docente(context["sesion_id"]))
+    )
 
 
 @when("un Estudiante intenta unirse")

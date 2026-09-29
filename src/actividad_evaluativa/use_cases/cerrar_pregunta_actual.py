@@ -34,6 +34,9 @@ from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ProyeccionesEnVivoQueryPort,
 )
 from src.actividad_evaluativa.use_cases._resolucion_nombres import resolver_nombres
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 
@@ -76,6 +79,22 @@ def _mensaje_cierre(
     }
 
 
+async def _persistir_cierre(
+    event_store: EventStorePort, sesion_id: UUID, version: int, payload: dict[str, Any]
+) -> None:
+    """Persiste `PreguntaEnVivoCerrada`, traduciendo la carrera optimista — función libre para
+    no sumar CBO a `CerrarPreguntaActualUseCase` (`US-ADJ-57`)."""
+    try:
+        await event_store.append(
+            AGGREGATE_TYPE_SESION,
+            sesion_id,
+            version,
+            [EventoParaAlmacenar(event_type="PreguntaEnVivoCerrada", payload=payload)],
+        )
+    except ConcurrenciaOptimistaError as exc:
+        raise PreguntaYaCerrada(sesion_id) from exc
+
+
 class CerrarPreguntaActualUseCase:
     """Orquesta el cierre: validación, persistencia y broadcast leyendo los read models."""
 
@@ -86,39 +105,40 @@ class CerrarPreguntaActualUseCase:
         pregunta_consulta: PreguntaConsultaPort,
         canal: CanalTiempoRealPort,
         estudiante_consulta: EstudianteConsultaPort,
+        autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe el event store, las proyecciones, las consultas de Banco/Identidad y el canal."""
+        """Recibe el event store, las proyecciones, las consultas de Banco/Identidad, el canal y
+        el servicio de autorización por Comisión."""
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._pregunta_consulta = pregunta_consulta
         self._canal = canal
         self._estudiante_consulta = estudiante_consulta
+        self._autorizacion = autorizacion
 
-    async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def execute(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Cierra la pregunta actual y transmite el resultado a todos los conectados.
 
-        Levanta `SesionNoExiste`, `SesionNoEnCurso`, `OpcionesNoMostradasTodavia` o
-        `PreguntaYaCerrada` (incluida la carrera de dos cierres simultáneos, que el chequeo
-        optimista del event store resuelve dejando ganar a uno). No calcula nada pesado — lee
-        los read models ya acumulados (RNF de rendimiento) y publica recién después de persistir.
+        Levanta `SesionNoExiste`, `ComisionNoAutorizada` (403) si `docente_id` no está
+        asignado a la Comisión de la sesión (`US-ADJ-57`; `None` = Administrador, sin
+        chequeo), `SesionNoEnCurso`, `OpcionesNoMostradasTodavia` o `PreguntaYaCerrada`
+        (incluida la carrera de dos cierres simultáneos, que el chequeo optimista del event
+        store resuelve dejando ganar a uno). No calcula nada pesado — lee los read models ya
+        acumulados (RNF de rendimiento) y publica recién después de persistir.
         """
         eventos = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
         if not eventos:
             raise SesionNoExiste(sesion_id)
 
         sesion = ActividadEvaluativaEnVivo.reconstruir(eventos)
+        await self._autorizacion.verificar_comision(docente_id, sesion.comision_id)
+
         sesion.cerrar_pregunta()
         evento = PreguntaEnVivoCerrada.desde_sesion(sesion, datetime.now(UTC))
 
-        try:
-            await self._event_store.append(
-                AGGREGATE_TYPE_SESION,
-                sesion_id,
-                len(eventos),
-                [EventoParaAlmacenar(event_type="PreguntaEnVivoCerrada", payload=_payload(evento))],
-            )
-        except ConcurrenciaOptimistaError as exc:
-            raise PreguntaYaCerrada(sesion_id) from exc
+        await _persistir_cierre(self._event_store, sesion_id, len(eventos), _payload(evento))
 
         detalle = await self._pregunta_consulta.obtener_detalle_correccion(evento.pregunta_id)
         distribucion = await self._proyecciones.distribucion(sesion_id, evento.pregunta_id)

@@ -32,6 +32,9 @@ from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSes
 from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     MostrarOpcionesEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
@@ -70,11 +73,18 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
             texto=f"Detalle {i}", contenido_correcto={"opcion_indice": 2}, opciones=opciones
         )
     canal = FakeCanalTiempoReal()
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
     if iniciada:
         await IniciarSesionEnVivoUseCase(
-            event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+            event_store,
+            pregunta_consulta,
+            canal,
+            FakeParticipantesAlMenosUno(),
+            autorizacion,
         ).execute(sesion.id)
-        await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+        await MostrarOpcionesEnVivoUseCase(
+            event_store, pregunta_consulta, canal, comision_consulta
+        ).execute(sesion.id)
     if iniciada and cerrada:
         await CerrarPreguntaActualUseCase(
             event_store,
@@ -82,9 +92,12 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
             pregunta_consulta,
             canal,
             FakeEstudianteConsultaPort(),
+            autorizacion,
         ).execute(sesion.id)
     canal.publicados.clear()
-    use_case = AvanzarSiguientePreguntaUseCase(event_store, pregunta_consulta, canal)
+    use_case = AvanzarSiguientePreguntaUseCase(
+        event_store, pregunta_consulta, canal, comision_consulta
+    )
     return use_case, event_store, canal, sesion
 
 
@@ -223,13 +236,17 @@ async def _mostrar_y_cerrar(event_store, canal, sesion_id):
     pregunta_consulta.detalles[sesion.pregunta_actual().pregunta_id] = DetalleCorreccionPregunta(
         texto="x", contenido_correcto={"opcion_indice": 0}, opciones=OPCIONES
     )
-    await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion_id)
+    comision_consulta = FakeComisionConsultaPort()
+    await MostrarOpcionesEnVivoUseCase(
+        event_store, pregunta_consulta, canal, comision_consulta
+    ).execute(sesion_id)
     await CerrarPreguntaActualUseCase(
         event_store,
         FakeProyeccionesEnVivo(),
         pregunta_consulta,
         canal,
         FakeEstudianteConsultaPort(),
+        VerificarAutorizacionComisionService(comision_consulta),
     ).execute(sesion_id)
 
 

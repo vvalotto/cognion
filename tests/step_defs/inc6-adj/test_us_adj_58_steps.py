@@ -22,11 +22,10 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
     SQLAlchemyEventStore,
 )
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -133,8 +132,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _post(sesion_id: str, accion: str, headers: dict[str, str], json=None):
@@ -197,7 +197,8 @@ def sesion_en_curso(context):
 @given("una sesión en vivo Cancelada")
 def sesion_cancelada(context):
     run_async(_en_espera(context, unidos=0))
-    assert run_async(_post(context["sesion_id"], "cancelar", _docente())).status_code == 200
+    sesion_id = context["sesion_id"]
+    assert run_async(_post(sesion_id, "cancelar", _docente(sesion_id))).status_code == 200
     context["eventos_antes"] = len(run_async(_reconstruir(context["sesion_id"]))[1])
 
 
@@ -255,8 +256,8 @@ def en_curso_con_dos_respuestas(context):
 
 def _con_conectados(context, accion: str, headers_conectados: list[dict[str, str]]) -> None:
     """Ejecuta `accion` como Docente con `headers_conectados` escuchando el canal."""
-    docente = _docente()
     sesion_id = context["sesion_id"]
+    docente = _docente(sesion_id)
     tokens = [h["Authorization"].split()[1] for h in headers_conectados]
     with TestClient(app) as client:
         sockets = [
@@ -282,7 +283,9 @@ def docente_cancela(context):
 
 @when("el Docente intenta cancelar la sesión")
 def docente_intenta_cancelar(context):
-    context["response"] = run_async(_post(context["sesion_id"], "cancelar", _docente()))
+    context["response"] = run_async(
+        _post(context["sesion_id"], "cancelar", _docente(context["sesion_id"]))
+    )
 
 
 @when("un Estudiante intenta unirse")
@@ -302,7 +305,9 @@ def estudiante_intenta_cancelar(context):
 @when("el Docente intenta iniciar la sesión")
 @when("el Docente inicia la sesión")
 def docente_inicia(context):
-    context["response"] = run_async(_post(context["sesion_id"], "iniciar", _docente()))
+    context["response"] = run_async(
+        _post(context["sesion_id"], "iniciar", _docente(context["sesion_id"]))
+    )
 
 
 @when("el Docente finaliza la sesión")
@@ -325,11 +330,12 @@ def queda_cancelada(context):
 @then("deja de figurar en el listado de sesiones EnEspera y EnCurso de la Comisión")
 def no_figura_en_el_listado(context):
     async def _listar():
+        docente = await headers_docente_de_sesion(context["sesion_id"])
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             return await client.get(
                 "/sesiones-en-vivo",
                 params={"comision_id": context["comision_id"]},
-                headers=_docente(),
+                headers=docente,
             )
 
     respuesta = run_async(_listar())

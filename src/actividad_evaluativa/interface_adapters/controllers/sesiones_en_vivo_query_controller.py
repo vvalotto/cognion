@@ -38,9 +38,11 @@ class SesionesEnVivoQueryController:
         """Devuelve el estado de la sesión; con `estudiante_id`, incluye su avance propio."""
         return await self._obtener_estado.execute(sesion_id, estudiante_id)
 
-    async def listar_participantes(self, sesion_id: UUID) -> list[ParticipanteResumen]:
+    async def listar_participantes(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> list[ParticipanteResumen]:
         """Devuelve los participantes de la sala de espera."""
-        return await self._listar_participantes.execute(sesion_id)
+        return await self._listar_participantes.execute(sesion_id, docente_id)
 
     async def obtener_ranking(
         self, sesion_id: UUID, es_estudiante: bool

@@ -60,12 +60,12 @@ def context():
     return {}
 
 
-async def _crear_materia_con_preguntas_y_comision(cantidad: int) -> tuple[str, str]:
+async def _crear_materia_con_preguntas_y_comision(cantidad: int) -> tuple[str, str, dict[str, str]]:
     """Crea materia, Comisión con Docente asignado, y carga `cantidad` preguntas (`US-ADJ-57`).
 
     La Comisión se crea y el Docente se asigna antes del loop de carga — `POST
-    /preguntas/verdadero-falso` ahora exige que el Docente que llama tenga una Comisión
-    asignada en la materia del banco. Devuelve `(materia_id, comision_id)`.
+    /preguntas/verdadero-falso` y `POST /sesiones-en-vivo` ahora exigen que el Docente que
+    llama tenga una Comisión asignada. Devuelve `(materia_id, comision_id, headers_del_docente)`.
     """
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         creada = await client.post(
@@ -113,7 +113,7 @@ async def _crear_materia_con_preguntas_y_comision(cantidad: int) -> tuple[str, s
                 },
                 headers=headers,
             )
-        return materia_id, str(comision.id)
+        return materia_id, str(comision.id), headers
 
 
 async def _post_crear_sesion(comision_id: str, cantidad: int, tiempo: int, headers: dict[str, str]):
@@ -151,8 +151,11 @@ async def _payload_primer_evento(sesion_id: str) -> dict:
 
 
 def _dado_comision_con_preguntas(context, cantidad: int) -> None:
-    _materia_id, comision_id = run_async(_crear_materia_con_preguntas_y_comision(cantidad))
+    _materia_id, comision_id, headers = run_async(
+        _crear_materia_con_preguntas_y_comision(cantidad)
+    )
     context["comision_id"] = comision_id
+    context["docente_headers"] = headers
 
 
 @given("una Comisión existente cuya Materia tiene un Banco con preguntas activas suficientes")
@@ -195,7 +198,9 @@ def usuario_estudiante(context):
 def docente_crea_sesion(context, cantidad, tiempo):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], cantidad, tiempo, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], cantidad, tiempo, context.get("docente_headers") or docente_headers()
+        )
     )
 
 
@@ -205,7 +210,9 @@ def docente_crea_sesion(context, cantidad, tiempo):
 def docente_intenta_crear_con_cantidad(context, cantidad):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], cantidad, 30, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], cantidad, 30, context.get("docente_headers") or docente_headers()
+        )
     )
 
 
@@ -218,14 +225,18 @@ def docente_intenta_crear_con_cantidad(context, cantidad):
 def docente_intenta_crear_con_tiempo(context, tiempo):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], 10, tiempo, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], 10, tiempo, context.get("docente_headers") or docente_headers()
+        )
     )
 
 
 @when("el Docente intenta crear una sesión en vivo")
 def docente_intenta_crear(context):
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], 10, 30, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], 10, 30, context.get("docente_headers") or docente_headers()
+        )
     )
 
 

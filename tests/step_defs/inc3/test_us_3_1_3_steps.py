@@ -66,7 +66,12 @@ async def _contar_eventos_evaluacion(evaluacion_id: str) -> int:
         return resultado.scalar_one()
 
 
-async def _crear_materia_con_preguntas(cantidad: int) -> str:
+async def _crear_materia_con_preguntas(cantidad: int) -> tuple[str, dict[str, str]]:
+    """Crea la materia con preguntas y devuelve `(materia_id, headers)` del Docente asignado.
+
+    `POST /actividades` exige que el Docente que llama tenga una Comisión asignada en la
+    materia (`US-ADJ-57`) — se reutilizan los mismos `headers` que ya cargaron las preguntas.
+    """
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post(
@@ -89,7 +94,7 @@ async def _crear_materia_con_preguntas(cantidad: int) -> str:
                 headers=headers,
             )
 
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
 async def _crear_actividad(
@@ -97,6 +102,7 @@ async def _crear_actividad(
     cantidad_preguntas: int,
     fecha_apertura: datetime,
     fecha_cierre: datetime,
+    headers: dict[str, str] | None = None,
 ) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -109,7 +115,7 @@ async def _crear_actividad(
                 "cantidad_preguntas": cantidad_preguntas,
                 "cantidad_intentos_permitidos": 1,
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
         return response.json()["id"]
 
@@ -133,36 +139,42 @@ def _periodo_vigente() -> tuple[datetime, datetime]:
     )
 )
 def actividad_vigente_con_cantidad(context, cantidad):
-    materia_id = run_async(_crear_materia_con_preguntas(cantidad + 10))
+    materia_id, headers = run_async(_crear_materia_con_preguntas(cantidad + 10))
     apertura, cierre = _periodo_vigente()
     context["cantidad_preguntas"] = cantidad
-    context["actividad_id"] = run_async(_crear_actividad(materia_id, cantidad, apertura, cierre))
+    context["actividad_id"] = run_async(
+        _crear_actividad(materia_id, cantidad, apertura, cierre, headers)
+    )
 
 
 @given(
     "una ActividadEvaluativaPeriodoAbierto vigente con más preguntas activas que cantidad_preguntas"
 )
 def actividad_vigente_con_banco_amplio(context):
-    materia_id = run_async(_crear_materia_con_preguntas(20))
+    materia_id, headers = run_async(_crear_materia_con_preguntas(20))
     apertura, cierre = _periodo_vigente()
     context["cantidad_preguntas"] = 5
-    context["actividad_id"] = run_async(_crear_actividad(materia_id, 5, apertura, cierre))
+    context["actividad_id"] = run_async(_crear_actividad(materia_id, 5, apertura, cierre, headers))
 
 
 @given("una ActividadEvaluativaPeriodoAbierto con fecha_apertura futura")
 def actividad_con_apertura_futura(context):
-    materia_id = run_async(_crear_materia_con_preguntas(20))
+    materia_id, headers = run_async(_crear_materia_con_preguntas(20))
     apertura = datetime.now(UTC) + timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    context["actividad_id"] = run_async(_crear_actividad(materia_id, 10, apertura, cierre))
+    context["actividad_id"] = run_async(
+        _crear_actividad(materia_id, 10, apertura, cierre, headers)
+    )
 
 
 @given("una ActividadEvaluativaPeriodoAbierto con fecha_cierre pasada")
 def actividad_con_cierre_pasado(context):
-    materia_id = run_async(_crear_materia_con_preguntas(20))
+    materia_id, headers = run_async(_crear_materia_con_preguntas(20))
     cierre = datetime.now(UTC) - timedelta(days=1)
     apertura = cierre - timedelta(days=7)
-    context["actividad_id"] = run_async(_crear_actividad(materia_id, 10, apertura, cierre))
+    context["actividad_id"] = run_async(
+        _crear_actividad(materia_id, 10, apertura, cierre, headers)
+    )
 
 
 @given("un Estudiante autenticado sin Evaluacion previa para esa actividad")
@@ -174,9 +186,9 @@ def estudiante_autenticado_sin_evaluacion_previa(context):
 
 @given("una Evaluacion EnCurso ya existente para (actividad_id, estudiante_id)")
 def evaluacion_en_curso_existente(context):
-    materia_id = run_async(_crear_materia_con_preguntas(20))
+    materia_id, headers = run_async(_crear_materia_con_preguntas(20))
     apertura, cierre = _periodo_vigente()
-    context["actividad_id"] = run_async(_crear_actividad(materia_id, 10, apertura, cierre))
+    context["actividad_id"] = run_async(_crear_actividad(materia_id, 10, apertura, cierre, headers))
 
     estudiante_id, headers = run_async(crear_estudiante())
     context["estudiante_id"] = estudiante_id

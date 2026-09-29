@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
@@ -19,8 +20,25 @@ from src.actividad_evaluativa.entities.ports.event_store_port import (
 from src.actividad_evaluativa.entities.ports.materia_consulta_port import MateriaConsultaPort
 from src.actividad_evaluativa.entities.ports.notificacion_port import NotificacionPort
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 
 AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
+
+
+async def _persistir_cierre(
+    event_store: EventStorePort, actividad_id: UUID, version: int, payload: dict[str, Any]
+) -> None:
+    """Envuelve `ActividadEvaluativaCerrada` y la persiste — función libre para no sumar CBO
+    a `CerrarActividadUseCase` (`US-ADJ-57`, mismo criterio que `_payload` en los Use Case de
+    sesión en vivo)."""
+    await event_store.append(
+        AGGREGATE_TYPE,
+        actividad_id,
+        version,
+        [EventoParaAlmacenar(event_type="ActividadEvaluativaCerrada", payload=payload)],
+    )
 
 
 class CerrarActividadUseCase:
@@ -33,23 +51,30 @@ class CerrarActividadUseCase:
         finalizar_evaluacion: FinalizarEvaluacionUseCase,
         materia_consulta: MateriaConsultaPort,
         notificacion: NotificacionPort,
+        autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
         """Recibe el event store, el read model, el Use Case en cascada y los puertos nuevos.
 
         `materia_consulta` y `notificacion` se agregan en `US-5.1.3` para resolver el nombre
-        de la materia y disparar el email de cierre, respectivamente.
+        de la materia y disparar el email de cierre, respectivamente. `autorizacion`
+        (`US-ADJ-57`) valida la pertenencia del Docente antes de cerrar.
         """
         self._event_store = event_store
         self._evaluacion_activa_query = evaluacion_activa_query
         self._finalizar_evaluacion = finalizar_evaluacion
         self._materia_consulta = materia_consulta
         self._notificacion = notificacion
+        self._autorizacion = autorizacion
 
-    async def execute(self, actividad_id: UUID) -> ActividadEvaluativaPeriodoAbierto:
+    async def execute(
+        self, actividad_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaPeriodoAbierto:
         """Cierra la actividad y finaliza de inmediato sus evaluaciones activas.
 
-        Levanta `ActividadNoExiste` si `actividad_id` no tiene stream, `ActividadYaCerrada`
-        (INV-AE-04b) si ya estaba cerrada manualmente. La cascada sobre cada `Evaluacion`
+        Levanta `ActividadNoExiste` si `actividad_id` no tiene stream, `MateriaNoAutorizada`
+        (403) si `docente_id` no tiene ninguna Comisión asignada en la materia de la actividad
+        (`US-ADJ-57`; `None` = Administrador, sin chequeo), `ActividadYaCerrada` (INV-AE-04b)
+        si ya estaba cerrada manualmente. La cascada sobre cada `Evaluacion`
         `EnCurso`/`Suspendida` reutiliza `FinalizarEvaluacionUseCase` con `actor="sistema"` —
         mismo efecto que la Regla 2 del `VerificadorDeVencimientos`, disparado de inmediato en
         vez de esperar la próxima pasada del job periódico. Al final, después de confirmar la
@@ -61,6 +86,9 @@ class CerrarActividadUseCase:
             raise ActividadNoExiste(actividad_id)
 
         actividad = ActividadEvaluativaPeriodoAbierto.reconstruir(eventos)
+
+        await self._autorizacion.verificar_materia(docente_id, actividad.materia_id)
+
         actividad.validar_para_cerrar()
 
         evento = ActividadEvaluativaCerrada(actividad_id=actividad_id)
@@ -68,12 +96,7 @@ class CerrarActividadUseCase:
             "actividad_id": str(evento.actividad_id),
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
-        await self._event_store.append(
-            AGGREGATE_TYPE,
-            actividad_id,
-            len(eventos),
-            [EventoParaAlmacenar(event_type="ActividadEvaluativaCerrada", payload=payload)],
-        )
+        await _persistir_cierre(self._event_store, actividad_id, len(eventos), payload)
         actividad.cerrada_manualmente = True
 
         resumen = await self._evaluacion_activa_query.listar_no_finalizadas()

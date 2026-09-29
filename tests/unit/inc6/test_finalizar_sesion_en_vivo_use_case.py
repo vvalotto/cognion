@@ -31,6 +31,9 @@ from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSes
 from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     MostrarOpcionesEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
@@ -66,18 +69,32 @@ async def _escenario(iniciada: bool = True, cerrada: bool = True, preguntas: int
         )
     proyecciones = FakeProyeccionesEnVivo()
     canal = FakeCanalTiempoReal()
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
     if iniciada:
         await IniciarSesionEnVivoUseCase(
-            event_store, pregunta_consulta, canal, FakeParticipantesAlMenosUno()
+            event_store,
+            pregunta_consulta,
+            canal,
+            FakeParticipantesAlMenosUno(),
+            autorizacion,
         ).execute(sesion.id)
-        await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+        await MostrarOpcionesEnVivoUseCase(
+            event_store, pregunta_consulta, canal, comision_consulta
+        ).execute(sesion.id)
     estudiante_consulta = FakeEstudianteConsultaPort()
     if iniciada and cerrada:
         await CerrarPreguntaActualUseCase(
-            event_store, proyecciones, pregunta_consulta, canal, estudiante_consulta
+            event_store,
+            proyecciones,
+            pregunta_consulta,
+            canal,
+            estudiante_consulta,
+            autorizacion,
         ).execute(sesion.id)
     canal.publicados.clear()
-    use_case = FinalizarSesionEnVivoUseCase(event_store, proyecciones, canal, estudiante_consulta)
+    use_case = FinalizarSesionEnVivoUseCase(
+        event_store, proyecciones, canal, estudiante_consulta, autorizacion
+    )
     return use_case, event_store, canal, sesion, proyecciones, estudiante_consulta
 
 

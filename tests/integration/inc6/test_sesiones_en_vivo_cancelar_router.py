@@ -14,11 +14,10 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.inc6._helpers import (
     correr,
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     preparar_sesion,
     unirse_a_sesion,
@@ -29,8 +28,8 @@ def _cliente() -> AsyncClient:
     return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+async def _docente(sesion_id: str) -> dict[str, str]:
+    return await headers_docente_de_sesion(sesion_id)
 
 
 def _url(sesion_id: str, accion: str = "cancelar") -> str:
@@ -51,7 +50,7 @@ async def _eventos_de_sesion(session, sesion_id: str) -> list[str]:
 
 async def _cancelar(sesion_id: str):
     async with _cliente() as client:
-        return await client.post(_url(sesion_id), headers=_docente())
+        return await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
 
 class TestCancelarAPIIntegration:
@@ -71,16 +70,17 @@ class TestCancelarAPIIntegration:
         sesion_id, comision_id = await preparar_sesion()
         await _cancelar(sesion_id)
 
+        docente = await _docente(sesion_id)
         async with _cliente() as client:
             activas = await client.get(
                 "/sesiones-en-vivo",
                 params={"comision_id": comision_id, "estado": ["EnEspera", "EnCurso"]},
-                headers=_docente(),
+                headers=docente,
             )
             canceladas = await client.get(
                 "/sesiones-en-vivo",
                 params={"comision_id": comision_id, "estado": ["Cancelada"]},
-                headers=_docente(),
+                headers=docente,
             )
 
         assert activas.status_code == 200
@@ -125,7 +125,9 @@ class TestCancelarAPIIntegration:
         await _cancelar(sesion_id)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id, "iniciar"), headers=_docente())
+            response = await client.post(
+                _url(sesion_id, "iniciar"), headers=await _docente(sesion_id)
+            )
 
         assert response.status_code == 422
         assert "cancelada" in response.json()["detail"]
@@ -149,10 +151,11 @@ class TestCancelarAPIIntegration:
         _, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
 
+        docente = await _docente(sesion_id)
         async with _cliente() as client:
             respuestas = await asyncio.gather(
-                client.post(_url(sesion_id), headers=_docente()),
-                client.post(_url(sesion_id, "iniciar"), headers=_docente()),
+                client.post(_url(sesion_id), headers=docente),
+                client.post(_url(sesion_id, "iniciar"), headers=docente),
             )
 
         assert sorted(r.status_code for r in respuestas) == [200, 422]
@@ -166,7 +169,9 @@ class TestIniciarSinParticipantes:
         sesion_id, _ = await preparar_sesion()
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id, "iniciar"), headers=_docente())
+            response = await client.post(
+                _url(sesion_id, "iniciar"), headers=await _docente(sesion_id)
+            )
 
         assert response.status_code == 422
         assert "no tiene participantes" in response.json()["detail"]
@@ -178,7 +183,9 @@ class TestIniciarSinParticipantes:
         await unirse_a_sesion(sesion_id, headers)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id, "iniciar"), headers=_docente())
+            response = await client.post(
+                _url(sesion_id, "iniciar"), headers=await _docente(sesion_id)
+            )
 
         assert response.status_code == 200
         assert response.json()["estado"] == "EnCurso"
@@ -189,7 +196,7 @@ class TestBroadcastDeLaCancelacion:
 
     def test_los_estudiantes_en_la_sala_reciben_sesion_cancelada(self) -> None:
         sesion_id, comision_id = correr(preparar_sesion())
-        docente = _docente()
+        docente = correr(_docente(sesion_id))
         estudiantes = [correr(crear_estudiante(comision_id)) for _ in range(2)]
         for _, headers in estudiantes:
             correr(unirse_a_sesion(sesion_id, headers))

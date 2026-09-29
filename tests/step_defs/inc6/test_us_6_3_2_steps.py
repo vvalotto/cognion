@@ -25,6 +25,7 @@ from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
+    headers_docente_de_comision,
     iniciar_sesion,
     iniciar_y_finalizar,
     preparar_sesion,
@@ -80,6 +81,7 @@ async def _get(params: dict, headers: dict[str, str]):
 
 async def _crear_sesion(comision_id: str) -> str:
     """Crea una sesión adicional sobre una Comisión ya existente (mismo banco de preguntas)."""
+    docente = await headers_docente_de_comision(comision_id)
     async with _cliente() as client:
         respuesta = await client.post(
             "/sesiones-en-vivo",
@@ -88,7 +90,7 @@ async def _crear_sesion(comision_id: str) -> str:
                 "cantidad_preguntas": 5,
                 "tiempo_limite_por_pregunta_segundos": 30,
             },
-            headers=_docente(),
+            headers=docente,
         )
     assert respuesta.status_code == 201, respuesta.text
     return respuesta.json()["id"]
