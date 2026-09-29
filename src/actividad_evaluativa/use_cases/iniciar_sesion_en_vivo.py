@@ -39,8 +39,10 @@ AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 async def _persistir_inicio(
     event_store: EventStorePort, sesion_id: UUID, version: int, payload: dict[str, Any]
 ) -> None:
-    """Persiste `SesionEnVivoIniciada`, traduciendo la carrera optimista — función libre para
-    no sumar CBO a `IniciarSesionEnVivoUseCase` (`US-ADJ-57`)."""
+    """Guarda el evento `SesionEnVivoIniciada`, traduciendo la carrera optimista.
+
+    Función libre para no sumar CBO a `IniciarSesionEnVivoUseCase` (`US-ADJ-57`).
+    """
     try:
         await event_store.append(
             AGGREGATE_TYPE_SESION,
@@ -65,8 +67,10 @@ class IniciarSesionEnVivoUseCase:
         participantes: ParticipantesSesionQueryPort,
         autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe el event store, las consultas de preguntas/participantes, el canal y el
-        servicio de autorización por Comisión."""
+        """Recibe el event store, las consultas de preguntas/participantes y el canal.
+
+        Recibe también el servicio de autorización por Comisión.
+        """
         self._event_store = event_store
         self._pregunta_consulta = pregunta_consulta
         self._canal = canal

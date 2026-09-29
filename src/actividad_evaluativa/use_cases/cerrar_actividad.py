@@ -30,9 +30,11 @@ AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
 async def _persistir_cierre(
     event_store: EventStorePort, actividad_id: UUID, version: int, payload: dict[str, Any]
 ) -> None:
-    """Envuelve `ActividadEvaluativaCerrada` y la persiste — función libre para no sumar CBO
-    a `CerrarActividadUseCase` (`US-ADJ-57`, mismo criterio que `_payload` en los Use Case de
-    sesión en vivo)."""
+    """Envuelve `ActividadEvaluativaCerrada` y la persiste.
+
+    Función libre para no sumar CBO a `CerrarActividadUseCase` (`US-ADJ-57`, mismo
+    criterio que `_payload` en los Use Case de sesión en vivo).
+    """
     await event_store.append(
         AGGREGATE_TYPE,
         actividad_id,

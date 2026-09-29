@@ -28,8 +28,10 @@ AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
 async def _persistir_creacion(
     event_store: EventStorePort, actividad_id: UUID, payload: dict[str, Any]
 ) -> None:
-    """Envuelve `ActividadEvaluativaCreada` y la persiste como primer evento del stream —
-    función libre para no sumar CBO a `CrearActividadPeriodoAbiertoUseCase` (`US-ADJ-57`)."""
+    """Envuelve `ActividadEvaluativaCreada` y la persiste como primer evento del stream.
+
+    Función libre para no sumar CBO a `CrearActividadPeriodoAbiertoUseCase` (`US-ADJ-57`).
+    """
     await event_store.append(
         AGGREGATE_TYPE,
         actividad_id,
@@ -49,8 +51,10 @@ class CrearActividadPeriodoAbiertoUseCase:
         notificacion: NotificacionPort,
         autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe los puertos de consulta a Banco de Preguntas/Identidad, el event store y
-        Notificaciones."""
+        """Recibe los puertos de consulta a Banco de Preguntas/Identidad, el event store.
+
+        Recibe también Notificaciones y el servicio de autorización por Comisión.
+        """
         self._materia_consulta = materia_consulta
         self._pregunta_consulta = pregunta_consulta
         self._event_store = event_store

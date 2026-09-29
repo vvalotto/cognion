@@ -82,8 +82,10 @@ def _mensaje_cierre(
 async def _persistir_cierre(
     event_store: EventStorePort, sesion_id: UUID, version: int, payload: dict[str, Any]
 ) -> None:
-    """Persiste `PreguntaEnVivoCerrada`, traduciendo la carrera optimista — función libre para
-    no sumar CBO a `CerrarPreguntaActualUseCase` (`US-ADJ-57`)."""
+    """Guarda el evento `PreguntaEnVivoCerrada`, traduciendo la carrera optimista.
+
+    Función libre para no sumar CBO a `CerrarPreguntaActualUseCase` (`US-ADJ-57`).
+    """
     try:
         await event_store.append(
             AGGREGATE_TYPE_SESION,
@@ -107,8 +109,10 @@ class CerrarPreguntaActualUseCase:
         estudiante_consulta: EstudianteConsultaPort,
         autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe el event store, las proyecciones, las consultas de Banco/Identidad, el canal y
-        el servicio de autorización por Comisión."""
+        """Recibe el event store, las proyecciones, las consultas de Banco/Identidad, el canal.
+
+        Recibe también el servicio de autorización por Comisión.
+        """
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._pregunta_consulta = pregunta_consulta

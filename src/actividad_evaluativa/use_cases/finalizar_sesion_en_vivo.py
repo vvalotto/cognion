@@ -71,8 +71,10 @@ class FinalizarSesionEnVivoUseCase:
         estudiante_consulta: EstudianteConsultaPort,
         autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe el event store, las proyecciones, el canal, las consultas de Identidad y el
-        servicio de autorización por Comisión."""
+        """Recibe el event store, las proyecciones, el canal y las consultas de Identidad.
+
+        Recibe también el servicio de autorización por Comisión.
+        """
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._canal = canal
