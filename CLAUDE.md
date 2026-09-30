@@ -941,7 +941,8 @@ Merge `develop → main` y tag `v0.7.1` (PATCH, mismo criterio de versionado que
 ejecutados el mismo día. Milestone GitHub [Incremento 5-ADJ](https://github.com/vvalotto/cognion/milestone/13)
 cerrado.
 
-Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10) — en curso
+Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10) — **cerrado 2026-09-30, junto con
+Incremento 6-ADJ, como `BL-011`** (ver más abajo)
 (`docs/plans/inc6/inc6-candidatas.md`, Milestone GitHub
 [Incremento 6](https://github.com/vvalotto/cognion/milestone/8)). Incremento de mayor riesgo
 técnico del proyecto (`PLAN_v1.md`): primer uso real de WebSockets, primer agregado
@@ -1041,7 +1042,8 @@ en la misma revisión (cajas de opción azul/verde ≥4,5:1 de contraste, enunci
 **Cierra completa la Iteración 3 y el Incremento 6 (backend + frontend)** — RF-08/09/10 siguen en
 **Implementado** (pasan a Validado recién al cerrar la baseline).
 
-**Incremento 6-ADJ — Ajuste técnico y documental, en curso** (abierto 2026-09-27, renombrado de `SP-ADJ-02`
+**Incremento 6-ADJ — Ajuste técnico y documental, cerrado 2026-09-30 junto con Incremento 6
+como `BL-011`** (abierto 2026-09-27, renombrado de `SP-ADJ-02`
 el mismo día; `docs/plans/inc6-adj/inc6-adj-candidatas.md`, Milestone GitHub
 [Incremento 6-ADJ](https://github.com/vvalotto/cognion/milestone/14)). Mismo criterio que los incrementos
 ADJ anteriores: ajuste fuera de la secuencia 0-7 de `PLAN_v1.md`, insertado **antes** de cerrar `BL-011`
@@ -1089,11 +1091,28 @@ un solo párrafo desactualizado corregido en
 UAT de `US-6.3.10`, sin registrarlo). **Cierra completo el barrido de §12 y con él
 `Incremento 6-ADJ`.**
 
-**Próximo paso:** cierre de `BL-011` (Incremento 6 + 6-ADJ juntos) — corresponde a Víctor:
-correr `ArchitectAnalyst` (siempre manual, `CLAUDE.md` tabla de quality gates), registrar la
-baseline en `.cm/baselines/`, decidir merge `develop → main` + tag y cierre del Milestone
-GitHub. Ítem abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS
-real (`PROCEDIMIENTO-UAT.md` §4).
+**`BL-011` — Incremento 6 (Sesión en Vivo) + Incremento 6-ADJ (Ajuste técnico y documental)
+cerrada 2026-09-30** (`.cm/baselines/BL-011-sesion-en-vivo-y-ajuste-tecnico.md`): 1799/1799
+tests backend (97% cobertura), 801/801 frontend (93.5% cobertura statements/85.71% branches),
+`ruff`/`mypy` 0 errores, `pylint` 9.59/10, `designreviewer` 0 CRITICAL (330 advertencias sobre
+300 archivos), `architectanalyst` 7 CRITICAL (mismo "Zone of Pain" aceptado desde
+`US-ADJ-13`/`19`, sin módulo nuevo desde `BL-010`, `should_block: false`). Sin UAT formal
+consolidada adicional — cada iteración con código de producción ya había corrido la propia
+(Iteración 1/2 backend con revisión manual + verificación del RNF de `US-6.2.9`; Iteración 3
+frontend con Playwright E2E + revisión manual de Víctor en Mac/iPhone/iPad,
+`quality/reports/uat/inc6/revision-manual-app.md`), sin hallazgos 🔴 Bloqueantes. RF-08, RF-09
+y RF-10 pasan a **Validado** en `docs/traceability/matrix.md`. `CHANGELOG.md`: `[Unreleased]`
+cerrado como `[0.8.0]`, con las entradas faltantes de `US-6.1.x`/`US-6.2.x`/`US-ADJ-57`/`58`/
+`07` agregadas antes del cierre (no estaban registradas). Merge `develop → main` y tag
+`v0.8.0` (MINOR — cierre de Incremento 6 de `PLAN_v1.md`; `Incremento 6-ADJ` se pliega en la
+misma baseline, sin tag propio) ejecutados el mismo día. Milestones GitHub
+[Incremento 6](https://github.com/vvalotto/cognion/milestone/8) e
+[Incremento 6-ADJ](https://github.com/vvalotto/cognion/milestone/14) cerrados.
+
+**Próximo paso:** evaluar si corresponde abrir el Incremento 7 (Cierre de Alcance v1,
+`RF-07` — importación desde PDF, mecanismo de parseo automático vs. asistido pendiente de
+decisión) o retomar otro backlog sin incremento asignado. Ítem abierto aparte, no bloqueante:
+checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
 
 ---
 
