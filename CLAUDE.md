@@ -1151,7 +1151,8 @@ en 7 puntos, ejecutándose de a uno:
    llevaba 22 días sin mergear.
 4. ✅ Agregada `tests/uat/datos-reales/` a `.gitignore` (antes quedaba fuera de git solo por
    disciplina manual — ya hubo un incidente real de `git add` arrastrándolo).
-5. ⬜ Borrar branches locales ya integradas por otro commit: `docs/us-adj-21-cerrada`,
+5. ✅ Borradas las branches locales (y remotas donde aplicaba) ya integradas por otro commit:
+   `docs/us-adj-21-cerrada`,
    `feature/editar-cuenta-administrador`, `feature/editar-materia`, `fix/admin-crea-materias`
    (ancestros confirmados de `develop`), `feature/home-docente-reportes` + su worktree
    (`.claude/worktrees/gracious-williamson-a7dd0f`, superado por PR #374),
