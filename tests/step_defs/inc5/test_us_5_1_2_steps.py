@@ -26,7 +26,11 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    asignar_docente_a_comision,
+    docente_asignado_a_materia,
+)
 
 scenarios("../../features/inc5/US-5.1.2-notificacion-apertura.feature")
 
@@ -42,6 +46,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
         await session.execute(text("DELETE FROM materia"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
@@ -115,12 +120,16 @@ class _FakeSmtpServer:
                             conn.sendall(b"250 OK\r\n")
 
 
-async def _crear_materia_con_preguntas(cantidad: int) -> str:
+async def _crear_materia_con_preguntas(cantidad: int) -> tuple[str, str, dict[str, str]]:
+    """Devuelve `(materia_id, docente_id, headers)` — el Docente ya asignado a una Comisión de
+    la materia (`US-ADJ-57`), reutilizable para crear la actividad y para asignarlo también a
+    las Comisiones A/B de cada escenario."""
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
+        docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -133,12 +142,16 @@ async def _crear_materia_con_preguntas(cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
-        return creada.json()["id"]
+        return creada.json()["id"], docente_id, headers
 
 
-async def _crear_comision_con_estudiantes(materia_id: str, cantidad: int) -> list[str]:
+async def _crear_comision_con_estudiantes(
+    materia_id: str, cantidad: int, docente_id: str
+) -> list[str]:
+    """Crea la Comisión y la asigna a `docente_id` (`US-ADJ-57`) — el mismo Docente que crea la
+    actividad debe estar asignado a cada Comisión que la restrinja."""
     async with SessionLocal() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -156,6 +169,7 @@ async def _crear_comision_con_estudiantes(materia_id: str, cantidad: int) -> lis
             await usuario_repo.guardar(estudiante)
             emails.append(email)
 
+    await asignar_docente_a_comision(str(comision.id), docente_id)
     return [str(comision.id), *emails]
 
 
@@ -165,7 +179,9 @@ def _periodo() -> tuple[str, str]:
     return apertura.isoformat(), cierre.isoformat()
 
 
-async def _post_crear_actividad(materia_id: str, comisiones_ids: list[str] | None) -> object:
+async def _post_crear_actividad(
+    materia_id: str, comisiones_ids: list[str] | None, headers: dict[str, str]
+) -> object:
     transport = ASGITransport(app=app)
     apertura, cierre = _periodo()
     body = {
@@ -179,7 +195,7 @@ async def _post_crear_actividad(materia_id: str, comisiones_ids: list[str] | Non
     if comisiones_ids is not None:
         body["comisiones_ids"] = comisiones_ids
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post("/actividades", json=body, headers=docente_headers())
+        return await client.post("/actividades", json=body, headers=headers)
 
 
 def _apuntar_settings_al_stub(monkeypatch, servidor: _FakeSmtpServer) -> None:
@@ -203,10 +219,15 @@ def materia_con_comisiones_a_2_y_b_1(context, monkeypatch):
     context["servidor_smtp"] = servidor
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2))
-    comision_b_id, *emails_b = run_async(_crear_comision_con_estudiantes(materia_id, 1))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    comision_a_id, *emails_a = run_async(
+        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
+    )
+    comision_b_id, *emails_b = run_async(
+        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
+    )
     context["materia_id"] = materia_id
+    context["docente_headers"] = headers
     context["comision_a_id"] = comision_a_id
     context["comision_b_id"] = comision_b_id
     context["emails_esperados"] = set(emails_a) | set(emails_b)
@@ -216,7 +237,9 @@ def materia_con_comisiones_a_2_y_b_1(context, monkeypatch):
 def docente_crea_actividad_restringida_a_b(context):
     context["response"] = run_async(
         _post_crear_actividad(
-            context["materia_id"], [context["comision_a_id"], context["comision_b_id"]]
+            context["materia_id"],
+            [context["comision_a_id"], context["comision_b_id"]],
+            context["docente_headers"],
         )
     )
     _esperar_mensajes(context["servidor_smtp"], 3)
@@ -247,16 +270,23 @@ def materia_con_comisiones_a_y_b_sin_otra(context, monkeypatch):
     context["servidor_smtp"] = servidor
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    _comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 1))
-    _comision_b_id, *emails_b = run_async(_crear_comision_con_estudiantes(materia_id, 1))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    _comision_a_id, *emails_a = run_async(
+        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
+    )
+    _comision_b_id, *emails_b = run_async(
+        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
+    )
     context["materia_id"] = materia_id
+    context["docente_headers"] = headers
     context["emails_esperados"] = set(emails_a) | set(emails_b)
 
 
 @when("un Docente crea una actividad de período abierto sin comisiones_ids")
 def docente_crea_actividad_sin_comisiones_ids(context):
-    context["response"] = run_async(_post_crear_actividad(context["materia_id"], None))
+    context["response"] = run_async(
+        _post_crear_actividad(context["materia_id"], None, context["docente_headers"])
+    )
     cantidad_esperada = len(context.get("emails_esperados", []))
     if cantidad_esperada:
         _esperar_mensajes(context["servidor_smtp"], cantidad_esperada)
@@ -276,9 +306,12 @@ def verificar_emails_a_y_b(context):
 
 @given("una actividad restringida a la comisión A con 2 estudiantes")
 def actividad_restringida_a_comision_a_2_estudiantes(context):
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    comision_a_id, *emails_a = run_async(
+        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
+    )
     context["materia_id"] = materia_id
+    context["docente_headers"] = headers
     context["comision_a_id"] = comision_a_id
     context["emails_esperados"] = set(emails_a)
 
@@ -293,7 +326,9 @@ def envio_smtp_no_disponible(context, monkeypatch):
 @when("se dispara la notificación de apertura")
 def se_dispara_la_notificacion_de_apertura(context):
     context["response"] = run_async(
-        _post_crear_actividad(context["materia_id"], [context["comision_a_id"]])
+        _post_crear_actividad(
+            context["materia_id"], [context["comision_a_id"]], context["docente_headers"]
+        )
     )
 
 
@@ -318,7 +353,9 @@ def materia_recien_creada_sin_comision(context, monkeypatch):
     servidor = _FakeSmtpServer()
     context["servidor_smtp"] = servidor
     _apuntar_settings_al_stub(monkeypatch, servidor)
-    context["materia_id"] = run_async(_crear_materia_con_preguntas(20))
+    materia_id, _docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    context["materia_id"] = materia_id
+    context["docente_headers"] = headers
 
 
 @then("no se envía ningún email")

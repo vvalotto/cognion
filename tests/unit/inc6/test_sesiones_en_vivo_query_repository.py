@@ -139,3 +139,26 @@ class TestResumenDeStream:
 
         assert resumen.unidad_tematica == "Unidad 1"
         assert resumen.tema == "Bounded Contexts"
+
+
+class TestCancelada:
+    """`US-ADJ-58`: `SesionEnVivoCancelada` deriva el estado `Cancelada` en el read model."""
+
+    def test_cancelada_pasa_a_cancelada(self):
+        sesion_id, comision_id, materia_id = uuid4(), uuid4(), uuid4()
+        eventos = [
+            _evento(
+                sesion_id,
+                "SesionEnVivoCreada",
+                _payload_creada(comision_id, materia_id),
+                datetime(2026, 1, 1, tzinfo=UTC),
+                1,
+            ),
+            _evento(
+                sesion_id, "SesionEnVivoCancelada", {}, datetime(2026, 1, 1, 12, tzinfo=UTC), 2
+            ),
+        ]
+
+        resumen = _resumen_de_stream(eventos)
+
+        assert resumen.estado is EstadoSesionEnVivo.CANCELADA

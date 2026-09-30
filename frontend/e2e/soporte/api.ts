@@ -33,15 +33,10 @@ export function idDeToken(token: string): string {
   return JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString()).sub as string
 }
 
-interface EstadoApi {
-  estado: "EnEspera" | "EnCurso" | "Finalizada"
-  opciones_mostradas: boolean
-  pregunta_actual_cerrada: boolean
-}
-
 /**
- * Deja finalizadas por API todas las sesiones abiertas de la Comisión — para que un circuito que falla
- * a mitad de camino no contamine los siguientes (las tarjetas del Estudiante se buscan por materia).
+ * Cierra por API todas las sesiones abiertas de la Comisión — para que un circuito que falla a mitad de
+ * camino no contamine los siguientes (las tarjetas del Estudiante se buscan por materia). Desde US-ADJ-58
+ * una sesión `EnEspera` se cancela y una `EnCurso` se finaliza en cualquier etapa.
  */
 export async function finalizarSesionesAbiertas(comisionId: string, token: string) {
   const { body: sesiones } = await api<{ id: string; estado: string }[]>(
@@ -50,12 +45,8 @@ export async function finalizarSesionesAbiertas(comisionId: string, token: strin
     token,
   )
   for (const sesion of sesiones ?? []) {
-    if (sesion.estado === "Finalizada") continue
     const base = `/sesiones-en-vivo/${sesion.id}`
-    if (sesion.estado === "EnEspera") await api("POST", `${base}/iniciar`, token)
-    const { body: estado } = await api<EstadoApi>("GET", base, token)
-    if (!estado.opciones_mostradas) await api("POST", `${base}/mostrar-opciones`, token)
-    if (!estado.pregunta_actual_cerrada) await api("POST", `${base}/cerrar-pregunta`, token)
-    await api("POST", `${base}/finalizar`, token)
+    if (sesion.estado === "EnEspera") await api("POST", `${base}/cancelar`, token)
+    if (sesion.estado === "EnCurso") await api("POST", `${base}/finalizar`, token)
   }
 }

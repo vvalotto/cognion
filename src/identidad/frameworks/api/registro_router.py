@@ -13,11 +13,44 @@ from src.identidad.entities.errors import (
     PasswordSinComplejidadSuficiente,
 )
 from src.identidad.entities.usuario import Estudiante
-from src.identidad.frameworks.api.schemas import RegistrarEstudianteRequest, RegistroResponse
-from src.identidad.frameworks.dependencies import get_registro_controller
+from src.identidad.frameworks.api.schemas import (
+    InvitacionPreviewResponse,
+    RegistrarEstudianteRequest,
+    RegistroResponse,
+)
+from src.identidad.frameworks.dependencies import (
+    get_invitaciones_controller,
+    get_registro_controller,
+)
+from src.identidad.interface_adapters.controllers.invitaciones_controller import (
+    InvitacionesController,
+)
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 
 router = APIRouter(prefix="/identidad", tags=["identidad"])
+
+
+@router.get("/invitaciones/{token}", response_model=InvitacionPreviewResponse)
+async def obtener_invitacion(
+    token: str,
+    controller: InvitacionesController = Depends(get_invitaciones_controller),
+) -> InvitacionPreviewResponse:
+    """Vista previa de una invitación por token, sin consumirla; endpoint público, sin JWT.
+
+    Responde 404 si el token no corresponde a ninguna invitación, o 422 si ya venció o ya
+    fue usada — a diferencia de `POST /registro`, aquí sí se distingue el motivo porque es
+    una consulta anónima por token, sin riesgo de enumerar invitaciones ajenas (`US-ADJ-08`).
+    """
+    try:
+        preview = await controller.obtener_invitacion(token)
+    except InvitacionInvalida as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (InvitacionVencida, InvitacionYaUsada) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        ) from exc
+
+    return InvitacionPreviewResponse(materia=preview.materia, horario=preview.horario)
 
 
 @router.post("/registro", response_model=RegistroResponse, status_code=status.HTTP_201_CREATED)

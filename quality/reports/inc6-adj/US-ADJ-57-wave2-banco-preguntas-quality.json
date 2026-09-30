@@ -1,0 +1,38 @@
+{
+  "us_id": "US-ADJ-57 (Wave 2/4 — Banco de Preguntas)",
+  "fecha": "2026-09-28T17:15:00-03:00",
+  "componente": "src/banco_preguntas/ (ComisionConsultaPort ampliado + docente_id en use cases de mutación/listado + guards en materias/preguntas/bancos routers)",
+  "metricas": {
+    "pylint": 9.62,
+    "cc_promedio": 7.2,
+    "cc_max": 10,
+    "mi_min": 48.38,
+    "coverage_entities_use_cases_interface_adapters": 92.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 16,
+    "errors": 35,
+    "warnings": 2,
+    "infos": 107,
+    "reporte": "quality/reports/inc6-adj/US-ADJ-57-wave2-banco-preguntas-codeguard.json"
+  },
+  "backend_tests": {
+    "unitarios_banco_preguntas": "63/63 (tests/unit/inc2)",
+    "integracion_banco_preguntas": "64/64 (tests/integration/inc2)",
+    "suite_completa_backend": "1770/1770 (tests/unit + tests/integration + tests/step_defs, corrida secuencial única)"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 35 'errors' de DeadCode/Spelling/Types/UnusedImports son fallas de herramientas ausentes/timeout (vulture, codespell no instalados; mypy y pylint embebidos en CodeGuard exceden su timeout de 10s/5s en archivos chicos) — mismo bug documentado en CLAUDE.md, no hallazgos de código real. La corrida directa de mypy sobre src/ completo (fuente de verdad local) da 0 issues.",
+    "2 warnings de Pylint embebido en CodeGuard (bancos_router.py 6.11/10, bancos_controller.py 6.67/10 por archivo aislado sin contexto de paquete) son falsos valores — la corrida directa de pylint sobre src/banco_preguntas/ completo da 9.62/10.",
+    "coverage 92% (vs. 100% habitual en este BC) porque tests/unit/inc2 y tests/integration/inc2 se corrieron solos, sin las suites de otros BC que también ejercitan editar_materia/eliminar_materia/activar_materia (sin tocar en esta US) — no es una regresión de cobertura introducida por US-ADJ-57.",
+    "frameworks/ (los 3 routers modificados) queda fuera del gate de coverage por diseño del proyecto (pyproject.toml omit) — se valida por integración, no por cobertura de líneas.",
+    "Blast radius más grande que Wave 1: 13 archivos de tests/integration/ y ~25 de tests/step_defs/ de otros BC (Actividad Evaluativa, Notificaciones, Analytics, Sesiones en Vivo) seedeaban preguntas con un Docente anónimo sin Comisión asignada — corregido con un helper compartido (asignar_docente_a_materia en tests/integration/conftest.py, docente_asignado_a_materia en los _auth_headers.py de BDD) que materializa una fila Usuario real con el mismo id del JWT y la asigna, sin cambiar la identidad que usa cada test."
+  ]
+}

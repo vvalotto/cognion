@@ -22,15 +22,23 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
 from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
+from tests.integration.conftest import asignar_docente_a_materia
 
 
-async def _banco_persistido(session) -> Banco:
+async def _banco_persistido(session, docente_headers: dict[str, str] | None = None) -> Banco:
+    """Persiste una Materia con Banco vacío; asigna el Docente si se indica (`US-ADJ-57`).
+
+    `docente_headers=None` alcanza para los escenarios de rechazo por rol/autenticación —
+    fallan antes de llegar al chequeo de autorización de materia.
+    """
     materia_repo = SQLAlchemyMateriaRepository(session)
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    if docente_headers is not None:
+        await asignar_docente_a_materia(str(materia.id), docente_headers)
     return banco
 
 
@@ -91,7 +99,7 @@ class TestPreguntasAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.3-cargar-pregunta-opcion-multiple.feature`."""
 
     async def test_docente_carga_pregunta_exitosa(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
@@ -107,7 +115,7 @@ class TestPreguntasAPIIntegration:
         assert len(data["opciones"]) == 3
 
     async def test_rechazo_por_ninguna_opcion_correcta(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         body = _body_valido(banco.id)
         body["opciones"] = [
             {"texto": "Paraná", "es_correcta": False},
@@ -122,7 +130,7 @@ class TestPreguntasAPIIntegration:
         assert response.status_code == 422
 
     async def test_rechazo_por_mas_de_una_opcion_correcta(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         body = _body_valido(banco.id)
         body["opciones"] = [
             {"texto": "Paraná", "es_correcta": True},
@@ -137,7 +145,7 @@ class TestPreguntasAPIIntegration:
         assert response.status_code == 422
 
     async def test_rechazo_por_menos_de_dos_opciones(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         body = _body_valido(banco.id)
         body["opciones"] = [{"texto": "Paraná", "es_correcta": True}]
         transport = ASGITransport(app=app)
@@ -198,7 +206,7 @@ class TestPreguntasVerdaderoFalsoAPIIntegration:
     async def test_docente_carga_pregunta_exitosa_respuesta_verdadero(
         self, session, docente_headers
     ):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
@@ -214,7 +222,7 @@ class TestPreguntasVerdaderoFalsoAPIIntegration:
         assert data["activa"] is True
 
     async def test_docente_carga_pregunta_exitosa_respuesta_falso(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
@@ -290,7 +298,7 @@ class TestEditarPreguntaAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.5-editar-pregunta.feature`."""
 
     async def test_edicion_exitosa_opcion_multiple(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         pregunta = await _pregunta_om_persistida(session, banco.id)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -309,7 +317,7 @@ class TestEditarPreguntaAPIIntegration:
         ]
 
     async def test_edicion_exitosa_verdadero_falso(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -325,7 +333,7 @@ class TestEditarPreguntaAPIIntegration:
         assert data["respuesta_correcta"] is False
 
     async def test_rechazo_por_dejar_sin_opcion_correcta(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         pregunta = await _pregunta_om_persistida(session, banco.id)
         body = _body_editar_om(pregunta)
         body["opciones"] = [
@@ -352,7 +360,7 @@ class TestEditarPreguntaAPIIntegration:
         assert response.status_code == 404
 
     async def test_rechazo_por_pregunta_inactiva(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         pregunta.activa = False
@@ -395,7 +403,7 @@ class TestEliminarPreguntaAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.6-eliminar-pregunta.feature`."""
 
     async def test_eliminacion_exitosa(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -416,7 +424,7 @@ class TestEliminarPreguntaAPIIntegration:
         assert response.status_code == 404
 
     async def test_rechazo_por_pregunta_ya_eliminada(self, session, docente_headers):
-        banco = await _banco_persistido(session)
+        banco = await _banco_persistido(session, docente_headers)
         pregunta = await _pregunta_vf_persistida(session, banco.id)
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         pregunta.activa = False

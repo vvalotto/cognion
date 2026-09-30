@@ -25,7 +25,7 @@ function actividadVisible(id: string, titulo: string) {
 }
 
 function desempeno(evaluaciones: unknown[], resumen: Record<string, number>) {
-  return { evaluaciones, resumen }
+  return { evaluaciones, resumen, sesiones_en_vivo: [] }
 }
 
 function evaluacionDetalle(actividadId: string, finalizadaEn: string, correctas: number, incorrectas: number) {

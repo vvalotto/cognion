@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.errors import ConcurrenciaOptimistaError
+from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
@@ -55,6 +56,38 @@ class FakeEstudianteConsultaPort(EstudianteConsultaPort):
             for estudiante_id in ids
             if estudiante_id in self.nombres_por_estudiante
         }
+
+
+class FakeComisionConsultaPort(ComisionConsultaPort):
+    """Consulta de comisiones en memoria — pertenencia Docente↔Comisión (`US-ADJ-57`).
+
+    Compartido entre `inc3` (actividades de período abierto) e `inc6` (sesiones en vivo,
+    reexportado desde `tests/unit/inc6/_fakes.py`) — mismo puerto, mismos dos niveles de
+    autorización.
+    """
+
+    def __init__(self) -> None:
+        """Inicializa el almacenamiento en memoria."""
+        self.materias: dict[UUID, UUID] = {}
+        """`comision_id` → `materia_id` (para `obtener_materia_id`, `US-6.1.1`)."""
+        self.asignaciones: set[tuple[UUID, UUID]] = set()
+        """Pares `(docente_id, comision_id)` asignados — precargar antes de ejercitar el
+        chequeo de pertenencia; vacío = ningún Docente asignado a nada."""
+
+    async def obtener_materia_id(self, comision_id: UUID) -> UUID | None:
+        """Devuelve el `materia_id` precargado, o `None` si la comisión no fue precargada."""
+        return self.materias.get(comision_id)
+
+    async def esta_asignado_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si `(docente_id, comision_id)` fue precargado en `asignaciones`."""
+        return (docente_id, comision_id) in self.asignaciones
+
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene alguna comisión asignada cuyo `materia_id` coincida."""
+        return any(
+            docente == docente_id and self.materias.get(comision) == materia_id
+            for docente, comision in self.asignaciones
+        )
 
 
 class FakeMateriaConsultaPort(MateriaConsultaPort):

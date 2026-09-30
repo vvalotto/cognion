@@ -5,6 +5,7 @@ import { datos, type Usuario } from "./datos"
 /** Control del canal WebSocket de una página: cortarlo, restablecerlo y contar sockets abiertos. */
 export class Canal {
   private cortado = false
+  private zombi = false
   private actual: WebSocketRoute | null = null
   abiertos = 0
   aperturas = 0
@@ -21,8 +22,21 @@ export class Canal {
       ws.onClose(() => {
         this.abiertos--
       })
-      ws.connectToServer()
+      const servidor = ws.connectToServer()
+      // Se reenvía a mano para poder simular la conexión "zombi" de Safari en iOS.
+      servidor.onMessage((mensaje) => {
+        if (!this.zombi) ws.send(mensaje)
+      })
+      this.zombi = false
     })
+  }
+
+  /**
+   * Conexión "zombi" (Safari iOS con la pantalla bloqueada, hallazgo #7): el socket sigue abierto pero
+   * deja de entregar mensajes, sin cerrarse. Una conexión nueva vuelve a funcionar.
+   */
+  volverZombi() {
+    this.zombi = true
   }
 
   /** Corta la conexión y rechaza las reconexiones hasta `restablecer()`. */

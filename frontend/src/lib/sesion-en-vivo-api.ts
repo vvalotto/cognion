@@ -1,14 +1,15 @@
 import { apiFetch } from "@/lib/api-client"
 
-export type EstadoSesionEnVivo = "en_espera" | "en_curso" | "finalizada"
+export type EstadoSesionEnVivo = "en_espera" | "en_curso" | "finalizada" | "cancelada"
 
 /** Valor que manda el backend (`EstadoSesionEnVivo` de `actividad_evaluativa_en_vivo.py`). */
-type EstadoSesionEnVivoApi = "EnEspera" | "EnCurso" | "Finalizada"
+type EstadoSesionEnVivoApi = "EnEspera" | "EnCurso" | "Finalizada" | "Cancelada"
 
 const ESTADO_DESDE_API: Record<EstadoSesionEnVivoApi, EstadoSesionEnVivo> = {
   EnEspera: "en_espera",
   EnCurso: "en_curso",
   Finalizada: "finalizada",
+  Cancelada: "cancelada",
 }
 
 /**
@@ -401,6 +402,18 @@ export async function finalizarSesion(
 ): Promise<SesionEnVivoResponse> {
   const response = await apiFetch<SesionEnVivoApiResponse>(
     `/sesiones-en-vivo/${sesionId}/finalizar`,
+    { method: "POST", signal },
+  )
+  return mapearSesion(response)
+}
+
+/** Cancela una sesión que todavía no se inició (`US-ADJ-58`); 422 si ya se inició o ya estaba cancelada. */
+export async function cancelarSesion(
+  sesionId: string,
+  signal?: AbortSignal,
+): Promise<SesionEnVivoResponse> {
+  const response = await apiFetch<SesionEnVivoApiResponse>(
+    `/sesiones-en-vivo/${sesionId}/cancelar`,
     { method: "POST", signal },
   )
   return mapearSesion(response)

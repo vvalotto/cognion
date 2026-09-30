@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { esEnteroPositivo, soloEnterosPositivos } from "@/lib/entero-positivo"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -74,12 +75,12 @@ export function NuevaSesionEnVivo() {
     event.preventDefault()
     setError(null)
 
-    if (cantidadPreguntas < 1) {
-      setError("La cantidad de preguntas debe ser al menos 1.")
+    if (!esEnteroPositivo(cantidadPreguntas)) {
+      setError("La cantidad de preguntas debe ser un número entero de al menos 1.")
       return
     }
-    if (tiempoLimite <= 0) {
-      setError("El tiempo límite por pregunta debe ser mayor a 0.")
+    if (!esEnteroPositivo(tiempoLimite)) {
+      setError("El tiempo límite por pregunta debe ser un número entero de segundos mayor a 0.")
       return
     }
 
@@ -178,8 +179,10 @@ export function NuevaSesionEnVivo() {
                 <Input
                   id="ns-cantidad-preguntas"
                   type="number"
+                  inputMode="numeric"
                   required
                   value={cantidadPreguntas}
+                  onKeyDown={soloEnterosPositivos}
                   onChange={(event) => setCantidadPreguntas(Number(event.target.value))}
                 />
               </div>
@@ -188,8 +191,10 @@ export function NuevaSesionEnVivo() {
                 <Input
                   id="ns-tiempo-limite"
                   type="number"
+                  inputMode="numeric"
                   required
                   value={tiempoLimite}
+                  onKeyDown={soloEnterosPositivos}
                   onChange={(event) => setTiempoLimite(Number(event.target.value))}
                 />
               </div>

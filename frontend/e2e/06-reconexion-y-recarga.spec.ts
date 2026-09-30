@@ -91,3 +91,39 @@ test("reconexión del Estudiante y del Docente, y recarga en cada etapa", async 
 
   await cerrar(doc, est)
 })
+
+/**
+ * Hallazgo #7 de la revisión manual (Safari iOS): con la pantalla bloqueada, el WebSocket queda
+ * "zombi" — abierto, sin mensajes, sin cierre. Al volver la pantalla, el celular se pone al día solo.
+ */
+test("conexión zombi: al volver la pantalla el celular recupera la pregunta siguiente", async ({ browser }) => {
+  const doc = await docente(browser)
+  const est = await estudiante(browser, 1)
+
+  await crearSesion(doc, { tema: TEMAS.opcionMultiple, cantidad: 2, tiempo: 90 })
+  await unirse(est)
+  await esperarSala(est, 1)
+  await iniciar(doc)
+  await mostrarOpciones(doc)
+  await esperarTarjetas(est)
+  await responder(est, "B")
+  await cerrarPregunta(doc)
+
+  // El celular "se bloquea": su conexión deja de entregar mensajes sin cerrarse.
+  est.canal.volverZombi()
+  await expect(doc.page.getByText(/Ranking — tras la pregunta/)).toBeVisible({ timeout: 9_000 })
+  await siguiente(doc)
+  await est.page.waitForTimeout(1_500)
+  await expect(est.page.getByRole("heading", { name: "¡Correcto!" })).toBeVisible()
+
+  // Vuelve la pantalla: rearma la conexión y se pone al día sin recargar.
+  await est.page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")))
+  await esperarEsperaOpciones(est, 2, 2)
+
+  await mostrarOpciones(doc)
+  await cerrarPregunta(doc)
+  await expect(doc.page.getByText(/Ranking — tras la pregunta/)).toBeVisible({ timeout: 9_000 })
+  await finalizar(doc)
+  await cerrar(doc, est)
+})
+

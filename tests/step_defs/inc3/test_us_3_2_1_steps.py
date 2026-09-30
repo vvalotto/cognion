@@ -21,7 +21,12 @@ from src.actividad_evaluativa.entities.evaluacion import (
 )
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.2.1-registrar-respuesta.feature")
 
@@ -72,14 +77,18 @@ async def _contar_eventos(evaluacion_id: str, event_type: str | None = None) -> 
         return resultado.scalar_one()
 
 
-async def _crear_materia_con_opcion_multiple() -> tuple[str, str]:
-    """Crea una materia con una única pregunta de opción múltiple (opción correcta: índice 1)."""
+async def _crear_materia_con_opcion_multiple() -> tuple[str, str, dict[str, str]]:
+    """Crea una materia con una única pregunta de opción múltiple (opción correcta: índice 1).
+
+    Devuelve también los `headers` del Docente asignado — `POST /actividades` exige que el
+    Docente que llama tenga una Comisión asignada en la materia (`US-ADJ-57`)."""
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post(
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers()
         )
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         respuesta = await client.post(
             "/preguntas/opcion-multiple",
             json={
@@ -94,9 +103,9 @@ async def _crear_materia_con_opcion_multiple() -> tuple[str, str]:
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
-        return creada.json()["id"], respuesta.json()["id"]
+        return creada.json()["id"], respuesta.json()["id"], headers
 
 
 async def _crear_actividad(
@@ -104,6 +113,7 @@ async def _crear_actividad(
     fecha_apertura: datetime,
     fecha_cierre: datetime,
     cantidad_intentos_permitidos: int = 1,
+    headers: dict[str, str] | None = None,
 ) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -116,7 +126,7 @@ async def _crear_actividad(
                 "cantidad_preguntas": 1,
                 "cantidad_intentos_permitidos": cantidad_intentos_permitidos,
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
         return response.json()["id"]
 
@@ -148,10 +158,10 @@ def _periodo_vigente() -> tuple[datetime, datetime]:
 
 
 async def _armar_evaluacion_en_curso(cantidad_intentos_permitidos: int = 1):
-    materia_id, pregunta_id = await _crear_materia_con_opcion_multiple()
+    materia_id, pregunta_id, docente_headers_ = await _crear_materia_con_opcion_multiple()
     apertura, cierre = _periodo_vigente()
     actividad_id = await _crear_actividad(
-        materia_id, apertura, cierre, cantidad_intentos_permitidos
+        materia_id, apertura, cierre, cantidad_intentos_permitidos, docente_headers_
     )
     estudiante_id, headers = await crear_estudiante()
     evaluacion = await _iniciar_evaluacion(actividad_id, headers)
@@ -232,10 +242,10 @@ def evaluacion_en_estado_finalizada(context):
 
 @given("una Evaluacion EnCurso cuya actividad ya pasó su fecha_cierre")
 def evaluacion_en_curso_actividad_por_cerrar(context):
-    materia_id, pregunta_id = run_async(_crear_materia_con_opcion_multiple())
+    materia_id, pregunta_id, docente_headers_ = run_async(_crear_materia_con_opcion_multiple())
     apertura = datetime.now(UTC) - timedelta(milliseconds=500)
     cierre = apertura + timedelta(seconds=1.5)
-    actividad_id = run_async(_crear_actividad(materia_id, apertura, cierre))
+    actividad_id = run_async(_crear_actividad(materia_id, apertura, cierre, 1, docente_headers_))
     _estudiante_id, headers = run_async(crear_estudiante())
     evaluacion = run_async(_iniciar_evaluacion(actividad_id, headers))
     time.sleep(2)  # deja pasar fecha_cierre antes de intentar RegistrarRespuesta

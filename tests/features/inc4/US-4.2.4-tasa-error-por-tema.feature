@@ -27,7 +27,7 @@ Feature: Docente consulta la tasa de error por unidad/tema de una materia (US-4.
   Scenario: Comisión que no pertenece a la materia
     Given una comisión de otra materia
     When un Docente hace GET /analytics/materias/X/tasa-error-por-tema?comision_id={esa comisión}
-    Then recibe 422
+    Then recibe 403
 
   @error-case
   Scenario: Sin autenticación

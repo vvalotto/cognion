@@ -24,12 +24,14 @@ const ETIQUETA_ESTADO_SESION: Record<EstadoSesionEnVivo, string> = {
   en_espera: "En espera",
   en_curso: "En curso",
   finalizada: "Finalizada",
+  cancelada: "Cancelada",
 }
 
 const VARIANTE_ESTADO_SESION: Record<EstadoSesionEnVivo, "estado-en-espera" | "estado-en-curso" | "estado-cerrada"> = {
   en_espera: "estado-en-espera",
   en_curso: "estado-en-curso",
   finalizada: "estado-cerrada",
+  cancelada: "estado-cerrada",
 }
 
 /**

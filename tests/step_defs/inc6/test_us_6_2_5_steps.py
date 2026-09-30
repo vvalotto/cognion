@@ -12,11 +12,10 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -42,6 +41,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM usuario"))
         await session.commit()
 
@@ -58,8 +58,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _post_cerrar(sesion_id: str, headers: dict[str, str]):
@@ -97,12 +98,13 @@ async def _armar(context, contenidos: list[dict | None], mostrar: bool = True) -
     el temporizador). `None` deja al Estudiante sin responder.
     """
     sesion_id, comision_id = await preparar_sesion(opcion_multiple=True)
-    await iniciar_sesion(sesion_id)
     estudiantes = []
     for _ in contenidos:
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
         estudiantes.append((estudiante_id, headers))
+    # Se unen antes de iniciar: desde US-ADJ-58 no se inicia sin participantes (INV-AEV-11).
+    await iniciar_sesion(sesion_id)
     context.update(sesion_id=sesion_id, estudiantes=[e for e, _ in estudiantes])
     context["headers_estudiante"] = (
         estudiantes[0][1] if estudiantes else (await crear_estudiante(comision_id))[1]
@@ -149,7 +151,8 @@ def solo_enunciado(context):
 @given("una pregunta ya cerrada")
 def pregunta_ya_cerrada(context):
     _preparar(context, [None])
-    assert run_async(_post_cerrar(context["sesion_id"], _docente())).status_code == 200
+    sesion_id = context["sesion_id"]
+    assert run_async(_post_cerrar(sesion_id, _docente(sesion_id))).status_code == 200
 
 
 @given("una sesión EnEspera")
@@ -171,8 +174,8 @@ def usuario_estudiante(context):
 @when("el Docente cierra la pregunta")
 def docente_cierra_con_conectados(context):
     """Cierra con el Docente y un Estudiante conectados al canal, para verificar el broadcast."""
-    docente = _docente()
     sesion_id = context["sesion_id"]
+    docente = _docente(sesion_id)
     tokens = [
         docente["Authorization"].split()[1],
         context["headers_estudiante"]["Authorization"].split()[1],
@@ -198,7 +201,9 @@ def docente_cierra_con_conectados(context):
 @when("el Docente intenta cerrarla de nuevo")
 @when("el Docente intenta cerrar la pregunta")
 def docente_intenta_cerrar(context):
-    context["response"] = run_async(_post_cerrar(context["sesion_id"], _docente()))
+    context["response"] = run_async(
+        _post_cerrar(context["sesion_id"], _docente(context["sesion_id"]))
+    )
 
 
 @when("intenta cerrar la pregunta")

@@ -4,7 +4,7 @@ import pytest
 
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.errors import BancoNoExiste
+from src.banco_preguntas.entities.errors import BancoNoExiste, MateriaNoAutorizada
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
@@ -13,7 +13,11 @@ from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaVerdaderoFalso,
 )
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
-from tests.unit.inc2._fakes import FakeBancoRepository, FakePreguntaRepository
+from tests.unit.inc2._fakes import (
+    FakeBancoRepository,
+    FakeComisionConsultaPort,
+    FakePreguntaRepository,
+)
 
 
 def _pregunta_om(
@@ -73,7 +77,7 @@ class TestFiltrarBancoUseCase:
         await pregunta_repo.guardar(match)
         await pregunta_repo.guardar(otra_dificultad)
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(
             banco_id=banco.id, dificultad=Dificultad.ALTO, importancia=Importancia.ALTO
         )
@@ -94,7 +98,7 @@ class TestFiltrarBancoUseCase:
         inactiva.activa = False
         await pregunta_repo.guardar(inactiva)
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(banco_id=banco.id)
 
         assert len(resultado.preguntas) == 5
@@ -108,7 +112,7 @@ class TestFiltrarBancoUseCase:
         await banco_repo.guardar(banco)
         await pregunta_repo.guardar(_pregunta_om(banco.id, dificultad=Dificultad.ALTO))
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(banco_id=banco.id, dificultad=Dificultad.BAJO)
 
         assert resultado.preguntas == []
@@ -117,7 +121,7 @@ class TestFiltrarBancoUseCase:
     async def test_rechaza_banco_inexistente(self):
         banco_repo = FakeBancoRepository()
         pregunta_repo = FakePreguntaRepository()
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
 
         with pytest.raises(BancoNoExiste):
             await use_case.execute(banco_id=uuid.uuid4())
@@ -133,7 +137,7 @@ class TestFiltrarBancoUseCase:
         await pregunta_repo.guardar(match)
         await pregunta_repo.guardar(otra_unidad)
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(banco_id=banco.id, unidad="Unidad 2", tema="Testing")
 
         assert resultado.preguntas == [match]
@@ -149,7 +153,7 @@ class TestFiltrarBancoUseCase:
         de_otro_banco = _pregunta_om(otro_banco.id)
         await pregunta_repo.guardar(de_otro_banco)
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(banco_id=banco.id)
 
         assert resultado.preguntas == []
@@ -162,7 +166,7 @@ class TestFiltrarBancoUseCase:
         for _ in range(5):
             await pregunta_repo.guardar(_pregunta_om(banco.id))
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(banco_id=banco.id, pagina=1, tamanio_pagina=2)
 
         assert len(resultado.preguntas) == 2
@@ -177,8 +181,21 @@ class TestFiltrarBancoUseCase:
         for _ in range(25):
             await pregunta_repo.guardar(_pregunta_om(banco.id))
 
-        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo)
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
         resultado = await use_case.execute(banco_id=banco.id)
 
         assert len(resultado.preguntas) == 25
         assert resultado.total == 25
+
+    async def test_rechaza_docente_sin_comision_en_la_materia(self):
+        """`US-ADJ-57`: `docente_id` sin ninguna Comisión asignada en la materia del banco."""
+        banco_repo = FakeBancoRepository()
+        pregunta_repo = FakePreguntaRepository()
+        comision_consulta = FakeComisionConsultaPort()
+        banco = Banco.crear(materia_id=uuid.uuid4())
+        await banco_repo.guardar(banco)
+
+        use_case = FiltrarBancoUseCase(banco_repo, pregunta_repo, comision_consulta)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(banco_id=banco.id, docente_id=uuid.uuid4())

@@ -180,3 +180,25 @@ class TokenRecuperacionYaUsado(Exception):
         """Guarda el token en conflicto y arma el mensaje de la excepción."""
         self.token = token
         super().__init__(f"El token de recuperación '{token}' ya fue utilizado.")
+
+
+class ComisionNoAutorizada(Exception):
+    """El Docente autenticado no está asignado a esta comisión puntual (`US-ADJ-57`).
+
+    Autorización (403), distinto de `DocenteNoAsignadoAComision` (422, valida el docente
+    *destino* de una invitación, no a quien hace el pedido).
+    """
+
+    def __init__(self, comision_id: UUID) -> None:
+        """Guarda el id en conflicto y arma el mensaje de la excepción."""
+        self.comision_id = comision_id
+        super().__init__(f"No estás asignado a la comisión '{comision_id}'.")
+
+
+class MateriaNoAutorizada(Exception):
+    """El Docente autenticado no tiene ninguna comisión asignada en esta materia (`US-ADJ-57`)."""
+
+    def __init__(self, materia_id: UUID) -> None:
+        """Guarda el id en conflicto y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"No tenés ninguna comisión asignada en la materia '{materia_id}'.")

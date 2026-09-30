@@ -29,7 +29,11 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    asignar_docente_a_comision,
+    docente_asignado_a_materia,
+)
 
 scenarios("../../features/inc5/US-5.1.3-notificacion-cierre-actividad.feature")
 
@@ -45,6 +49,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
         await session.execute(text("DELETE FROM materia"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
@@ -123,12 +128,16 @@ class _FakeSmtpServer:
         return [m for m in self.mensajes if m.startswith("Subject: Actividad cerrada:")]
 
 
-async def _crear_materia_con_preguntas(cantidad: int) -> str:
+async def _crear_materia_con_preguntas(cantidad: int) -> tuple[str, str, dict[str, str]]:
+    """Devuelve `(materia_id, docente_id, headers)` — el Docente ya asignado a una Comisión de
+    la materia (`US-ADJ-57`), reutilizable para crear/cerrar la actividad y para asignarlo
+    también a las Comisiones A/B de cada escenario."""
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
         creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
+        docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -141,12 +150,16 @@ async def _crear_materia_con_preguntas(cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
-        return creada.json()["id"]
+        return creada.json()["id"], docente_id, headers
 
 
-async def _crear_comision_con_estudiantes(materia_id: str, cantidad: int) -> list[str]:
+async def _crear_comision_con_estudiantes(
+    materia_id: str, cantidad: int, docente_id: str
+) -> list[str]:
+    """Crea la Comisión y la asigna a `docente_id` (`US-ADJ-57`) — el mismo Docente que crea y
+    cierra la actividad debe estar asignado a cada Comisión que la restrinja."""
     async with SessionLocal() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -164,6 +177,7 @@ async def _crear_comision_con_estudiantes(materia_id: str, cantidad: int) -> lis
             await usuario_repo.guardar(estudiante)
             emails.append(email)
 
+    await asignar_docente_a_comision(str(comision.id), docente_id)
     return [str(comision.id), *emails]
 
 
@@ -173,7 +187,9 @@ def _periodo() -> tuple[str, str]:
     return apertura.isoformat(), cierre.isoformat()
 
 
-async def _post_crear_actividad(materia_id: str, comisiones_ids: list[str] | None) -> str:
+async def _post_crear_actividad(
+    materia_id: str, comisiones_ids: list[str] | None, headers: dict[str, str]
+) -> str:
     transport = ASGITransport(app=app)
     apertura, cierre = _periodo()
     body = {
@@ -187,14 +203,14 @@ async def _post_crear_actividad(materia_id: str, comisiones_ids: list[str] | Non
     if comisiones_ids is not None:
         body["comisiones_ids"] = comisiones_ids
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        creada = await client.post("/actividades", json=body, headers=docente_headers())
+        creada = await client.post("/actividades", json=body, headers=headers)
         return creada.json()["id"]
 
 
-async def _post_cerrar_actividad(actividad_id: str) -> object:
+async def _post_cerrar_actividad(actividad_id: str, headers: dict[str, str]) -> object:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(f"/actividades/{actividad_id}/cerrar", headers=docente_headers())
+        return await client.post(f"/actividades/{actividad_id}/cerrar", headers=headers)
 
 
 async def _backdatear_fecha_cierre(actividad_id: str, nueva_fecha_cierre: datetime) -> None:
@@ -211,10 +227,10 @@ async def _backdatear_fecha_cierre(actividad_id: str, nueva_fecha_cierre: dateti
         await session.commit()
 
 
-async def _obtener_estado_actividad(actividad_id: str) -> str:
+async def _obtener_estado_actividad(actividad_id: str, headers: dict[str, str]) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        respuesta = await client.get(f"/actividades/{actividad_id}", headers=docente_headers())
+        respuesta = await client.get(f"/actividades/{actividad_id}", headers=headers)
         return respuesta.json()["estado"]
 
 
@@ -239,17 +255,26 @@ def actividad_vigente_restringida_a_a_2_y_b_1(context, monkeypatch):
     context["servidor_smtp"] = servidor
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2))
-    comision_b_id, *emails_b = run_async(_crear_comision_con_estudiantes(materia_id, 1))
-    actividad_id = run_async(_post_crear_actividad(materia_id, [comision_a_id, comision_b_id]))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    comision_a_id, *emails_a = run_async(
+        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
+    )
+    comision_b_id, *emails_b = run_async(
+        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
+    )
+    actividad_id = run_async(
+        _post_crear_actividad(materia_id, [comision_a_id, comision_b_id], headers)
+    )
     context["actividad_id"] = actividad_id
+    context["docente_headers"] = headers
     context["emails_esperados"] = set(emails_a) | set(emails_b)
 
 
 @when("el Docente la cierra manualmente")
 def docente_cierra_la_actividad_manualmente(context):
-    context["response"] = run_async(_post_cerrar_actividad(context["actividad_id"]))
+    context["response"] = run_async(
+        _post_cerrar_actividad(context["actividad_id"], context["docente_headers"])
+    )
     cantidad_esperada = len(context.get("emails_esperados", []))
     if cantidad_esperada:
         _esperar_mensajes_de_cierre(context["servidor_smtp"], cantidad_esperada)
@@ -279,11 +304,16 @@ def actividad_vigente_sin_comisiones_ids_con_a_y_b(context, monkeypatch):
     context["servidor_smtp"] = servidor
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    _comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 1))
-    _comision_b_id, *emails_b = run_async(_crear_comision_con_estudiantes(materia_id, 1))
-    actividad_id = run_async(_post_crear_actividad(materia_id, None))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    _comision_a_id, *emails_a = run_async(
+        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
+    )
+    _comision_b_id, *emails_b = run_async(
+        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
+    )
+    actividad_id = run_async(_post_crear_actividad(materia_id, None, headers))
     context["actividad_id"] = actividad_id
+    context["docente_headers"] = headers
     context["emails_esperados"] = set(emails_a) | set(emails_b)
 
 
@@ -304,11 +334,12 @@ def actividad_vigente_con_fecha_cierre_pasada(context, monkeypatch):
     context["servidor_smtp"] = servidor
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    run_async(_crear_comision_con_estudiantes(materia_id, 1))
-    actividad_id = run_async(_post_crear_actividad(materia_id, None))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    run_async(_crear_comision_con_estudiantes(materia_id, 1, docente_id))
+    actividad_id = run_async(_post_crear_actividad(materia_id, None, headers))
     run_async(_backdatear_fecha_cierre(actividad_id, datetime.now(UTC) - timedelta(days=1)))
     context["actividad_id"] = actividad_id
+    context["docente_headers"] = headers
 
 
 async def _correr_verificador_vencimientos() -> None:
@@ -324,7 +355,9 @@ def corre_verificador_de_vencimientos(context):
 
 @then("la actividad pasa a estado cerrado")
 def verificar_actividad_en_estado_cerrado(context):
-    estado = run_async(_obtener_estado_actividad(context["actividad_id"]))
+    estado = run_async(
+        _obtener_estado_actividad(context["actividad_id"], context["docente_headers"])
+    )
     assert estado == "cerrada"
 
 
@@ -338,10 +371,13 @@ def verificar_no_se_envia_ningun_email_de_cierre(context):
 
 @given("una actividad restringida a la comisión A con 2 estudiantes")
 def actividad_restringida_a_comision_a_2_estudiantes(context):
-    materia_id = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2))
-    actividad_id = run_async(_post_crear_actividad(materia_id, [comision_a_id]))
+    materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
+    comision_a_id, *emails_a = run_async(
+        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
+    )
+    actividad_id = run_async(_post_crear_actividad(materia_id, [comision_a_id], headers))
     context["actividad_id"] = actividad_id
+    context["docente_headers"] = headers
     context["emails_esperados"] = set(emails_a)
 
 
@@ -354,7 +390,9 @@ def envio_smtp_no_disponible(context, monkeypatch):
 
 @when("el Docente cierra la actividad manualmente")
 def docente_cierra_la_actividad_manualmente_variante(context):
-    context["response"] = run_async(_post_cerrar_actividad(context["actividad_id"]))
+    context["response"] = run_async(
+        _post_cerrar_actividad(context["actividad_id"], context["docente_headers"])
+    )
 
 
 @then("el segundo estudiante igual recibe su email de cierre")

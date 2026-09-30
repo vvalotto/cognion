@@ -45,6 +45,10 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import (
+    asignar_docente_a_comision_existente,
+    asignar_docente_a_materia,
+)
 
 scenarios("../../features/inc5-adj/US-ADJ-44-desempeno-por-comision.feature")
 
@@ -64,6 +68,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM banco"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
@@ -314,6 +319,8 @@ def comision_con_estudiantes_en_distinto_estado(context):
         context["estudiante_2_id"],
     ) = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
+    run_async(asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"]))
 
 
 @given("una actividad abierta ahora, visible a la comisión, que el segundo estudiante no rindió")
@@ -342,6 +349,8 @@ def comision_sin_evaluaciones_finalizadas(context):
 
     context["materia_id"], context["comision_id"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
+    run_async(asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"]))
 
 
 @given("una comisión de otra materia")
@@ -490,11 +499,6 @@ def valida_200_detalle_completo(context):
     cuerpo = response.json()
     assert cuerpo["cantidad_preguntas"] == 1
     assert cuerpo["cantidad_correctas"] == 1
-
-
-@then("recibe 422")
-def valida_422(context):
-    assert context["response"].status_code == 422
 
 
 @then("recibe 401")
