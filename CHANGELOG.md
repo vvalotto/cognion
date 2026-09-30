@@ -10,6 +10,14 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 ## [Unreleased]
 
 ### Added
+- **US-ADJ-08** (Estudiante ve la materia/comisión de la invitación antes de registrarse):
+  endpoint público de solo lectura `GET /identidad/invitaciones/{token}` (`ObtenerInvitacionUseCase`,
+  reutiliza `Invitacion.verificar_vigente()` sin consumir la invitación, resuelve materia/horario
+  con los mismos puertos que `RegistroController`) y chip "Te vas a unir a {materia} — {horario}"
+  en `Registro.tsx` antes del formulario — usa el horario de la Comisión en vez de una letra
+  inexistente en el dominio (nota de diseño de la spec). 404 si el token no existe, 422 si venció
+  o ya fue usada.
+
 - **US-6.3.4** (Infraestructura de frontend del modo en vivo): primer uso de WebSockets del
   frontend — cliente API tipado (`sesion-en-vivo-api.ts`, 12 funciones), canal WebSocket con
   reconexión y backoff exponencial (`canal-sesion-en-vivo.ts`), hook seguro ante `StrictMode`
