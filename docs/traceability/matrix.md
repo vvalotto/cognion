@@ -3,7 +3,24 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-21 — Especificación de la Iteración 3 del Incremento 6
+> Última actualización: 2026-09-30 — Barrido documental §12 (`Incremento 6-ADJ`, `US-ADJ-52`
+> aplicado también aquí): `US-6.3.0` a `US-6.3.10` pasan de "especificadas" a "cerradas" en las
+> filas de RF-08/09/10 (Iteración 3 del Incremento 6, frontend del modo en vivo, cerrada
+> 2026-09-25). Sin cambio de estado de RF: RF-08, RF-09 y RF-10 siguen en "Implementado" —
+> pasan a "Validado" recién al cierre de `BL-011` (Incremento 6 + 6-ADJ juntos), pendiente del
+> checkpoint de staging del RNF (`PROCEDIMIENTO-UAT.md` §4).
+>
+> 2026-09-27 en adelante — `Incremento 6-ADJ`: `US-ADJ-58` (cancelar/finalizar en cualquier
+> etapa, no iniciar sin participantes) cerrada, ya reflejada en las filas de RF-08/RF-09;
+> `US-ADJ-56` (sesiones en vivo suman a "Mi desempeño"/"Desempeño por alumno") cerrada, ya
+> reflejada en las filas de RF-15/RF-16; `US-ADJ-57` (Docente solo ve/opera sus propios
+> recursos — Identidad, Banco de Preguntas, Actividad Evaluativa, Analytics, las 4 partes)
+> cerrada — sin RF asociado, no mueve ninguna fila (mismo criterio que `US-2.1.2`/`US-2.1.6`);
+> `US-ADJ-08` (vista previa de la invitación antes de registrarse) y `US-ADJ-07` (nombre
+> legible de la comisión en el detalle de cuenta) cerradas — ambas amplían RF-01 (ya
+> `Validado` desde `BL-002`) sin mover fila, mismo criterio.
+>
+> 2026-09-21 — Especificación de la Iteración 3 del Incremento 6
 > (frontend del modo en vivo): `US-6.3.0` a `US-6.3.10` (Issues #412 a #422). Sin cambio de
 > estado de RF: RF-08, RF-09 y RF-10 siguen en "Implementado" (backend) y pasarán a "Validado"
 > recién al cierre de baseline del Incremento 6, con el frontend implementado y su UAT en
@@ -185,9 +202,9 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Validado |
 | RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Validado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
-| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, especificadas); US-ADJ-58 (`Incremento 6-ADJ`: cancelar e iniciar solo con participantes) | Implementado |
-| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, especificadas); US-ADJ-58 (`Incremento 6-ADJ`: finalizar en cualquier etapa) | Implementado |
-| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, especificadas) | Implementado |
+| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: cancelar e iniciar solo con participantes) | Implementado |
+| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: finalizar en cualquier etapa) | Implementado |
+| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, cerradas) | Implementado |
 | RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.2 (backend); US-3.4.3 (frontend) | Validado |
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |

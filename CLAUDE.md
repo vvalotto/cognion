@@ -1062,10 +1062,38 @@ Preguntas (28-sep, PR #455); faltan Actividad Evaluativa y Analytics. Pendientes
 (`docs/architecture/`, wireframes contra código, matriz, este archivo). `US-ADJ-06` se da por resuelta de
 hecho (`US-ADJ-37`, `UserMenu.tsx`) sin código propio.
 
-**Próximo paso:** terminar `US-ADJ-57` (Actividad Evaluativa y Analytics, 2 partes restantes), después
-`US-ADJ-08`/`07` y el barrido documental de §12 — con eso cierra `Incremento 6-ADJ` y recién ahí `BL-011`
-(Incremento 6 + 6-ADJ juntos). Ítem abierto aparte: checkpoint de staging del RNF en Fly.io con WSS real
-(`PROCEDIMIENTO-UAT.md` §4).
+`US-ADJ-57` cerrada completa 2026-09-29 (4/4 partes: Identidad PR #454, Banco de Preguntas PR
+#455, Actividad Evaluativa PR #458, Analytics PR #459). **`US-ADJ-08`** (ver materia/comisión de
+la invitación antes de registrarse, Issue #448) cerrada 2026-09-30, PR #460 — pantalla pública
+`InvitacionPreview.tsx`, `GET /invitaciones/{token}` nuevo (sin autenticar, solo datos públicos:
+nombre de comisión/materia, sin exponer el docente). **`US-ADJ-07`** (nombre legible de la
+comisión en el detalle de cuenta, track informal) cerrada 2026-09-30, PR #461:
+`CuentaDetalle.tsx` resuelve `comisionId` vía `GET /comisiones/{id}` (`US-ADJ-25`) +
+`useNombreMateria`, mismo patrón que `ComisionDetalle.tsx` — la causa raíz original de la spec
+(no existía forma de resolverlo del lado del cliente) ya no aplicaba desde `US-ADJ-25`.
+
+**Barrido documental de §12 ejecutado 2026-09-30** (`/docs-audit` + revisión manual de la
+sesión): `docs/architecture/03-bounded-contexts.md` tenía la tabla de catálogo de BC congelada
+en el estado del Incremento 1 (4 de 5 BC marcados "Pendiente" pese a estar todos implementados
+y validados hace varios incrementos) — actualizada con el estado real y referencias a
+`ADR-018`/`ADR-019`, ausentes hasta ahora en `docs/architecture/`. `docs/traceability/matrix.md`
+tenía las filas de RF-08/09/10 con `US-6.3.x` marcadas "especificadas" pese a que la Iteración 3
+cerró completa el 2026-09-25 — corregido a "cerradas", más una nota de header consolidando los
+cierres de `US-ADJ-56`/`57`/`58`/`08`/`07` desde el 2026-09-21. Tres Issues de GitHub (#421
+`US-6.3.10`, #422 `US-6.3.0`, #443 `US-ADJ-57`) tenían el trabajo mergeado desde días antes sin
+cerrarse — cerrados con comentario de evidencia (commits/PRs). Dos archivos de trabajo de
+`/implement-us` (`US-ADJ-56-context.md`/`-plan.md`) habían quedado en la raíz de `docs/plans/`
+en vez de `docs/plans/inc6-adj/` — reubicados. `docs/design/ux/` sin gaps nuevos —
+un solo párrafo desactualizado corregido en
+`wireframes-actividad-evaluativa-en-vivo.md` §7 (aprobación de UX que ya había ocurrido en la
+UAT de `US-6.3.10`, sin registrarlo). **Cierra completo el barrido de §12 y con él
+`Incremento 6-ADJ`.**
+
+**Próximo paso:** cierre de `BL-011` (Incremento 6 + 6-ADJ juntos) — corresponde a Víctor:
+correr `ArchitectAnalyst` (siempre manual, `CLAUDE.md` tabla de quality gates), registrar la
+baseline en `.cm/baselines/`, decidir merge `develop → main` + tag y cierre del Milestone
+GitHub. Ítem abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS
+real (`PROCEDIMIENTO-UAT.md` §4).
 
 ---
 

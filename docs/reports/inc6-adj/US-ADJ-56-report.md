@@ -207,7 +207,7 @@ misma base de datos de test en este proyecto.
 ## Documentación Actualizada
 
 - [x] Docstrings agregados/actualizados en los 6 archivos nuevos/modificados de `src/`
-- [x] `docs/plans/US-ADJ-56-plan.md` completado con estado, métricas y lecciones aprendidas
+- [x] `docs/plans/inc6-adj/US-ADJ-56-plan.md` completado con estado, métricas y lecciones aprendidas
 - [x] `docs/design/domain/BC-analytics-modelo.md` — nueva query, nuevo puerto, nota de alcance RF-15 actualizada
 - [x] `docs/traceability/matrix.md` — RF-15/RF-16 referencian esta US
 - [x] `docs/architecture/20-context-map-integrations.md` — fila Actividad Evaluativa↔Analytics ampliada

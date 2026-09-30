@@ -26,9 +26,9 @@
   - cobertura ≥ umbral vigente en `pyproject.toml`
 
 ## Rutas de Artefactos
-- Contexto: docs/plans/US-ADJ-56-context.md
+- Contexto: docs/plans/inc6-adj/US-ADJ-56-context.md
 - BDD feature: tests/features/inc6-adj/US-ADJ-56-*.feature (mismo criterio que `US-ADJ-58`)
-- Plan: docs/plans/US-ADJ-56-plan.md
+- Plan: docs/plans/inc6-adj/US-ADJ-56-plan.md
 - Reporte: docs/reports/inc6-adj/US-ADJ-56-report.md
 - Quality report: quality/reports/inc6-adj/US-ADJ-56-quality.json
 
