@@ -1159,8 +1159,18 @@ en 7 puntos, ejecutándose de a uno:
    `fix/claude-md-estado-inc3-adj` (superado por PR #226), `local-vitest-bump` (`vitest` ya
    en `^4.1.11` vía otro bump), `claude/gracious-williamson-a7dd0f` (sin diff contra
    `develop`).
-6. ⬜ Cola de Dependabot — 13 PRs abiertos, 12 `MERGEABLE`/`CLEAN` (5 de ellos con
-   `mergeable=UNKNOWN`, pendiente de que GitHub recalcule).
+6. ✅ Cola de Dependabot resuelta — 13 PRs abiertos, procesados de a uno (cada bump
+   verificado con CI real, no aprobado a ciegas): **mergeados** #464 (`pyjwt`), #457
+   (`undici`), #456 (`ip-address`), #317 (`js-yaml`), #316 (`baseline-browser-mapping`), #301
+   (`hono`), #217 (`qs`), #216 (`fast-uri`), #296 (`react-router` 7→8, salto de versión
+   **mayor** — verificado aparte con `tsc -b` + suite completa local antes de mergear, sin
+   breaking changes para este proyecto), #297 (`@testing-library/react`), #295
+   (`lucide-react`). **Cerrados sin mergear**: #294 (`react`/`@types/react`) — bump real que
+   no incluía `react-dom`, versiones incompatibles, CI lo confirmó rompiendo las 105 suites de
+   test (mismo tipo de hallazgo que el Paso 1: no aprobar Dependabot a ciegas); #293
+   (`@testing-library/jest-dom`, patch trivial) — conflicto mecánico de `package-lock.json`
+   contra `develop` tras los otros merges, no valía la pena resolver a mano, Dependabot lo
+   regenera solo en su próximo escaneo.
 7. ⬜ Decidir destino de la branch `docs/modelo-datos-postgresql` (commit del 20-sep, modelo
    de datos de Postgres documentado para solo 3 de 5 BC — desactualizado, le faltan
    Analytics/Notificaciones/tablas del modo en vivo).
