@@ -15,7 +15,11 @@ from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     AGGREGATE_TYPE,
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
+    FakeComisionConsultaPort,
     FakeEventStore,
     FakeMateriaConsultaPort,
     FakeNotificacionPort,
@@ -36,7 +40,11 @@ def _use_case(
     notificacion: FakeNotificacionPort | None = None,
 ) -> CrearActividadPeriodoAbiertoUseCase:
     return CrearActividadPeriodoAbiertoUseCase(
-        materia_consulta, pregunta_consulta, event_store, notificacion or FakeNotificacionPort()
+        materia_consulta,
+        pregunta_consulta,
+        event_store,
+        notificacion or FakeNotificacionPort(),
+        VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
     )
 
 

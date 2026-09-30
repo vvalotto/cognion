@@ -91,6 +91,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_qu
 from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
     AvanzarSiguientePreguntaUseCase,
 )
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import (
     CerrarPreguntaActualUseCase,
@@ -137,6 +140,9 @@ from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEva
 from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     UnirseASesionEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from src.actividad_evaluativa.use_cases.verificar_vencimientos import (
     VerificarVencimientosUseCase,
 )
@@ -163,28 +169,34 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
     event_store = SQLAlchemyEventStore(session)
     evaluacion_activa_query = SQLAlchemyEvaluacionActivaQueryRepository(session)
     notificacion = NotificacionPortInProcess(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
     return ActividadesController(
         CrearActividadPeriodoAbiertoUseCase(
-            materia_consulta, pregunta_consulta, event_store, notificacion
+            materia_consulta, pregunta_consulta, event_store, notificacion, autorizacion
         ),
-        ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query),
+        ModificarPeriodoDisponibilidadUseCase(
+            event_store, evaluacion_activa_query, comision_consulta
+        ),
         CerrarActividadUseCase(
             event_store,
             evaluacion_activa_query,
             FinalizarEvaluacionUseCase(event_store),
             materia_consulta,
             notificacion,
+            autorizacion,
         ),
-        ModificarTituloActividadUseCase(event_store),
+        ModificarTituloActividadUseCase(event_store, comision_consulta),
     )
 
 
 def get_actividades_query_controller(session: SessionDep) -> ActividadesQueryController:
     """Arma el `ActividadesQueryController` (consultas de solo lectura) con sus dependencias."""
     actividad_query = SQLAlchemyActividadQueryRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return ActividadesQueryController(
-        ListarActividadesUseCase(actividad_query),
-        ObtenerActividadUseCase(actividad_query),
+        ListarActividadesUseCase(actividad_query, comision_consulta),
+        ObtenerActividadUseCase(actividad_query, comision_consulta),
     )
 
 
@@ -296,11 +308,12 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
-    """Arma el `SesionesEnVivoController` con sus dependencias concretas (`US-6.1.2` a `6.1.4`)."""
+    """Arma el `SesionesEnVivoController` (`US-6.1.2` a `6.1.4`, `US-ADJ-58`)."""
     event_store = SQLAlchemyEventStore(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return SesionesEnVivoController(
         CrearSesionEnVivoUseCase(
-            ComisionConsultaPortInProcess(session),
+            comision_consulta,
             PreguntaConsultaPortInProcess(session),
             event_store,
         ),
@@ -315,18 +328,24 @@ def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoContro
             event_store,
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            VerificarAutorizacionComisionService(comision_consulta),
         ),
+        CancelarSesionEnVivoUseCase(event_store, get_canal_tiempo_real(), comision_consulta),
     )
 
 
 def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoController:
     """Arma el `ConduccionEnVivoController` con sus dependencias (`US-6.2.2` a `US-6.2.7`)."""
     event_store = SQLAlchemyEventStore(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
     return ConduccionEnVivoController(
         MostrarOpcionesEnVivoUseCase(
             event_store,
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
+            comision_consulta,
         ),
         CerrarPreguntaActualUseCase(
             event_store,
@@ -334,17 +353,20 @@ def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoCo
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
             EstudianteConsultaPortInProcess(session),
+            autorizacion,
         ),
         AvanzarSiguientePreguntaUseCase(
             event_store,
             PreguntaConsultaPortInProcess(session),
             get_canal_tiempo_real(),
+            comision_consulta,
         ),
         FinalizarSesionEnVivoUseCase(
             event_store,
             SQLAlchemyProyeccionesEnVivoQuery(session),
             get_canal_tiempo_real(),
             EstudianteConsultaPortInProcess(session),
+            autorizacion,
         ),
     )
 
@@ -364,6 +386,7 @@ def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivo
             event_store,
             SQLAlchemyParticipantesSesionQueryRepository(session),
             EstudianteConsultaPortInProcess(session),
+            ComisionConsultaPortInProcess(session),
         ),
         ObtenerRankingUseCase(
             event_store,

@@ -8,7 +8,11 @@ from uuid import UUID
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
 )
-from src.actividad_evaluativa.entities.errors import ComisionNoExiste, PreguntasInsuficientes
+from src.actividad_evaluativa.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoExiste,
+    PreguntasInsuficientes,
+)
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion
 from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoCreada
 from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
@@ -42,13 +46,16 @@ class CrearSesionEnVivoUseCase:
         tiempo_limite_por_pregunta_segundos: int,
         unidad_tematica: str | None = None,
         tema: str | None = None,
+        docente_id: UUID | None = None,
     ) -> ActividadEvaluativaEnVivo:
         """Crea la sesión validando INV-AEV-01/02 y la persiste como primer evento del stream.
 
         Levanta `ComisionNoExiste` si `comision_id` no corresponde a ninguna Comisión,
-        `PreguntasInsuficientes` si `cantidad_preguntas` excede las preguntas activas del banco
-        de la materia de esa Comisión (filtradas por `unidad_tematica`/`tema` si se eligieron,
-        combinados con AND). `TiempoLimiteInvalido` se valida en el aggregate (INV-AEV-02).
+        `ComisionNoAutorizada` (403) si `docente_id` no está asignado a esa Comisión
+        (`US-ADJ-57`; `None` = Administrador, sin chequeo), `PreguntasInsuficientes` si
+        `cantidad_preguntas` excede las preguntas activas del banco de la materia de esa
+        Comisión (filtradas por `unidad_tematica`/`tema` si se eligieron, combinados con AND).
+        `TiempoLimiteInvalido` se valida en el aggregate (INV-AEV-02).
 
         El set de preguntas se sampleá y fija acá, al crear (no al iniciar la sesión) — todos
         los estudiantes que se unan reciben el mismo set (RF-08).
@@ -56,6 +63,10 @@ class CrearSesionEnVivoUseCase:
         materia_id = await self._comision_consulta.obtener_materia_id(comision_id)
         if materia_id is None:
             raise ComisionNoExiste(comision_id)
+        if docente_id is not None and not await self._comision_consulta.esta_asignado_a_comision(
+            docente_id, comision_id
+        ):
+            raise ComisionNoAutorizada(comision_id)
 
         ids_disponibles = await self._pregunta_consulta.listar_ids_activas_por_materia(
             materia_id, unidad_tematica, tema

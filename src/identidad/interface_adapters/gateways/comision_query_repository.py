@@ -109,3 +109,30 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         )
         resultado = await self._session.execute(query)
         return resultado.first() is not None
+
+    async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si el docente está asignado a esa comisión puntual."""
+        query = (
+            select(comision_docentes.c.comision_id)
+            .where(
+                comision_docentes.c.docente_id == docente_id,
+                comision_docentes.c.comision_id == comision_id,
+            )
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None
+
+    async def docente_tiene_comision_en_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia."""
+        query = (
+            select(comision_docentes.c.comision_id)
+            .join(ComisionModel, ComisionModel.id == comision_docentes.c.comision_id)
+            .where(
+                comision_docentes.c.docente_id == docente_id,
+                ComisionModel.materia_id == materia_id,
+            )
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None

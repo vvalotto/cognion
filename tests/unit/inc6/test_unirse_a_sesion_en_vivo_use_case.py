@@ -16,6 +16,9 @@ from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaA
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
     SesionesEnVivoController,
 )
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
     IniciarSesionEnVivoUseCase,
@@ -25,6 +28,9 @@ from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
     AGGREGATE_TYPE_SESION,
     UnirseASesionEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
@@ -33,6 +39,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeParticipantesSesionQueryPort,
     FakeProyeccionesEnVivo,
 )
@@ -241,9 +248,16 @@ class TestSesionesEnVivoControllerUnirse:
         estudiante_id = uuid4()
         estudiantes.estudiantes.add(estudiante_id)
         iniciar = IniciarSesionEnVivoUseCase(
-            FakeEventStore(), FakePreguntaConsultaPort(), FakeCanalTiempoReal()
+            FakeEventStore(),
+            FakePreguntaConsultaPort(),
+            FakeCanalTiempoReal(),
+            FakeParticipantesAlMenosUno(),
+            VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
         )
-        controller = SesionesEnVivoController(_crear_sesion_stub(), use_case, iniciar)
+        cancelar = CancelarSesionEnVivoUseCase(
+            FakeEventStore(), FakeCanalTiempoReal(), FakeComisionConsultaPort()
+        )
+        controller = SesionesEnVivoController(_crear_sesion_stub(), use_case, iniciar, cancelar)
 
         participacion = await controller.unirse(sesion.id, estudiante_id)
 

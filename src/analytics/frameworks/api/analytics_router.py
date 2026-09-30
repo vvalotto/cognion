@@ -6,7 +6,12 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.analytics.entities.errors import ActividadNoExiste, ComisionNoPerteneceAMateria
+from src.analytics.entities.errors import (
+    ActividadNoExiste,
+    ComisionNoAutorizada,
+    ComisionNoPerteneceAMateria,
+    MateriaNoAutorizada,
+)
 from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.frameworks.api.schemas import (
     CompletitudFilaResponse,
@@ -19,6 +24,7 @@ from src.analytics.frameworks.api.schemas import (
     EvolucionTemporalPuntoResponse,
     RankingPreguntaFalladaResponse,
     ResumenDesempenoResponse,
+    SesionEnVivoDetalleResponse,
     TasaErrorTemaResponse,
 )
 from src.analytics.frameworks.dependencies import (
@@ -64,6 +70,20 @@ def _a_response(desempeno: DesempenoEstudiante) -> DesempenoEstudianteResponse:
             porcentaje_acierto=desempeno.resumen.porcentaje_acierto,
             cantidad_evaluaciones=desempeno.resumen.cantidad_evaluaciones,
         ),
+        sesiones_en_vivo=[
+            SesionEnVivoDetalleResponse(
+                sesion_id=s.sesion_id,
+                comision_horario=s.comision_horario,
+                finalizada_en=s.finalizada_en,
+                cantidad_preguntas=s.cantidad_preguntas,
+                cantidad_correctas=s.cantidad_correctas,
+                cantidad_incorrectas=s.cantidad_incorrectas,
+                puntaje_final=s.puntaje_final,
+                posicion=s.posicion,
+                total_participantes=s.total_participantes,
+            )
+            for s in desempeno.sesiones_en_vivo
+        ],
     )
 
 
@@ -95,14 +115,15 @@ async def obtener_mi_desempeno(
 async def obtener_desempeno_de_estudiante(
     materia_id: UUID,
     estudiante_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     estudiante_consulta: EstudianteConsultaPort = Depends(get_estudiante_consulta_port),
     controller: AnalyticsController = Depends(get_analytics_controller),
 ) -> DesempenoEstudianteResponse:
     """Desempeño de un Estudiante elegido por el Docente en `materia_id`: detalle y resumen (RF-16).
 
-    Sin restricción de pertenencia a una comisión que el Docente dicte — RBAC estándar de rol
-    `docente`, hot spot de autorización resuelto con Víctor
-    (`docs/design/domain/BC-analytics-modelo.md` §4). A diferencia de `obtener_mi_desempeno`,
+    El Docente debe tener al menos una Comisión asignada en `materia_id` (`US-ADJ-57`) —
+    reemplaza el hot spot de autorización documentado en
+    `docs/design/domain/BC-analytics-modelo.md` §4. A diferencia de `obtener_mi_desempeno`,
     acá `estudiante_id` sí puede ser inválido (viene del path, no del token) — se valida su
     existencia antes de invocar el Use Case.
     """
@@ -111,7 +132,12 @@ async def obtener_desempeno_de_estudiante(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No existe un Estudiante con id {estudiante_id}.",
         )
-    desempeno = await controller.obtener_desempeno_de_estudiante(estudiante_id, materia_id)
+    try:
+        desempeno = await controller.obtener_desempeno_de_estudiante(
+            estudiante_id, materia_id, usuario.usuario_id
+        )
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return _a_response(desempeno)
 
 
@@ -123,19 +149,25 @@ async def obtener_desempeno_de_estudiante(
 async def obtener_tasa_error_por_tema(
     materia_id: UUID,
     comision_id: UUID | None = None,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
 ) -> list[TasaErrorTemaResponse]:
     """Tasa de error por unidad/tema de una materia, agregada o acotada a una comisión (RF-17).
 
     Sin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`
-    → 422 (`ComisionNoPerteneceAMateria`).
+    → 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización sobre la materia, o sobre
+    la comisión puntual → 403 (`US-ADJ-57`).
     """
     try:
-        tasas = await controller.obtener_tasa_error_por_tema(materia_id, comision_id)
+        tasas = await controller.obtener_tasa_error_por_tema(
+            materia_id, comision_id, usuario.usuario_id
+        )
     except ComisionNoPerteneceAMateria as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return [
         TasaErrorTemaResponse(
             unidad_tematica=tasa.unidad_tematica,
@@ -156,19 +188,24 @@ async def obtener_tasa_error_por_tema(
 async def obtener_desempeno_por_comision(
     materia_id: UUID,
     comision_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
 ) -> list[DesempenoComisionFilaResponse]:
     """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20).
 
     `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`, mismo
-    criterio que `obtener_tasa_error_por_tema`).
+    criterio que `obtener_tasa_error_por_tema`). Docente sin autorización → 403 (`US-ADJ-57`).
     """
     try:
-        filas = await controller.obtener_desempeno_por_comision(materia_id, comision_id)
+        filas = await controller.obtener_desempeno_por_comision(
+            materia_id, comision_id, usuario.usuario_id
+        )
     except ComisionNoPerteneceAMateria as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return [
         DesempenoComisionFilaResponse(
             estudiante_id=fila.estudiante_id,
@@ -188,19 +225,26 @@ async def obtener_desempeno_por_comision(
 async def obtener_evolucion_temporal_estudiante(
     materia_id: UUID,
     estudiante_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     estudiante_consulta: EstudianteConsultaPort = Depends(get_estudiante_consulta_port),
     controller: AnalyticsController = Depends(get_analytics_controller),
 ) -> list[EvolucionTemporalPuntoResponse]:
     """Evolución temporal individual de un estudiante (`US-ADJ-45`, RF-21).
 
     `estudiante_id` inexistente → 404, mismo criterio que `obtener_desempeno_de_estudiante`.
+    Docente sin Comisión asignada en `materia_id` → 403 (`US-ADJ-57`).
     """
     if not await estudiante_consulta.existe(estudiante_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No existe un Estudiante con id {estudiante_id}.",
         )
-    puntos = await controller.obtener_evolucion_temporal_estudiante(estudiante_id, materia_id)
+    try:
+        puntos = await controller.obtener_evolucion_temporal_estudiante(
+            estudiante_id, materia_id, usuario.usuario_id
+        )
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return [
         EvolucionTemporalPuntoResponse(
             actividad_id=punto.actividad_id,
@@ -220,18 +264,24 @@ async def obtener_evolucion_temporal_estudiante(
 async def obtener_evolucion_temporal_comision(
     materia_id: UUID,
     comision_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
 ) -> list[EvolucionTemporalComisionPuntoResponse]:
     """Evolución temporal promedio de una comisión (`US-ADJ-45`, RF-21).
 
     `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`).
+    Docente sin autorización → 403 (`US-ADJ-57`).
     """
     try:
-        puntos = await controller.obtener_evolucion_temporal_comision(materia_id, comision_id)
+        puntos = await controller.obtener_evolucion_temporal_comision(
+            materia_id, comision_id, usuario.usuario_id
+        )
     except ComisionNoPerteneceAMateria as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return [
         EvolucionTemporalComisionPuntoResponse(
             actividad_id=punto.actividad_id,
@@ -250,19 +300,24 @@ async def obtener_evolucion_temporal_comision(
 async def obtener_ranking_preguntas_falladas(
     materia_id: UUID,
     comision_id: UUID | None = None,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
 ) -> list[RankingPreguntaFalladaResponse]:
     """Ranking de preguntas más falladas de una materia, agregado o acotado a comisión (RF-22).
 
     Sin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`
-    → 422 (`ComisionNoPerteneceAMateria`).
+    → 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización → 403 (`US-ADJ-57`).
     """
     try:
-        ranking = await controller.obtener_ranking_preguntas_falladas(materia_id, comision_id)
+        ranking = await controller.obtener_ranking_preguntas_falladas(
+            materia_id, comision_id, usuario.usuario_id
+        )
     except ComisionNoPerteneceAMateria as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return [
         RankingPreguntaFalladaResponse(
             pregunta_id=fila.pregunta_id,
@@ -284,16 +339,22 @@ async def obtener_ranking_preguntas_falladas(
 )
 async def obtener_completitud_por_actividad(
     actividad_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsCompletitudController = Depends(get_analytics_completitud_controller),
 ) -> CompletitudPorActividadResponse:
     """Completitud del roster aplicable de una actividad puntual (`US-ADJ-47`, RF-23).
 
-    `actividad_id` inexistente → 404 (`ActividadNoExiste`).
+    `actividad_id` inexistente → 404 (`ActividadNoExiste`). Docente sin Comisión asignada en
+    la materia de la actividad → 403 (`US-ADJ-57`).
     """
     try:
-        completitud = await controller.obtener_completitud_por_actividad(actividad_id)
+        completitud = await controller.obtener_completitud_por_actividad(
+            actividad_id, usuario.usuario_id
+        )
     except ActividadNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     return CompletitudPorActividadResponse(
         detalle=[
             CompletitudFilaResponse(

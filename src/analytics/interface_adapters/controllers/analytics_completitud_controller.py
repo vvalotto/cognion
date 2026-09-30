@@ -25,7 +25,7 @@ class AnalyticsCompletitudController:
         self._obtener_completitud_por_actividad = obtener_completitud_por_actividad
 
     async def obtener_completitud_por_actividad(
-        self, actividad_id: UUID
+        self, actividad_id: UUID, docente_id: UUID
     ) -> CompletitudPorActividad:
         """Completitud del roster aplicable de una actividad puntual (RF-23)."""
-        return await self._obtener_completitud_por_actividad.execute(actividad_id)
+        return await self._obtener_completitud_por_actividad.execute(actividad_id, docente_id)

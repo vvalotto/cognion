@@ -19,6 +19,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
@@ -106,6 +107,7 @@ async def _preparar_evaluacion_en_curso(
     session,
 ) -> dict:
     materia_id, banco_id = await _crear_materia(client, admin_headers)
+    await asignar_docente_a_materia(materia_id, docente_headers)
     await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
@@ -245,6 +247,7 @@ class TestSuspenderReanudarAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = datetime.now(UTC) + timedelta(seconds=1)
@@ -270,6 +273,7 @@ class TestSuspenderReanudarAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=2)

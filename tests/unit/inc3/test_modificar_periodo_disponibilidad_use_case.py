@@ -18,7 +18,7 @@ from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import 
     AGGREGATE_TYPE,
     ModificarPeriodoDisponibilidadUseCase,
 )
-from tests.unit.inc3._fakes import FakeEventStore
+from tests.unit.inc3._fakes import FakeComisionConsultaPort, FakeEventStore
 
 
 class FakeEvaluacionActivaQueryPort(EvaluacionActivaQueryPort):
@@ -78,7 +78,9 @@ class TestModificarPeriodoDisponibilidadUseCase:
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
         evaluacion_activa_query = FakeEvaluacionActivaQueryPort([_resumen_activo(actividad_id)])
-        use_case = ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query)
+        use_case = ModificarPeriodoDisponibilidadUseCase(
+            event_store, evaluacion_activa_query, FakeComisionConsultaPort()
+        )
         nueva_fecha_cierre = cierre + timedelta(days=3)
 
         actividad = await use_case.execute(actividad_id, nueva_fecha_cierre)
@@ -93,7 +95,9 @@ class TestModificarPeriodoDisponibilidadUseCase:
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
         evaluacion_activa_query = FakeEvaluacionActivaQueryPort([])
-        use_case = ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query)
+        use_case = ModificarPeriodoDisponibilidadUseCase(
+            event_store, evaluacion_activa_query, FakeComisionConsultaPort()
+        )
         nueva_fecha_cierre = cierre - timedelta(hours=1)
 
         actividad = await use_case.execute(actividad_id, nueva_fecha_cierre)
@@ -105,7 +109,9 @@ class TestModificarPeriodoDisponibilidadUseCase:
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
         evaluacion_activa_query = FakeEvaluacionActivaQueryPort([_resumen_activo(actividad_id)])
-        use_case = ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query)
+        use_case = ModificarPeriodoDisponibilidadUseCase(
+            event_store, evaluacion_activa_query, FakeComisionConsultaPort()
+        )
 
         with pytest.raises(NoSePuedeAcortarConEvaluacionesActivas):
             await use_case.execute(actividad_id, cierre - timedelta(hours=1))
@@ -121,7 +127,9 @@ class TestModificarPeriodoDisponibilidadUseCase:
         evaluacion_activa_query = FakeEvaluacionActivaQueryPort(
             [_resumen_activo(otra_actividad_id)]
         )
-        use_case = ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query)
+        use_case = ModificarPeriodoDisponibilidadUseCase(
+            event_store, evaluacion_activa_query, FakeComisionConsultaPort()
+        )
 
         actividad = await use_case.execute(actividad_id, cierre - timedelta(hours=1))
 
@@ -132,7 +140,7 @@ class TestModificarPeriodoDisponibilidadUseCase:
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
         use_case = ModificarPeriodoDisponibilidadUseCase(
-            event_store, FakeEvaluacionActivaQueryPort()
+            event_store, FakeEvaluacionActivaQueryPort(), FakeComisionConsultaPort()
         )
 
         with pytest.raises(PeriodoInvalido):
@@ -141,7 +149,7 @@ class TestModificarPeriodoDisponibilidadUseCase:
     async def test_rechaza_actividad_inexistente(self):
         event_store = FakeEventStore()
         use_case = ModificarPeriodoDisponibilidadUseCase(
-            event_store, FakeEvaluacionActivaQueryPort()
+            event_store, FakeEvaluacionActivaQueryPort(), FakeComisionConsultaPort()
         )
 
         with pytest.raises(ActividadNoExiste):
@@ -152,7 +160,7 @@ class TestModificarPeriodoDisponibilidadUseCase:
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
         use_case = ModificarPeriodoDisponibilidadUseCase(
-            event_store, FakeEvaluacionActivaQueryPort()
+            event_store, FakeEvaluacionActivaQueryPort(), FakeComisionConsultaPort()
         )
         primera_extension = cierre + timedelta(days=1)
         segunda_extension = cierre + timedelta(days=2)

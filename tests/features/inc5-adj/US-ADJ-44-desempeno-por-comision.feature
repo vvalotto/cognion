@@ -24,7 +24,7 @@ Feature: Docente consulta el desempeño de una Comisión completa (US-ADJ-44)
   Scenario: Comisión que no pertenece a la materia
     Given una comisión de otra materia
     When un Docente hace GET /analytics/materias/X/comisiones/{esa comisión}/desempeno
-    Then recibe 422
+    Then recibe 403
 
   @error-case
   Scenario: Sin autenticación

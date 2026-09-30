@@ -1,0 +1,49 @@
+{
+  "us_id": "US-ADJ-56",
+  "fecha": "2026-09-27T13:58:00-03:00",
+  "componente": "src/analytics/ (backend) + frontend/src/pages/analytics/, frontend/src/lib/analytics-api.ts",
+  "metricas": {
+    "pylint": 9.74,
+    "cc_promedio": 1.98,
+    "cc_max": 8,
+    "mi_promedio": 75.13,
+    "coverage_backend": 100.0,
+    "coverage_frontend_desempeno_resumen_detalle": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 6,
+    "errors": 15,
+    "warnings": 2,
+    "infos": 36,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 6 },
+      "PEP8": { "errors": 0, "warnings": 1, "infos": 5 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 6 },
+      "DeadCode": { "errors": 6, "warnings": 0, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 6 },
+      "Pylint": { "errors": 0, "warnings": 1, "infos": 5 },
+      "Spelling": { "errors": 6, "warnings": 0, "infos": 0 },
+      "Types": { "errors": 2, "warnings": 0, "infos": 3 },
+      "UnusedImports": { "errors": 1, "warnings": 0, "infos": 5 }
+    },
+    "reporte": "quality/reports/inc6-adj/US-ADJ-56-codeguard.json"
+  },
+  "frontend": {
+    "oxlint_errores": 0,
+    "tsc_errores": 0,
+    "vitest_analytics": "796/796 (suite completa)"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 15 'errors' de DeadCode/Spelling/Types/UnusedImports son fallas de herramientas ausentes o con timeout (vulture, codespell no instalados; mypy/pylint embebidos en CodeGuard exceden su timeout interno de 10s/5s) — mismo bug documentado en CLAUDE.md y software_limpio#70/71, no hallazgos de código real.",
+    "Pylint embebido en CodeGuard reportó 7.54/10 para schemas.py (warning) — pylint corrido directo sobre el mismo archivo da 10.00/10; se toma la corrida directa como fuente de verdad, mismo criterio que el hook mypy dedicado (bug conocido de CodeGuard en análisis por archivo aislado).",
+    "PEP8 E501 en analytics_router.py:1 es la línea del docstring del módulo, preexistente desde 2026-09-05 (commit 1fbd5193), no tocada por esta US.",
+    "R0801 duplicate-code (pylint) entre el puerto/use case/schema del DTO de sesión en vivo: mismo patrón arquitectónico ya aceptado en el resto de Analytics (DTOs paralelos por capa, Clean Architecture)."
+  ]
+}

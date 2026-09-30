@@ -14,13 +14,12 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.inc6._helpers import (
     cerrar_pregunta_actual,
     correr,
     crear_estudiante,
     finalizar_sesion,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -36,8 +35,8 @@ def _cliente() -> AsyncClient:
     return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+async def _docente(sesion_id: str) -> dict[str, str]:
+    return await headers_docente_de_sesion(sesion_id)
 
 
 def _url(sesion_id: str) -> str:
@@ -86,7 +85,7 @@ class TestCerrarPreguntaAPIIntegration:
         await _responder(sesion_id, comision_id, CORRECTA)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id), headers=_docente())
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 200
         assert response.json()["estado"] == "EnCurso"
@@ -102,7 +101,7 @@ class TestCerrarPreguntaAPIIntegration:
     async def test_despues_de_cerrar_no_se_puede_responder(self):
         sesion_id, comision_id = await _sesion_lista()
         async with _cliente() as client:
-            await client.post(_url(sesion_id), headers=_docente())
+            await client.post(_url(sesion_id), headers=await _docente(sesion_id))
         estudiante_id, headers = await crear_estudiante(comision_id)
         await unirse_a_sesion(sesion_id, headers)
 
@@ -123,7 +122,7 @@ class TestCerrarPreguntaAPIIntegration:
         sesion_id, _ = await _sesion_lista()
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id), headers=_docente())
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 200
 
@@ -131,7 +130,7 @@ class TestCerrarPreguntaAPIIntegration:
         sesion_id, _ = await _sesion_lista(mostrar=False)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id), headers=_docente())
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 422
         assert "opciones" in response.json()["detail"]
@@ -140,8 +139,8 @@ class TestCerrarPreguntaAPIIntegration:
     async def test_rechazo_si_ya_estaba_cerrada(self, session):
         sesion_id, _ = await _sesion_lista()
         async with _cliente() as client:
-            await client.post(_url(sesion_id), headers=_docente())
-            response = await client.post(_url(sesion_id), headers=_docente())
+            await client.post(_url(sesion_id), headers=await _docente(sesion_id))
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 422
         assert len(await _eventos_de_sesion(session, sesion_id)) == 4
@@ -150,7 +149,7 @@ class TestCerrarPreguntaAPIIntegration:
         sesion_id, _ = await preparar_sesion()
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id), headers=_docente())
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 422
         assert "no está en curso" in response.json()["detail"]
@@ -161,13 +160,14 @@ class TestCerrarPreguntaAPIIntegration:
         await finalizar_sesion(sesion_id)
 
         async with _cliente() as client:
-            response = await client.post(_url(sesion_id), headers=_docente())
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 422
 
     async def test_sesion_inexistente(self):
+        sesion_id = str(uuid.uuid4())
         async with _cliente() as client:
-            response = await client.post(_url(str(uuid.uuid4())), headers=_docente())
+            response = await client.post(_url(sesion_id), headers=await _docente(sesion_id))
 
         assert response.status_code == 404
 
@@ -191,8 +191,8 @@ class TestCerrarPreguntaAPIIntegration:
 
         async with _cliente() as client:
             respuestas = await asyncio.gather(
-                client.post(_url(sesion_id), headers=_docente()),
-                client.post(_url(sesion_id), headers=_docente()),
+                client.post(_url(sesion_id), headers=await _docente(sesion_id)),
+                client.post(_url(sesion_id), headers=await _docente(sesion_id)),
             )
 
         assert sorted(r.status_code for r in respuestas) == [200, 422]
@@ -206,7 +206,7 @@ class TestBroadcastATodosLosConectados:
         sesion_id, comision_id = correr(_sesion_lista())
         acierto = correr(_responder(sesion_id, comision_id, CORRECTA))
         error = correr(_responder(sesion_id, comision_id, INCORRECTA))
-        docente = _docente()
+        docente = correr(_docente(sesion_id))
         token_docente = docente["Authorization"].split()[1]
         _, headers_estudiante = correr(crear_estudiante(comision_id))
         token_estudiante = headers_estudiante["Authorization"].split()[1]
@@ -233,9 +233,9 @@ class TestBroadcastATodosLosConectados:
             {"opcion": "0", "cantidad": 1},
             {"opcion": "1", "cantidad": 1},
         ]
-        posiciones = [(f["posicion"], f["estudiante_id"]) for f in mensaje["ranking"]]
-        assert posiciones == [(1, acierto), (2, error)]
-        assert (
-            mensaje["ranking"][0]["puntaje_acumulado"] > mensaje["ranking"][1]["puntaje_acumulado"]
-        )
+        # El ranking incluye además al participante que une `iniciar_sesion` (INV-AEV-11, US-ADJ-58),
+        # empatado en 0 con `error`: se compara solo el orden entre los dos que respondieron.
+        por_id = {f["estudiante_id"]: f for f in mensaje["ranking"]}
+        assert mensaje["ranking"][0]["estudiante_id"] == acierto
+        assert por_id[acierto]["puntaje_acumulado"] > por_id[error]["puntaje_acumulado"] == 0
         assert mensaje["ranking"][1]["puntaje_acumulado"] == 0

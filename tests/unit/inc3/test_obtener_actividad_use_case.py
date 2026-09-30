@@ -4,6 +4,7 @@ import pytest
 
 from src.actividad_evaluativa.entities.errors import ActividadNoExiste
 from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
+from tests.unit.inc3._fakes import FakeComisionConsultaPort
 from tests.unit.inc3.test_listar_actividades_use_case import FakeActividadQueryPort, _resumen
 
 
@@ -13,7 +14,7 @@ class TestObtenerActividadUseCase:
         resumen = _resumen(materia_id)
         query_port = FakeActividadQueryPort()
         query_port.resumenes[materia_id] = [resumen]
-        use_case = ObtenerActividadUseCase(query_port)
+        use_case = ObtenerActividadUseCase(query_port, FakeComisionConsultaPort())
 
         resultado = await use_case.execute(resumen.id)
 
@@ -22,7 +23,7 @@ class TestObtenerActividadUseCase:
 
     async def test_lanza_actividad_no_existe_si_no_esta(self):
         query_port = FakeActividadQueryPort()
-        use_case = ObtenerActividadUseCase(query_port)
+        use_case = ObtenerActividadUseCase(query_port, FakeComisionConsultaPort())
         actividad_id = uuid4()
 
         with pytest.raises(ActividadNoExiste):

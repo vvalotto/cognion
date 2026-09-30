@@ -1,6 +1,6 @@
 # US-ADJ-06: Mostrar el nombre real del usuario autenticado en el header de aplicación
 
-**Estado**: `Especificada`
+**Estado**: `Resuelta de hecho` — cerrada sin código en `Incremento 6-ADJ` (2026-09-27): `UserMenu.tsx` (`US-ADJ-37`) muestra el nombre real y `AppLayout.tsx` se lo pasa desde la sesión
 **Iteracion / Sprint**: `SP-ADJ-01` (misma iteración de ajuste que `US-ADJ-01`/`03`/`04`/`05`)
 **Tipo**: `feature backend + frontend`
 **Agregado principal afectado**: `Usuario` (sin cambios de invariantes — expone un atributo ya

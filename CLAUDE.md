@@ -941,7 +941,8 @@ Merge `develop → main` y tag `v0.7.1` (PATCH, mismo criterio de versionado que
 ejecutados el mismo día. Milestone GitHub [Incremento 5-ADJ](https://github.com/vvalotto/cognion/milestone/13)
 cerrado.
 
-Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10) — en curso
+Incremento 6 — Sesión en Vivo (RF-08, RF-09, RF-10) — **cerrado 2026-09-30, junto con
+Incremento 6-ADJ, como `BL-011`** (ver más abajo)
 (`docs/plans/inc6/inc6-candidatas.md`, Milestone GitHub
 [Incremento 6](https://github.com/vvalotto/cognion/milestone/8)). Incremento de mayor riesgo
 técnico del proyecto (`PLAN_v1.md`): primer uso real de WebSockets, primer agregado
@@ -1011,23 +1012,122 @@ RF-08/09/10 pasan a **Implementado** en la matriz (no Validado: espera el cierre
 Incremento 6). El checkpoint de staging (Fly.io, WSS real) del RNF sigue pendiente
 (`PROCEDIMIENTO-UAT.md` §4).
 
-**Iteración 3 del Incremento 6 — Frontend del modo en vivo, especificada 2026-09-21**
+**Iteración 3 del Incremento 6 — Frontend del modo en vivo, cerrada 2026-09-25**
 (`docs/plans/inc6/inc6-candidatas.md` §Iteración 3, specs `docs/specs/inc6/US-6.3.0.md` a `US-6.3.10.md`,
-Issues #412 a #422). Backend + frontend juntos. 11 US: `6.3.0` (UX — ampliación de wireframes, gate de diseño previo a
-las pantallas), backend `6.3.1` (nombres de los Estudiantes en HTTP y broadcasts), `6.3.2` (listar sesiones de una
-Comisión), `6.3.3` (estado completo para reconectar la proyección); frontend `6.3.4` (cliente API, primer canal
-WebSocket del frontend, `StageLayout`, rutas), `6.3.5` a `6.3.7` (Docente: crear + sala, proyección de la pregunta,
-histograma/ranking/podio), `6.3.8` y `6.3.9` (Estudiante: sesiones + sala, responder + resultado + final); `6.3.10`
-(UAT en navegador real, un celular real). **Decisiones de Víctor (2026-09-21):** los nombres los agrega el backend;
-el ranking muestra **Top 3 en todas las pantallas**; una sola pasada de UAT al cierre. **Huecos detectados** entre los
-wireframes aprobados y el backend real (Verdadero/Falso, 3 opciones, pantallas intermedias del celular, recuperar una
-sesión creada) se cierran en `US-6.3.0` antes de codear. Ítem abierto: `UnirseASesionEnVivo` no valida que el Estudiante
-pertenezca a la Comisión de la sesión (posible `US-ADJ`). Sin cambio de estado de RF.
+Issues #412 a #422). Backend + frontend juntos. **Decisiones de Víctor (2026-09-21):** los nombres los agrega el
+backend; el ranking muestra **Top 3 en todas las pantallas**; una sola pasada de UAT al cierre.
+`US-6.3.0` (ampliación de wireframes/prototipo — cierra los huecos entre lo aprobado y el backend real:
+Verdadero/Falso, 3 opciones, pantallas intermedias del celular, recuperar una sesión creada), PR #424.
+Backend: `US-6.3.1` (nombres de los Estudiantes en HTTP y broadcasts, PR #425), `US-6.3.2` (listar sesiones de
+una Comisión, PR #426), `US-6.3.3` (estado completo para reconectar la proyección, PR #427) — cierra el backend
+del incremento completo. Frontend: `US-6.3.4` (infraestructura — cliente API, primer canal WebSocket del
+frontend con reconexión/backoff, `StageLayout`, rutas placeholder, PR #428), `US-6.3.5` (Docente crea la sesión
+desde el detalle de Comisión y abre la sala de espera, PR #429), `US-6.3.6` (Docente proyecta la pregunta,
+muestra opciones y cierra, PR #430), `US-6.3.7` (Docente proyecta histograma/ranking/podio, avanza o finaliza,
+PR #431), `US-6.3.8` (Estudiante ve sesiones, se une y espera, PR #436), `US-6.3.9` (Estudiante responde desde
+el celular y ve resultado y final, PR #439) — con esta última quedan las 6 pantallas completas.
+Tres US de ajuste de la propia suite de tests del frontend, detectadas en Fase 7 de `US-6.3.7`/`6.3.8` (fallos
+aleatorios con cobertura, esperas asincrónicas mal formadas, timeout de Testing Library corto para la suite
+completa): `US-ADJ-53`/`54`/`55`, cerradas 2026-09-24.
+**`US-6.3.10` (UAT de cierre) en dos tramos:** Tramo 1, 4 corridas de los 8 circuitos Playwright E2E (10/10 sin
+inestabilidad, incluida una corrida a través del proxy de dev), mediciones de legibilidad de la proyección
+contra `RNF_v1.md` (todas cumplen salvo dos hallazgos de contraste/tamaño, H3/H4, dejados abiertos a
+decisión). Tramo 2, **revisión manual de Víctor en Mac/iPhone/iPad sobre `develop` con datos reales**
+(`quality/reports/uat/inc6/revision-manual-app.md`, 2026-09-26): 7 hallazgos — 5 resueltos directo en
+frontend/backend chico (detalle de Materia con sus Comisiones, ver/dar de alta Comisión desde ahí sin pantalla
+propia, no iniciar sesión sin participantes + botón "Salir", bloqueo de negativos en campos numéricos, fix de
+paginación `ge=1`), 1 resuelto aparte (reconexión WebSocket "zombi" en iOS al volver de pantalla apagada), y 2
+derivados a una US de ajuste formal por tocar una invariante de dominio (`US-ADJ-58`, ver abajo). H3/H4 resueltos
+en la misma revisión (cajas de opción azul/verde ≥4,5:1 de contraste, enunciado de 30px con opciones).
+**Cierra completa la Iteración 3 y el Incremento 6 (backend + frontend)** — RF-08/09/10 siguen en
+**Implementado** (pasan a Validado recién al cerrar la baseline).
 
-**Próximo paso:** revisión y aprobación de Víctor de las specs de la Iteración 3 (`US-6.3.0` incluida, que necesita su
-aprobación de las ampliaciones de diseño); después `US-6.3.0` (wireframes/prototipo) en paralelo con el backend
-`6.3.1` → `6.3.2`/`6.3.3`, y el frontend. Cierre de baseline `BL-011` al terminar la iteración. Ítem abierto aparte:
-checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
+**Incremento 6-ADJ — Ajuste técnico y documental, cerrado 2026-09-30 junto con Incremento 6
+como `BL-011`** (abierto 2026-09-27, renombrado de `SP-ADJ-02`
+el mismo día; `docs/plans/inc6-adj/inc6-adj-candidatas.md`, Milestone GitHub
+[Incremento 6-ADJ](https://github.com/vvalotto/cognion/milestone/14)). Mismo criterio que los incrementos
+ADJ anteriores: ajuste fuera de la secuencia 0-7 de `PLAN_v1.md`, insertado **antes** de cerrar `BL-011`
+(decisión de Víctor 2026-09-26, agrupando lo que en un principio iba después del cierre). Origen: los
+hallazgos derivados de la revisión manual de `US-6.3.10` más el barrido documental pendiente de `PLAN-CM.md`
+§12. **`US-ADJ-58`** (cancelar una sesión `EnEspera`, finalizar desde cualquier etapa relajando INV-AEV-03,
+no iniciar sin participantes también a nivel de backend) cerrada 2026-09-27, Issue #445 — primera de la
+iteración, porque termina de cerrar el modo en vivo que valida `BL-011`. **`US-ADJ-56`** (las sesiones en
+vivo suman al desempeño del Estudiante y al "Desempeño por alumno" del Docente, acumulado separado del de
+período abierto, sin detalle pregunta por pregunta) cerrada 2026-09-27. **`US-ADJ-57`** (cada Docente ve y
+opera solo sobre las materias/Comisiones donde está asignado — el sistema nació "Docente único" y hoy ningún
+endpoint de los 4 BC filtra por esa asignación; primitiva nueva en Identidad,
+`docente_pertenece_a_comision`/`docente_tiene_comision_en_materia`, que cada BC consume ampliando su propio
+`ComisionConsultaPort`) **en curso — 2 de 4 partes mergeadas**: Identidad (27-sep, PR #454) y Banco de
+Preguntas (28-sep, PR #455); faltan Actividad Evaluativa y Analytics. Pendientes de la iteración después de
+`US-ADJ-57`: `US-ADJ-08` (ver materia/comisión de la invitación antes de registrarse, Issue #448),
+`US-ADJ-07` (nombre legible de comisión en detalle de cuenta, informal) y el barrido documental de §12
+(`docs/architecture/`, wireframes contra código, matriz, este archivo). `US-ADJ-06` se da por resuelta de
+hecho (`US-ADJ-37`, `UserMenu.tsx`) sin código propio.
+
+`US-ADJ-57` cerrada completa 2026-09-29 (4/4 partes: Identidad PR #454, Banco de Preguntas PR
+#455, Actividad Evaluativa PR #458, Analytics PR #459). **`US-ADJ-08`** (ver materia/comisión de
+la invitación antes de registrarse, Issue #448) cerrada 2026-09-30, PR #460 — pantalla pública
+`InvitacionPreview.tsx`, `GET /invitaciones/{token}` nuevo (sin autenticar, solo datos públicos:
+nombre de comisión/materia, sin exponer el docente). **`US-ADJ-07`** (nombre legible de la
+comisión en el detalle de cuenta, track informal) cerrada 2026-09-30, PR #461:
+`CuentaDetalle.tsx` resuelve `comisionId` vía `GET /comisiones/{id}` (`US-ADJ-25`) +
+`useNombreMateria`, mismo patrón que `ComisionDetalle.tsx` — la causa raíz original de la spec
+(no existía forma de resolverlo del lado del cliente) ya no aplicaba desde `US-ADJ-25`.
+
+**Barrido documental de §12 ejecutado 2026-09-30** (`/docs-audit` + revisión manual de la
+sesión): `docs/architecture/03-bounded-contexts.md` tenía la tabla de catálogo de BC congelada
+en el estado del Incremento 1 (4 de 5 BC marcados "Pendiente" pese a estar todos implementados
+y validados hace varios incrementos) — actualizada con el estado real y referencias a
+`ADR-018`/`ADR-019`, ausentes hasta ahora en `docs/architecture/`. `docs/traceability/matrix.md`
+tenía las filas de RF-08/09/10 con `US-6.3.x` marcadas "especificadas" pese a que la Iteración 3
+cerró completa el 2026-09-25 — corregido a "cerradas", más una nota de header consolidando los
+cierres de `US-ADJ-56`/`57`/`58`/`08`/`07` desde el 2026-09-21. Tres Issues de GitHub (#421
+`US-6.3.10`, #422 `US-6.3.0`, #443 `US-ADJ-57`) tenían el trabajo mergeado desde días antes sin
+cerrarse — cerrados con comentario de evidencia (commits/PRs). Dos archivos de trabajo de
+`/implement-us` (`US-ADJ-56-context.md`/`-plan.md`) habían quedado en la raíz de `docs/plans/`
+en vez de `docs/plans/inc6-adj/` — reubicados. `docs/design/ux/` sin gaps nuevos —
+un solo párrafo desactualizado corregido en
+`wireframes-actividad-evaluativa-en-vivo.md` §7 (aprobación de UX que ya había ocurrido en la
+UAT de `US-6.3.10`, sin registrarlo). **Cierra completo el barrido de §12 y con él
+`Incremento 6-ADJ`.**
+
+**`BL-011` — Incremento 6 (Sesión en Vivo) + Incremento 6-ADJ (Ajuste técnico y documental)
+cerrada 2026-09-30** (`.cm/baselines/BL-011-sesion-en-vivo-y-ajuste-tecnico.md`): 1799/1799
+tests backend (97% cobertura), 801/801 frontend (93.5% cobertura statements/85.71% branches),
+`ruff`/`mypy` 0 errores, `pylint` 9.59/10, `designreviewer` 0 CRITICAL (330 advertencias sobre
+300 archivos), `architectanalyst` 7 CRITICAL (mismo "Zone of Pain" aceptado desde
+`US-ADJ-13`/`19`, sin módulo nuevo desde `BL-010`, `should_block: false`). Sin UAT formal
+consolidada adicional — cada iteración con código de producción ya había corrido la propia
+(Iteración 1/2 backend con revisión manual + verificación del RNF de `US-6.2.9`; Iteración 3
+frontend con Playwright E2E + revisión manual de Víctor en Mac/iPhone/iPad,
+`quality/reports/uat/inc6/revision-manual-app.md`), sin hallazgos 🔴 Bloqueantes. RF-08, RF-09
+y RF-10 pasan a **Validado** en `docs/traceability/matrix.md`. `CHANGELOG.md`: `[Unreleased]`
+cerrado como `[0.8.0]`, con las entradas faltantes de `US-6.1.x`/`US-6.2.x`/`US-ADJ-57`/`58`/
+`07` agregadas antes del cierre (no estaban registradas). Merge `develop → main` y tag
+`v0.8.0` (MINOR — cierre de Incremento 6 de `PLAN_v1.md`; `Incremento 6-ADJ` se pliega en la
+misma baseline, sin tag propio) ejecutados el mismo día. Milestones GitHub
+[Incremento 6](https://github.com/vvalotto/cognion/milestone/8) e
+[Incremento 6-ADJ](https://github.com/vvalotto/cognion/milestone/14) cerrados.
+
+Incremento 7 — Cierre de alcance v1, en planificación desde 2026-09-30
+(`docs/plans/inc7/inc7-candidatas.md`). Último incremento de `PLAN_v1.md` — sin BC nuevo, sin
+Iteración 0 de Modelado. **Decisión de Víctor:** la Iteración 1 original (`RF-18`, KPIs
+históricos) se reemplaza por una **iteración de UAT manual completa de cierre de alcance
+v1** — recorrido exploratorio de Víctor sobre todo el sistema (los 7 incrementos acumulados),
+sin código de producción, que produce 4 artefactos en `quality/reports/uat/inc7/`:
+`plan-de-pruebas.md`, `registro-ejecuciones.md`, `registro-hallazgos.md`,
+`plan-de-correccion.md` (detalle completo, incluida la separación de responsabilidades entre
+Víctor y la sesión, en `docs/plans/PROCEDIMIENTO-UAT.md` §11). El `plan-de-correccion.md` es
+un documento de **priorización, no de ejecución** — no implementa nada por sí mismo, solo
+propone cómo resolver cada hallazgo (track informal / US-ADJ / incremento nuevo). `RF-18`
+queda diferido sin incremento asignado (`docs/rf/RF_v1.md` revisión 2026-09-30,
+`docs/traceability/matrix.md`) — sigue en alcance v1, solo sin incremento todavía. La
+Iteración 2 (`RF-07`, importación desde PDF) no cambia — spike de decisión (parseo automático
+vs. asistido) pendiente, con Víctor presente, antes de especificarla.
+
+**Próximo paso:** escribir el `plan-de-pruebas.md` de la Iteración 1 junto con Víctor. Ítem
+abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS real
+(`PROCEDIMIENTO-UAT.md` §4).
 
 ---
 

@@ -26,8 +26,12 @@ class BancosController:
         importancia: str | None = None,
         pagina: int | None = None,
         tamanio_pagina: int | None = None,
+        docente_id: UUID | None = None,
     ) -> ResultadoPaginadoPreguntas:
-        """Delega el filtrado del banco en el caso de uso correspondiente."""
+        """Delega el filtrado del banco en el caso de uso correspondiente.
+
+        `docente_id` acota la consulta a materias del Docente que llama (`US-ADJ-57`).
+        """
         return await self._filtrar_banco.execute(
             banco_id=banco_id,
             unidad=unidad,
@@ -36,4 +40,5 @@ class BancosController:
             importancia=importancia,
             pagina=pagina,
             tamanio_pagina=tamanio_pagina,
+            docente_id=docente_id,
         )

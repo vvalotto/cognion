@@ -1,0 +1,1743 @@
+{
+  "summary": {
+    "total_files": 9,
+    "checks_executed": 9,
+    "elapsed_seconds": 63.38,
+    "timestamp": "2026-09-27T18:29:39.547053",
+    "total_issues": 81,
+    "errors": 20,
+    "warnings": 4,
+    "infos": 57
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 68.7 (grade A)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.41/10 (< 8.0). Run 'pylint comision_query_port.py' for details.",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E305 expected 2 blank lines after class or function definition, found 1",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": 41
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 62.0 (grade A)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.21/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint invitaciones_router.py' for details.",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/invitaciones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 92.0 (grade A)",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint materias_comisiones_router.py' for details.",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 74.6 (grade A)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.00/10 (>= 8.0)",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 63.2 (grade A)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 76.1 (grade A)",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.67/10 (>= 8.0)",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/use_cases/generar_invitacion.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.41/10 (< 8.0). Run 'pylint comision_query_port.py' for details.",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E305 expected 2 blank lines after class or function definition, found 1",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 41
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint invitaciones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint materias_comisiones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 68.7 (grade A)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 62.0 (grade A)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.21/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 92.0 (grade A)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 74.6 (grade A)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 63.2 (grade A)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 76.1 (grade A)",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.67/10 (>= 8.0)",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "api/comisiones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E305 expected 2 blank lines after class or function definition, found 1",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": 41
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 62.0 (grade A)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.21/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/comisiones_router.py",
+        "line": null
+      }
+    ],
+    "api/invitaciones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint invitaciones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/invitaciones_router.py",
+        "line": null
+      }
+    ],
+    "api/materias_comisiones_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 92.0 (grade A)",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint materias_comisiones_router.py' for details.",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/api/materias_comisiones_router.py",
+        "line": null
+      }
+    ],
+    "controllers/comisiones_query_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 74.6 (grade A)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/controllers/comisiones_query_controller.py",
+        "line": null
+      }
+    ],
+    "controllers/invitaciones_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+        "line": null
+      }
+    ],
+    "entities/errors.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 68.7 (grade A)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/errors.py",
+        "line": null
+      }
+    ],
+    "gateways/comision_query_repository.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 63.2 (grade A)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      }
+    ],
+    "ports/comision_query_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.41/10 (< 8.0). Run 'pylint comision_query_port.py' for details.",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      }
+    ],
+    "use_cases/generar_invitacion.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 76.1 (grade A)",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.67/10 (>= 8.0)",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/use_cases/generar_invitacion.py",
+        "line": null
+      }
+    ]
+  }
+}

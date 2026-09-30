@@ -8,7 +8,6 @@ import { AltaDocente } from "@/pages/identidad/AltaDocente"
 import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
 import { EditarComision } from "@/pages/identidad/EditarComision"
 import { EliminarComision } from "@/pages/identidad/EliminarComision"
-import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
@@ -71,6 +70,7 @@ import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionD
 import { ProyeccionSesionEnVivo } from "@/pages/actividad-evaluativa/ProyeccionSesionEnVivo"
 import { NuevaSesionEnVivo } from "@/pages/actividad-evaluativa/NuevaSesionEnVivo"
 import { SalaEsperaDocente } from "@/pages/actividad-evaluativa/SalaEsperaDocente"
+import { CancelarSesionEnVivo } from "@/pages/actividad-evaluativa/CancelarSesionEnVivo"
 import { SesionEnVivoEstudiante } from "@/pages/actividad-evaluativa/SesionEnVivoEstudiante"
 
 /**
@@ -104,14 +104,6 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Inicio /> },
       { path: "/mi-cuenta/cambiar-password", element: <CambiarPassword /> },
-      {
-        path: "/comisiones",
-        element: (
-          <RequireRole rol="administrador">
-            <Comisiones />
-          </RequireRole>
-        ),
-      },
       {
         path: "/comisiones/nueva",
         element: (
@@ -509,6 +501,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <SalaEsperaDocente />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/sesiones-en-vivo/:sesionId/cancelar",
+        element: (
+          <RequireRole rol="docente">
+            <CancelarSesionEnVivo />
           </RequireRole>
         ),
       },

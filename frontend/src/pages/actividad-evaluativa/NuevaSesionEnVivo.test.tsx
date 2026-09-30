@@ -133,6 +133,22 @@ describe("NuevaSesionEnVivo", () => {
     expect(vi.mocked(fetch).mock.calls.length).toBe(llamadasAntes)
   })
 
+  it("no deja tipear un signo menos en el tiempo límite", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, materias))
+      .mockResolvedValueOnce(jsonResponse(200, preguntas))
+
+    renderFormulario()
+    await screen.findByRole("heading", { name: "Nueva sesión en vivo" })
+    const input = screen.getByLabelText("Tiempo límite por pregunta (segundos)")
+    const user = userEvent.setup()
+    await user.clear(input)
+    await user.type(input, "-30")
+
+    expect(input).toHaveValue(30)
+  })
+
   it("muestra el error del servidor (preguntas insuficientes) y permanece en el formulario", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))

@@ -18,7 +18,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_asignado_a_materia
 
 scenarios("../../features/sp-adj-01/US-ADJ-03-paginar-banco-preguntas.feature")
 
@@ -34,6 +34,11 @@ async def _limpiar_tablas_banco_preguntas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -57,7 +62,11 @@ async def _post_crear_materia(nombre: str):
 
 
 async def _post_cargar_pregunta(
-    banco_id: str, indice: int, unidad: str = "Unidad 1", dificultad: str = "medio"
+    banco_id: str,
+    indice: int,
+    headers: dict[str, str],
+    unidad: str = "Unidad 1",
+    dificultad: str = "medio",
 ):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -75,16 +84,14 @@ async def _post_cargar_pregunta(
                 "dificultad": dificultad,
                 "importancia": "medio",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
-async def _get_filtrar_banco(banco_id: str, **params):
+async def _get_filtrar_banco(banco_id: str, headers: dict[str, str], **params):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.get(
-            f"/bancos/{banco_id}/preguntas", params=params, headers=docente_headers()
-        )
+        return await client.get(f"/bancos/{banco_id}/preguntas", params=params, headers=headers)
 
 
 def _crear_banco_con_preguntas(context, cantidad: int, **kwargs) -> None:
@@ -92,10 +99,12 @@ def _crear_banco_con_preguntas(context, cantidad: int, **kwargs) -> None:
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
     context["banco_id"] = banco_id
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
     ids_en_orden = []
     for i in range(cantidad):
-        respuesta = run_async(_post_cargar_pregunta(banco_id, i, **kwargs))
+        respuesta = run_async(_post_cargar_pregunta(banco_id, i, headers, **kwargs))
         assert respuesta.status_code == 201
         ids_en_orden.append(respuesta.json()["id"])
     context["ids_en_orden"] = ids_en_orden
@@ -115,7 +124,9 @@ def banco_con_n_preguntas_sin_tamanio(context, cantidad):
 def docente_viendo_pagina_de_banco(context, pagina, paginas):
     _crear_banco_con_preguntas(context, paginas * TAMANIO_PAGINA - 1)
     context["response"] = run_async(
-        _get_filtrar_banco(context["banco_id"], pagina=pagina, tamanio_pagina=TAMANIO_PAGINA)
+        _get_filtrar_banco(
+            context["banco_id"], context["headers"], pagina=pagina, tamanio_pagina=TAMANIO_PAGINA
+        )
     )
 
 
@@ -125,7 +136,11 @@ def docente_viendo_pagina_filtrada(context, pagina, unidad):
     context["banco_unidad"] = unidad
     context["response"] = run_async(
         _get_filtrar_banco(
-            context["banco_id"], pagina=pagina, tamanio_pagina=TAMANIO_PAGINA, unidad=unidad
+            context["banco_id"],
+            context["headers"],
+            pagina=pagina,
+            tamanio_pagina=TAMANIO_PAGINA,
+            unidad=unidad,
         )
     )
 
@@ -133,21 +148,27 @@ def docente_viendo_pagina_filtrada(context, pagina, unidad):
 @when("un Docente abre el banco de esa materia")
 def docente_abre_banco(context):
     context["response"] = run_async(
-        _get_filtrar_banco(context["banco_id"], pagina=1, tamanio_pagina=TAMANIO_PAGINA)
+        _get_filtrar_banco(
+            context["banco_id"], context["headers"], pagina=1, tamanio_pagina=TAMANIO_PAGINA
+        )
     )
 
 
 @when("un Docente lo abre")
 def docente_abre_banco_alias(context):
     context["response"] = run_async(
-        _get_filtrar_banco(context["banco_id"], pagina=1, tamanio_pagina=TAMANIO_PAGINA)
+        _get_filtrar_banco(
+            context["banco_id"], context["headers"], pagina=1, tamanio_pagina=TAMANIO_PAGINA
+        )
     )
 
 
 @when('hace clic en "Siguiente" (o en el número de página 2)')
 def hace_clic_en_siguiente(context):
     context["response"] = run_async(
-        _get_filtrar_banco(context["banco_id"], pagina=2, tamanio_pagina=TAMANIO_PAGINA)
+        _get_filtrar_banco(
+            context["banco_id"], context["headers"], pagina=2, tamanio_pagina=TAMANIO_PAGINA
+        )
     )
 
 
@@ -156,6 +177,7 @@ def cambia_filtro_dificultad(context):
     context["response"] = run_async(
         _get_filtrar_banco(
             context["banco_id"],
+            context["headers"],
             pagina=1,
             tamanio_pagina=TAMANIO_PAGINA,
             unidad=context["banco_unidad"],

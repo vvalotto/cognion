@@ -310,11 +310,6 @@ def valida_email_enviado(context):
     assert context["response"].status_code == 201
 
 
-@then("recibe 422")
-def valida_422(context):
-    assert context["response"].status_code == 422
-
-
 @then("recibe 404")
 def valida_404(context):
     assert context["response"].status_code == 404

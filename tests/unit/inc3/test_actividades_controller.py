@@ -17,7 +17,11 @@ from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import 
 from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
     ModificarTituloActividadUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
+    FakeComisionConsultaPort,
     FakeEventStore,
     FakeMateriaConsultaPort,
     FakeNotificacionPort,
@@ -35,17 +39,24 @@ def _controller(event_store: FakeEventStore | None = None) -> ActividadesControl
     pregunta_consulta = FakePreguntaConsultaPort()
     return ActividadesController(
         CrearActividadPeriodoAbiertoUseCase(
-            materia_consulta, pregunta_consulta, event_store, FakeNotificacionPort()
+            materia_consulta,
+            pregunta_consulta,
+            event_store,
+            FakeNotificacionPort(),
+            VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
         ),
-        ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
+        ModificarPeriodoDisponibilidadUseCase(
+            event_store, FakeEvaluacionActivaQueryPort(), FakeComisionConsultaPort()
+        ),
         CerrarActividadUseCase(
             event_store,
             FakeEvaluacionActivaQueryPort(),
             FinalizarEvaluacionUseCase(event_store),
             materia_consulta,
             FakeNotificacionPort(),
+            VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
         ),
-        ModificarTituloActividadUseCase(event_store),
+        ModificarTituloActividadUseCase(event_store, FakeComisionConsultaPort()),
     )
 
 
@@ -59,17 +70,24 @@ class TestActividadesController:
         event_store = FakeEventStore()
         controller = ActividadesController(
             CrearActividadPeriodoAbiertoUseCase(
-                materia_consulta, pregunta_consulta, event_store, FakeNotificacionPort()
+                materia_consulta,
+                pregunta_consulta,
+                event_store,
+                FakeNotificacionPort(),
+                VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
             ),
-            ModificarPeriodoDisponibilidadUseCase(event_store, FakeEvaluacionActivaQueryPort()),
+            ModificarPeriodoDisponibilidadUseCase(
+                event_store, FakeEvaluacionActivaQueryPort(), FakeComisionConsultaPort()
+            ),
             CerrarActividadUseCase(
                 event_store,
                 FakeEvaluacionActivaQueryPort(),
                 FinalizarEvaluacionUseCase(event_store),
                 materia_consulta,
                 FakeNotificacionPort(),
+                VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
             ),
-            ModificarTituloActividadUseCase(event_store),
+            ModificarTituloActividadUseCase(event_store, FakeComisionConsultaPort()),
         )
         apertura = datetime.now(UTC)
         cierre = apertura + timedelta(days=7)

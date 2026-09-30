@@ -24,6 +24,10 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import (
+    asignar_docente_a_comision_existente,
+    asignar_docente_a_materia,
+)
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
@@ -114,6 +118,7 @@ class TestAnalyticsRouterEvolucionTemporalEstudiante:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             _estudiante_comision, estudiante, estudiante_headers = await _comision_con_estudiante(
                 session, materia_id
             )
@@ -145,6 +150,7 @@ class TestAnalyticsRouterEvolucionTemporalEstudiante:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             _comision_id, estudiante, _headers = await _comision_con_estudiante(session, materia_id)
 
             response = await client.get(
@@ -194,8 +200,10 @@ class TestAnalyticsRouterEvolucionTemporalComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             comision_id, _e1, headers_1 = await _comision_con_estudiante(session, materia_id)
             _comision_2, _e2, headers_2 = await _comision_con_estudiante(session, materia_id)
+            await asignar_docente_a_comision_existente(str(comision_id), docente_headers)
 
             await _cargar_verdadero_falso(client, docente_headers, banco_id)
             actividad_id = await _crear_actividad(client, docente_headers, materia_id, "Parcial 1")
@@ -218,6 +226,7 @@ class TestAnalyticsRouterEvolucionTemporalComision:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, _banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             otra_materia_id = uuid.uuid4()
             comision_de_otra_materia, _est, _h = await _comision_con_estudiante(
                 session, otra_materia_id
@@ -228,7 +237,9 @@ class TestAnalyticsRouterEvolucionTemporalComision:
                 headers=docente_headers,
             )
 
-        assert response.status_code == 422
+        # `US-ADJ-57`: el Docente no está asignado a `comision_de_otra_materia` — la
+        # autorización (403) se resuelve antes que la validación de negocio.
+        assert response.status_code == 403
 
     async def test_sin_autenticacion(self):
         transport = ASGITransport(app=app)

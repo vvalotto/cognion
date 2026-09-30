@@ -30,6 +30,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 scenarios("../../features/inc5-adj/US-ADJ-47-completitud-por-actividad.feature")
 
@@ -46,6 +47,7 @@ async def _limpiar_tablas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
@@ -183,10 +185,11 @@ def actividad_restringida_con_cuatro_estudiantes(context):
             store = SQLAlchemyEventStore(session)
             actividad_id = uuid4()
             await _actividad_creada(store, actividad_id, materia_id, frozenset({comision.id}))
-            return actividad_id, estudiantes
+            return actividad_id, materia_id, estudiantes
 
-    context["actividad_id"], context["estudiantes"] = run_async(_setup())
+    context["actividad_id"], materia_id, context["estudiantes"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(materia_id), context["headers"]))
 
 
 @given("1 finalizó, 1 está en curso, 1 suspendió y 1 nunca inició")
@@ -219,10 +222,11 @@ def actividad_sin_restriccion_dos_comisiones(context):
             store = SQLAlchemyEventStore(session)
             actividad_id = uuid4()
             await _actividad_creada(store, actividad_id, materia_id)
-            return actividad_id, estudiantes_1 + estudiantes_2
+            return actividad_id, materia_id, estudiantes_1 + estudiantes_2
 
-    context["actividad_id"], context["estudiantes"] = run_async(_setup())
+    context["actividad_id"], materia_id, context["estudiantes"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(materia_id), context["headers"]))
 
 
 @given("un actividad_id que no corresponde a ninguna actividad")

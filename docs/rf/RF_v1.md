@@ -13,6 +13,13 @@
 > en ningún lado; RF-03 gana un mecanismo de bloqueo *automático* por intentos fallidos
 > (antes solo contemplaba bloqueos como acción del administrador). Sesión de elicitación en
 > `docs/design/domain/BC-identidad-modelo.md` §9.
+> Revisión 2026-09-30: RF-18 (KPIs históricos) queda diferido sin incremento asignado —
+> decisión de Víctor al planificar el Incremento 7: su Iteración 1 original (RF-18) se
+> reemplaza por una iteración de UAT manual completa de cierre de alcance v1 (ver
+> `docs/plans/PLAN_v1.md`, revisión correspondiente, y `docs/plans/inc7/inc7-candidatas.md`).
+> No reescribe historia — el Incremento 7 no se ejecutó todavía. RF-18 sigue en alcance
+> ("En alcance" más abajo no se modifica) — solo se retira del Incremento 7, queda
+> "Planificado" sin incremento en `docs/traceability/matrix.md` hasta que se le asigne uno.
 > Revisión 2026-09-16: se agregan RF-24 (recuperación de contraseña por autoservicio) y RF-25
 > (autoregistro de Docente/Estudiante), numerados en el cierre documental del Incremento 5-ADJ
 > (`US-ADJ-52`) — elicitados y modelados durante ese incremento

@@ -3,7 +3,11 @@ import uuid
 import pytest
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.errors import ComisionNoExiste, DocenteNoAsignadoAComision
+from src.identidad.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoExiste,
+    DocenteNoAsignadoAComision,
+)
 from src.identidad.entities.eventos import InvitacionGenerada
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from tests.unit.inc1._fakes import (
@@ -25,7 +29,7 @@ class TestGenerarInvitacionUseCase:
 
         use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
         invitacion, evento = await use_case.execute(
-            comision.id, docente_id, "estudiante@fiuner.edu.ar"
+            comision.id, docente_id, "estudiante@fiuner.edu.ar", solicitante_id=docente_id
         )
 
         assert invitacion.comision_id == comision.id
@@ -45,7 +49,7 @@ class TestGenerarInvitacionUseCase:
 
         use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
         invitacion, _evento = await use_case.execute(
-            comision.id, docente_id, "estudiante@fiuner.edu.ar"
+            comision.id, docente_id, "estudiante@fiuner.edu.ar", solicitante_id=docente_id
         )
 
         assert notificador.enviados == [("estudiante@fiuner.edu.ar", invitacion.token)]
@@ -61,7 +65,9 @@ class TestGenerarInvitacionUseCase:
         await comision_repo.guardar(comision)
 
         use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
-        invitacion, evento = await use_case.execute(comision.id, docente_id, None)
+        invitacion, evento = await use_case.execute(
+            comision.id, docente_id, None, solicitante_id=docente_id
+        )
 
         assert invitacion.id in invitacion_repo.invitaciones
         assert notificador.enviados == []
@@ -71,14 +77,45 @@ class TestGenerarInvitacionUseCase:
         comision_repo = FakeComisionRepository()
         invitacion_repo = FakeInvitacionRepository()
         notificador = FakeNotificador()
+        solicitante_id = uuid.uuid4()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
+        comision.asignar_docente(solicitante_id)
         await comision_repo.guardar(comision)
         docente_no_asignado = uuid.uuid4()
 
         use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
 
         with pytest.raises(DocenteNoAsignadoAComision):
-            await use_case.execute(comision.id, docente_no_asignado, "estudiante@fiuner.edu.ar")
+            await use_case.execute(
+                comision.id,
+                docente_no_asignado,
+                "estudiante@fiuner.edu.ar",
+                solicitante_id=solicitante_id,
+            )
+
+        assert invitacion_repo.invitaciones == {}
+        assert notificador.enviados == []
+
+    async def test_rechaza_solicitante_no_asignado_a_la_comision(self):
+        """`US-ADJ-57`: quien pide la invitación debe estar asignado, no solo el destino."""
+        comision_repo = FakeComisionRepository()
+        invitacion_repo = FakeInvitacionRepository()
+        notificador = FakeNotificador()
+        docente_id = uuid.uuid4()
+        comision = Comision.crear(uuid.uuid4(), "lu 10-12", uuid.uuid4())
+        comision.asignar_docente(docente_id)
+        await comision_repo.guardar(comision)
+        solicitante_ajeno = uuid.uuid4()
+
+        use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
+
+        with pytest.raises(ComisionNoAutorizada):
+            await use_case.execute(
+                comision.id,
+                docente_id,
+                "estudiante@fiuner.edu.ar",
+                solicitante_id=solicitante_ajeno,
+            )
 
         assert invitacion_repo.invitaciones == {}
         assert notificador.enviados == []
@@ -91,7 +128,9 @@ class TestGenerarInvitacionUseCase:
         use_case = GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
 
         with pytest.raises(ComisionNoExiste):
-            await use_case.execute(uuid.uuid4(), uuid.uuid4(), "estudiante@fiuner.edu.ar")
+            await use_case.execute(
+                uuid.uuid4(), uuid.uuid4(), "estudiante@fiuner.edu.ar", solicitante_id=uuid.uuid4()
+            )
 
         assert invitacion_repo.invitaciones == {}
         assert notificador.enviados == []
