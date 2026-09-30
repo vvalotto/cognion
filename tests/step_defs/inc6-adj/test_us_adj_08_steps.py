@@ -74,7 +74,9 @@ async def _crear_invitacion_vigente() -> str:
         sufijo = uuid.uuid4()
         materia = Materia.crear(f"IS-2026-adj08-{sufijo}")
         await materia_repo.guardar(materia)
-        admin = Usuario.crear("Vic", f"vic.{sufijo}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        admin = Usuario.crear(
+            "Vic", f"vic.{sufijo}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
+        )
         await usuario_repo.guardar(admin)
         docente = Usuario.crear("Ana", f"ana.{sufijo}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(docente)
