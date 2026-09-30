@@ -410,8 +410,9 @@ real (celular y proyector) que exige el gate de diseño para este escenario (`CL
 
 **Decisión de Víctor (2026-09-22):** la validación en dispositivo real de §6 se difiere al
 momento de implementar `US-6.3.5` a `US-6.3.9` (frontend real, no el prototipo estático) — no
-bloquea el arranque del backend (`US-6.3.1` a `US-6.3.3`) ni el resto de la Iteración 3. La
-aprobación explícita en el Issue #422 sigue pendiente hasta ese momento.
+bloquea el arranque del backend (`US-6.3.1` a `US-6.3.3`) ni el resto de la Iteración 3. Validada
+en la UAT de cierre de `US-6.3.10` (Tramo 2, revisión manual de Víctor en Mac/iPhone/iPad,
+2026-09-26) — aprobación explícita registrada al cerrar el Issue #422 (barrido documental §12).
 
 ---
 
