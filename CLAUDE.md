@@ -1149,7 +1149,7 @@ en 7 puntos, ejecutándose de a uno:
 3. ✅ Corregida la nota del Paso 1 de la prueba de estabilización del Administrador (arriba en
    este archivo), que afirmaba el fix de `Inicio.tsx` ya cerrado cuando en realidad su PR
    llevaba 22 días sin mergear.
-4. ⬜ Agregar `tests/uat/datos-reales/` a `.gitignore` (hoy queda fuera de git solo por
+4. ✅ Agregada `tests/uat/datos-reales/` a `.gitignore` (antes quedaba fuera de git solo por
    disciplina manual — ya hubo un incidente real de `git add` arrastrándolo).
 5. ⬜ Borrar branches locales ya integradas por otro commit: `docs/us-adj-21-cerrada`,
    `feature/editar-cuenta-administrador`, `feature/editar-materia`, `fix/admin-crea-materias`
