@@ -3,11 +3,17 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-30 — Barrido documental §12 (`Incremento 6-ADJ`, `US-ADJ-52`
+> Última actualización: 2026-09-30 — Cierre de `BL-011` (Incremento 6 + Incremento 6-ADJ
+> juntos): **RF-08, RF-09 y RF-10 pasan de "Implementado" a "Validado"**, referenciando
+> `.cm/baselines/BL-011-sesion-en-vivo-y-ajuste-tecnico.md`. Checkpoint de staging del RNF en
+> Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4) sigue pendiente, sin relación con este
+> cierre.
+>
+> 2026-09-30 — Barrido documental §12 (`Incremento 6-ADJ`, `US-ADJ-52`
 > aplicado también aquí): `US-6.3.0` a `US-6.3.10` pasan de "especificadas" a "cerradas" en las
 > filas de RF-08/09/10 (Iteración 3 del Incremento 6, frontend del modo en vivo, cerrada
-> 2026-09-25). Sin cambio de estado de RF: RF-08, RF-09 y RF-10 siguen en "Implementado" —
-> pasan a "Validado" recién al cierre de `BL-011` (Incremento 6 + 6-ADJ juntos), pendiente del
+> 2026-09-25). Sin cambio de estado de RF en ese momento: RF-08, RF-09 y RF-10 seguían en
+> "Implementado" — pasaron a "Validado" recién al cierre de `BL-011` (arriba), pendiente del
 > checkpoint de staging del RNF (`PROCEDIMIENTO-UAT.md` §4).
 >
 > 2026-09-27 en adelante — `Incremento 6-ADJ`: `US-ADJ-58` (cancelar/finalizar en cualquier
@@ -202,9 +208,9 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Validado |
 | RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Validado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
-| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: cancelar e iniciar solo con participantes) | Implementado |
-| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: finalizar en cualquier etapa) | Implementado |
-| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, cerradas) | Implementado |
+| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: cancelar e iniciar solo con participantes) | Validado |
+| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: finalizar en cualquier etapa) | Validado |
+| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, cerradas) | Validado |
 | RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.2 (backend); US-3.4.3 (frontend) | Validado |
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
