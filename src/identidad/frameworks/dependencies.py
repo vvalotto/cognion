@@ -70,13 +70,13 @@ from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.eliminar_comision import EliminarComisionUseCase
 from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
-from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.listar_materias_del_estudiante import (
     ListarMateriasDelEstudianteUseCase,
 )
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
+from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
