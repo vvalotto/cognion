@@ -3,7 +3,13 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-30 — Cierre de `BL-011` (Incremento 6 + Incremento 6-ADJ
+> Última actualización: 2026-09-30 — Planificación del Incremento 7: **RF-18** (KPIs
+> históricos) sale de la Iteración 1 del Incremento 7 (reemplazada por una iteración de UAT
+> manual completa, decisión de Víctor) — pasa de Incremento `7` a **sin incremento
+> asignado** (columna Incremento: `—`), estado sin cambios ("Planificado"). Ver
+> `docs/rf/PLAN_v1.md` (revisión 2026-09-30) y `docs/plans/inc7/inc7-candidatas.md`.
+>
+> 2026-09-30 — Cierre de `BL-011` (Incremento 6 + Incremento 6-ADJ
 > juntos): **RF-08, RF-09 y RF-10 pasan de "Implementado" a "Validado"**, referenciando
 > `.cm/baselines/BL-011-sesion-en-vivo-y-ajuste-tecnico.md`. Checkpoint de staging del RNF en
 > Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4) sigue pendiente, sin relación con este
@@ -219,7 +225,7 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend); US-ADJ-56 (`Incremento 6-ADJ`: sesiones en vivo, backend + frontend) | Validado |
 | RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.1, US-4.2.2 (backend, cerradas); US-4.2.5 (frontend, cerrada); US-ADJ-56 (`Incremento 6-ADJ`: sesiones en vivo, backend + frontend) | Validado |
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |
-| RF-18 | Analytics | 7 | — | Planificado |
+| RF-18 | Analytics | — | — | Planificado |
 | RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Validado |
 | RF-20 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-44 (backend); US-ADJ-48 (frontend) | Validado |
 | RF-21 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-45 (backend); US-ADJ-49 (frontend) | Validado |
@@ -230,6 +236,11 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 > RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
 > y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
+
+> RF-18 diferido sin incremento asignado 2026-09-30 — su Iteración 1 original del Incremento 7
+> (`docs/rf/PLAN_v1.md`) se reemplaza por una iteración de UAT manual completa de cierre de
+> alcance v1 (decisión de Víctor, `docs/plans/inc7/inc7-candidatas.md`). Sin cambio de estado
+> ("Planificado" antes y después) — solo pierde el incremento asignado.
 
 > RF-20 a RF-23 agregados 2026-09-09 (elicitación dedicada durante la prueba manual E2E de
 > estabilización post-`BL-007`, ver `docs/rf/RF_v1.md` revisión 2026-09-09) — informes nuevos
