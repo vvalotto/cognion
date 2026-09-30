@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
+import uuid
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -11,8 +12,19 @@ from sqlalchemy import text
 
 from src.app import app
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
+
+
+def _headers_docente(docente_id: str) -> dict[str, str]:
+    """JWT del Docente autenticado en el Background (`US-ADJ-57`) — `docente_headers()` es un
+    tercero desconectado del `docente_id` de `context`, y ahora la pertenencia a la comisión
+    importa."""
+    jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
+
 
 scenarios("../../features/inc1/US-1.1.1-generar-invitacion.feature")
 
@@ -127,7 +139,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
             json={
                 "nombre": "Usuario Test",
                 "email": email,
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": perfil,
             },
             headers=admin_headers(),
@@ -142,7 +154,7 @@ async def _post(path: str, json: dict, headers: dict[str, str] | None = None):
 
 
 async def _crear_materia_id(nombre: str) -> str:
-    respuesta = await _post("/materias", {"nombre": nombre}, headers=docente_headers())
+    respuesta = await _post("/materias", {"nombre": nombre}, headers=admin_headers())
     return respuesta.json()["id"]
 
 
@@ -189,7 +201,7 @@ def ejecuta_generar_invitacion(context):
                 "docente_id": context["docente_id"],
                 "email_destinatario": "estudiante.bdd@fiuner.edu.ar",
             },
-            headers=docente_headers(),
+            headers=_headers_docente(context["docente_id"]),
         )
     )
 
@@ -203,7 +215,7 @@ def intenta_generar_invitacion(context):
                 "docente_id": context["docente_id"],
                 "email_destinatario": "estudiante.bdd@fiuner.edu.ar",
             },
-            headers=docente_headers(),
+            headers=_headers_docente(context["docente_id"]),
         )
     )
 
@@ -235,10 +247,15 @@ def valida_evento_invitacion_generada(context):
 
 @then(parsers.parse("el sistema rechaza la operación con {codigo_error}"))
 def valida_rechazo_con_codigo(context, codigo_error):
-    mapa_status = {"DocenteNoAsignadoAComision": 422}
+    # `US-ADJ-57`: acá el Docente que llama es el mismo `docente_id` bajo prueba (Background
+    # "un Docente autenticado") — al no estar asignado, la autorización (403,
+    # `ComisionNoAutorizada`) se resuelve antes que la validación de negocio original (422,
+    # `DocenteNoAsignadoAComision`), que sigue vigente cuando el docente *destino* es un
+    # tercero distinto de quien llama (ver `test_us_adj_26_steps.py`).
+    mapa_status = {"DocenteNoAsignadoAComision": 403}
     assert context["response"].status_code == mapa_status[codigo_error]
 
 
 @then("ninguna Invitación se crea")
 def valida_ninguna_invitacion_creada(context):
-    assert context["response"].status_code == 422
+    assert context["response"].status_code == 403

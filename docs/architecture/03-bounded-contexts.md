@@ -29,13 +29,16 @@ de cómo colaboran en runtime (eso vive en `20-context-map-integrations.md`).
 
 ## Catálogo de Bounded Contexts
 
-| BC | Tipo DDD | Estado de modelado | Incremento |
+| BC | Tipo DDD | Estado de modelado | Incremento(s) |
 |----|----------|---------------------|------------|
-| **Identidad** | Generic | En curso — Iteración 1 (US-1.1.0 implementada: alta de Usuario/Comisión) | Incremento 1 |
-| **Banco de Preguntas** | Supporting | Pendiente | Incremento 2 |
-| **Actividad Evaluativa** | Core Domain | Pendiente (antes "Sesiones", ver `ADR-015`) | Incremento 3 |
-| **Analytics** | Supporting | Pendiente | Incremento 4 |
-| **Notificaciones** | Generic | Pendiente | Incremento 5 |
+| **Identidad** | Generic | Implementado — RF-01, RF-02, RF-03, RF-19, RF-24, RF-25 `Validado`; amplía RF-01 (portal de entrada, gestión de Comisiones) y autoservicio de contraseña en incrementos posteriores | Incremento 1; ampliado en 3-ADJ, 4-ADJ, 5-ADJ, 6-ADJ |
+| **Banco de Preguntas** | Supporting | Implementado — RF-04, RF-05, RF-06 `Validado`; RF-07 (import PDF) `Planificado` | Incremento 2; ampliado en 4-ADJ, 6-ADJ |
+| **Actividad Evaluativa** | Core Domain | Implementado (antes "Sesiones", ver `ADR-015`) — RF-11/RF-11b/RF-12/RF-13 (período abierto) `Validado`; RF-08/RF-09/RF-10 (modo en vivo, agregado hermano `ActividadEvaluativaPeriodoAbierto`/`ActividadEvaluativaEnVivo`) `Implementado`, `Validado` recién al cierre de `BL-011` | Incremento 3 (período abierto); Incremento 6 + 6-ADJ (modo en vivo) |
+| **Analytics** | Supporting | Implementado — RF-15 a RF-17 y RF-20 a RF-23 `Validado`; RF-18 `Planificado` | Incremento 4; ampliado en 5-ADJ, 6-ADJ |
+| **Notificaciones** | Generic | Implementado — RF-14 `Validado`, primer BC puramente reactivo (sin aggregate ni persistencia propia) | Incremento 5 |
+
+Estado de madurez por RF: ver `docs/traceability/matrix.md` (fuente de verdad de trazabilidad —
+esta tabla resume el estado del BC como módulo, no reemplaza la matriz).
 
 ### Identidad
 
@@ -99,8 +102,10 @@ dispara cada notificación. Recibe la orden de notificar desde Actividad Evaluat
 directa a su Use Case (`ADR-006`), no consume el event store completo.
 
 **Nota:** BC Identidad ya tiene, desde el Incremento 1, su propio mecanismo de envío de email
-para invitaciones (`ADR-012`), independiente del que implementará este BC — deuda técnica
-consciente a revisar cuando Notificaciones se modele (Incremento 5).
+para invitaciones (`ADR-012`), independiente del de este BC — deuda técnica consciente,
+revisada en `US-5.1.1`: se mantienen dos adaptadores SMTP separados por BC, pero
+`SmtpCanalEnvio` reutiliza la misma técnica (`smtplib` + `asyncio.to_thread`) que
+`SmtpNotificador` de Identidad, sin sumar una dependencia async nueva.
 
 ## Regla de comunicación entre BCs
 
@@ -110,7 +115,11 @@ Evaluativa → Notificaciones, `ADR-006`; Analytics leyendo el event store compa
 Evaluativa, `ADR-002`). `shared/entities/` es la excepción transversal para tipos y utilidades
 sin lógica de negocio de un BC específico (`CLAUDE.md`); `shared/frameworks/` (desde `US-1.1.0`,
 `ADR-017`) es la excepción análoga para infraestructura técnica pura — engine y sesión async de
-SQLAlchemy compartidos por todos los BC contra la misma instancia de PostgreSQL (`ADR-004`).
+SQLAlchemy compartidos por todos los BC contra la misma instancia de PostgreSQL (`ADR-004`,
+`ADR-018` para el uso de `NullPool`). JWT/RBAC (verificación de token, roles) vive también en
+`shared/` desde `ADR-019` (`shared/entities/`, `shared/frameworks/security/`,
+`shared/interface_adapters/security/`) — cada BC sigue armando su propio composition root, sin
+importar directamente de otro BC.
 
 ## Siguiente paso
 

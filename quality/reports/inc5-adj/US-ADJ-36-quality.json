@@ -1,0 +1,60 @@
+{
+  "us_id": "US-ADJ-36",
+  "fecha": "2026-09-12T15:15:00-03:00",
+  "componente": "src/identidad/entities/usuario.py (modificado) + src/identidad/entities/errors.py (modificado) + src/identidad/use_cases/crear_usuario.py (modificado) + src/identidad/use_cases/registrar_estudiante.py (modificado) + 4 routers (cuentas_router.py, perfil_router.py, registro_router.py, usuarios_router.py, modificados) + frontend/src/components/PasswordInput.tsx (ampliado) + 4 pantallas frontend modificadas",
+  "metricas": {
+    "pylint": 9.83,
+    "cc_promedio": 1.89,
+    "cc_maximo": 8,
+    "mi_promedio": 85.07,
+    "mi_minimo": 63.89,
+    "coverage": 98.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 18,
+    "warnings": 3,
+    "infos": 51,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 8 },
+      "PEP8": { "errors": 0, "warnings": 0, "infos": 8 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 8 },
+      "DeadCode": { "errors": 8, "warnings": 0, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 8 },
+      "Pylint": { "errors": 0, "warnings": 3, "infos": 5 },
+      "Spelling": { "errors": 8, "warnings": 0, "infos": 0 },
+      "Types": { "errors": 2, "warnings": 0, "infos": 6 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 8 }
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-36-codeguard.json"
+  },
+  "frontend": {
+    "oxlint": { "errores": 0, "warnings_nuevos": 0 },
+    "tsc_b": { "errores": 0 },
+    "vitest": {
+      "suite_completa": "385/389 (4 fallos son flake preexistente de banco-preguntas por contención de CPU al correr la suite completa — ajeno a esta US, confirmado en aislamiento)",
+      "archivos_nuevos_o_modificados": {
+        "PasswordInput.test.tsx": "9/9 (5 casos nuevos de mostrarFortaleza)",
+        "Registro.test.tsx, CambiarPassword.test.tsx, AltaDocente.test.tsx, ResetearPassword.test.tsx, Login.test.tsx": "36/36 verificados en aislamiento, sin regresiones"
+      }
+    },
+    "coverage_password_input": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" }
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 8 'errors' de DeadCode (vulture) y los 8 de Spelling (codespell) son fallos de herramienta no instalada en este entorno ('vulture not installed'/'codespell not installed'), no hallazgos de código — mismo patrón ya documentado en US-5.1.1/US-5.1.2/US-5.1.3 y varias US previas del proyecto.",
+    "Los 2 'errors' de Types corresponden al timeout de 10s de mypy dentro de CodeGuard, bug conocido y documentado en CLAUDE.md (vvalotto/software_limpio#70) — la fuente de verdad local es el hook dedicado de mypy sobre src/ completo.",
+    "Pylint 9.83/10 sobre los 8 archivos tocados. Hallazgos reales: R0902 (too-many-instance-attributes en Usuario, 10 campos — preexistente, sin campos nuevos agregados por esta US), R0913/R0917 (7 argumentos en resetear_password de cuentas_router.py — firma de endpoint FastAPI con Depends, preexistente), R0903 (too-few-public-methods en los 2 Use Case de un solo execute() — patrón aceptado en todo el proyecto). Ninguno introducido por esta US.",
+    "CC máximo 8 (Usuario.validar_password_nueva, el único método ampliado con lógica nueva) — dentro del umbral de 10, sin necesidad de refactor.",
+    "Coverage 98% agregado sobre entities/usuarios+errors y use_cases/ (los 4 archivos sujetos al gate — frameworks/ queda excluido por pyproject.toml, mismo criterio que US-5.1.2/US-5.1.3). Las 4 líneas sin cubrir en usuario.py son de métodos preexistentes no tocados por esta US (editar_datos, deshabilitar, activar).",
+    "Suite completa del proyecto en verde sin regresiones: 986/986 backend (unit + integration + BDD, incluido el flake de test_us_3_2_1_steps.py que esta vez pasó) corridos en esta misma sesión tras los cambios de esta US.",
+    "Gap real cerrado: CrearUsuarioUseCase y RegistrarEstudianteUseCase ahora invocan Usuario.validar_password_nueva — antes de esta US, POST /usuarios y POST /identidad/registro no tenían ninguna validación de dominio sobre la contraseña, solo minLength HTML del lado del cliente.",
+    "Se actualizaron ~19 archivos de fixtures de tests preexistentes (unit, integration, step_defs, features de otros incrementos) para usar contraseñas que cumplen la política ampliada — necesario porque el cierre del gap hizo que CrearUsuario/RegistrarEstudiante empezaran a validar contraseñas que antes se aceptaban sin control en toda la suite."
+  ]
+}

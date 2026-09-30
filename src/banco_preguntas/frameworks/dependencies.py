@@ -7,6 +7,9 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.banco_preguntas.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
+)
 from src.banco_preguntas.interface_adapters.controllers.bancos_controller import (
     BancosController,
 )
@@ -25,6 +28,7 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
 from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
+from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
 )
@@ -32,10 +36,15 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
+from src.banco_preguntas.use_cases.editar_materia import EditarMateriaUseCase
 from src.banco_preguntas.use_cases.editar_pregunta import EditarPreguntaUseCase
+from src.banco_preguntas.use_cases.eliminar_materia import EliminarMateriaUseCase
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
 from src.banco_preguntas.use_cases.listar_materias import ListarMateriasUseCase
+from src.banco_preguntas.use_cases.verificar_autorizacion_materia import (
+    VerificarAutorizacionMateriaService,
+)
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -51,9 +60,13 @@ def get_materias_controller(session: SessionDep) -> MateriasController:
     materia_repo = SQLAlchemyMateriaRepository(session)
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return MateriasController(
         CrearMateriaUseCase(materia_repo, banco_repo),
-        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo),
+        ListarMateriasUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
+        EditarMateriaUseCase(materia_repo),
+        EliminarMateriaUseCase(materia_repo, banco_repo, pregunta_repo, comision_consulta),
+        ActivarMateriaUseCase(materia_repo),
     )
 
 
@@ -61,11 +74,13 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
     """Arma el `PreguntasController` con sus dependencias concretas."""
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    verificador_autorizacion = VerificarAutorizacionMateriaService(banco_repo, comision_consulta)
     return PreguntasController(
-        CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo),
-        CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo),
-        EditarPreguntaUseCase(pregunta_repo),
-        EliminarPreguntaUseCase(pregunta_repo),
+        CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo, comision_consulta),
+        CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo, comision_consulta),
+        EditarPreguntaUseCase(pregunta_repo, verificador_autorizacion),
+        EliminarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
     )
 
 
@@ -73,7 +88,8 @@ def get_bancos_controller(session: SessionDep) -> BancosController:
     """Arma el `BancosController` con sus dependencias concretas."""
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
-    return BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    return BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo, comision_consulta))
 
 
 def get_jwt_issuer() -> JWTIssuerPort:
@@ -90,6 +106,11 @@ require_docente = require_rol([TipoPerfil.DOCENTE], get_current_user)
 require_docente_o_administrador = require_rol(
     [TipoPerfil.DOCENTE, TipoPerfil.ADMINISTRADOR], get_current_user
 )
-"""Dependency que exige rol `docente` o `administrador` — `GET /materias` lo necesita también
-para el Administrador (selector de la pantalla de Comisiones, `US-ADJ-23`, gap detectado en
-Fase 3: `GET /materias` era `require_docente` únicamente y bloqueaba la pantalla)."""
+"""Dependency que exige rol `docente` o `administrador` — `GET /materias` (lectura) lo
+necesita para ambos roles: el Administrador (selector de la pantalla de Comisiones,
+`US-ADJ-23`) y el Docente (selector de Banco de Preguntas)."""
+
+require_administrador = require_rol([TipoPerfil.ADMINISTRADOR], get_current_user)
+"""Dependency que exige rol `administrador` — alta/edición/baja de Materia (unificación con
+Comisión: el Administrador arma la estructura Materia→Comisión→Docente, el Docente consume,
+no crea)."""

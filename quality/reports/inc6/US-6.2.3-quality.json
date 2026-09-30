@@ -1,0 +1,84 @@
+{
+  "us_id": "US-6.2.3",
+  "fecha": "2026-09-20T08:45:26.691630",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.7,
+    "cc_promedio": 1.5,
+    "cc_maximo": 5,
+    "mi_promedio": 84.1,
+    "mi_minimo": 62.47,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 4,
+    "errors": 14,
+    "warnings": 44,
+    "infos": 27,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "DeadCode": {
+        "errors": 12,
+        "warnings": 39,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "Pylint": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 3
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 5,
+        "infos": 2
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "UnusedImports": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 3
+      }
+    },
+    "nota": "12 errors de DeadCode: falsos positivos (parámetros de métodos abstractos del puerto). 2 errors de timeout de pylint (>10s/>5s) sobre módulos que importan SQLAlchemy: herramienta, no código; pylint directo da 9.70/10."
+  },
+  "designreviewer": {
+    "critical": 0,
+    "warnings": 245,
+    "nota": "Un CRITICAL de NOP (adapter con 2 puertos) detectado y corregido separando escritura/consulta en dos adapters."
+  },
+  "tests": {
+    "unit": 636,
+    "integration_inc6": 47,
+    "nuevos": "3 unit de unirse + 10 integración de proyecciones (ranking, desempate, 60 concurrentes, atomicidad, migración round-trip)"
+  },
+  "estado": "APROBADO"
+}

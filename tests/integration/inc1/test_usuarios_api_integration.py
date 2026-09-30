@@ -24,7 +24,7 @@ class TestUsuariosAPIIntegration:
                 json={
                     "nombre": "Ana Docente",
                     "email": "ana.api@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -41,13 +41,30 @@ class TestUsuariosAPIIntegration:
             payload = {
                 "nombre": "Ana",
                 "email": "duplicado@fiuner.edu.ar",
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": "docente",
             }
             await client.post("/usuarios", json=payload, headers=admin_headers)
             response = await client.post("/usuarios", json=payload, headers=admin_headers)
 
         assert response.status_code == 409
+
+    async def test_crear_usuario_password_debil_devuelve_422(self, admin_headers):
+        """Gap cerrado en US-ADJ-36: antes, este endpoint no validaba INV-ID-11."""
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/usuarios",
+                json={
+                    "nombre": "Docente Débil",
+                    "email": "debil.api@fiuner.edu.ar",
+                    "password": "abc123",
+                    "perfil": "docente",
+                },
+                headers=admin_headers,
+            )
+
+        assert response.status_code == 422
 
 
 class TestListarCuentasAPIIntegration:
@@ -61,7 +78,7 @@ class TestListarCuentasAPIIntegration:
                 json={
                     "nombre": "Listado Uno",
                     "email": "listado.uno@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -80,7 +97,7 @@ class TestListarCuentasAPIIntegration:
                 json={
                     "nombre": "Marisa Gonzalez",
                     "email": "mgonzalez.api@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -90,7 +107,7 @@ class TestListarCuentasAPIIntegration:
                 json={
                     "nombre": "Admin Distinto",
                     "email": "admin.distinto@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "administrador",
                 },
                 headers=admin_headers,
@@ -119,7 +136,7 @@ class TestListarCuentasAPIIntegration:
                 json={
                     "nombre": "Cuenta Activa",
                     "email": "activa.api@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -146,7 +163,7 @@ class TestListarCuentasAPIIntegration:
                     json={
                         "nombre": f"Paginado {i}",
                         "email": f"paginado{i}@fiuner.edu.ar",
-                        "password": "claveSegura1",
+                        "password": "claveSegura1#",
                         "perfil": "docente",
                     },
                     headers=admin_headers,
@@ -182,7 +199,7 @@ class TestObtenerCuentaAPIIntegration:
                 json={
                     "nombre": "Detalle Docente",
                     "email": "detalle.docente@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -263,7 +280,7 @@ class TestResetearPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
                 f"/usuarios/{usuario.id}/resetear-password",
-                json={"password_nueva": "claveNueva123"},
+                json={"password_nueva": "claveNueva123#"},
                 headers=admin_headers,
             )
 
@@ -284,11 +301,11 @@ class TestResetearPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             await client.post(
                 f"/usuarios/{usuario.id}/resetear-password",
-                json={"password_nueva": "claveNueva123"},
+                json={"password_nueva": "claveNueva123#"},
                 headers=admin_headers,
             )
             response = await client.post(
-                "/identidad/login", json={"email": email, "password": "claveNueva123"}
+                "/identidad/login", json={"email": email, "password": "claveNueva123#"}
             )
 
         assert response.status_code == 200
@@ -302,7 +319,7 @@ class TestResetearPasswordAPIIntegration:
                 json={
                     "nombre": "Activa Reseteo",
                     "email": f"activa.reseteo.{uuid.uuid4()}@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -311,7 +328,7 @@ class TestResetearPasswordAPIIntegration:
 
             response = await client.post(
                 f"/usuarios/{usuario_id}/resetear-password",
-                json={"password_nueva": "claveNueva123"},
+                json={"password_nueva": "claveNueva123#"},
                 headers=admin_headers,
             )
 
@@ -326,7 +343,7 @@ class TestResetearPasswordAPIIntegration:
                 json={
                     "nombre": "Corta Reseteo",
                     "email": f"corta.reseteo.{uuid.uuid4()}@fiuner.edu.ar",
-                    "password": "claveSegura1",
+                    "password": "claveSegura1#",
                     "perfil": "docente",
                 },
                 headers=admin_headers,
@@ -346,7 +363,7 @@ class TestResetearPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
                 f"/usuarios/{uuid.uuid4()}/resetear-password",
-                json={"password_nueva": "claveNueva123"},
+                json={"password_nueva": "claveNueva123#"},
                 headers=admin_headers,
             )
 
@@ -357,7 +374,7 @@ class TestResetearPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
                 f"/usuarios/{uuid.uuid4()}/resetear-password",
-                json={"password_nueva": "claveNueva123"},
+                json={"password_nueva": "claveNueva123#"},
             )
 
         assert response.status_code == 401

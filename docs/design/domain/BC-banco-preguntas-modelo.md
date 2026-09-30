@@ -1,7 +1,9 @@
 # BC Banco de Preguntas — Modelo de Dominio (Event Storming)
 
-> Estado documental: **borrador — pendiente de aprobación explícita de Víctor en el comentario
-> de cierre del Issue de esta US-Modelado (Iteración 0, Incremento 2).**
+> Estado documental: **vigente — aprobado por Víctor en el comentario de cierre del Issue
+> [#38](https://github.com/vvalotto/cognion/issues/38) (US-2.0.1, Iteración 0, Incremento 2,
+> cerrado 2026-07-31). Incremento 2 completo y validado (`BL-003`) — actualizado 2026-09-16
+> durante la revisión documental transversal del Incremento 5-ADJ.**
 > Va a ser usado como input de las specs US-IEDD de la Iteración 1
 > (`docs/specs/inc2/US-2.1.x`).
 >

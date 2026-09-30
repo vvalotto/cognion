@@ -19,15 +19,14 @@ describe("AppNav", () => {
     cleanup()
   })
 
-  it("Docente ve sus 5 ítems", () => {
+  it("Docente ve sus 4 ítems", () => {
     renderAppNav("docente")
 
     expect(screen.getByText("Inicio")).toBeInTheDocument()
     expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
     expect(screen.getByText("Actividades")).toBeInTheDocument()
-    expect(screen.getByText("Desempeño por alumno")).toBeInTheDocument()
-    expect(screen.getByText("Desempeño por tema")).toBeInTheDocument()
-    expect(screen.getAllByRole("link")).toHaveLength(5)
+    expect(screen.getByText("Reportes")).toBeInTheDocument()
+    expect(screen.getAllByRole("link")).toHaveLength(4)
   })
 
   it("Estudiante ve sus 3 ítems", () => {
@@ -39,14 +38,20 @@ describe("AppNav", () => {
     expect(screen.getAllByRole("link")).toHaveLength(3)
   })
 
-  it("Administrador ve sus 4 ítems", () => {
+  it("Administrador ve sus 3 ítems — las Comisiones se gestionan desde Materias", () => {
     renderAppNav("administrador")
 
     expect(screen.getByText("Inicio")).toBeInTheDocument()
-    expect(screen.getByText("Comisiones")).toBeInTheDocument()
-    expect(screen.getByText("Docentes")).toBeInTheDocument()
+    expect(screen.getByText("Materias")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
-    expect(screen.getAllByRole("link")).toHaveLength(4)
+    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+    expect(screen.getAllByRole("link")).toHaveLength(3)
+  })
+
+  it("en las pantallas de una Comisión el Administrador ve 'Materias' como activo", () => {
+    renderAppNav("administrador", "/comisiones/c1")
+
+    expect(screen.getByText("Materias")).toHaveAttribute("aria-current", "page")
   })
 
   it("marca el ítem de la sección actual como activo", () => {
@@ -71,8 +76,7 @@ describe("AppNav", () => {
   it("cada ítem navega a su ruta destino (atributo href)", () => {
     renderAppNav("administrador")
 
-    expect(screen.getByText("Comisiones")).toHaveAttribute("href", "/comisiones")
-    expect(screen.getByText("Docentes")).toHaveAttribute("href", "/docentes/nuevo")
+    expect(screen.getByText("Materias")).toHaveAttribute("href", "/materias")
     expect(screen.getByText("Cuentas")).toHaveAttribute("href", "/cuentas")
   })
 })

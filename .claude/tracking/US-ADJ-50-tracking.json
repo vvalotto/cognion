@@ -1,0 +1,134 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-50",
+    "us_title": "Docente ve el ranking de Preguntas más falladas",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-14T21:52:51.556438+00:00",
+    "completed_at": "2026-09-14T22:38:08.130597+00:00",
+    "total_elapsed_seconds": 2716,
+    "effective_seconds": 2716,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-14T21:53:21.102448+00:00",
+      "completed_at": "2026-09-14T21:53:51.547761+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-14T22:02:33.274606+00:00",
+      "completed_at": "2026-09-14T22:03:54.204330+00:00",
+      "elapsed_seconds": 80,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "1",
+          "task_name": "Cliente API obtenerRankingPreguntasFalladas",
+          "task_type": "implementation",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-14T22:02:40.398258+00:00",
+          "completed_at": "2026-09-14T22:03:09.935878+00:00",
+          "elapsed_seconds": 29,
+          "actual_minutes": 0.48,
+          "variance_minutes": -9.52,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "2",
+          "task_name": "Pantalla RankingPreguntasFalladas",
+          "task_type": "implementation",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-14T22:03:13.524149+00:00",
+          "completed_at": "2026-09-14T22:03:34.941373+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -14.65,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "3",
+          "task_name": "Integración router y AppNav",
+          "task_type": "implementation",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-14T22:03:35.203790+00:00",
+          "completed_at": "2026-09-14T22:03:53.974061+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -9.7,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-14T22:04:23.227739+00:00",
+      "completed_at": "2026-09-14T22:13:11.201607+00:00",
+      "elapsed_seconds": 527,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-14T22:13:16.184951+00:00",
+      "completed_at": "2026-09-14T22:20:36.077909+00:00",
+      "elapsed_seconds": 439,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-14T22:21:09.423277+00:00",
+      "completed_at": "2026-09-14T22:21:54.706991+00:00",
+      "elapsed_seconds": 45,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-14T22:37:01.538360+00:00",
+      "completed_at": "2026-09-14T22:38:07.988935+00:00",
+      "elapsed_seconds": 66,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 6,
+    "estimated_total_minutes": 35.0,
+    "actual_total_minutes": 1.13,
+    "variance_minutes": -33.87,
+    "variance_percent": -96.76
+  }
+}

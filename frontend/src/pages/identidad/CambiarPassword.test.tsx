@@ -66,13 +66,13 @@ describe("CambiarPassword", () => {
     expect(await screen.findByText("Materias")).toBeInTheDocument()
   })
 
-  it("rechaza una contraseña nueva de menos de 8 caracteres sin llamar al backend", async () => {
+  it("rechaza una contraseña nueva de menos de 12 caracteres sin llamar al backend", async () => {
     const user = userEvent.setup()
 
     renderCambiarPassword()
     await completarFormulario(user, { nueva: "corta", confirmacion: "corta" })
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(/al menos 8 caracteres/i)
+    expect(await screen.findByRole("alert")).toHaveTextContent(/al menos 12 caracteres/i)
     expect(fetch).not.toHaveBeenCalled()
   })
 

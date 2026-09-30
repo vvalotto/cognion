@@ -4,6 +4,15 @@ import { useNavigate } from "react-router"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmptyRow,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table"
 import { listarActividadesVisibles } from "@/lib/actividad-evaluativa-api"
 import { listarMisMaterias, type MateriaEstudianteResponse } from "@/lib/identidad-estudiante-api"
 
@@ -46,36 +55,40 @@ export function MisMaterias() {
         Materias de tu comisión — elegí una para ver sus actividades.
       </p>
 
-      {materias === null ? (
-        <p className="mt-4 text-sm text-muted-foreground">Cargando…</p>
-      ) : (
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {materias.map((materia) => (
-            <Card
-              key={materia.id}
-              role="button"
-              tabIndex={0}
-              className="cursor-pointer p-5 transition-colors hover:border-primary"
-              onClick={() => navigate(`/mis-actividades/materias/${materia.id}/actividades`)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  navigate(`/mis-actividades/materias/${materia.id}/actividades`)
-                }
-              }}
-            >
-              <p className="mb-2 text-xl">📘</p>
-              <p className="font-semibold">{materia.nombre}</p>
-              <div className="mt-3">
-                {materia.cantidadPendientes > 0 ? (
-                  <Badge variant="visible-pendiente">{materia.cantidadPendientes} pendiente{materia.cantidadPendientes === 1 ? "" : "s"}</Badge>
-                ) : (
-                  <Badge variant="visible-todavia-no-abrio">Sin actividades disponibles</Badge>
-                )}
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
+      <Card className="mt-4 overflow-x-auto py-0">
+        <Table>
+          <TableHeader>
+            <tr>
+              <TableHeaderCell>Materia</TableHeaderCell>
+              <TableHeaderCell>Actividades</TableHeaderCell>
+            </tr>
+          </TableHeader>
+          <TableBody>
+            {materias === null ? (
+              <TableEmptyRow colSpan={2}>Cargando…</TableEmptyRow>
+            ) : materias.length === 0 ? (
+              <TableEmptyRow colSpan={2}>Todavía no estás inscripto en ninguna materia.</TableEmptyRow>
+            ) : (
+              materias.map((materia) => (
+                <TableRow
+                  key={materia.id}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/mis-actividades/materias/${materia.id}/actividades`)}
+                >
+                  <TableCell className="font-medium">{materia.nombre}</TableCell>
+                  <TableCell>
+                    {materia.cantidadPendientes > 0 ? (
+                      <Badge variant="visible-pendiente">{materia.cantidadPendientes} pendiente{materia.cantidadPendientes === 1 ? "" : "s"}</Badge>
+                    ) : (
+                      <Badge variant="visible-todavia-no-abrio">Sin actividades disponibles</Badge>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   )
 }

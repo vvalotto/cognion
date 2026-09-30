@@ -11,7 +11,11 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.1.2-crear-actividad-periodo-abierto.feature")
 
@@ -26,6 +30,11 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -42,12 +51,18 @@ def context():
     return {}
 
 
-async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> tuple[str, dict[str, str]]:
+    """Crea la materia con preguntas y devuelve `(materia_id, headers)` del Docente asignado.
+
+    `POST /actividades` exige que el Docente que llama tenga una Comisión asignada en la
+    materia (`US-ADJ-57`) — se reutilizan los mismos `headers` que ya cargaron las preguntas,
+    en vez de un `docente_headers()` anónimo sin asignación.
+    """
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
-
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -60,10 +75,10 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
 
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
 async def _post_crear_actividad(
@@ -72,6 +87,7 @@ async def _post_crear_actividad(
     fecha_cierre: datetime,
     cantidad_preguntas: int,
     cantidad_intentos_permitidos: int,
+    headers: dict[str, str] | None = None,
 ):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -84,7 +100,7 @@ async def _post_crear_actividad(
                 "cantidad_preguntas": cantidad_preguntas,
                 "cantidad_intentos_permitidos": cantidad_intentos_permitidos,
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
 
 
@@ -95,19 +111,22 @@ def _periodo_por_defecto() -> tuple[datetime, datetime]:
 
 @given("un Docente autenticado")
 def docente_autenticado(context):
-    materia_id = run_async(_crear_materia_con_preguntas(f"Materia {uuid.uuid4()}", 20))
+    materia_id, headers = run_async(_crear_materia_con_preguntas(f"Materia {uuid.uuid4()}", 20))
     context["materia_id"] = materia_id
+    context["docente_headers"] = headers
     context["fecha_apertura"], context["fecha_cierre"] = _periodo_por_defecto()
 
 
 @given(parsers.parse('la materia "{nombre}" tiene {cantidad:d} preguntas activas en su banco'))
 def materia_con_preguntas_activas(context, nombre, cantidad):
-    context["materia_id"] = run_async(_crear_materia_con_preguntas(nombre, cantidad))
+    context["materia_id"], context["docente_headers"] = run_async(
+        _crear_materia_con_preguntas(nombre, cantidad)
+    )
 
 
 @given(parsers.parse("una materia con solo {cantidad:d} preguntas activas en su banco"))
 def materia_con_pocas_preguntas_activas(context, cantidad):
-    context["materia_id"] = run_async(
+    context["materia_id"], context["docente_headers"] = run_async(
         _crear_materia_con_preguntas(f"Materia {uuid.uuid4()}", cantidad)
     )
 
@@ -132,6 +151,7 @@ def ejecuta_crear_actividad_valida(context, cantidad, intentos):
             context["fecha_cierre"],
             cantidad,
             intentos,
+            context.get("docente_headers"),
         )
     )
 
@@ -144,7 +164,9 @@ def ejecuta_crear_actividad_valida(context, cantidad, intentos):
 def un_docente_ejecuta_crear_actividad_con_cantidad(context, cantidad):
     apertura, cierre = _periodo_por_defecto()
     context["response"] = run_async(
-        _post_crear_actividad(context["materia_id"], apertura, cierre, cantidad, 1)
+        _post_crear_actividad(
+            context["materia_id"], apertura, cierre, cantidad, 1, context.get("docente_headers")
+        )
     )
 
 
@@ -152,7 +174,9 @@ def un_docente_ejecuta_crear_actividad_con_cantidad(context, cantidad):
 def ejecuta_crear_actividad_periodo_invalido(context):
     apertura, cierre = _periodo_por_defecto()
     context["response"] = run_async(
-        _post_crear_actividad(context["materia_id"], cierre, apertura, 10, 1)
+        _post_crear_actividad(
+            context["materia_id"], cierre, apertura, 10, 1, context.get("docente_headers")
+        )
     )
 
 
@@ -164,7 +188,12 @@ def ejecuta_crear_actividad_periodo_invalido(context):
 def ejecuta_crear_actividad_con_intentos(context, intentos):
     context["response"] = run_async(
         _post_crear_actividad(
-            context["materia_id"], context["fecha_apertura"], context["fecha_cierre"], 10, intentos
+            context["materia_id"],
+            context["fecha_apertura"],
+            context["fecha_cierre"],
+            10,
+            intentos,
+            context.get("docente_headers"),
         )
     )
 
@@ -173,7 +202,12 @@ def ejecuta_crear_actividad_con_intentos(context, intentos):
 def un_docente_ejecuta_crear_actividad_con_materia_id(context):
     context["response"] = run_async(
         _post_crear_actividad(
-            context["materia_id"], context["fecha_apertura"], context["fecha_cierre"], 10, 1
+            context["materia_id"],
+            context["fecha_apertura"],
+            context["fecha_cierre"],
+            10,
+            1,
+            context.get("docente_headers"),
         )
     )
 

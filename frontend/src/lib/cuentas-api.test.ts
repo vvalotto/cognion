@@ -7,10 +7,13 @@ vi.mock("@/router", () => ({
 import {
   CambiarPasswordError,
   cambiarPassword,
+  confirmarNuevaPassword,
   listarCuentas,
   obtenerCuenta,
   resetearPassword,
+  solicitarRecuperacionPassword,
 } from "@/lib/cuentas-api"
+import { ApiError } from "@/lib/api-client"
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -223,6 +226,59 @@ describe("cuentas-api", () => {
 
       expect(error).toBeInstanceOf(CambiarPasswordError)
       expect((error as CambiarPasswordError).bloqueada).toBe(true)
+    })
+  })
+
+  describe("solicitarRecuperacionPassword", () => {
+    it("hace POST /identidad/recuperar-password/solicitar con el email", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(202, {}))
+
+      await solicitarRecuperacionPassword("ana@fiuner.edu.ar")
+
+      const [url, options] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toMatch(/\/identidad\/recuperar-password\/solicitar$/)
+      expect(options?.method).toBe("POST")
+      expect(JSON.parse(String(options?.body))).toEqual({ email: "ana@fiuner.edu.ar" })
+    })
+  })
+
+  describe("confirmarNuevaPassword", () => {
+    it("hace POST /identidad/recuperar-password/confirmar con token y contraseña nueva", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, {}))
+
+      await confirmarNuevaPassword("tok-123", "nuevaClave123")
+
+      const [url, options] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toMatch(/\/identidad\/recuperar-password\/confirmar$/)
+      expect(options?.method).toBe("POST")
+      expect(JSON.parse(String(options?.body))).toEqual({
+        token: "tok-123",
+        password_nueva: "nuevaClave123",
+      })
+    })
+
+    it("propaga el mensaje de error tal cual cuando el token es inválido", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(422, { detail: "El token de recuperación 'tok-123' ya venció." }),
+      )
+
+      const error = await confirmarNuevaPassword("tok-123", "nuevaClave123").catch(
+        (e: unknown) => e,
+      )
+
+      expect(error).toBeInstanceOf(ApiError)
+      expect((error as ApiError).message).toBe("El token de recuperación 'tok-123' ya venció.")
+    })
+
+    it("propaga el mensaje de error tal cual cuando la contraseña no cumple la política", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(422, { detail: "La contraseña debe tener al menos 12 caracteres." }),
+      )
+
+      const error = await confirmarNuevaPassword("tok-123", "corta").catch((e: unknown) => e)
+
+      expect(error).toBeInstanceOf(ApiError)
+      expect((error as ApiError).message).toBe("La contraseña debe tener al menos 12 caracteres.")
     })
   })
 })

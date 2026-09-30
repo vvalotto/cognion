@@ -1,0 +1,39 @@
+{
+  "us_id": "US-ADJ-51",
+  "titulo": "Docente ve la completitud de una actividad puntual",
+  "tipo": "frontend puro, sin cambios de backend (consume US-ADJ-47 ya cerrado)",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 6
+    },
+    "tsc_b": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "494/494",
+      "archivos_nuevos": {
+        "CompletitudActividad.test.tsx": "4/4 (nuevo) — sin columna Comisión (una sola comisión), con columna Comisión (más de una), resumen + badges por estado, error de red"
+      },
+      "archivos_modificados": {
+        "analytics-api.ts": "no tiene test dedicado propio — cubierto indirectamente por CompletitudActividad.test.tsx",
+        "ActividadDetalle.test.tsx": "+2 casos (botón 'Ver completitud' navega, visible incluso con actividad cerrada manualmente)",
+        "router.test.tsx": "+2 casos (RBAC de la ruta de completitud)"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "analytics-api.ts": { "statements": "85.18%", "branches": "50%", "functions": "88.23%", "nota": "rama sin cubrir: mismo patrón de mapeo defensivo ya presente en el resto del archivo, no ejercitado por ningún test existente" },
+      "CompletitudActividad.tsx": { "statements": "93.54%", "branches": "80%", "functions": "86.36%", "lines": "98.07%" },
+      "badge.tsx": { "statements": "100%", "branches": "100%", "functions": "100%" },
+      "ActividadDetalle.tsx": { "statements": "88.88%", "branches": "77.77%", "nota": "sin regresión — gaps preexistentes (contenidoDeActividad línea 43, onClick de 'Volver a actividades'/'Editar título' líneas 96-106), no introducidos por esta US" },
+      "router.tsx": { "statements": "100%", "branches": "100%", "functions": "100%" }
+    },
+    "coverage_global_nota": "No se corrió --coverage sobre la suite completa por el tiempo que toma; se verificó por archivo tocado, mismo criterio que US-ADJ-37/48/49/50. Ningún archivo tocado bajó de cobertura."
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro, consume el endpoint ya cerrado en US-ADJ-47"
+  },
+  "manual_browser_verification": "corresponde ahora — US-ADJ-51 cierra completa la Iteración 4 (decisión de Víctor 2026-09-14: verificación manual concentrada al cierre de la iteración, no por US)",
+  "estado_general": "APROBADO"
+}

@@ -64,8 +64,10 @@ def _headers(perfil: TipoPerfil) -> dict[str, str]:
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
-def _headers_docente() -> dict[str, str]:
-    return _headers(TipoPerfil.DOCENTE)
+def _headers_docente(docente_id: uuid.UUID | None = None) -> dict[str, str]:
+    """`docente_id` (`US-ADJ-57`) — sin indicarlo, un Docente sin comisiones asignadas."""
+    jwt_vo = PyJWTIssuer().emitir(docente_id or uuid4(), TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
 def _headers_administrador() -> dict[str, str]:
@@ -81,7 +83,9 @@ async def _crear_materia_real() -> uuid.UUID:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
-            "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=_headers_docente()
+            "/materias",
+            json={"nombre": f"Materia {uuid.uuid4()}"},
+            headers=_headers_administrador(),
         )
     return uuid.UUID(response.json()["id"])
 
@@ -167,15 +171,20 @@ def id_de_materia_inexistente(context):
 
 @given("una materia con una comisión")
 def materia_con_una_comision(context):
-    materia_id, comision = run_async(_crear_materia_con_comision_sin_docente())
+    """`US-ADJ-57`: el escenario de regresión necesita un Docente asignado — sin eso, el
+    endpoint ya no da 200 para cualquier Docente."""
+    materia_id, comision, docente = run_async(_crear_materia_con_comision_y_docente(0))
     context["materia_id"] = materia_id
     context["comision"] = comision
+    context["docente"] = docente
 
 
 @given("una comisión con estudiantes inscriptos")
 def comision_con_estudiantes(context):
-    _, comision, _docente = run_async(_crear_materia_con_comision_y_docente(2))
+    """`US-ADJ-57`: el escenario de regresión necesita un Docente asignado a esta comisión."""
+    _, comision, docente = run_async(_crear_materia_con_comision_y_docente(2))
     context["comision"] = comision
+    context["docente"] = docente
 
 
 @given("un Estudiante autenticado")
@@ -197,12 +206,14 @@ def administrador_get_comisiones_materia_inexistente(context):
 
 @when("un Docente hace GET /materias/{materia_id}/comisiones")
 def docente_get_comisiones(context):
-    _get(context, f"/materias/{context['materia_id']}/comisiones", _headers_docente())
+    docente_id = context["docente"].id if "docente" in context else None
+    _get(context, f"/materias/{context['materia_id']}/comisiones", _headers_docente(docente_id))
 
 
 @when("un Docente hace GET /comisiones/{comision_id}/estudiantes")
 def docente_get_estudiantes(context):
-    _get(context, f"/comisiones/{context['comision'].id}/estudiantes", _headers_docente())
+    docente_id = context["docente"].id if "docente" in context else None
+    _get(context, f"/comisiones/{context['comision'].id}/estudiantes", _headers_docente(docente_id))
 
 
 @when("hace GET /materias/{materia_id}/comisiones")

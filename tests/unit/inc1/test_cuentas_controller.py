@@ -2,13 +2,19 @@ import uuid
 
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
+from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
+from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
+from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.unit.inc1._fakes import (
+    FakeComisionQueryRepository,
     FakeCuentaQueryRepository,
+    FakeEvaluacionConsultaPort,
     FakePasswordHasher,
+    FakeTokenRecuperacionPasswordRepository,
     FakeUsuarioRepository,
 )
 
@@ -20,6 +26,14 @@ def _armar_controller(
         ListarCuentasUseCase(cuenta_query_repo),
         ObtenerCuentaUseCase(usuario_repo),
         ResetearPasswordUseCase(usuario_repo, FakePasswordHasher()),
+        EditarCuentaUseCase(usuario_repo),
+        EliminarCuentaUseCase(
+            usuario_repo,
+            FakeComisionQueryRepository(),
+            FakeEvaluacionConsultaPort(),
+            FakeTokenRecuperacionPasswordRepository(),
+        ),
+        ActivarCuentaUseCase(usuario_repo),
     )
 
 
@@ -57,7 +71,7 @@ class TestCuentasController:
         usuario_repo.usuarios[usuario.id] = usuario
         controller = _armar_controller(cuenta_query_repo, usuario_repo)
 
-        resultado = await controller.resetear_password(usuario.id, "nuevaClave123", uuid.uuid4())
+        resultado = await controller.resetear_password(usuario.id, "nuevaClave123#", uuid.uuid4())
 
         assert resultado.id == usuario.id
         assert resultado.bloqueada is False

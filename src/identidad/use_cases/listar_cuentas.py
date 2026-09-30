@@ -21,6 +21,9 @@ class ListarCuentasUseCase:
         busqueda: str | None,
         pagina: int = 1,
         tamanio_pagina: int = 20,
+        incluir_inactivas: bool = False,
     ) -> ResultadoPaginadoCuentas:
         """Delega el filtrado combinado (AND) y la paginación en el puerto de consulta."""
-        return await self._cuenta_query.listar(rol, estado, busqueda, pagina, tamanio_pagina)
+        return await self._cuenta_query.listar(
+            rol, estado, busqueda, pagina, tamanio_pagina, incluir_inactivas
+        )

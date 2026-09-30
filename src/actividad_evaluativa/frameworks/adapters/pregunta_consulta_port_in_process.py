@@ -19,6 +19,10 @@ from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     DetalleCorreccionPregunta,
     PreguntaConsultaPort,
 )
+from src.actividad_evaluativa.entities.puntaje_en_vivo import (
+    NivelesDePregunta,
+    NivelPregunta,
+)
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
     SQLAlchemyBancoRepository,
@@ -36,8 +40,10 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         self._banco_repositorio = SQLAlchemyBancoRepository(session)
         self._pregunta_repositorio = SQLAlchemyPreguntaRepository(session)
 
-    async def contar_activas_por_materia(self, materia_id: UUID) -> int:
-        """Cuenta las preguntas `activa = true` del banco de la materia.
+    async def contar_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> int:
+        """Cuenta las preguntas `activa = true` del banco de la materia, filtradas por `unidad`/`tema`.
 
         Devuelve 0 si la materia no tiene `Banco` asociado — no debería ocurrir en la práctica
         (INV-BP-01, toda `Materia` se crea junto con su `Banco`), pero evita que este puerto le
@@ -46,11 +52,13 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         banco = await self._banco_repositorio.obtener_por_materia_id(materia_id)
         if banco is None:
             return 0
-        resultado = await self._pregunta_repositorio.filtrar(banco.id)
+        resultado = await self._pregunta_repositorio.filtrar(banco.id, unidad=unidad, tema=tema)
         return resultado.total
 
-    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
-        """Lista los ids de las preguntas `activa = true` del banco de la materia.
+    async def listar_ids_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> list[UUID]:
+        """Lista los ids de las preguntas `activa = true` del banco de la materia, filtradas por `unidad`/`tema`.
 
         Lista vacía si la materia no tiene `Banco` asociado — mismo criterio que
         `contar_activas_por_materia`.
@@ -58,7 +66,7 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
         banco = await self._banco_repositorio.obtener_por_materia_id(materia_id)
         if banco is None:
             return []
-        resultado = await self._pregunta_repositorio.filtrar(banco.id)
+        resultado = await self._pregunta_repositorio.filtrar(banco.id, unidad=unidad, tema=tema)
         return [pregunta.id for pregunta in resultado.preguntas]
 
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict[str, Any]) -> bool:
@@ -124,3 +132,18 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
             )
 
         return ContenidoPregunta(texto=pregunta.texto, opciones=None)
+
+    async def obtener_niveles(self, pregunta_id: UUID) -> NivelesDePregunta:
+        """Mapea dificultad e importancia de la `PreguntaPlantilla` vigente a `NivelPregunta`.
+
+        Mismo criterio defensivo que los demás métodos ante `pregunta is None`. Los enums de
+        Banco comparten el valor textual (`"bajo"`/`"medio"`/`"alto"`) con `NivelPregunta`.
+        """
+        pregunta = await self._pregunta_repositorio.obtener_por_id(pregunta_id)
+        if pregunta is None:
+            raise PreguntaNoAsignada(None, pregunta_id)
+
+        return NivelesDePregunta(
+            dificultad=NivelPregunta(pregunta.dificultad.value),
+            importancia=NivelPregunta(pregunta.importancia.value),
+        )

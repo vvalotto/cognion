@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright (US-6.3.10)
+/test-results/
+/playwright-report/
+/e2e/.estado/

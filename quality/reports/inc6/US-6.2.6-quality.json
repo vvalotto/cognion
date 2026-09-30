@@ -1,0 +1,80 @@
+{
+  "us_id": "US-6.2.6",
+  "fecha": "2026-09-21T08:49:37.900924",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.79,
+    "cc_promedio": 1.8,
+    "cc_maximo": 7,
+    "mi_promedio": 78.5,
+    "mi_minimo": 54.37,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 9,
+    "errors": 2,
+    "warnings": 219,
+    "infos": 58,
+    "checks_ejecutados": 9,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 6,
+        "infos": 6
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 81,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "Pylint": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 132,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "UnusedImports": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 8
+      }
+    }
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa: 1511 passed, 1 failed (15m58s). El fallo es test_us_3_2_1_steps::test_rechazo_fuera_del_período_vigente, flake preexistente (ventana ~1s en el setup), ajeno a esta US. Cobertura 100% de src/actividad_evaluativa (1699 stmts); total src 96.43%.",
+    "Errors de CodeGuard: los 2 son 'pylint execution timed out' de sus checks internos (Pylint >10s, UnusedImports >5s), bug conocido software_limpio#70/#71. Los 9 checks corrieron con --analysis-type full.",
+    "Pylint directo sobre los 9 archivos: R0801 duplicate-code entre iniciar_sesion_en_vivo y avanzar_siguiente_pregunta (mismo esqueleto load/reconstruir, patrón ya presente en el BC), R0902/R0913/R0903 del mismo patrón que el resto del BC, C0301 preexistentes; las 2 líneas largas propias se corrigieron.",
+    "mypy src/: 0 errores; ruff check y format: limpios. CC máx 7, MI mín 54.37."
+  ]
+}

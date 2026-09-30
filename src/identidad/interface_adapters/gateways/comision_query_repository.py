@@ -9,8 +9,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.ports.comision_query_port import ComisionQueryPort, EstudianteResumen
-from src.identidad.frameworks.db.models import ComisionModel, EstudianteModel, UsuarioModel
+from src.identidad.entities.ports.comision_query_port import (
+    ComisionQueryPort,
+    EstudianteConEmail,
+    EstudianteResumen,
+)
+from src.identidad.frameworks.db.models import (
+    ComisionModel,
+    EstudianteModel,
+    UsuarioModel,
+    comision_docentes,
+)
 
 
 class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
@@ -20,17 +29,22 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         """Recibe la sesión async a usar en las consultas."""
         self._session = session
 
-    async def listar_comisiones_por_materia(self, materia_id: UUID) -> list[Comision]:
+    async def listar_comisiones_por_materia(
+        self, materia_id: UUID, incluir_inactivas: bool = False
+    ) -> list[Comision]:
         """Lista las comisiones de una materia, con sus docentes asignados.
 
         Materia sin comisiones → lista vacía. Carga `docentes` con `selectinload` —
         necesario en SQLAlchemy async para evitar `MissingGreenlet` al acceder a la
-        relación fuera de la sesión (`US-ADJ-23`).
+        relación fuera de la sesión (`US-ADJ-23`). `incluir_inactivas=True` también trae las
+        deshabilitadas — lo usa la pantalla de gestión de Comisiones del Administrador; el
+        resto de los consumidores (Docente, Analytics) sigue viendo solo las activas.
         """
+        condiciones = [ComisionModel.materia_id == materia_id]
+        if not incluir_inactivas:
+            condiciones.append(ComisionModel.activa.is_(True))
         query = (
-            select(ComisionModel)
-            .where(ComisionModel.materia_id == materia_id)
-            .options(selectinload(ComisionModel.docentes))
+            select(ComisionModel).where(*condiciones).options(selectinload(ComisionModel.docentes))
         )
         resultado = await self._session.execute(query)
         return [
@@ -40,6 +54,7 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
                 horario=modelo.horario,
                 administrador_id=modelo.administrador_id,
                 docentes_asignados=[docente.id for docente in modelo.docentes],
+                activa=modelo.activa,
             )
             for modelo in resultado.scalars().all()
         ]
@@ -56,3 +71,68 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
             EstudianteResumen(id=modelo.id, nombre=modelo.nombre)
             for modelo in resultado.scalars().all()
         ]
+
+    async def listar_estudiantes_con_email(self, comision_id: UUID) -> list[EstudianteConEmail]:
+        """Lista los estudiantes inscriptos en una comisión, incluido su email (`US-5.1.1`).
+
+        Mismo query que `listar_estudiantes`, agregando `email` al DTO — no reemplaza ese
+        método, ambos coexisten para no romper a sus consumidores actuales (Analytics, Banco
+        de Preguntas).
+        """
+        query = (
+            select(UsuarioModel)
+            .join(EstudianteModel, EstudianteModel.id == UsuarioModel.id)
+            .where(EstudianteModel.comision_id == comision_id)
+        )
+        resultado = await self._session.execute(query)
+        return [
+            EstudianteConEmail(id=modelo.id, nombre=modelo.nombre, email=modelo.email)
+            for modelo in resultado.scalars().all()
+        ]
+
+    async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
+        """Indica si el docente está asignado a alguna comisión (activa o no)."""
+        query = (
+            select(comision_docentes.c.comision_id)
+            .where(comision_docentes.c.docente_id == docente_id)
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None
+
+    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
+        """Indica si el administrador creó alguna comisión (activa o no)."""
+        query = (
+            select(ComisionModel.id)
+            .where(ComisionModel.administrador_id == administrador_id)
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None
+
+    async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si el docente está asignado a esa comisión puntual."""
+        query = (
+            select(comision_docentes.c.comision_id)
+            .where(
+                comision_docentes.c.docente_id == docente_id,
+                comision_docentes.c.comision_id == comision_id,
+            )
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None
+
+    async def docente_tiene_comision_en_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia."""
+        query = (
+            select(comision_docentes.c.comision_id)
+            .join(ComisionModel, ComisionModel.id == comision_docentes.c.comision_id)
+            .where(
+                comision_docentes.c.docente_id == docente_id,
+                ComisionModel.materia_id == materia_id,
+            )
+            .limit(1)
+        )
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None

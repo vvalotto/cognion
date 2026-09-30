@@ -42,6 +42,13 @@ function contenidoDeSeleccion(seleccion: Seleccion): Record<string, unknown> {
     : { valor: seleccion.valor }
 }
 
+function mismaSeleccion(a: Seleccion | null, b: Seleccion | null): boolean {
+  if (a === null || b === null) return a === b
+  if (a.tipo === "opcion" && b.tipo === "opcion") return a.indice === b.indice
+  if (a.tipo === "vf" && b.tipo === "vf") return a.valor === b.valor
+  return false
+}
+
 function mapaDeRespuestasConfirmadas(evaluacion: EvaluacionResponse): Map<string, Seleccion> {
   const mapa = new Map<string, Seleccion>()
   for (const respuesta of evaluacion.respuestasConfirmadas) {
@@ -65,6 +72,7 @@ export function RendirEvaluacion() {
   const [seleccion, setSeleccion] = useState<Seleccion | null>(null)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [intentosAgotados, setIntentosAgotados] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!actividadId) return undefined
@@ -112,7 +120,7 @@ export function RendirEvaluacion() {
   }
 
   const esUltimaPregunta = indiceActual === cantidad - 1
-  const preguntaYaRespondida = respondidas.has(preguntaActual.preguntaId)
+  const preguntaAgotada = intentosAgotados.has(preguntaActual.preguntaId)
 
   function irA(indice: number) {
     const pregunta = preguntas[indice]
@@ -121,49 +129,58 @@ export function RendirEvaluacion() {
     setIndiceActual(indice)
   }
 
-  async function confirmarYSiguiente() {
+  const todasRespondidas = respondidas.size === cantidad
+
+  /** Confirma la selección actual (si cambió respecto de lo ya registrado, vuelve a llamar
+   * `registrarRespuesta` — el backend ya soporta reintentos por pregunta hasta
+   * `cantidad_intentos_permitidos`, `INV-AE-07/08`) y avanza a la siguiente, si hay. No
+   * finaliza acá — el Estudiante decide cuándo, con "Finalizar evaluación" (independiente de
+   * en qué pregunta esté parado). No revela si la respuesta es correcta — eso solo se ve en
+   * la revisión al finalizar (`RF-13`). */
+  async function confirmarRespuesta() {
     if (!seleccion) return
     setError(null)
-    setEnviando(true)
-    try {
-      const contenido = contenidoDeSeleccion(seleccion)
-      await registrarRespuesta(evaluacion!.id, preguntaActual.preguntaId, contenido)
-      setRespondidas((prev) => new Set(prev).add(preguntaActual.preguntaId))
-      setRespuestasConfirmadas((prev) =>
-        new Map(prev).set(preguntaActual.preguntaId, seleccion),
-      )
-      if (esUltimaPregunta) {
-        await finalizarEvaluacion(evaluacion!.id)
-        navigate(`/mis-actividades/evaluaciones/${evaluacion!.id}/revision`)
-        return
-      }
-      irA(indiceActual + 1)
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 422) {
-        setError(err.message)
-        return
-      }
-      throw err
-    } finally {
-      setEnviando(false)
-    }
-  }
-
-  /** Sobre una pregunta ya respondida el botón solo navega — nunca reintenta registrar
-   * (INV-AE-07/08 rechazaría con `IntentosAgotados`, `US-ADJ-12`). */
-  async function avanzarSinConfirmar() {
-    if (esUltimaPregunta) {
-      setError(null)
+    const cambioRespectoDeLoConfirmado = !mismaSeleccion(
+      seleccion,
+      respuestasConfirmadas.get(preguntaActual.preguntaId) ?? null,
+    )
+    if (cambioRespectoDeLoConfirmado) {
       setEnviando(true)
       try {
-        await finalizarEvaluacion(evaluacion!.id)
-        navigate(`/mis-actividades/evaluaciones/${evaluacion!.id}/revision`)
+        const contenido = contenidoDeSeleccion(seleccion)
+        await registrarRespuesta(evaluacion!.id, preguntaActual.preguntaId, contenido)
+        setRespondidas((prev) => new Set(prev).add(preguntaActual.preguntaId))
+        setRespuestasConfirmadas((prev) =>
+          new Map(prev).set(preguntaActual.preguntaId, seleccion),
+        )
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 422) {
+          setError(err.message)
+          setIntentosAgotados((prev) => new Set(prev).add(preguntaActual.preguntaId))
+          return
+        }
+        throw err
       } finally {
         setEnviando(false)
       }
-      return
     }
-    irA(indiceActual + 1)
+    if (!esUltimaPregunta) {
+      irA(indiceActual + 1)
+    }
+  }
+
+  /** Finaliza la evaluación — el backend la acepta en cualquier momento (incluso incompleta,
+   * para el cierre automático por vencimiento), pero acá se habilita recién cuando el
+   * Estudiante respondió todas las preguntas (validación de cliente, no del dominio). */
+  async function finalizar() {
+    setError(null)
+    setEnviando(true)
+    try {
+      await finalizarEvaluacion(evaluacion!.id)
+      navigate(`/mis-actividades/evaluaciones/${evaluacion!.id}/revision`)
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -213,7 +230,7 @@ export function RendirEvaluacion() {
                   type="radio"
                   name={`pregunta-${preguntaActual.preguntaId}`}
                   checked={seleccion?.tipo === "opcion" && seleccion.indice === indice}
-                  disabled={preguntaYaRespondida}
+                  disabled={preguntaAgotada}
                   onChange={() => setSeleccion({ tipo: "opcion", indice })}
                 />
                 {texto}
@@ -232,7 +249,7 @@ export function RendirEvaluacion() {
                   type="radio"
                   name={`pregunta-${preguntaActual.preguntaId}`}
                   checked={seleccion?.tipo === "vf" && seleccion.valor === true}
-                  disabled={preguntaYaRespondida}
+                  disabled={preguntaAgotada}
                   onChange={() => setSeleccion({ tipo: "vf", valor: true })}
                 />
                 Verdadero
@@ -248,7 +265,7 @@ export function RendirEvaluacion() {
                   type="radio"
                   name={`pregunta-${preguntaActual.preguntaId}`}
                   checked={seleccion?.tipo === "vf" && seleccion.valor === false}
-                  disabled={preguntaYaRespondida}
+                  disabled={preguntaAgotada}
                   onChange={() => setSeleccion({ tipo: "vf", valor: false })}
                 />
                 Falso
@@ -264,7 +281,7 @@ export function RendirEvaluacion() {
             indice === indiceActual
               ? "bg-primary text-primary-foreground"
               : respondidas.has(p.preguntaId)
-                ? "bg-emerald-600 text-white"
+                ? "bg-sky-500 text-white"
                 : "bg-muted text-muted-foreground"
           return (
             <button
@@ -288,23 +305,27 @@ export function RendirEvaluacion() {
           Anterior
         </Button>
         <Button
-          disabled={(!preguntaYaRespondida && !seleccion) || enviando}
-          onClick={() =>
-            void (preguntaYaRespondida ? avanzarSinConfirmar() : confirmarYSiguiente())
-          }
+          disabled={!seleccion || preguntaAgotada || enviando}
+          onClick={() => void confirmarRespuesta()}
         >
-          {preguntaYaRespondida
-            ? esUltimaPregunta
-              ? "Finalizar"
-              : "Siguiente"
-            : esUltimaPregunta
-              ? "Confirmar y finalizar"
-              : "Confirmar y siguiente"}
+          {esUltimaPregunta ? "Confirmar respuesta" : "Confirmar y siguiente"}
         </Button>
       </div>
+
+      <Button
+        className="mt-4 w-full"
+        variant={todasRespondidas ? "default" : "outline"}
+        disabled={!todasRespondidas || enviando}
+        onClick={() => void finalizar()}
+      >
+        Finalizar evaluación
+      </Button>
       <p className="mt-3 text-center text-xs text-muted-foreground">
-        Cada respuesta se guarda apenas la confirmás — si se corta la conexión, no perdés lo ya
-        respondido.
+        {todasRespondidas
+          ? "Ya respondiste todas las preguntas — finalizá cuando quieras, antes del cierre."
+          : `Respondé las ${cantidad - respondidas.size} preguntas que faltan para poder finalizar.`}{" "}
+        Podés volver atrás y cambiar una respuesta ya confirmada, hasta agotar los intentos
+        permitidos. No vas a ver si acertaste hasta finalizar.
       </p>
     </div>
   )

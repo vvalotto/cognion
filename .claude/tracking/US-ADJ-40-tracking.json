@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-40",
+    "us_title": "Pantallas de recuperación de contraseña",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-13T14:11:53.492423+00:00",
+    "completed_at": "2026-09-13T14:49:07.164755+00:00",
+    "total_elapsed_seconds": 2233,
+    "effective_seconds": 2233,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-13T14:12:08.627820+00:00",
+      "completed_at": "2026-09-13T14:13:21.613607+00:00",
+      "elapsed_seconds": 72,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-13T14:13:27.614149+00:00",
+      "completed_at": "2026-09-13T14:15:38.435602+00:00",
+      "elapsed_seconds": 130,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-13T14:15:42.867636+00:00",
+      "completed_at": "2026-09-13T14:18:00.884303+00:00",
+      "elapsed_seconds": 138,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "cliente-api",
+          "task_name": "solicitarRecuperacionPassword/confirmarNuevaPassword en cuentas-api.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-13T14:15:49.481094+00:00",
+          "completed_at": "2026-09-13T14:16:16.652132+00:00",
+          "elapsed_seconds": 27,
+          "actual_minutes": 0.45,
+          "variance_minutes": -9.55,
+          "file_created": "frontend/src/lib/cuentas-api.ts",
+          "status": "completed"
+        },
+        {
+          "task_id": "pantalla-solicitar",
+          "task_name": "RecuperarPasswordSolicitar.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 12.0,
+          "started_at": "2026-09-13T14:16:18.662828+00:00",
+          "completed_at": "2026-09-13T14:16:30.335674+00:00",
+          "elapsed_seconds": 11,
+          "actual_minutes": 0.18,
+          "variance_minutes": -11.82,
+          "file_created": "frontend/src/pages/identidad/RecuperarPasswordSolicitar.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "pantalla-solicitado",
+          "task_name": "RecuperarPasswordSolicitado.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 6.0,
+          "started_at": "2026-09-13T14:16:30.440840+00:00",
+          "completed_at": "2026-09-13T14:16:37.579539+00:00",
+          "elapsed_seconds": 7,
+          "actual_minutes": 0.12,
+          "variance_minutes": -5.88,
+          "file_created": "frontend/src/pages/identidad/RecuperarPasswordSolicitado.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "pantalla-token-invalido",
+          "task_name": "RecuperarPasswordTokenInvalido.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-13T14:16:37.684396+00:00",
+          "completed_at": "2026-09-13T14:16:46.415007+00:00",
+          "elapsed_seconds": 8,
+          "actual_minutes": 0.13,
+          "variance_minutes": -7.87,
+          "file_created": "frontend/src/pages/identidad/RecuperarPasswordTokenInvalido.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "pantalla-exito",
+          "task_name": "RecuperarPasswordExito.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 6.0,
+          "started_at": "2026-09-13T14:16:46.539532+00:00",
+          "completed_at": "2026-09-13T14:16:52.593206+00:00",
+          "elapsed_seconds": 6,
+          "actual_minutes": 0.1,
+          "variance_minutes": -5.9,
+          "file_created": "frontend/src/pages/identidad/RecuperarPasswordExito.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "pantalla-nueva",
+          "task_name": "RecuperarPasswordNueva.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-13T14:16:52.711298+00:00",
+          "completed_at": "2026-09-13T14:17:11.230618+00:00",
+          "elapsed_seconds": 18,
+          "actual_minutes": 0.3,
+          "variance_minutes": -19.7,
+          "file_created": "frontend/src/pages/identidad/RecuperarPasswordNueva.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "login-link",
+          "task_name": "Link olvidaste tu contraseña en Login.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-13T14:17:11.345441+00:00",
+          "completed_at": "2026-09-13T14:17:26.577219+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -4.75,
+          "file_created": "frontend/src/pages/identidad/Login.tsx",
+          "status": "completed"
+        },
+        {
+          "task_id": "router",
+          "task_name": "5 rutas nuevas en router.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 6.0,
+          "started_at": "2026-09-13T14:17:26.680962+00:00",
+          "completed_at": "2026-09-13T14:17:50.654615+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -5.62,
+          "file_created": "frontend/src/router.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-13T14:18:07.006449+00:00",
+      "completed_at": "2026-09-13T14:30:17.781785+00:00",
+      "elapsed_seconds": 730,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-13T14:30:38.753757+00:00",
+      "completed_at": "2026-09-13T14:33:44.240381+00:00",
+      "elapsed_seconds": 185,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-13T14:46:13.745178+00:00",
+      "completed_at": "2026-09-13T14:47:44.900556+00:00",
+      "elapsed_seconds": 91,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-13T14:47:53.942324+00:00",
+      "completed_at": "2026-09-13T14:49:03.641399+00:00",
+      "elapsed_seconds": 69,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 7,
+    "estimated_total_minutes": 73.0,
+    "actual_total_minutes": 1.92,
+    "variance_minutes": -71.08,
+    "variance_percent": -97.37
+  }
+}

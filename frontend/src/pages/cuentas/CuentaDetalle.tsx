@@ -2,23 +2,13 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { RolBadge } from "@/components/RolBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
-import type { Rol } from "@/lib/session"
-
-const ETIQUETA_ROL: Record<Rol, string> = {
-  administrador: "Administrador",
-  docente: "Docente",
-  estudiante: "Estudiante",
-}
-
-const VARIANTE_ROL: Record<Rol, "rol-docente" | "rol-estudiante" | "rol-admin"> = {
-  docente: "rol-docente",
-  estudiante: "rol-estudiante",
-  administrador: "rol-admin",
-}
+import { activarCuenta, obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
+import { obtenerComision, type ComisionDetalleResponse } from "@/lib/identidad-comisiones-api"
+import { useNombreMateria } from "@/pages/identidad/useNombreMateria"
 
 /** Pantalla de detalle de cuenta (§2.2 `wireframes-cuentas-administracion.md`). */
 export function CuentaDetalle() {
@@ -26,6 +16,8 @@ export function CuentaDetalle() {
   const navigate = useNavigate()
 
   const [cuenta, setCuenta] = useState<CuentaDetalleResponse | null>(null)
+  const [comision, setComision] = useState<ComisionDetalleResponse | null>(null)
+  const nombreMateria = useNombreMateria(comision?.materiaId)
 
   useEffect(() => {
     if (!usuarioId) return undefined
@@ -35,6 +27,21 @@ export function CuentaDetalle() {
       .catch(() => {})
     return () => controller.abort()
   }, [usuarioId])
+
+  useEffect(() => {
+    if (!cuenta?.comisionId) return undefined
+    const controller = new AbortController()
+    obtenerComision(cuenta.comisionId, controller.signal)
+      .then(setComision)
+      .catch(() => {})
+    return () => controller.abort()
+  }, [cuenta?.comisionId])
+
+  async function handleActivar() {
+    if (!cuenta) return
+    const actualizada = await activarCuenta(cuenta.id)
+    setCuenta(actualizada)
+  }
 
   if (!cuenta) {
     return <p className="text-sm text-muted-foreground">Cargando…</p>
@@ -77,21 +84,29 @@ export function CuentaDetalle() {
           <div className="flex items-center justify-between py-2.5">
             <dt className="text-muted-foreground">Rol</dt>
             <dd>
-              <Badge variant={VARIANTE_ROL[cuenta.perfil]}>{ETIQUETA_ROL[cuenta.perfil]}</Badge>
+              <RolBadge rol={cuenta.perfil} />
             </dd>
           </div>
           <div className="flex items-center justify-between py-2.5">
             <dt className="text-muted-foreground">Estado</dt>
             <dd>
-              <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
-                {cuenta.bloqueada ? "Bloqueada" : "Activa"}
-              </Badge>
+              {cuenta.deshabilitada ? (
+                <Badge variant="estado-inactiva">Inactiva</Badge>
+              ) : (
+                <Badge variant={cuenta.bloqueada ? "estado-bloqueada" : "estado-activa"}>
+                  {cuenta.bloqueada ? "Bloqueada" : "Activa"}
+                </Badge>
+              )}
             </dd>
           </div>
           {cuenta.perfil === "estudiante" && cuenta.comisionId && (
             <div className="flex items-center justify-between py-2.5">
               <dt className="text-muted-foreground">Comisión</dt>
-              <dd>{cuenta.comisionId}</dd>
+              <dd>
+                {comision && nombreMateria
+                  ? `${nombreMateria} — ${comision.horario}`
+                  : "Cargando…"}
+              </dd>
             </div>
           )}
           <div className="flex items-center justify-between py-2.5">
@@ -101,17 +116,39 @@ export function CuentaDetalle() {
         </dl>
       </Card>
 
-      <Button
-        variant="destructive-solid"
-        className="mt-4 w-full"
-        onClick={() => navigate(`/cuentas/${cuenta.id}/resetear-password`)}
-      >
-        Resetear contraseña y desbloquear
-      </Button>
-      <p className="mt-2 text-center text-sm text-muted-foreground">
-        Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear"
-        separada.
-      </p>
+      {cuenta.deshabilitada ? (
+        <Button variant="outline" className="mt-4 w-full" onClick={() => void handleActivar()}>
+          Activar cuenta
+        </Button>
+      ) : (
+        <>
+          <Button
+            variant="outline"
+            className="mt-4 w-full"
+            onClick={() => navigate(`/cuentas/${cuenta.id}/editar`)}
+          >
+            Editar datos de la cuenta
+          </Button>
+          <Button
+            variant="destructive-solid"
+            className="mt-2 w-full"
+            onClick={() => navigate(`/cuentas/${cuenta.id}/resetear-password`)}
+          >
+            Resetear contraseña y desbloquear
+          </Button>
+          <p className="mt-2 text-center text-sm text-muted-foreground">
+            Es la única forma de desbloquear la cuenta — no existe una acción de "desbloquear"
+            separada.
+          </p>
+          <Button
+            variant="destructive-solid"
+            className="mt-2 w-full"
+            onClick={() => navigate(`/cuentas/${cuenta.id}/eliminar`)}
+          >
+            Eliminar cuenta
+          </Button>
+        </>
+      )}
     </div>
   )
 }

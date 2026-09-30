@@ -5,6 +5,8 @@ import type { Rol } from "@/lib/session"
 interface ItemNav {
   label: string
   to: string
+  /** Otras rutas en las que este ítem se resalta (ej. las Comisiones cuelgan de Materias). */
+  tambienActivoEn?: string[]
 }
 
 const ITEMS_POR_ROL: Record<Rol, ItemNav[]> = {
@@ -12,8 +14,7 @@ const ITEMS_POR_ROL: Record<Rol, ItemNav[]> = {
     { label: "Inicio", to: "/" },
     { label: "Banco de Preguntas", to: "/materias" },
     { label: "Actividades", to: "/actividad-evaluativa/materias" },
-    { label: "Desempeño por alumno", to: "/analytics/desempeno-por-alumno" },
-    { label: "Desempeño por tema", to: "/analytics/desempeno-por-tema" },
+    { label: "Reportes", to: "/analytics" },
   ],
   estudiante: [
     { label: "Inicio", to: "/" },
@@ -22,8 +23,8 @@ const ITEMS_POR_ROL: Record<Rol, ItemNav[]> = {
   ],
   administrador: [
     { label: "Inicio", to: "/" },
-    { label: "Comisiones", to: "/comisiones" },
-    { label: "Docentes", to: "/docentes/nuevo" },
+    // Las Comisiones se gestionan desde el detalle de cada Materia (revisión manual 2026-09-26).
+    { label: "Materias", to: "/materias", tambienActivoEn: ["/comisiones"] },
     { label: "Cuentas", to: "/cuentas" },
   ],
 }
@@ -44,7 +45,9 @@ export function AppNav({ rol }: { rol: Rol }) {
   return (
     <nav className="flex flex-wrap gap-1 border-b border-border bg-card px-6">
       {items.map((item) => {
-        const activo = esItemActivo(pathname, item.to)
+        const activo = [item.to, ...(item.tambienActivoEn ?? [])].some((ruta) =>
+          esItemActivo(pathname, ruta),
+        )
         return (
           <Link
             key={item.to}

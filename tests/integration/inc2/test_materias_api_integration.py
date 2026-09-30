@@ -5,43 +5,40 @@ from httpx import ASGITransport, AsyncClient
 from src.app import app
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 class TestMateriasAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.1-alta-materia-banco.feature` (RF-04, RF-06)."""
 
-    async def test_docente_crea_materia_nueva(self, docente_headers):
-        nombre = f"Ingeniería de Software {uuid.uuid4()}"
+    async def test_docente_no_puede_crear_materia(self, docente_headers):
+        """Unificación con Comisión (hallazgo de UAT, Incremento 5-ADJ): crear Materia pasa
+        a ser exclusivo del Administrador — el Docente consume el banco, no crea la Materia.
+        """
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
-                "/materias", json={"nombre": nombre}, headers=docente_headers
+                "/materias",
+                json={"nombre": f"Rechazo Docente {uuid.uuid4()}"},
+                headers=docente_headers,
             )
 
-        assert response.status_code == 201
-        data = response.json()
-        assert data["nombre"] == nombre
-        assert "id" in data
-        assert "banco_id" in data
+        assert response.status_code == 403
 
-    async def test_rechazo_por_nombre_duplicado(self, docente_headers):
+    async def test_rechazo_por_nombre_duplicado(self, admin_headers):
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            primera = await client.post(
-                "/materias", json={"nombre": nombre}, headers=docente_headers
-            )
-            segunda = await client.post(
-                "/materias", json={"nombre": nombre}, headers=docente_headers
-            )
+            primera = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
+            segunda = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
 
         assert primera.status_code == 201
         assert segunda.status_code == 409
 
-    async def test_rechazo_por_nombre_vacio(self, docente_headers):
+    async def test_rechazo_por_nombre_vacio(self, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            response = await client.post("/materias", json={"nombre": ""}, headers=docente_headers)
+            response = await client.post("/materias", json={"nombre": ""}, headers=admin_headers)
 
         assert response.status_code == 422
 
@@ -52,11 +49,24 @@ class TestMateriasAPIIntegration:
 
         assert response.status_code == 401
 
-    async def test_rechazo_con_rol_insuficiente(self, admin_headers):
+    async def test_administrador_crea_materia_nueva(self, admin_headers):
+        """Camino feliz — único rol habilitado desde la unificación con Comisión."""
+        nombre = f"Gestión de Proyectos {uuid.uuid4()}"
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
-                "/materias", json={"nombre": "Rol insuficiente"}, headers=admin_headers
+                "/materias", json={"nombre": nombre}, headers=admin_headers
+            )
+
+        assert response.status_code == 201
+
+    async def test_rechazo_con_rol_insuficiente(self):
+        jwt_vo = PyJWTIssuer().emitir(uuid.uuid4(), TipoPerfil.ESTUDIANTE)
+        headers = {"Authorization": f"Bearer {jwt_vo.token}"}
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/materias", json={"nombre": "Rol insuficiente"}, headers=headers
             )
 
         assert response.status_code == 403
@@ -65,14 +75,15 @@ class TestMateriasAPIIntegration:
 class TestListarMateriasAPIIntegration:
     """Escenarios de `tests/features/inc2/US-2.1.9-listado-alta-materias.feature`."""
 
-    async def test_lista_materias_con_cantidad_de_preguntas_activas(self, docente_headers):
+    async def test_lista_materias_con_cantidad_de_preguntas_activas(
+        self, docente_headers, admin_headers
+    ):
         nombre = f"Ingeniería de Software {uuid.uuid4()}"
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            creada = await client.post(
-                "/materias", json={"nombre": nombre}, headers=docente_headers
-            )
+            creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
             banco_id = creada.json()["banco_id"]
+            await asignar_docente_a_materia(creada.json()["id"], docente_headers)
 
             await client.post(
                 "/preguntas/verdadero-falso",

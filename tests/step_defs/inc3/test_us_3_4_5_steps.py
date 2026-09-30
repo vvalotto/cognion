@@ -11,7 +11,12 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import crear_estudiante_de_materia, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante_de_materia,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.4.5-mis-materias-actividades.feature")
 
@@ -52,15 +57,16 @@ def context():
 async def _crear_materia(nombre: str) -> str:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         return creada.json()["id"]
 
 
-async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -73,13 +79,17 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
 async def _crear_actividad(
-    materia_id: str, apertura: datetime, cierre: datetime, cantidad_preguntas: int = 1
+    materia_id: str,
+    apertura: datetime,
+    cierre: datetime,
+    cantidad_preguntas: int = 1,
+    headers: dict[str, str] | None = None,
 ) -> None:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -93,7 +103,7 @@ async def _crear_actividad(
                 "cantidad_intentos_permitidos": 1,
                 "titulo": "Parcial 1",
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
 
 
@@ -134,39 +144,39 @@ def estudiante_con_comision(context):
 
 @given("una actividad dentro de su período vigente, sin Evaluacion Finalizada del Estudiante")
 def actividad_vigente_sin_evaluacion(context):
-    materia_id = run_async(
+    materia_id, docente_headers_ = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 5)
     )
     _estudiante_id, headers = run_async(crear_estudiante_de_materia(materia_id))
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    run_async(_crear_actividad(materia_id, apertura, cierre))
+    run_async(_crear_actividad(materia_id, apertura, cierre, headers=docente_headers_))
     context["materia_id"] = materia_id
     context["estudiante_headers"] = headers
 
 
 @given("una actividad con fecha_apertura futura")
 def actividad_con_apertura_futura(context):
-    materia_id = run_async(
+    materia_id, docente_headers_ = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 5)
     )
     _estudiante_id, headers = run_async(crear_estudiante_de_materia(materia_id))
     apertura = datetime.now(UTC) + timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    run_async(_crear_actividad(materia_id, apertura, cierre))
+    run_async(_crear_actividad(materia_id, apertura, cierre, headers=docente_headers_))
     context["materia_id"] = materia_id
     context["estudiante_headers"] = headers
 
 
 @given("una actividad donde el Estudiante ya tiene una Evaluacion Finalizada")
 def actividad_con_evaluacion_finalizada(context):
-    materia_id = run_async(
+    materia_id, docente_headers_ = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 5)
     )
     _estudiante_id, headers = run_async(crear_estudiante_de_materia(materia_id))
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)
-    run_async(_crear_actividad(materia_id, apertura, cierre))
+    run_async(_crear_actividad(materia_id, apertura, cierre, headers=docente_headers_))
     actividad = run_async(_get_mis_actividades(materia_id, headers))
     actividad_id = actividad.json()[0]["id"]
     run_async(_finalizar_evaluacion(actividad_id, headers))

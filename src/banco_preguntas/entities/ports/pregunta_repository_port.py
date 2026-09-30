@@ -36,6 +36,10 @@ class PreguntaRepositoryPort(ABC):
         """Guarda los cambios de una pregunta ya existente (actualización, no alta)."""
 
     @abstractmethod
+    async def existen_preguntas(self, banco_id: UUID) -> bool:
+        """Indica si el banco tiene alguna pregunta, activa o no."""
+
+    @abstractmethod
     async def filtrar(
         self,
         banco_id: UUID,

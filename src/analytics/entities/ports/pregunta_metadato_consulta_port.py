@@ -18,10 +18,13 @@ class MetadatoPreguntaResumen:
     """Representación mínima de los metadatos de clasificación de una pregunta.
 
     No reexporta `MetadatosPregunta` de Banco de Preguntas — copia propia de Analytics.
+    `enunciado` (`US-ADJ-46`) mapea al campo `texto` de `PreguntaPlantillaModel` — nombres
+    distintos, mismo dato, insumo del ranking de preguntas más falladas (RF-22).
     """
 
     unidad_tematica: str
     tema: str
+    enunciado: str
 
 
 class PreguntaMetadatoConsultaPort(ABC):

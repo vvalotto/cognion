@@ -38,7 +38,9 @@ class PreguntaMetadatoConsultaPortInProcess(PreguntaMetadatoConsultaPort):
         )
         return {
             modelo.id: MetadatoPreguntaResumen(
-                unidad_tematica=modelo.unidad_tematica, tema=modelo.tema
+                unidad_tematica=modelo.unidad_tematica,
+                tema=modelo.tema,
+                enunciado=modelo.texto,
             )
             for modelo in resultado.scalars().all()
         }

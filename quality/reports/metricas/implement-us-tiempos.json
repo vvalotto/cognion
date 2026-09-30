@@ -1,16 +1,16 @@
 {
   "summary": {
-    "n": 47,
-    "mean": 40.3,
-    "median": 35.4,
-    "stdev": 20.5,
-    "min": 12.2,
-    "max": 100.9,
-    "q1": 26.1,
-    "q3": 53.0,
-    "total_h": 31.6,
-    "min_id": "US-3.0.2",
-    "max_id": "US-2.1.2"
+    "n": 102,
+    "mean": 37.6,
+    "median": 29.7,
+    "stdev": 32.2,
+    "min": 6.2,
+    "max": 257.8,
+    "q1": 20.2,
+    "q3": 42.2,
+    "total_h": 63.9,
+    "min_id": "US-ADJ-10",
+    "max_id": "US-ADJ-47"
   },
   "us": [
     {
@@ -435,172 +435,501 @@
       "start": "2026-08-28T14:16:25.436987+00:00",
       "inc": "Inc3",
       "iter": "Inc3-Iter3"
-    }
-  ],
-  "phases": [
-    {
-      "name": "Validación de Contexto",
-      "total_min": 57.3,
-      "n": 26,
-      "avg_min": 2.2
     },
     {
-      "name": "Escenarios BDD",
-      "total_min": 93.1,
-      "n": 44,
-      "avg_min": 2.12
-    },
-    {
-      "name": "Plan de Implementación",
-      "total_min": 197.1,
-      "n": 46,
-      "avg_min": 4.28
-    },
-    {
-      "name": "Implementación",
-      "total_min": 419.1,
-      "n": 43,
-      "avg_min": 9.75
-    },
-    {
-      "name": "Tests Unitarios",
-      "total_min": 148.0,
-      "n": 45,
-      "avg_min": 3.29
-    },
-    {
-      "name": "Tests de Integración",
-      "total_min": 92.3,
-      "n": 43,
-      "avg_min": 2.15
-    },
-    {
-      "name": "Validación BDD",
-      "total_min": 131.4,
-      "n": 44,
-      "avg_min": 2.99
-    },
-    {
-      "name": "Quality Gates",
-      "total_min": 224.2,
-      "n": 45,
-      "avg_min": 4.98
-    },
-    {
-      "name": "Documentación",
-      "total_min": 186.2,
-      "n": 42,
-      "avg_min": 4.43
-    },
-    {
-      "name": "Reporte Final",
-      "total_min": 36.4,
-      "n": 45,
-      "avg_min": 0.81
-    }
-  ],
-  "iterations": [
-    {
-      "iter": "Inc1-Iter1",
-      "inc": "Inc1",
-      "n": 6,
-      "mean": 40.5,
-      "median": 34.2,
-      "total": 243.2
-    },
-    {
-      "iter": "Inc1-Iter2",
-      "inc": "Inc1",
-      "n": 4,
-      "mean": 30.2,
-      "median": 27.9,
-      "total": 120.8
-    },
-    {
-      "iter": "Inc2-Iter1",
-      "inc": "Inc2",
-      "n": 13,
-      "mean": 41.2,
-      "median": 35.9,
-      "total": 535.8
-    },
-    {
-      "iter": "Inc2-Iter2",
-      "inc": "Inc2",
-      "n": 9,
-      "mean": 39.7,
-      "median": 31.8,
-      "total": 357.7
-    },
-    {
-      "iter": "Inc3-Iter0",
+      "id": "US-3.4.1",
+      "title": "Infraestructura de frontend de Actividad Evaluativa",
+      "points": 3,
+      "seconds": 672,
+      "start": "2026-08-30T12:05:56.096003+00:00",
       "inc": "Inc3",
-      "n": 2,
-      "mean": 32.6,
-      "median": 32.6,
-      "total": 65.1
+      "iter": "Inc3-Iter4"
     },
     {
-      "iter": "Inc3-Iter1",
+      "id": "US-3.4.2",
+      "title": "Docente ve sus materias y el listado de actividades de una materia",
+      "points": 5,
+      "seconds": 1878,
+      "start": "2026-08-30T12:24:27.302250+00:00",
       "inc": "Inc3",
-      "n": 3,
-      "mean": 27.5,
-      "median": 20.6,
-      "total": 82.6
+      "iter": "Inc3-Iter4"
     },
     {
-      "iter": "Inc3-Iter2",
+      "id": "US-3.4.3",
+      "title": "Docente crea una nueva actividad de período abierto",
+      "points": 3,
+      "seconds": 645,
+      "start": "2026-08-30T18:20:07.179845+00:00",
       "inc": "Inc3",
-      "n": 4,
-      "mean": 32.9,
-      "median": 32.4,
-      "total": 131.7
+      "iter": "Inc3-Iter4"
     },
     {
-      "iter": "Inc3-Iter3",
+      "id": "US-3.4.4",
+      "title": "Docente ve el detalle de una actividad, extiende el plazo y la cierra manualmente",
+      "points": 5,
+      "seconds": 2044,
+      "start": "2026-08-30T18:49:54.719621+00:00",
       "inc": "Inc3",
-      "n": 2,
-      "mean": 29.7,
-      "median": 29.7,
-      "total": 59.3
+      "iter": "Inc3-Iter4"
     },
     {
-      "iter": "SP-ADJ-01",
-      "inc": "SP-ADJ",
-      "n": 4,
-      "mean": 74.3,
-      "median": 72.2,
-      "total": 297.3
-    }
-  ],
-  "increments": [
-    {
-      "inc": "Inc1",
-      "n": 10,
-      "mean": 36.4,
-      "median": 31.4,
-      "total": 364.0
-    },
-    {
-      "inc": "Inc2",
-      "n": 22,
-      "mean": 40.6,
-      "median": 35.7,
-      "total": 893.5
-    },
-    {
-      "inc": "SP-ADJ",
-      "n": 4,
-      "mean": 74.3,
-      "median": 72.2,
-      "total": 297.3
-    },
-    {
+      "id": "US-ADJ-09",
+      "title": "Fix - datetimes naive/aware en actividades",
+      "points": 2,
+      "seconds": 1200,
+      "start": "2026-08-30T20:05:58.467232+00:00",
       "inc": "Inc3",
-      "n": 11,
-      "mean": 30.8,
-      "median": 29.2,
-      "total": 338.7
+      "iter": "Inc3-Iter4"
+    },
+    {
+      "id": "US-ADJ-10",
+      "title": "Docente edita el titulo de una actividad ya creada",
+      "points": 2,
+      "seconds": 375,
+      "start": "2026-08-30T21:08:10.090779+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter4"
+    },
+    {
+      "id": "US-3.4.5",
+      "title": "Estudiante ve sus materias y las actividades disponibles",
+      "points": 5,
+      "seconds": 6060,
+      "start": "2026-08-31T12:29:20.934863+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter4"
+    },
+    {
+      "id": "US-3.4.6",
+      "title": "Estudiante rinde su evaluación — responde, pausa y reanuda",
+      "points": 8,
+      "seconds": 2012,
+      "start": "2026-08-31T14:29:50.347237+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter4"
+    },
+    {
+      "id": "US-3.4.7",
+      "title": "Estudiante finaliza su evaluación y ve la revisión completa",
+      "points": 3,
+      "seconds": 1627,
+      "start": "2026-08-31T15:19:39.767055+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter4"
+    },
+    {
+      "id": "US-ADJ-11",
+      "title": "Fix — IniciarEvaluacion no rechaza actividad cerrada manualmente",
+      "points": 1,
+      "seconds": 769,
+      "start": "2026-08-31T19:45:28.567255+00:00",
+      "inc": "Inc3",
+      "iter": "Inc3-Iter4"
+    },
+    {
+      "id": "US-ADJ-20",
+      "title": "AbortController en fetch de useEffect/submit del frontend",
+      "points": 5,
+      "seconds": 6420,
+      "start": "2026-09-02T18:06:43.485227+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-13",
+      "title": "Documentar Zone of Pain de ArchitectAnalyst como falso positivo aceptado",
+      "points": 2,
+      "seconds": 403,
+      "start": "2026-09-03T11:55:59.547167+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-14",
+      "title": "Reordenar frontend/src/pages/ por Bounded Context",
+      "points": 3,
+      "seconds": 906,
+      "start": "2026-09-03T12:12:33.286629+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-15",
+      "title": "Fix de coverage_report_path en [tool.architectanalyst]",
+      "points": 1,
+      "seconds": 423,
+      "start": "2026-09-03T12:34:48.083417+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-16",
+      "title": "Subir cobertura de branches del frontend (77.89% a 80%)",
+      "points": 5,
+      "seconds": 967,
+      "start": "2026-09-03T12:55:48.904503+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-17",
+      "title": "Value Object MetadatosPregunta (Data Clump/Primitive Obsession)",
+      "points": 8,
+      "seconds": 1034,
+      "start": "2026-09-03T13:28:56.759413+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-18",
+      "title": "Refactor SQLAlchemyPreguntaRepository (Feature Envy/Ley de Demeter/Long Method)",
+      "points": 5,
+      "seconds": 1045,
+      "start": "2026-09-03T13:55:19.252670+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-ADJ-19",
+      "title": "LayerViolationsAnalyzer no detecta violaciones bajo ninguna config",
+      "points": 2,
+      "seconds": 694,
+      "start": "2026-09-03T14:41:33.743471+00:00",
+      "inc": "Inc3-ADJ",
+      "iter": "Inc3-ADJ-01"
+    },
+    {
+      "id": "US-4.1.1",
+      "title": "Infraestructura de consulta del BC Analytics",
+      "points": 5,
+      "seconds": 1719,
+      "start": "2026-09-04T14:13:47.833547+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter1"
+    },
+    {
+      "id": "US-4.1.2",
+      "title": "Estudiante consulta su propio desempeño en una materia",
+      "points": 3,
+      "seconds": 2817,
+      "start": "2026-09-04T15:09:56.057336+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter1"
+    },
+    {
+      "id": "US-4.1.3",
+      "title": "Estudiante ve la pantalla Mi desempeño",
+      "points": 3,
+      "seconds": 1220,
+      "start": "2026-09-05T12:02:57.067573+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter1"
+    },
+    {
+      "id": "US-4.2.1",
+      "title": "Docente consulta el desempeño de un estudiante elegido",
+      "points": 2,
+      "seconds": 2189,
+      "start": "2026-09-05T18:37:54.361031+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter2"
+    },
+    {
+      "id": "US-4.2.2",
+      "title": "ComisionConsultaPort - comisiones por materia y estudiantes por comision",
+      "points": 3,
+      "seconds": 2249,
+      "start": "2026-09-05T19:27:26.359313+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter2"
+    },
+    {
+      "id": "US-4.2.3",
+      "title": "PreguntaMetadatoConsultaPort hacia Banco de Preguntas",
+      "points": 2,
+      "seconds": 1488,
+      "start": "2026-09-05T20:22:53.727226+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter2"
+    },
+    {
+      "id": "US-4.2.4",
+      "title": "Docente consulta la tasa de error por unidad/tema de una materia",
+      "points": 3,
+      "seconds": 3830,
+      "start": "2026-09-05T21:04:27.096992+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter2"
+    },
+    {
+      "id": "US-4.2.5",
+      "title": "Docente ve Desempeño por alumno",
+      "points": 3,
+      "seconds": 1231,
+      "start": "2026-09-06T11:52:26.428474+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter2"
+    },
+    {
+      "id": "US-4.2.6",
+      "title": "Docente ve Desempeño por tema",
+      "points": 3,
+      "seconds": 845,
+      "start": "2026-09-06T12:36:44.930380+00:00",
+      "inc": "Inc4",
+      "iter": "Inc4-Iter2"
+    },
+    {
+      "id": "US-ADJ-23",
+      "title": "Administrador ve el listado de Comisiones de una Materia",
+      "points": 3,
+      "seconds": 1659,
+      "start": "2026-09-07T13:38:17.154077+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1a"
+    },
+    {
+      "id": "US-ADJ-24",
+      "title": "Administrador crea una Comisión",
+      "points": 2,
+      "seconds": 1124,
+      "start": "2026-09-07T14:36:02.678218+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1a"
+    },
+    {
+      "id": "US-ADJ-25",
+      "title": "Administrador asigna un Docente a una Comisión",
+      "points": 2,
+      "seconds": 1411,
+      "start": "2026-09-07T15:28:14.572664+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1a"
+    },
+    {
+      "id": "US-ADJ-26",
+      "title": "Docente genera el link de invitación de una Comisión",
+      "points": 2,
+      "seconds": 1543,
+      "start": "2026-09-07T18:30:32.141593+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1a"
+    },
+    {
+      "id": "US-ADJ-27",
+      "title": "Menú de navegación persistente en AppLayout",
+      "points": 2,
+      "seconds": 676,
+      "start": "2026-09-07T19:41:41.803095+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1b"
+    },
+    {
+      "id": "US-ADJ-28",
+      "title": "Home del Docente",
+      "points": 2,
+      "seconds": 451,
+      "start": "2026-09-07T20:02:59.791301+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1b"
+    },
+    {
+      "id": "US-ADJ-29",
+      "title": "Home del Estudiante",
+      "points": 2,
+      "seconds": 1360,
+      "start": "2026-09-07T20:19:38.494729+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1b"
+    },
+    {
+      "id": "US-ADJ-30",
+      "title": "Home del Administrador",
+      "points": 2,
+      "seconds": 838,
+      "start": "2026-09-07T20:58:36.299524+00:00",
+      "inc": "Inc4-ADJ",
+      "iter": "Inc4-ADJ-Iter1b"
+    },
+    {
+      "id": "US-5.1.1",
+      "title": "Infraestructura del BC Notificaciones",
+      "points": 5,
+      "seconds": 2519,
+      "start": "2026-09-10T14:21:06.590691+00:00",
+      "inc": "Inc5",
+      "iter": "Inc5-Iter1"
+    },
+    {
+      "id": "US-5.1.2",
+      "title": "Notificación de apertura de una Actividad Evaluativa de período abierto",
+      "points": 5,
+      "seconds": 3286,
+      "start": "2026-09-10T15:29:06.276964+00:00",
+      "inc": "Inc5",
+      "iter": "Inc5-Iter1"
+    },
+    {
+      "id": "US-5.1.3",
+      "title": "Notificación de cierre manual de una Actividad Evaluativa",
+      "points": 3,
+      "seconds": 1764,
+      "start": "2026-09-10T19:41:00.837416+00:00",
+      "inc": "Inc5",
+      "iter": "Inc5-Iter1"
+    },
+    {
+      "id": "US-ADJ-35",
+      "title": "Toggle mostrar/ocultar contraseña",
+      "points": 1,
+      "seconds": 1773,
+      "start": "2026-09-12T14:58:32.122929+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter1"
+    },
+    {
+      "id": "US-ADJ-36",
+      "title": "Contraseña segura — política ampliada",
+      "points": 2,
+      "seconds": 8675,
+      "start": "2026-09-12T15:53:45.847509+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter1"
+    },
+    {
+      "id": "US-ADJ-37",
+      "title": "Descubribilidad: menú de usuario (cambiar contraseña, cerrar sesión)",
+      "points": 1,
+      "seconds": 849,
+      "start": "2026-09-12T18:45:06.556171+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter1"
+    },
+    {
+      "id": "US-ADJ-38",
+      "title": "Solicitar recuperación de contraseña",
+      "points": 3,
+      "seconds": 2246,
+      "start": "2026-09-13T12:34:21.180818+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter2"
+    },
+    {
+      "id": "US-ADJ-39",
+      "title": "Confirmar nueva contraseña con token de recuperación",
+      "points": 3,
+      "seconds": 1778,
+      "start": "2026-09-13T13:25:50.118446+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter2"
+    },
+    {
+      "id": "US-ADJ-40",
+      "title": "Pantallas de recuperación de contraseña",
+      "points": 3,
+      "seconds": 2233,
+      "start": "2026-09-13T14:11:53.492423+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter2"
+    },
+    {
+      "id": "US-ADJ-41",
+      "title": "Autoregistro de Docente",
+      "points": 3,
+      "seconds": 808,
+      "start": "2026-09-13T18:57:45.675973+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter3"
+    },
+    {
+      "id": "US-ADJ-42",
+      "title": "Autoregistro de Estudiante (endpoint público)",
+      "points": 3,
+      "seconds": 1418,
+      "start": "2026-09-13T19:23:33.574909+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter3"
+    },
+    {
+      "id": "US-ADJ-43",
+      "title": "Pantallas de autoregistro con selección de perfil",
+      "points": 5,
+      "seconds": 2114,
+      "start": "2026-09-13T20:09:29.434788+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter3"
+    },
+    {
+      "id": "US-ADJ-44",
+      "title": "Docente consulta el desempeño de una Comisión completa",
+      "points": 5,
+      "seconds": 3290,
+      "start": "2026-09-14T12:43:33.767493+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-45",
+      "title": "Docente consulta la evolución temporal de aciertos",
+      "points": 5,
+      "seconds": 2164,
+      "start": "2026-09-14T13:59:56.244349+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-46",
+      "title": "Docente consulta el ranking de preguntas más falladas",
+      "points": 5,
+      "seconds": 1929,
+      "start": "2026-09-14T14:36:07.654701+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-47",
+      "title": "Docente consulta la completitud de una actividad puntual",
+      "points": 5,
+      "seconds": 15469,
+      "start": "2026-09-14T15:08:24.061331+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-48",
+      "title": "Docente ve Desempeño por comisión con drill-down",
+      "points": 3,
+      "seconds": 2789,
+      "start": "2026-09-14T20:13:38.682183+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-49",
+      "title": "Docente ve la evolucion temporal de un estudiante y de su comision",
+      "points": 5,
+      "seconds": 2054,
+      "start": "2026-09-14T21:03:53.708642+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-50",
+      "title": "Docente ve el ranking de Preguntas más falladas",
+      "points": 3,
+      "seconds": 2716,
+      "start": "2026-09-14T21:52:51.556438+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
+    },
+    {
+      "id": "US-ADJ-51",
+      "title": "Docente ve la completitud de una actividad puntual",
+      "points": 3,
+      "seconds": 889,
+      "start": "2026-09-15T10:48:21.629260+00:00",
+      "inc": "Inc5-ADJ",
+      "iter": "Inc5-ADJ-Iter4"
     }
   ]
 }

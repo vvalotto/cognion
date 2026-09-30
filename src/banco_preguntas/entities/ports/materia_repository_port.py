@@ -16,6 +16,14 @@ class MateriaRepositoryPort(ABC):
         """Guarda una materia nueva."""
 
     @abstractmethod
+    async def actualizar(self, materia: Materia) -> None:
+        """Guarda cambios sobre una materia existente (nombre y `activa`)."""
+
+    @abstractmethod
+    async def eliminar(self, materia_id: UUID) -> None:
+        """Borra físicamente una materia sin preguntas ni comisiones asociadas."""
+
+    @abstractmethod
     async def obtener_por_nombre(self, nombre: str) -> Materia | None:
         """Busca una materia por nombre, o `None` si no existe (INV-BP-00)."""
 
@@ -24,5 +32,5 @@ class MateriaRepositoryPort(ABC):
         """Busca una materia por id, o `None` si no existe."""
 
     @abstractmethod
-    async def listar(self) -> list[Materia]:
-        """Lista todas las materias existentes."""
+    async def listar(self, incluir_inactivas: bool = False) -> list[Materia]:
+        """Lista las materias activas; con `incluir_inactivas=True`, también las deshabilitadas."""

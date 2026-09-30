@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-51",
+    "us_title": "Docente ve la completitud de una actividad puntual",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-15T10:48:21.629260+00:00",
+    "completed_at": "2026-09-15T11:03:11.292218+00:00",
+    "total_elapsed_seconds": 889,
+    "effective_seconds": 889,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-09-15T10:48:27.574858+00:00",
+      "completed_at": "2026-09-15T10:49:01.726111+00:00",
+      "elapsed_seconds": 34,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-15T10:49:08.611969+00:00",
+      "completed_at": "2026-09-15T10:51:04.873458+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-15T10:51:04.984589+00:00",
+      "completed_at": "2026-09-15T10:52:47.480670+00:00",
+      "elapsed_seconds": 102,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task1",
+          "task_name": "Cliente API analytics-api.ts",
+          "task_type": "implementacion",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-15T10:51:11.284998+00:00",
+          "completed_at": "2026-09-15T10:51:31.814224+00:00",
+          "elapsed_seconds": 20,
+          "actual_minutes": 0.33,
+          "variance_minutes": -14.67,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task2",
+          "task_name": "Variantes de Badge",
+          "task_type": "implementacion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-15T10:51:31.924362+00:00",
+          "completed_at": "2026-09-15T10:51:38.264839+00:00",
+          "elapsed_seconds": 6,
+          "actual_minutes": 0.1,
+          "variance_minutes": -4.9,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task3",
+          "task_name": "Pantalla CompletitudActividad.tsx",
+          "task_type": "implementacion",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-09-15T10:51:38.380700+00:00",
+          "completed_at": "2026-09-15T10:52:08.736712+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -24.5,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task4",
+          "task_name": "Entry point en ActividadDetalle",
+          "task_type": "implementacion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-15T10:52:08.844932+00:00",
+          "completed_at": "2026-09-15T10:52:15.528315+00:00",
+          "elapsed_seconds": 6,
+          "actual_minutes": 0.1,
+          "variance_minutes": -4.9,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task5",
+          "task_name": "Ruta nueva en router.tsx",
+          "task_type": "implementacion",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-15T10:52:15.627291+00:00",
+          "completed_at": "2026-09-15T10:52:47.376708+00:00",
+          "elapsed_seconds": 31,
+          "actual_minutes": 0.52,
+          "variance_minutes": -4.48,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-15T10:52:54.428775+00:00",
+      "completed_at": "2026-09-15T10:58:08.006296+00:00",
+      "elapsed_seconds": 313,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-15T10:58:16.812511+00:00",
+      "completed_at": "2026-09-15T10:58:16.919194+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-15T10:58:28.264881+00:00",
+      "completed_at": "2026-09-15T11:01:33.967322+00:00",
+      "elapsed_seconds": 185,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-15T11:01:40.882492+00:00",
+      "completed_at": "2026-09-15T11:03:01.168206+00:00",
+      "elapsed_seconds": 80,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-15T11:03:01.293563+00:00",
+      "completed_at": "2026-09-15T11:03:07.198451+00:00",
+      "elapsed_seconds": 5,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 5,
+    "completed_tasks": 5,
+    "total_phases": 8,
+    "estimated_total_minutes": 55.0,
+    "actual_total_minutes": 1.55,
+    "variance_minutes": -53.45,
+    "variance_percent": -97.18
+  }
+}

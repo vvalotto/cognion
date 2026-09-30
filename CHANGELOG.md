@@ -9,6 +9,206 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-30
+
+### Added
+- **US-6.0.1/US-6.0.2** (modelado del modo en vivo): event storming de `ActividadEvaluativaEnVivo`
+  (agregado hermano de `ActividadEvaluativaPeriodoAbierto`, `ADR-015`) y wireframes/prototipo
+  navegable aprobados, seis rondas de ajuste — la sesión en vivo se crea desde el detalle de una
+  Comisión puntual, no desde la Materia. Spike del algoritmo de puntaje resuelto antes del
+  modelado (`Puntaje = 1000 × FactorTiempo × FactorDificultad × FactorImportancia`).
+- **US-6.1.1** (infraestructura de tiempo real): canal WebSocket por `sesion_id` con JWT por
+  query param, `ComisionConsultaPort` de Actividad Evaluativa hacia Identidad.
+- **US-6.1.2/US-6.1.3/US-6.1.4** (backend): crear una sesión en vivo desde una Comisión, unirse
+  (idempotente, sin duplicar participante), iniciar la sesión y presentar la primera pregunta.
+- **US-6.2.1 a US-6.2.9** (backend, dinámica en tiempo real): cálculo de puntaje server-side,
+  mostrar opciones, read models `ranking_por_sesion`/`distribucion_por_pregunta`, responder con
+  feedback personal inmediato, cerrar la pregunta actual (respuesta correcta + histograma +
+  ranking en un único broadcast), avanzar a la siguiente pregunta, finalizar la sesión sin
+  restricción de última pregunta, consultas de estado/participantes/ranking para reconexión y
+  sala de espera, y verificación E2E del RNF de rendimiento (p95 43,81 ms del use case
+  `CerrarPreguntaActual` con 60 participantes simultáneos, umbral 100 ms).
+- **US-ADJ-08** (Estudiante ve la materia/comisión de la invitación antes de registrarse):
+  endpoint público de solo lectura `GET /identidad/invitaciones/{token}` (`ObtenerInvitacionUseCase`,
+  reutiliza `Invitacion.verificar_vigente()` sin consumir la invitación, resuelve materia/horario
+  con los mismos puertos que `RegistroController`) y chip "Te vas a unir a {materia} — {horario}"
+  en `Registro.tsx` antes del formulario — usa el horario de la Comisión en vez de una letra
+  inexistente en el dominio (nota de diseño de la spec). 404 si el token no existe, 422 si venció
+  o ya fue usada.
+
+- **US-6.3.4** (Infraestructura de frontend del modo en vivo): primer uso de WebSockets del
+  frontend — cliente API tipado (`sesion-en-vivo-api.ts`, 12 funciones), canal WebSocket con
+  reconexión y backoff exponencial (`canal-sesion-en-vivo.ts`), hook seguro ante `StrictMode`
+  (`use-canal-sesion-en-vivo.ts`), layout de proyección `StageLayout` con la paleta oscura
+  `--stage-*`, y las 4 rutas del modo en vivo protegidas por rol con placeholders. Base para
+  `US-6.3.5` a `US-6.3.9`.
+- **US-6.3.5** (Docente crea la sesión en vivo y abre la sala de espera): primera pantalla real
+  del modo en vivo — formulario de creación desde el detalle de una Comisión
+  (`NuevaSesionEnVivo.tsx`), sala de espera como primer consumidor real del canal WebSocket
+  (`SalaEsperaDocente.tsx`: participantes en vivo, reconexión, iniciar sesión), y bloque
+  "Sesiones en vivo activas" en `ComisionDetalleDocente.tsx` para recuperar una sesión creada.
+- **US-6.3.6** (Docente proyecta la pregunta, muestra las opciones y la cierra): contenedor
+  `ProyeccionSesionEnVivo.tsx` con su máquina de etapas (estado del servidor + mensajes del
+  canal, recálculo al reconectar y ante `422`) y las etapas `#stage-pregunta-sola` /
+  `#stage-pregunta-opciones` (cajas de color sin marcar la correcta, Verdadero/Falso, temporizador
+  informativo, conteo en vivo, "Cerrar pregunta"). Nuevos `lib/opciones-en-vivo.ts` y
+  `lib/temporizador-pregunta.ts` (compartidos con `US-6.3.9`) y `IndicadorConexion.tsx`
+  (chip "Reconectando…" extraído de la sala de espera). Frontend puro.
+- **US-6.3.7** (Docente proyecta histograma, ranking y resultado final; avanza o finaliza): completa la
+  máquina de etapas de `ProyeccionSesionEnVivo.tsx` con `StageHistograma` (una barra por opción,
+  incluidas las no elegidas, la correcta con borde blanco y ✓, paso automático al ranking a los 6 s o con
+  "Ver ranking ahora"), `StageRanking` (Top 3 con nombres o "Nadie participó", "Siguiente pregunta" si
+  quedan, "Finalizar sesión" siempre) y `StageFinal` (podio 2°-1°-3°, "¡Gracias por participar!",
+  "‹ Volver a la Comisión"). Nuevos `filasHistograma` (`lib/opciones-en-vivo.ts`) y `lib/ranking-en-vivo.ts`
+  (`top3`, compartido con `US-6.3.9`). Frontend puro.
+- **US-ADJ-53** (suite frontend con cobertura estable): `npm run test:coverage` como comando único de la Fase 7
+  del frontend, `testTimeout: 20000` y `coverage.reportOnFailure` en `frontend/vite.config.ts`, sin flags manuales.
+  Mediciones (8 corridas, 4 configuraciones de workers) mostraron que la saturación venía de carga ajena a Vitest y
+  que limitar workers solo alarga la corrida; se documenta el comando en `phase-7-quality-gates.md`.
+- **US-ADJ-54** (esperas asincrónicas correctas en los tests del frontend): barrido de 48 casos sospechosos en todos
+  los `*.test.tsx` (verificar un valor que llega después de que aparece el elemento); 6 carreras reales corregidas
+  con `waitFor` sobre el dato (`EditarCuenta`, `EditarMateria`, `EditarComision`, `MateriasActividades`,
+  `ComisionesDeMateria`, `RendirEvaluacion`) y 42 descartadas con su motivo en el plan. Solo archivos de test.
+- **US-6.3.8** (Estudiante ve las sesiones disponibles, se une y espera en la sala): bloque "Sesiones en vivo" en
+  `MisActividades.tsx` (tarjetas de la Comisión del Estudiante para esa materia, refresco cada 10 s, unirse con manejo
+  de `422`/`404`) y contenedor `SesionEnVivoEstudiante.tsx` (se une al abrir —reunión idempotente, sin guardar nada en
+  el cliente—, sala de espera `SalaEsperaEstudiante` con el conteo en vivo, paso automático a la pregunta al iniciar el
+  Docente). `listarSesionesEnVivo` acepta `comisionId` opcional. Reemplaza el último placeholder del modo en vivo.
+- **US-ADJ-55** (espera máxima de Testing Library acorde a la suite completa): `asyncUtilTimeout: 5000` en
+  `frontend/src/test/setup.ts`. Medición de 646 esperas `findBy*`/`waitFor` por corrida (p99 ~1,9 s, máximo ~4 s bajo
+  la carga de la suite): el default de 1 s se agotaba en tests que esperaban bien el dato.
+- **US-6.3.9** (Estudiante responde desde el celular y ve su resultado y el final): completa `SesionEnVivoEstudiante`
+  con espera de opciones (H3), pregunta con tarjetas táctiles del color de la proyección (V/F, 3 opciones, un solo
+  intento, temporizador), resultado inmediato sin ranking, "sin respuesta" por cierre (H4) o tiempo agotado (H5) y
+  resultado final con posición y Top 3 con la fila propia resaltada. Los `422` de responder (texto libre en el backend)
+  se resuelven recalculando la etapa con el estado del servidor. Frontend puro.
+- **US-6.3.10** (UAT del modo en vivo, tramo automático): circuitos E2E con Playwright (`frontend/e2e/`,
+  `npm run test:e2e`) contra backend y frontend reales — sesión completa, V/F y tres opciones, finalizar antes,
+  unión tardía, bordes al responder, reconexión y recarga, pocos participantes y legibilidad medida en el
+  navegador. **Corrige dos bloqueantes** que Vitest no veía: el estado de la sesión (`EnEspera`/`EnCurso`/
+  `Finalizada` del backend) y los mensajes del WebSocket en snake_case. Proxy de desarrollo de Vite (`/api`)
+  para probar desde un celular de la red.
+- **US-ADJ-56** (el desempeño del Estudiante incluye las sesiones en vivo): "Mi desempeño" y "Desempeño por
+  alumno" ganan la sección "Sesiones en vivo" (comisión, fecha, puntaje, posición, correctas/incorrectas),
+  separada del acumulado de período abierto. Segundo puerto de Analytics hacia Actividad Evaluativa
+  (`SesionEnVivoDesempenoConsultaPort`, in-process) que agrupa los streams `ActividadEvaluativaEnVivo`/
+  `ParticipacionEnVivo` y lee `ranking_por_sesion` para la posición — sin endpoint nuevo, sin migración.
+- **US-ADJ-58** (cancelar una sesión no iniciada, finalizar en cualquier etapa, no iniciar sin
+  participantes): estado propio `Cancelada` (no reutiliza `Finalizada`), `finalizar()` relaja
+  INV-AEV-03 para no exigir la última pregunta, validación de "al menos un participante" también
+  en el backend (no solo en la UI).
+- **US-ADJ-57** (cada Docente ve y opera solo sobre las materias de sus Comisiones): primitivas
+  nuevas en Identidad, `docente_pertenece_a_comision`/`docente_tiene_comision_en_materia`,
+  consumidas ampliando el `ComisionConsultaPort` propio de cada uno de los otros 3 BC (Banco de
+  Preguntas, Actividad Evaluativa, Analytics) — sin importar directamente entre BCs.
+
+### Fixed
+- **US-ADJ-07** (nombre legible de la comisión en el detalle de cuenta): `CuentaDetalle.tsx`
+  mostraba el UUID crudo de `comisionId` para cuentas de perfil Estudiante — ahora resuelve
+  `{Materia} — {horario}` vía `GET /comisiones/{id}` (`US-ADJ-25`), mismo patrón que
+  `ComisionDetalle.tsx`.
+
+## [0.7.1] - 2026-09-17
+
+### Added
+- **Incremento 5-ADJ — Identidad Autoservicio y Analytics del Docente** (`RF-20` a `RF-25`),
+  cierre de baseline `BL-010`. Insertado fuera de la secuencia numérica de `PLAN_v1.md` (mismo
+  criterio que Incremento 3-ADJ/4-ADJ), agrupa dos frentes: backlog de Identidad relevado por
+  Víctor en revisión manual (contraseña visible/oculta, política segura, descubribilidad de
+  "Cambiar contraseña", recuperación de contraseña por autoservicio, autoregistro con
+  selección de perfil) y los 4 informes de Analytics para el Docente elicitados durante la
+  estabilización post-`BL-007` (desempeño por comisión, evolución temporal, ranking de
+  preguntas falladas, completitud por actividad). Cinco iteraciones, backend + frontend juntos
+  en cada una sin diferir a otra iteración (mismo criterio que Banco de Preguntas/Cuentas).
+  - **Contraseña segura y accesible**: `PasswordInput.tsx` compartido con toggle
+    mostrar/ocultar, reemplaza los 10 inputs de contraseña de los 5 formularios existentes;
+    `Usuario.validar_password_nueva` (`INV-ID-11`) ampliada de 8 a 12 caracteres + mezcla de
+    tipos, cerrando un gap real (`CrearUsuario`/`RegistrarEstudiante` no la invocaban);
+    `UserMenu.tsx` como único punto de entrada por clic a "Cambiar contraseña"/"Cerrar sesión"
+  - **Recuperación de contraseña** (`RF-24`): aggregate `TokenRecuperacionPassword` (expiración
+    1 hora), endpoints públicos `POST /identidad/recuperar-password/{solicitar,confirmar}`,
+    respuesta indistinguible si el email existe o no (`INV-ID-17`) — primera vez que BC
+    Identidad depende de un puerto de BC Notificaciones (`CanalRecuperacionPort`, `ADR-006`)
+  - **Autoregistro con selección de perfil** (`RF-25`): endpoints públicos
+    `POST /identidad/autoregistro/{docente,estudiante}` (Docente activo de inmediato, sin
+    aprobación; Estudiante con `comision_id` obligatorio), pantalla de selección de perfil →
+    formulario dinámico, coexiste con el registro por invitación existente
+  - **Analytics** (`RF-20` a `RF-23`): `ObtenerDesempenoPorComision` (reutiliza
+    `ObtenerDesempenoEstudianteUseCase` de `US-4.1.2` para el drill-down),
+    `ObtenerEvolucionTemporalEstudiante`/`Comision`, `ObtenerRankingPreguntasFalladas`,
+    `ObtenerCompletitudPorActividad` — todas amplían `EvaluacionDesempenoConsultaPort` ya
+    existente, sin puertos nuevos; 4 pantallas nuevas unificadas bajo un único ítem de menú
+    "Reportes" en `AppNav.tsx`, con landing (`Analytics.tsx`) y paginación de 20 ítems
+  - Alta/edición/baja de Materia pasa a ser exclusiva del Administrador (antes también el
+    Docente, RBAC confuso) — hallazgo de la UAT de cierre de la Iteración 4
+  - Iteración 5 — revisión documental de cierre (`US-ADJ-52`, sin código de producción):
+    numeración definitiva de `RF-24`/`RF-25`, `ADR-020` nuevo (autoregistro como tercera vía de
+    alta de cuenta), nota de alcance en `ADR-012`, wireframes reconciliados con el código real
+  - 1197/1197 tests backend (95.49% cobertura), 497/497 frontend (91.72% cobertura
+    statements), `designreviewer` 0 CRITICAL (215 advertencias), `architectanalyst` 7 críticos
+    (mismo "Zone of Pain" aceptado desde `US-ADJ-13`/`19`, sube de 6 a 7 por `notificaciones`
+    como séptimo módulo del patrón). RF-20 a RF-25 pasan a **Validado** en
+    `docs/traceability/matrix.md`
+
+## [0.7.0] - 2026-09-10
+
+### Added
+- **Incremento 5 — Notificaciones** (RF-14), cierre de baseline `BL-009`. Primer Bounded
+  Context puramente event-driven del sistema: sin aggregate ni comando propio disparado por
+  un actor humano, reacciona a eventos de dominio ya existentes de Actividad Evaluativa
+  (`ActividadEvaluativaCreada`/`ActividadEvaluativaCerrada`) y produce un efecto de borde
+  (enviar un email) vía integración directa (`ADR-006`). Incremento corto y deliberadamente
+  aislado — una sola iteración, sin frontend (RF-14 sin pantalla propia)
+  - `src/notificaciones/` (BC completo): `CanalEnvioPort`/`SmtpCanalEnvio` (adapter SMTP
+    propio, mismo patrón `smtplib` + `asyncio.to_thread` que `SmtpNotificador` de Identidad,
+    `ADR-012`), `ComisionConsultaPort`/`ComisionConsultaPortInProcess` (copia propia hacia
+    Identidad, con `email`), `NotificarAperturaUseCase`/`NotificarCierreUseCase`
+  - `NotificacionPort` (Actividad Evaluativa, dueño del puerto): `notificar_apertura(...)`
+    cableado en `CrearActividadPeriodoAbiertoUseCase`, `notificar_cierre(...)` cableado en
+    `CerrarActividadUseCase` — ambos con `materia_nombre` resuelto vía `MateriaConsultaPort`
+    (Notificaciones no tiene el propio), ambos "nunca lanzan": un fallo de envío se loguea y
+    no aborta la operación de dominio ni el resto del roster
+  - Solo el cierre manual del Docente dispara el email de cierre — el vencimiento natural del
+    período (`VerificarVencimientosUseCase`) sigue sin disparar ningún email, decisión de
+    producto confirmada en el modelado
+  - `ComisionQueryPort.listar_estudiantes_con_email` nuevo en Identidad
+    (`EstudianteConEmail`), coexiste con `listar_estudiantes` sin reemplazarlo
+  - 969/969 tests backend (94.82% cobertura), quality gates APROBADO en las 3 US, UAT de
+    cierre sin hallazgos 🔴 Bloqueantes (`quality/reports/uat/inc5/design.md`/`evidencia.md`):
+    Capa 1 (757/757 unit+integration, 212/212 BDD) y Capa 2 (`smoke.sh` extendido — fake SMTP
+    persiste el contenido real de cada mensaje, verificado contra el flujo ya existente de
+    crear/cerrar una actividad, sin pasos HTTP nuevos). RF-14 pasa a **Validado** en
+    `docs/traceability/matrix.md`
+  - Cuenta SMTP real de producción queda como ítem abierto (`CLAUDE.md`) — evaluadas 3
+    variantes (cuenta institucional única, "From" delegado del Docente, cuenta real por
+    Materia); se resuelve junto con la decisión mayor de infraestructura de producción,
+    todavía pendiente institucionalmente
+
+## [0.6.2] - 2026-09-10
+
+Cierra `BL-008` — prueba manual E2E de estabilización de los tres portales (Administrador,
+Docente, Estudiante) con datos reales, posterior a `BL-007`. Sin US-IEDD ni RF nuevo — track
+informal en su totalidad; detalle completo en
+[`.cm/baselines/BL-008-estabilizacion-portales.md`](.cm/baselines/BL-008-estabilizacion-portales.md).
+
+### Fixed
+- Edición de cuenta (`PATCH /usuarios/{id}`) devolvía `200` sin escribir `nombre`/`email` a la
+  base — `SQLAlchemyUsuarioRepository.actualizar()` no persistía el cambio
+- Mismo bug class en `MateriaRepositoryPort` (sin método `actualizar()`)
+- `/` sin sesión no redirigía a `/login`
+- `POST /materias` rechazaba al rol `administrador` (solo aceptaba `docente`)
+
+### Added
+- CRUD estandarizado (editar, ver, eliminar con baja lógica condicionada, reactivar) para
+  Materias, Comisiones y Cuentas — dos puertos cruzados nuevos in-process
+  (`ComisionConsultaPort`, `EvaluacionConsultaPort`)
+- Actividad Evaluativa restringible a una Comisión y a una unidad temática/tema concretos
+- Reintento de respuestas durante la evaluación (`IntentosAgotados`, 422, contador por
+  pregunta) y "Finalizar evaluación" como acción independiente de responder la última pregunta
+- Listados de Materias/Comisiones/Actividades/Cuentas en tabla con columnas de métricas
+- `RF-20` a `RF-23` elicitados (informes de Analytics para el Docente) — quedan Planificados,
+  sin incremento asignado
+
 ## [0.6.1] - 2026-09-07
 
 ### Added

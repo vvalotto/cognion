@@ -1,0 +1,9 @@
+reposo_inicial: load~7 (picos 10), disco~18 MB/s
+default-a | reposo=7.84 | duracion=240s | load_prom=128.8 | load_pico=244.84 | disco_MB/s=11.2 | Tests  3 failed | 636 passed (639)
+w4-a | reposo=13.95 | duracion=254s | load_prom=131.4 | load_pico=233.54 | disco_MB/s=31.9 | Tests  639 passed (639)
+w2-a | reposo=7.90 | duracion=281s | load_prom=21.1 | load_pico=52.13 | disco_MB/s=13.5 | Tests  1 failed | 638 passed (639)
+p50-a | reposo=7.54 | duracion=120s | load_prom=17.0 | load_pico=27.34 | disco_MB/s=17.5 | Tests  1 failed | 638 passed (639)
+default-b | reposo=7.96 | duracion=108s | load_prom=13.5 | load_pico=19.71 | disco_MB/s=9.8 | Tests  639 passed (639)
+w4-b | reposo=7.73 | duracion=118s | load_prom=14.1 | load_pico=19.34 | disco_MB/s=27.9 | Tests  639 passed (639)
+w2-b | reposo=7.76 | duracion=161s | load_prom=10.3 | load_pico=15.98 | disco_MB/s=12.8 | Tests  639 passed (639)
+p50-b | reposo=7.87 | duracion=127s | load_prom=15.3 | load_pico=21.53 | disco_MB/s=16.8 | Tests  639 passed (639)

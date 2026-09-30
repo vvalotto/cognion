@@ -43,6 +43,26 @@ rol, sin navegación).
 | Cards de acceso | 4 cards: Banco de Preguntas, Actividades, Desempeño por alumno, Desempeño por tema — cada una con título + descripción de una línea, click navega a la ruta ya existente |
 | Fuera de alcance | Contenido dinámico (contadores, notificaciones) — solo navegación, ver `portal-entrada-modelo.md` §5 |
 
+> **Nota de deriva documental (agregada 2026-09-16, `US-ADJ-52`):** al aprobarse este
+> wireframe (2026-09-07) los dos únicos informes de Analytics del Docente eran "Desempeño por
+> alumno" y "Desempeño por tema" (RF-16/RF-17). El Incremento 5-ADJ agregó dos más (RF-20/22,
+> `US-ADJ-48`/`50`) y, tras una sesión de UAT con Víctor sobre la app real (PR #370,
+> 2026-09-16), los 4 se unificaron en un único ítem de `.app-nav` — **"Reportes"** —, que
+> navega a una landing (`Analytics.tsx`, ruta `/analytics`) con una card por informe
+> (Desempeño por comisión, Desempeño por alumno, Desempeño por tema, Preguntas más falladas),
+> en vez de una entrada de menú por informe. El `.app-nav` real del Docente hoy es: **Inicio ·
+> Banco de Preguntas · Actividades · Reportes** (`frontend/src/components/AppNav.tsx`). Este
+> documento no se reescribe retroactivamente — la tabla de arriba refleja lo aprobado el
+> 2026-09-07; esta nota documenta el estado vigente.
+>
+> **Hallazgo resuelto 2026-09-16, en tarea aparte (PR #374, track informal, solo
+> `frontend/`):** las 2 cards sueltas de "Desempeño por alumno"/"Desempeño por tema" en
+> `HomeDocente.tsx` (que enlazaban directo a esas dos pantallas, sin pasar por la landing
+> "Reportes" ni incluir los otros 2 informes) se reemplazaron por una única card "Reportes" →
+> `/analytics`, mismo destino y mismo criterio de unificación que el ítem de `.app-nav` de
+> arriba. `HomeDocente.tsx` pasa de 4 a 3 cards de acceso — Home y menú persistente quedan
+> consistentes entre sí.
+
 ### 2.2 Home Estudiante (`#home-estudiante`) — `US-ADJ-29`
 
 **Actor:** Estudiante.

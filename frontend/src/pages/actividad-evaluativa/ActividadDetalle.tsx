@@ -38,6 +38,11 @@ function tituloDeActividad(actividad: ActividadResumenResponse): string {
   return actividad.titulo || `Actividad del ${formatearFecha(actividad.fechaApertura)}`
 }
 
+function contenidoDeActividad(actividad: ActividadResumenResponse): string {
+  if (!actividad.unidadTematica && !actividad.tema) return "Sin restricción (todo el banco)"
+  return [actividad.unidadTematica, actividad.tema].filter(Boolean).join(" · ")
+}
+
 /** Detalle de una actividad, con acciones de extender plazo y cerrar (`#doc-detalle-actividad`, `US-3.4.4`). */
 export function ActividadDetalle() {
   const { actividadId } = useParams<{ actividadId: string }>()
@@ -117,6 +122,10 @@ export function ActividadDetalle() {
           <span className="font-medium">{formatearFecha(actividad.fechaCierre)}</span>
         </div>
         <div className="flex items-center justify-between px-4 py-3 text-sm">
+          <span className="text-muted-foreground">Unidad temática / Tema</span>
+          <span className="font-medium">{contenidoDeActividad(actividad)}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-3 text-sm">
           <span className="text-muted-foreground">Cantidad de preguntas</span>
           <span className="font-medium">{actividad.cantidadPreguntas}</span>
         </div>
@@ -135,6 +144,17 @@ export function ActividadDetalle() {
           <span className="font-medium">{actividad.cantidadEvaluacionesFinalizadas}</span>
         </div>
       </Card>
+
+      <div className="mt-4 flex flex-col gap-2">
+        <Button
+          variant="outline"
+          onClick={() =>
+            navigate(`/actividad-evaluativa/actividades/${actividad.id}/completitud`)
+          }
+        >
+          Ver completitud
+        </Button>
+      </div>
 
       {!actividad.cerradaManualmente && (
         <div className="mt-4 flex flex-col gap-2">

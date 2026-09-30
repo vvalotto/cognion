@@ -1,0 +1,45 @@
+{
+  "us_id": "US-ADJ-46",
+  "fecha": "2026-09-14T12:05:00",
+  "componente": "src/analytics (12 archivos, acumulado de la branch US-ADJ-44/45/46: pregunta_metadato_consulta_port.py, pregunta_metadato_consulta_port_in_process.py, obtener_ranking_preguntas_falladas.py, analytics_informes_controller.py nuevo, analytics_controller.py separado, dependencies.py, schemas.py, analytics_router.py, evaluacion_desempeno_consulta_port.py, evaluacion_desempeno_consulta_port_in_process.py, obtener_evolucion_temporal_estudiante.py, obtener_evolucion_temporal_comision.py)",
+  "metricas": {
+    "pylint": 9.82,
+    "cc_promedio": 2.7,
+    "cc_max": 9,
+    "mi_promedio": 79.6,
+    "mi_min_archivo": 50.52,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 12,
+    "errors": 8,
+    "warnings": 109,
+    "infos": 87,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 12 },
+      "PEP8": { "errors": 0, "warnings": 1, "infos": 11 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 12 },
+      "DeadCode": { "errors": 8, "warnings": 90, "infos": 1 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 12 },
+      "Pylint": { "errors": 0, "warnings": 0, "infos": 12 },
+      "Spelling": { "errors": 0, "warnings": 18, "infos": 4 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 11 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 12 }
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-46-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Reporte de CodeGuard/pylint/radon corre sobre el acumulado de la branch (US-ADJ-44+45+46, implementadas juntas en una sola ejecución/PR por decisión de Víctor) — no solo los archivos que esta US agregó, ya que comparten el mismo diff contra develop.",
+    "DesignReviewer detectó CRITICAL de CBO (13/10) en AnalyticsController al agregar el 6° Use Case — corregido separando en AnalyticsController (desempeño individual, 2 Use Case) y AnalyticsInformesController nuevo (informes agregados, 4 Use Case), mismo criterio de separación por responsabilidad ya aplicado en Incremento 2. DesignReviewer local post-fix: 0 CRITICAL.",
+    "Los 8 errores de DeadCode son falso positivo de vulture sobre los parámetros de los 5 métodos abstractos de EvaluacionDesempenoConsultaPort y el único de PreguntaMetadatoConsultaPort — mismo patrón ya aceptado en US-ADJ-44/45.",
+    "pylint marca 'duplicate-code' entre RankingPreguntaFallada (dataclass) y su Response Pydantic — mismo patrón de duplicación estructural ya presente en todo el BC (DTO de dominio + schema de API con los mismos campos), no específico de esta US.",
+    "Coverage medido en entities/use_cases/interface_adapters (100%) — frameworks/ queda fuera del gate por diseño (tool.coverage.run.omit en pyproject.toml)."
+  ]
+}

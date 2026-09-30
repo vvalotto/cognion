@@ -37,7 +37,7 @@ class TestRegistroController:
         )
 
         usuario, materia, evento_invitacion, evento_usuario = await controller.registrar_estudiante(
-            invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123"
+            invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x"
         )
 
         assert usuario.email == "nico@fiuner.edu.ar"

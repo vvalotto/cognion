@@ -14,9 +14,12 @@
 # actividad, estudiante inicia su evaluación con set aleatorio fijo, idempotencia
 # en reconexión, rechazo fuera de período), el flujo de Analytics (US-4.1.1 a US-4.1.3:
 # desempeño del propio Estudiante; US-4.2.1/4.2.2/4.2.4: desempeño de un alumno elegido
-# y tasa de error por tema, ambos consultados por el Docente), verifica casos de error (email
-# duplicado -> 409, token vencido -> 422, opciones inválidas -> 422, evaluación
-# fuera de período -> 422, rol insuficiente -> 403), limpia los datos de prueba
+# y tasa de error por tema, ambos consultados por el Docente), y verifica el flujo de
+# Notificaciones (US-5.1.2/5.1.3, RF-14: el fake SMTP persiste cada mensaje capturado y el
+# script confirma que la creación y el cierre manual de la actividad de arriba dispararon
+# el email de apertura y de cierre respectivamente, sin pasos HTTP nuevos), verifica casos
+# de error (email duplicado -> 409, token vencido -> 422, opciones inválidas -> 422,
+# evaluación fuera de período -> 422, rol insuficiente -> 403), limpia los datos de prueba
 # y baja el server.
 #
 # Uso: .claude/skills/run-cognion/smoke.sh   (desde la raíz del repo)
@@ -78,7 +81,8 @@ pg_isready -q || { echo "Postgres no responde en localhost:5432 — arrancalo co
 echo "OK"
 
 echo "== Arrancando fake SMTP (puerto ${SMTP_PORT}) =="
-python3 .claude/skills/run-cognion/fake_smtp.py "$SMTP_PORT" &
+SMTP_LOG=$(mktemp -t cognion-smoke-smtp.XXXXXX.log)
+python3 .claude/skills/run-cognion/fake_smtp.py "$SMTP_PORT" "$SMTP_LOG" &
 SMTP_PID=$!
 sleep 0.3
 echo "OK"
@@ -303,6 +307,11 @@ if [[ "$invitacion_code" == "201" ]]; then
   actividad_id=$(echo "$actividad" | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
   echo "OK (id=$actividad_id, vigente por 7 días)"
 
+  echo "== Notificación de apertura capturada por el fake SMTP (US-5.1.2, RF-14) =="
+  grep -q "Subject: Nueva actividad disponible:" "$SMTP_LOG" || { echo "FAIL: no se capturó ningún email de apertura en $SMTP_LOG"; cat "$SMTP_LOG"; exit 1; }
+  grep -q "To: ${ESTUDIANTE_EMAIL}" "$SMTP_LOG" || { echo "FAIL: el email de apertura no fue dirigido a $ESTUDIANTE_EMAIL"; cat "$SMTP_LOG"; exit 1; }
+  echo "OK"
+
   echo "== POST /evaluaciones (estudiante inicia su evaluación, US-3.1.3, RF-12) =="
   evaluacion=$(curl -s -X POST "${BASE}/evaluaciones" -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${estudiante_token}" \
@@ -492,6 +501,11 @@ assert por_tema['Geografía']['tasa_error'] == 1.0, tasas
     -H "Authorization: Bearer ${docente_token}")
   [[ "$code" == "200" ]] || { echo "FAIL: cerrar actividad devolvió $code, esperado 200"; exit 1; }
   echo "OK ($code)"
+
+  echo "== Notificación de cierre capturada por el fake SMTP (US-5.1.3, RF-14) =="
+  grep -q "Subject: Actividad cerrada:" "$SMTP_LOG" || { echo "FAIL: no se capturó ningún email de cierre en $SMTP_LOG"; cat "$SMTP_LOG"; exit 1; }
+  grep -q "To: ${ESTUDIANTE_EMAIL}" "$SMTP_LOG" || { echo "FAIL: el email de cierre no fue dirigido a $ESTUDIANTE_EMAIL"; cat "$SMTP_LOG"; exit 1; }
+  echo "OK"
 
   echo "== POST /evaluaciones sobre actividad ya cerrada, estudiante SIN Evaluacion previa (esperado 422) =="
   # No reusar estudiante_token: ese estudiante ya tiene una Evaluacion Finalizada para

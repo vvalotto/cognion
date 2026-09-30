@@ -1,0 +1,621 @@
+"""Tests unitarios del aggregate `ActividadEvaluativaEnVivo` y su evento (US-6.1.2)."""
+
+from uuid import uuid4
+
+import pytest
+
+from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+    ActividadEvaluativaEnVivo,
+    EstadoSesionEnVivo,
+)
+from src.actividad_evaluativa.entities.errors import (
+    ComisionNoExiste,
+    TiempoLimiteInvalido,
+)
+from src.actividad_evaluativa.entities.evaluacion import Evaluacion
+from src.actividad_evaluativa.entities.eventos_en_vivo import SesionEnVivoCreada
+
+
+def _preguntas(cantidad: int = 3):
+    return Evaluacion.armar_preguntas_asignadas([uuid4() for _ in range(cantidad)])
+
+
+class TestCrear:
+    def test_crea_en_espera_sin_pregunta_actual(self):
+        comision_id, materia_id = uuid4(), uuid4()
+        preguntas = _preguntas()
+
+        sesion = ActividadEvaluativaEnVivo.crear(comision_id, materia_id, preguntas, 30)
+
+        assert sesion.comision_id == comision_id
+        assert sesion.materia_id == materia_id
+        assert sesion.preguntas == preguntas
+        assert sesion.tiempo_limite_por_pregunta_segundos == 30
+        assert sesion.estado == EstadoSesionEnVivo.EN_ESPERA
+        assert sesion.pregunta_actual_indice is None
+        assert sesion.opciones_mostradas is False
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_unidad_y_tema_vacios_se_normalizan_a_none(self):
+        sesion = ActividadEvaluativaEnVivo.crear(
+            uuid4(), uuid4(), _preguntas(), 30, unidad_tematica="", tema=""
+        )
+
+        assert sesion.unidad_tematica is None
+        assert sesion.tema is None
+
+    def test_conserva_unidad_y_tema(self):
+        sesion = ActividadEvaluativaEnVivo.crear(
+            uuid4(), uuid4(), _preguntas(), 30, unidad_tematica="U1", tema="T1"
+        )
+
+        assert sesion.unidad_tematica == "U1"
+        assert sesion.tema == "T1"
+
+    @pytest.mark.parametrize("tiempo", [0, -5])
+    def test_rechaza_tiempo_limite_no_positivo(self, tiempo):
+        with pytest.raises(TiempoLimiteInvalido):
+            ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), tiempo)
+
+    def test_cada_sesion_tiene_id_propio(self):
+        a = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        b = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        assert a.id != b.id
+
+
+class TestSesionEnVivoCreada:
+    def test_desde_sesion_copia_los_campos(self):
+        sesion = ActividadEvaluativaEnVivo.crear(
+            uuid4(), uuid4(), _preguntas(), 45, unidad_tematica="U1", tema="T1"
+        )
+
+        evento = SesionEnVivoCreada.desde_sesion(sesion)
+
+        assert evento.sesion_id == sesion.id
+        assert evento.comision_id == sesion.comision_id
+        assert evento.materia_id == sesion.materia_id
+        assert evento.preguntas == sesion.preguntas
+        assert evento.tiempo_limite_por_pregunta_segundos == 45
+        assert evento.unidad_tematica == "U1"
+        assert evento.tema == "T1"
+
+
+class TestErrores:
+    def test_tiempo_limite_invalido_guarda_el_valor_y_arma_mensaje(self):
+        error = TiempoLimiteInvalido(0)
+
+        assert error.tiempo_limite_segundos == 0
+        assert "0" in str(error)
+
+    def test_comision_no_existe_guarda_el_id_y_arma_mensaje(self):
+        comision_id = uuid4()
+
+        error = ComisionNoExiste(comision_id)
+
+        assert error.comision_id == comision_id
+        assert str(comision_id) in str(error)
+
+
+def _evento_creada(sesion):
+    from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
+
+    return EventoAlmacenado(
+        sequence_number=1,
+        event_type="SesionEnVivoCreada",
+        payload={
+            "sesion_id": str(sesion.id),
+            "comision_id": str(sesion.comision_id),
+            "materia_id": str(sesion.materia_id),
+            "preguntas": [
+                {"pregunta_id": str(p.pregunta_id), "orden": p.orden} for p in sesion.preguntas
+            ],
+            "tiempo_limite_por_pregunta_segundos": sesion.tiempo_limite_por_pregunta_segundos,
+            "unidad_tematica": sesion.unidad_tematica,
+            "tema": sesion.tema,
+        },
+        occurred_at=None,
+    )
+
+
+def _evento(tipo: str, secuencia: int, payload: dict | None = None):
+    from datetime import UTC, datetime
+
+    from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
+
+    return EventoAlmacenado(
+        sequence_number=secuencia,
+        event_type=tipo,
+        payload=payload or {},
+        occurred_at=datetime.now(UTC),
+    )
+
+
+class TestReconstruir:
+    def test_reconstruye_la_sesion_recien_creada(self):
+        original = ActividadEvaluativaEnVivo.crear(
+            uuid4(), uuid4(), _preguntas(4), 45, unidad_tematica="U1", tema="T1"
+        )
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir([_evento_creada(original)])
+
+        assert sesion.id == original.id
+        assert sesion.comision_id == original.comision_id
+        assert sesion.materia_id == original.materia_id
+        assert sesion.preguntas == original.preguntas
+        assert sesion.tiempo_limite_por_pregunta_segundos == 45
+        assert sesion.unidad_tematica == "U1"
+        assert sesion.tema == "T1"
+        assert sesion.estado == EstadoSesionEnVivo.EN_ESPERA
+
+    def test_iniciada_pasa_a_en_curso(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [_evento_creada(original), _evento("SesionEnVivoIniciada", 2)]
+        )
+
+        assert sesion.estado == EstadoSesionEnVivo.EN_CURSO
+
+    def test_finalizada_pasa_a_finalizada(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [
+                _evento_creada(original),
+                _evento("SesionEnVivoIniciada", 2),
+                _evento("SesionEnVivoFinalizada", 3),
+            ]
+        )
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+
+    def test_ignora_los_event_type_sin_efecto_sobre_el_estado(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [_evento_creada(original), _evento("PreguntaEnVivoCerrada", 2)]
+        )
+
+        assert sesion.estado == EstadoSesionEnVivo.EN_ESPERA
+
+
+class TestValidarParaUnirse:
+    def test_admite_en_espera_y_en_curso(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.validar_para_unirse()
+
+        sesion.estado = EstadoSesionEnVivo.EN_CURSO
+        sesion.validar_para_unirse()
+
+    def test_rechaza_finalizada(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaFinalizada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = EstadoSesionEnVivo.FINALIZADA
+
+        with pytest.raises(SesionYaFinalizada):
+            sesion.validar_para_unirse()
+
+
+class TestIniciar:
+    def test_pasa_a_en_curso_con_la_primera_pregunta_actual(self):
+        preguntas = _preguntas(3)
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), preguntas, 30)
+
+        sesion.iniciar()
+
+        assert sesion.estado == EstadoSesionEnVivo.EN_CURSO
+        assert sesion.pregunta_actual_indice == 0
+        assert sesion.opciones_mostradas is False
+        assert sesion.pregunta_actual_cerrada is False
+        assert sesion.pregunta_actual() == preguntas[0]
+
+    @pytest.mark.parametrize("estado", [EstadoSesionEnVivo.EN_CURSO, EstadoSesionEnVivo.FINALIZADA])
+    def test_rechaza_si_ya_no_esta_en_espera(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionYaIniciada):
+            sesion.iniciar()
+
+    def test_no_muta_si_se_rechaza(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = EstadoSesionEnVivo.FINALIZADA
+
+        with pytest.raises(SesionYaIniciada):
+            sesion.iniciar()
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+        assert sesion.pregunta_actual_indice is None
+
+    def test_pregunta_actual_sin_iniciar_levanta(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        with pytest.raises(ValueError):
+            sesion.pregunta_actual()
+
+
+class TestReconstruirConInicioReal:
+    def test_toma_la_pregunta_actual_del_payload(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.ports.event_store_port import EventoAlmacenado
+
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        iniciada = EventoAlmacenado(
+            sequence_number=2,
+            event_type="SesionEnVivoIniciada",
+            payload={"sesion_id": str(original.id), "pregunta_actual_indice": 0},
+            occurred_at=datetime.now(UTC),
+        )
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir([_evento_creada(original), iniciada])
+
+        assert sesion.estado == EstadoSesionEnVivo.EN_CURSO
+        assert sesion.pregunta_actual_indice == 0
+        assert sesion.pregunta_actual() == original.preguntas[0]
+
+    def test_payload_minimo_sembrado_asume_la_primera_pregunta(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [_evento_creada(original), _evento("SesionEnVivoIniciada", 2)]
+        )
+
+        assert sesion.pregunta_actual_indice == 0
+
+
+class TestMostrarOpciones:
+    def _en_curso(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        return sesion
+
+    def test_marca_las_opciones_y_registra_el_instante(self):
+        from datetime import UTC, datetime
+
+        sesion = self._en_curso()
+        ahora = datetime.now(UTC)
+
+        sesion.mostrar_opciones(ahora)
+
+        assert sesion.opciones_mostradas is True
+        assert sesion.opciones_mostradas_en == ahora
+
+    @pytest.mark.parametrize(
+        "estado", [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.FINALIZADA]
+    )
+    def test_rechaza_si_no_esta_en_curso(self, estado):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.mostrar_opciones(datetime.now(UTC))
+
+        assert sesion.opciones_mostradas is False
+        assert sesion.opciones_mostradas_en is None
+
+    def test_rechaza_si_ya_estaban_mostradas_sin_pisar_el_instante(self):
+        from datetime import UTC, datetime, timedelta
+
+        from src.actividad_evaluativa.entities.errors import OpcionesYaMostradas
+
+        sesion = self._en_curso()
+        primero = datetime.now(UTC)
+        sesion.mostrar_opciones(primero)
+
+        with pytest.raises(OpcionesYaMostradas):
+            sesion.mostrar_opciones(primero + timedelta(seconds=5))
+
+        assert sesion.opciones_mostradas_en == primero
+
+    def test_reconstruir_aplica_el_evento_de_opciones_mostradas(self):
+        from datetime import UTC, datetime
+
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        ocurrido = datetime.now(UTC)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [
+                _evento_creada(original),
+                _evento("SesionEnVivoIniciada", 2),
+                _evento("OpcionesEnVivoMostradas", 3, {"ocurrido_en": ocurrido.isoformat()}),
+            ]
+        )
+
+        assert sesion.opciones_mostradas is True
+        assert sesion.opciones_mostradas_en == ocurrido
+
+
+class TestEventoOpcionesMostradas:
+    def test_desde_sesion_toma_la_pregunta_actual(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.eventos_en_vivo import OpcionesEnVivoMostradas
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        ahora = datetime.now(UTC)
+
+        evento = OpcionesEnVivoMostradas.desde_sesion(sesion, ["a", "b"], ahora)
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 0
+        assert evento.pregunta_id == sesion.pregunta_actual().pregunta_id
+        assert evento.opciones == ["a", "b"]
+        assert evento.ocurrido_en == ahora
+
+
+class TestCerrarPregunta:
+    def _con_opciones_mostradas(self):
+        from datetime import UTC, datetime
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        sesion.mostrar_opciones(datetime.now(UTC))
+        return sesion
+
+    def test_marca_la_pregunta_como_cerrada(self):
+        sesion = self._con_opciones_mostradas()
+
+        sesion.cerrar_pregunta()
+
+        assert sesion.pregunta_actual_cerrada is True
+
+    @pytest.mark.parametrize(
+        "estado", [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.FINALIZADA]
+    )
+    def test_rechaza_si_no_esta_en_curso(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.cerrar_pregunta()
+
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_rechaza_si_las_opciones_no_se_mostraron(self):
+        from src.actividad_evaluativa.entities.errors import OpcionesNoMostradasTodavia
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+
+        with pytest.raises(OpcionesNoMostradasTodavia):
+            sesion.cerrar_pregunta()
+
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_rechaza_si_ya_estaba_cerrada(self):
+        from src.actividad_evaluativa.entities.errors import PreguntaYaCerrada
+
+        sesion = self._con_opciones_mostradas()
+        sesion.cerrar_pregunta()
+
+        with pytest.raises(PreguntaYaCerrada):
+            sesion.cerrar_pregunta()
+
+    def test_evento_toma_la_pregunta_actual(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.eventos_en_vivo import PreguntaEnVivoCerrada
+
+        sesion = self._con_opciones_mostradas()
+        ahora = datetime.now(UTC)
+
+        evento = PreguntaEnVivoCerrada.desde_sesion(sesion, ahora)
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 0
+        assert evento.pregunta_id == sesion.pregunta_actual().pregunta_id
+        assert evento.ocurrido_en == ahora
+
+
+class TestAvanzar:
+    def _cerrada(self, cantidad: int = 3, indice: int = 0):
+        from datetime import UTC, datetime
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(cantidad), 30)
+        sesion.iniciar()
+        sesion.pregunta_actual_indice = indice
+        sesion.mostrar_opciones(datetime.now(UTC))
+        sesion.cerrar_pregunta()
+        return sesion
+
+    def test_pasa_a_la_siguiente_con_el_estado_inicial(self):
+        sesion = self._cerrada()
+
+        sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 1
+        assert sesion.opciones_mostradas is False
+        assert sesion.opciones_mostradas_en is None
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_avanza_hasta_la_ultima_pregunta(self):
+        sesion = self._cerrada(cantidad=5, indice=3)
+
+        sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 4
+
+    @pytest.mark.parametrize(
+        "estado", [EstadoSesionEnVivo.EN_ESPERA, EstadoSesionEnVivo.FINALIZADA]
+    )
+    def test_rechaza_si_no_esta_en_curso(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = self._cerrada()
+        sesion.estado = estado
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 0
+
+    def test_rechaza_si_la_pregunta_no_fue_cerrada_sin_mutar(self):
+        from datetime import UTC, datetime
+
+        from src.actividad_evaluativa.entities.errors import PreguntaActualNoCerrada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.iniciar()
+        sesion.mostrar_opciones(datetime.now(UTC))
+
+        with pytest.raises(PreguntaActualNoCerrada):
+            sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 0
+        assert sesion.opciones_mostradas is True
+
+    def test_rechaza_en_la_ultima_pregunta_sin_mutar(self):
+        from src.actividad_evaluativa.entities.errors import NoQuedanPreguntas
+
+        sesion = self._cerrada(cantidad=3, indice=2)
+
+        with pytest.raises(NoQuedanPreguntas):
+            sesion.avanzar()
+
+        assert sesion.pregunta_actual_indice == 2
+        assert sesion.pregunta_actual_cerrada is True
+
+    def test_evento_toma_la_nueva_pregunta_actual(self):
+        from src.actividad_evaluativa.entities.eventos_en_vivo import SiguientePreguntaPresentada
+
+        sesion = self._cerrada()
+        sesion.avanzar()
+
+        evento = SiguientePreguntaPresentada.desde_sesion(sesion, "Enunciado 2", "opcion_multiple")
+
+        assert evento.sesion_id == sesion.id
+        assert evento.pregunta_actual_indice == 1
+        assert evento.pregunta_id == sesion.preguntas[1].pregunta_id
+        assert evento.enunciado == "Enunciado 2"
+        assert evento.tipo == "opcion_multiple"
+
+    def test_reconstruir_aplica_el_evento_y_resetea_el_estado_de_la_pregunta(self):
+        from datetime import UTC, datetime
+        from types import SimpleNamespace
+
+        sesion = self._cerrada()
+        sesion.opciones_mostradas_en = datetime.now(UTC)
+        evento = SimpleNamespace(
+            event_type="SiguientePreguntaPresentada", payload={"pregunta_actual_indice": 1}
+        )
+
+        from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
+            _aplicar_evento,
+        )
+
+        _aplicar_evento(sesion, evento)  # type: ignore[arg-type]
+
+        assert sesion.pregunta_actual_indice == 1
+        assert sesion.opciones_mostradas is False
+        assert sesion.opciones_mostradas_en is None
+        assert sesion.pregunta_actual_cerrada is False
+
+
+class TestCancelar:
+    """`cancelar()` e INV-AEV-10 (`US-ADJ-58`)."""
+
+    def test_en_espera_pasa_a_cancelada(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion.cancelar()
+
+        assert sesion.estado == EstadoSesionEnVivo.CANCELADA
+
+    @pytest.mark.parametrize("estado", [EstadoSesionEnVivo.EN_CURSO, EstadoSesionEnVivo.FINALIZADA])
+    def test_rechaza_si_ya_se_inicio(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionYaIniciada):
+            sesion.cancelar()
+
+        assert sesion.estado == estado
+
+    def test_rechaza_cancelar_dos_veces(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaCancelada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.cancelar()
+
+        with pytest.raises(SesionYaCancelada):
+            sesion.cancelar()
+
+    def test_cancelada_rechaza_unirse_e_iniciar(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaCancelada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.cancelar()
+
+        with pytest.raises(SesionYaCancelada):
+            sesion.validar_para_unirse()
+        with pytest.raises(SesionYaCancelada):
+            sesion.iniciar()
+        assert sesion.pregunta_actual_indice is None
+
+    def test_cancelada_no_se_finaliza(self):
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.cancelar()
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.finalizar()
+
+    def test_reconstruir_aplica_la_cancelacion(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [_evento_creada(original), _evento("SesionEnVivoCancelada", 2)]
+        )
+
+        assert sesion.estado == EstadoSesionEnVivo.CANCELADA
+
+
+class TestFinalizarEnCualquierEtapa:
+    """INV-AEV-03 modificado (`US-ADJ-58`): finalizar no exige la pregunta cerrada."""
+
+    def test_finaliza_sin_opciones_mostradas(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        sesion.iniciar()
+
+        sesion.finalizar()
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_finaliza_con_las_opciones_a_la_vista(self):
+        from datetime import UTC, datetime
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        sesion.iniciar()
+        sesion.mostrar_opciones(datetime.now(UTC))
+
+        sesion.finalizar()
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_avanzar_sigue_exigiendo_la_pregunta_cerrada(self):
+        from src.actividad_evaluativa.entities.errors import PreguntaActualNoCerrada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        sesion.iniciar()
+
+        with pytest.raises(PreguntaActualNoCerrada):
+            sesion.avanzar()

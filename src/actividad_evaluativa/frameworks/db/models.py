@@ -47,3 +47,25 @@ class EventoModel(Base):
     event_type: Mapped[str] = mapped_column(String(100), nullable=False)
     payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class RankingPorSesionModel(Base):
+    """Read model `ranking_por_sesion` — puntaje acumulado por participante (`US-6.2.3`)."""
+
+    __tablename__ = "ranking_por_sesion"
+
+    sesion_id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
+    estudiante_id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
+    puntaje_acumulado: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    ultima_actualizacion: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class DistribucionPorPreguntaModel(Base):
+    """Read model `distribucion_por_pregunta` — respuestas por opción (`US-6.2.3`)."""
+
+    __tablename__ = "distribucion_por_pregunta"
+
+    sesion_id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
+    pregunta_id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
+    opcion: Mapped[str] = mapped_column(String(50), primary_key=True)
+    cantidad: Mapped[int] = mapped_column(Integer, nullable=False, default=0)

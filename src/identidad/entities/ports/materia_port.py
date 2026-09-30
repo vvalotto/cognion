@@ -25,3 +25,7 @@ class MateriaPort(ABC):
     @abstractmethod
     async def obtener(self, materia_id: UUID) -> MateriaDTO | None:
         """Busca una materia por id, o `None` si no existe."""
+
+    @abstractmethod
+    async def listar(self) -> list[MateriaDTO]:
+        """Lista las materias activas. Sin materias → lista vacía."""

@@ -1,0 +1,204 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-45",
+    "us_title": "Docente consulta la evolución temporal de aciertos",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-14T13:59:56.244349+00:00",
+    "completed_at": "2026-09-14T14:36:01.171313+00:00",
+    "total_elapsed_seconds": 2164,
+    "effective_seconds": 2164,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-14T14:00:07.843517+00:00",
+      "completed_at": "2026-09-14T14:00:29.402968+00:00",
+      "elapsed_seconds": 21,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-14T14:00:29.532569+00:00",
+      "completed_at": "2026-09-14T14:00:48.129683+00:00",
+      "elapsed_seconds": 18,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-14T14:01:04.149011+00:00",
+      "completed_at": "2026-09-14T14:02:04.077800+00:00",
+      "elapsed_seconds": 59,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-14T14:02:04.213226+00:00",
+      "completed_at": "2026-09-14T14:10:14.627245+00:00",
+      "elapsed_seconds": 490,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Port: obtener_titulos_actividades + fakes",
+          "task_type": "port",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-14T14:02:09.920272+00:00",
+          "completed_at": "2026-09-14T14:04:58.713183+00:00",
+          "elapsed_seconds": 168,
+          "actual_minutes": 2.8,
+          "variance_minutes": -12.2,
+          "file_created": "src/analytics/entities/ports/evaluacion_desempeno_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "UseCase ObtenerEvolucionTemporalEstudianteUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-14T14:05:15.267272+00:00",
+          "completed_at": "2026-09-14T14:05:39.338193+00:00",
+          "elapsed_seconds": 24,
+          "actual_minutes": 0.4,
+          "variance_minutes": -14.6,
+          "file_created": "src/analytics/use_cases/obtener_evolucion_temporal_estudiante.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "UseCase ObtenerEvolucionTemporalComisionUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-14T14:05:50.867032+00:00",
+          "completed_at": "2026-09-14T14:06:40.003954+00:00",
+          "elapsed_seconds": 49,
+          "actual_minutes": 0.82,
+          "variance_minutes": -19.18,
+          "file_created": "src/analytics/use_cases/obtener_evolucion_temporal_comision.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Controller + DI: evolucion temporal",
+          "task_type": "controller",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-14T14:06:51.919752+00:00",
+          "completed_at": "2026-09-14T14:08:13.941496+00:00",
+          "elapsed_seconds": 82,
+          "actual_minutes": 1.37,
+          "variance_minutes": -13.63,
+          "file_created": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Schemas + Router: evolucion temporal",
+          "task_type": "schema",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-14T14:08:29.163838+00:00",
+          "completed_at": "2026-09-14T14:09:44.046027+00:00",
+          "elapsed_seconds": 74,
+          "actual_minutes": 1.23,
+          "variance_minutes": -13.77,
+          "file_created": "src/analytics/frameworks/api/analytics_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-14T14:10:20.508500+00:00",
+      "completed_at": "2026-09-14T14:12:45.523838+00:00",
+      "elapsed_seconds": 145,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-14T14:12:51.004424+00:00",
+      "completed_at": "2026-09-14T14:20:53.587524+00:00",
+      "elapsed_seconds": 482,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-14T14:14:46.627839+00:00",
+      "completed_at": "2026-09-14T14:20:30.543312+00:00",
+      "elapsed_seconds": 343,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-14T14:23:19.370610+00:00",
+      "completed_at": "2026-09-14T14:33:59.275749+00:00",
+      "elapsed_seconds": 639,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-14T14:34:05.207228+00:00",
+      "completed_at": "2026-09-14T14:34:59.489439+00:00",
+      "elapsed_seconds": 54,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-14T14:35:10.329164+00:00",
+      "completed_at": "2026-09-14T14:36:01.051530+00:00",
+      "elapsed_seconds": 50,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 5,
+    "completed_tasks": 5,
+    "total_phases": 10,
+    "estimated_total_minutes": 80.0,
+    "actual_total_minutes": 6.62,
+    "variance_minutes": -73.38,
+    "variance_percent": -91.73
+  }
+}

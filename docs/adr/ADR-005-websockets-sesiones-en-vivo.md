@@ -44,3 +44,20 @@ mismo ciclo async de FastAPI, sin round-trips adicionales ni canales separados p
 - ✅ Soportado nativamente por FastAPI sin dependencias adicionales
 - ⚠️ Las conexiones WebSocket persisten durante toda la sesión (recurso TCP por cliente —
   aceptable a 60 conexiones)
+
+## Nota aclaratoria (2026-09-18, `US-6.1.1`)
+
+El event storming del Incremento 6 (`docs/design/domain/BC-actividad-evaluativa-modelo.md`
+§12/§13/§16, 2026-09-17) precisó el reparto de responsabilidades que esta ADR dejaba implícito:
+los comandos del Docente y del Estudiante (crear/iniciar/mostrar-opciones/cerrar/avanzar/
+finalizar la sesión, unirse, responder) viajan por **HTTP REST**, no por el canal WebSocket — el
+WebSocket se usa exclusivamente para el **broadcast servidor→clientes** tras cada evento de
+dominio (enunciado de pregunta, opciones, histograma, ranking). La justificación original
+("el docente envía el comando de cierre... todo en el mismo ciclo async, sin canales separados
+por dirección") describía la latencia esperada del flujo completo, no que el comando en sí
+viajara por WS — la decisión de **usar WebSockets** para la parte de broadcast en tiempo real
+sigue vigente sin cambios; lo que se precisa acá es que no hace falta, y no se implementó, un
+canal de comandos bidireccional sobre WS. Implementado en `US-6.1.1`
+(`src/actividad_evaluativa/frameworks/websockets/`, `frameworks/api/sesiones_en_vivo_router.py`):
+el endpoint `WS /sesiones-en-vivo/{sesion_id}/canal` solo lee del socket para detectar
+desconexión, nunca interpreta contenido entrante como comando.

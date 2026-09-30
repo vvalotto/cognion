@@ -8,6 +8,7 @@ from src.identidad.entities.errors import (
     CuentaBloqueadaError,
     PasswordActualIncorrecta,
     PasswordDemasiadoCorta,
+    PasswordSinComplejidadSuficiente,
 )
 from src.identidad.frameworks.api.schemas import CambiarPasswordRequest
 from src.identidad.frameworks.dependencies import get_current_user, get_perfil_controller
@@ -48,7 +49,7 @@ async def cambiar_password(
         else:
             detail["intentos_restantes"] = exc.intentos_restantes
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail) from exc
-    except PasswordDemasiadoCorta as exc:
+    except (PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail={"mensaje": str(exc)},

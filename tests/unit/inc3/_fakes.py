@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.errors import ConcurrenciaOptimistaError
+from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
@@ -18,11 +19,13 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import (
     MateriaConsultaPort,
     MateriaDTO,
 )
+from src.actividad_evaluativa.entities.ports.notificacion_port import NotificacionPort
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     ContenidoPregunta,
     DetalleCorreccionPregunta,
     PreguntaConsultaPort,
 )
+from src.actividad_evaluativa.entities.puntaje_en_vivo import NivelesDePregunta, NivelPregunta
 
 
 class FakeEstudianteConsultaPort(EstudianteConsultaPort):
@@ -31,10 +34,60 @@ class FakeEstudianteConsultaPort(EstudianteConsultaPort):
     def __init__(self) -> None:
         """Inicializa el almacenamiento en memoria."""
         self.estudiantes: set[UUID] = set()
+        self.comisiones_por_estudiante: dict[UUID, UUID] = {}
+        self.nombres_por_estudiante: dict[UUID, str] = {}
 
     async def existe(self, estudiante_id: UUID) -> bool:
         """Indica si el estudiante fue precargado como válido."""
         return estudiante_id in self.estudiantes
+
+    async def obtener_comision_id(self, estudiante_id: UUID) -> UUID | None:
+        """Devuelve la comisión precargada en `comisiones_por_estudiante`, si hay alguna."""
+        return self.comisiones_por_estudiante.get(estudiante_id)
+
+    async def obtener_nombres(self, ids: list[UUID]) -> dict[UUID, str]:
+        """Devuelve los nombres precargados en `nombres_por_estudiante` (`US-6.3.1`).
+
+        Ids sin nombre precargado simplemente no aparecen en el resultado, igual que el
+        adapter real.
+        """
+        return {
+            estudiante_id: self.nombres_por_estudiante[estudiante_id]
+            for estudiante_id in ids
+            if estudiante_id in self.nombres_por_estudiante
+        }
+
+
+class FakeComisionConsultaPort(ComisionConsultaPort):
+    """Consulta de comisiones en memoria — pertenencia Docente↔Comisión (`US-ADJ-57`).
+
+    Compartido entre `inc3` (actividades de período abierto) e `inc6` (sesiones en vivo,
+    reexportado desde `tests/unit/inc6/_fakes.py`) — mismo puerto, mismos dos niveles de
+    autorización.
+    """
+
+    def __init__(self) -> None:
+        """Inicializa el almacenamiento en memoria."""
+        self.materias: dict[UUID, UUID] = {}
+        """`comision_id` → `materia_id` (para `obtener_materia_id`, `US-6.1.1`)."""
+        self.asignaciones: set[tuple[UUID, UUID]] = set()
+        """Pares `(docente_id, comision_id)` asignados — precargar antes de ejercitar el
+        chequeo de pertenencia; vacío = ningún Docente asignado a nada."""
+
+    async def obtener_materia_id(self, comision_id: UUID) -> UUID | None:
+        """Devuelve el `materia_id` precargado, o `None` si la comisión no fue precargada."""
+        return self.materias.get(comision_id)
+
+    async def esta_asignado_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si `(docente_id, comision_id)` fue precargado en `asignaciones`."""
+        return (docente_id, comision_id) in self.asignaciones
+
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene alguna comisión asignada cuyo `materia_id` coincida."""
+        return any(
+            docente == docente_id and self.materias.get(comision) == materia_id
+            for docente, comision in self.asignaciones
+        )
 
 
 class FakeMateriaConsultaPort(MateriaConsultaPort):
@@ -56,16 +109,35 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
         """Inicializa el almacenamiento en memoria."""
         self.conteos: dict[UUID, int] = {}
         self.ids_activas: dict[UUID, list[UUID]] = {}
+        self.conteos_por_tema: dict[tuple[UUID, str], int] = {}
+        self.ids_activas_por_tema: dict[tuple[UUID, str], list[UUID]] = {}
+        self.conteos_por_unidad_tema: dict[tuple[UUID, str, str], int] = {}
+        self.ids_activas_por_unidad_tema: dict[tuple[UUID, str, str], list[UUID]] = {}
         self.correcciones: dict[UUID, bool] = {}
         self.detalles: dict[UUID, DetalleCorreccionPregunta] = {}
         self.contenidos: dict[UUID, ContenidoPregunta] = {}
+        self.niveles: dict[UUID, NivelesDePregunta] = {}
 
-    async def contar_activas_por_materia(self, materia_id: UUID) -> int:
-        """Devuelve el conteo precargado para la materia, o 0 si no se precargó."""
+    async def contar_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> int:
+        """Devuelve el conteo precargado para (materia, unidad, tema) según qué filtros se
+        pasen; 0 si no se precargó nada para esa combinación."""
+        if unidad is not None and tema is not None:
+            return self.conteos_por_unidad_tema.get((materia_id, unidad, tema), 0)
+        if tema is not None:
+            return self.conteos_por_tema.get((materia_id, tema), 0)
         return self.conteos.get(materia_id, 0)
 
-    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
-        """Devuelve los ids precargados para la materia, o lista vacía si no se precargó."""
+    async def listar_ids_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> list[UUID]:
+        """Devuelve los ids precargados para (materia, unidad, tema) según qué filtros se
+        pasen; lista vacía si no se precargó nada para esa combinación."""
+        if unidad is not None and tema is not None:
+            return list(self.ids_activas_por_unidad_tema.get((materia_id, unidad, tema), []))
+        if tema is not None:
+            return list(self.ids_activas_por_tema.get((materia_id, tema), []))
         return list(self.ids_activas.get(materia_id, []))
 
     async def evaluar_correccion(self, pregunta_id: UUID, contenido: dict) -> bool:
@@ -82,6 +154,68 @@ class FakePreguntaConsultaPort(PreguntaConsultaPort):
     async def obtener_contenido(self, pregunta_id: UUID) -> ContenidoPregunta:
         """Devuelve el contenido precargado para la pregunta, o uno vacío si no se precargó."""
         return self.contenidos.get(pregunta_id, ContenidoPregunta(texto="", opciones=None))
+
+    async def obtener_niveles(self, pregunta_id: UUID) -> NivelesDePregunta:
+        """Devuelve los niveles precargados, o `BAJO`/`BAJO` si no se precargó nada."""
+        return self.niveles.get(
+            pregunta_id, NivelesDePregunta(NivelPregunta.BAJO, NivelPregunta.BAJO)
+        )
+
+
+class FakeNotificacionPort(NotificacionPort):
+    """Puerto de disparo de notificaciones en memoria — registra cada llamada recibida.
+
+    Nunca lanza (mismo contrato que `NotificacionPortInProcess` real, `US-5.1.2`) — los tests
+    de `CrearActividadPeriodoAbiertoUseCase` no necesitan simular un fallo de envío acá, ese
+    comportamiento se prueba en `tests/unit/inc5/test_notificar_apertura_use_case.py`.
+    """
+
+    def __init__(self) -> None:
+        """Inicializa el registro de llamadas."""
+        self.aperturas: list[dict] = []
+        self.cierres: list[dict] = []
+
+    async def notificar_apertura(
+        self,
+        actividad_id: UUID,
+        materia_id: UUID,
+        materia_nombre: str,
+        titulo: str,
+        fecha_apertura: datetime,
+        fecha_cierre: datetime,
+        comisiones_ids: list[UUID],
+    ) -> None:
+        """Registra los argumentos recibidos en `aperturas`."""
+        self.aperturas.append(
+            {
+                "actividad_id": actividad_id,
+                "materia_id": materia_id,
+                "materia_nombre": materia_nombre,
+                "titulo": titulo,
+                "fecha_apertura": fecha_apertura,
+                "fecha_cierre": fecha_cierre,
+                "comisiones_ids": comisiones_ids,
+            }
+        )
+
+    async def notificar_cierre(
+        self,
+        actividad_id: UUID,
+        materia_id: UUID,
+        materia_nombre: str,
+        titulo: str,
+        comisiones_ids: list[UUID],
+    ) -> None:
+        """Registra los argumentos recibidos en `cierres`."""
+        self.cierres.append(
+            {
+                "actividad_id": actividad_id,
+                "materia_id": materia_id,
+                "materia_nombre": materia_nombre,
+                "titulo": titulo,
+                "comisiones_ids": comisiones_ids,
+            }
+        )
 
 
 class FakeEventStore(EventStorePort):

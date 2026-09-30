@@ -10,7 +10,11 @@ from src.banco_preguntas.interface_adapters.controllers.bancos_controller import
     BancosController,
 )
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
-from tests.unit.inc2._fakes import FakeBancoRepository, FakePreguntaRepository
+from tests.unit.inc2._fakes import (
+    FakeBancoRepository,
+    FakeComisionConsultaPort,
+    FakePreguntaRepository,
+)
 
 
 def _pregunta_om(banco_id: uuid.UUID) -> PreguntaPlantillaOpcionMultiple:
@@ -39,7 +43,9 @@ class TestBancosController:
         pregunta = _pregunta_om(banco.id)
         await pregunta_repo.guardar(pregunta)
 
-        controller = BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
+        controller = BancosController(
+            FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
+        )
 
         resultado = await controller.filtrar_preguntas(banco_id=banco.id)
 
@@ -52,7 +58,9 @@ class TestBancosController:
         await banco_repo.guardar(banco)
         await pregunta_repo.guardar(_pregunta_om(banco.id))
 
-        controller = BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
+        controller = BancosController(
+            FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
+        )
 
         resultado = await controller.filtrar_preguntas(banco_id=banco.id, dificultad="bajo")
 
@@ -66,7 +74,9 @@ class TestBancosController:
         for _ in range(3):
             await pregunta_repo.guardar(_pregunta_om(banco.id))
 
-        controller = BancosController(FiltrarBancoUseCase(banco_repo, pregunta_repo))
+        controller = BancosController(
+            FiltrarBancoUseCase(banco_repo, pregunta_repo, FakeComisionConsultaPort())
+        )
 
         resultado = await controller.filtrar_preguntas(
             banco_id=banco.id, pagina=1, tamanio_pagina=2

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
+import { Pagination } from "@/components/ui/pagination"
 import { obtenerTasaErrorPorTema, type TasaErrorTemaResponse } from "@/lib/analytics-api"
 import { listarMaterias, type MateriaListItemResponse } from "@/lib/banco-preguntas-api"
 import {
@@ -28,6 +29,8 @@ function severidad(tasaError: number): Severidad {
   return "baja"
 }
 
+const TAMANIO_PAGINA = 20
+
 /** Pantalla "Desempeño por tema" del Docente (`#doc-desempeno-tema`, `US-4.2.6`, RF-17). */
 export function DesempenoPorTema() {
   const [materias, setMaterias] = useState<MateriaListItemResponse[]>([])
@@ -38,6 +41,7 @@ export function DesempenoPorTema() {
 
   const [tasas, setTasas] = useState<TasaErrorTemaResponse[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [pagina, setPagina] = useState(1)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -71,6 +75,7 @@ export function DesempenoPorTema() {
     const controller = new AbortController()
     setError(null)
     setTasas(null)
+    setPagina(1)
     obtenerTasaErrorPorTema(materiaId, comisionId || undefined, controller.signal)
       .then(setTasas)
       .catch((err) => {
@@ -82,7 +87,7 @@ export function DesempenoPorTema() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Desempeño por tema" }]} />
+      <Breadcrumb items={[{ label: "Reportes", to: "/analytics" }, { label: "Desempeño por tema" }]} />
       <h1 className="text-lg font-semibold">Desempeño por tema</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Tasa de error agregada por unidad y tema, de toda la materia o de una comisión puntual.
@@ -151,8 +156,9 @@ export function DesempenoPorTema() {
       )}
 
       {!error && tasas !== null && tasas.length > 0 && (
+        <>
         <div className="mt-4 flex flex-col gap-3">
-          {tasas.map((tasaTema) => {
+          {tasas.slice((pagina - 1) * TAMANIO_PAGINA, pagina * TAMANIO_PAGINA).map((tasaTema) => {
             const nivel = severidad(tasaTema.tasaError)
             const porcentaje = Math.round(tasaTema.tasaError * 100)
             return (
@@ -183,6 +189,12 @@ export function DesempenoPorTema() {
             )
           })}
         </div>
+        <Pagination
+          pagina={pagina}
+          totalPaginas={Math.ceil(tasas.length / TAMANIO_PAGINA)}
+          onCambiarPagina={setPagina}
+        />
+        </>
       )}
     </div>
   )

@@ -6,6 +6,9 @@ vi.mock("@/router", () => ({
 
 import {
   obtenerDesempenoDeEstudiante,
+  obtenerDesempenoPorComision,
+  obtenerEvolucionTemporalComision,
+  obtenerEvolucionTemporalEstudiante,
   obtenerMiDesempeno,
   obtenerTasaErrorPorTema,
 } from "@/lib/analytics-api"
@@ -46,6 +49,19 @@ describe("analytics-api", () => {
             porcentaje_acierto: 80,
             cantidad_evaluaciones: 1,
           },
+          sesiones_en_vivo: [
+            {
+              sesion_id: "s1",
+              comision_horario: "Lunes 14-16hs",
+              finalizada_en: "2026-09-20T10:00:00Z",
+              cantidad_preguntas: 10,
+              cantidad_correctas: 7,
+              cantidad_incorrectas: 3,
+              puntaje_final: 1200,
+              posicion: 3,
+              total_participantes: 14,
+            },
+          ],
         }),
       )
 
@@ -70,10 +86,23 @@ describe("analytics-api", () => {
           porcentajeAcierto: 80,
           cantidadEvaluaciones: 1,
         },
+        sesionesEnVivo: [
+          {
+            sesionId: "s1",
+            comisionHorario: "Lunes 14-16hs",
+            finalizadaEn: "2026-09-20T10:00:00Z",
+            cantidadPreguntas: 10,
+            cantidadCorrectas: 7,
+            cantidadIncorrectas: 3,
+            puntajeFinal: 1200,
+            posicion: 3,
+            totalParticipantes: 14,
+          },
+        ],
       })
     })
 
-    it("mapea una lista vacía de evaluaciones", async () => {
+    it("mapea una lista vacía de evaluaciones y de sesiones en vivo", async () => {
       vi.mocked(fetch).mockResolvedValueOnce(
         jsonResponse(200, {
           evaluaciones: [],
@@ -83,6 +112,7 @@ describe("analytics-api", () => {
             porcentaje_acierto: 0,
             cantidad_evaluaciones: 0,
           },
+          sesiones_en_vivo: [],
         }),
       )
 
@@ -90,6 +120,7 @@ describe("analytics-api", () => {
 
       expect(desempeno.evaluaciones).toEqual([])
       expect(desempeno.resumen.cantidadEvaluaciones).toBe(0)
+      expect(desempeno.sesionesEnVivo).toEqual([])
     })
   })
 
@@ -112,6 +143,7 @@ describe("analytics-api", () => {
             porcentaje_acierto: 80,
             cantidad_evaluaciones: 1,
           },
+          sesiones_en_vivo: [],
         }),
       )
 
@@ -133,12 +165,14 @@ describe("analytics-api", () => {
             porcentaje_acierto: 0,
             cantidad_evaluaciones: 0,
           },
+          sesiones_en_vivo: [],
         }),
       )
 
       const desempeno = await obtenerDesempenoDeEstudiante("m1", "u2")
 
       expect(desempeno.evaluaciones).toEqual([])
+      expect(desempeno.sesionesEnVivo).toEqual([])
     })
   })
 
@@ -191,6 +225,110 @@ describe("analytics-api", () => {
       const tasas = await obtenerTasaErrorPorTema("m1")
 
       expect(tasas).toEqual([])
+    })
+  })
+
+  describe("obtenerDesempenoPorComision", () => {
+    it("hace GET /analytics/materias/{materiaId}/comisiones/{comisionId}/desempeno y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            estudiante_id: "u1",
+            nombre: "Ana Pérez",
+            porcentaje_aciertos_acumulado: 82,
+            actividades_pendientes: 1,
+          },
+          {
+            estudiante_id: "u2",
+            nombre: "Juan Gómez",
+            porcentaje_aciertos_acumulado: null,
+            actividades_pendientes: 2,
+          },
+        ]),
+      )
+
+      const filas = await obtenerDesempenoPorComision("m1", "c1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/comisiones/c1/desempeno",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(filas).toEqual([
+        { estudianteId: "u1", nombre: "Ana Pérez", porcentajeAciertosAcumulado: 82, actividadesPendientes: 1 },
+        { estudianteId: "u2", nombre: "Juan Gómez", porcentajeAciertosAcumulado: null, actividadesPendientes: 2 },
+      ])
+    })
+
+    it("mapea una lista vacía (comisión sin estudiantes)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const filas = await obtenerDesempenoPorComision("m1", "c1")
+
+      expect(filas).toEqual([])
+    })
+  })
+
+  describe("obtenerEvolucionTemporalEstudiante", () => {
+    it("hace GET /analytics/materias/{materiaId}/estudiantes/{estudianteId}/evolucion-temporal y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          {
+            actividad_id: "a1",
+            titulo_actividad: "Parcial 1",
+            finalizada_en: "2026-08-30T10:00:00Z",
+            porcentaje_acierto: 82,
+          },
+        ]),
+      )
+
+      const puntos = await obtenerEvolucionTemporalEstudiante("m1", "u1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/estudiantes/u1/evolucion-temporal",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(puntos).toEqual([
+        { actividadId: "a1", tituloActividad: "Parcial 1", finalizadaEn: "2026-08-30T10:00:00Z", porcentajeAcierto: 82 },
+      ])
+    })
+
+    it("mapea una lista vacía (estudiante sin evaluaciones finalizadas)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const puntos = await obtenerEvolucionTemporalEstudiante("m1", "u1")
+
+      expect(puntos).toEqual([])
+    })
+  })
+
+  describe("obtenerEvolucionTemporalComision", () => {
+    it("hace GET /analytics/materias/{materiaId}/comisiones/{comisionId}/evolucion-temporal y mapea a camelCase", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, [
+          { actividad_id: "a1", titulo_actividad: "Parcial 1", porcentaje_aciertos_promedio: 74.5 },
+        ]),
+      )
+
+      const puntos = await obtenerEvolucionTemporalComision("m1", "c1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toBe(
+        "http://localhost:8000/analytics/materias/m1/comisiones/c1/evolucion-temporal",
+      )
+      expect(init?.method ?? "GET").toBe("GET")
+      expect(puntos).toEqual([
+        { actividadId: "a1", tituloActividad: "Parcial 1", porcentajeAciertosPromedio: 74.5 },
+      ])
+    })
+
+    it("mapea una lista vacía (comisión sin evaluaciones finalizadas)", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, []))
+
+      const puntos = await obtenerEvolucionTemporalComision("m1", "c1")
+
+      expect(puntos).toEqual([])
     })
   })
 })

@@ -97,6 +97,15 @@ menú, sin la palabra "materias" en ninguno de los dos** — elimina la ambigüe
 
 ---
 
+> **Nota de deriva documental (agregada 2026-09-16, revisión documental transversal del
+> Incremento 5-ADJ):** al aprobarse este mapa (2026-09-07) los únicos dos informes de
+> Analytics del Docente eran "Desempeño por alumno" y "Desempeño por tema" (§2 arriba, tabla
+> sin actualizar — refleja el inventario relevado ese día). El Incremento 5-ADJ agregó dos
+> informes más (RF-20/22) y, tras una sesión de UAT con Víctor (PR #370, 2026-09-16), los 4 se
+> unificaron bajo un único ítem — **"Reportes"** (`/analytics`) —, tanto en el menú persistente
+> como en el Home del Docente (PR #374). Las tablas de §3 y §4 abajo ya reflejan el estado
+> vigente; la de §2 queda como inventario histórico del momento de aprobación.
+
 ## 3. Menú de navegación persistente
 
 Un único componente en `AppLayout.tsx`, condicionado por `session.rol` — mismo dato que ya usa
@@ -105,15 +114,15 @@ logo + badge + los ítems de este menú.
 
 | Rol | Ítems del menú (orden) |
 |---|---|
-| **Docente** | 1. Banco de Preguntas (`/materias`) — 2. Actividades (`/actividad-evaluativa/materias`) — 3. Desempeño por alumno (`/analytics/desempeno-por-alumno`) — 4. Desempeño por tema (`/analytics/desempeno-por-tema`) |
+| **Docente** | 1. Banco de Preguntas (`/materias`) — 2. Actividades (`/actividad-evaluativa/materias`) — 3. Reportes (`/analytics`) |
 | **Estudiante** | 1. Mis Actividades (`/mis-actividades/materias`) — 2. Mi Desempeño (`/analytics/mi-desempeno`) |
 | **Administrador** | 1. Comisiones (`/comisiones`) — 2. Docentes (`/docentes/nuevo`) — 3. Cuentas (`/cuentas`) |
 | **Docente (adicional)** | La generación del link de invitación vive dentro del detalle de una Comisión, no como ítem de menú propio — el Docente llega ahí desde "Actividades" o desde una vista de sus Comisiones a confirmar en el wireframe (`US-ADJ-22`) |
 
 **Criterio de orden — confirmado con Víctor (2026-09-07):** para Docente, orden de "creación
-de contenido → ejecución → análisis" (Banco → Actividades → Desempeño por alumno → Desempeño
-por tema), mismo orden causal que el flujo real de uso (primero se carga el banco, después se
-crean actividades sobre él, al final se analiza el resultado). Para
+de contenido → ejecución → análisis" (Banco → Actividades → Reportes), mismo orden causal que
+el flujo real de uso (primero se carga el banco, después se crean actividades sobre él, al
+final se analiza el resultado). Para
 Estudiante, orden de uso (primero rinde, después consulta desempeño). Para Administrador,
 orden causal del ciclo de alta (Comisiones → Docentes → Cuentas): antes de poder invitar
 estudiantes hace falta una Comisión con un Docente asignado; alta de Docente y gestión de
@@ -138,8 +147,7 @@ que ve el usuario, así que puede permitirse más contexto que un ítem de menú
 |---|---|---|
 | Banco de Preguntas | `/materias` | Cargar, editar y filtrar preguntas por materia |
 | Actividades | `/actividad-evaluativa/materias` | Crear y administrar actividades de evaluación |
-| Desempeño por alumno | `/analytics/desempeno-por-alumno` | Consultar el desempeño de un estudiante elegido |
-| Desempeño por tema | `/analytics/desempeno-por-tema` | Tasa de error por unidad/tema de una materia |
+| Reportes | `/analytics` | Ver los informes de desempeño y participación de los estudiantes |
 
 ### Home Estudiante (`/`)
 

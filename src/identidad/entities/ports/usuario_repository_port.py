@@ -27,6 +27,11 @@ class UsuarioRepositoryPort(ABC):
         ...
 
     @abstractmethod
+    async def eliminar(self, usuario_id: UUID) -> None:
+        """Borra físicamente un usuario sin datos asociados, junto con su fila de perfil."""
+        ...
+
+    @abstractmethod
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
         """Busca un usuario por id, o `None` si no existe."""
         ...

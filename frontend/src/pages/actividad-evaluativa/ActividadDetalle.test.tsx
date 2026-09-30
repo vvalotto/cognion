@@ -65,6 +65,10 @@ function renderActividadDetalle() {
           path="/actividad-evaluativa/actividades/:actividadId/cerrar"
           element={<p>Cerrar actividad</p>}
         />
+        <Route
+          path="/actividad-evaluativa/actividades/:actividadId/completitud"
+          element={<p>Completitud</p>}
+        />
       </Routes>
     </MemoryRouter>,
   )
@@ -137,5 +141,25 @@ describe("ActividadDetalle", () => {
     await user.click(await screen.findByRole("button", { name: "Cerrar actividad ahora" }))
 
     expect(await screen.findByText("Cerrar actividad")).toBeInTheDocument()
+  })
+
+  it("muestra 'Ver completitud' y navega a la pantalla de completitud (US-ADJ-51)", async () => {
+    mockObtenerActividad()
+    mockListarMaterias()
+
+    renderActividadDetalle()
+    const user = userEvent.setup()
+    await user.click(await screen.findByRole("button", { name: "Ver completitud" }))
+
+    expect(await screen.findByText("Completitud")).toBeInTheDocument()
+  })
+
+  it("muestra 'Ver completitud' incluso cuando la actividad ya está cerrada manualmente", async () => {
+    mockObtenerActividad({ estado: "cerrada", cerrada_manualmente: true })
+    mockListarMaterias()
+
+    renderActividadDetalle()
+
+    expect(await screen.findByRole("button", { name: "Ver completitud" })).toBeInTheDocument()
   })
 })

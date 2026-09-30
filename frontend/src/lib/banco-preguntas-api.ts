@@ -14,6 +14,7 @@ export interface MateriaListItemResponse {
   nombre: string
   bancoId: string
   cantidadPreguntasActivas: number
+  activa: boolean
 }
 
 export interface Opcion {
@@ -106,6 +107,7 @@ interface MateriaListItemApiResponse {
   nombre: string
   banco_id: string
   cantidad_preguntas_activas: number
+  activa: boolean
 }
 
 interface OpcionApiSchema {
@@ -191,14 +193,55 @@ export async function crearMateria(
   return { id: response.id, nombre: response.nombre, bancoId: response.banco_id }
 }
 
-export async function listarMaterias(signal?: AbortSignal): Promise<MateriaListItemResponse[]> {
-  const response = await apiFetch<MateriaListItemApiResponse[]>("/materias", { signal })
+export async function editarMateria(
+  materiaId: string,
+  nombre: string,
+  signal?: AbortSignal,
+): Promise<{ id: string; nombre: string }> {
+  return apiFetch<{ id: string; nombre: string }>(`/materias/${materiaId}`, {
+    method: "PATCH",
+    body: { nombre },
+    signal,
+  })
+}
+
+/**
+ * Elimina una materia, o la deshabilita si tiene preguntas cargadas o comisiones asociadas
+ * (200 en ese caso; 204 sin cuerpo si se borró físicamente) — de cualquier forma, deja de
+ * aparecer en el listado.
+ */
+export async function eliminarMateria(materiaId: string, signal?: AbortSignal): Promise<void> {
+  await apiFetch<void>(`/materias/${materiaId}`, { method: "DELETE", signal })
+}
+
+/**
+ * Lista las materias activas; con `incluirInactivas: true` también trae las deshabilitadas
+ * — lo usa la pantalla de gestión de Materias, que permite reactivarlas.
+ */
+export async function listarMaterias(
+  signal?: AbortSignal,
+  incluirInactivas = false,
+): Promise<MateriaListItemResponse[]> {
+  const query = incluirInactivas ? "?incluir_inactivas=true" : ""
+  const response = await apiFetch<MateriaListItemApiResponse[]>(`/materias${query}`, { signal })
   return response.map((materia) => ({
     id: materia.id,
     nombre: materia.nombre,
     bancoId: materia.banco_id,
     cantidadPreguntasActivas: materia.cantidad_preguntas_activas,
+    activa: materia.activa,
   }))
+}
+
+/** Reactiva una materia deshabilitada. */
+export async function activarMateria(
+  materiaId: string,
+  signal?: AbortSignal,
+): Promise<{ id: string; nombre: string; activa: boolean }> {
+  return apiFetch<{ id: string; nombre: string; activa: boolean }>(
+    `/materias/${materiaId}/activar`,
+    { method: "POST", signal },
+  )
 }
 
 export async function filtrarBanco(

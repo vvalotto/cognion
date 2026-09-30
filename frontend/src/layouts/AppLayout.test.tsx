@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
@@ -31,14 +32,14 @@ describe("AppLayout (integración)", () => {
 
     renderAppLayout()
 
-    expect(screen.getByText("administrador")).toBeInTheDocument()
+    expect(screen.getByText("Administrador")).toBeInTheDocument()
   })
 
   it("no muestra información de usuario sin sesión activa", () => {
     renderAppLayout()
 
-    expect(screen.queryByText("administrador")).not.toBeInTheDocument()
-    expect(screen.queryByText("docente")).not.toBeInTheDocument()
+    expect(screen.queryByText("Administrador")).not.toBeInTheDocument()
+    expect(screen.queryByText("Docente")).not.toBeInTheDocument()
   })
 
   it("renderiza el contenido anidado vía Outlet", () => {
@@ -67,14 +68,14 @@ describe("AppLayout (integración)", () => {
 
     renderAppLayout()
 
-    expect(screen.getByText("Comisiones")).toBeInTheDocument()
+    expect(screen.getByText("Materias")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
   })
 
   it("no muestra el menú de navegación sin sesión activa", () => {
     renderAppLayout()
 
-    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+    expect(screen.queryByText("Cuentas")).not.toBeInTheDocument()
   })
 
   it("muestra el menú correspondiente al rol Docente", () => {
@@ -83,6 +84,18 @@ describe("AppLayout (integración)", () => {
     renderAppLayout()
 
     expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
-    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+    expect(screen.queryByText("Cuentas")).not.toBeInTheDocument()
+  })
+
+  it("abre el menú de usuario desde el header y ofrece Cambiar contraseña y Cerrar sesión", async () => {
+    const user = userEvent.setup()
+    setSession({ token: "t", rol: "docente" })
+
+    renderAppLayout()
+
+    await user.click(screen.getByRole("button", { name: /Docente/ }))
+
+    expect(await screen.findByText("🔑 Cambiar contraseña")).toBeInTheDocument()
+    expect(screen.getByText("↩ Cerrar sesión")).toBeInTheDocument()
   })
 })

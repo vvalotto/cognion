@@ -17,13 +17,18 @@ from src.shared.entities.tipo_perfil import TipoPerfil
 class PyJWTIssuer(JWTIssuerPort):
     """Emite y verifica tokens de sesión firmados con `settings.secret_key` (exp. 60 min)."""
 
-    def emitir(self, usuario_id: UUID, rol: TipoPerfil) -> JWT:
-        """Firma un JWT con claims `sub` y `rol`, `exp` a `access_token_expire_minutes`."""
+    def emitir(self, usuario_id: UUID, rol: TipoPerfil, nombre: str = "") -> JWT:
+        """Firma un JWT con claims `sub`, `rol` y `nombre`, `exp` a `access_token_expire_minutes`.
+
+        `nombre` es solo para que el cliente lo muestre (header de la app) — no se usa para
+        autorización, así que `verificar()` no lo decodifica.
+        """
         ahora = datetime.now(UTC)
         expira_en = ahora + timedelta(minutes=settings.access_token_expire_minutes)
         payload = {
             "sub": str(usuario_id),
             "rol": rol.value,
+            "nombre": nombre,
             "exp": expira_en,
         }
         token = jwt.encode(payload, settings.secret_key, algorithm=settings.algorithm)

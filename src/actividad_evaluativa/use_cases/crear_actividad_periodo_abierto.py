@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
@@ -15,9 +16,28 @@ from src.actividad_evaluativa.entities.ports.event_store_port import (
     EventStorePort,
 )
 from src.actividad_evaluativa.entities.ports.materia_consulta_port import MateriaConsultaPort
+from src.actividad_evaluativa.entities.ports.notificacion_port import NotificacionPort
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 
 AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
+
+
+async def _persistir_creacion(
+    event_store: EventStorePort, actividad_id: UUID, payload: dict[str, Any]
+) -> None:
+    """Envuelve `ActividadEvaluativaCreada` y la persiste como primer evento del stream.
+
+    Función libre para no sumar CBO a `CrearActividadPeriodoAbiertoUseCase` (`US-ADJ-57`).
+    """
+    await event_store.append(
+        AGGREGATE_TYPE,
+        actividad_id,
+        0,
+        [EventoParaAlmacenar(event_type="ActividadEvaluativaCreada", payload=payload)],
+    )
 
 
 class CrearActividadPeriodoAbiertoUseCase:
@@ -28,11 +48,18 @@ class CrearActividadPeriodoAbiertoUseCase:
         materia_consulta: MateriaConsultaPort,
         pregunta_consulta: PreguntaConsultaPort,
         event_store: EventStorePort,
+        notificacion: NotificacionPort,
+        autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe los puertos de consulta a Banco de Preguntas y el event store del BC."""
+        """Recibe los puertos de consulta a Banco de Preguntas/Identidad, el event store.
+
+        Recibe también Notificaciones y el servicio de autorización por Comisión.
+        """
         self._materia_consulta = materia_consulta
         self._pregunta_consulta = pregunta_consulta
         self._event_store = event_store
+        self._notificacion = notificacion
+        self._autorizacion = autorizacion
 
     async def execute(
         self,
@@ -42,19 +69,39 @@ class CrearActividadPeriodoAbiertoUseCase:
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
         titulo: str = "",
-    ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
+        comisiones_ids: frozenset[UUID] | None = None,
+        unidad_tematica: str | None = None,
+        tema: str | None = None,
+        docente_id: UUID | None = None,
+    ) -> tuple[ActividadEvaluativaPeriodoAbierto, object]:
         """Crea la actividad validando INV-AE-01/02/03 y la persiste como primer evento del stream.
 
         Levanta `MateriaNoExiste` si `materia_id` no corresponde a ninguna `Materia`,
+        `MateriaNoAutorizada` (403) si `docente_id` no tiene ninguna Comisión asignada en esa
+        materia, `ComisionNoAutorizada` (403) si alguna de `comisiones_ids` no es una Comisión
+        del propio Docente (`US-ADJ-57`; `None` = Administrador, sin chequeo), y
         `PreguntasInsuficientes` si `cantidad_preguntas` excede las preguntas activas del banco
-        de esa materia. `PeriodoInvalido`/`CantidadIntentosInvalida` se validan en el aggregate
-        (INV-AE-02/03).
+        de esa materia (filtradas por `unidad_tematica`/`tema` si se eligieron, combinados con
+        AND). `PeriodoInvalido`/`CantidadIntentosInvalida` se validan en el aggregate
+        (INV-AE-02/03). Al final, después de confirmar la persistencia del evento, dispara
+        `NotificacionPort.notificar_apertura(...)` (`US-5.1.2`, RF-14) — un fallo de envío no
+        revierte ni afecta la respuesta de esta operación.
+
+        El segundo elemento de la tupla se tipa como `object` (no `ActividadEvaluativaCreada`)
+        para no acumular CBO en este Use Case — mismo criterio ya aplicado en los controllers
+        de `US-2.1.5`/`US-2.1.6`; ningún caller usa su tipo (el router lo descarta).
         """
         materia = await self._materia_consulta.obtener(materia_id)
         if materia is None:
             raise MateriaNoExiste(materia_id)
 
-        cantidad_disponible = await self._pregunta_consulta.contar_activas_por_materia(materia_id)
+        await self._autorizacion.verificar_materia(docente_id, materia_id)
+        for comision_id in comisiones_ids or frozenset():
+            await self._autorizacion.verificar_comision(docente_id, comision_id)
+
+        cantidad_disponible = await self._pregunta_consulta.contar_activas_por_materia(
+            materia_id, unidad_tematica, tema
+        )
         if cantidad_preguntas > cantidad_disponible:
             raise PreguntasInsuficientes(cantidad_preguntas, cantidad_disponible)
 
@@ -65,17 +112,12 @@ class CrearActividadPeriodoAbiertoUseCase:
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
             titulo=titulo,
+            comisiones_ids=comisiones_ids,
+            unidad_tematica=unidad_tematica,
+            tema=tema,
         )
 
-        evento = ActividadEvaluativaCreada(
-            actividad_id=actividad.id,
-            materia_id=actividad.materia_id,
-            fecha_apertura=actividad.fecha_apertura,
-            fecha_cierre=actividad.fecha_cierre,
-            cantidad_preguntas=actividad.cantidad_preguntas,
-            cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
-            titulo=actividad.titulo,
-        )
+        evento = ActividadEvaluativaCreada.desde_actividad(actividad)
 
         payload = {
             "actividad_id": str(evento.actividad_id),
@@ -85,13 +127,21 @@ class CrearActividadPeriodoAbiertoUseCase:
             "cantidad_preguntas": evento.cantidad_preguntas,
             "cantidad_intentos_permitidos": evento.cantidad_intentos_permitidos,
             "titulo": evento.titulo,
+            "comisiones_ids": [str(c) for c in evento.comisiones_ids],
+            "unidad_tematica": evento.unidad_tematica,
+            "tema": evento.tema,
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
-        await self._event_store.append(
-            AGGREGATE_TYPE,
+        await _persistir_creacion(self._event_store, actividad.id, payload)
+
+        await self._notificacion.notificar_apertura(
             actividad.id,
-            0,
-            [EventoParaAlmacenar(event_type="ActividadEvaluativaCreada", payload=payload)],
+            actividad.materia_id,
+            materia.nombre,
+            actividad.titulo,
+            actividad.fecha_apertura,
+            actividad.fecha_cierre,
+            list(actividad.comisiones_ids),
         )
 
         return actividad, evento

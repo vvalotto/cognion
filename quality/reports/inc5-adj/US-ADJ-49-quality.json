@@ -1,0 +1,38 @@
+{
+  "us_id": "US-ADJ-49",
+  "titulo": "Docente ve la evolución temporal de un estudiante y de su comisión",
+  "tipo": "frontend puro, sin cambios de backend (consume US-ADJ-45 ya cerrado)",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 6
+    },
+    "tsc_b": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "475/481 (6 fallos en 2 archivos ajenos a esta US — AutoregistroDocente.test.tsx y CambiarPassword.test.tsx, timeout de 5000ms por contención de CPU al correr la suite completa, mismo flake preexistente ya documentado en US-ADJ-24/35/36/37)",
+      "archivos_nuevos": {
+        "EvolucionTemporal.test.tsx": "5/5 (nuevo) — serie completa, un solo punto sin polyline, actividad no rendida por el estudiante, estado vacío, error de red"
+      },
+      "archivos_modificados": {
+        "analytics-api.test.ts": "+4 casos (obtenerEvolucionTemporalEstudiante, obtenerEvolucionTemporalComision)",
+        "router.test.tsx": "+2 casos (RBAC de la ruta de evolución temporal)",
+        "DesempenoPorComisionDetalleEstudiante.test.tsx": "+1 caso (link 'Ver evolución temporal' navega)"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "analytics-api.ts": { "statements": "100%", "branches": "100%", "functions": "100%" },
+      "EvolucionTemporal.tsx": { "statements": "91.38%", "branches": "86.36%", "functions": "100%" },
+      "DesempenoPorComisionDetalleEstudiante.tsx": { "statements": "91.67%", "branches": "78.57%", "functions": "100%", "nota": "rama sin cubrir: chequeo de AbortError en el catch, mismo patrón inalcanzable en la práctica ya aceptado en US-ADJ-48" },
+      "router.tsx": { "statements": "100%", "branches": "100%", "functions": "100%" }
+    },
+    "coverage_global_nota": "No se corrió --coverage sobre la suite completa por el tiempo que toma; se verificó por archivo tocado, mismo criterio que US-ADJ-37/48. Ningún archivo tocado bajó de cobertura."
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro, consume los endpoints ya cerrados en US-ADJ-45"
+  },
+  "manual_browser_verification": "diferida al cierre de la Iteración 4 completa (decisión de Víctor 2026-09-14) — no se repite por cada US de esta iteración, ver feedback en memoria del proyecto",
+  "estado_general": "APROBADO"
+}

@@ -15,6 +15,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
@@ -41,10 +42,13 @@ async def _crear_estudiante(session) -> tuple[Usuario, dict[str, str]]:
     return estudiante, _headers_para(estudiante)
 
 
-async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(
+    client: AsyncClient, admin_headers: dict, docente_headers: dict, cantidad: int
+) -> str:
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
-    creada = await client.post("/materias", json={"nombre": nombre}, headers=headers)
+    creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
+    await asignar_docente_a_materia(creada.json()["id"], docente_headers)
 
     for i in range(cantidad):
         await client.post(
@@ -58,7 +62,7 @@ async def _crear_materia_con_preguntas(client: AsyncClient, headers: dict, canti
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=headers,
+            headers=docente_headers,
         )
 
     return creada.json()["id"]
@@ -89,10 +93,14 @@ async def _crear_actividad(
 class TestCerrarActividadAPIIntegration:
     """Escenarios de `tests/features/inc3/US-3.3.2-cerrar-actividad.feature`."""
 
-    async def test_docente_cierra_actividad_sin_evaluaciones_activas(self, docente_headers):
+    async def test_docente_cierra_actividad_sin_evaluaciones_activas(
+        self, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -108,11 +116,15 @@ class TestCerrarActividadAPIIntegration:
         assert data["id"] == actividad_id
         assert data["cerrada_manualmente"] is True
 
-    async def test_cerrar_finaliza_en_cascada_evaluacion_en_curso(self, session, docente_headers):
+    async def test_cerrar_finaliza_en_cascada_evaluacion_en_curso(
+        self, session, docente_headers, admin_headers
+    ):
         _estudiante, estudiante_headers = await _crear_estudiante(session)
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -135,10 +147,12 @@ class TestCerrarActividadAPIIntegration:
         assert response.status_code == 200
         assert revision.status_code == 200
 
-    async def test_rechazo_al_cerrar_una_actividad_ya_cerrada(self, docente_headers):
+    async def test_rechazo_al_cerrar_una_actividad_ya_cerrada(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -152,10 +166,14 @@ class TestCerrarActividadAPIIntegration:
 
         assert response.status_code == 422
 
-    async def test_rechazo_al_modificar_periodo_de_actividad_cerrada(self, docente_headers):
+    async def test_rechazo_al_modificar_periodo_de_actividad_cerrada(
+        self, docente_headers, admin_headers
+    ):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -180,10 +198,12 @@ class TestCerrarActividadAPIIntegration:
 
         assert response.status_code == 404
 
-    async def test_rechazo_sin_autenticacion(self, docente_headers):
+    async def test_rechazo_sin_autenticacion(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(
@@ -197,7 +217,9 @@ class TestCerrarActividadAPIIntegration:
     async def test_rechazo_con_rol_insuficiente(self, docente_headers, admin_headers):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
-            materia_id = await _crear_materia_con_preguntas(client, docente_headers, 20)
+            materia_id = await _crear_materia_con_preguntas(
+                client, admin_headers, docente_headers, 20
+            )
             apertura = datetime.now(UTC)
             cierre = apertura + timedelta(days=7)
             actividad_id = await _crear_actividad(

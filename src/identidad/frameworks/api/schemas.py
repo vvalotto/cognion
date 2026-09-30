@@ -36,6 +36,7 @@ class CuentaResponse(BaseModel):
     email: str
     perfil: TipoPerfil
     bloqueada: bool
+    deshabilitada: bool
 
 
 class CuentasPaginadasResponse(BaseModel):
@@ -55,12 +56,20 @@ class CuentaDetalleResponse(BaseModel):
     bloqueada: bool
     creado_en: datetime
     comision_id: UUID | None
+    deshabilitada: bool
 
 
 class ResetearPasswordRequest(BaseModel):
     """Body de la request de reseteo de contraseña de una cuenta (`US-2.2.4`)."""
 
     password_nueva: str = Field(..., min_length=8)
+
+
+class EditarCuentaRequest(BaseModel):
+    """Body de la request de corrección de nombre/email de una cuenta existente."""
+
+    nombre: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=1)
 
 
 class CambiarPasswordRequest(BaseModel):
@@ -86,6 +95,7 @@ class ComisionResponse(BaseModel):
     horario: str
     administrador_id: UUID
     docentes_asignados: list[UUID]
+    activa: bool
 
 
 class ComisionResumenResponse(BaseModel):
@@ -98,6 +108,7 @@ class ComisionResumenResponse(BaseModel):
     id: UUID
     horario: str
     docentes_asignados: list[UUID]
+    activa: bool
 
 
 class EstudianteResumenResponse(BaseModel):
@@ -111,6 +122,12 @@ class AsignarDocenteRequest(BaseModel):
     """Body de la request de asignación de un docente a una comisión."""
 
     docente_id: UUID
+
+
+class EditarComisionRequest(BaseModel):
+    """Body de la request de corrección del horario de una comisión existente."""
+
+    horario: str = Field(..., min_length=1, max_length=200)
 
 
 class GenerarInvitacionRequest(BaseModel):
@@ -134,6 +151,13 @@ class InvitacionResponse(BaseModel):
     token: str
 
 
+class InvitacionPreviewResponse(BaseModel):
+    """Vista previa de una invitación vigente, sin datos sensibles (`US-ADJ-08`)."""
+
+    materia: str
+    horario: str
+
+
 class RegistrarEstudianteRequest(BaseModel):
     """Body de la request de registro de un Estudiante vía invitación."""
 
@@ -151,6 +175,54 @@ class RegistroResponse(BaseModel):
     email: str
     comision_id: UUID
     materia: str
+
+
+class AutoregistrarDocenteRequest(BaseModel):
+    """Body de la request de autoregistro de un Docente (`US-ADJ-41`)."""
+
+    nombre: str = Field(..., min_length=1, max_length=200)
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=8)
+
+
+class AutoregistroResponse(BaseModel):
+    """Representación del Usuario autoregistrado devuelta por la API."""
+
+    id: UUID
+    nombre: str
+    email: str
+    tipo_perfil: str
+
+
+class AutoregistrarEstudianteRequest(BaseModel):
+    """Body de la request de autoregistro de un Estudiante (`US-ADJ-42`)."""
+
+    nombre: str = Field(..., min_length=1, max_length=200)
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=8)
+    comision_id: UUID
+
+
+class MateriaAutoregistroResponse(BaseModel):
+    """Materia mínima para el selector de la pantalla de autoregistro (`US-ADJ-43`).
+
+    Endpoint público, sin JWT — expone solo `id`/`nombre`, sin los campos adicionales de
+    `GET /materias` (`US-2.1.9`, protegido por rol).
+    """
+
+    id: UUID
+    nombre: str
+
+
+class ComisionAutoregistroResponse(BaseModel):
+    """Comisión mínima para el selector de la pantalla de autoregistro (`US-ADJ-43`).
+
+    Endpoint público, sin JWT — expone solo `id`/`horario`, sin `docentes_asignados` ni
+    `activa` como sí hace `GET /materias/{id}/comisiones` (`US-4.2.2`, protegido por rol).
+    """
+
+    id: UUID
+    horario: str
 
 
 class LoginRequest(BaseModel):
@@ -174,3 +246,30 @@ class MateriaEstudianteResponse(BaseModel):
 
     id: UUID
     nombre: str
+
+
+class SolicitarRecuperacionPasswordRequest(BaseModel):
+    """Body de la request de solicitud de recuperación de contraseña (`US-ADJ-38`)."""
+
+    email: str = Field(..., min_length=3, max_length=255)
+
+
+class SolicitarRecuperacionPasswordResponse(BaseModel):
+    """Respuesta genérica de la solicitud — igual exista o no la cuenta (INV-ID-17)."""
+
+    mensaje: str = (
+        "Si el email ingresado corresponde a una cuenta, te enviamos un link de recuperación."
+    )
+
+
+class ConfirmarRecuperacionPasswordRequest(BaseModel):
+    """Body de la request de confirmación de una contraseña nueva (`US-ADJ-39`)."""
+
+    token: str = Field(..., min_length=1)
+    password_nueva: str = Field(..., min_length=12)
+
+
+class ConfirmarRecuperacionPasswordResponse(BaseModel):
+    """Respuesta de éxito del canje de token por una contraseña nueva."""
+
+    mensaje: str = "Tu contraseña fue actualizada correctamente."

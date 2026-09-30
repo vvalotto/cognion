@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.puntaje_en_vivo import NivelesDePregunta
+
 
 @dataclass(frozen=True)
 class ContenidoPregunta:
@@ -48,15 +50,25 @@ class PreguntaConsultaPort(ABC):
     """Operaciones de consulta requeridas sobre `PreguntaPlantilla` de BC Banco de Preguntas."""
 
     @abstractmethod
-    async def contar_activas_por_materia(self, materia_id: UUID) -> int:
-        """Cuenta las `PreguntaPlantilla` activas del banco de la materia (INV-AE-01)."""
+    async def contar_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> int:
+        """Cuenta las `PreguntaPlantilla` activas del banco de la materia (INV-AE-01).
+
+        `unidad`/`tema` son opcionales y combinables (AND) — si se proveen, cuenta solo las
+        que coinciden con ambos (el Docente puede restringir de qué unidad/tema salen las
+        preguntas de una Actividad).
+        """
 
     @abstractmethod
-    async def listar_ids_activas_por_materia(self, materia_id: UUID) -> list[UUID]:
+    async def listar_ids_activas_por_materia(
+        self, materia_id: UUID, unidad: str | None = None, tema: str | None = None
+    ) -> list[UUID]:
         """Lista los ids de las `PreguntaPlantilla` activas del banco de la materia.
 
         Base del sampleo aleatorio (RF-12) — el Use Case hace `random.sample` sobre esta lista,
-        el puerto no sabe nada de muestreo.
+        el puerto no sabe nada de muestreo. `unidad`/`tema` son opcionales y combinables,
+        mismo criterio que `contar_activas_por_materia`.
         """
 
     @abstractmethod
@@ -85,4 +97,13 @@ class PreguntaConsultaPort(ABC):
         Usado por `#est-rendir` (`US-3.4.6`) para renderizar la pregunta actual — a diferencia
         de `obtener_detalle_correccion`, que sí expone qué opción es correcta y no debe
         reusarse antes de que el estudiante finalice la evaluación.
+        """
+
+    @abstractmethod
+    async def obtener_niveles(self, pregunta_id: UUID) -> NivelesDePregunta:
+        """Devuelve la dificultad y la importancia vigentes de `pregunta_id`.
+
+        Insumo del puntaje de la sesión en vivo (`US-6.2.4`, RF-10). El adapter es el único
+        lugar que conoce los enums de Banco de Preguntas — el puerto expone solo el vocabulario
+        propio de Actividad Evaluativa (`NivelPregunta`).
         """

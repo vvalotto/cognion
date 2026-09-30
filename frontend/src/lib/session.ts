@@ -26,12 +26,11 @@ export function clearSession(): void {
 }
 
 /**
- * Decodifica el claim `sub` (id de usuario) del JWT de la sesión actual.
- *
- * No verifica la firma — el backend ya la valida en cada request; el cliente solo necesita
- * leer el payload para completar campos como `administrador_id` en formularios (`US-ADJ-24`).
+ * Decodifica el payload del JWT de la sesión actual (sin verificar la firma — el backend ya
+ * la valida en cada request; el cliente solo necesita leer los claims para completar campos
+ * como `administrador_id` en formularios, `US-ADJ-24`, o mostrar el nombre en el header).
  */
-export function obtenerUsuarioId(): string | null {
+function decodificarPayload(): { sub?: string; nombre?: string } | null {
   const session = getSession()
   if (!session) return null
 
@@ -46,9 +45,20 @@ export function obtenerUsuarioId(): string | null {
         .map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0"))
         .join(""),
     )
-    const payload = JSON.parse(payloadJson) as { sub?: string }
-    return payload.sub ?? null
+    return JSON.parse(payloadJson) as { sub?: string; nombre?: string }
   } catch {
     return null
   }
+}
+
+/** Decodifica el claim `sub` (id de usuario) del JWT de la sesión actual. */
+export function obtenerUsuarioId(): string | null {
+  return decodificarPayload()?.sub ?? null
+}
+
+/** Decodifica el claim `nombre` del JWT de la sesión actual (vacío en tokens emitidos antes
+ * de que existiera el claim, o si no se pudo decodificar). */
+export function obtenerNombre(): string | null {
+  const nombre = decodificarPayload()?.nombre
+  return nombre ? nombre : null
 }

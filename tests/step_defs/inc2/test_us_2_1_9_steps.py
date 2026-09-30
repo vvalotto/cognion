@@ -9,7 +9,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_asignado_a_materia
 
 # El .feature mezcla escenarios backend y frontend (alcance ampliado de US-2.1.9, ver
 # docs/specs/inc2/US-2.1.9.md). Solo el escenario backend se ejecuta con pytest-bdd —
@@ -34,6 +34,11 @@ async def _limpiar_tablas_banco_preguntas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -53,10 +58,10 @@ def context():
 async def _post_crear_materia(nombre: str):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        return await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
 
 
-async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
+async def _post_cargar_pregunta_verdadero_falso(banco_id: str, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.post(
@@ -70,20 +75,20 @@ async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
-async def _delete_eliminar_pregunta(pregunta_id: str):
+async def _delete_eliminar_pregunta(pregunta_id: str, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.delete(f"/preguntas/{pregunta_id}", headers=docente_headers())
+        return await client.delete(f"/preguntas/{pregunta_id}", headers=headers)
 
 
-async def _get_listar_materias():
+async def _get_listar_materias(headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.get("/materias", headers=docente_headers())
+        return await client.get("/materias", headers=headers)
 
 
 @given("una materia con 3 preguntas activas y 1 pregunta eliminada (baja lógica)")
@@ -92,20 +97,22 @@ def materia_con_preguntas_activas_e_inactivas(context):
     assert respuesta_materia.status_code == 201
     context["nombre"] = respuesta_materia.json()["nombre"]
     banco_id = respuesta_materia.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
     for _ in range(3):
-        respuesta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id))
+        respuesta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id, headers))
         assert respuesta.status_code == 201
 
-    a_eliminar = run_async(_post_cargar_pregunta_verdadero_falso(banco_id))
+    a_eliminar = run_async(_post_cargar_pregunta_verdadero_falso(banco_id, headers))
     assert a_eliminar.status_code == 201
-    eliminacion = run_async(_delete_eliminar_pregunta(a_eliminar.json()["id"]))
+    eliminacion = run_async(_delete_eliminar_pregunta(a_eliminar.json()["id"], headers))
     assert eliminacion.status_code == 204
 
 
 @when("se hace GET /materias")
 def ejecuta_get_materias(context):
-    context["response"] = run_async(_get_listar_materias())
+    context["response"] = run_async(_get_listar_materias(context["headers"]))
 
 
 @then("la materia aparece en la respuesta con cantidad_preguntas_activas = 3")

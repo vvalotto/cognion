@@ -10,13 +10,17 @@ from src.analytics.entities.ports.pregunta_metadato_consulta_port import (
 
 class TestMetadatoPreguntaResumen:
     def test_es_inmutable(self):
-        metadato = MetadatoPreguntaResumen(unidad_tematica="Unidad 1", tema="Herencia")
+        metadato = MetadatoPreguntaResumen(
+            unidad_tematica="Unidad 1", tema="Herencia", enunciado="Enunciado de prueba"
+        )
 
         with pytest.raises(AttributeError):
             metadato.tema = "Polimorfismo"  # type: ignore[misc]
 
     def test_conserva_los_valores_recibidos(self):
-        metadato = MetadatoPreguntaResumen(unidad_tematica="Unidad 2", tema="Acoplamiento")
+        metadato = MetadatoPreguntaResumen(
+            unidad_tematica="Unidad 2", tema="Acoplamiento", enunciado="Enunciado de prueba"
+        )
 
         assert metadato.unidad_tematica == "Unidad 2"
         assert metadato.tema == "Acoplamiento"

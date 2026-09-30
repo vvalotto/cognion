@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "us_id": "US-5.1.3",
+    "us_title": "Notificación de cierre manual de una Actividad Evaluativa",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-10T19:41:00.837416+00:00",
+    "completed_at": "2026-09-10T20:10:25.131997+00:00",
+    "total_elapsed_seconds": 1764,
+    "effective_seconds": 1764,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-10T19:42:07.118613+00:00",
+      "completed_at": "2026-09-10T19:42:34.032387+00:00",
+      "elapsed_seconds": 26,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-10T19:42:40.971263+00:00",
+      "completed_at": "2026-09-10T19:45:39.495212+00:00",
+      "elapsed_seconds": 178,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-10T19:45:45.917074+00:00",
+      "completed_at": "2026-09-10T19:48:09.242890+00:00",
+      "elapsed_seconds": 143,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Extender NotificacionPort con materia_nombre",
+          "task_type": "entities",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-10T19:45:46.039624+00:00",
+          "completed_at": "2026-09-10T19:46:08.060133+00:00",
+          "elapsed_seconds": 22,
+          "actual_minutes": 0.37,
+          "variance_minutes": -4.63,
+          "file_created": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Crear NotificarCierreUseCase",
+          "task_type": "use_cases",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-10T19:46:14.607167+00:00",
+          "completed_at": "2026-09-10T19:46:27.924444+00:00",
+          "elapsed_seconds": 13,
+          "actual_minutes": 0.22,
+          "variance_minutes": -9.78,
+          "file_created": "src/notificaciones/use_cases/notificar_cierre.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Cablear notificar_cierre en NotificacionPortInProcess",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-10T19:46:34.961939+00:00",
+          "completed_at": "2026-09-10T19:46:55.418103+00:00",
+          "elapsed_seconds": 20,
+          "actual_minutes": 0.33,
+          "variance_minutes": -4.67,
+          "file_created": "src/actividad_evaluativa/frameworks/adapters/notificacion_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Cablear CerrarActividadUseCase con MateriaConsultaPort y NotificacionPort",
+          "task_type": "use_cases",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-10T19:47:03.141743+00:00",
+          "completed_at": "2026-09-10T19:47:36.046285+00:00",
+          "elapsed_seconds": 32,
+          "actual_minutes": 0.53,
+          "variance_minutes": -14.47,
+          "file_created": "src/actividad_evaluativa/use_cases/cerrar_actividad.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Pasar materia_consulta y notificacion a CerrarActividadUseCase",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-10T19:47:43.631886+00:00",
+          "completed_at": "2026-09-10T19:47:55.067076+00:00",
+          "elapsed_seconds": 11,
+          "actual_minutes": 0.18,
+          "variance_minutes": -4.82,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-10T19:48:16.691732+00:00",
+      "completed_at": "2026-09-10T19:50:54.235479+00:00",
+      "elapsed_seconds": 157,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-10T19:51:06.583465+00:00",
+      "completed_at": "2026-09-10T19:54:44.541680+00:00",
+      "elapsed_seconds": 217,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-10T19:54:52.299453+00:00",
+      "completed_at": "2026-09-10T19:59:14.939255+00:00",
+      "elapsed_seconds": 262,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-10T19:59:32.467851+00:00",
+      "completed_at": "2026-09-10T20:03:25.677448+00:00",
+      "elapsed_seconds": 233,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-10T20:03:34.027186+00:00",
+      "completed_at": "2026-09-10T20:09:21.964857+00:00",
+      "elapsed_seconds": 347,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-10T20:09:27.950424+00:00",
+      "completed_at": "2026-09-10T20:10:24.965202+00:00",
+      "elapsed_seconds": 57,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 5,
+    "completed_tasks": 5,
+    "total_phases": 9,
+    "estimated_total_minutes": 40.0,
+    "actual_total_minutes": 1.63,
+    "variance_minutes": -38.37,
+    "variance_percent": -95.92
+  }
+}

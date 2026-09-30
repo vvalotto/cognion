@@ -1,0 +1,87 @@
+{
+  "us_id": "US-6.1.2",
+  "fecha": "2026-09-18T17:44:41.039698",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.84,
+    "cc_promedio": 1.5,
+    "cc_maximo": 5,
+    "mi_promedio": 83.99,
+    "mi_minimo": 60.23,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 4,
+    "warnings": 201,
+    "infos": 52,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 7
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 156,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Pylint": {
+        "errors": 2,
+        "warnings": 0,
+        "infos": 6
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 44,
+        "infos": 1
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "UnusedImports": {
+        "errors": 2,
+        "warnings": 0,
+        "infos": 6
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.1.2-codeguard.json"
+  },
+  "tests": {
+    "suite_completa": "1224 passed, 1 failed, 20 errors en la primera corrida",
+    "tras_fix_conftest": "20 errores resueltos (re-ejecutados integration/inc6 + step_defs inc1/inc2 afectados: 44 passed)",
+    "fallo_preexistente": "tests/step_defs/inc3/test_us_3_2_1_steps.py::test_rechazo_fuera_del_período_vigente (documentado en CLAUDE.md, ventana de ~1s)"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 20 errores de la primera corrida completa eran propios: tests/integration/inc6 dejaba preguntas huerfanas y rompia el DELETE FROM banco de step_defs inc1/inc2 (FK). Corregido con tests/integration/inc6/conftest.py (mismo patron que inc5).",
+    "Coverage: el proyecto excluye frameworks/* del gate (pyproject.toml [tool.coverage.run] omit). Los 44 archivos medidos (entities, use_cases, interface_adapters del BC) estan al 100%, incluidos los 4 nuevos de esta US. El router/dependencies/schemas de frameworks tienen tests de integracion (8) y BDD (5) igualmente.",
+    "CodeGuard corrido con .venv/bin en el PATH (sin eso vulture/codespell figuran 'not installed'). 4 'errors' restantes son timeouts de pylint dentro de la herramienta (>5s/>10s), no hallazgos de codigo; pylint se midio directo: 9.84.",
+    "CodeGuard DeadCode (156 warnings) y Spelling (45) son ruido conocido: DeadCode analiza archivo por archivo sin ver usos cross-modulo; Spelling compara texto en espanol con diccionario en ingles. Types: 0 errores.",
+    "Unico hallazgo real de PEP8 (E501 en dependencies.py:54) es un import preexistente, no de esta US.",
+    "Pylint 9.84: R0902 en SesionEnVivoCreada (8/7 atributos, dataclass de evento) y R0903 en Use Case/Controller (1 metodo publico) - mismo patron aceptado en US previas."
+  ]
+}

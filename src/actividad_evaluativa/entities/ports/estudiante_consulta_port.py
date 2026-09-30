@@ -16,3 +16,21 @@ class EstudianteConsultaPort(ABC):
     @abstractmethod
     async def existe(self, estudiante_id: UUID) -> bool:
         """Indica si `estudiante_id` corresponde a un `Usuario` existente con rol Estudiante."""
+
+    @abstractmethod
+    async def obtener_comision_id(self, estudiante_id: UUID) -> UUID | None:
+        """Devuelve la `comision_id` del Estudiante, o `None` si no existe.
+
+        Usado para filtrar la visibilidad de actividades restringidas a comisiones concretas
+        (`ListarActividadesVisiblesUseCase`) — un Estudiante cursa una única Comisión
+        (`estudiante.comision_id`, sin multi-inscripción todavía).
+        """
+
+    @abstractmethod
+    async def obtener_nombres(self, ids: list[UUID]) -> dict[UUID, str]:
+        """Devuelve `{estudiante_id: nombre}` para los ids resolubles, en una sola consulta.
+
+        Los ids sin cuenta resoluble simplemente no aparecen en el dict devuelto — quien llama
+        decide el texto de reemplazo (`US-6.3.1`, mismo criterio best-effort que el resto del
+        canal en vivo).
+        """

@@ -118,11 +118,25 @@ class UsuarioNoExiste(Exception):
 
 
 class PasswordDemasiadoCorta(Exception):
-    """La contraseña nueva no cumple el mínimo de 8 caracteres (INV-ID-11)."""
+    """La contraseña nueva no cumple el mínimo de 12 caracteres (INV-ID-11 ampliada)."""
 
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos de la contraseña rechazada."""
-        super().__init__("La contraseña debe tener al menos 8 caracteres.")
+        super().__init__("La contraseña debe tener al menos 12 caracteres.")
+
+
+class PasswordSinComplejidadSuficiente(Exception):
+    """La contraseña nueva no mezcla mayúscula, número y símbolo (INV-ID-11 ampliada).
+
+    Se lanza solo cuando la contraseña ya cumple el mínimo de longitud — si es demasiado
+    corta, `Usuario.validar_password_nueva` lanza `PasswordDemasiadoCorta` primero.
+    """
+
+    def __init__(self) -> None:
+        """Arma el mensaje genérico de la excepción, sin datos de la contraseña rechazada."""
+        super().__init__(
+            "La contraseña debe incluir al menos una mayúscula, un número y un símbolo."
+        )
 
 
 class PasswordActualIncorrecta(Exception):
@@ -139,3 +153,52 @@ class PasswordActualIncorrecta(Exception):
         self.evento_cuenta_bloqueada: CuentaBloqueada | None = None
         self.intentos_restantes: int | None = None
         super().__init__("La contraseña actual es incorrecta.")
+
+
+class TokenRecuperacionInvalido(Exception):
+    """Se intentó canjear un token de recuperación cuyo valor no corresponde a ninguno existente."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"El token de recuperación '{token}' no existe.")
+
+
+class TokenRecuperacionVencido(Exception):
+    """Se intentó canjear un `TokenRecuperacionPassword` cuyo `expira_en` ya pasó (INV-ID-13)."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"El token de recuperación '{token}' ya venció.")
+
+
+class TokenRecuperacionYaUsado(Exception):
+    """Se intentó canjear un `TokenRecuperacionPassword` con `usado_en` no null."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"El token de recuperación '{token}' ya fue utilizado.")
+
+
+class ComisionNoAutorizada(Exception):
+    """El Docente autenticado no está asignado a esta comisión puntual (`US-ADJ-57`).
+
+    Autorización (403), distinto de `DocenteNoAsignadoAComision` (422, valida el docente
+    *destino* de una invitación, no a quien hace el pedido).
+    """
+
+    def __init__(self, comision_id: UUID) -> None:
+        """Guarda el id en conflicto y arma el mensaje de la excepción."""
+        self.comision_id = comision_id
+        super().__init__(f"No estás asignado a la comisión '{comision_id}'.")
+
+
+class MateriaNoAutorizada(Exception):
+    """El Docente autenticado no tiene ninguna comisión asignada en esta materia (`US-ADJ-57`)."""
+
+    def __init__(self, materia_id: UUID) -> None:
+        """Guarda el id en conflicto y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"No tenés ninguna comisión asignada en la materia '{materia_id}'.")

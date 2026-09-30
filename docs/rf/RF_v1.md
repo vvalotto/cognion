@@ -13,6 +13,19 @@
 > en ningún lado; RF-03 gana un mecanismo de bloqueo *automático* por intentos fallidos
 > (antes solo contemplaba bloqueos como acción del administrador). Sesión de elicitación en
 > `docs/design/domain/BC-identidad-modelo.md` §9.
+> Revisión 2026-09-30: RF-18 (KPIs históricos) queda diferido sin incremento asignado —
+> decisión de Víctor al planificar el Incremento 7: su Iteración 1 original (RF-18) se
+> reemplaza por una iteración de UAT manual completa de cierre de alcance v1 (ver
+> `docs/plans/PLAN_v1.md`, revisión correspondiente, y `docs/plans/inc7/inc7-candidatas.md`).
+> No reescribe historia — el Incremento 7 no se ejecutó todavía. RF-18 sigue en alcance
+> ("En alcance" más abajo no se modifica) — solo se retira del Incremento 7, queda
+> "Planificado" sin incremento en `docs/traceability/matrix.md` hasta que se le asigne uno.
+> Revisión 2026-09-16: se agregan RF-24 (recuperación de contraseña por autoservicio) y RF-25
+> (autoregistro de Docente/Estudiante), numerados en el cierre documental del Incremento 5-ADJ
+> (`US-ADJ-52`) — elicitados y modelados durante ese incremento
+> (`docs/design/domain/BC-identidad-modelo.md` §13). RF-24 amplía la regla de longitud mínima
+> de contraseña de RF-19 (sube de 8 a 12 caracteres + mezcla de tipos) a los 7 comandos que
+> fijan contraseña en el sistema, RF-19 no se reescribe.
 
 ## Descripción del sistema
 
@@ -128,6 +141,53 @@ El docente puede ver el desempeño agregado por comisión e identificar qué tem
 El sistema mantiene un historial de KPIs por sesión y por cursada que el docente puede consultar a lo largo del tiempo.  
 - **Criterios de aceptación:** Los datos de sesiones anteriores son accesibles y comparables. Los KPIs específicos a mostrar serán definidos por el docente (ver Diferidos).
 
+> **Agregado 2026-09-09** (sesión de estabilización post-`BL-007`, prueba manual E2E del portal
+> Estudiante) — RF-20 a RF-23 abajo. Concretan, para el caso de "período abierto", parte de lo
+> que `RF-18` dejaba diferido como "definición detallada de KPIs a mostrar" — no lo reemplazan,
+> lo especifican.
+
+**RF-20 — Desempeño por comisión, con drill-down a la revisión de un estudiante**  
+El docente elige una materia y una comisión (una por vez) y ve una tabla con todos los estudiantes de esa comisión: su % de aciertos acumulado y la cantidad de actividades abiertas que todavía no respondió. Desde esa tabla entra al detalle de un estudiante (desempeño por actividad, ya cubierto por `RF-16`) y, desde ahí, a la revisión completa de una evaluación puntual — la misma vista pregunta por pregunta que hoy ve el propio estudiante al finalizar (`RF-15`), pero consultada por el docente.  
+- **Criterios de aceptación:** La tabla es ordenable por cualquier columna. Un estudiante sin evaluaciones finalizadas muestra "Sin datos" en el % de aciertos, nunca 0%. "Actividades pendientes" cuenta solo las actividades abiertas en este momento que el estudiante no respondió — no incluye actividades programadas a futuro. La revisión de una evaluación puntual expone lo mismo que ve el propio estudiante (enunciado, respuesta dada, respuesta correcta, acierto/error por pregunta), pero para un estudiante de una comisión del docente que consulta.  
+- **Casos límite:** Una comisión sin ningún estudiante con evaluaciones finalizadas — la tabla se muestra igual, todos con "Sin datos".
+
+**RF-21 — Evolución temporal del desempeño**  
+El docente ve un gráfico de línea con el % de aciertos a lo largo de las actividades rendidas, tanto para un estudiante individual (desde el drill-down de `RF-20`) como para el promedio de toda la comisión.  
+- **Criterios de aceptación:** El eje X respeta el orden cronológico de las actividades efectivamente rendidas — las no respondidas se saltean, sin dejar un punto en cero ni un hueco marcado.  
+- **Casos límite:** Un estudiante con una sola evaluación finalizada muestra un único punto, no una línea.
+
+**RF-22 — Ranking de preguntas más falladas**  
+El docente ve una lista completa y ordenable de las preguntas que aparecieron en al menos una actividad, con su tasa de error (fallos sobre cantidad de veces que la pregunta fue presentada a un estudiante) — no un conteo bruto de fallos. Filtrable por comisión o agregado de todas las comisiones de la materia, mismo criterio que `RF-17`.  
+- **Criterios de aceptación:** Solo se listan preguntas que efectivamente aparecieron en alguna actividad, no todo el banco. Usa la misma escala de color por severidad que `RF-17` (≥50% rojo, 20-49% ámbar, <20% verde).  
+- **Casos límite:** Una pregunta que apareció en una actividad pero todavía nadie respondió — sin tasa calculable, queda fuera del ranking hasta tener al menos una respuesta registrada.
+
+**RF-23 — Completitud y participación por actividad**  
+Para una actividad abierta puntual, el docente ve una tabla con todos los estudiantes de la comisión y su estado respecto de esa actividad: sin iniciar, en curso, suspendida o finalizada.  
+- **Criterios de aceptación:** Los cuatro estados se distinguen entre sí — "en curso" y "suspendida" no se agrupan.  
+- **Casos límite:** Ninguno explorado todavía — a definir al especificar la US si aparece alguno.
+
+> **Agregado 2026-09-16** (revisión documental de cierre del Incremento 5-ADJ, `US-ADJ-52`) —
+> RF-24 y RF-25 abajo. Elicitados junto con RF-20 a RF-23 en `docs/plans/inc5-adj/
+> inc5-adj-candidatas.md`, numerados formalmente recién ahora que el alcance quedó cerrado e
+> implementado.
+
+**RF-24 — Recuperación de contraseña por autoservicio**  
+Cualquier usuario que no recuerde su contraseña puede solicitar restablecerla ingresando su email, sin depender del administrador. El sistema envía un link con token de un solo uso al email registrado; al confirmarlo con una contraseña nueva, la cuenta queda accesible de inmediato.  
+- **Criterios de aceptación:** El token expira a la hora de generado. La respuesta a la solicitud es indistinguible exista o no una cuenta con ese email (no debe ser posible enumerar cuentas). Solicitar un token nuevo invalida cualquier token anterior sin usar de la misma cuenta. La contraseña nueva cumple la misma regla de complejidad que RF-19 (ver nota de complejidad abajo).  
+- **Casos límite:** Token vencido, inválido, o ya usado — el sistema rechaza la confirmación con un mensaje explicando el motivo, sin recuperación automática (mismo criterio de `ADR-012` para la invitación, aplicado acá a un concepto distinto — ver `ADR-012` nota de alcance).
+
+**RF-25 — Autoregistro de Docente y Estudiante**  
+Cualquier persona puede crear su propia cuenta como Docente o Estudiante sin invitación previa ni aprobación del administrador, eligiendo su perfil. Un Estudiante que se autoregistra debe elegir su Materia y Comisión de una lista pública. Una cuenta autoregistrada queda activa de inmediato.  
+- **Criterios de aceptación:** El autoregistro convive con el registro por invitación existente (RF-01) y con el alta directa por el administrador (RF-03) — no los reemplaza, son tres vías de alta independientes. El autoregistro no admite el perfil Administrador. La contraseña elegida cumple la misma regla de complejidad que RF-19/RF-24.  
+- **Casos límite:** Email ya registrado — el sistema rechaza el autoregistro con un mensaje explicando el motivo. Comisión inexistente en el autoregistro de Estudiante — mismo rechazo.
+
+> **Nota de complejidad de contraseña (afecta RF-01, RF-03, RF-19, RF-24, RF-25):** desde el
+> Incremento 5-ADJ (`US-ADJ-36`), toda contraseña nueva exige mínimo 12 caracteres (sube de 8)
+> y al menos una mayúscula, un número y un símbolo — regla única y transversal a los 7 comandos
+> que fijan contraseña en el sistema. Ninguno de los RF que mencionan "mínimo 8 caracteres" se
+> reescribe; esta nota documenta la ampliación vigente, igual criterio que la nota de RF-19
+> arriba.
+
 ---
 
 ## Decisiones de alcance
@@ -143,15 +203,28 @@ El sistema mantiene un historial de KPIs por sesión y por cursada que el docent
 - Migración inicial desde PDFs
 - Cambio de contraseña self-service, con bloqueo automático de cuenta a los 3 intentos
   fallidos consecutivos (login o cambio de contraseña) — RF-19
+- Tabla de desempeño por comisión con drill-down a la revisión completa de una evaluación de
+  un estudiante puntual, evolución temporal del % de aciertos, ranking de preguntas más
+  falladas del banco, y completitud/participación por actividad — RF-20 a RF-23
+  (agregado 2026-09-09)
+- Recuperación de contraseña por autoservicio, sin depender del administrador — RF-24
+  (agregado 2026-09-16)
+- Autoregistro de Docente y Estudiante sin invitación ni aprobación, conviviendo con el
+  registro por invitación (RF-01) y el alta directa por administrador (RF-03) — RF-25
+  (agregado 2026-09-16)
 
 ### Fuera de alcance
 - Múltiples docentes — *Razón:* el sistema es de uso personal del docente por ahora; se extiende después.
 - Reportes exportables — *Razón:* se evalúa en una etapa posterior.
+- Comparativa de desempeño entre comisiones de una misma materia — *Razón:* descartada
+  explícitamente por Víctor al elicitar RF-20 a RF-23 (2026-09-09).
 
 ### Diferidos
 - Algoritmo de selección de preguntas no aleatorio — *Razón del diferimiento:* requiere definir criterios de personalización (historial, desempeño previo, etc.).
 - Notificaciones por canales distintos al email — *Razón del diferimiento:* la arquitectura debe preverlo pero la implementación queda para después.
 - Definición detallada de KPIs a mostrar en el dashboard del docente — *Razón del diferimiento:* el docente los irá definiendo a medida que use el sistema.
+- Reporte de uso de intentos por pregunta (cuántos estudiantes necesitaron 2do/3er intento) —
+  *Razón del diferimiento:* alcance sin definir todavía, "no por el momento" (2026-09-09).
 
 ---
 

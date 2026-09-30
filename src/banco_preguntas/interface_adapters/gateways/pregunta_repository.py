@@ -162,6 +162,12 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
             return None
         return _a_entidad(modelo)
 
+    async def existen_preguntas(self, banco_id: UUID) -> bool:
+        """Indica si el banco tiene alguna pregunta, activa o no."""
+        query = select(PreguntaPlantillaModel.id).where(PreguntaPlantillaModel.banco_id == banco_id)
+        resultado = await self._session.execute(query.limit(1))
+        return resultado.first() is not None
+
     async def filtrar(
         self,
         banco_id: UUID,

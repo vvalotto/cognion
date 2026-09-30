@@ -141,4 +141,7 @@ def _a_resumen(
         cerrada_manualmente=actividad.cerrada_manualmente,
         cantidad_evaluaciones_activas=activas,
         cantidad_evaluaciones_finalizadas=finalizadas,
+        comisiones_ids=actividad.comisiones_ids,
+        unidad_tematica=actividad.unidad_tematica,
+        tema=actividad.tema,
     )

@@ -189,6 +189,35 @@ class TestObtenerRevisionEvaluacionUseCase:
         with pytest.raises(EvaluacionNoExiste):
             await use_case.execute(evaluacion_id, uuid4())
 
+    async def test_verificar_propietario_false_admite_llamador_ajeno(self):
+        """Drill-down de Docente (`US-ADJ-44`): sin `verificar_propietario`, cualquier
+        `usuario_id` puede pedir la revisión — RBAC por rol la resuelve el router, no acá."""
+        event_store = FakeEventStore()
+        pregunta_id = uuid4()
+        evaluacion_id, _estudiante_id = await _evaluacion_finalizada_con(
+            event_store, [pregunta_id], []
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        pregunta_consulta.detalles[pregunta_id] = DetalleCorreccionPregunta(
+            texto="¿Sin responder?", contenido_correcto={"valor": True}, opciones=None
+        )
+        use_case = ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store)
+
+        revision = await use_case.execute(evaluacion_id, uuid4(), verificar_propietario=False)
+
+        assert revision.evaluacion_id == evaluacion_id
+
+    async def test_verificar_propietario_true_por_default(self):
+        """El default sigue siendo estricto — mismo comportamiento previo a `US-ADJ-44`."""
+        event_store = FakeEventStore()
+        evaluacion_id, estudiante_id = await _evaluacion_finalizada_con(event_store, [uuid4()], [])
+        pregunta_consulta = FakePreguntaConsultaPort()
+        use_case = ObtenerRevisionEvaluacionUseCase(pregunta_consulta, event_store)
+
+        revision = await use_case.execute(evaluacion_id, estudiante_id)
+
+        assert revision.evaluacion_id == evaluacion_id
+
     async def test_rechaza_evaluacion_en_curso(self):
         actividad_id, estudiante_id, pregunta_id = uuid4(), uuid4(), uuid4()
         evaluacion_id = Evaluacion.id_para(actividad_id, estudiante_id)

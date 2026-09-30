@@ -35,7 +35,7 @@ class TestCambiarPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.put(
                 "/usuarios/me/password",
-                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123"},
+                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123#"},
                 headers=_headers_para(usuario),
             )
 
@@ -54,11 +54,11 @@ class TestCambiarPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             await client.put(
                 "/usuarios/me/password",
-                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123"},
+                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123#"},
                 headers=_headers_para(usuario),
             )
             response = await client.post(
-                "/identidad/login", json={"email": email, "password": "claveNueva123"}
+                "/identidad/login", json={"email": email, "password": "claveNueva123#"}
             )
 
         assert response.status_code == 200
@@ -79,7 +79,7 @@ class TestCambiarPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.put(
                 "/usuarios/me/password",
-                json={"password_actual": "incorrecta", "password_nueva": "claveNueva123"},
+                json={"password_actual": "incorrecta", "password_nueva": "claveNueva123#"},
                 headers=_headers_para(usuario),
             )
 
@@ -102,7 +102,7 @@ class TestCambiarPasswordAPIIntegration:
             for _ in range(3):
                 response = await client.put(
                     "/usuarios/me/password",
-                    json={"password_actual": "incorrecta", "password_nueva": "claveNueva123"},
+                    json={"password_actual": "incorrecta", "password_nueva": "claveNueva123#"},
                     headers=headers,
                 )
 
@@ -128,7 +128,7 @@ class TestCambiarPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.put(
                 "/usuarios/me/password",
-                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123"},
+                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123#"},
                 headers=_headers_para(usuario),
             )
 
@@ -160,7 +160,7 @@ class TestCambiarPasswordAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.put(
                 "/usuarios/me/password",
-                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123"},
+                json={"password_actual": "claveActual1", "password_nueva": "claveNueva123#"},
             )
 
         assert response.status_code == 401

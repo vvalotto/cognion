@@ -1,0 +1,43 @@
+{
+  "us_id": "US-ADJ-45",
+  "fecha": "2026-09-14T11:34:00",
+  "componente": "src/analytics (evaluacion_desempeno_consulta_port.py, evaluacion_desempeno_consulta_port_in_process.py, obtener_evolucion_temporal_estudiante.py, obtener_evolucion_temporal_comision.py, analytics_controller.py, analytics_router.py, schemas.py, dependencies.py)",
+  "metricas": {
+    "pylint": 9.92,
+    "cc_promedio": 2.8,
+    "cc_max": 9,
+    "mi_promedio": 78.6,
+    "mi_min_archivo": 50.52,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 7,
+    "warnings": 86,
+    "infos": 56,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 8 },
+      "PEP8": { "errors": 0, "warnings": 1, "infos": 7 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 8 },
+      "DeadCode": { "errors": 7, "warnings": 69, "infos": 1 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 8 },
+      "Pylint": { "errors": 0, "warnings": 0, "infos": 8 },
+      "Spelling": { "errors": 0, "warnings": 16, "infos": 1 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 7 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 8 }
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-45-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "DeadCode reporta 7 errores 'variable never used' sobre los parámetros de los 4 métodos abstractos de EvaluacionDesempenoConsultaPort (entities/ports) — falso positivo de vulture sobre firmas de interfaz ABC, mismo patrón ya aceptado en US-ADJ-44.",
+    "CC de ObtenerEvolucionTemporalComisionUseCase.execute detectado en 11/10 durante la corrida inicial de Fase 7 — corregido extrayendo _acumular_por_actividad/_puntos_ordenados a funciones de módulo (mismo criterio de extracción ya aplicado en todo el BC). CC máx final: 9.",
+    "Coverage medido en entities/use_cases/interface_adapters (100%) — frameworks/ queda fuera del gate por diseño (tool.coverage.run.omit en pyproject.toml)."
+  ]
+}

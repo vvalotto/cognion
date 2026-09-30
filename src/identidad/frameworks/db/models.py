@@ -34,6 +34,7 @@ class UsuarioModel(Base):
     intentos_fallidos_login: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     intentos_fallidos_password: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     creado_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    deshabilitada: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
 
 class AdministradorModel(Base):
@@ -57,7 +58,7 @@ class DocenteModel(Base):
 
 
 class EstudianteModel(Base):
-    """Fila de la tabla `estudiante`, marca de perfil sobre `usuario`, con su comisión (INV-ID-05)."""
+    """Fila de `estudiante`, marca de perfil sobre `usuario`, con su comisión (INV-ID-05)."""
 
     __tablename__ = "estudiante"
 
@@ -82,6 +83,7 @@ class ComisionModel(Base):
     administrador_id: Mapped[uuid.UUID] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("administrador.id"), nullable=False
     )
+    activa: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     docentes: Mapped[list[DocenteModel]] = relationship(secondary=comision_docentes)
 
 
@@ -103,3 +105,20 @@ class InvitacionModel(Base):
     generada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     expira_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     usada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class TokenRecuperacionPasswordModel(Base):
+    """Fila de la tabla `token_recuperacion_password` (`US-ADJ-38`)."""
+
+    __tablename__ = "token_recuperacion_password"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    usuario_id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), ForeignKey("usuario.id"), nullable=False
+    )
+    token: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+    generado_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expira_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    usado_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

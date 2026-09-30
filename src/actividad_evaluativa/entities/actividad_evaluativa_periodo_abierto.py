@@ -31,6 +31,20 @@ class ActividadEvaluativaPeriodoAbierto:
     cantidad_intentos_permitidos: int
     cerrada_manualmente: bool = field(default=False)
     titulo: str = field(default="")
+    comisiones_ids: frozenset[UUID] = field(default_factory=frozenset)
+    """Comisiones a las que se restringe la visibilidad de la actividad — vacío (default)
+    significa "todas las Comisiones de la Materia", mismo comportamiento que antes de que
+    existiera este campo (hallazgo de la prueba manual E2E del portal Docente: sin esto,
+    cualquier actividad era visible para cualquier Comisión de la Materia, sin forma de
+    dirigirla a una en particular)."""
+    unidad_tematica: str | None = field(default=None)
+    """Unidad temática del banco de preguntas de la que sale el set aleatorio — `None`
+    (default) significa "cualquier unidad", combinable con `tema` (AND, mismo criterio que el
+    filtro del banco en `Banco.tsx`)."""
+    tema: str | None = field(default=None)
+    """Tema del banco de preguntas del que sale el set aleatorio, combinado con
+    `unidad_tematica` — `None` (default) significa "cualquier tema", mismo criterio de "vacío
+    = sin restricción" que `comisiones_ids`."""
 
     @staticmethod
     def crear(
@@ -40,11 +54,15 @@ class ActividadEvaluativaPeriodoAbierto:
         cantidad_preguntas: int,
         cantidad_intentos_permitidos: int,
         titulo: str = "",
+        comisiones_ids: frozenset[UUID] | None = None,
+        unidad_tematica: str | None = None,
+        tema: str | None = None,
     ) -> ActividadEvaluativaPeriodoAbierto:
         """Crea la actividad validando INV-AE-02/03.
 
-        INV-AE-01 (preguntas suficientes en el banco de la materia) no se valida acá — requiere
-        consultar a BC Banco de Preguntas vía puerto, responsabilidad del Use Case
+        INV-AE-01 (preguntas suficientes en el banco de la materia, filtradas por
+        `unidad_tematica`/`tema` si se eligieron) no se valida acá — requiere consultar a BC
+        Banco de Preguntas vía puerto, responsabilidad del Use Case
         (`CrearActividadPeriodoAbiertoUseCase`).
         """
         if fecha_apertura >= fecha_cierre:
@@ -60,6 +78,9 @@ class ActividadEvaluativaPeriodoAbierto:
             cantidad_preguntas=cantidad_preguntas,
             cantidad_intentos_permitidos=cantidad_intentos_permitidos,
             titulo=titulo,
+            comisiones_ids=comisiones_ids or frozenset(),
+            unidad_tematica=unidad_tematica or None,
+            tema=tema or None,
         )
 
     @staticmethod
@@ -81,6 +102,9 @@ class ActividadEvaluativaPeriodoAbierto:
             cantidad_preguntas=int(payload["cantidad_preguntas"]),
             cantidad_intentos_permitidos=int(payload["cantidad_intentos_permitidos"]),
             titulo=payload.get("titulo", ""),
+            comisiones_ids=frozenset(UUID(c) for c in payload.get("comisiones_ids", [])),
+            unidad_tematica=payload.get("unidad_tematica") or None,
+            tema=payload.get("tema") or None,
         )
         for evento in eventos[1:]:
             _aplicar_evento(actividad, evento)

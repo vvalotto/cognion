@@ -41,3 +41,20 @@ class ComisionConsultaPort(ABC):
     async def listar_estudiantes(self, comision_id: UUID) -> list[EstudianteResumen]:
         """Lista los estudiantes inscriptos en una comisión. Sin inscriptos → lista vacía."""
         ...
+
+    @abstractmethod
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia (`US-ADJ-57`).
+
+        Nivel de autorización usado por los informes que no reciben `comision_id`, o cuando
+        `comision_id` viene en `None` — mismo criterio que Actividad Evaluativa.
+        """
+        ...
+
+    @abstractmethod
+    async def esta_asignado_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si el docente está asignado a esa comisión puntual (`US-ADJ-57`).
+
+        Nivel de autorización usado por los informes que acotan a una `comision_id` concreta.
+        """
+        ...

@@ -9,7 +9,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_asignado_a_materia
 
 scenarios("../../features/inc2/US-2.1.5-editar-pregunta.feature")
 
@@ -23,6 +23,11 @@ async def _limpiar_tablas_banco_preguntas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -42,10 +47,12 @@ def context():
 async def _post_crear_materia(nombre: str):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        return await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
 
 
-async def _post_cargar_pregunta_opcion_multiple(banco_id: str, opciones: list[dict]):
+async def _post_cargar_pregunta_opcion_multiple(
+    banco_id: str, opciones: list[dict], headers: dict[str, str]
+):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.post(
@@ -59,11 +66,11 @@ async def _post_cargar_pregunta_opcion_multiple(banco_id: str, opciones: list[di
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
-async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
+async def _post_cargar_pregunta_verdadero_falso(banco_id: str, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.post(
@@ -77,14 +84,14 @@ async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
-async def _put_editar_pregunta(pregunta_id: str, body: dict):
+async def _put_editar_pregunta(pregunta_id: str, body: dict, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.put(f"/preguntas/{pregunta_id}", json=body, headers=docente_headers())
+        return await client.put(f"/preguntas/{pregunta_id}", json=body, headers=headers)
 
 
 async def _marcar_inactiva(pregunta_id: str) -> None:
@@ -97,8 +104,8 @@ async def _marcar_inactiva(pregunta_id: str) -> None:
 
 
 @given("un Docente autenticado")
-def docente_autenticado(context):
-    context["headers"] = docente_headers()
+def docente_autenticado(context) -> None:
+    """No-op: el Docente real y asignado se crea recién en el siguiente Given (`US-ADJ-57`)."""
 
 
 @given("una PreguntaPlantillaOpcionMultiple activa con 3 opciones")
@@ -106,6 +113,8 @@ def pregunta_om_activa_con_tres_opciones(context):
     respuesta_materia = run_async(_post_crear_materia("Gestión de Proyectos"))
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
     respuesta_pregunta = run_async(
         _post_cargar_pregunta_opcion_multiple(
@@ -115,6 +124,7 @@ def pregunta_om_activa_con_tres_opciones(context):
                 {"texto": "Concordia", "es_correcta": False},
                 {"texto": "Gualeguaychú", "es_correcta": False},
             ],
+            headers,
         )
     )
     assert respuesta_pregunta.status_code == 201
@@ -126,6 +136,8 @@ def pregunta_om_activa(context):
     respuesta_materia = run_async(_post_crear_materia("Ingeniería de Software"))
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
     respuesta_pregunta = run_async(
         _post_cargar_pregunta_opcion_multiple(
@@ -134,6 +146,7 @@ def pregunta_om_activa(context):
                 {"texto": "Paraná", "es_correcta": True},
                 {"texto": "Concordia", "es_correcta": False},
             ],
+            headers,
         )
     )
     assert respuesta_pregunta.status_code == 201
@@ -145,8 +158,10 @@ def pregunta_inactiva(context):
     respuesta_materia = run_async(_post_crear_materia("Sistemas de Información"))
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
-    respuesta_pregunta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id))
+    respuesta_pregunta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id, headers))
     assert respuesta_pregunta.status_code == 201
     pregunta_id = respuesta_pregunta.json()["id"]
     run_async(_marcar_inactiva(pregunta_id))
@@ -170,6 +185,7 @@ def edita_texto_y_opcion(context):
                     {"texto": "Gualeguaychú", "es_correcta": False},
                 ],
             },
+            context["headers"],
         )
     )
 
@@ -190,6 +206,7 @@ def desmarca_opcion_correcta(context):
                     {"texto": "Concordia", "es_correcta": False},
                 ],
             },
+            context["headers"],
         )
     )
 
@@ -207,6 +224,7 @@ def edita_pregunta_inactiva(context):
                 "importancia": "alto",
                 "respuesta_correcta": False,
             },
+            context["headers"],
         )
     )
 

@@ -1,0 +1,3068 @@
+{
+  "summary": {
+    "total_files": 10,
+    "checks_executed": 9,
+    "elapsed_seconds": 64.32,
+    "timestamp": "2026-09-10T11:49:30.246992",
+    "total_issues": 144,
+    "errors": 23,
+    "warnings": 50,
+    "infos": 71
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'NotificacionPort' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 21
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'notificar_apertura' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 24
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'actividad_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 28
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'titulo' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 29
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'fecha_apertura' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 30
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'fecha_cierre' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 31
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comisiones_ids' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 32
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'notificar_cierre' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 42
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'actividad_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 45
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 46
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'titulo' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 47
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comisiones_ids' is never used (100% confidence)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": 48
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 5.56/10 (< 8.0). Run 'pylint notificacion_port.py' for details.",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 21
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'id' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 34
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 35
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 36
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionQueryPort' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 39
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 42
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'incluir_inactivas' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 44
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 52
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 53
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes_con_email' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 57
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 58
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'tiene_comisiones_asignadas' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'docente_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 67
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'tiene_comisiones_creadas' is never used (60% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 71
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'administrador_id' is never used (100% confidence)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 72
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.83/10 (< 8.0). Run 'pylint comision_query_port.py' for details.",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 14
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 14
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 40
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 45
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": 75
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/entities/ports/comision_query_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SQLAlchemyComisionQueryRepository' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 25
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 32
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 62
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_estudiantes_con_email' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 75
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'tiene_comisiones_asignadas' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 93
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'tiene_comisiones_creadas' is never used (60% confidence)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 103
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 69.7 (grade A)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 11
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 11
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 34
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": 51
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ No complex functions detected",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "Could not extract pylint score from output",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/entities/ports/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CanalEnvioPort' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": 12
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'enviar' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": 15
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'asunto' is never used (100% confidence)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": 16
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'cuerpo' is never used (100% confidence)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": 16
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'destinatario_email' is never used (100% confidence)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": 16
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 6.00/10 (< 8.0). Run 'pylint canal_envio_port.py' for details.",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'implemente' should be 'implement,'",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": 13
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 21
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 22
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'email' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 23
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 26
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 29
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 30
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_destinatarios' is never used (60% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 39
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "Dead code: variable 'comision_ids' is never used (100% confidence)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": 41
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.46/10 (>= 8.0)",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ No complex functions detected",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "info",
+      "message": "✓ No dead code detected",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "Could not extract pylint score from output",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/frameworks/adapters/__init__.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 24
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'listar_destinatarios' is never used (60% confidence)",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 36
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 28
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 34
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comision' should be 'commission'",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": 34
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SmtpCanalEnvio' is never used (60% confidence)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": 21
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'enviar' is never used (60% confidence)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": 24
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.50/10 (>= 8.0)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_canal_envio_port' is never used (60% confidence)",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": 27
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": 32
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/frameworks/dependencies.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'actividad_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'titulo' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'fecha_apertura' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'fecha_cierre' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comisiones_ids' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'actividad_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'titulo' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comisiones_ids' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 48
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'incluir_inactivas' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 53
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'docente_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'administrador_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 72
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "Could not extract pylint score from output",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'asunto' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'cuerpo' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'destinatario_email' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_ids' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 41
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "Could not extract pylint score from output",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'NotificacionPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'notificar_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'notificar_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 42
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 5.56/10 (< 8.0). Run 'pylint notificacion_port.py' for details.",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 35
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionQueryPort' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes_con_email' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_asignadas' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_creadas' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 71
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.83/10 (< 8.0). Run 'pylint comision_query_port.py' for details.",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 40
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 45
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyComisionQueryRepository' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes_con_email' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_asignadas' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 93
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_creadas' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 103
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 11
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 11
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 34
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CanalEnvioPort' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 12
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'enviar' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 15
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 6.00/10 (< 8.0). Run 'pylint canal_envio_port.py' for details.",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'implemente' should be 'implement,'",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 13
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_destinatarios' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_destinatarios' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 36
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 28
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 34
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SmtpCanalEnvio' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'enviar' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_canal_envio_port' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": 32
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 69.7 (grade A)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ No complex functions detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.46/10 (>= 8.0)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ No complex functions detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.50/10 (>= 8.0)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/__init__.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ No complex functions detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "Could not extract pylint score from output",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/__init__.py",
+        "line": null
+      }
+    ],
+    "adapters/comision_consulta_port_in_process.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPortInProcess' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_destinatarios' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 36
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 28
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 34
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": 34
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/comision_consulta_port_in_process.py",
+        "line": null
+      }
+    ],
+    "adapters/smtp_canal_envio.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SmtpCanalEnvio' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'enviar' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 24
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.50/10 (>= 8.0)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_canal_envio_port' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": 32
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "gateways/comision_query_repository.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SQLAlchemyComisionQueryRepository' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 25
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes_con_email' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_asignadas' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 93
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_creadas' is never used (60% confidence)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 103
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 69.7 (grade A)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 11
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 11
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 34
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": 51
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/interface_adapters/gateways/comision_query_repository.py",
+        "line": null
+      }
+    ],
+    "ports/__init__.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ No complex functions detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "info",
+        "message": "✓ No dead code detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "Could not extract pylint score from output",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/entities/ports/__init__.py",
+        "line": null
+      }
+    ],
+    "ports/canal_envio_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CanalEnvioPort' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 12
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'enviar' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 15
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'asunto' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'cuerpo' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 16
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'destinatario_email' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 16
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 6.00/10 (< 8.0). Run 'pylint canal_envio_port.py' for details.",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'implemente' should be 'implement,'",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": 13
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/entities/ports/canal_envio_port.py",
+        "line": null
+      }
+    ],
+    "ports/comision_consulta_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'estudiante_id' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionConsultaPort' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 26
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_destinatarios' is never used (60% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_ids' is never used (100% confidence)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": 41
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.46/10 (>= 8.0)",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/entities/ports/comision_consulta_port.py",
+        "line": null
+      }
+    ],
+    "ports/comision_query_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 22
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'id' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'nombre' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 35
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'email' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 36
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionQueryPort' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_comisiones_por_materia' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'incluir_inactivas' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 44
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 53
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'listar_estudiantes_con_email' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 57
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comision_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 58
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_asignadas' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'docente_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'tiene_comisiones_creadas' is never used (60% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 71
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'administrador_id' is never used (100% confidence)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 72
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.83/10 (< 8.0). Run 'pylint comision_query_port.py' for details.",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 14
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 40
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 45
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comision' should be 'commission'",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": 75
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/entities/ports/comision_query_port.py",
+        "line": null
+      }
+    ],
+    "ports/notificacion_port.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'NotificacionPort' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 21
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'notificar_apertura' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 24
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'actividad_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 27
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 28
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'titulo' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 29
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'fecha_apertura' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 30
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'fecha_cierre' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 31
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comisiones_ids' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 32
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'notificar_cierre' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 42
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'actividad_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 45
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'materia_id' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 46
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'titulo' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "Dead code: variable 'comisiones_ids' is never used (100% confidence)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": 48
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 5.56/10 (< 8.0). Run 'pylint notificacion_port.py' for details.",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/ports/notificacion_port.py",
+        "line": null
+      }
+    ]
+  }
+}

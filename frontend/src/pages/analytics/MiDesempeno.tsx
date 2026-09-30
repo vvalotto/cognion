@@ -6,6 +6,7 @@ import { listarActividadesVisibles } from "@/lib/actividad-evaluativa-api"
 import { listarMisMaterias, type MateriaEstudianteResponse } from "@/lib/identidad-estudiante-api"
 import {
   armarFilas,
+  armarFilasEnVivo,
   DesempenoResumenDetalle,
   type FilaDesempeno,
 } from "@/pages/analytics/DesempenoResumenDetalle"
@@ -55,7 +56,7 @@ export function MiDesempeno() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Mi desempeño" }]} />
+      <Breadcrumb items={[{ label: "Reportes" }, { label: "Mi desempeño" }]} />
       <h1 className="text-lg font-semibold">Mi desempeño</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Historial de tus evaluaciones de período abierto en la materia elegida.
@@ -95,6 +96,8 @@ export function MiDesempeno() {
           desempeno={desempeno}
           filas={filas}
           mensajeVacio="Todavía no finalizaste ninguna evaluación de esta materia."
+          filasEnVivo={armarFilasEnVivo(desempeno)}
+          mensajeVacioEnVivo="Todavía no participaste en sesiones en vivo de esta materia."
         />
       )}
     </div>

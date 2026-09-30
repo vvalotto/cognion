@@ -1,0 +1,282 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-44",
+    "us_title": "Docente consulta el desempeño de una Comisión completa",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-14T12:43:33.767493+00:00",
+    "completed_at": "2026-09-14T13:38:23.802255+00:00",
+    "total_elapsed_seconds": 3290,
+    "effective_seconds": 3290,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-14T12:43:55.783623+00:00",
+      "completed_at": "2026-09-14T12:44:52.407214+00:00",
+      "elapsed_seconds": 56,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-14T12:45:10.347592+00:00",
+      "completed_at": "2026-09-14T12:46:27.323596+00:00",
+      "elapsed_seconds": 76,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-14T12:46:36.392745+00:00",
+      "completed_at": "2026-09-14T12:49:43.353902+00:00",
+      "elapsed_seconds": 186,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-14T12:49:54.762541+00:00",
+      "completed_at": "2026-09-14T12:58:13.118764+00:00",
+      "elapsed_seconds": 498,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Port: listar_actividades_abiertas",
+          "task_type": "port",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-14T12:49:59.512775+00:00",
+          "completed_at": "2026-09-14T12:50:19.585009+00:00",
+          "elapsed_seconds": 20,
+          "actual_minutes": 0.33,
+          "variance_minutes": -4.67,
+          "file_created": "src/analytics/entities/ports/evaluacion_desempeno_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Adapter: listar_actividades_abiertas",
+          "task_type": "adapter",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-14T12:50:29.917853+00:00",
+          "completed_at": "2026-09-14T12:51:37.626624+00:00",
+          "elapsed_seconds": 67,
+          "actual_minutes": 1.12,
+          "variance_minutes": -13.88,
+          "file_created": "src/analytics/frameworks/adapters/evaluacion_desempeno_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "UseCase ObtenerDesempenoPorComisionUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-14T12:51:48.283802+00:00",
+          "completed_at": "2026-09-14T12:52:38.120668+00:00",
+          "elapsed_seconds": 49,
+          "actual_minutes": 0.82,
+          "variance_minutes": -19.18,
+          "file_created": "src/analytics/use_cases/obtener_desempeno_por_comision.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Controller: obtener_desempeno_por_comision",
+          "task_type": "controller",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-14T12:52:47.687700+00:00",
+          "completed_at": "2026-09-14T12:53:31.110439+00:00",
+          "elapsed_seconds": 43,
+          "actual_minutes": 0.72,
+          "variance_minutes": -9.28,
+          "file_created": "src/analytics/interface_adapters/controllers/analytics_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "DI: wiring ObtenerDesempenoPorComisionUseCase",
+          "task_type": "wiring",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-14T12:53:42.295168+00:00",
+          "completed_at": "2026-09-14T12:54:17.450596+00:00",
+          "elapsed_seconds": 35,
+          "actual_minutes": 0.58,
+          "variance_minutes": -4.42,
+          "file_created": "src/analytics/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Schema DesempenoComisionFilaResponse",
+          "task_type": "schema",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-14T12:54:28.554320+00:00",
+          "completed_at": "2026-09-14T12:54:41.478755+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -4.8,
+          "file_created": "src/analytics/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Router: GET desempeno por comision",
+          "task_type": "router",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-14T12:54:51.411315+00:00",
+          "completed_at": "2026-09-14T12:55:21.675562+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -9.5,
+          "file_created": "src/analytics/frameworks/api/analytics_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T8",
+          "task_name": "UseCase: verificar_propietario flag",
+          "task_type": "use_case",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-14T12:55:34.096221+00:00",
+          "completed_at": "2026-09-14T12:55:58.693359+00:00",
+          "elapsed_seconds": 24,
+          "actual_minutes": 0.4,
+          "variance_minutes": -9.6,
+          "file_created": "src/actividad_evaluativa/use_cases/obtener_revision_evaluacion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T9",
+          "task_name": "RevisionController: pasar verificar_propietario",
+          "task_type": "controller",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-14T12:56:09.832790+00:00",
+          "completed_at": "2026-09-14T12:56:31.098624+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -4.65,
+          "file_created": "src/actividad_evaluativa/interface_adapters/controllers/revision_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T10",
+          "task_name": "Dependency require_estudiante_o_docente",
+          "task_type": "wiring",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-14T12:56:41.466379+00:00",
+          "completed_at": "2026-09-14T12:57:02.659968+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -4.65,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T11",
+          "task_name": "Router: guard ampliado revision",
+          "task_type": "router",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-14T12:57:13.011395+00:00",
+          "completed_at": "2026-09-14T12:57:51.631988+00:00",
+          "elapsed_seconds": 38,
+          "actual_minutes": 0.63,
+          "variance_minutes": -9.37,
+          "file_created": "src/actividad_evaluativa/frameworks/api/revision_router.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-14T12:58:25.590630+00:00",
+      "completed_at": "2026-09-14T13:03:42.466720+00:00",
+      "elapsed_seconds": 316,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-14T13:03:59.109657+00:00",
+      "completed_at": "2026-09-14T13:10:49.469955+00:00",
+      "elapsed_seconds": 410,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-14T13:11:02.715729+00:00",
+      "completed_at": "2026-09-14T13:18:49.993509+00:00",
+      "elapsed_seconds": 467,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-14T13:19:01.834111+00:00",
+      "completed_at": "2026-09-14T13:34:55.221562+00:00",
+      "elapsed_seconds": 953,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-14T13:35:27.604155+00:00",
+      "completed_at": "2026-09-14T13:36:29.464043+00:00",
+      "elapsed_seconds": 61,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-14T13:36:41.524697+00:00",
+      "completed_at": "2026-09-14T13:38:23.678891+00:00",
+      "elapsed_seconds": 102,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 11,
+    "completed_tasks": 11,
+    "total_phases": 10,
+    "estimated_total_minutes": 100.0,
+    "actual_total_minutes": 6.0,
+    "variance_minutes": -94.0,
+    "variance_percent": -94.0
+  }
+}

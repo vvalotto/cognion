@@ -1,0 +1,79 @@
+{
+  "us_id": "US-6.2.1",
+  "fecha": "2026-09-20T08:13:26.250320",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.8,
+    "cc_promedio": 2.1,
+    "cc_maximo": 5,
+    "mi_promedio": 73.83,
+    "mi_minimo": 70.62,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 3,
+    "errors": 11,
+    "warnings": 32,
+    "infos": 20,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 2,
+        "infos": 2
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "DeadCode": {
+        "errors": 11,
+        "warnings": 21,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 9,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      }
+    },
+    "nota": "Los 11 errors de DeadCode son falsos positivos: parámetros de métodos abstractos del puerto (patrón preexistente)."
+  },
+  "tests": {
+    "unit_total": 633,
+    "integration_inc6": 37,
+    "nuevos": "11 parametrizados+unit de puntaje, 3 de integración"
+  },
+  "estado": "APROBADO"
+}

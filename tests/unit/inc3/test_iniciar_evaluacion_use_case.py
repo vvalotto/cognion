@@ -38,6 +38,8 @@ async def _actividad_vigente(
     event_store: FakeEventStore,
     materia_id: object,
     cantidad_preguntas: int = 10,
+    unidad: str | None = None,
+    tema: str | None = None,
 ) -> object:
     actividad_id = uuid4()
     apertura = datetime.now(UTC) - timedelta(days=1)
@@ -46,12 +48,18 @@ async def _actividad_vigente(
         AGGREGATE_TYPE,
         actividad_id,
         0,
-        [_evento_actividad_creada(actividad_id, materia_id, apertura, cierre, cantidad_preguntas)],
+        [
+            _evento_actividad_creada(
+                actividad_id, materia_id, apertura, cierre, cantidad_preguntas, unidad, tema
+            )
+        ],
     )
     return actividad_id
 
 
-def _evento_actividad_creada(actividad_id, materia_id, apertura, cierre, cantidad_preguntas):
+def _evento_actividad_creada(
+    actividad_id, materia_id, apertura, cierre, cantidad_preguntas, unidad=None, tema=None
+):
     return EventoParaAlmacenar(
         event_type="ActividadEvaluativaCreada",
         payload={
@@ -61,6 +69,8 @@ def _evento_actividad_creada(actividad_id, materia_id, apertura, cierre, cantida
             "fecha_cierre": cierre.isoformat(),
             "cantidad_preguntas": cantidad_preguntas,
             "cantidad_intentos_permitidos": 1,
+            "unidad_tematica": unidad,
+            "tema": tema,
             "ocurrido_en": apertura.isoformat(),
         },
     )
@@ -117,6 +127,56 @@ class TestIniciarEvaluacionUseCase:
         stream = await event_store.load(AGGREGATE_TYPE_EVALUACION, evaluacion.id)
         assert len(stream) == 1
         assert stream[0].event_type == "EvaluacionIniciada"
+
+    async def test_actividad_restringida_a_tema_samplea_solo_de_ese_tema(self):
+        materia_id, estudiante_id = uuid4(), uuid4()
+        event_store = FakeEventStore()
+        actividad_id = await _actividad_vigente(
+            event_store, materia_id, cantidad_preguntas=3, tema="Cohesión"
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        # Preguntas de otros temas — no deberían aparecer en el set asignado.
+        pregunta_consulta.ids_activas[materia_id] = [uuid4() for _ in range(10)]
+        ids_del_tema = [uuid4() for _ in range(5)]
+        pregunta_consulta.ids_activas_por_tema[(materia_id, "Cohesión")] = ids_del_tema
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        estudiante_consulta.estudiantes.add(estudiante_id)
+        use_case = _use_case(estudiante_consulta, pregunta_consulta, event_store)
+
+        evaluacion, _creada = await use_case.execute(actividad_id, estudiante_id)
+
+        ids_asignados = {p.pregunta_id for p in evaluacion.preguntas_asignadas}
+        assert ids_asignados.issubset(set(ids_del_tema))
+
+    async def test_actividad_restringida_a_unidad_y_tema_combinados_samplea_solo_de_esa_combinacion(
+        self,
+    ):
+        materia_id, estudiante_id = uuid4(), uuid4()
+        event_store = FakeEventStore()
+        actividad_id = await _actividad_vigente(
+            event_store,
+            materia_id,
+            cantidad_preguntas=2,
+            unidad="Principios de Diseño",
+            tema="Cohesión",
+        )
+        pregunta_consulta = FakePreguntaConsultaPort()
+        # Preguntas de "Cohesión" en otra unidad — no deberían aparecer en el set asignado.
+        pregunta_consulta.ids_activas_por_tema[(materia_id, "Cohesión")] = [
+            uuid4() for _ in range(10)
+        ]
+        ids_de_la_combinacion = [uuid4() for _ in range(4)]
+        pregunta_consulta.ids_activas_por_unidad_tema[
+            (materia_id, "Principios de Diseño", "Cohesión")
+        ] = ids_de_la_combinacion
+        estudiante_consulta = FakeEstudianteConsultaPort()
+        estudiante_consulta.estudiantes.add(estudiante_id)
+        use_case = _use_case(estudiante_consulta, pregunta_consulta, event_store)
+
+        evaluacion, _creada = await use_case.execute(actividad_id, estudiante_id)
+
+        ids_asignados = {p.pregunta_id for p in evaluacion.preguntas_asignadas}
+        assert ids_asignados.issubset(set(ids_de_la_combinacion))
 
     async def test_reconexion_es_idempotente_sin_nuevo_set(self):
         materia_id, estudiante_id = uuid4(), uuid4()

@@ -1,0 +1,54 @@
+{
+  "us_id": "US-ADJ-43",
+  "fecha": "2026-09-13T17:42:00",
+  "componente": "src/identidad (materia_port.py, materia_port_in_process.py, autoregistro_router.py, schemas.py, dependencies.py, autoregistro_controller.py) + frontend/src (identidad-autoregistro-api.ts, AutoregistroPerfil/Docente/Estudiante/Exito.tsx, Login.tsx, router.tsx)",
+  "metricas": {
+    "pylint": 10.00,
+    "cc_promedio": 1.5,
+    "cc_max": 4,
+    "mi_promedio": 92.27,
+    "mi_min_archivo": 59.77,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 6,
+    "errors": 1,
+    "warnings": 156,
+    "infos": 45,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 6},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 6},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 6},
+      "DeadCode": {"errors": 1, "warnings": 145, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 6},
+      "Pylint": {"errors": 0, "warnings": 0, "infos": 6},
+      "Spelling": {"errors": 0, "warnings": 11, "infos": 3},
+      "Types": {"errors": 0, "warnings": 0, "infos": 6},
+      "UnusedImports": {"errors": 0, "warnings": 0, "infos": 6}
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-43-codeguard.json"
+  },
+  "coverage_reporte": "quality/reports/inc5-adj/US-ADJ-43-coverage.json",
+  "frontend": {
+    "oxlint": "0 errores (6 warnings preexistentes, ajenos a esta US)",
+    "tsc_b": "0 errores",
+    "vitest": "440/440 (incluye 31 tests nuevos de esta US), sin regresiones"
+  },
+  "tests": {
+    "unit_backend": "496/496 (incluye 4 tests nuevos de esta US), sin regresiones",
+    "integration_backend": "341/341 (incluye 5 tests nuevos de esta US), sin regresiones",
+    "bdd_backend": "244/244 (incluye 4 escenarios nuevos de esta US), sin regresiones"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "1 error DeadCode (vulture) en materia_port.py:26 (parámetro 'materia_id' del método abstracto 'obtener') es falso positivo preexistente sobre código NO modificado por esta US — vulture marca como no usados los parámetros de métodos ABC sin cuerpo ejecutable, mismo patrón aceptado ya documentado para los 131 warnings DeadCode de US-ADJ-42 (dependencies.py, schemas.py). Verificado con `git diff develop` que la línea 26 no cambió en esta US.",
+    "Los 156 warnings DeadCode/Spelling restantes son ruido conocido de vulture/codespell sobre el composition root completo (dependencies.py, schemas.py con ~30 schemas Pydantic preexistentes) que entra en el análisis por estar en la lista de archivos modificados, no por código nuevo — mismo criterio aceptado en US-ADJ-41/US-ADJ-42.",
+    "Coverage 100% mide solo entities/ e interface_adapters/ (materia_port.py, autoregistro_controller.py) — frameworks/* está excluido del gate de coverage por diseño del proyecto (`[tool.coverage.run] omit = [\"src/*/frameworks/*\"]` en pyproject.toml), consistente con reportes de US anteriores."
+  ]
+}

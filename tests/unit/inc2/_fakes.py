@@ -7,6 +7,7 @@ from uuid import UUID
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.ports.banco_repository_port import BancoRepositoryPort
+from src.banco_preguntas.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.banco_preguntas.entities.ports.materia_repository_port import MateriaRepositoryPort
 from src.banco_preguntas.entities.ports.pregunta_repository_port import PreguntaRepositoryPort
 from src.banco_preguntas.entities.pregunta_plantilla import (
@@ -40,9 +41,36 @@ class FakeMateriaRepository(MateriaRepositoryPort):
         """Busca una materia por id, o `None` si no existe."""
         return self.materias.get(materia_id)
 
-    async def listar(self) -> list[Materia]:
-        """Lista todas las materias existentes."""
-        return list(self.materias.values())
+    async def actualizar(self, materia: Materia) -> None:
+        """Guarda cambios sobre una materia existente."""
+        self.materias[materia.id] = materia
+
+    async def eliminar(self, materia_id: UUID) -> None:
+        """Borra físicamente una materia."""
+        self.materias.pop(materia_id, None)
+
+    async def listar(self, incluir_inactivas: bool = False) -> list[Materia]:
+        """Lista las materias activas; con `incluir_inactivas=True`, también las deshabilitadas."""
+        if incluir_inactivas:
+            return list(self.materias.values())
+        return [m for m in self.materias.values() if m.activa]
+
+
+class FakeComisionConsultaPort(ComisionConsultaPort):
+    """Puerto de consulta de Comisión en memoria (Banco de Preguntas → Identidad)."""
+
+    def __init__(self) -> None:
+        """Inicializa el conjunto de materias con Comisiones asociadas."""
+        self.materias_con_comisiones: set[UUID] = set()
+        self.docentes_asignados_por_materia: dict[UUID, set[UUID]] = {}
+
+    async def tiene_comisiones(self, materia_id: UUID) -> bool:
+        """Indica si existe alguna comisión que referencie esta materia."""
+        return materia_id in self.materias_con_comisiones
+
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia (`US-ADJ-57`)."""
+        return docente_id in self.docentes_asignados_por_materia.get(materia_id, set())
 
 
 class FakeBancoRepository(BancoRepositoryPort):
@@ -94,6 +122,10 @@ class FakePreguntaRepository(PreguntaRepositoryPort):
     ) -> None:
         """Persiste los cambios de una pregunta ya existente."""
         self.preguntas[pregunta.id] = pregunta
+
+    async def existen_preguntas(self, banco_id: UUID) -> bool:
+        """Indica si el banco tiene alguna pregunta, activa o no."""
+        return any(pregunta.banco_id == banco_id for pregunta in self.preguntas.values())
 
     async def filtrar(
         self,

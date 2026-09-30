@@ -11,7 +11,12 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import crear_estudiante, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.4.4-detalle-actividad.feature")
 
@@ -26,6 +31,12 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -42,11 +53,12 @@ def context():
     return {}
 
 
-async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
+async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        creada = await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -59,9 +71,9 @@ async def _crear_materia_con_preguntas(nombre: str, cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
 def _periodo() -> tuple[str, str]:
@@ -70,7 +82,7 @@ def _periodo() -> tuple[str, str]:
     return apertura.isoformat(), cierre.isoformat()
 
 
-async def _crear_actividad(materia_id: str) -> str:
+async def _crear_actividad(materia_id: str, headers: dict[str, str] | None = None) -> str:
     apertura, cierre = _periodo()
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -84,7 +96,7 @@ async def _crear_actividad(materia_id: str) -> str:
                 "cantidad_intentos_permitidos": 1,
                 "titulo": "Parcial 1",
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
         return creada.json()["id"]
 
@@ -96,40 +108,49 @@ async def _iniciar_evaluacion(actividad_id: str) -> None:
         await client.post("/evaluaciones", json={"actividad_id": actividad_id}, headers=headers)
 
 
-async def _get_actividad(actividad_id: str):
+async def _get_actividad(actividad_id: str, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.get(f"/actividades/{actividad_id}", headers=docente_headers())
+        return await client.get(
+            f"/actividades/{actividad_id}", headers=headers or docente_headers()
+        )
 
 
-async def _modificar_periodo(actividad_id: str, nueva_fecha_cierre: str):
+async def _modificar_periodo(
+    actividad_id: str, nueva_fecha_cierre: str, headers: dict[str, str] | None = None
+):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.patch(
             f"/actividades/{actividad_id}/periodo",
             json={"nueva_fecha_cierre": nueva_fecha_cierre},
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
 
 
-async def _cerrar_actividad(actividad_id: str):
+async def _cerrar_actividad(actividad_id: str, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(f"/actividades/{actividad_id}/cerrar", headers=docente_headers())
+        return await client.post(
+            f"/actividades/{actividad_id}/cerrar", headers=headers or docente_headers()
+        )
 
 
 @given("un Docente en el listado de actividades", target_fixture="context")
 def docente_en_listado(context):
-    materia_id = run_async(
+    materia_id, headers = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 20)
     )
-    context["actividad_id"] = run_async(_crear_actividad(materia_id))
+    context["docente_headers"] = headers
+    context["actividad_id"] = run_async(_crear_actividad(materia_id, headers))
     return context
 
 
 @when("elige una actividad")
 def elige_una_actividad(context):
-    context["response"] = run_async(_get_actividad(context["actividad_id"]))
+    context["response"] = run_async(
+        _get_actividad(context["actividad_id"], context.get("docente_headers"))
+    )
 
 
 @then("ve apertura, cierre, cantidad de preguntas, intentos, evaluaciones activas y finalizadas")
@@ -148,10 +169,11 @@ def ve_detalle_completo(context):
 
 @given("un Docente en el detalle de una actividad no cerrada", target_fixture="context")
 def docente_en_detalle_no_cerrada(context):
-    materia_id = run_async(
+    materia_id, headers = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 20)
     )
-    context["actividad_id"] = run_async(_crear_actividad(materia_id))
+    context["docente_headers"] = headers
+    context["actividad_id"] = run_async(_crear_actividad(materia_id, headers))
     return context
 
 
@@ -159,7 +181,9 @@ def docente_en_detalle_no_cerrada(context):
 def extiende_el_plazo(context):
     _, cierre_actual = _periodo()
     nueva_fecha = (datetime.now(UTC) + timedelta(days=14)).isoformat()
-    context["response"] = run_async(_modificar_periodo(context["actividad_id"], nueva_fecha))
+    context["response"] = run_async(
+        _modificar_periodo(context["actividad_id"], nueva_fecha, context.get("docente_headers"))
+    )
     context["nueva_fecha"] = nueva_fecha
 
 
@@ -174,7 +198,7 @@ def vuelve_al_detalle_con_nuevo_valor(context):
     `ExtenderPlazo.test.tsx` (Vitest). Acá se verifica la única condición observable por HTTP:
     el detalle refleja el nuevo cierre.
     """
-    detalle = run_async(_get_actividad(context["actividad_id"]))
+    detalle = run_async(_get_actividad(context["actividad_id"], context.get("docente_headers")))
     fecha_cierre = datetime.fromisoformat(detalle.json()["fecha_cierre"])
     esperada = datetime.fromisoformat(context["nueva_fecha"])
     assert fecha_cierre == esperada
@@ -182,10 +206,11 @@ def vuelve_al_detalle_con_nuevo_valor(context):
 
 @given("una actividad con evaluaciones activas", target_fixture="context")
 def actividad_con_evaluaciones_activas(context):
-    materia_id = run_async(
+    materia_id, headers = run_async(
         _crear_materia_con_preguntas(f"Ingeniería de Software {uuid.uuid4()}", 20)
     )
-    context["actividad_id"] = run_async(_crear_actividad(materia_id))
+    context["docente_headers"] = headers
+    context["actividad_id"] = run_async(_crear_actividad(materia_id, headers))
     run_async(_iniciar_evaluacion(context["actividad_id"]))
     return context
 
@@ -193,7 +218,11 @@ def actividad_con_evaluaciones_activas(context):
 @when("el Docente intenta guardar un cierre anterior al actual")
 def intenta_acortar_el_plazo(context):
     cierre_anterior = (datetime.now(UTC) + timedelta(hours=1)).isoformat()
-    context["response"] = run_async(_modificar_periodo(context["actividad_id"], cierre_anterior))
+    context["response"] = run_async(
+        _modificar_periodo(
+            context["actividad_id"], cierre_anterior, context.get("docente_headers")
+        )
+    )
 
 
 @then("el backend responde 422 NoSePuedeAcortarConEvaluacionesActivas")
@@ -207,14 +236,16 @@ def formulario_muestra_error_inline(context):
     """Comportamiento de UI — verificado en `ExtenderPlazo.test.tsx` (Vitest). Acá se verifica
     la única condición observable por HTTP: el 422 ya afirmado no cambió el estado del recurso.
     """
-    detalle = run_async(_get_actividad(context["actividad_id"]))
+    detalle = run_async(_get_actividad(context["actividad_id"], context.get("docente_headers")))
     assert detalle.json()["cerrada_manualmente"] is False
 
 
 @when('confirma "Sí, cerrar actividad ahora"')
 def confirma_cierre(context):
     run_async(_iniciar_evaluacion(context["actividad_id"]))
-    context["response"] = run_async(_cerrar_actividad(context["actividad_id"]))
+    context["response"] = run_async(
+        _cerrar_actividad(context["actividad_id"], context.get("docente_headers"))
+    )
 
 
 @then("el sistema cierra la actividad y finaliza en cascada sus evaluaciones activas")
@@ -228,5 +259,5 @@ def vuelve_al_detalle_con_estado_cerrada(context):
     """La navegación de vuelta al detalle es un comportamiento de UI — verificado en
     `CerrarActividad.test.tsx` (Vitest). Acá se verifica la condición observable por HTTP.
     """
-    detalle = run_async(_get_actividad(context["actividad_id"]))
+    detalle = run_async(_get_actividad(context["actividad_id"], context.get("docente_headers")))
     assert detalle.json()["estado"] == "cerrada"

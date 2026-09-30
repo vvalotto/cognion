@@ -12,6 +12,7 @@ import {
 } from "@/lib/identidad-comisiones-api"
 import {
   armarFilas,
+  armarFilasEnVivo,
   DesempenoResumenDetalle,
   type FilaDesempeno,
 } from "@/pages/analytics/DesempenoResumenDetalle"
@@ -105,7 +106,7 @@ export function DesempenoPorAlumno() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Breadcrumb items={[{ label: "Analytics" }, { label: "Desempeño por alumno" }]} />
+      <Breadcrumb items={[{ label: "Reportes", to: "/analytics" }, { label: "Desempeño por alumno" }]} />
       <h1 className="text-lg font-semibold">Desempeño por alumno</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Elegí una materia, una comisión y un estudiante para ver su desempeño.
@@ -192,6 +193,8 @@ export function DesempenoPorAlumno() {
           desempeno={desempeno}
           filas={filas}
           mensajeVacio="Este estudiante todavía no finalizó ninguna evaluación de esta materia."
+          filasEnVivo={armarFilasEnVivo(desempeno)}
+          mensajeVacioEnVivo="Este estudiante todavía no participó en sesiones en vivo de esta materia."
         />
       )}
     </div>

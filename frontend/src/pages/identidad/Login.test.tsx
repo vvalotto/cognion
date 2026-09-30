@@ -136,4 +136,74 @@ describe("Login", () => {
       "Email o contraseña incorrectos"
     )
   })
+
+  it("mostrar/ocultar contraseña (US-ADJ-35) no pierde el valor tipeado ni rompe el submit", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        access_token: "token-docente",
+        rol: "docente",
+        expira_en: "2026-01-01T00:00:00Z",
+      })
+    )
+
+    const user = userEvent.setup()
+    renderLogin()
+
+    const password = screen.getByLabelText("Contraseña")
+    await user.type(password, "Docente#2026")
+    expect(password).toHaveAttribute("type", "password")
+
+    await user.click(screen.getByRole("button", { name: "Mostrar contraseña" }))
+    expect(password).toHaveAttribute("type", "text")
+    expect(password).toHaveValue("Docente#2026")
+
+    await user.type(screen.getByLabelText("Email"), "docente@fiuner.edu.ar")
+    await user.click(screen.getByRole("button", { name: "Ingresar" }))
+
+    expect(await screen.findByText("Inicio")).toBeInTheDocument()
+  })
+
+  it("el link '¿Olvidaste tu contraseña?' navega a /recuperar-password (US-ADJ-40)", async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={["/login"]}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/recuperar-password" element={<p>Recuperar contraseña</p>} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await user.click(screen.getByRole("link", { name: "¿Olvidaste tu contraseña?" }))
+
+    expect(await screen.findByText("Recuperar contraseña")).toBeInTheDocument()
+  })
+
+  it("el link 'Registrate' navega a /autoregistro (US-ADJ-43)", async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={["/login"]}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/autoregistro" element={<p>Autoregistro</p>} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await user.click(screen.getByRole("link", { name: "Registrate" }))
+
+    expect(await screen.findByText("Autoregistro")).toBeInTheDocument()
+  })
+
+  it("cuenta bloqueada no muestra el link 'Registrate'", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, { detail: "La cuenta está bloqueada. Contactá a un administrador." })
+    )
+
+    renderLogin()
+    await completarFormulario("bloqueado@fiuner.edu.ar", "cualquiera")
+
+    expect(await screen.findByRole("alert")).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: "Registrate" })).not.toBeInTheDocument()
+  })
 })

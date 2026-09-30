@@ -1,0 +1,48 @@
+{
+  "us_id": "US-ADJ-38",
+  "titulo": "Solicitar recuperación de contraseña (endpoint público)",
+  "fecha": "2026-09-13T10:10:00-03:00",
+  "componente": "src/identidad/entities/token_recuperacion_password.py (nuevo) + 2 ports nuevos + solicitar_recuperacion_password.py (nuevo) + gateway SQLAlchemy nuevo + adapter cruzado hacia Notificaciones nuevo + controller/router nuevos + frameworks/dependencies.py (modificado) + src/app.py (modificado) + src/settings.py (modificado)",
+  "metricas": {
+    "pylint": 9.75,
+    "cc_promedio": 1.18,
+    "cc_maximo": 3,
+    "mi_promedio": 88.59,
+    "mi_minimo": 49.97,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "mypy_dedicado": {
+    "comando": "mypy sobre los 13 archivos modificados/agregados (fuente de verdad de tipos, ver CLAUDE.md — el check Types de CodeGuard puede quedar mudo por timeout en frío)",
+    "resultado": "Success: no issues found in 13 source files"
+  },
+  "codeguard": {
+    "archivos_analizados": 13,
+    "errors": 33,
+    "warnings": 6,
+    "infos": 77,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 13 },
+      "PEP8": { "errors": 0, "warnings": 2, "infos": 11 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 13 },
+      "DeadCode": { "errors": 13, "warnings": 0, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 13 },
+      "Pylint": { "errors": 4, "warnings": 4, "infos": 5 },
+      "Spelling": { "errors": 13, "warnings": 0, "infos": 0 },
+      "Types": { "errors": 2, "warnings": 0, "infos": 10 },
+      "UnusedImports": { "errors": 1, "warnings": 0, "infos": 12 }
+    },
+    "reporte": "quality/reports/inc5-adj/US-ADJ-38-codeguard.json",
+    "nota": "Los 13 errores de DeadCode y los 13 de Spelling son 'vulture not installed'/'codespell not installed' — herramientas no instaladas en este entorno, mismo gap preexistente ya visto en US-ADJ-36 (no introducido por esta US). Los 4 errores + 4 warnings de Pylint y los 2 de Types son timeouts de pylint/mypy por archivo (>10s en frío, mismo bug documentado en CLAUDE.md/software_limpio#70) — la fuente de verdad real es el pylint (9.75/10) y mypy (0 issues) corridos directo sobre el mismo set de archivos, ver arriba. Los 2 warnings de PEP8 (line-too-long en token_recuperacion_password.py:1 y models.py:61) ya fueron corregidos antes de cerrar esta fase; el JSON crudo quedó generado antes del fix, no se regeneró (costo ~200s) dado que pylint directo ya confirma 0 line-too-long."
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "1 línea sin cubrir en token_recuperacion_password_repository.py:60 (ValueError defensivo de actualizar() sobre un token inexistente) — mismo patrón sin testear en SQLAlchemyInvitacionRepository.actualizar(), error del llamador no un caso de negocio a ejercitar.",
+    "R0903 (too-few-public-methods) en 4 clases nuevas de una sola responsabilidad (puerto ABC de un método, adapter, controller, use case) — patrón ya aceptado en todo el proyecto para este tipo de componente."
+  ]
+}

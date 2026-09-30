@@ -7,7 +7,7 @@ Feature: Cambio de contraseña propio (US-2.2.5)
   @cambiar-password @happy-path
   Scenario: Cambio exitoso
     Given un Usuario autenticado con su contraseña actual correcta
-    When ejecuta CambiarPassword(usuario_id, password_actual, "nuevaClave123")
+    When ejecuta CambiarPassword(usuario_id, password_actual, "nuevaClave123#")
     Then el sistema actualiza password_hash
     And intentos_fallidos_password vuelve a 0
     And se emite PasswordCambiada

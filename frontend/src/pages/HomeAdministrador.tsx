@@ -11,21 +11,15 @@ interface CardAcceso {
 
 const CARDS: CardAcceso[] = [
   {
-    icono: "🏫",
-    titulo: "Comisiones",
-    descripcion: "Ver, crear y asignar Docentes a Comisiones",
-    to: "/comisiones",
-  },
-  {
-    icono: "👤",
-    titulo: "Alta de Docente",
-    descripcion: "Dar de alta un nuevo Docente en el sistema",
-    to: "/docentes/nuevo",
+    icono: "📘",
+    titulo: "Materias",
+    descripcion: "Ver y dar de alta Materias y sus Comisiones",
+    to: "/materias",
   },
   {
     icono: "🔐",
     titulo: "Cuentas",
-    descripcion: "Ver, filtrar y resetear cuentas de usuario",
+    descripcion: "Ver, dar de alta, filtrar y resetear cuentas de usuario",
     to: "/cuentas",
   },
 ]

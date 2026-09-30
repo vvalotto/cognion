@@ -77,7 +77,9 @@ class IniciarEvaluacionUseCase:
         if eventos_evaluacion:
             return Evaluacion.reconstruir(eventos_evaluacion), False
 
-        ids_disponibles = await self._pregunta_consulta.listar_ids_activas_por_materia(materia_id)
+        ids_disponibles = await self._pregunta_consulta.listar_ids_activas_por_materia(
+            materia_id, actividad.unidad_tematica, actividad.tema
+        )
         muestra = random.sample(ids_disponibles, k=cantidad_preguntas)
         preguntas_asignadas = Evaluacion.armar_preguntas_asignadas(muestra)
 

@@ -1,0 +1,39 @@
+{
+  "us_id": "US-ADJ-35",
+  "titulo": "Toggle mostrar/ocultar contraseña",
+  "tipo": "frontend puro, sin cambios de backend",
+  "frontend": {
+    "oxlint": {
+      "errores": 0,
+      "warnings_nuevos": 0,
+      "warnings_preexistentes": 6
+    },
+    "tsc_b": {
+      "errores": 0
+    },
+    "vitest": {
+      "suite_completa": "380/384 (4 fallos son flake preexistente de contención de CPU al correr la suite completa — confirmado corriendo los 2 archivos afectados en aislamiento: 8/8 verdes, ninguno de los 5 archivos tocados por esta US)",
+      "archivos_nuevos_o_modificados": {
+        "PasswordInput.test.tsx": "4/4 (nuevo)",
+        "Login.test.tsx": "7/7 (1 caso nuevo: toggle no pierde el valor tipeado)",
+        "Registro.test.tsx": "sin casos nuevos, 100% verde",
+        "CambiarPassword.test.tsx": "sin casos nuevos, 100% verde",
+        "AltaDocente.test.tsx": "sin casos nuevos, 100% verde",
+        "ResetearPassword.test.tsx": "sin casos nuevos, 100% verde"
+      }
+    },
+    "coverage_archivos_tocados": {
+      "PasswordInput.tsx": { "statements": "100%", "branches": "100%", "functions": "100%", "lines": "100%" },
+      "Login.tsx": { "statements": "94.59%", "branches": "87.5%", "functions": "100%", "lines": "96.96%", "nota": "línea sin cubrir preexistente, no relacionada al cambio de esta US" },
+      "Registro.tsx": { "statements": "90.24%", "branches": "80%", "functions": "100%", "lines": "92.1%", "nota": "líneas sin cubrir preexistentes" },
+      "CambiarPassword.tsx": { "statements": "95.74%", "branches": "83.33%", "functions": "100%", "lines": "97.72%", "nota": "línea sin cubrir preexistente" },
+      "AltaDocente.tsx": { "statements": "86.48%", "branches": "78.57%", "functions": "88.88%", "lines": "88.23%", "nota": "líneas sin cubrir preexistentes" },
+      "ResetearPassword.tsx": { "statements": "88.09%", "branches": "75%", "functions": "90.9%", "lines": "94.44%", "nota": "líneas sin cubrir preexistentes" }
+    },
+    "coverage_global_nota": "Perfiles de cobertura de los 5 archivos existentes sin cambios respecto de antes de esta US — el reemplazo de Input por PasswordInput no agregó ni quitó líneas cubiertas de esos archivos, solo el componente nuevo (100%)."
+  },
+  "backend": {
+    "cambios": "ninguno — US frontend puro"
+  },
+  "estado_general": "APROBADO"
+}

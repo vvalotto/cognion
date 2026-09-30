@@ -71,14 +71,29 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         await self._session.commit()
 
     async def actualizar(self, usuario: Usuario) -> None:
-        """Guarda `password_hash`, `bloqueada` y los contadores de intentos fallidos."""
+        """Guarda `nombre`, `email`, `password_hash`, `bloqueada`, `deshabilitada` y contadores."""
         usuario_model = await self._session.get(UsuarioModel, usuario.id)
         if usuario_model is None:
             return
+        usuario_model.nombre = usuario.nombre
+        usuario_model.email = usuario.email
         usuario_model.password_hash = usuario.password_hash
         usuario_model.bloqueada = usuario.bloqueada
+        usuario_model.deshabilitada = usuario.deshabilitada
         usuario_model.intentos_fallidos_login = usuario.intentos_fallidos_login
         usuario_model.intentos_fallidos_password = usuario.intentos_fallidos_password
+        await self._session.commit()
+
+    async def eliminar(self, usuario_id: UUID) -> None:
+        """Borra físicamente un usuario sin datos asociados, junto con su fila de perfil."""
+        for model_cls in _MODEL_POR_PERFIL.values():
+            perfil_model = await self._session.get(model_cls, usuario_id)
+            if perfil_model is not None:
+                await self._session.delete(perfil_model)
+                break
+        usuario_model = await self._session.get(UsuarioModel, usuario_id)
+        if usuario_model is not None:
+            await self._session.delete(usuario_model)
         await self._session.commit()
 
     @staticmethod
@@ -121,6 +136,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
             intentos_fallidos_login=usuario_model.intentos_fallidos_login,
             intentos_fallidos_password=usuario_model.intentos_fallidos_password,
             creado_en=usuario_model.creado_en,
+            deshabilitada=usuario_model.deshabilitada,
         )
 
     async def _resolver_perfil(self, usuario_id: UUID) -> Perfil | None:

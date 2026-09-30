@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "us_id": "US-6.1.1",
+    "us_title": "Infraestructura de tiempo real (WebSockets) y ComisionConsultaPort",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-18T13:47:36.271113+00:00",
+    "completed_at": "2026-09-18T14:13:08.448858+00:00",
+    "total_elapsed_seconds": 1532,
+    "effective_seconds": 1532,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Analisis y Diseño Tecnico",
+      "started_at": "2026-09-18T13:47:51.595324+00:00",
+      "completed_at": "2026-09-18T13:49:10.555894+00:00",
+      "elapsed_seconds": 78,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación de Plan de Implementación",
+      "started_at": "2026-09-18T13:49:59.565636+00:00",
+      "completed_at": "2026-09-18T13:50:48.533525+00:00",
+      "elapsed_seconds": 48,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-09-18T13:50:48.855657+00:00",
+      "completed_at": "2026-09-18T13:56:17.027742+00:00",
+      "elapsed_seconds": 328,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "CanalTiempoRealPort + ComisionConsultaPort",
+          "task_type": "entities",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-18T13:51:23.038940+00:00",
+          "completed_at": "2026-09-18T13:51:45.547046+00:00",
+          "elapsed_seconds": 22,
+          "actual_minutes": 0.37,
+          "variance_minutes": -9.63,
+          "file_created": "canal_tiempo_real_port.py,comision_consulta_port.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "ConnectionManager",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-18T13:51:57.437440+00:00",
+          "completed_at": "2026-09-18T13:52:31.307329+00:00",
+          "elapsed_seconds": 33,
+          "actual_minutes": 0.55,
+          "variance_minutes": -14.45,
+          "file_created": "connection_manager.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "WebSocketCanalTiempoReal",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-18T13:52:35.321473+00:00",
+          "completed_at": "2026-09-18T13:52:47.407000+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -4.8,
+          "file_created": "websocket_canal_tiempo_real.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "ComisionConsultaPortInProcess",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-18T13:52:51.631433+00:00",
+          "completed_at": "2026-09-18T13:53:06.410517+00:00",
+          "elapsed_seconds": 14,
+          "actual_minutes": 0.23,
+          "variance_minutes": -9.77,
+          "file_created": "comision_consulta_port_in_process.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Wiring en dependencies.py (ConnectionManager singleton, CanalTiempoRealPort, ComisionConsultaPort)",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-18T13:53:50.335115+00:00",
+          "completed_at": "2026-09-18T13:54:33.565292+00:00",
+          "elapsed_seconds": 43,
+          "actual_minutes": 0.72,
+          "variance_minutes": -14.28,
+          "file_created": "dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "sesiones_en_vivo_router.py (WS canal)",
+          "task_type": "frameworks",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-18T13:54:37.391471+00:00",
+          "completed_at": "2026-09-18T13:54:52.595138+00:00",
+          "elapsed_seconds": 15,
+          "actual_minutes": 0.25,
+          "variance_minutes": -14.75,
+          "file_created": "sesiones_en_vivo_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Registrar sesiones_en_vivo_router en app.py",
+          "task_type": "frameworks",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-18T13:54:56.357242+00:00",
+          "completed_at": "2026-09-18T13:55:46.648125+00:00",
+          "elapsed_seconds": 50,
+          "actual_minutes": 0.83,
+          "variance_minutes": -4.17,
+          "file_created": "app.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-18T13:56:20.642953+00:00",
+      "completed_at": "2026-09-18T13:58:16.671781+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-18T13:58:20.474726+00:00",
+      "completed_at": "2026-09-18T14:02:48.990389+00:00",
+      "elapsed_seconds": 268,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-18T14:02:54.942261+00:00",
+      "completed_at": "2026-09-18T14:08:58.196395+00:00",
+      "elapsed_seconds": 363,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-18T14:09:36.746346+00:00",
+      "completed_at": "2026-09-18T14:11:38.542782+00:00",
+      "elapsed_seconds": 121,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-18T14:11:38.673857+00:00",
+      "completed_at": "2026-09-18T14:13:08.307661+00:00",
+      "elapsed_seconds": 89,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 7,
+    "completed_tasks": 7,
+    "total_phases": 8,
+    "estimated_total_minutes": 75.0,
+    "actual_total_minutes": 3.15,
+    "variance_minutes": -71.85,
+    "variance_percent": -95.8
+  }
+}

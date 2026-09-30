@@ -8,6 +8,7 @@ from src.identidad.entities.errors import (
     InvitacionInvalida,
     InvitacionVencida,
     InvitacionYaUsada,
+    PasswordDemasiadoCorta,
 )
 from src.identidad.entities.eventos import InvitacionAceptada, UsuarioRegistrado
 from src.identidad.entities.invitacion import Invitacion
@@ -31,12 +32,12 @@ class TestRegistrarEstudianteUseCase:
 
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
         usuario, evento_invitacion, evento_usuario = await use_case.execute(
-            invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123"
+            invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x"
         )
 
         assert isinstance(usuario.perfil, Estudiante)
         assert usuario.perfil.comision_id == comision_id
-        assert usuario.password_hash == hasher.hash("password123")
+        assert usuario.password_hash == hasher.hash("Password#123x")
         assert usuario.id in usuario_repo.usuarios
 
         assert isinstance(evento_invitacion, InvitacionAceptada)
@@ -55,7 +56,7 @@ class TestRegistrarEstudianteUseCase:
         await invitacion_repo.guardar(invitacion)
 
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
-        await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
+        await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x")
 
         assert invitacion_repo.invitaciones[invitacion.id].usada_en is not None
 
@@ -71,7 +72,7 @@ class TestRegistrarEstudianteUseCase:
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
         with pytest.raises(EmailYaRegistrado):
-            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
+            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x")
 
         assert invitacion_repo.invitaciones[invitacion.id].usada_en is None
 
@@ -82,7 +83,9 @@ class TestRegistrarEstudianteUseCase:
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
         with pytest.raises(InvitacionInvalida):
-            await use_case.execute("token-inexistente", "Nico", "nico@fiuner.edu.ar", "password123")
+            await use_case.execute(
+                "token-inexistente", "Nico", "nico@fiuner.edu.ar", "Password#123x"
+            )
 
         assert usuario_repo.usuarios == {}
 
@@ -98,7 +101,7 @@ class TestRegistrarEstudianteUseCase:
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
         with pytest.raises(InvitacionVencida):
-            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
+            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x")
 
         assert usuario_repo.usuarios == {}
 
@@ -114,9 +117,26 @@ class TestRegistrarEstudianteUseCase:
         use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
 
         with pytest.raises(InvitacionYaUsada):
-            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "password123")
+            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x")
 
         assert usuario_repo.usuarios == {}
+
+    async def test_rechaza_password_debil_sin_consumir_la_invitacion(self):
+        """Gap cerrado en US-ADJ-36: antes de esta US, este flujo no validaba INV-ID-11."""
+        invitacion_repo = FakeInvitacionRepository()
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        comision_id = uuid.uuid4()
+        invitacion = Invitacion.crear(comision_id, uuid.uuid4())
+        await invitacion_repo.guardar(invitacion)
+
+        use_case = RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher)
+
+        with pytest.raises(PasswordDemasiadoCorta):
+            await use_case.execute(invitacion.token, "Nico", "nico@fiuner.edu.ar", "abc123")
+
+        assert usuario_repo.usuarios == {}
+        assert invitacion_repo.invitaciones[invitacion.id].usada_en is None
 
 
 def _usuario_con_email(email: str) -> Usuario:

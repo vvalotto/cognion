@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-48",
+    "us_title": "Docente ve Desempeño por comisión con drill-down",
+    "us_points": 3,
+    "producto": "analytics",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-14T20:13:38.682183+00:00",
+    "completed_at": "2026-09-14T21:00:07.745251+00:00",
+    "total_elapsed_seconds": 2789,
+    "effective_seconds": 2789,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-14T20:14:07.980793+00:00",
+      "completed_at": "2026-09-14T20:14:41.711582+00:00",
+      "elapsed_seconds": 33,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-09-14T20:17:04.335225+00:00",
+      "completed_at": "2026-09-14T20:20:23.770599+00:00",
+      "elapsed_seconds": 199,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-14T20:20:29.305013+00:00",
+      "completed_at": "2026-09-14T20:27:44.667180+00:00",
+      "elapsed_seconds": 435,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-14T20:28:56.607315+00:00",
+      "completed_at": "2026-09-14T20:38:24.637075+00:00",
+      "elapsed_seconds": 568,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-14T20:55:54.543788+00:00",
+      "completed_at": "2026-09-14T20:57:17.180330+00:00",
+      "elapsed_seconds": 82,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-14T20:58:36.198953+00:00",
+      "completed_at": "2026-09-14T21:00:03.582165+00:00",
+      "elapsed_seconds": 87,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 6,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

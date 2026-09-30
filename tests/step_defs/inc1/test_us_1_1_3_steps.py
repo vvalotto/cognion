@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
+import uuid
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -12,8 +13,17 @@ from sqlalchemy import text
 from src.app import app
 from src.identidad.frameworks.db.models import InvitacionModel
 from src.settings import settings
+from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
+from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.step_defs.inc1._auth_headers import admin_headers
+
+
+def _headers_docente(docente_id: str) -> dict[str, str]:
+    """JWT del Docente ya asignado a la comisión (`US-ADJ-57`)."""
+    jwt_vo = PyJWTIssuer().emitir(uuid.UUID(docente_id), TipoPerfil.DOCENTE)
+    return {"Authorization": f"Bearer {jwt_vo.token}"}
+
 
 FEATURE = "../../features/inc1/US-1.1.3-registro-link-invalido.feature"
 
@@ -153,7 +163,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
             {
                 "nombre": "Usuario Test",
                 "email": email,
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
                 "perfil": perfil,
             },
             headers=admin_headers(),
@@ -162,7 +172,7 @@ async def _crear_usuario(email: str, perfil: str) -> dict:
 
 
 async def _crear_materia() -> str:
-    respuesta = await _post("/materias", {"nombre": "IS-2026-C3"}, headers=docente_headers())
+    respuesta = await _post("/materias", {"nombre": "IS-2026-C3"}, headers=admin_headers())
     return respuesta.json()["id"]
 
 
@@ -184,7 +194,7 @@ async def _crear_invitacion_vigente() -> str:
     invitacion_resp = await _post(
         f"/comisiones/{comision_id}/invitaciones",
         {"docente_id": docente["id"], "email_destinatario": "estudiante.bdd113@fiuner.edu.ar"},
-        headers=docente_headers(),
+        headers=_headers_docente(docente["id"]),
     )
     return invitacion_resp.json()["id"]
 
@@ -232,7 +242,7 @@ def ejecuta_registrar_estudiante(context):
                 "token": context["token"],
                 "nombre": "Nico Estudiante",
                 "email": "rechazo.bdd113@fiuner.edu.ar",
-                "password": "claveSegura1",
+                "password": "claveSegura1#",
             },
         )
     )

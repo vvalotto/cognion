@@ -10,7 +10,11 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import docente_headers
+from tests.step_defs.inc2._auth_headers import (
+    admin_headers,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc2/US-2.1.6-eliminar-pregunta.feature")
 
@@ -24,6 +28,11 @@ async def _limpiar_tablas_banco_preguntas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -43,10 +52,10 @@ def context():
 async def _post_crear_materia(nombre: str):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post("/materias", json={"nombre": nombre}, headers=docente_headers())
+        return await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
 
 
-async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
+async def _post_cargar_pregunta_verdadero_falso(banco_id: str, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.post(
@@ -60,14 +69,14 @@ async def _post_cargar_pregunta_verdadero_falso(banco_id: str):
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
-async def _delete_eliminar_pregunta(pregunta_id: str):
+async def _delete_eliminar_pregunta(pregunta_id: str, headers: dict[str, str]):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.delete(f"/preguntas/{pregunta_id}", headers=docente_headers())
+        return await client.delete(f"/preguntas/{pregunta_id}", headers=headers)
 
 
 async def _marcar_inactiva(pregunta_id: str) -> None:
@@ -88,8 +97,8 @@ async def _fila_existe(pregunta_id: str) -> bool:
 
 
 @given("un Docente autenticado")
-def docente_autenticado(context):
-    context["headers"] = docente_headers()
+def docente_autenticado(context) -> None:
+    """No-op: el Docente real y asignado se crea recién en el siguiente Given (`US-ADJ-57`)."""
 
 
 @given("una PreguntaPlantilla activa")
@@ -97,8 +106,10 @@ def pregunta_activa(context):
     respuesta_materia = run_async(_post_crear_materia("Ingeniería de Software"))
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
-    respuesta_pregunta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id))
+    respuesta_pregunta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id, headers))
     assert respuesta_pregunta.status_code == 201
     context["pregunta_id"] = respuesta_pregunta.json()["id"]
 
@@ -108,8 +119,10 @@ def pregunta_inactiva(context):
     respuesta_materia = run_async(_post_crear_materia("Gestión de Proyectos"))
     assert respuesta_materia.status_code == 201
     banco_id = respuesta_materia.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta_materia.json()["id"]))
+    context["headers"] = headers
 
-    respuesta_pregunta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id))
+    respuesta_pregunta = run_async(_post_cargar_pregunta_verdadero_falso(banco_id, headers))
     assert respuesta_pregunta.status_code == 201
     pregunta_id = respuesta_pregunta.json()["id"]
     run_async(_marcar_inactiva(pregunta_id))
@@ -119,21 +132,28 @@ def pregunta_inactiva(context):
 @given("un pregunta_id que no corresponde a ninguna PreguntaPlantilla")
 def pregunta_id_inexistente(context):
     context["pregunta_id"] = str(uuid.uuid4())
+    context["headers"] = docente_headers()
 
 
 @when("ejecuta EliminarPregunta sobre esa pregunta")
 def elimina_pregunta(context):
-    context["response"] = run_async(_delete_eliminar_pregunta(context["pregunta_id"]))
+    context["response"] = run_async(
+        _delete_eliminar_pregunta(context["pregunta_id"], context["headers"])
+    )
 
 
 @when("intenta ejecutar EliminarPregunta con ese id")
 def intenta_eliminar_inexistente(context):
-    context["response"] = run_async(_delete_eliminar_pregunta(context["pregunta_id"]))
+    context["response"] = run_async(
+        _delete_eliminar_pregunta(context["pregunta_id"], context["headers"])
+    )
 
 
 @when("ejecuta EliminarPregunta sobre ella")
 def elimina_pregunta_ya_eliminada(context):
-    context["response"] = run_async(_delete_eliminar_pregunta(context["pregunta_id"]))
+    context["response"] = run_async(
+        _delete_eliminar_pregunta(context["pregunta_id"], context["headers"])
+    )
 
 
 @then("el sistema marca la pregunta como activa = false")
