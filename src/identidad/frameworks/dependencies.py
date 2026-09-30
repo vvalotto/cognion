@@ -70,6 +70,7 @@ from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.eliminar_comision import EliminarComisionUseCase
 from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
+from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.listar_materias_del_estudiante import (
@@ -136,8 +137,10 @@ def get_invitaciones_controller(session: SessionDep) -> InvitacionesController:
     comision_repo = SQLAlchemyComisionRepository(session)
     invitacion_repo = SQLAlchemyInvitacionRepository(session)
     notificador = get_notificador()
+    materia_port = MateriaPortInProcess(session)
     return InvitacionesController(
-        GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
+        GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador),
+        ObtenerInvitacionUseCase(invitacion_repo, comision_repo, materia_port),
     )
 
 

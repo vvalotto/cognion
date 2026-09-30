@@ -151,6 +151,13 @@ class InvitacionResponse(BaseModel):
     token: str
 
 
+class InvitacionPreviewResponse(BaseModel):
+    """Vista previa de una invitación vigente, sin datos sensibles (`US-ADJ-08`)."""
+
+    materia: str
+    horario: str
+
+
 class RegistrarEstudianteRequest(BaseModel):
     """Body de la request de registro de un Estudiante vía invitación."""
 
