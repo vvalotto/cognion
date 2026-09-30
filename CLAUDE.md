@@ -750,8 +750,12 @@ compartida (confirmado en el Paso 3, ver
 `SELECT`/`psql` directo, nunca confiando en un `200` sin volver a leer la base (aprendizaje
 del Paso 5, ver más abajo).
 
-Pasos 1 a 9 cerrados: (1) `/` sin sesión no redirigía a `/login` — bug real, corregido en
-`Inicio.tsx`. (2) Cuenta del Administrador bloqueada por reintentos — desbloqueada
+Pasos 1 a 9 cerrados: (1) `/` sin sesión no redirigía a `/login` — bug real, con fix escrito
+en `Inicio.tsx` el mismo día (commit local), pero el PR ([#292](https://github.com/vvalotto/cognion/pull/292))
+quedó abierto sin mergear 22 días — detectado recién en el análisis de higiene de
+repositorio del 2026-09-30 (`develop` tuvo el bug activo todo ese tiempo pese a esta nota).
+Mergeado ese día, ver "Higiene de repositorio" más abajo. (2) Cuenta del Administrador
+bloqueada por reintentos — desbloqueada
 directamente en la base, mismo criterio de excepción que `ADR-016` (única cuenta existente).
 (3) Administrador no podía crear Materia (solo Docente) — `POST /materias` pasa a
 `require_docente_o_administrador`; `RequireRole` gana soporte de array de roles. (4) Orden de
@@ -1128,6 +1132,54 @@ vs. asistido) pendiente, con Víctor presente, antes de especificarla.
 **Próximo paso:** escribir el `plan-de-pruebas.md` de la Iteración 1 junto con Víctor. Ítem
 abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS real
 (`PROCEDIMIENTO-UAT.md` §4).
+
+**Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
+branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
+en 7 puntos, ejecutándose de a uno:
+1. ✅ **PR [#292](https://github.com/vvalotto/cognion/pull/292)** (bug real: `/` sin sesión
+   no redirigía a `/login`, escrito el 2026-09-08 pero nunca mergeado) — actualizado contra
+   `develop` (162 commits de atraso), 802/802 tests frontend + `tsc -b`/`oxlint` limpios,
+   mergeado.
+2. ✅ **PR [#291](https://github.com/vvalotto/cognion/pull/291)** (tooling de siembra E2E con
+   datos reales, `seed_datos_reales.py` + 113 preguntas de 2 materias) — cerrado sin mergear:
+   quedó superado de hecho por el tooling real usado después (`cargar_preguntas.py`/
+   `cargar_estudiantes.py`, 71 preguntas de Ingeniería de Software, bitácoras), nunca
+   reconciliado con este PR. Si se decide versionar ese tooling más adelante, es un PR nuevo
+   desde el estado actual de `tests/uat/datos-reales/`.
+3. ✅ Corregida la nota del Paso 1 de la prueba de estabilización del Administrador (arriba en
+   este archivo), que afirmaba el fix de `Inicio.tsx` ya cerrado cuando en realidad su PR
+   llevaba 22 días sin mergear.
+4. ✅ Agregada `tests/uat/datos-reales/` a `.gitignore` (antes quedaba fuera de git solo por
+   disciplina manual — ya hubo un incidente real de `git add` arrastrándolo).
+5. ✅ Borradas las branches locales (y remotas donde aplicaba) ya integradas por otro commit:
+   `docs/us-adj-21-cerrada`,
+   `feature/editar-cuenta-administrador`, `feature/editar-materia`, `fix/admin-crea-materias`
+   (ancestros confirmados de `develop`), `feature/home-docente-reportes` + su worktree
+   (`.claude/worktrees/gracious-williamson-a7dd0f`, superado por PR #374),
+   `fix/claude-md-estado-inc3-adj` (superado por PR #226), `local-vitest-bump` (`vitest` ya
+   en `^4.1.11` vía otro bump), `claude/gracious-williamson-a7dd0f` (sin diff contra
+   `develop`).
+6. ✅ Cola de Dependabot resuelta — 13 PRs abiertos, procesados de a uno (cada bump
+   verificado con CI real, no aprobado a ciegas): **mergeados** #464 (`pyjwt`), #457
+   (`undici`), #456 (`ip-address`), #317 (`js-yaml`), #316 (`baseline-browser-mapping`), #301
+   (`hono`), #217 (`qs`), #216 (`fast-uri`), #296 (`react-router` 7→8, salto de versión
+   **mayor** — verificado aparte con `tsc -b` + suite completa local antes de mergear, sin
+   breaking changes para este proyecto), #297 (`@testing-library/react`), #295
+   (`lucide-react`). **Cerrados sin mergear**: #294 (`react`/`@types/react`) — bump real que
+   no incluía `react-dom`, versiones incompatibles, CI lo confirmó rompiendo las 105 suites de
+   test (mismo tipo de hallazgo que el Paso 1: no aprobar Dependabot a ciegas); #293
+   (`@testing-library/jest-dom`, patch trivial) — conflicto mecánico de `package-lock.json`
+   contra `develop` tras los otros merges, no valía la pena resolver a mano, Dependabot lo
+   regenera solo en su próximo escaneo.
+7. ✅ Rescatado el contenido de `docs/modelo-datos-postgresql` (commit del 20-sep, nunca
+   mergeada) y actualizado antes de incorporarlo:
+   `docs/architecture/24{,a,b,c}-modelo-datos-*.md` — agrega los streams
+   `ActividadEvaluativaEnVivo`/`ParticipacionEnVivo` y las tablas
+   `ranking_por_sesion`/`distribucion_por_pregunta` (Incremento 6, no existían el 20-sep).
+   Analytics y Notificaciones confirmado sin tablas propias (`src/*/frameworks/db/models.py`)
+   — el índice ya lo documentaba bien. Branch local borrada, contenido absorbido en commits
+   propios. **Cierra completo el plan de higiene de repositorio de 7 puntos** — falta armar
+   el PR final con todo lo acumulado en la branch `docs/higiene-repositorio-claude-md`.
 
 ---
 
