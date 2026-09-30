@@ -4,7 +4,11 @@ from uuid import uuid4
 
 import pytest
 
-from src.analytics.entities.errors import ComisionNoPerteneceAMateria
+from src.analytics.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoPerteneceAMateria,
+    MateriaNoAutorizada,
+)
 from src.analytics.entities.ports.comision_consulta_port import (
     ComisionConsultaPort,
     ComisionResumen,
@@ -55,15 +59,25 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
         self,
         comisiones: list[ComisionResumen] | None = None,
         estudiantes: list[EstudianteResumen] | None = None,
+        autorizado_materia: bool = True,
+        autorizado_comision: bool = True,
     ) -> None:
         self._comisiones = comisiones or []
         self._estudiantes = estudiantes or []
+        self._autorizado_materia = autorizado_materia
+        self._autorizado_comision = autorizado_comision
 
     async def listar_comisiones_por_materia(self, materia_id) -> list[ComisionResumen]:
         return self._comisiones
 
     async def listar_estudiantes(self, comision_id) -> list[EstudianteResumen]:
         return self._estudiantes
+
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return self._autorizado_materia
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return self._autorizado_comision
 
 
 class _PreguntaMetadatoConsultaPortFake(PreguntaMetadatoConsultaPort):
@@ -79,11 +93,13 @@ def _use_case(
     metadatos: dict,
     comisiones: list[ComisionResumen] | None = None,
     estudiantes: list[EstudianteResumen] | None = None,
+    autorizado_materia: bool = True,
+    autorizado_comision: bool = True,
 ) -> tuple[ObtenerTasaErrorPorTemaUseCase, _EvaluacionDesempenoConsultaPortFake]:
     evaluacion_desempeno_consulta = _EvaluacionDesempenoConsultaPortFake(respuestas)
     use_case = ObtenerTasaErrorPorTemaUseCase(
         evaluacion_desempeno_consulta,
-        _ComisionConsultaPortFake(comisiones, estudiantes),
+        _ComisionConsultaPortFake(comisiones, estudiantes, autorizado_materia, autorizado_comision),
         _PreguntaMetadatoConsultaPortFake(metadatos),
     )
     return use_case, evaluacion_desempeno_consulta
@@ -94,7 +110,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
     async def test_sin_respuestas_devuelve_lista_vacia(self):
         use_case, _ = _use_case(respuestas=[], metadatos={})
 
-        resultado = await use_case.execute(uuid4(), None)
+        resultado = await use_case.execute(uuid4(), None, uuid4())
 
         assert resultado == []
 
@@ -115,7 +131,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
-        resultado = await use_case.execute(uuid4(), None)
+        resultado = await use_case.execute(uuid4(), None, uuid4())
 
         assert len(resultado) == 1
         assert resultado[0].unidad_tematica == "U1"
@@ -137,7 +153,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
-        resultado = await use_case.execute(uuid4(), None)
+        resultado = await use_case.execute(uuid4(), None, uuid4())
 
         assert resultado[0].cantidad_respuestas == 1
         assert resultado[0].cantidad_incorrectas == 0
@@ -161,7 +177,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
-        resultado = await use_case.execute(uuid4(), None)
+        resultado = await use_case.execute(uuid4(), None, uuid4())
 
         assert len(resultado) == 1
         assert resultado[0].cantidad_respuestas == 1
@@ -183,7 +199,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
         }
         use_case, _ = _use_case(respuestas, metadatos)
 
-        resultado = await use_case.execute(uuid4(), None)
+        resultado = await use_case.execute(uuid4(), None, uuid4())
 
         assert [tasa.tema for tasa in resultado] == ["AltaTasa", "BajaTasa"]
 
@@ -191,7 +207,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
     async def test_sin_comision_id_no_acota_estudiantes(self):
         use_case, evaluacion_desempeno_consulta = _use_case(respuestas=[], metadatos={})
 
-        await use_case.execute(uuid4(), None)
+        await use_case.execute(uuid4(), None, uuid4())
 
         assert evaluacion_desempeno_consulta.ultimo_estudiante_ids is None
 
@@ -206,7 +222,7 @@ class TestObtenerTasaErrorPorTemaUseCase:
             estudiantes=[estudiante],
         )
 
-        await use_case.execute(materia_id, comision_id)
+        await use_case.execute(materia_id, comision_id, uuid4())
 
         assert evaluacion_desempeno_consulta.ultimo_estudiante_ids == [estudiante.id]
 
@@ -220,4 +236,28 @@ class TestObtenerTasaErrorPorTemaUseCase:
         )
 
         with pytest.raises(ComisionNoPerteneceAMateria):
-            await use_case.execute(materia_id, comision_id)
+            await use_case.execute(materia_id, comision_id, uuid4())
+
+
+class TestAutorizacionPorComision:
+    """`US-ADJ-57`: materia siempre; comisión puntual además cuando `comision_id` viene."""
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_en_materia_levanta_materia_no_autorizada(self):
+        use_case, _ = _use_case(respuestas=[], metadatos={}, autorizado_materia=False)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(uuid4(), None, uuid4())
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_en_comision_levanta_comision_no_autorizada(self):
+        materia_id, comision_id = uuid4(), uuid4()
+        use_case, _ = _use_case(
+            respuestas=[],
+            metadatos={},
+            comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
+            autorizado_comision=False,
+        )
+
+        with pytest.raises(ComisionNoAutorizada):
+            await use_case.execute(materia_id, comision_id, uuid4())

@@ -268,9 +268,9 @@
     border: 3px solid transparent;
   }
   .stage-option.color-a { background: #c93a3e; color: #fff; }
-  .stage-option.color-b { background: #2f8fc7; color: #fff; }
+  .stage-option.color-b { background: #287aaa; color: #fff; }
   .stage-option.color-c { background: #d9a324; color: #2a1c00; }
-  .stage-option.color-d { background: #3f9463; color: #fff; }
+  .stage-option.color-d { background: #378257; color: #fff; }
   .stage-option.correcta { border-color: #ffffff; box-shadow: 0 0 0 2px rgba(255,255,255,0.5) inset; }
 
   /* Tarjetas táctiles — pregunta activa del Estudiante (§3.3 wireframes), mismos colores que
@@ -287,9 +287,9 @@
   }
   .tap-card:active { transform: scale(0.96); }
   .tap-card.color-a { background: #c93a3e; }
-  .tap-card.color-b { background: #2f8fc7; }
+  .tap-card.color-b { background: #287aaa; }
   .tap-card.color-c { background: #d9a324; color: #2a1c00; }
-  .tap-card.color-d { background: #3f9463; }
+  .tap-card.color-d { background: #378257; }
 
   /* Histograma de respuestas (§2.4 wireframes) — misma paleta que las cajas de opción */
   .stage-histograma { width: 100%; max-width: 760px; margin: 10px 0 0; }
@@ -299,9 +299,9 @@
     padding: 10px 14px; line-height: 1.2;
   }
   .histo-row.color-a .label { background: #c93a3e; color: #fff; }
-  .histo-row.color-b .label { background: #2f8fc7; color: #fff; }
+  .histo-row.color-b .label { background: #287aaa; color: #fff; }
   .histo-row.color-c .label { background: #d9a324; color: #2a1c00; }
-  .histo-row.color-d .label { background: #3f9463; color: #fff; }
+  .histo-row.color-d .label { background: #378257; color: #fff; }
   .histo-row .track { flex: 1; height: 30px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
   .histo-row .track .fill { height: 100%; background: var(--stage-primary); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-weight: 800; font-size: 15px; }
   .histo-row.correcta .track .fill { background: var(--stage-accent); }
@@ -399,6 +399,11 @@
   <button data-target="est-sin-respuesta">17. Estudiante — sin respuesta (H4/H5)</button>
   <button data-target="doc-comision-sesiones">18. Docente — sesiones activas (H6)</button>
   <button data-target="stage-ranking-pocos">19. Proyección — ranking, pocos (H9)</button>
+  <span class="sep"></span>
+  <strong>Ampliaciones US-ADJ-58 —</strong>
+  <button data-target="doc-cancelar-sesion">20. Docente — cancelar sesión</button>
+  <button data-target="est-sesion-cancelada">21. Estudiante — sesión cancelada</button>
+  <button data-target="stage-confirmar-finalizar">22. Proyección — finalizar con pregunta abierta</button>
 </nav>
 
 <!-- 1. DOCENTE — NUEVA SESIÓN -->
@@ -463,6 +468,12 @@
       <div class="form-actions">
         <button class="btn accent full" onclick="go('stage-pregunta-sola')">Iniciar sesión</button>
       </div>
+      <!-- US-ADJ-58: "Iniciar" queda deshabilitado con 0 participantes (INV-AEV-11). "Cancelar sesión"
+           descarta una sesión que no se va a dar; "‹ Salir" no toca la sesión. -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
+        <a href="#" style="font-size:13px;color:var(--muted-foreground);" onclick="go('doc-comision-sesiones');return false;">‹ Salir</a>
+        <button class="btn outline sm" style="color:var(--destructive);border-color:var(--destructive);" onclick="go('doc-cancelar-sesion')">Cancelar sesión</button>
+      </div>
     </div>
   </div>
 </section>
@@ -474,6 +485,7 @@
     <div class="stage-question">¿Qué principio de SOLID viola una clase que depende directamente de otra clase concreta en vez de una abstracción?</div>
     <div class="stage-actions">
       <button class="btn lg" onclick="go('stage-pregunta-opciones')">Mostrar opciones</button>
+      <button class="btn outline lg" onclick="go('stage-confirmar-finalizar')" style="color:#fff;border-color:rgba(255,255,255,0.4);background:transparent;">Finalizar sesión</button>
     </div>
   </div>
 </section>
@@ -495,6 +507,7 @@
     <div class="stage-count" style="margin-top:26px;"><span class="n">11</span> / 14 ya respondieron</div>
     <div class="stage-actions">
       <button class="btn destructive lg" onclick="go('stage-histograma')">Cerrar pregunta</button>
+      <button class="btn outline lg" onclick="go('stage-confirmar-finalizar')" style="color:#fff;border-color:rgba(255,255,255,0.4);background:transparent;">Finalizar sesión</button>
     </div>
     <button class="conn-toggle" onclick="toggleConn('conn-stage-opciones')">Simular desconexión (H8)</button>
   </div>
@@ -513,6 +526,7 @@
     <div class="stage-eyebrow" style="margin-top:10px;">Pasando al ranking en unos segundos…</div>
     <div class="stage-actions">
       <button class="btn outline lg" onclick="go('stage-ranking')" style="color:#fff;border-color:rgba(255,255,255,0.4);background:transparent;">Ver ranking ahora →</button>
+      <button class="btn accent lg" onclick="go('stage-final')">Finalizar sesión</button>
     </div>
   </div>
 </section>
@@ -790,6 +804,57 @@
     <div class="stage-eyebrow" style="margin-top:16px;font-size:14px;">Se muestran tantos puestos como participantes haya — con 0, "Nadie participó".</div>
     <div class="stage-actions">
       <button class="btn lg" onclick="go('stage-pregunta-sola')">Siguiente pregunta</button>
+      <button class="btn accent lg" onclick="go('stage-final')">Finalizar sesión</button>
+    </div>
+  </div>
+</section>
+
+<!-- 20. DOCENTE — CANCELAR SESIÓN (US-ADJ-58) -->
+<section class="screen" id="doc-cancelar-sesion">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Docente</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Actividad evaluativa &nbsp;›&nbsp; Sala de espera &nbsp;›&nbsp; <span class="current">Cancelar sesión</span></div>
+    <h1 class="page-title">¿Cancelar esta sesión?</h1>
+    <p class="page-subtitle">La sesión todavía no empezó. Si la cancelás, deja de figurar como activa y no se puede retomar.</p>
+    <div class="form-card">
+      <div class="detail-row"><span class="k">Preguntas</span><span class="v">10 · Ingeniería de Software</span></div>
+      <div class="detail-row"><span class="k">Participantes en la sala</span><span class="v">14</span></div>
+      <div class="alert warning" style="margin:16px 0;"><span class="icon">!</span><div class="body"><strong>Los estudiantes en la sala</strong>ven que la sesión se canceló y vuelven a sus actividades.</div></div>
+      <div class="form-actions" style="display:flex;gap:10px;">
+        <button class="btn outline full" onclick="go('doc-sala-espera')">Volver a la sala</button>
+        <button class="btn destructive full" onclick="go('doc-comision-sesiones')">Cancelar sesión</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 21. ESTUDIANTE — SESIÓN CANCELADA (US-ADJ-58) -->
+<section class="screen" id="est-sesion-cancelada">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">LR</span>Lucía Ramos · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="result-card">
+      <div class="center-icon">🚫</div>
+      <h1 class="page-title">El Docente canceló la sesión</h1>
+      <p class="page-subtitle">Esta sesión en vivo no se va a dar. No se registró ninguna respuesta.</p>
+      <button class="btn full" onclick="go('est-sesiones')">Volver a mis actividades</button>
+    </div>
+  </div>
+</section>
+
+<!-- 22. PROYECCIÓN — FINALIZAR CON LA PREGUNTA ABIERTA (US-ADJ-58) -->
+<section class="screen" id="stage-confirmar-finalizar">
+  <div class="stage">
+    <div class="stage-eyebrow">Pregunta 3 de 10 — abierta</div>
+    <div class="stage-question" style="font-size:34px;">¿Finalizar la sesión ahora?</div>
+    <div class="stage-eyebrow" style="font-size:18px;max-width:720px;">La pregunta 3 no se cierra ni muestra su histograma. Las respuestas ya dadas cuentan para el ranking final.</div>
+    <div class="stage-actions">
+      <button class="btn outline lg" onclick="go('stage-pregunta-opciones')" style="color:#fff;border-color:rgba(255,255,255,0.4);background:transparent;">Volver a la pregunta</button>
       <button class="btn accent lg" onclick="go('stage-final')">Finalizar sesión</button>
     </div>
   </div>

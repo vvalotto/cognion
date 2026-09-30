@@ -29,6 +29,7 @@ from src.identidad.interface_adapters.gateways.comision_repository import (
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
+from tests.integration.conftest import _id_desde_headers, asignar_docente_a_materia
 
 
 class _BandejaSmtp:
@@ -108,6 +109,7 @@ async def _crear_materia_con_preguntas(
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
     creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
+    await asignar_docente_a_materia(creada.json()["id"], docente_headers)
 
     for i in range(cantidad):
         await client.post(
@@ -128,9 +130,14 @@ async def _crear_materia_con_preguntas(
 
 
 async def _crear_comision_con_estudiantes(
-    session, materia_id: uuid.UUID, cantidad: int
+    session, materia_id: uuid.UUID, cantidad: int, docente_id: uuid.UUID | None = None
 ) -> tuple[uuid.UUID, list[str]]:
-    """Crea una comisión real para `materia_id` con `cantidad` estudiantes reales inscriptos."""
+    """Crea una comisión real para `materia_id` con `cantidad` estudiantes reales inscriptos.
+
+    `docente_id` (`US-ADJ-57`): si se indica, asigna esa Comisión al Docente — necesario para
+    que `POST /actividades` con `comisiones_ids` restringidas a esta Comisión no la rechace
+    con `ComisionNoAutorizada` cuando el Docente que llama es el mismo de `docente_headers`.
+    """
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     comision_repo = SQLAlchemyComisionRepository(session)
     admin = Usuario.crear(
@@ -139,6 +146,9 @@ async def _crear_comision_con_estudiantes(
     await usuario_repo.guardar(admin)
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    if docente_id is not None:
+        comision.asignar_docente(docente_id)
+        await comision_repo.actualizar(comision)
 
     emails = []
     for i in range(cantidad):
@@ -195,11 +205,12 @@ class TestNotificarCierreActividadIntegration:
             materia_id = await _crear_materia_con_preguntas(
                 client, admin_headers, docente_headers, 20
             )
+            docente_id = _id_desde_headers(docente_headers)
             comision_a_id, emails_a = await _crear_comision_con_estudiantes(
-                session, uuid.UUID(materia_id), 2
+                session, uuid.UUID(materia_id), 2, docente_id
             )
             comision_b_id, emails_b = await _crear_comision_con_estudiantes(
-                session, uuid.UUID(materia_id), 1
+                session, uuid.UUID(materia_id), 1, docente_id
             )
             actividad_id = await _crear_actividad(
                 client, docente_headers, materia_id, [str(comision_a_id), str(comision_b_id)]

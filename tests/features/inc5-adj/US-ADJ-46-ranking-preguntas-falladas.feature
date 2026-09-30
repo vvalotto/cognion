@@ -34,7 +34,7 @@ Feature: Docente consulta el ranking de preguntas más falladas (US-ADJ-46)
   Scenario: Comisión que no pertenece a la materia
     Given una comisión de otra materia
     When un Docente hace GET .../ranking-preguntas-falladas?comision_id={esa comisión}
-    Then recibe 422
+    Then recibe 403
 
   @error-case
   Scenario: Rol distinto de Docente

@@ -42,7 +42,8 @@ export interface VistaProyeccion {
 
 /** Etapa que le corresponde al estado del servidor; `null` si la sesión no arrancó (→ sala). */
 export function calcularVista(estado: EstadoSesionEnVivoResponse): VistaProyeccion | null {
-  if (estado.estado === "en_espera") return null
+  // Cancelada (`US-ADJ-58`) vuelve a la sala, que la redirige al detalle de la Comisión.
+  if (estado.estado === "en_espera" || estado.estado === "cancelada") return null
 
   const pregunta = estado.preguntaActual
   const resultadoServidor = estado.resultadoPregunta
@@ -131,10 +132,41 @@ export function aplicarMensaje(
         etapa: "finalizada",
         resultado: { respuestaCorrecta: null, distribucion: [], ranking: mensaje.ranking },
       }
+    case "sesion_cancelada":
+      // Solo se cancela una sesión `EnEspera`, que la proyección no muestra (`US-ADJ-58`).
+      return "recalcular"
   }
 }
 
 /** Paso del histograma al ranking — local, sin comando; fuera del histograma no hace nada. */
 export function verRanking(vista: VistaProyeccion): VistaProyeccion {
   return vista.etapa === "histograma" ? { ...vista, etapa: "ranking" } : vista
+}
+
+const ORDEN_ETAPA: Record<EtapaProyeccion, number> = {
+  "pregunta-sola": 0,
+  "pregunta-opciones": 1,
+  histograma: 2,
+  ranking: 3,
+  finalizada: 4,
+}
+
+/**
+ * Combina la vista de la proyección con la recalculada del servidor sin retroceder dentro de la misma
+ * pregunta (hallazgo #7: resincronizar no debe devolver el ranking al histograma ni reiniciar el
+ * temporizador). Actualiza igual los conteos en vivo.
+ */
+export function sincronizarVistaProyeccion(
+  actual: VistaProyeccion | null,
+  nueva: VistaProyeccion,
+): VistaProyeccion {
+  if (actual === null) return nueva
+  if (actual.indice === nueva.indice && ORDEN_ETAPA[nueva.etapa] < ORDEN_ETAPA[actual.etapa]) {
+    return {
+      ...actual,
+      cantidadRespuestas: nueva.cantidadRespuestas,
+      totalParticipantes: nueva.totalParticipantes,
+    }
+  }
+  return nueva
 }

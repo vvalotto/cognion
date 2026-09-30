@@ -82,6 +82,12 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
     async def listar_estudiantes(self, comision_id) -> list[EstudianteResumen]:
         return self.estudiantes
 
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return True
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return True
+
 
 class _PreguntaMetadatoConsultaPortFake(PreguntaMetadatoConsultaPort):
     def __init__(self, metadatos: dict | None = None) -> None:
@@ -135,7 +141,7 @@ class TestAnalyticsInformesController:
             pregunta_metadato_consulta=_PreguntaMetadatoConsultaPortFake(metadatos),
         )
 
-        resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None)
+        resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None, uuid4())
 
         assert len(resultado) == 1
         assert resultado[0].unidad_tematica == "U1"
@@ -146,7 +152,7 @@ class TestAnalyticsInformesController:
     async def test_obtener_tasa_error_por_tema_sin_respuestas_devuelve_lista_vacia(self):
         controller = _controller()
 
-        resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None)
+        resultado = await controller.obtener_tasa_error_por_tema(uuid4(), None, uuid4())
 
         assert resultado == []
 
@@ -159,7 +165,9 @@ class TestAnalyticsInformesController:
         comision_consulta.estudiantes = [estudiante]
         controller = _controller(comision_consulta=comision_consulta)
 
-        resultado = await controller.obtener_desempeno_por_comision(materia_id, comision_id)
+        resultado = await controller.obtener_desempeno_por_comision(
+            materia_id, comision_id, uuid4()
+        )
 
         assert len(resultado) == 1
         assert resultado[0].estudiante_id == estudiante.id
@@ -172,7 +180,9 @@ class TestAnalyticsInformesController:
         comision_consulta.comisiones = [ComisionResumen(id=comision_id, horario="lu 10-12")]
         controller = _controller(comision_consulta=comision_consulta)
 
-        resultado = await controller.obtener_evolucion_temporal_comision(materia_id, comision_id)
+        resultado = await controller.obtener_evolucion_temporal_comision(
+            materia_id, comision_id, uuid4()
+        )
 
         assert resultado == []
 
@@ -194,7 +204,7 @@ class TestAnalyticsInformesController:
             pregunta_metadato_consulta=_PreguntaMetadatoConsultaPortFake(metadatos),
         )
 
-        resultado = await controller.obtener_ranking_preguntas_falladas(uuid4(), None)
+        resultado = await controller.obtener_ranking_preguntas_falladas(uuid4(), None, uuid4())
 
         assert len(resultado) == 1
         assert resultado[0].enunciado == "¿Cuánto es 2+2?"
@@ -204,6 +214,6 @@ class TestAnalyticsInformesController:
     async def test_obtener_ranking_preguntas_falladas_sin_respuestas_devuelve_lista_vacia(self):
         controller = _controller()
 
-        resultado = await controller.obtener_ranking_preguntas_falladas(uuid4(), None)
+        resultado = await controller.obtener_ranking_preguntas_falladas(uuid4(), None, uuid4())
 
         assert resultado == []

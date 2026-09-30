@@ -31,6 +31,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 AGGREGATE_TYPE_EVALUACION = "Evaluacion"
 AGGREGATE_TYPE_ACTIVIDAD = "ActividadEvaluativaPeriodoAbierto"
@@ -144,6 +145,7 @@ class TestAnalyticsRouterCompletitud:
 
     async def test_actividad_restringida_estados_mixtos(self, session, docente_headers):
         materia_id = uuid4()
+        await asignar_docente_a_materia(str(materia_id), docente_headers)
         comision_id, estudiantes = await _comision_con_estudiantes(session, materia_id, 4)
         finalizo, en_curso, suspendio, nunca_inicio = estudiantes
 
@@ -177,6 +179,7 @@ class TestAnalyticsRouterCompletitud:
 
     async def test_actividad_sin_restriccion_de_comision(self, session, docente_headers):
         materia_id = uuid4()
+        await asignar_docente_a_materia(str(materia_id), docente_headers)
         comision_1, estudiantes_1 = await _comision_con_estudiantes(session, materia_id, 1)
         comision_2, estudiantes_2 = await _comision_con_estudiantes(session, materia_id, 1)
 

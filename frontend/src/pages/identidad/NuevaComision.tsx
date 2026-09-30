@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate, useSearchParams } from "react-router"
 
+import { rutaMateria, useNombreMateria } from "@/pages/identidad/useNombreMateria"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -21,6 +22,7 @@ export function NuevaComision() {
 
   const [materias, setMaterias] = useState<MateriaListItemResponse[] | null>(null)
   const [materiaId, setMateriaId] = useState(materiaPreseleccionada)
+  const nombreMateria = useNombreMateria(materiaId)
   const [horario, setHorario] = useState("")
 
   const controladorSubmitRef = useRef<AbortController | null>(null)
@@ -46,7 +48,7 @@ export function NuevaComision() {
   }, [])
 
   function volverAlListado() {
-    void navigate(materiaId ? `/comisiones?materiaId=${materiaId}` : "/comisiones")
+    void navigate(rutaMateria(materiaId))
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -67,7 +69,13 @@ export function NuevaComision() {
 
   return (
     <div>
-      <Breadcrumb items={[{ label: "Comisiones", to: "/comisiones" }, { label: "Nueva Comisión" }]} />
+      <Breadcrumb
+        items={[
+          { label: "Materias", to: "/materias" },
+          { label: nombreMateria ?? "…", to: rutaMateria(materiaId) },
+          { label: "Nueva Comisión" },
+        ]}
+      />
       <h1 className="text-lg font-semibold">Crear comisión</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Sin docente asignado todavía — esa acción se hace después, desde el detalle de la

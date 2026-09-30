@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-08",
+    "us_title": "Estudiante ve la materia/comisión de la invitación antes de registrarse",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-30T10:57:03.375741+00:00",
+    "completed_at": "2026-09-30T11:39:29.406911+00:00",
+    "total_elapsed_seconds": 2546,
+    "effective_seconds": 2546,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-30T11:02:47.863076+00:00",
+      "completed_at": "2026-09-30T11:07:38.396330+00:00",
+      "elapsed_seconds": 290,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "1",
+          "task_name": "ObtenerInvitacionUseCase",
+          "task_type": "use_case",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-30T11:02:48.056093+00:00",
+          "completed_at": "2026-09-30T11:03:09.445354+00:00",
+          "elapsed_seconds": 21,
+          "actual_minutes": 0.35,
+          "variance_minutes": -14.65,
+          "file_created": "src/identidad/use_cases/obtener_invitacion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "2",
+          "task_name": "InvitacionesController.obtener_invitacion",
+          "task_type": "controller",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-30T11:03:18.122208+00:00",
+          "completed_at": "2026-09-30T11:03:36.000952+00:00",
+          "elapsed_seconds": 17,
+          "actual_minutes": 0.28,
+          "variance_minutes": -9.72,
+          "file_created": "src/identidad/interface_adapters/controllers/invitaciones_controller.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "3",
+          "task_name": "InvitacionPreviewResponse",
+          "task_type": "schema",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-30T11:03:45.578311+00:00",
+          "completed_at": "2026-09-30T11:04:01.741032+00:00",
+          "elapsed_seconds": 16,
+          "actual_minutes": 0.27,
+          "variance_minutes": -4.73,
+          "file_created": "src/identidad/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "4",
+          "task_name": "GET /identidad/invitaciones/{token}",
+          "task_type": "endpoint",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-30T11:04:04.745476+00:00",
+          "completed_at": "2026-09-30T11:04:57.555006+00:00",
+          "elapsed_seconds": 52,
+          "actual_minutes": 0.87,
+          "variance_minutes": -9.13,
+          "file_created": "src/identidad/frameworks/api/registro_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "5",
+          "task_name": "wiring dependencies.py",
+          "task_type": "composition-root",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-30T11:04:19.357026+00:00",
+          "completed_at": "2026-09-30T11:04:57.414260+00:00",
+          "elapsed_seconds": 38,
+          "actual_minutes": 0.63,
+          "variance_minutes": -4.37,
+          "file_created": "src/identidad/frameworks/dependencies.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "6",
+          "task_name": "Registro.tsx chip preview",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-30T11:05:12.594443+00:00",
+          "completed_at": "2026-09-30T11:07:19.633260+00:00",
+          "elapsed_seconds": 127,
+          "actual_minutes": 2.12,
+          "variance_minutes": -17.88,
+          "file_created": "frontend/src/pages/identidad/Registro.tsx",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-30T11:07:48.021279+00:00",
+      "completed_at": "2026-09-30T11:13:07.904618+00:00",
+      "elapsed_seconds": 319,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T4-1",
+          "task_name": "test_obtener_invitacion_use_case",
+          "task_type": "unit-test",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-30T11:08:15.799971+00:00",
+          "completed_at": "2026-09-30T11:13:07.762096+00:00",
+          "elapsed_seconds": 291,
+          "actual_minutes": 4.85,
+          "variance_minutes": -10.15,
+          "file_created": "tests/unit/inc1/test_obtener_invitacion_use_case.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-30T11:13:36.382300+00:00",
+      "completed_at": "2026-09-30T11:22:47.580411+00:00",
+      "elapsed_seconds": 551,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T5-1",
+          "task_name": "test_obtener_invitacion_api_integration",
+          "task_type": "integration-test",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-30T11:13:36.522138+00:00",
+          "completed_at": "2026-09-30T11:16:08.187287+00:00",
+          "elapsed_seconds": 151,
+          "actual_minutes": 2.52,
+          "variance_minutes": -12.48,
+          "file_created": "tests/integration/inc1/test_obtener_invitacion_api_integration.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-30T11:22:54.839045+00:00",
+      "completed_at": "2026-09-30T11:22:54.973719+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-30T11:23:06.813019+00:00",
+      "completed_at": "2026-09-30T11:29:16.909369+00:00",
+      "elapsed_seconds": 370,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Actualización de Documentación",
+      "started_at": "2026-09-30T11:29:59.059762+00:00",
+      "completed_at": "2026-09-30T11:30:15.172207+00:00",
+      "elapsed_seconds": 16,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-30T11:38:30.978322+00:00",
+      "completed_at": "2026-09-30T11:39:29.263693+00:00",
+      "elapsed_seconds": 58,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 8,
+    "completed_tasks": 8,
+    "total_phases": 7,
+    "estimated_total_minutes": 95.0,
+    "actual_total_minutes": 11.88,
+    "variance_minutes": -83.12,
+    "variance_percent": -87.49
+  }
+}

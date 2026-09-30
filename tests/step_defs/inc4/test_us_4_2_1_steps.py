@@ -28,6 +28,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 scenarios("../../features/inc4/US-4.2.1-desempeno-estudiante-elegido.feature")
 
@@ -44,6 +45,7 @@ async def _limpiar_tablas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
@@ -199,12 +201,14 @@ def docente_y_estudiante_con_dos_evaluaciones(context):
 
     context["estudiante"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
 
 
 @given("un Docente autenticado y un Estudiante sin ninguna Evaluacion finalizada en la materia Y")
 def docente_y_estudiante_sin_evaluaciones(context):
     context["estudiante"] = run_async(_crear_estudiante_real())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
 
 
 @given("un Docente autenticado")

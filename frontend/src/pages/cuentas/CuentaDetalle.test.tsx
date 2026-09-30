@@ -75,12 +75,47 @@ describe("CuentaDetalle", () => {
   })
 
   it("ve el detalle de una cuenta bloqueada y ve una alerta indicando que está bloqueada", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, cuentaBloqueada))
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, cuentaBloqueada))
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          id: "c1",
+          materia_id: "m1",
+          horario: "Lunes 14-16hs",
+          administrador_id: "a1",
+          docentes_asignados: [],
+          activa: true,
+        }),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, [{ id: "m1", nombre: "Ingeniería de Software" }]))
 
     renderCuentaDetalle("u2")
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/bloqueada/i)
     expect(screen.getByText("Bloqueada")).toBeInTheDocument()
+  })
+
+  it("[US-ADJ-07] muestra la comisión de un Estudiante con nombre legible en vez del UUID crudo", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, cuentaBloqueada))
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          id: "c1",
+          materia_id: "m1",
+          horario: "Lunes 14-16hs",
+          administrador_id: "a1",
+          docentes_asignados: [],
+          activa: true,
+        }),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, [{ id: "m1", nombre: "Ingeniería de Software" }]))
+
+    renderCuentaDetalle("u2")
+
+    expect(
+      await screen.findByText("Ingeniería de Software — Lunes 14-16hs"),
+    ).toBeInTheDocument()
+    expect(screen.queryByText("c1")).not.toBeInTheDocument()
   })
 
   it("[US-ADJ-04] breadcrumb, tarjeta de datos y tags de color", async () => {

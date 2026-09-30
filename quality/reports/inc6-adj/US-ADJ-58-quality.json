@@ -1,0 +1,91 @@
+{
+  "us_id": "US-ADJ-58",
+  "fecha": "2026-09-27T09:15:24",
+  "componente": "src/actividad_evaluativa (modo en vivo) + frontend/src/pages/actividad-evaluativa",
+  "metricas": {
+    "pylint": 9.78,
+    "cc_promedio": 1.875,
+    "cc_max": 7,
+    "mi_promedio": null,
+    "mi_min": 43.64,
+    "coverage": 99.0,
+    "coverage_modulos_tocados": 100.0,
+    "frontend": {
+      "tests": "789/789 (Vitest, suite completa)",
+      "statements": 93.5,
+      "branches": 85.68
+    },
+    "e2e": "13/13"
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 9,
+    "errors": 19,
+    "warnings": 8,
+    "infos": 59,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 8,
+        "infos": 6
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "DeadCode": {
+        "errors": 9,
+        "warnings": 0,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "Spelling": {
+        "errors": 9,
+        "warnings": 0,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 9
+      },
+      "UnusedImports": {
+        "errors": 1,
+        "warnings": 0,
+        "infos": 8
+      }
+    },
+    "reporte": "quality/reports/inc6-adj/US-ADJ-58-codeguard.json"
+  },
+  "designreviewer": {
+    "critical": 0,
+    "should_block": false
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "CodeGuard: los errors de DeadCode/Spelling son de tooling (vulture y codespell no instalados en el venv) y los de Types/UnusedImports son timeouts conocidos (software_limpio#70); no son defectos del código. mypy sobre src/ completo: 0 errores.",
+    "PEP8 E501: las líneas > 100 que quedan son preexistentes; las introducidas por esta US se acortaron.",
+    "Integración + BDD del Incremento 6 y de US-ADJ-58 corridos contra una base aparte (cognion_test_adj58), no contra la base de la UAT: 146/146 integración inc6, 257/257 BDD inc6 + 11/11 US-ADJ-58 tras los ajustes.",
+    "E2E (Playwright): 13/13 contra la base aparte, incluidos los circuitos nuevos 09 (cancelar) y 10 (finalizar con la pregunta abierta)."
+  ]
+}

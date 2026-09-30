@@ -14,6 +14,8 @@ from src.actividad_evaluativa.entities.errors import (
     ActividadNoExiste,
     ActividadYaCerrada,
     CantidadIntentosInvalida,
+    ComisionNoAutorizada,
+    MateriaNoAutorizada,
     MateriaNoExiste,
     NoSePuedeAcortarConEvaluacionesActivas,
     PeriodoInvalido,
@@ -107,10 +109,18 @@ def _a_resumen_response(resumen: ActividadResumen, ahora: datetime) -> Actividad
 )
 async def listar_actividades(
     materia_id: UUID = Query(...),
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesQueryController = Depends(get_actividades_query_controller),
 ) -> list[ActividadResumenResponse]:
-    """Lista las actividades de una materia con estado derivado y conteos (`US-3.4.2`, RF-11)."""
-    resumenes = await controller.listar_actividades(materia_id)
+    """Lista las actividades de una materia con estado derivado y conteos (`US-3.4.2`, RF-11).
+
+    El Docente solo ve las actividades de una materia donde tiene al menos una Comisión
+    asignada (`US-ADJ-57`); 403 si no.
+    """
+    try:
+        resumenes = await controller.listar_actividades(materia_id, usuario.usuario_id)
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     ahora = datetime.now(UTC)
     return [_a_resumen_response(resumen, ahora) for resumen in resumenes]
 
@@ -152,13 +162,20 @@ async def listar_mis_actividades(
 )
 async def obtener_actividad(
     actividad_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesQueryController = Depends(get_actividades_query_controller),
 ) -> ActividadResumenResponse:
-    """Detalle de una actividad puntual, con estado derivado y conteos (`US-3.4.4`, RF-11b)."""
+    """Detalle de una actividad puntual, con estado derivado y conteos (`US-3.4.4`, RF-11b).
+
+    403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
+    (`US-ADJ-57`).
+    """
     try:
-        resumen = await controller.obtener_actividad(actividad_id)
+        resumen = await controller.obtener_actividad(actividad_id, usuario.usuario_id)
     except ActividadNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     ahora = datetime.now(UTC)
     return _a_resumen_response(resumen, ahora)
@@ -172,9 +189,14 @@ async def obtener_actividad(
 )
 async def crear_actividad(
     body: CrearActividadRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
 ) -> ActividadResponse:
-    """Crea una actividad de período abierto; responde 404/422 ante los rechazos de dominio."""
+    """Crea una actividad de período abierto; responde 404/422/403 ante los rechazos de dominio.
+
+    403 si el Docente no tiene ninguna Comisión asignada en `materia_id`, o si alguna de
+    `comisiones_ids` no es una Comisión propia (`US-ADJ-57`).
+    """
     try:
         actividad, _evento = await controller.crear_actividad(
             body.materia_id,
@@ -186,9 +208,12 @@ async def crear_actividad(
             frozenset(body.comisiones_ids),
             body.unidad_tematica,
             body.tema,
+            usuario.usuario_id,
         )
     except MateriaNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except (PreguntasInsuficientes, PeriodoInvalido, CantidadIntentosInvalida) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
@@ -205,15 +230,22 @@ async def crear_actividad(
 async def modificar_periodo_disponibilidad(
     actividad_id: UUID,
     body: ModificarPeriodoDisponibilidadRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
 ) -> ActividadResponse:
-    """Extiende o acorta `fecha_cierre` de una actividad vigente (RF-11b)."""
+    """Extiende o acorta `fecha_cierre` de una actividad vigente (RF-11b).
+
+    403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
+    (`US-ADJ-57`).
+    """
     try:
         actividad = await controller.modificar_periodo_disponibilidad(
-            actividad_id, body.nueva_fecha_cierre
+            actividad_id, body.nueva_fecha_cierre, usuario.usuario_id
         )
     except ActividadNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except (
         PeriodoInvalido,
         NoSePuedeAcortarConEvaluacionesActivas,
@@ -234,13 +266,22 @@ async def modificar_periodo_disponibilidad(
 async def modificar_titulo(
     actividad_id: UUID,
     body: ModificarTituloRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
 ) -> ActividadResponse:
-    """Edita el título de una actividad, sin importar su estado (`US-ADJ-10`)."""
+    """Edita el título de una actividad, sin importar su estado (`US-ADJ-10`).
+
+    403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
+    (`US-ADJ-57`).
+    """
     try:
-        actividad = await controller.modificar_titulo(actividad_id, body.nuevo_titulo)
+        actividad = await controller.modificar_titulo(
+            actividad_id, body.nuevo_titulo, usuario.usuario_id
+        )
     except ActividadNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     return _a_response(actividad)
 
@@ -252,13 +293,20 @@ async def modificar_titulo(
 )
 async def cerrar_actividad(
     actividad_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
 ) -> ActividadResponse:
-    """Cierra manualmente la actividad, finalizando en cascada sus evaluaciones activas (RF-11b)."""
+    """Cierra manualmente la actividad, finalizando en cascada sus evaluaciones activas (RF-11b).
+
+    403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
+    (`US-ADJ-57`).
+    """
     try:
-        actividad = await controller.cerrar_actividad(actividad_id)
+        actividad = await controller.cerrar_actividad(actividad_id, usuario.usuario_id)
     except ActividadNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except ActividadYaCerrada as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)

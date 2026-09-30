@@ -33,7 +33,7 @@ describe("StagePreguntaOpciones", () => {
   })
 
   it("muestra las 4 opciones como cajas de color, sin marcar ninguna como correcta", () => {
-    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} />)
+    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} onFinalizar={() => {}} />)
 
     const cajas = screen.getAllByRole("listitem")
     expect(cajas.map((c) => c.getAttribute("data-color"))).toEqual(["a", "b", "c", "d"])
@@ -51,7 +51,7 @@ describe("StagePreguntaOpciones", () => {
       <StagePreguntaOpciones
         vista={{ ...vista, tipo: "verdadero_falso", opciones: null }}
         enviando={false}
-        onCerrarPregunta={() => {}}
+        onCerrarPregunta={() => {}} onFinalizar={() => {}}
       />,
     )
     expect(screen.getAllByRole("listitem").map((c) => c.textContent)).toEqual(["Verdadero", "Falso"])
@@ -62,7 +62,7 @@ describe("StagePreguntaOpciones", () => {
       <StagePreguntaOpciones
         vista={{ ...vista, opciones: ["x", "y", "z"] }}
         enviando={false}
-        onCerrarPregunta={() => {}}
+        onCerrarPregunta={() => {}} onFinalizar={() => {}}
       />,
     )
     const cajas = screen.getAllByRole("listitem")
@@ -72,7 +72,7 @@ describe("StagePreguntaOpciones", () => {
   })
 
   it("el temporizador cuenta desde el tiempo límite y la barra baja", () => {
-    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} />)
+    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} onFinalizar={() => {}} />)
     expect(screen.getByRole("timer")).toHaveTextContent("00:20")
     expect(screen.getByTestId("barra-progreso")).toHaveStyle({ width: "100%" })
 
@@ -88,7 +88,7 @@ describe("StagePreguntaOpciones", () => {
       <StagePreguntaOpciones
         vista={{ ...vista, inicioOpcionesMs: ahora - 10_000 }}
         enviando={false}
-        onCerrarPregunta={() => {}}
+        onCerrarPregunta={() => {}} onFinalizar={() => {}}
       />,
     )
     expect(screen.getByRole("timer")).toHaveTextContent("00:10")
@@ -96,7 +96,7 @@ describe("StagePreguntaOpciones", () => {
 
   it("el temporizador en 0 no cierra la pregunta: el botón sigue disponible", () => {
     const onCerrar = vi.fn()
-    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={onCerrar} />)
+    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={onCerrar} onFinalizar={() => {}} />)
 
     act(() => {
       vi.advanceTimersByTime(60_000)
@@ -107,19 +107,27 @@ describe("StagePreguntaOpciones", () => {
   })
 
   it("muestra solo el total del conteo, sin desglose por opción", () => {
-    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} />)
+    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} onFinalizar={() => {}} />)
     expect(screen.getByText(/ya respondieron/)).toHaveTextContent("3 / 5 ya respondieron")
   })
 
   it("'Cerrar pregunta' avisa al contenedor y se deshabilita mientras envía", () => {
     const onCerrar = vi.fn()
     const { rerender } = render(
-      <StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={onCerrar} />,
+      <StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={onCerrar} onFinalizar={() => {}} />,
     )
     fireEvent.click(screen.getByRole("button", { name: "Cerrar pregunta" }))
     expect(onCerrar).toHaveBeenCalledTimes(1)
 
-    rerender(<StagePreguntaOpciones vista={vista} enviando onCerrarPregunta={onCerrar} />)
+    rerender(<StagePreguntaOpciones vista={vista} enviando onCerrarPregunta={onCerrar} onFinalizar={() => {}} />)
     expect(screen.getByRole("button", { name: "Cerrar pregunta" })).toBeDisabled()
+  })
+
+  it("'Finalizar sesión' avisa al contenedor para pedir confirmación (US-ADJ-58)", () => {
+    const onFinalizar = vi.fn()
+    render(<StagePreguntaOpciones vista={vista} enviando={false} onCerrarPregunta={() => {}} onFinalizar={onFinalizar} />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar sesión" }))
+    expect(onFinalizar).toHaveBeenCalledTimes(1)
   })
 })

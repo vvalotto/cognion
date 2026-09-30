@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import pytest
 
-from src.analytics.entities.errors import ActividadNoExiste
+from src.analytics.entities.errors import ActividadNoExiste, MateriaNoAutorizada
 from src.analytics.entities.ports.comision_consulta_port import (
     ComisionConsultaPort,
     ComisionResumen,
@@ -54,15 +54,23 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
         self,
         comisiones: list[ComisionResumen] | None = None,
         estudiantes_por_comision: dict | None = None,
+        autorizado: bool = True,
     ) -> None:
         self._comisiones = comisiones or []
         self._estudiantes_por_comision = estudiantes_por_comision or {}
+        self._autorizado = autorizado
 
     async def listar_comisiones_por_materia(self, materia_id) -> list[ComisionResumen]:
         return self._comisiones
 
     async def listar_estudiantes(self, comision_id) -> list[EstudianteResumen]:
         return self._estudiantes_por_comision.get(comision_id, [])
+
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return self._autorizado
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return self._autorizado
 
 
 class TestObtenerCompletitudPorActividadUseCase:
@@ -74,7 +82,7 @@ class TestObtenerCompletitudPorActividadUseCase:
         )
 
         with pytest.raises(ActividadNoExiste):
-            await use_case.execute(uuid4())
+            await use_case.execute(uuid4(), uuid4())
 
     @pytest.mark.asyncio
     async def test_estados_mixtos_arman_detalle_y_resumen(self):
@@ -102,7 +110,7 @@ class TestObtenerCompletitudPorActividadUseCase:
             ),
         )
 
-        resultado = await use_case.execute(uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4())
 
         assert resultado.resumen.finalizadas == 1
         assert resultado.resumen.en_curso == 1
@@ -136,7 +144,7 @@ class TestObtenerCompletitudPorActividadUseCase:
             ),
         )
 
-        resultado = await use_case.execute(uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4())
 
         assert {fila.estudiante_id for fila in resultado.detalle} == {
             estudiante_1.id,
@@ -157,7 +165,7 @@ class TestObtenerCompletitudPorActividadUseCase:
             ),
         )
 
-        resultado = await use_case.execute(uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4())
 
         assert resultado.detalle == []
         assert resultado.resumen.finalizadas == 0
@@ -183,6 +191,28 @@ class TestObtenerCompletitudPorActividadUseCase:
             ),
         )
 
-        await use_case.execute(actividad_id)
+        await use_case.execute(actividad_id, uuid4())
 
         assert puerto_evaluacion.ultimo_estudiante_ids == [estudiante.id]
+
+
+class TestAutorizacionPorComision:
+    """`US-ADJ-57`: `docente_id` sin Comisión en la materia de la actividad, rechazado."""
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_levanta_materia_no_autorizada(self):
+        materia_id, comision_id = uuid4(), uuid4()
+        use_case = ObtenerCompletitudPorActividadUseCase(
+            _EvaluacionDesempenoConsultaPortFake(
+                actividad_resumen=ActividadResumen(
+                    materia_id=materia_id, comisiones_ids=frozenset({comision_id})
+                ),
+            ),
+            _ComisionConsultaPortFake(
+                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
+                autorizado=False,
+            ),
+        )
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(uuid4(), uuid4())

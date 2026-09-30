@@ -12,11 +12,13 @@ Feature: Docente inicia la sesión en vivo (US-6.1.4)
     Then el estado pasa a EnCurso con pregunta_actual_indice=0
     And todos los conectados al canal reciben el enunciado de la primera pregunta, sin opciones
 
-  @backend @happy-path
+  # Reemplazado por US-ADJ-58 (INV-AEV-11): antes "la operación se acepta igual — el dominio no
+  # exige un mínimo de participantes"; desde la revisión manual de 2026-09-26 se rechaza.
+  @backend @error
   Scenario: Inicio sin ningún Estudiante unido todavía
     Given una sesión en vivo en estado EnEspera sin ningún Estudiante unido
     When el Docente la inicia
-    Then la operación se acepta igual — el dominio no exige un mínimo de participantes
+    Then el sistema rechaza la operación con SinParticipantes (422)
 
   @backend @error
   Scenario: Rechazo por sesión ya iniciada

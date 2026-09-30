@@ -523,3 +523,99 @@ class TestAvanzar:
         assert sesion.opciones_mostradas is False
         assert sesion.opciones_mostradas_en is None
         assert sesion.pregunta_actual_cerrada is False
+
+
+class TestCancelar:
+    """`cancelar()` e INV-AEV-10 (`US-ADJ-58`)."""
+
+    def test_en_espera_pasa_a_cancelada(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion.cancelar()
+
+        assert sesion.estado == EstadoSesionEnVivo.CANCELADA
+
+    @pytest.mark.parametrize("estado", [EstadoSesionEnVivo.EN_CURSO, EstadoSesionEnVivo.FINALIZADA])
+    def test_rechaza_si_ya_se_inicio(self, estado):
+        from src.actividad_evaluativa.entities.errors import SesionYaIniciada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.estado = estado
+
+        with pytest.raises(SesionYaIniciada):
+            sesion.cancelar()
+
+        assert sesion.estado == estado
+
+    def test_rechaza_cancelar_dos_veces(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaCancelada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.cancelar()
+
+        with pytest.raises(SesionYaCancelada):
+            sesion.cancelar()
+
+    def test_cancelada_rechaza_unirse_e_iniciar(self):
+        from src.actividad_evaluativa.entities.errors import SesionYaCancelada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.cancelar()
+
+        with pytest.raises(SesionYaCancelada):
+            sesion.validar_para_unirse()
+        with pytest.raises(SesionYaCancelada):
+            sesion.iniciar()
+        assert sesion.pregunta_actual_indice is None
+
+    def test_cancelada_no_se_finaliza(self):
+        from src.actividad_evaluativa.entities.errors import SesionNoEnCurso
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+        sesion.cancelar()
+
+        with pytest.raises(SesionNoEnCurso):
+            sesion.finalizar()
+
+    def test_reconstruir_aplica_la_cancelacion(self):
+        original = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(), 30)
+
+        sesion = ActividadEvaluativaEnVivo.reconstruir(
+            [_evento_creada(original), _evento("SesionEnVivoCancelada", 2)]
+        )
+
+        assert sesion.estado == EstadoSesionEnVivo.CANCELADA
+
+
+class TestFinalizarEnCualquierEtapa:
+    """INV-AEV-03 modificado (`US-ADJ-58`): finalizar no exige la pregunta cerrada."""
+
+    def test_finaliza_sin_opciones_mostradas(self):
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        sesion.iniciar()
+
+        sesion.finalizar()
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_finaliza_con_las_opciones_a_la_vista(self):
+        from datetime import UTC, datetime
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        sesion.iniciar()
+        sesion.mostrar_opciones(datetime.now(UTC))
+
+        sesion.finalizar()
+
+        assert sesion.estado == EstadoSesionEnVivo.FINALIZADA
+        assert sesion.pregunta_actual_cerrada is False
+
+    def test_avanzar_sigue_exigiendo_la_pregunta_cerrada(self):
+        from src.actividad_evaluativa.entities.errors import PreguntaActualNoCerrada
+
+        sesion = ActividadEvaluativaEnVivo.crear(uuid4(), uuid4(), _preguntas(4), 30)
+        sesion.iniciar()
+
+        with pytest.raises(PreguntaActualNoCerrada):
+            sesion.avanzar()

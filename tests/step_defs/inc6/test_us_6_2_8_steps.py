@@ -11,13 +11,12 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     cerrar_pregunta_actual,
     crear_estudiante,
     finalizar_sesion,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -43,6 +42,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM usuario"))
         await session.commit()
 
@@ -59,8 +59,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _get(ruta: str, headers: dict[str, str]):
@@ -169,7 +170,9 @@ def usuario_estudiante(context):
 
 @when("un Docente consulta el estado")
 def docente_consulta_estado(context):
-    context["response"] = run_async(_get(f"/sesiones-en-vivo/{context['sesion_id']}", _docente()))
+    context["response"] = run_async(
+        _get(f"/sesiones-en-vivo/{context['sesion_id']}", _docente(context["sesion_id"]))
+    )
 
 
 @when("un Estudiante consulta el estado")
@@ -188,13 +191,13 @@ def consulta_estado(context):
 
 @when("se consulta el estado")
 def se_consulta_estado(context):
-    context["response"] = run_async(_get(f"/sesiones-en-vivo/{context['sesion_id']}", _docente()))
+    context["response"] = run_async(_get(f"/sesiones-en-vivo/{context['sesion_id']}", _docente(context['sesion_id'])))
 
 
 @when("el Docente lista los participantes")
 def docente_lista(context):
     context["response"] = run_async(
-        _get(f"/sesiones-en-vivo/{context['sesion_id']}/participantes", _docente())
+        _get(f"/sesiones-en-vivo/{context['sesion_id']}/participantes", _docente(context['sesion_id']))
     )
 
 
@@ -211,7 +214,7 @@ def estudiante_lista(context):
 @when("el Docente consulta el ranking")
 def docente_ranking(context):
     context["response"] = run_async(
-        _get(f"/sesiones-en-vivo/{context['sesion_id']}/ranking", _docente())
+        _get(f"/sesiones-en-vivo/{context['sesion_id']}/ranking", _docente(context['sesion_id']))
     )
 
 

@@ -10,7 +10,7 @@ function renderHomeAdministrador() {
     <MemoryRouter initialEntries={["/"]}>
       <Routes>
         <Route path="/" element={<HomeAdministrador />} />
-        <Route path="/comisiones" element={<p>Comisiones listado</p>} />
+        <Route path="/materias" element={<p>Materias listado</p>} />
         <Route path="/cuentas" element={<p>Cuentas listado</p>} />
       </Routes>
     </MemoryRouter>,
@@ -28,21 +28,21 @@ describe("HomeAdministrador", () => {
     expect(screen.getByRole("heading", { name: "Hola, Administrador" })).toBeInTheDocument()
   })
 
-  it("muestra las 3 cards de acceso", () => {
+  it("muestra las 2 cards de acceso — las Comisiones se gestionan desde Materias", () => {
     renderHomeAdministrador()
 
     expect(screen.getByText("Materias")).toBeInTheDocument()
-    expect(screen.getByText("Comisiones")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
+    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
   })
 
-  it("navega a /comisiones al hacer clic en Comisiones", async () => {
+  it("navega a /materias al hacer clic en Materias", async () => {
     renderHomeAdministrador()
     const user = userEvent.setup()
 
-    await user.click(screen.getByText("Comisiones"))
+    await user.click(screen.getByText("Materias"))
 
-    expect(await screen.findByText("Comisiones listado")).toBeInTheDocument()
+    expect(await screen.findByText("Materias listado")).toBeInTheDocument()
   })
 
   it("navega a /cuentas al hacer clic en Cuentas", async () => {
@@ -58,11 +58,11 @@ describe("HomeAdministrador", () => {
     renderHomeAdministrador()
     const user = userEvent.setup()
 
-    ;(screen.getByText("Comisiones").closest('[role="button"]') as HTMLElement).focus()
+    ;(screen.getByText("Materias").closest('[role="button"]') as HTMLElement).focus()
     await user.keyboard("{Enter}")
 
     await waitFor(() => {
-      expect(screen.getByText("Comisiones listado")).toBeInTheDocument()
+      expect(screen.getByText("Materias listado")).toBeInTheDocument()
     })
   })
 })

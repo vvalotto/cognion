@@ -8,6 +8,8 @@ export type EtapaEstudiante =
   | "resultado"
   | "sin-respuesta"
   | "finalizada"
+  /** Terminal: el Docente canceló la sesión antes de iniciarla (`US-ADJ-58`). */
+  | "cancelada"
 
 /** `cierre`: el Docente cerró sin que respondiera (H4); `tiempo`: su toque llegó tarde (H5). */
 export type MotivoSinRespuesta = "cierre" | "tiempo"
@@ -55,8 +57,8 @@ export function calcularVistaEstudiante(
   const etapa: EtapaEstudiante =
     estado.estado === "en_espera"
       ? "sala"
-      : estado.estado === "finalizada"
-        ? "finalizada"
+      : estado.estado === "finalizada" || estado.estado === "cancelada"
+        ? estado.estado
         : etapaEnCurso(estado, trasRechazo)
   const pregunta = estado.preguntaActual
   return {
@@ -90,7 +92,7 @@ export function aplicarMensajeEstudiante(
     case "participantes_actualizados":
       return { ...vista, totalParticipantes: mensaje.cantidad }
     case "pregunta_presentada":
-      if (vista.etapa === "finalizada") return vista
+      if (vista.etapa === "finalizada" || vista.etapa === "cancelada") return vista
       return {
         ...vista,
         etapa: "espera-opciones",
@@ -117,6 +119,8 @@ export function aplicarMensajeEstudiante(
       return { ...vista, etapa: "sin-respuesta", motivoSinRespuesta: "cierre" }
     case "sesion_finalizada":
       return { ...vista, etapa: "finalizada", ranking: mensaje.ranking }
+    case "sesion_cancelada":
+      return { ...vista, etapa: "cancelada" }
     default:
       return vista
   }
@@ -140,4 +144,41 @@ const TIPO_VERDADERO_FALSO = "verdadero_falso"
 /** Contenido que se manda al responder la opción en la posición `indice`: `{valor}` o `{opcion_indice}`. */
 export function contenidoRespuesta(tipo: string, indice: number): Record<string, unknown> {
   return tipo === TIPO_VERDADERO_FALSO ? { valor: indice === 0 } : { opcion_indice: indice }
+}
+
+const ORDEN_ETAPA: Record<EtapaEstudiante, number> = {
+  sala: 0,
+  "espera-opciones": 1,
+  pregunta: 2,
+  resultado: 3,
+  "sin-respuesta": 3,
+  finalizada: 4,
+  cancelada: 4,
+}
+
+/**
+ * Combina la vista que se muestra con la recalculada del servidor sin retroceder dentro de la misma
+ * pregunta (hallazgo #7: la resincronización periódica no debe pisar el "¡Correcto! +N" ni el "Se acabó
+ * el tiempo"). Otra pregunta, o una etapa posterior, toma la del servidor.
+ */
+export function sincronizarVistaEstudiante(
+  actual: VistaEstudiante | null,
+  nueva: VistaEstudiante,
+): VistaEstudiante {
+  if (actual === null) return nueva
+  const mismaPregunta = actual.indice === nueva.indice && actual.etapa !== "sala" && nueva.etapa !== "sala"
+  if (!mismaPregunta) return nueva
+  if (ORDEN_ETAPA[nueva.etapa] < ORDEN_ETAPA[actual.etapa]) {
+    return { ...actual, totalParticipantes: nueva.totalParticipantes }
+  }
+  if (nueva.etapa === actual.etapa) {
+    // Misma etapa: manda el servidor (temporizador, conteos), salvo lo que solo sabe la pantalla.
+    return {
+      ...nueva,
+      resultado: actual.resultado ?? nueva.resultado,
+      motivoSinRespuesta: actual.motivoSinRespuesta,
+      ranking: actual.ranking ?? nueva.ranking,
+    }
+  }
+  return nueva
 }

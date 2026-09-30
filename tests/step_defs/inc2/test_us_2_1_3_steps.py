@@ -9,7 +9,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc2._auth_headers import admin_headers, docente_headers
+from tests.step_defs.inc2._auth_headers import admin_headers, docente_asignado_a_materia
 
 scenarios("../../features/inc2/US-2.1.3-cargar-pregunta-opcion-multiple.feature")
 
@@ -23,6 +23,11 @@ async def _limpiar_tablas_banco_preguntas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
+        await session.execute(text("DELETE FROM comision_docentes"))
+        await session.execute(text("DELETE FROM comision"))
+        await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
+        await session.execute(text("DELETE FROM usuario"))
         await session.execute(text("DELETE FROM materia"))
         await session.commit()
 
@@ -45,7 +50,9 @@ async def _post_crear_materia(nombre: str):
         return await client.post("/materias", json={"nombre": nombre}, headers=admin_headers())
 
 
-async def _post_cargar_pregunta_opcion_multiple(banco_id: str, opciones: list[dict]):
+async def _post_cargar_pregunta_opcion_multiple(
+    banco_id: str, opciones: list[dict], headers: dict[str, str]
+):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.post(
@@ -59,7 +66,7 @@ async def _post_cargar_pregunta_opcion_multiple(banco_id: str, opciones: list[di
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
 
 
@@ -68,6 +75,8 @@ def docente_y_banco_existente(context, nombre_materia):
     respuesta = run_async(_post_crear_materia(nombre_materia))
     assert respuesta.status_code == 201
     context["banco_id"] = respuesta.json()["banco_id"]
+    _docente_id, headers = run_async(docente_asignado_a_materia(respuesta.json()["id"]))
+    context["docente_headers"] = headers
 
 
 @when("ejecuta CargarPreguntaOpcionMultiple con 3 opciones y una marcada como correcta")
@@ -78,7 +87,9 @@ def ejecuta_carga_tres_opciones_una_correcta(context):
         {"texto": "Gualeguaychú", "es_correcta": False},
     ]
     context["response"] = run_async(
-        _post_cargar_pregunta_opcion_multiple(context["banco_id"], opciones)
+        _post_cargar_pregunta_opcion_multiple(
+            context["banco_id"], opciones, context["docente_headers"]
+        )
     )
 
 
@@ -90,7 +101,9 @@ def ejecuta_carga_tres_opciones_ninguna_correcta(context):
         {"texto": "Gualeguaychú", "es_correcta": False},
     ]
     context["response"] = run_async(
-        _post_cargar_pregunta_opcion_multiple(context["banco_id"], opciones)
+        _post_cargar_pregunta_opcion_multiple(
+            context["banco_id"], opciones, context["docente_headers"]
+        )
     )
 
 
@@ -101,7 +114,9 @@ def ejecuta_carga_dos_opciones_correctas(context):
         {"texto": "Concordia", "es_correcta": True},
     ]
     context["response"] = run_async(
-        _post_cargar_pregunta_opcion_multiple(context["banco_id"], opciones)
+        _post_cargar_pregunta_opcion_multiple(
+            context["banco_id"], opciones, context["docente_headers"]
+        )
     )
 
 
@@ -109,7 +124,9 @@ def ejecuta_carga_dos_opciones_correctas(context):
 def ejecuta_carga_una_unica_opcion(context):
     opciones = [{"texto": "Paraná", "es_correcta": True}]
     context["response"] = run_async(
-        _post_cargar_pregunta_opcion_multiple(context["banco_id"], opciones)
+        _post_cargar_pregunta_opcion_multiple(
+            context["banco_id"], opciones, context["docente_headers"]
+        )
     )
 
 
