@@ -2,8 +2,13 @@ import uuid
 
 import pytest
 
+from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.dificultad import Dificultad
-from src.banco_preguntas.entities.errors import PreguntaNoExiste, PreguntaYaEliminada
+from src.banco_preguntas.entities.errors import (
+    MateriaNoAutorizada,
+    PreguntaNoExiste,
+    PreguntaYaEliminada,
+)
 from src.banco_preguntas.entities.eventos import PreguntaEliminada
 from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
@@ -13,7 +18,11 @@ from src.banco_preguntas.entities.pregunta_plantilla import (
     PreguntaPlantillaVerdaderoFalso,
 )
 from src.banco_preguntas.use_cases.eliminar_pregunta import EliminarPreguntaUseCase
-from tests.unit.inc2._fakes import FakePreguntaRepository
+from tests.unit.inc2._fakes import (
+    FakeBancoRepository,
+    FakeComisionConsultaPort,
+    FakePreguntaRepository,
+)
 
 
 def _pregunta_om() -> PreguntaPlantillaOpcionMultiple:
@@ -52,7 +61,9 @@ class TestEliminarPreguntaUseCase:
         pregunta_repo = FakePreguntaRepository()
         pregunta = _pregunta_om()
         await pregunta_repo.guardar(pregunta)
-        use_case = EliminarPreguntaUseCase(pregunta_repo)
+        use_case = EliminarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         eliminada, evento = await use_case.execute(pregunta_id=pregunta.id)
 
@@ -66,7 +77,9 @@ class TestEliminarPreguntaUseCase:
         pregunta_repo = FakePreguntaRepository()
         pregunta = _pregunta_vf()
         await pregunta_repo.guardar(pregunta)
-        use_case = EliminarPreguntaUseCase(pregunta_repo)
+        use_case = EliminarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         eliminada, evento = await use_case.execute(pregunta_id=pregunta.id)
 
@@ -75,7 +88,9 @@ class TestEliminarPreguntaUseCase:
 
     async def test_rechaza_pregunta_inexistente(self):
         pregunta_repo = FakePreguntaRepository()
-        use_case = EliminarPreguntaUseCase(pregunta_repo)
+        use_case = EliminarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         with pytest.raises(PreguntaNoExiste):
             await use_case.execute(pregunta_id=uuid.uuid4())
@@ -85,7 +100,24 @@ class TestEliminarPreguntaUseCase:
         pregunta = _pregunta_vf()
         pregunta.activa = False
         await pregunta_repo.guardar(pregunta)
-        use_case = EliminarPreguntaUseCase(pregunta_repo)
+        use_case = EliminarPreguntaUseCase(
+            pregunta_repo, FakeBancoRepository(), FakeComisionConsultaPort()
+        )
 
         with pytest.raises(PreguntaYaEliminada):
             await use_case.execute(pregunta_id=pregunta.id)
+
+    async def test_rechaza_docente_sin_comision_en_la_materia(self):
+        """`US-ADJ-57`: `docente_id` sin ninguna Comisión asignada en la materia del banco."""
+        pregunta_repo = FakePreguntaRepository()
+        banco_repo = FakeBancoRepository()
+        comision_consulta = FakeComisionConsultaPort()
+        pregunta = _pregunta_om()
+        banco = Banco.crear(uuid.uuid4())
+        pregunta.banco_id = banco.id
+        await pregunta_repo.guardar(pregunta)
+        await banco_repo.guardar(banco)
+        use_case = EliminarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(pregunta_id=pregunta.id, docente_id=uuid.uuid4())

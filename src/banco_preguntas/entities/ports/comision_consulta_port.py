@@ -17,3 +17,11 @@ class ComisionConsultaPort(ABC):
     @abstractmethod
     async def tiene_comisiones(self, materia_id: UUID) -> bool:
         """Indica si existe alguna comisión (activa o no) que referencie esta materia."""
+
+    @abstractmethod
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia (`US-ADJ-57`).
+
+        El banco de preguntas se gatea a nivel materia, no por comisión puntual — una
+        `PreguntaPlantilla` no pertenece a una comisión.
+        """

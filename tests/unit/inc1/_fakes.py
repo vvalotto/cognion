@@ -138,6 +138,19 @@ class FakeComisionQueryRepository(ComisionQueryPort):
     async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
         return administrador_id in self.administradores_con_comisiones
 
+    async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        for comisiones in self.comisiones_por_materia.values():
+            for comision in comisiones:
+                if comision.id == comision_id:
+                    return docente_id in comision.docentes_asignados
+        return False
+
+    async def docente_tiene_comision_en_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        return any(
+            docente_id in comision.docentes_asignados
+            for comision in self.comisiones_por_materia.get(materia_id, [])
+        )
+
 
 class FakeEvaluacionConsultaPort(EvaluacionConsultaPort):
     def __init__(self) -> None:

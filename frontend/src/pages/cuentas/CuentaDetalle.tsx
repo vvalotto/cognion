@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { activarCuenta, obtenerCuenta, type CuentaDetalleResponse } from "@/lib/cuentas-api"
+import { obtenerComision, type ComisionDetalleResponse } from "@/lib/identidad-comisiones-api"
+import { useNombreMateria } from "@/pages/identidad/useNombreMateria"
 
 /** Pantalla de detalle de cuenta (§2.2 `wireframes-cuentas-administracion.md`). */
 export function CuentaDetalle() {
@@ -14,6 +16,8 @@ export function CuentaDetalle() {
   const navigate = useNavigate()
 
   const [cuenta, setCuenta] = useState<CuentaDetalleResponse | null>(null)
+  const [comision, setComision] = useState<ComisionDetalleResponse | null>(null)
+  const nombreMateria = useNombreMateria(comision?.materiaId)
 
   useEffect(() => {
     if (!usuarioId) return undefined
@@ -23,6 +27,15 @@ export function CuentaDetalle() {
       .catch(() => {})
     return () => controller.abort()
   }, [usuarioId])
+
+  useEffect(() => {
+    if (!cuenta?.comisionId) return undefined
+    const controller = new AbortController()
+    obtenerComision(cuenta.comisionId, controller.signal)
+      .then(setComision)
+      .catch(() => {})
+    return () => controller.abort()
+  }, [cuenta?.comisionId])
 
   async function handleActivar() {
     if (!cuenta) return
@@ -89,7 +102,11 @@ export function CuentaDetalle() {
           {cuenta.perfil === "estudiante" && cuenta.comisionId && (
             <div className="flex items-center justify-between py-2.5">
               <dt className="text-muted-foreground">Comisión</dt>
-              <dd>{cuenta.comisionId}</dd>
+              <dd>
+                {comision && nombreMateria
+                  ? `${nombreMateria} — ${comision.horario}`
+                  : "Cargando…"}
+              </dd>
             </div>
           )}
           <div className="flex items-center justify-between py-2.5">

@@ -4,11 +4,10 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
-from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port import (
     ParticipanteResumen,
     ParticipantesSesionQueryPort,
@@ -23,24 +22,20 @@ from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import 
     SesionEnVivoResumen,
     SesionesEnVivoQueryPort,
 )
+from tests.unit.inc3._fakes import FakeComisionConsultaPort as FakeComisionConsultaPort
 from tests.unit.inc3._fakes import FakeEventStore
+
+# `FakeComisionConsultaPort` se reexporta desde `tests.unit.inc3._fakes` (mismo puerto que
+# consumen las actividades de período abierto, `US-ADJ-57`) — no se duplica acá; queda
+# importable como `from tests.unit.inc6._fakes import FakeComisionConsultaPort` para no
+# tocar los imports ya existentes en los tests de este directorio. El alias `as
+# FakeComisionConsultaPort` (mismo nombre) es el idiom estándar de reexport explícito que
+# ruff/mypy reconocen sin marcarlo como import sin usar.
 
 _ESTADO_POR_EVENTO_FAKE = {
     "SesionEnVivoIniciada": EstadoSesionEnVivo.EN_CURSO,
     "SesionEnVivoFinalizada": EstadoSesionEnVivo.FINALIZADA,
 }
-
-
-class FakeComisionConsultaPort(ComisionConsultaPort):
-    """Consulta de comisiones en memoria — devuelve lo que se precarga en `materias`."""
-
-    def __init__(self) -> None:
-        """Inicializa el almacenamiento en memoria (`comision_id` → `materia_id`)."""
-        self.materias: dict[UUID, UUID] = {}
-
-    async def obtener_materia_id(self, comision_id: UUID) -> UUID | None:
-        """Devuelve el `materia_id` precargado, o `None` si la comisión no fue precargada."""
-        return self.materias.get(comision_id)
 
 
 class FakeCanalTiempoReal(CanalTiempoRealPort):
@@ -80,6 +75,18 @@ class FakeParticipantesSesionQueryPort(ParticipantesSesionQueryPort):
             and evento.payload["sesion_id"] == str(sesion_id)
         ]
         return sorted(participantes, key=lambda p: p.unido_en)
+
+
+class FakeParticipantesAlMenosUno(ParticipantesSesionQueryPort):
+    """Siempre informa un participante — para tests que inician la sesión sin ejercitar INV-AEV-11.
+
+    `IniciarSesionEnVivoUseCase` exige al menos un Estudiante unido desde `US-ADJ-58`; los tests
+    de la dinámica (mostrar, cerrar, avanzar, finalizar) no se ocupan de esa regla.
+    """
+
+    async def listar(self, sesion_id: UUID) -> list[ParticipanteResumen]:
+        """Devuelve un participante cualquiera, sin importar la sesión."""
+        return [ParticipanteResumen(estudiante_id=uuid4(), unido_en=datetime.now())]
 
 
 class FakeSesionesEnVivoQueryPort(SesionesEnVivoQueryPort):

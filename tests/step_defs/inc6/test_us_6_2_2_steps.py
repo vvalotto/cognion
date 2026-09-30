@@ -12,11 +12,10 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     preparar_sesion,
 )
@@ -39,6 +38,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM usuario"))
         await session.commit()
 
@@ -55,8 +55,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _post_mostrar(sesion_id: str, headers: dict[str, str]):
@@ -95,7 +96,8 @@ def sesion_en_curso_verdadero_falso(context):
 @given("una pregunta con las opciones ya mostradas")
 def opciones_ya_mostradas(context):
     _preparar_en_curso(context, opcion_multiple=True)
-    assert run_async(_post_mostrar(context["sesion_id"], _docente())).status_code == 200
+    sesion_id = context["sesion_id"]
+    assert run_async(_post_mostrar(sesion_id, _docente(sesion_id))).status_code == 200
 
 
 @given("una sesión en estado EnEspera")
@@ -116,8 +118,8 @@ def usuario_estudiante(context):
 @when("el Docente muestra las opciones")
 def docente_muestra(context):
     """Muestra con el Docente y el Estudiante conectados al canal, para verificar el broadcast."""
-    docente = _docente()
     sesion_id = context["sesion_id"]
+    docente = _docente(sesion_id)
     tokens = [
         docente["Authorization"].split()[1],
         context["headers_estudiante"]["Authorization"].split()[1],
@@ -142,7 +144,9 @@ def docente_muestra(context):
 @when("el Docente intenta mostrarlas de nuevo")
 @when("el Docente intenta mostrar las opciones")
 def docente_intenta_mostrar(context):
-    context["response"] = run_async(_post_mostrar(context["sesion_id"], _docente()))
+    context["response"] = run_async(
+        _post_mostrar(context["sesion_id"], _docente(context["sesion_id"]))
+    )
 
 
 @when("intenta mostrar las opciones")

@@ -43,6 +43,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM usuario"))
         await session.commit()
 
@@ -59,12 +60,45 @@ def context():
     return {}
 
 
-async def _crear_materia_con_preguntas(cantidad: int) -> str:
+async def _crear_materia_con_preguntas_y_comision(cantidad: int) -> tuple[str, str, dict[str, str]]:
+    """Crea materia, Comisión con Docente asignado, y carga `cantidad` preguntas (`US-ADJ-57`).
+
+    La Comisión se crea y el Docente se asigna antes del loop de carga — `POST
+    /preguntas/verdadero-falso` y `POST /sesiones-en-vivo` ahora exigen que el Docente que
+    llama tenga una Comisión asignada. Devuelve `(materia_id, comision_id, headers_del_docente)`.
+    """
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         creada = await client.post(
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers()
         )
         banco_id = creada.json()["banco_id"]
+        materia_id = creada.json()["id"]
+
+        async with SessionLocal() as session:
+            admin = Usuario.crear(
+                "Admin",
+                f"admin.{uuid.uuid4()}@fiuner.edu.ar",
+                BcryptPasswordHasher().hash("x"),
+                TipoPerfil.ADMINISTRADOR,
+            )
+            await SQLAlchemyUsuarioRepository(session).guardar(admin)
+            docente_usuario = Usuario.crear(
+                "Docente",
+                f"docente.{uuid.uuid4()}@fiuner.edu.ar",
+                BcryptPasswordHasher().hash("x"),
+                TipoPerfil.DOCENTE,
+            )
+            await SQLAlchemyUsuarioRepository(session).guardar(docente_usuario)
+
+            comision_repo = SQLAlchemyComisionRepository(session)
+            comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
+            await comision_repo.guardar(comision)
+            comision.asignar_docente(docente_usuario.id)
+            await comision_repo.actualizar(comision)
+
+        docente_jwt = PyJWTIssuer().emitir(docente_usuario.id, TipoPerfil.DOCENTE)
+        headers = {"Authorization": f"Bearer {docente_jwt.token}"}
+
         for i in range(cantidad):
             await client.post(
                 "/preguntas/verdadero-falso",
@@ -77,23 +111,9 @@ async def _crear_materia_con_preguntas(cantidad: int) -> str:
                     "dificultad": "medio",
                     "importancia": "alto",
                 },
-                headers=docente_headers(),
+                headers=headers,
             )
-        return creada.json()["id"]
-
-
-async def _crear_comision(materia_id: str) -> str:
-    async with SessionLocal() as session:
-        admin = Usuario.crear(
-            "Admin",
-            f"admin.{uuid.uuid4()}@fiuner.edu.ar",
-            BcryptPasswordHasher().hash("x"),
-            TipoPerfil.ADMINISTRADOR,
-        )
-        await SQLAlchemyUsuarioRepository(session).guardar(admin)
-        comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
-        await SQLAlchemyComisionRepository(session).guardar(comision)
-    return str(comision.id)
+        return materia_id, str(comision.id), headers
 
 
 async def _post_crear_sesion(comision_id: str, cantidad: int, tiempo: int, headers: dict[str, str]):
@@ -131,8 +151,11 @@ async def _payload_primer_evento(sesion_id: str) -> dict:
 
 
 def _dado_comision_con_preguntas(context, cantidad: int) -> None:
-    materia_id = run_async(_crear_materia_con_preguntas(cantidad))
-    context["comision_id"] = run_async(_crear_comision(materia_id))
+    _materia_id, comision_id, headers = run_async(
+        _crear_materia_con_preguntas_y_comision(cantidad)
+    )
+    context["comision_id"] = comision_id
+    context["docente_headers"] = headers
 
 
 @given("una Comisión existente cuya Materia tiene un Banco con preguntas activas suficientes")
@@ -175,7 +198,9 @@ def usuario_estudiante(context):
 def docente_crea_sesion(context, cantidad, tiempo):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], cantidad, tiempo, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], cantidad, tiempo, context.get("docente_headers") or docente_headers()
+        )
     )
 
 
@@ -185,7 +210,9 @@ def docente_crea_sesion(context, cantidad, tiempo):
 def docente_intenta_crear_con_cantidad(context, cantidad):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], cantidad, 30, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], cantidad, 30, context.get("docente_headers") or docente_headers()
+        )
     )
 
 
@@ -198,14 +225,18 @@ def docente_intenta_crear_con_cantidad(context, cantidad):
 def docente_intenta_crear_con_tiempo(context, tiempo):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], 10, tiempo, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], 10, tiempo, context.get("docente_headers") or docente_headers()
+        )
     )
 
 
 @when("el Docente intenta crear una sesión en vivo")
 def docente_intenta_crear(context):
     context["response"] = run_async(
-        _post_crear_sesion(context["comision_id"], 10, 30, docente_headers())
+        _post_crear_sesion(
+            context["comision_id"], 10, 30, context.get("docente_headers") or docente_headers()
+        )
     )
 
 

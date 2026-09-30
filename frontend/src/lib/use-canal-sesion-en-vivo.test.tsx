@@ -1,11 +1,11 @@
-import { act, render } from "@testing-library/react"
+import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("@/router", () => ({
   router: { navigate: vi.fn() },
 }))
 
-import { useCanalSesionEnVivo } from "@/lib/use-canal-sesion-en-vivo"
+import { RESINCRONIZAR_CADA_MS, useCanalSesionEnVivo } from "@/lib/use-canal-sesion-en-vivo"
 import { setSession } from "@/lib/session"
 import type { MensajeSesionEnVivo } from "@/lib/canal-sesion-en-vivo"
 
@@ -60,6 +60,8 @@ describe("useCanalSesionEnVivo", () => {
   })
 
   afterEach(() => {
+    // Sin desmontar, los componentes de tests anteriores seguirían escuchando visibilitychange.
+    cleanup()
     vi.restoreAllMocks()
   })
 
@@ -119,4 +121,82 @@ describe("useCanalSesionEnVivo", () => {
     expect(onReconectado).toHaveBeenCalledTimes(1)
     vi.useRealTimers()
   })
+
+  describe("resincronización (hallazgo #7, Safari iOS)", () => {
+    function visibilidad(valor: DocumentVisibilityState) {
+      vi.spyOn(document, "visibilityState", "get").mockReturnValue(valor)
+    }
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it("al volver la pestaña a primer plano rearma la conexión", () => {
+      render(<Componente onMensaje={vi.fn()} onReconectado={vi.fn()} />)
+      WebSocketFalso.instancias[0].simularApertura()
+
+      visibilidad("visible")
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"))
+      })
+
+      expect(WebSocketFalso.instancias).toHaveLength(2)
+      expect(WebSocketFalso.instancias[0].cerrado).toBe(true)
+    })
+
+    it("pageshow y online también rearman, sin repetir si llegan juntos", () => {
+      render(<Componente onMensaje={vi.fn()} onReconectado={vi.fn()} />)
+      visibilidad("visible")
+      act(() => {
+        window.dispatchEvent(new Event("pageshow"))
+        window.dispatchEvent(new Event("online"))
+      })
+
+      expect(WebSocketFalso.instancias).toHaveLength(2)
+    })
+
+    it("al ocultarse la pestaña no rearma", () => {
+      render(<Componente onMensaje={vi.fn()} onReconectado={vi.fn()} />)
+      visibilidad("hidden")
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"))
+      })
+
+      expect(WebSocketFalso.instancias).toHaveLength(1)
+    })
+
+    it("resincroniza cada 10 s con la pantalla visible, y no con la pestaña oculta", () => {
+      vi.useFakeTimers()
+      const onReconectado = vi.fn()
+      render(<Componente onMensaje={vi.fn()} onReconectado={onReconectado} />)
+
+      visibilidad("visible")
+      act(() => {
+        vi.advanceTimersByTime(RESINCRONIZAR_CADA_MS)
+      })
+      expect(onReconectado).toHaveBeenCalledTimes(1)
+
+      visibilidad("hidden")
+      act(() => {
+        vi.advanceTimersByTime(RESINCRONIZAR_CADA_MS * 3)
+      })
+      expect(onReconectado).toHaveBeenCalledTimes(1)
+    })
+
+    it("al desmontar deja de escuchar y de resincronizar", () => {
+      vi.useFakeTimers()
+      const onReconectado = vi.fn()
+      const { unmount } = render(<Componente onMensaje={vi.fn()} onReconectado={onReconectado} />)
+      unmount()
+
+      visibilidad("visible")
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"))
+        vi.advanceTimersByTime(RESINCRONIZAR_CADA_MS * 2)
+      })
+      expect(WebSocketFalso.instancias).toHaveLength(1)
+      expect(onReconectado).not.toHaveBeenCalled()
+    })
+  })
 })
+

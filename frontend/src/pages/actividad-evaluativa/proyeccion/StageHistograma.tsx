@@ -9,10 +9,13 @@ export const SEGUNDOS_HISTOGRAMA = 6
 interface Props {
   vista: VistaProyeccion
   onVerRanking: () => void
+  enviando: boolean
+  /** Finaliza directo, sin confirmación: la pregunta ya está cerrada (§8.4, `US-ADJ-58`). */
+  onFinalizar: () => void
 }
 
 /** Proyección — así respondió el aula (`#stage-histograma`, §2.5); pasa sola al ranking. */
-export function StageHistograma({ vista, onVerRanking }: Props) {
+export function StageHistograma({ vista, onVerRanking, enviando, onFinalizar }: Props) {
   useEffect(() => {
     const timeout = setTimeout(onVerRanking, SEGUNDOS_HISTOGRAMA * 1000)
     return () => clearTimeout(timeout)
@@ -69,7 +72,7 @@ export function StageHistograma({ vista, onVerRanking }: Props) {
       <p className="mt-6 text-xl" style={{ color: "var(--stage-muted)" }}>
         Pasando al ranking en unos segundos…
       </p>
-      <div className="mt-6">
+      <div className="mt-6 flex gap-3.5">
         <Button
           type="button"
           variant="outline"
@@ -78,6 +81,16 @@ export function StageHistograma({ vista, onVerRanking }: Props) {
           onClick={onVerRanking}
         >
           Ver ranking ahora →
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className="h-auto border-white/40 bg-transparent px-9 py-4 text-xl text-white hover:bg-white/10"
+          disabled={enviando}
+          onClick={onFinalizar}
+        >
+          Finalizar sesión
         </Button>
       </div>
     </div>

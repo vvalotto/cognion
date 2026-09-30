@@ -1,0 +1,37 @@
+{
+  "us_id": "US-ADJ-57 (Wave 1/4 — Identidad)",
+  "fecha": "2026-09-27T18:35:00-03:00",
+  "componente": "src/identidad/ (primitivas de pertenencia Docente↔Comisión + guards en sus propios endpoints)",
+  "metricas": {
+    "pylint": 9.69,
+    "cc_promedio": 1.86,
+    "cc_max": 6,
+    "mi_promedio_min": 61.97,
+    "coverage_entities_use_cases_interface_adapters": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 9,
+    "errors": 20,
+    "warnings": 4,
+    "infos": 57,
+    "reporte": "quality/reports/inc6-adj/US-ADJ-57-wave1-identidad-codeguard.json"
+  },
+  "backend_tests": {
+    "unitarios_e_integracion_identidad": "485/485",
+    "suite_completa_backend": "1763/1763 (tests/unit + tests/integration + tests/step_defs)"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Los 20 'errors' de DeadCode/Spelling/Types son fallas de herramientas ausentes/timeout (vulture, codespell no instalados; mypy embebido excede su timeout de 10s) — mismo bug documentado en CLAUDE.md, no hallazgos de código real.",
+    "1 warning de PEP8 (E305, falta de línea en blanco) corregido antes de este reporte.",
+    "3 warnings de Pylint embebido en CodeGuard (7.37-7.41/10 por archivo aislado) son falsos valores — la corrida directa de pylint sobre los 9 archivos juntos da 9.69/10.",
+    "R0903 (too-few-public-methods) y R0801 (duplicate-code) son patrones ya aceptados en el resto del proyecto (Controllers/Use Cases de una sola responsabilidad, manejo de errores HTTP repetido entre routers).",
+    "frameworks/ (los 3 routers modificados) queda fuera del gate de coverage por diseño del proyecto (pyproject.toml omit) — se valida por integración, no por cobertura de líneas."
+  ]
+}

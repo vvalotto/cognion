@@ -28,6 +28,9 @@ from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSes
 from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
     MostrarOpcionesEnVivoUseCase,
 )
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from tests.unit.inc3._fakes import (
     FakeEstudianteConsultaPort,
     FakeEventStore,
@@ -36,6 +39,7 @@ from tests.unit.inc3._fakes import (
 from tests.unit.inc6._fakes import (
     FakeCanalTiempoReal,
     FakeComisionConsultaPort,
+    FakeParticipantesAlMenosUno,
     FakeProyeccionesEnVivo,
 )
 
@@ -64,15 +68,29 @@ async def _escenario(iniciada: bool = True, opciones_mostradas: bool = True):
         comision_consulta, pregunta_consulta, event_store
     ).execute(comision_id, 3, 45)
     canal = FakeCanalTiempoReal()
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
     if iniciada:
-        await IniciarSesionEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+        await IniciarSesionEnVivoUseCase(
+            event_store,
+            pregunta_consulta,
+            canal,
+            FakeParticipantesAlMenosUno(),
+            autorizacion,
+        ).execute(sesion.id)
     if iniciada and opciones_mostradas:
-        await MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal).execute(sesion.id)
+        await MostrarOpcionesEnVivoUseCase(
+            event_store, pregunta_consulta, canal, comision_consulta
+        ).execute(sesion.id)
     canal.publicados.clear()
     proyecciones = FakeProyeccionesEnVivo()
     estudiante_consulta = FakeEstudianteConsultaPort()
     use_case = CerrarPreguntaActualUseCase(
-        event_store, proyecciones, pregunta_consulta, canal, estudiante_consulta
+        event_store,
+        proyecciones,
+        pregunta_consulta,
+        canal,
+        estudiante_consulta,
+        autorizacion,
     )
     return use_case, event_store, canal, sesion, proyecciones, estudiante_consulta
 

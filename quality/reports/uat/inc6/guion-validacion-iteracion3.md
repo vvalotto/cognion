@@ -63,10 +63,10 @@ multiple", 3 preguntas, 30 s).
 
 Severidades: `docs/plans/PROCEDIMIENTO-UAT.md` §8. Un 🔴 frena el cierre de la iteración.
 
-## 5. Decisiones que quedan para vos
+## 5. Decisiones tomadas (2026-09-26)
 
-- **H3 — contraste de las cajas de opción** (medido en el circuito 8): rojo 5,05:1, **azul 3,57:1**, amarillo
-  7,29:1, **verde 3,73:1**, contra el 7:1 (AAA) de §1.1. Son los colores del prototipo aprobado; el texto es
-  de 28 px en negrita (texto grande: AA pide 3:1, AAA 4,5:1). ¿Se mantienen, o se oscurecen azul y verde?
-- **H4 — enunciado en la pantalla con opciones: 30 px** (el prototipo lo achica para dejar lugar a las
-  cajas; con la pregunta sola es 40 px). ¿Alcanza a distancia, o debe ser ≥ 40 px también ahí?
+- **H3 — contraste de las cajas de opción: opción b.** Azul `#287aaa` y verde `#378257` (≥ 4,5:1, antes 3,57 y
+  3,73); rojo y amarillo sin cambios. Mismos colores en las tarjetas del celular. En P2, mirar que se sigan
+  distinguiendo los cuatro colores a distancia.
+- **H4 — enunciado de 30 px con las opciones a la vista: opción a** (se mantiene). En P1, confirmar a ojo que se
+  lee desde el fondo; si no, se sube.

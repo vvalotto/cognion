@@ -5,6 +5,8 @@ from uuid import uuid4
 
 import pytest
 
+from src.analytics.entities.errors import MateriaNoAutorizada
+from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
@@ -42,6 +44,34 @@ class _EvaluacionDesempenoConsultaPortFake(EvaluacionDesempenoConsultaPort):
         raise NotImplementedError
 
 
+class _ComisionConsultaPortFake(ComisionConsultaPort):
+    def __init__(self, autorizado: bool = True) -> None:
+        self._autorizado = autorizado
+
+    async def listar_comisiones_por_materia(self, materia_id):
+        raise NotImplementedError
+
+    async def listar_estudiantes(self, comision_id):
+        raise NotImplementedError
+
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return self._autorizado
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return self._autorizado
+
+
+def _use_case(
+    resumenes: list[EvaluacionDesempenoResumen] | None = None,
+    titulos: dict | None = None,
+    autorizado: bool = True,
+) -> ObtenerEvolucionTemporalEstudianteUseCase:
+    return ObtenerEvolucionTemporalEstudianteUseCase(
+        _EvaluacionDesempenoConsultaPortFake(resumenes, titulos),
+        _ComisionConsultaPortFake(autorizado),
+    )
+
+
 def _resumen(actividad_id, finalizada_en, correctas, incorrectas) -> EvaluacionDesempenoResumen:
     return EvaluacionDesempenoResumen(
         evaluacion_id=uuid4(),
@@ -56,9 +86,9 @@ def _resumen(actividad_id, finalizada_en, correctas, incorrectas) -> EvaluacionD
 class TestObtenerEvolucionTemporalEstudianteUseCase:
     @pytest.mark.asyncio
     async def test_sin_evaluaciones_finalizadas_devuelve_lista_vacia(self):
-        use_case = ObtenerEvolucionTemporalEstudianteUseCase(_EvaluacionDesempenoConsultaPortFake())
+        use_case = _use_case()
 
-        resultado = await use_case.execute(uuid4(), uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4(), uuid4())
 
         assert resultado == []
 
@@ -69,11 +99,9 @@ class TestObtenerEvolucionTemporalEstudianteUseCase:
             _resumen(actividad_nueva, datetime(2026, 2, 1, tzinfo=UTC), 1, 0),
             _resumen(actividad_vieja, datetime(2026, 1, 1, tzinfo=UTC), 1, 0),
         ]
-        use_case = ObtenerEvolucionTemporalEstudianteUseCase(
-            _EvaluacionDesempenoConsultaPortFake(resumenes)
-        )
+        use_case = _use_case(resumenes)
 
-        resultado = await use_case.execute(uuid4(), uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4(), uuid4())
 
         assert [punto.actividad_id for punto in resultado] == [actividad_vieja, actividad_nueva]
 
@@ -81,13 +109,9 @@ class TestObtenerEvolucionTemporalEstudianteUseCase:
     async def test_resuelve_titulo_de_cada_actividad(self):
         actividad_id = uuid4()
         resumenes = [_resumen(actividad_id, datetime(2026, 1, 1, tzinfo=UTC), 3, 1)]
-        use_case = ObtenerEvolucionTemporalEstudianteUseCase(
-            _EvaluacionDesempenoConsultaPortFake(
-                resumenes, titulos={actividad_id: "Primer parcial"}
-            )
-        )
+        use_case = _use_case(resumenes, titulos={actividad_id: "Primer parcial"})
 
-        resultado = await use_case.execute(uuid4(), uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4(), uuid4())
 
         assert resultado[0].titulo_actividad == "Primer parcial"
         assert resultado[0].porcentaje_acierto == 75
@@ -96,11 +120,9 @@ class TestObtenerEvolucionTemporalEstudianteUseCase:
     async def test_actividad_sin_titulo_resuelto_usa_cadena_vacia(self):
         actividad_id = uuid4()
         resumenes = [_resumen(actividad_id, datetime(2026, 1, 1, tzinfo=UTC), 1, 0)]
-        use_case = ObtenerEvolucionTemporalEstudianteUseCase(
-            _EvaluacionDesempenoConsultaPortFake(resumenes, titulos={})
-        )
+        use_case = _use_case(resumenes, titulos={})
 
-        resultado = await use_case.execute(uuid4(), uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4(), uuid4())
 
         assert resultado[0].titulo_actividad == ""
 
@@ -108,10 +130,19 @@ class TestObtenerEvolucionTemporalEstudianteUseCase:
     async def test_porcentaje_cero_sin_respuestas(self):
         actividad_id = uuid4()
         resumenes = [_resumen(actividad_id, datetime(2026, 1, 1, tzinfo=UTC), 0, 0)]
-        use_case = ObtenerEvolucionTemporalEstudianteUseCase(
-            _EvaluacionDesempenoConsultaPortFake(resumenes)
-        )
+        use_case = _use_case(resumenes)
 
-        resultado = await use_case.execute(uuid4(), uuid4())
+        resultado = await use_case.execute(uuid4(), uuid4(), uuid4())
 
         assert resultado[0].porcentaje_acierto == 0
+
+
+class TestAutorizacionPorComision:
+    """`US-ADJ-57`: `docente_id` sin Comisión en la materia levanta `MateriaNoAutorizada`."""
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_levanta_materia_no_autorizada(self):
+        use_case = _use_case(autorizado=False)
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(uuid4(), uuid4(), uuid4())

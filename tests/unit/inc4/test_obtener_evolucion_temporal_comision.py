@@ -5,7 +5,11 @@ from uuid import uuid4
 
 import pytest
 
-from src.analytics.entities.errors import ComisionNoPerteneceAMateria
+from src.analytics.entities.errors import (
+    ComisionNoAutorizada,
+    ComisionNoPerteneceAMateria,
+    MateriaNoAutorizada,
+)
 from src.analytics.entities.ports.comision_consulta_port import (
     ComisionConsultaPort,
     ComisionResumen,
@@ -53,15 +57,25 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
         self,
         comisiones: list[ComisionResumen] | None = None,
         estudiantes: list[EstudianteResumen] | None = None,
+        autorizado_materia: bool = True,
+        autorizado_comision: bool = True,
     ) -> None:
         self._comisiones = comisiones or []
         self._estudiantes = estudiantes or []
+        self._autorizado_materia = autorizado_materia
+        self._autorizado_comision = autorizado_comision
 
     async def listar_comisiones_por_materia(self, materia_id) -> list[ComisionResumen]:
         return self._comisiones
 
     async def listar_estudiantes(self, comision_id) -> list[EstudianteResumen]:
         return self._estudiantes
+
+    async def esta_asignado_a_materia(self, docente_id, materia_id) -> bool:
+        return self._autorizado_materia
+
+    async def esta_asignado_a_comision(self, docente_id, comision_id) -> bool:
+        return self._autorizado_comision
 
 
 def _resumen(actividad_id, finalizada_en, correctas, incorrectas) -> EvaluacionDesempenoResumen:
@@ -85,7 +99,7 @@ class TestObtenerEvolucionTemporalComisionUseCase:
         )
 
         with pytest.raises(ComisionNoPerteneceAMateria):
-            await use_case.execute(materia_id, comision_id)
+            await use_case.execute(materia_id, comision_id, uuid4())
 
     @pytest.mark.asyncio
     async def test_comision_sin_evaluaciones_finalizadas_devuelve_lista_vacia(self):
@@ -99,7 +113,7 @@ class TestObtenerEvolucionTemporalComisionUseCase:
             _EvaluacionDesempenoConsultaPortFake(),
         )
 
-        resultado = await use_case.execute(materia_id, comision_id)
+        resultado = await use_case.execute(materia_id, comision_id, uuid4())
 
         assert resultado == []
 
@@ -128,7 +142,7 @@ class TestObtenerEvolucionTemporalComisionUseCase:
             ),
         )
 
-        resultado = await use_case.execute(materia_id, comision_id)
+        resultado = await use_case.execute(materia_id, comision_id, uuid4())
 
         assert len(resultado) == 1
         assert resultado[0].porcentaje_aciertos_promedio == 75.0
@@ -153,7 +167,7 @@ class TestObtenerEvolucionTemporalComisionUseCase:
             ),
         )
 
-        resultado = await use_case.execute(materia_id, comision_id)
+        resultado = await use_case.execute(materia_id, comision_id, uuid4())
 
         assert [punto.actividad_id for punto in resultado] == [actividad_vieja, actividad_nueva]
 
@@ -175,6 +189,38 @@ class TestObtenerEvolucionTemporalComisionUseCase:
             ),
         )
 
-        resultado = await use_case.execute(materia_id, comision_id)
+        resultado = await use_case.execute(materia_id, comision_id, uuid4())
 
         assert resultado[0].titulo_actividad == "Parcial 1"
+
+
+class TestAutorizacionPorComision:
+    """`US-ADJ-57`: materia y comisión puntual, ambas siempre requeridas acá."""
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_en_materia_levanta_materia_no_autorizada(self):
+        materia_id, comision_id = uuid4(), uuid4()
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
+            _ComisionConsultaPortFake(
+                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
+                autorizado_materia=False,
+            ),
+            _EvaluacionDesempenoConsultaPortFake(),
+        )
+
+        with pytest.raises(MateriaNoAutorizada):
+            await use_case.execute(materia_id, comision_id, uuid4())
+
+    @pytest.mark.asyncio
+    async def test_docente_no_autorizado_en_comision_levanta_comision_no_autorizada(self):
+        materia_id, comision_id = uuid4(), uuid4()
+        use_case = ObtenerEvolucionTemporalComisionUseCase(
+            _ComisionConsultaPortFake(
+                comisiones=[ComisionResumen(id=comision_id, horario="lu 10-12")],
+                autorizado_comision=False,
+            ),
+            _EvaluacionDesempenoConsultaPortFake(),
+        )
+
+        with pytest.raises(ComisionNoAutorizada):
+            await use_case.execute(materia_id, comision_id, uuid4())

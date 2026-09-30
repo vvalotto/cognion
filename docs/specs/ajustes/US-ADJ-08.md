@@ -1,7 +1,7 @@
 # US-ADJ-08: Mostrar la comisión de destino antes de completar el registro
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `SP-ADJ-01` (misma iteración de ajuste que `US-ADJ-01`/`03`/`04`/`05`/`06`/`07`)
+**Iteracion / Sprint**: `Incremento 6-ADJ` (reasignada desde `SP-ADJ-01`, donde quedó diferida)
 **Tipo**: `feature backend + frontend`
 **Agregado principal afectado**: — (consulta de solo lectura, sin cambios de Aggregate)
 **Bounded Context**: Identidad

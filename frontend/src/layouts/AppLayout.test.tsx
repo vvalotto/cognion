@@ -68,14 +68,14 @@ describe("AppLayout (integración)", () => {
 
     renderAppLayout()
 
-    expect(screen.getByText("Comisiones")).toBeInTheDocument()
+    expect(screen.getByText("Materias")).toBeInTheDocument()
     expect(screen.getByText("Cuentas")).toBeInTheDocument()
   })
 
   it("no muestra el menú de navegación sin sesión activa", () => {
     renderAppLayout()
 
-    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+    expect(screen.queryByText("Cuentas")).not.toBeInTheDocument()
   })
 
   it("muestra el menú correspondiente al rol Docente", () => {
@@ -84,7 +84,7 @@ describe("AppLayout (integración)", () => {
     renderAppLayout()
 
     expect(screen.getByText("Banco de Preguntas")).toBeInTheDocument()
-    expect(screen.queryByText("Comisiones")).not.toBeInTheDocument()
+    expect(screen.queryByText("Cuentas")).not.toBeInTheDocument()
   })
 
   it("abre el menú de usuario desde el header y ofrece Cambiar contraseña y Cerrar sesión", async () => {

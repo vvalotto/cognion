@@ -29,6 +29,9 @@ from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
     ProyeccionesEnVivoQueryPort,
 )
 from src.actividad_evaluativa.use_cases._resolucion_nombres import resolver_nombres
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 
@@ -66,25 +69,36 @@ class FinalizarSesionEnVivoUseCase:
         proyecciones: ProyeccionesEnVivoQueryPort,
         canal: CanalTiempoRealPort,
         estudiante_consulta: EstudianteConsultaPort,
+        autorizacion: VerificarAutorizacionComisionService,
     ) -> None:
-        """Recibe el event store, las proyecciones, el canal y la consulta de Identidad."""
+        """Recibe el event store, las proyecciones, el canal y las consultas de Identidad.
+
+        Recibe también el servicio de autorización por Comisión.
+        """
         self._event_store = event_store
         self._proyecciones = proyecciones
         self._canal = canal
         self._estudiante_consulta = estudiante_consulta
+        self._autorizacion = autorizacion
 
-    async def execute(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def execute(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Finaliza la sesión y transmite el ranking final a todos los conectados.
 
-        Levanta `SesionNoExiste`, `SesionYaFinalizada` (incluida la carrera de dos
-        finalizaciones simultáneas, que el chequeo optimista resuelve dejando ganar a una),
-        `SesionNoEnCurso` o `PreguntaActualNoCerrada`. Publica recién después de persistir.
+        Levanta `SesionNoExiste`, `ComisionNoAutorizada` (403) si `docente_id` no está
+        asignado a la Comisión de la sesión (`US-ADJ-57`; `None` = Administrador, sin
+        chequeo), `SesionYaFinalizada` (incluida la carrera de dos finalizaciones simultáneas,
+        que el chequeo optimista resuelve dejando ganar a una), `SesionNoEnCurso` o
+        `PreguntaActualNoCerrada`. Publica recién después de persistir.
         """
         eventos = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
         if not eventos:
             raise SesionNoExiste(sesion_id)
 
         sesion = ActividadEvaluativaEnVivo.reconstruir(eventos)
+        await self._autorizacion.verificar_comision(docente_id, sesion.comision_id)
+
         sesion.finalizar()
         evento = SesionEnVivoFinalizada.desde_sesion(sesion, datetime.now(UTC))
 

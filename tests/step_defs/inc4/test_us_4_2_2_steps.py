@@ -39,6 +39,7 @@ def run_async(coro):
 async def _limpiar_tablas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
@@ -61,8 +62,9 @@ def context():
     return {}
 
 
-def _headers_docente() -> dict[str, str]:
-    jwt_vo = PyJWTIssuer().emitir(uuid4(), TipoPerfil.DOCENTE)
+def _headers_docente(docente_id: uuid.UUID | None = None) -> dict[str, str]:
+    """`docente_id` (`US-ADJ-57`) — sin indicarlo, un Docente cualquiera sin comisiones asignadas."""
+    jwt_vo = PyJWTIssuer().emitir(docente_id or uuid4(), TipoPerfil.DOCENTE)
     return {"Authorization": f"Bearer {jwt_vo.token}"}
 
 
@@ -98,25 +100,46 @@ async def _crear_materia_real() -> uuid.UUID:
     return uuid.UUID(response.json()["id"])
 
 
-async def _crear_materia_con_comisiones(cantidad: int) -> tuple[uuid.UUID, list[Comision]]:
+async def _crear_docente(session) -> Usuario:
+    hasher = BcryptPasswordHasher()
+    usuario_repo = SQLAlchemyUsuarioRepository(session)
+    docente = Usuario.crear(
+        "Docente", f"docente.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.DOCENTE
+    )
+    await usuario_repo.guardar(docente)
+    return docente
+
+
+async def _crear_materia_con_comisiones(
+    cantidad: int,
+) -> tuple[uuid.UUID, list[Comision], uuid.UUID]:
+    """`US-ADJ-57`: el Docente devuelto está asignado a todas las comisiones creadas."""
     materia_id = await _crear_materia_real()
     async with SessionLocal() as session:
         admin = await _crear_admin(session)
+        docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         comisiones = [Comision.crear(materia_id, f"horario {i}", admin.id) for i in range(cantidad)]
         for comision in comisiones:
             await comision_repo.guardar(comision)
-        return materia_id, comisiones
+            comision.asignar_docente(docente.id)
+            await comision_repo.actualizar(comision)
+        return materia_id, comisiones, docente.id
 
 
-async def _crear_comision_con_estudiantes(cantidad: int) -> tuple[Comision, list[Usuario]]:
+async def _crear_comision_con_estudiantes(
+    cantidad: int,
+) -> tuple[Comision, list[Usuario], uuid.UUID]:
     async with SessionLocal() as session:
         admin = await _crear_admin(session)
+        docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         hasher = BcryptPasswordHasher()
         comision = Comision.crear(uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
         estudiantes = []
         for i in range(cantidad):
             estudiante = Usuario.crear_estudiante(
@@ -127,16 +150,19 @@ async def _crear_comision_con_estudiantes(cantidad: int) -> tuple[Comision, list
             )
             await usuario_repo.guardar(estudiante)
             estudiantes.append(estudiante)
-        return comision, estudiantes
+        return comision, estudiantes, docente.id
 
 
-async def _crear_comision_vacia() -> Comision:
+async def _crear_comision_vacia() -> tuple[Comision, uuid.UUID]:
     async with SessionLocal() as session:
         admin = await _crear_admin(session)
+        docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         comision = Comision.crear(uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
-        return comision
+        comision.asignar_docente(docente.id)
+        await comision_repo.actualizar(comision)
+        return comision, docente.id
 
 
 def _get(context, path: str, headers) -> None:
@@ -150,24 +176,25 @@ def _get(context, path: str, headers) -> None:
 
 @given("una materia X con 2 comisiones")
 def materia_con_2_comisiones(context):
-    materia_id, comisiones = run_async(_crear_materia_con_comisiones(2))
+    materia_id, comisiones, docente_id = run_async(_crear_materia_con_comisiones(2))
     context["materia_id"] = materia_id
     context["comisiones"] = comisiones
-    context["headers"] = _headers_docente()
+    context["headers"] = _headers_docente(docente_id)
 
 
 @given("una comisión con 3 estudiantes inscriptos")
 def comision_con_3_estudiantes(context):
-    comision, estudiantes = run_async(_crear_comision_con_estudiantes(3))
+    comision, estudiantes, docente_id = run_async(_crear_comision_con_estudiantes(3))
     context["comision"] = comision
     context["estudiantes"] = estudiantes
-    context["headers"] = _headers_docente()
+    context["headers"] = _headers_docente(docente_id)
 
 
 @given("una comisión recién creada, sin inscripciones")
 def comision_recien_creada(context):
-    context["comision"] = run_async(_crear_comision_vacia())
-    context["headers"] = _headers_docente()
+    comision, docente_id = run_async(_crear_comision_vacia())
+    context["comision"] = comision
+    context["headers"] = _headers_docente(docente_id)
 
 
 @given("un id de materia que no existe")
@@ -178,17 +205,17 @@ def id_de_materia_inexistente(context):
 
 @given("un Estudiante autenticado")
 def estudiante_autenticado(context):
-    materia_id, _ = run_async(_crear_materia_con_comisiones(1))
+    materia_id, _, _ = run_async(_crear_materia_con_comisiones(1))
     context["materia_id"] = materia_id
     context["headers"] = _headers_estudiante()
 
 
 @given('el mismo estado de datos que el escenario "Materia con comisiones"')
 def mismo_estado_que_materia_con_comisiones(context):
-    materia_id, comisiones = run_async(_crear_materia_con_comisiones(2))
+    materia_id, comisiones, docente_id = run_async(_crear_materia_con_comisiones(2))
     context["materia_id"] = materia_id
     context["comisiones"] = comisiones
-    context["headers"] = _headers_docente()
+    context["headers"] = _headers_docente(docente_id)
 
 
 @when("un Docente hace GET /materias/X/comisiones")

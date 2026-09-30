@@ -11,7 +11,12 @@ from sqlalchemy import text
 
 from src.app import app
 from src.shared.frameworks.db import SessionLocal
-from tests.step_defs.inc3._auth_headers import admin_headers, crear_estudiante, docente_headers
+from tests.step_defs.inc3._auth_headers import (
+    admin_headers,
+    crear_estudiante,
+    docente_asignado_a_materia,
+    docente_headers,
+)
 
 scenarios("../../features/inc3/US-3.3.2-cerrar-actividad.feature")
 
@@ -54,13 +59,14 @@ def _periodo_vigente() -> tuple[datetime, datetime]:
     return apertura, apertura + timedelta(days=7)
 
 
-async def _crear_materia_con_verdadero_falso() -> str:
+async def _crear_materia_con_verdadero_falso() -> tuple[str, dict[str, str]]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         creada = await client.post(
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin_headers()
         )
         banco_id = creada.json()["banco_id"]
+        _docente_id, headers = await docente_asignado_a_materia(creada.json()["id"])
         await client.post(
             "/preguntas/verdadero-falso",
             json={
@@ -72,13 +78,16 @@ async def _crear_materia_con_verdadero_falso() -> str:
                 "dificultad": "medio",
                 "importancia": "alto",
             },
-            headers=docente_headers(),
+            headers=headers,
         )
-        return creada.json()["id"]
+        return creada.json()["id"], headers
 
 
 async def _crear_actividad(
-    materia_id: str, fecha_apertura: datetime, fecha_cierre: datetime
+    materia_id: str,
+    fecha_apertura: datetime,
+    fecha_cierre: datetime,
+    headers: dict[str, str] | None = None,
 ) -> dict:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -91,7 +100,7 @@ async def _crear_actividad(
                 "cantidad_preguntas": 1,
                 "cantidad_intentos_permitidos": 1,
             },
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
         return response.json()
 
@@ -111,19 +120,23 @@ async def _suspender(evaluacion_id: str, estudiante_headers: dict) -> None:
         await client.post(f"/evaluaciones/{evaluacion_id}/suspender", headers=estudiante_headers)
 
 
-async def _cerrar_actividad(actividad_id: str):
+async def _cerrar_actividad(actividad_id: str, headers: dict[str, str] | None = None):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        return await client.post(f"/actividades/{actividad_id}/cerrar", headers=docente_headers())
+        return await client.post(
+            f"/actividades/{actividad_id}/cerrar", headers=headers or docente_headers()
+        )
 
 
-async def _modificar_periodo(actividad_id: str, nueva_fecha_cierre: datetime):
+async def _modificar_periodo(
+    actividad_id: str, nueva_fecha_cierre: datetime, headers: dict[str, str] | None = None
+):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         return await client.patch(
             f"/actividades/{actividad_id}/periodo",
             json={"nueva_fecha_cierre": nueva_fecha_cierre.isoformat()},
-            headers=docente_headers(),
+            headers=headers or docente_headers(),
         )
 
 
@@ -153,10 +166,15 @@ async def _ultimo_actor(evaluacion_id: str, event_type: str) -> str:
 
 
 async def _armar_actividad() -> dict:
-    materia_id = await _crear_materia_con_verdadero_falso()
+    materia_id, headers = await _crear_materia_con_verdadero_falso()
     apertura, cierre = _periodo_vigente()
-    actividad = await _crear_actividad(materia_id, apertura, cierre)
-    return {"actividad": actividad, "cierre": cierre, "apertura": apertura}
+    actividad = await _crear_actividad(materia_id, apertura, cierre, headers)
+    return {
+        "actividad": actividad,
+        "cierre": cierre,
+        "apertura": apertura,
+        "docente_headers": headers,
+    }
 
 
 @given("una ActividadEvaluativaPeriodoAbierto vigente sin ninguna Evaluacion EnCurso o Suspendida")
@@ -192,13 +210,15 @@ def actividad_con_cerrada_manualmente(context, valor):
     datos = run_async(_armar_actividad())
     context.update(datos)
     if valor == "true":
-        run_async(_cerrar_actividad(context["actividad"]["id"]))
+        run_async(_cerrar_actividad(context["actividad"]["id"], context.get("docente_headers")))
 
 
 @when("el Docente ejecuta CerrarActividad")
 @when("el Docente ejecuta CerrarActividad de nuevo")
 def ejecuta_cerrar_actividad(context):
-    context["response"] = run_async(_cerrar_actividad(context["actividad"]["id"]))
+    context["response"] = run_async(
+        _cerrar_actividad(context["actividad"]["id"], context.get("docente_headers"))
+    )
 
 
 @when("el Docente ejecuta CerrarActividad sobre un actividad_id que no existe")
@@ -210,7 +230,9 @@ def ejecuta_cerrar_actividad_inexistente(context):
 def ejecuta_modificar_periodo(context):
     nueva_fecha_cierre = context["cierre"] + timedelta(days=1)
     context["response"] = run_async(
-        _modificar_periodo(context["actividad"]["id"], nueva_fecha_cierre)
+        _modificar_periodo(
+            context["actividad"]["id"], nueva_fecha_cierre, context.get("docente_headers")
+        )
     )
 
 

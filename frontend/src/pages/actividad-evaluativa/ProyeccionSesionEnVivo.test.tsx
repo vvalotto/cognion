@@ -476,6 +476,7 @@ describe("ProyeccionSesionEnVivo", () => {
     expect(within(screen.getByRole("list", { name: "Podio" })).getAllByRole("listitem")).toHaveLength(3)
     expect(screen.getByText("Estudiante 1")).toBeInTheDocument()
     expect(llamadasA("/sesiones-en-vivo/s1/ranking")).toHaveLength(1)
+    expect(screen.queryByRole("link", { name: "‹ Salir" })).not.toBeInTheDocument()
   })
 
   it("si falla el estado inicial queda en 'Cargando…'", async () => {
@@ -529,7 +530,7 @@ describe("ProyeccionSesionEnVivo", () => {
     expect(screen.getByRole("heading", { name: "Segunda pregunta" })).toBeInTheDocument()
   })
 
-  it("422 NoQuedanPreguntas al avanzar recalcula con el estado del servidor", async () => {
+  it("422 NoQuedanPreguntas al avanzar recalcula sin volver del ranking al histograma", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
       .mockResolvedValueOnce(jsonResponse(422, { detail: "NoQuedanPreguntas" }))
@@ -540,7 +541,9 @@ describe("ProyeccionSesionEnVivo", () => {
     fireEvent.click(screen.getByRole("button", { name: "Siguiente pregunta" }))
 
     await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalledTimes(3))
-    expect(await screen.findByText(/así respondió el aula/)).toBeInTheDocument()
+    // El servidor dice "pregunta cerrada" (histograma), pero la proyección ya estaba en el ranking:
+    // resincronizar no retrocede (hallazgo #7).
+    expect(await screen.findByText(/Ranking — tras la pregunta/)).toBeInTheDocument()
   })
 
   it("finalizar antes de tiempo muestra el podio con el ranking del mensaje", async () => {
@@ -564,5 +567,98 @@ describe("ProyeccionSesionEnVivo", () => {
       "href",
       "/actividad-evaluativa/comisiones/c1",
     )
+  })
+
+  it("'Salir' vuelve a la Comisión sin tocar la sesión", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, estadoBase))
+
+    renderProyeccion()
+
+    expect(await screen.findByRole("link", { name: "‹ Salir" })).toHaveAttribute(
+      "href",
+      "/actividad-evaluativa/comisiones/c1",
+    )
+  })
+  describe("finalizar en cualquier etapa (US-ADJ-58)", () => {
+    it("con la pregunta sola pide confirmación antes de finalizar", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, estadoBase))
+
+      renderProyeccion()
+      fireEvent.click(await screen.findByRole("button", { name: "Finalizar sesión" }))
+
+      expect(screen.getByRole("heading", { name: "¿Finalizar la sesión ahora?" })).toBeInTheDocument()
+      expect(screen.getByText(/no se cierra ni muestra su histograma/)).toBeInTheDocument()
+      expect(llamadasA("/finalizar", "POST")).toHaveLength(0)
+    })
+
+    it("'Volver a la pregunta' cierra la confirmación sin enviar nada", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, estadoOpciones()))
+
+      renderProyeccion()
+      fireEvent.click(await screen.findByRole("button", { name: "Finalizar sesión" }))
+      fireEvent.click(screen.getByRole("button", { name: "Volver a la pregunta" }))
+
+      expect(screen.getByRole("button", { name: "Cerrar pregunta" })).toBeInTheDocument()
+      expect(llamadasA("/finalizar", "POST")).toHaveLength(0)
+    })
+
+    it("confirmar con las opciones a la vista finaliza y muestra el podio", async () => {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(jsonResponse(200, estadoOpciones()))
+        .mockResolvedValueOnce(jsonResponse(200, { ...sesionResponse, estado: "Finalizada" }))
+
+      renderProyeccion()
+      fireEvent.click(await screen.findByRole("button", { name: "Finalizar sesión" }))
+      fireEvent.click(screen.getByRole("button", { name: "Finalizar sesión" }))
+      await waitFor(() => expect(llamadasA("/finalizar", "POST")).toHaveLength(1))
+      expect(llamadasA("/cerrar-pregunta", "POST")).toHaveLength(0)
+
+      act(() => {
+        hookState.onMensaje({ tipo: "sesion_finalizada", ranking: rankingCanal(2) })
+      })
+
+      expect(screen.getByText("¡Gracias por participar!")).toBeInTheDocument()
+    })
+
+    it("si la pregunta se cierra desde otra pestaña, la confirmación desaparece", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, estadoOpciones()))
+
+      renderProyeccion()
+      fireEvent.click(await screen.findByRole("button", { name: "Finalizar sesión" }))
+      act(() => {
+        hookState.onMensaje({
+          tipo: "pregunta_cerrada",
+          preguntaActualIndice: 0,
+          respuestaCorrecta: { contenido: { opcion_indice: 1 }, texto: "¿?", opciones: ["A", "B"] },
+          distribucion: [],
+          ranking: [],
+        })
+      })
+
+      expect(screen.queryByRole("heading", { name: "¿Finalizar la sesión ahora?" })).not.toBeInTheDocument()
+      expect(screen.getByText(/así respondió el aula/)).toBeInTheDocument()
+    })
+
+    it("desde el histograma finaliza directo, sin confirmación", async () => {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(jsonResponse(200, estadoCerrada()))
+        .mockResolvedValueOnce(jsonResponse(200, { ...sesionResponse, estado: "Finalizada" }))
+
+      renderProyeccion()
+      fireEvent.click(await screen.findByRole("button", { name: "Finalizar sesión" }))
+
+      await waitFor(() => expect(llamadasA("/finalizar", "POST")).toHaveLength(1))
+      expect(screen.queryByRole("heading", { name: "¿Finalizar la sesión ahora?" })).not.toBeInTheDocument()
+    })
+
+    it("una sesión cancelada vuelve a la sala, que la redirige a la Comisión", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(
+        jsonResponse(200, { ...estadoBase, estado: "Cancelada", pregunta_actual: null }),
+      )
+
+      renderProyeccion()
+
+      await waitFor(() => expect(navigateMock).toHaveBeenCalledWith("/sesiones-en-vivo/s1/sala"))
+    })
   })
 })

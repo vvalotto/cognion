@@ -46,6 +46,20 @@ class MateriaNoExiste(Exception):
         super().__init__(f"La materia '{materia_id}' no existe.")
 
 
+class MateriaNoAutorizada(Exception):
+    """El Docente solicitante no tiene ninguna Comisión asignada en esta materia (`US-ADJ-57`).
+
+    Nivel de autorización de las actividades de período abierto (toda la materia) — mismo
+    criterio que `MateriaNoAutorizada` de Banco de Preguntas; `ComisionNoAutorizada` (abajo)
+    cubre el nivel más estrecho de las sesiones en vivo.
+    """
+
+    def __init__(self, materia_id: object) -> None:
+        """Guarda el id de la materia ajena y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"No tenés ninguna Comisión asignada en la materia '{materia_id}'.")
+
+
 class PreguntasInsuficientes(Exception):
     """`cantidad_preguntas` excede las `PreguntaPlantilla` activas de la materia (INV-AE-01)."""
 
@@ -405,3 +419,23 @@ class ComisionNoAutorizada(Exception):
         """Guarda el id pedido y arma el mensaje de la excepción."""
         self.comision_id = comision_id
         super().__init__(f"No podés ver las sesiones en vivo de la comisión '{comision_id}'.")
+
+
+class SesionYaCancelada(Exception):
+    """La sesión en vivo ya está `Cancelada` — estado terminal (`US-ADJ-58`, INV-AEV-10)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' fue cancelada.")
+
+
+class SinParticipantes(Exception):
+    """`IniciarSesionEnVivo` sin ningún Estudiante unido (`US-ADJ-58`, INV-AEV-11)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"La sesión en vivo '{sesion_id}' no tiene participantes: no se puede iniciar."
+        )

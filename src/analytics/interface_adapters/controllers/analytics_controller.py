@@ -36,22 +36,31 @@ class AnalyticsController:
     async def obtener_mi_desempeno(
         self, estudiante_id: UUID, materia_id: UUID
     ) -> DesempenoEstudiante:
-        """Delega la obtención del desempeño en el Use Case correspondiente."""
+        """Delega la obtención del desempeño en el Use Case correspondiente.
+
+        Sin `docente_id` — el propio Estudiante no tiene restricción de pertenencia
+        (`US-ADJ-57`).
+        """
         return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)
 
     async def obtener_desempeno_de_estudiante(
-        self, estudiante_id: UUID, materia_id: UUID
+        self, estudiante_id: UUID, materia_id: UUID, docente_id: UUID
     ) -> DesempenoEstudiante:
         """Desempeño de un Estudiante elegido por el Docente (`US-4.2.1`, RF-16).
 
         Mismo cálculo que `obtener_mi_desempeno` — el `estudiante_id` viene del path (elegido
         por el Docente) en vez del token, la existencia del Estudiante ya fue validada en el
-        router antes de llegar acá.
+        router antes de llegar acá. `docente_id` habilita la verificación de pertenencia a la
+        materia (`US-ADJ-57`).
         """
-        return await self._obtener_desempeno_estudiante.execute(estudiante_id, materia_id)
+        return await self._obtener_desempeno_estudiante.execute(
+            estudiante_id, materia_id, docente_id
+        )
 
     async def obtener_evolucion_temporal_estudiante(
-        self, estudiante_id: UUID, materia_id: UUID
+        self, estudiante_id: UUID, materia_id: UUID, docente_id: UUID
     ) -> list[EvolucionTemporalPunto]:
         """Evolución temporal individual de un estudiante (`US-ADJ-45`, RF-21)."""
-        return await self._obtener_evolucion_temporal_estudiante.execute(estudiante_id, materia_id)
+        return await self._obtener_evolucion_temporal_estudiante.execute(
+            estudiante_id, materia_id, docente_id
+        )

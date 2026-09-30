@@ -8,6 +8,7 @@ import {
   avanzarPregunta,
   cerrarPregunta,
   crearSesion,
+  cancelarSesion,
   finalizarSesion,
   iniciarSesion,
   listarParticipantes,
@@ -154,6 +155,19 @@ describe("sesion-en-vivo-api", () => {
       const [url, init] = vi.mocked(fetch).mock.calls[0]
       expect(String(url)).toContain("/sesiones-en-vivo/s1/finalizar")
       expect(init?.method).toBe("POST")
+    })
+  })
+
+  describe("cancelarSesion (US-ADJ-58)", () => {
+    it("hace POST /sesiones-en-vivo/{id}/cancelar y mapea el estado Cancelada", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, { ...SESION_API, estado: "Cancelada" }))
+
+      const sesion = await cancelarSesion("s1")
+
+      const [url, init] = vi.mocked(fetch).mock.calls[0]
+      expect(String(url)).toContain("/sesiones-en-vivo/s1/cancelar")
+      expect(init?.method).toBe("POST")
+      expect(sesion.estado).toBe("cancelada")
     })
   })
 
