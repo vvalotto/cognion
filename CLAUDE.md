@@ -1109,10 +1109,25 @@ misma baseline, sin tag propio) ejecutados el mismo día. Milestones GitHub
 [Incremento 6](https://github.com/vvalotto/cognion/milestone/8) e
 [Incremento 6-ADJ](https://github.com/vvalotto/cognion/milestone/14) cerrados.
 
-**Próximo paso:** evaluar si corresponde abrir el Incremento 7 (Cierre de Alcance v1,
-`RF-07` — importación desde PDF, mecanismo de parseo automático vs. asistido pendiente de
-decisión) o retomar otro backlog sin incremento asignado. Ítem abierto aparte, no bloqueante:
-checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
+Incremento 7 — Cierre de alcance v1, en planificación desde 2026-09-30
+(`docs/plans/inc7/inc7-candidatas.md`). Último incremento de `PLAN_v1.md` — sin BC nuevo, sin
+Iteración 0 de Modelado. **Decisión de Víctor:** la Iteración 1 original (`RF-18`, KPIs
+históricos) se reemplaza por una **iteración de UAT manual completa de cierre de alcance
+v1** — recorrido exploratorio de Víctor sobre todo el sistema (los 7 incrementos acumulados),
+sin código de producción, que produce 4 artefactos en `quality/reports/uat/inc7/`:
+`plan-de-pruebas.md`, `registro-ejecuciones.md`, `registro-hallazgos.md`,
+`plan-de-correccion.md` (detalle completo, incluida la separación de responsabilidades entre
+Víctor y la sesión, en `docs/plans/PROCEDIMIENTO-UAT.md` §11). El `plan-de-correccion.md` es
+un documento de **priorización, no de ejecución** — no implementa nada por sí mismo, solo
+propone cómo resolver cada hallazgo (track informal / US-ADJ / incremento nuevo). `RF-18`
+queda diferido sin incremento asignado (`docs/rf/RF_v1.md` revisión 2026-09-30,
+`docs/traceability/matrix.md`) — sigue en alcance v1, solo sin incremento todavía. La
+Iteración 2 (`RF-07`, importación desde PDF) no cambia — spike de decisión (parseo automático
+vs. asistido) pendiente, con Víctor presente, antes de especificarla.
+
+**Próximo paso:** escribir el `plan-de-pruebas.md` de la Iteración 1 junto con Víctor. Ítem
+abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS real
+(`PROCEDIMIENTO-UAT.md` §4).
 
 ---
 
