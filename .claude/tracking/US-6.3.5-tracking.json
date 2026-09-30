@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "us_id": "US-6.3.5",
+    "us_title": "Docente crea la sesión en vivo y abre la sala de espera",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-23T13:30:44.028929+00:00",
+    "completed_at": "2026-09-23T13:58:49.931280+00:00",
+    "total_elapsed_seconds": 1685,
+    "effective_seconds": 1685,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-23T13:30:44.428431+00:00",
+      "completed_at": "2026-09-23T13:32:29.048594+00:00",
+      "elapsed_seconds": 104,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-23T13:32:29.194531+00:00",
+      "completed_at": "2026-09-23T13:33:01.378179+00:00",
+      "elapsed_seconds": 32,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-23T13:33:01.536898+00:00",
+      "completed_at": "2026-09-23T13:33:51.512495+00:00",
+      "elapsed_seconds": 49,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-23T13:33:51.659103+00:00",
+      "completed_at": "2026-09-23T13:46:14.762176+00:00",
+      "elapsed_seconds": 743,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Agregar materiaId a ComisionDetalleResponse",
+          "task_type": "frontend",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-09-23T13:33:53.601777+00:00",
+          "completed_at": "2026-09-23T13:34:57.492482+00:00",
+          "elapsed_seconds": 63,
+          "actual_minutes": 1.05,
+          "variance_minutes": -3.95,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Agregar variante estado-en-espera al Badge",
+          "task_type": "frontend",
+          "estimated_minutes": 3.0,
+          "started_at": "2026-09-23T13:34:57.633445+00:00",
+          "completed_at": "2026-09-23T13:35:03.241060+00:00",
+          "elapsed_seconds": 5,
+          "actual_minutes": 0.08,
+          "variance_minutes": -2.92,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Crear NuevaSesionEnVivo.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-09-23T13:35:03.375649+00:00",
+          "completed_at": "2026-09-23T13:35:28.833745+00:00",
+          "elapsed_seconds": 25,
+          "actual_minutes": 0.42,
+          "variance_minutes": -29.58,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Crear SalaEsperaDocente.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 40.0,
+          "started_at": "2026-09-23T13:35:28.966331+00:00",
+          "completed_at": "2026-09-23T13:36:15.780985+00:00",
+          "elapsed_seconds": 46,
+          "actual_minutes": 0.77,
+          "variance_minutes": -39.23,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Ampliar ComisionDetalleDocente con boton y bloque de sesiones activas",
+          "task_type": "frontend",
+          "estimated_minutes": 25.0,
+          "started_at": "2026-09-23T13:36:15.918375+00:00",
+          "completed_at": "2026-09-23T13:36:53.605666+00:00",
+          "elapsed_seconds": 37,
+          "actual_minutes": 0.62,
+          "variance_minutes": -24.38,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Reemplazar placeholders en router.tsx",
+          "task_type": "frontend",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-23T13:36:53.758767+00:00",
+          "completed_at": "2026-09-23T13:37:22.819515+00:00",
+          "elapsed_seconds": 29,
+          "actual_minutes": 0.48,
+          "variance_minutes": -9.52,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T7",
+          "task_name": "Tests de las nuevas pantallas y ampliaciones",
+          "task_type": "frontend",
+          "estimated_minutes": 60.0,
+          "started_at": "2026-09-23T13:37:22.958039+00:00",
+          "completed_at": "2026-09-23T13:46:14.612166+00:00",
+          "elapsed_seconds": 531,
+          "actual_minutes": 8.85,
+          "variance_minutes": -51.15,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-23T13:46:14.903359+00:00",
+      "completed_at": "2026-09-23T13:46:18.139085+00:00",
+      "elapsed_seconds": 3,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-23T13:46:18.286996+00:00",
+      "completed_at": "2026-09-23T13:46:20.940491+00:00",
+      "elapsed_seconds": 2,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-23T13:46:21.072253+00:00",
+      "completed_at": "2026-09-23T13:46:47.634043+00:00",
+      "elapsed_seconds": 26,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-23T13:46:47.766763+00:00",
+      "completed_at": "2026-09-23T13:57:47.343165+00:00",
+      "elapsed_seconds": 659,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-23T13:57:47.478231+00:00",
+      "completed_at": "2026-09-23T13:58:49.535848+00:00",
+      "elapsed_seconds": 62,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-23T13:58:49.669566+00:00",
+      "completed_at": "2026-09-23T13:58:49.801586+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 7,
+    "completed_tasks": 7,
+    "total_phases": 10,
+    "estimated_total_minutes": 173.0,
+    "actual_total_minutes": 12.27,
+    "variance_minutes": -160.73,
+    "variance_percent": -92.91
+  }
+}

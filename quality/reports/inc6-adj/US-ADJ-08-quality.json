@@ -1,0 +1,49 @@
+{
+  "us_id": "US-ADJ-08",
+  "fecha": "2026-09-30T08:26:00",
+  "componente": "src/identidad (Invitacion: use_case + controller + endpoint) + frontend/src/pages/identidad/Registro.tsx",
+  "metricas": {
+    "pylint": 10.0,
+    "cc_promedio": 1.72,
+    "cc_max": 4,
+    "mi_promedio": null,
+    "mi_min": 59.36,
+    "coverage": 100.0,
+    "coverage_modulos_tocados": 100.0,
+    "frontend": {
+      "tests": "10/10 (Registro.test.tsx, suite completa 800/800)",
+      "tsc": "0 errores (tsc -b)",
+      "oxlint": "0 errores (1 warning preexistente en línea 38, no introducido por esta US)"
+    }
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 5,
+    "errors": 10,
+    "warnings": 1,
+    "infos": 35,
+    "checks": {
+      "Security": { "errors": 0, "warnings": 0, "infos": 6 },
+      "PEP8": { "errors": 0, "warnings": 0, "infos": 5 },
+      "Complexity": { "errors": 0, "warnings": 0, "infos": 5 },
+      "DeadCode": { "errors": 5, "warnings": 0, "infos": 0 },
+      "Maintainability": { "errors": 0, "warnings": 0, "infos": 5 },
+      "Pylint": { "errors": 0, "warnings": 1, "infos": 4 },
+      "Spelling": { "errors": 5, "warnings": 0, "infos": 0 },
+      "Types": { "errors": 0, "warnings": 0, "infos": 5 },
+      "UnusedImports": { "errors": 0, "warnings": 0, "infos": 5 }
+    },
+    "reporte": "quality/reports/inc6-adj/US-ADJ-08-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "codeguard: los 10 'errors' de DeadCode (5) y Spelling (5) son environment gaps preexistentes (vulture/codespell no instalados en el venv), no hallazgos de código — mismo patrón en todos los reportes previos del proyecto.",
+    "codeguard: Pylint warning de schemas.py (7.19/10 aislado) es un falso positivo conocido y recurrente (mismo patrón en US-1.1.0, US-ADJ-26, US-ADJ-38, US-3.4.4) — pylint real sobre el archivo completo con el config del proyecto da 10.00/10. schemas.py es un archivo compartido de ~30 modelos Pydantic entre varios BCs de Identidad; el check aislado de codeguard no aplica el mismo contexto/pylintrc.",
+    "Cobertura medida solo sobre entities/use_cases/interface_adapters (obtener_invitacion.py, invitaciones_controller.py) — frameworks/* está excluido del gate por diseño (omit en pyproject.toml [tool.coverage.run]), coherente con el resto del proyecto."
+  ]
+}

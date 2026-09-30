@@ -1,0 +1,191 @@
+{
+  "metadata": {
+    "us_id": "US-6.3.3",
+    "us_title": "Estado completo de la sesión para reconectar la proyección",
+    "us_points": 3,
+    "producto": "Cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-22T17:50:21.134561+00:00",
+    "completed_at": "2026-09-22T18:16:01.462692+00:00",
+    "total_elapsed_seconds": 1540,
+    "effective_seconds": 1540,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-22T17:50:21.975019+00:00",
+      "completed_at": "2026-09-22T17:50:46.287656+00:00",
+      "elapsed_seconds": 24,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-22T17:50:46.602096+00:00",
+      "completed_at": "2026-09-22T17:51:09.674401+00:00",
+      "elapsed_seconds": 23,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-22T17:51:10.200186+00:00",
+      "completed_at": "2026-09-22T17:52:26.760647+00:00",
+      "elapsed_seconds": 76,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-22T17:52:27.025236+00:00",
+      "completed_at": "2026-09-22T17:56:18.970158+00:00",
+      "elapsed_seconds": 231,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Ampliar ObtenerEstadoSesionUseCase con resultado_pregunta",
+          "task_type": "use_cases",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-22T17:52:29.918115+00:00",
+          "completed_at": "2026-09-22T17:54:41.793156+00:00",
+          "elapsed_seconds": 131,
+          "actual_minutes": 2.18,
+          "variance_minutes": -17.82,
+          "file_created": "src/actividad_evaluativa/use_cases/obtener_estado_sesion.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Agregar schemas de resultado_pregunta y ampliar EstadoSesionEnVivoResponse",
+          "task_type": "frameworks",
+          "estimated_minutes": 12.0,
+          "started_at": "2026-09-22T17:54:44.427482+00:00",
+          "completed_at": "2026-09-22T17:55:12.557773+00:00",
+          "elapsed_seconds": 28,
+          "actual_minutes": 0.47,
+          "variance_minutes": -11.53,
+          "file_created": "src/actividad_evaluativa/frameworks/api/schemas.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Armar los campos nuevos en _a_estado_response",
+          "task_type": "frameworks",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-09-22T17:55:15.087125+00:00",
+          "completed_at": "2026-09-22T17:55:50.904471+00:00",
+          "elapsed_seconds": 35,
+          "actual_minutes": 0.58,
+          "variance_minutes": -9.42,
+          "file_created": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Wiring de ObtenerEstadoSesionUseCase con las dependencias nuevas",
+          "task_type": "frameworks",
+          "estimated_minutes": 8.0,
+          "started_at": "2026-09-22T17:55:53.824638+00:00",
+          "completed_at": "2026-09-22T17:56:06.337780+00:00",
+          "elapsed_seconds": 12,
+          "actual_minutes": 0.2,
+          "variance_minutes": -7.8,
+          "file_created": "src/actividad_evaluativa/frameworks/dependencies.py",
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-22T17:56:26.001063+00:00",
+      "completed_at": "2026-09-22T17:57:56.180032+00:00",
+      "elapsed_seconds": 90,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-22T17:58:00.051804+00:00",
+      "completed_at": "2026-09-22T18:02:49.318820+00:00",
+      "elapsed_seconds": 289,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-22T18:02:52.018956+00:00",
+      "completed_at": "2026-09-22T18:05:47.867169+00:00",
+      "elapsed_seconds": 175,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-22T18:05:51.838859+00:00",
+      "completed_at": "2026-09-22T18:07:44.507995+00:00",
+      "elapsed_seconds": 112,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-22T18:07:46.871798+00:00",
+      "completed_at": "2026-09-22T18:07:59.224961+00:00",
+      "elapsed_seconds": 12,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-22T18:15:31.351242+00:00",
+      "completed_at": "2026-09-22T18:16:01.298707+00:00",
+      "elapsed_seconds": 29,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 4,
+    "completed_tasks": 4,
+    "total_phases": 10,
+    "estimated_total_minutes": 50.0,
+    "actual_total_minutes": 3.43,
+    "variance_minutes": -46.57,
+    "variance_percent": -93.13
+  }
+}

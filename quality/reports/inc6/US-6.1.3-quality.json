@@ -1,0 +1,86 @@
+{
+  "us_id": "US-6.1.3",
+  "fecha": "2026-09-19T09:22:24.571760",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.83,
+    "cc_promedio": 1.55,
+    "cc_maximo": 5,
+    "mi_promedio": 85.34,
+    "mi_minimo": 59.69,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 11,
+    "errors": 1,
+    "warnings": 218,
+    "infos": 79,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 11
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 10
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 11
+      },
+      "DeadCode": {
+        "errors": 1,
+        "warnings": 171,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 11
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 11
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 46,
+        "infos": 3
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 11
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 11
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.1.3-codeguard.json"
+  },
+  "tests": {
+    "suite_completa": "1286 passed, 0 failed, 0 errors (7m05s, tests/ completo con cobertura)",
+    "nuevos": "tests/unit/inc6: 55 (25 nuevos); tests/integration/inc6: 24 (11 nuevos); BDD inc6: 10 (5 nuevos)"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa corrida ANTES de codeguard y en serie (leccion de US-6.1.2): 1286 passed, sin fallos ni errores, incluido el test flaky preexistente de US-3.2.1.",
+    "CodeGuard con .venv/bin en el PATH: los 9 checks corrieron sin timeouts. Unico 'error' es un falso positivo de DeadCode (100% confianza) sobre el parametro sesion_id de un metodo abstracto de ParticipantesSesionQueryPort - mismo patron aceptado en todos los puertos ABC del proyecto (US-6.1.1).",
+    "CodeGuard DeadCode (171 warnings) y Spelling (46) son ruido conocido: DeadCode analiza archivo por archivo sin ver usos cross-modulo; Spelling compara texto en espanol con diccionario en ingles.",
+    "Unico hallazgo PEP8 (E501 en dependencies.py:57) es un import preexistente, no de esta US. Una linea larga propia en el router se corrigio.",
+    "Pylint 9.83: R0903 (1 metodo publico) en el puerto, el adapter y el use case - mismo patron aceptado en US previas.",
+    "Coverage: frameworks/* excluido del gate por pyproject.toml. Los archivos nuevos de entities/use_cases/interface_adapters estan al 100%; el adapter SQL del read model y el router se validan con tests de integracion (24) y BDD."
+  ]
+}

@@ -48,25 +48,31 @@ class AnalyticsInformesController:
         self._obtener_ranking_preguntas_falladas = obtener_ranking_preguntas_falladas
 
     async def obtener_tasa_error_por_tema(
-        self, materia_id: UUID, comision_id: UUID | None
+        self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
     ) -> list[TasaErrorTema]:
         """Tasa de error por tema de una materia, acotada a una comisión si se indica (RF-17)."""
-        return await self._obtener_tasa_error_por_tema.execute(materia_id, comision_id)
+        return await self._obtener_tasa_error_por_tema.execute(materia_id, comision_id, docente_id)
 
     async def obtener_desempeno_por_comision(
-        self, materia_id: UUID, comision_id: UUID
+        self, materia_id: UUID, comision_id: UUID, docente_id: UUID
     ) -> list[DesempenoComisionFila]:
         """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20)."""
-        return await self._obtener_desempeno_por_comision.execute(materia_id, comision_id)
+        return await self._obtener_desempeno_por_comision.execute(
+            materia_id, comision_id, docente_id
+        )
 
     async def obtener_evolucion_temporal_comision(
-        self, materia_id: UUID, comision_id: UUID
+        self, materia_id: UUID, comision_id: UUID, docente_id: UUID
     ) -> list[EvolucionTemporalComisionPunto]:
         """Evolución temporal promedio de una comisión (`US-ADJ-45`, RF-21)."""
-        return await self._obtener_evolucion_temporal_comision.execute(materia_id, comision_id)
+        return await self._obtener_evolucion_temporal_comision.execute(
+            materia_id, comision_id, docente_id
+        )
 
     async def obtener_ranking_preguntas_falladas(
-        self, materia_id: UUID, comision_id: UUID | None
+        self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
     ) -> list[RankingPreguntaFallada]:
         """Ranking de preguntas más falladas de una materia (`US-ADJ-46`, RF-22)."""
-        return await self._obtener_ranking_preguntas_falladas.execute(materia_id, comision_id)
+        return await self._obtener_ranking_preguntas_falladas.execute(
+            materia_id, comision_id, docente_id
+        )

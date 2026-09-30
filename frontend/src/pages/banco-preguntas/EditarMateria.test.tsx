@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -43,7 +43,9 @@ describe("EditarMateria", () => {
 
     renderEditarMateria()
 
-    expect(await screen.findByLabelText("Nombre de la materia")).toHaveValue("Ges")
+    // El formulario se dibuja antes de que llegue la materia: esperar el valor, no solo el campo.
+    const campo = await screen.findByLabelText("Nombre de la materia")
+    await waitFor(() => expect(campo).toHaveValue("Ges"))
   })
 
   it("guarda el nombre corregido y vuelve al listado", async () => {

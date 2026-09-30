@@ -46,6 +46,20 @@ class MateriaNoExiste(Exception):
         super().__init__(f"La materia '{materia_id}' no existe.")
 
 
+class MateriaNoAutorizada(Exception):
+    """El Docente solicitante no tiene ninguna Comisión asignada en esta materia (`US-ADJ-57`).
+
+    Nivel de autorización de las actividades de período abierto (toda la materia) — mismo
+    criterio que `MateriaNoAutorizada` de Banco de Preguntas; `ComisionNoAutorizada` (abajo)
+    cubre el nivel más estrecho de las sesiones en vivo.
+    """
+
+    def __init__(self, materia_id: object) -> None:
+        """Guarda el id de la materia ajena y arma el mensaje de la excepción."""
+        self.materia_id = materia_id
+        super().__init__(f"No tenés ninguna Comisión asignada en la materia '{materia_id}'.")
+
+
 class PreguntasInsuficientes(Exception):
     """`cantidad_preguntas` excede las `PreguntaPlantilla` activas de la materia (INV-AE-01)."""
 
@@ -220,4 +234,208 @@ class EvaluacionNoFinalizada(Exception):
         super().__init__(
             f"La evaluación '{evaluacion_id}' todavía no fue finalizada — la revisión no está "
             "disponible."
+        )
+
+
+class ComisionNoExiste(Exception):
+    """`comision_id` no corresponde a ninguna `Comision` existente en BC Identidad (`US-6.1.2`)."""
+
+    def __init__(self, comision_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.comision_id = comision_id
+        super().__init__(f"La comisión '{comision_id}' no existe.")
+
+
+class TiempoLimiteInvalido(Exception):
+    """`tiempo_limite_por_pregunta_segundos` no es mayor a 0 (INV-AEV-02)."""
+
+    def __init__(self, tiempo_limite_segundos: int) -> None:
+        """Guarda el valor inválido y arma el mensaje de la excepción."""
+        self.tiempo_limite_segundos = tiempo_limite_segundos
+        super().__init__(
+            f"El tiempo límite por pregunta debe ser mayor a 0 segundos, se recibió "
+            f"{tiempo_limite_segundos}."
+        )
+
+
+class SesionNoExiste(Exception):
+    """`sesion_id` no corresponde a ninguna `ActividadEvaluativaEnVivo` (`US-6.1.3`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id inexistente y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' no existe.")
+
+
+class SesionYaFinalizada(Exception):
+    """La sesión en vivo ya está `Finalizada` — no admite nuevas uniones (`US-6.1.3`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' ya está finalizada.")
+
+
+class SesionYaIniciada(Exception):
+    """La sesión en vivo ya no está `EnEspera` — está `EnCurso` o `Finalizada` (`US-6.1.4`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' ya fue iniciada.")
+
+
+class SesionNoEnCurso(Exception):
+    """La sesión en vivo no está `EnCurso` — está `EnEspera` o `Finalizada` (`US-6.2.2`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' no está en curso.")
+
+
+class OpcionesYaMostradas(Exception):
+    """Las opciones de la pregunta actual ya se mostraron (`US-6.2.2`, INV-AEV-09)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"Las opciones de la pregunta actual de la sesión '{sesion_id}' ya se mostraron."
+        )
+
+
+class ParticipacionNoExiste(Exception):
+    """El Estudiante no se unió a la sesión en vivo — no tiene `ParticipacionEnVivo` (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object, estudiante_id: object) -> None:
+        """Guarda los ids y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.estudiante_id = estudiante_id
+        super().__init__(
+            f"El estudiante '{estudiante_id}' no se unió a la sesión en vivo '{sesion_id}'."
+        )
+
+
+class PreguntaNoActual(Exception):
+    """`pregunta_id` no es la pregunta actual de la sesión en vivo (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object, pregunta_id: object) -> None:
+        """Guarda los ids y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.pregunta_id = pregunta_id
+        super().__init__(
+            f"La pregunta '{pregunta_id}' no es la pregunta actual de la sesión '{sesion_id}'."
+        )
+
+
+class OpcionesNoMostradasTodavia(Exception):
+    """El Docente todavía no mostró las opciones de la pregunta actual (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"Las opciones de la pregunta actual de la sesión '{sesion_id}' todavía no se "
+            "mostraron."
+        )
+
+
+class PreguntaYaCerrada(Exception):
+    """El Docente ya cerró la pregunta actual de la sesión en vivo (`US-6.2.4`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La pregunta actual de la sesión '{sesion_id}' ya fue cerrada.")
+
+
+class TiempoAgotado(Exception):
+    """La respuesta llegó después del tiempo límite de la pregunta (`US-6.2.4`, INV-AEV-08)."""
+
+    def __init__(self, sesion_id: object, tiempo_respuesta_segundos: float) -> None:
+        """Guarda los datos del rechazo y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.tiempo_respuesta_segundos = tiempo_respuesta_segundos
+        super().__init__(
+            f"La respuesta llegó a los {tiempo_respuesta_segundos:.1f}s, fuera del tiempo límite "
+            f"de la pregunta de la sesión '{sesion_id}'."
+        )
+
+
+class RespuestaYaRegistrada(Exception):
+    """El Estudiante ya respondió esta pregunta — un solo intento (`US-6.2.4`, INV-AEV-07)."""
+
+    def __init__(self, sesion_id: object, pregunta_id: object) -> None:
+        """Guarda los ids y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        self.pregunta_id = pregunta_id
+        super().__init__(
+            f"Ya registraste tu respuesta a la pregunta '{pregunta_id}' de la sesión '{sesion_id}'."
+        )
+
+
+class PreguntaActualNoCerrada(Exception):
+    """La pregunta actual no fue cerrada, no se puede avanzar (INV-AEV-03, `US-6.2.6`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La pregunta actual de la sesión '{sesion_id}' todavía no fue cerrada.")
+
+
+class NoQuedanPreguntas(Exception):
+    """La pregunta actual es la última del set — el Docente debe finalizar (`US-6.2.6`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión '{sesion_id}' no tiene más preguntas: debe finalizarse.")
+
+
+class RankingNoDisponible(Exception):
+    """Un Estudiante pidió el ranking con la sesión en vivo todavía no `Finalizada` (`US-6.2.8`)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"El ranking de la sesión en vivo '{sesion_id}' se publica al finalizarla."
+        )
+
+
+class ComisionRequerida(Exception):
+    """El Docente listó sesiones en vivo sin indicar `comision_id` (`US-6.3.2`)."""
+
+    def __init__(self) -> None:
+        """Arma el mensaje de la excepción."""
+        super().__init__("El Docente debe indicar comision_id para listar sesiones en vivo.")
+
+
+class ComisionNoAutorizada(Exception):
+    """El Estudiante pidió sesiones en vivo de una Comisión que no es la propia (`US-6.3.2`)."""
+
+    def __init__(self, comision_id: object) -> None:
+        """Guarda el id pedido y arma el mensaje de la excepción."""
+        self.comision_id = comision_id
+        super().__init__(f"No podés ver las sesiones en vivo de la comisión '{comision_id}'.")
+
+
+class SesionYaCancelada(Exception):
+    """La sesión en vivo ya está `Cancelada` — estado terminal (`US-ADJ-58`, INV-AEV-10)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(f"La sesión en vivo '{sesion_id}' fue cancelada.")
+
+
+class SinParticipantes(Exception):
+    """`IniciarSesionEnVivo` sin ningún Estudiante unido (`US-ADJ-58`, INV-AEV-11)."""
+
+    def __init__(self, sesion_id: object) -> None:
+        """Guarda el id de la sesión y arma el mensaje de la excepción."""
+        self.sesion_id = sesion_id
+        super().__init__(
+            f"La sesión en vivo '{sesion_id}' no tiene participantes: no se puede iniciar."
         )

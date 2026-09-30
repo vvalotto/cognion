@@ -1,0 +1,87 @@
+{
+  "us_id": "US-6.1.4",
+  "fecha": "2026-09-19T09:55:05.301582",
+  "componente": "src/actividad_evaluativa/",
+  "metricas": {
+    "pylint": 9.89,
+    "cc_promedio": 1.57,
+    "cc_maximo": 5,
+    "mi_promedio": 80.59,
+    "mi_minimo": 59.22,
+    "coverage": 100.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 8,
+    "errors": 0,
+    "warnings": 230,
+    "infos": 56,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 7
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "DeadCode": {
+        "errors": 0,
+        "warnings": 168,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 61,
+        "infos": 1
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.1.4-codeguard.json"
+  },
+  "tests": {
+    "suite_completa": "1319 passed, 1 failed (test_us_3_2_1 test_rechazo_fuera_del_periodo_vigente, flaky preexistente documentado en CLAUDE.md; pasa 3/3 aislado) en 7m57s, tests/ completo con cobertura",
+    "nuevos": "tests/unit/inc6: 74 (19 nuevos); tests/integration/inc6: 34 (10 nuevos); BDD inc6: 15 (5 nuevos)"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Suite completa corrida ANTES de codeguard y en serie: 1319 passed. El unico fallo es el flaky preexistente test_rechazo_fuera_del_periodo_vigente (US-3.2.1): su setup recibe FueraDePeriodo por la ventana de ~1s ya documentada en CLAUDE.md, en una actividad de periodo abierto sin relacion con el modo en vivo. Aislado pasa 3 de 3.",
+    "Dos ediciones de solo docstring (schemas.py y actividad_evaluativa_en_vivo.py, por lineas >100) se hicieron despues de la corrida de la suite completa; ruff, mypy y pylint se re-ejecutaron despues.",
+    "CodeGuard con .venv/bin en el PATH y en serie: 9 checks, 0 errores. Un timeout puntual de pylint en UnusedImports aparecio en una corrida intermedia y no se repitio en la final.",
+    "CodeGuard DeadCode (168 warnings) y Spelling (62) son ruido conocido: DeadCode analiza archivo por archivo sin ver usos cross-modulo; Spelling compara texto en espanol con diccionario en ingles.",
+    "Unico hallazgo PEP8 (E501 en dependencies.py:57) es un import preexistente, no de esta US.",
+    "Pylint: R0902 en SesionEnVivoCreada (8/7 atributos, de US-6.1.2) y R0903 (1 metodo publico) en el use case - mismo patron aceptado en US previas.",
+    "Coverage: frameworks/* excluido del gate por pyproject.toml. Los archivos de entities/use_cases/interface_adapters estan al 100%; el router se valida con 34 tests de integracion y BDD, incluida una carrera real de dos inicios simultaneos contra la DB."
+  ]
+}

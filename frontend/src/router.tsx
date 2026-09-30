@@ -3,11 +3,11 @@ import { createBrowserRouter } from "react-router"
 import { RequireRole } from "@/components/RequireRole"
 import { AppLayout } from "@/layouts/AppLayout"
 import { AuthLayout } from "@/layouts/AuthLayout"
+import { StageLayout } from "@/layouts/StageLayout"
 import { AltaDocente } from "@/pages/identidad/AltaDocente"
 import { ComisionDetalle } from "@/pages/identidad/ComisionDetalle"
 import { EditarComision } from "@/pages/identidad/EditarComision"
 import { EliminarComision } from "@/pages/identidad/EliminarComision"
-import { Comisiones } from "@/pages/identidad/Comisiones"
 import { AltaDocenteExito } from "@/pages/identidad/AltaDocenteExito"
 import { Inicio } from "@/pages/Inicio"
 import { Actividades } from "@/pages/actividad-evaluativa/Actividades"
@@ -67,6 +67,11 @@ import { RendirEvaluacion } from "@/pages/actividad-evaluativa/RendirEvaluacion"
 import { ResetearPassword } from "@/pages/cuentas/ResetearPassword"
 import { RevisionEvaluacion } from "@/pages/actividad-evaluativa/RevisionEvaluacion"
 import { RevisionEvaluacionDocente } from "@/pages/analytics/RevisionEvaluacionDocente"
+import { ProyeccionSesionEnVivo } from "@/pages/actividad-evaluativa/ProyeccionSesionEnVivo"
+import { NuevaSesionEnVivo } from "@/pages/actividad-evaluativa/NuevaSesionEnVivo"
+import { SalaEsperaDocente } from "@/pages/actividad-evaluativa/SalaEsperaDocente"
+import { CancelarSesionEnVivo } from "@/pages/actividad-evaluativa/CancelarSesionEnVivo"
+import { SesionEnVivoEstudiante } from "@/pages/actividad-evaluativa/SesionEnVivoEstudiante"
 
 /**
  * Router de la aplicación (React Router v7, modo data).
@@ -99,14 +104,6 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Inicio /> },
       { path: "/mi-cuenta/cambiar-password", element: <CambiarPassword /> },
-      {
-        path: "/comisiones",
-        element: (
-          <RequireRole rol="administrador">
-            <Comisiones />
-          </RequireRole>
-        ),
-      },
       {
         path: "/comisiones/nueva",
         element: (
@@ -488,6 +485,51 @@ export const router = createBrowserRouter([
         element: (
           <RequireRole rol="docente">
             <RankingPreguntasFalladas />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/sesiones-en-vivo/comisiones/:comisionId/nueva",
+        element: (
+          <RequireRole rol="docente">
+            <NuevaSesionEnVivo />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/sesiones-en-vivo/:sesionId/sala",
+        element: (
+          <RequireRole rol="docente">
+            <SalaEsperaDocente />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/sesiones-en-vivo/:sesionId/cancelar",
+        element: (
+          <RequireRole rol="docente">
+            <CancelarSesionEnVivo />
+          </RequireRole>
+        ),
+      },
+      {
+        path: "/mis-sesiones-en-vivo/:sesionId",
+        element: (
+          <RequireRole rol="estudiante">
+            <SesionEnVivoEstudiante />
+          </RequireRole>
+        ),
+      },
+    ],
+  },
+  {
+    element: <StageLayout />,
+    children: [
+      {
+        path: "/sesiones-en-vivo/:sesionId/proyeccion",
+        element: (
+          <RequireRole rol="docente">
+            <ProyeccionSesionEnVivo />
           </RequireRole>
         ),
       },

@@ -25,3 +25,12 @@ class EstudianteConsultaPort(ABC):
         (`ListarActividadesVisiblesUseCase`) — un Estudiante cursa una única Comisión
         (`estudiante.comision_id`, sin multi-inscripción todavía).
         """
+
+    @abstractmethod
+    async def obtener_nombres(self, ids: list[UUID]) -> dict[UUID, str]:
+        """Devuelve `{estudiante_id: nombre}` para los ids resolubles, en una sola consulta.
+
+        Los ids sin cuenta resoluble simplemente no aparecen en el dict devuelto — quien llama
+        decide el texto de reemplazo (`US-6.3.1`, mismo criterio best-effort que el resto del
+        canal en vivo).
+        """

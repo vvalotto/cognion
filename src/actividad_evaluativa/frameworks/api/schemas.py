@@ -156,11 +156,25 @@ class EvaluacionResponse(BaseModel):
     iniciada_en: datetime
 
 
+def _rechazar_opcion_negativa(contenido: dict[str, Any]) -> dict[str, Any]:
+    """Rechaza (422) un `opcion_indice` negativo — nunca es una opción válida (revisión manual)."""
+    indice = contenido.get("opcion_indice")
+    if isinstance(indice, int) and not isinstance(indice, bool) and indice < 0:
+        raise ValueError("opcion_indice no puede ser negativo")
+    return contenido
+
+
 class RegistrarRespuestaRequest(BaseModel):
     """Body de la request de confirmación de una respuesta."""
 
     pregunta_id: UUID
     contenido: dict[str, Any]
+
+    @field_validator("contenido")
+    @classmethod
+    def _validar_contenido(cls, contenido: dict[str, Any]) -> dict[str, Any]:
+        """Rechaza (422) un `opcion_indice` negativo; el resto del shape lo valida el dominio."""
+        return _rechazar_opcion_negativa(contenido)
 
 
 class RespuestaResponse(BaseModel):
@@ -201,3 +215,166 @@ class RevisionEvaluacionResponse(BaseModel):
     cantidad_correctas: int
     cantidad_incorrectas: int
     detalle: list[DetallePreguntaRevisionResponse]
+
+
+class CrearSesionEnVivoRequest(BaseModel):
+    """Body de la request de alta de una sesión en vivo (`US-6.1.2`, RF-08).
+
+    `tiempo_limite_por_pregunta_segundos` no lleva `gt=0` a propósito: INV-AEV-02 se valida en
+    el aggregate (`TiempoLimiteInvalido`, 422), no con el 422 genérico de Pydantic.
+    """
+
+    comision_id: UUID
+    cantidad_preguntas: int = Field(..., ge=1)
+    tiempo_limite_por_pregunta_segundos: int
+    unidad_tematica: str | None = None
+    """`None`/omitido (default) = las preguntas salen de cualquier unidad temática del banco."""
+    tema: str | None = None
+    """`None`/omitido (default) = las preguntas salen de cualquier tema del banco."""
+
+
+class SesionEnVivoResponse(BaseModel):
+    """Resumen de una `ActividadEvaluativaEnVivo`, sin las preguntas (`US-6.1.2`/`US-6.1.4`)."""
+
+    id: UUID
+    comision_id: UUID
+    materia_id: UUID
+    unidad_tematica: str | None
+    tema: str | None
+    cantidad_preguntas: int
+    tiempo_limite_por_pregunta_segundos: int
+    estado: str
+    pregunta_actual_indice: int | None = None
+    """`None` con la sesión `EnEspera`; posición de la pregunta actual una vez iniciada."""
+
+
+class ParticipacionEnVivoResponse(BaseModel):
+    """Confirmación de unión de un Estudiante a una sesión en vivo (`US-6.1.3`)."""
+
+    sesion_id: UUID
+    estudiante_id: UUID
+    unido_en: datetime
+
+
+class ResponderEnVivoRequest(BaseModel):
+    """Body de la respuesta a una pregunta en vivo — `estudiante_id` sale del JWT (`US-6.2.4`).
+
+    `contenido` debe ser exactamente `{"opcion_indice": int}` (opción múltiple) o
+    `{"valor": bool}` (Verdadero/Falso), el mismo shape que `Respuesta.contenido`.
+    """
+
+    pregunta_id: UUID
+    contenido: dict[str, Any]
+
+    @field_validator("contenido")
+    @classmethod
+    def _validar_contenido(cls, contenido: dict[str, Any]) -> dict[str, Any]:
+        """Rechaza (422) cualquier `contenido` que no tenga uno de los dos shapes válidos."""
+        es_opcion = contenido.keys() == {"opcion_indice"} and (
+            isinstance(contenido["opcion_indice"], int)
+            and not isinstance(contenido["opcion_indice"], bool)
+        )
+        es_valor = contenido.keys() == {"valor"} and isinstance(contenido["valor"], bool)
+        if not (es_opcion or es_valor):
+            raise ValueError('contenido debe ser {"opcion_indice": int} o {"valor": bool}')
+        return _rechazar_opcion_negativa(contenido)
+
+
+class RespuestaEnVivoResponse(BaseModel):
+    """Feedback personal de una respuesta en vivo — sin ranking (`US-6.2.4`)."""
+
+    es_correcta: bool
+    puntaje: int
+    puntaje_acumulado: int
+
+
+class RespuestaCorrectaResponse(BaseModel):
+    """Respuesta correcta de la pregunta actual — solo con la pregunta cerrada (`US-6.2.8`)."""
+
+    contenido: dict[str, Any]
+    texto: str
+    opciones: list[str] | None
+
+
+class PreguntaActualResponse(BaseModel):
+    """Pregunta actual de la sesión en vivo según lo que ya se reveló (`US-6.2.8`)."""
+
+    pregunta_id: UUID
+    enunciado: str
+    tipo: str
+    opciones: list[str] | None = None
+    respuesta_correcta: RespuestaCorrectaResponse | None = None
+
+
+class EstadoSesionEnVivoResponse(BaseModel):
+    """Estado consultable de una sesión en vivo, para reconexión y sala de espera (`US-6.2.8`)."""
+
+    estado: str
+    comision_id: UUID
+    cantidad_preguntas: int
+    tiempo_limite_por_pregunta_segundos: int
+    pregunta_actual_indice: int | None
+    opciones_mostradas: bool
+    opciones_mostradas_en: datetime | None
+    pregunta_actual_cerrada: bool
+    pregunta_actual: PreguntaActualResponse | None
+    ya_respondio: bool | None = None
+    """Solo para el Estudiante: si ya respondió la pregunta actual."""
+    puntaje_acumulado: int | None = None
+    """Solo para el Estudiante: su puntaje acumulado."""
+    total_participantes: int = 0
+    """Cantidad de Estudiantes unidos a la sesión (`US-6.3.3`)."""
+    cantidad_respuestas: int = 0
+    """Respuestas registradas a la pregunta actual, `0` sin pregunta actual (`US-6.3.3`)."""
+    resultado_pregunta: ResultadoPreguntaResponse | None = None
+    """Solo para el Docente, y solo con la pregunta actual cerrada (`US-6.3.3`)."""
+
+
+class ParticipanteResponse(BaseModel):
+    """Un Estudiante unido a la sesión, para la sala de espera del Docente (`US-6.2.8`)."""
+
+    estudiante_id: UUID
+    unido_en: datetime
+    nombre: str
+    """Resuelto contra Identidad — `"Estudiante sin nombre"` si la cuenta ya no existe
+    (`US-6.3.1`)."""
+
+
+class RankingItemResponse(BaseModel):
+    """Una fila del ranking de la sesión en vivo (`US-6.2.8`)."""
+
+    posicion: int
+    estudiante_id: UUID
+    puntaje_acumulado: int
+    nombre: str
+    """Resuelto contra Identidad — `"Estudiante sin nombre"` si la cuenta ya no existe
+    (`US-6.3.1`)."""
+
+
+class SesionEnVivoResumenResponse(BaseModel):
+    """Una sesión en vivo, para el listado por Comisión (`US-6.3.2`)."""
+
+    id: UUID
+    comision_id: UUID
+    materia_id: UUID
+    materia_nombre: str
+    cantidad_preguntas: int
+    tiempo_limite_por_pregunta_segundos: int
+    estado: str
+    unidad_tematica: str | None
+    tema: str | None
+    creada_en: datetime
+
+
+class OpcionDistribuidaResponse(BaseModel):
+    """Cantidad de respuestas de una opción de la pregunta cerrada (`US-6.3.3`)."""
+
+    opcion: str
+    cantidad: int
+
+
+class ResultadoPreguntaResponse(BaseModel):
+    """Histograma + ranking de la pregunta actual ya cerrada (`US-6.3.3`)."""
+
+    distribucion: list[OpcionDistribuidaResponse]
+    ranking: list[RankingItemResponse]

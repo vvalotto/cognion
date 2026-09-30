@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.analytics.entities.errors import ActividadNoExiste
+from src.analytics.entities.errors import ActividadNoExiste, MateriaNoAutorizada
 from src.analytics.entities.ports.comision_consulta_port import (
     ComisionConsultaPort,
     EstudianteResumen,
@@ -57,11 +57,20 @@ class ObtenerCompletitudPorActividadUseCase:
         self._evaluacion_puerto = evaluacion_puerto
         self._comision_puerto = comision_puerto
 
-    async def execute(self, actividad_id: UUID) -> CompletitudPorActividad:
-        """Resuelve el roster aplicable de la actividad y el estado de cada estudiante."""
+    async def execute(self, actividad_id: UUID, docente_id: UUID) -> CompletitudPorActividad:
+        """Resuelve el roster aplicable de la actividad y el estado de cada estudiante.
+
+        `docente_id` sin Comisión asignada en la materia de la actividad → `raise
+        MateriaNoAutorizada` (`US-ADJ-57`) — se verifica recién acá porque `materia_id` se
+        conoce solo después de resolver la actividad.
+        """
         actividad = await self._evaluacion_puerto.obtener_actividad_resumen(actividad_id)
         if actividad is None:
             raise ActividadNoExiste(actividad_id)
+        if not await self._comision_puerto.esta_asignado_a_materia(
+            docente_id, actividad.materia_id
+        ):
+            raise MateriaNoAutorizada(actividad.materia_id)
 
         roster = await _roster_aplicable(self._comision_puerto, actividad)
         estados = await self._evaluacion_puerto.listar_estados_de_actividad(

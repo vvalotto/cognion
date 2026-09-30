@@ -36,6 +36,9 @@ from src.analytics.frameworks.adapters.evaluacion_desempeno_consulta_port_in_pro
 from src.analytics.frameworks.adapters.pregunta_metadato_consulta_port_in_process import (
     PreguntaMetadatoConsultaPortInProcess,
 )
+from src.analytics.frameworks.adapters.sesion_en_vivo_desempeno_consulta_port_in_process import (
+    SesionEnVivoDesempenoConsultaPortInProcess,
+)
 from src.analytics.interface_adapters.controllers.analytics_completitud_controller import (
     AnalyticsCompletitudController,
 )
@@ -101,9 +104,13 @@ def get_pregunta_metadato_consulta_port(session: SessionDep) -> PreguntaMetadato
 def get_analytics_controller(session: SessionDep) -> AnalyticsController:
     """Arma el `AnalyticsController` (desempeño individual) con sus dependencias concretas."""
     evaluacion_desempeno_consulta = EvaluacionDesempenoConsultaPortInProcess(session)
+    sesion_en_vivo_desempeno_consulta = SesionEnVivoDesempenoConsultaPortInProcess(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return AnalyticsController(
-        ObtenerDesempenoEstudianteUseCase(evaluacion_desempeno_consulta),
-        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta),
+        ObtenerDesempenoEstudianteUseCase(
+            evaluacion_desempeno_consulta, sesion_en_vivo_desempeno_consulta, comision_consulta
+        ),
+        ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta, comision_consulta),
     )
 
 

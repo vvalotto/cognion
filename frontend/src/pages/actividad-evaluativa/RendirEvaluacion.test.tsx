@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -211,7 +211,9 @@ describe("RendirEvaluacion", () => {
     await user.click(screen.getByText("Opción A"))
     await user.click(screen.getByRole("button", { name: "Confirmar respuesta" }))
 
-    expect(await screen.findByRole("button", { name: "Finalizar evaluación" })).toBeEnabled()
+    // El botón existe siempre (deshabilitado): esperar a que se habilite, no solo a que exista.
+    const finalizar = await screen.findByRole("button", { name: "Finalizar evaluación" })
+    await waitFor(() => expect(finalizar).toBeEnabled())
 
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(200, evaluacionBody({ estado: "Finalizada" })),

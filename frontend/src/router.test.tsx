@@ -588,15 +588,13 @@ describe("router (integración)", () => {
       ).toBeInTheDocument()
     })
 
-    it("Administrador navega a Comisiones por el menú", async () => {
+    it("el menú del Administrador no tiene Comisiones (se gestionan desde Materias)", async () => {
       setSession({ token: "t", rol: "administrador" })
       await router.navigate("/")
       render(<RouterProvider router={router} />)
 
-      const user = userEvent.setup()
-      await user.click(screen.getByRole("link", { name: "Comisiones" }))
-
-      expect(await screen.findByRole("heading", { name: "Comisiones" })).toBeInTheDocument()
+      expect(await screen.findByRole("link", { name: "Materias" })).toBeInTheDocument()
+      expect(screen.queryByRole("link", { name: "Comisiones" })).not.toBeInTheDocument()
     })
 
     it("Estudiante no ve ítems de menú de otros roles", async () => {
@@ -792,6 +790,124 @@ describe("router (integración)", () => {
 
       await user.click(screen.getByRole("link", { name: "‹ Elegir otro perfil" }))
       expect(await screen.findByRole("heading", { name: "Creá tu cuenta" })).toBeInTheDocument()
+    })
+  })
+
+  describe("Sesión en Vivo (US-6.3.4)", () => {
+    it("la ruta de nueva sesión redirige a login sin sesión", async () => {
+      await router.navigate("/sesiones-en-vivo/comisiones/c1/nueva")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Iniciar sesión")).toBeInTheDocument()
+    })
+
+    it("la ruta de nueva sesión renderiza con sesión de docente", async () => {
+      setSession({ token: "t", rol: "docente" })
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(
+          jsonResponse(200, {
+            id: "c1",
+            materia_id: "m1",
+            horario: "Lunes 18-20hs",
+            administrador_id: "a1",
+            docentes_asignados: ["d1"],
+          }),
+        )
+        .mockResolvedValueOnce(
+          jsonResponse(200, [
+            { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 10, activa: true },
+          ]),
+        )
+        .mockResolvedValueOnce(jsonResponse(200, { preguntas: [], total: 0 }))
+      await router.navigate("/sesiones-en-vivo/comisiones/c1/nueva")
+      render(<RouterProvider router={router} />)
+
+      expect(
+        await screen.findByRole("heading", { name: "Nueva sesión en vivo" }),
+      ).toBeInTheDocument()
+    })
+
+    it("la sala del Docente renderiza con sesión de docente", async () => {
+      setSession({ token: "t", rol: "docente" })
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(
+          jsonResponse(200, {
+            estado: "EnEspera",
+            comision_id: "c1",
+            cantidad_preguntas: 5,
+            tiempo_limite_por_pregunta_segundos: 20,
+            pregunta_actual_indice: null,
+            opciones_mostradas: false,
+            opciones_mostradas_en: null,
+            pregunta_actual_cerrada: false,
+            pregunta_actual: null,
+            ya_respondio: null,
+            puntaje_acumulado: null,
+            total_participantes: 0,
+            cantidad_respuestas: 0,
+            resultado_pregunta: null,
+          }),
+        )
+        .mockResolvedValueOnce(jsonResponse(200, []))
+        .mockResolvedValueOnce(
+          jsonResponse(200, {
+            id: "c1",
+            materia_id: "m1",
+            horario: "Lunes 18-20hs",
+            administrador_id: "a1",
+            docentes_asignados: ["d1"],
+          }),
+        )
+        .mockResolvedValueOnce(
+          jsonResponse(200, [
+            { id: "m1", nombre: "Ingeniería de Software", banco_id: "b1", cantidad_preguntas_activas: 10, activa: true },
+          ]),
+        )
+      await router.navigate("/sesiones-en-vivo/s1/sala")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByRole("heading", { name: "Sala de espera" })).toBeInTheDocument()
+    })
+
+    it("un Estudiante no puede abrir la sala del Docente", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/sesiones-en-vivo/s1/sala")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+    })
+
+    it("un Estudiante no puede abrir la proyección del Docente", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/sesiones-en-vivo/s1/proyeccion")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+    })
+
+    it("la ruta de proyección usa StageLayout, sin el menú de navegación", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/sesiones-en-vivo/s1/proyeccion")
+      render(<RouterProvider router={router} />)
+
+      await screen.findByText("Cargando…")
+      expect(screen.queryByRole("navigation")).not.toBeInTheDocument()
+    })
+
+    it("la ruta de mi sesión en vivo del Estudiante requiere sesión de estudiante", async () => {
+      setSession({ token: "t", rol: "docente" })
+      await router.navigate("/mis-sesiones-en-vivo/s1")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Acceso denegado")).toBeInTheDocument()
+    })
+
+    it("la ruta de mi sesión en vivo renderiza con sesión de estudiante", async () => {
+      setSession({ token: "t", rol: "estudiante" })
+      await router.navigate("/mis-sesiones-en-vivo/s1")
+      render(<RouterProvider router={router} />)
+
+      expect(await screen.findByText("Cargando…")).toBeInTheDocument()
     })
   })
 })

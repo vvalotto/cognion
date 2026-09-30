@@ -1,0 +1,80 @@
+{
+  "us_id": "US-6.3.3",
+  "fecha": "2026-09-22T18:07:40.631844+00:00",
+  "componente": "src/actividad_evaluativa",
+  "metricas": {
+    "pylint": 9.86,
+    "cc_promedio": 2.5,
+    "cc_max": 7,
+    "mi_promedio": 61.09,
+    "mi_minimo": 44.7,
+    "coverage": 99.0
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95.0
+  },
+  "codeguard": {
+    "archivos_analizados": 4,
+    "errors": 1,
+    "warnings": 278,
+    "infos": 26,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 7,
+        "infos": 2
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "DeadCode": {
+        "errors": 1,
+        "warnings": 196,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "Pylint": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "Spelling": {
+        "errors": 0,
+        "warnings": 75,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      },
+      "UnusedImports": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 4
+      }
+    },
+    "reporte": "quality/reports/inc6/US-6.3.3-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "Coverage 99% sobre src/actividad_evaluativa completo — el 1% no cubierto (2 líneas) es de actividad_evaluativa_periodo_abierto.py, archivo preexistente no tocado por esta US; los 4 archivos modificados tienen 100%.",
+    "El único error de codeguard es un DeadCode preexistente (@classmethod de US-6.2.4 en schemas.py, no tocado por esta US) — el mismo hallazgo que reportó US-6.3.2.",
+    "Las C0301 (line-too-long) de pylint en dependencies.py y sesiones_en_vivo_router.py son imports preexistentes con rutas largas, ya documentadas en reportes anteriores del BC.",
+    "R0903 (too-few-public-methods) en ObtenerEstadoSesionUseCase: mismo patrón aceptado en todo el BC (use case con un único execute())."
+  ]
+}

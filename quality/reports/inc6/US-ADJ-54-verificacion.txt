@@ -1,0 +1,6 @@
+test #1 | reposo=4.44 | 127s | rc=0 | Tests  639 passed (639) 
+test:coverage #1 | reposo=9.59 | 129s | rc=0 | Tests  639 passed (639) Statements : 92.32% ( 2826/3061 ) Branches : 83.03% ( 1346/1621 ) 
+test #2 | reposo=9.76 | 106s | rc=0 | Tests  639 passed (639) 
+test:coverage #2 | reposo=9.40 | 126s | rc=0 | Tests  639 passed (639) Statements : 92.32% ( 2826/3061 ) Branches : 83.03% ( 1346/1621 ) 
+test #3 | reposo=9.96 | 141s | rc=0 | Tests  639 passed (639) 
+test:coverage #3 | reposo=9.34 | 162s | rc=0 | Tests  639 passed (639) Statements : 92.32% ( 2826/3061 ) Branches : 83.03% ( 1346/1621 ) 

@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "us_id": "US-6.3.4",
+    "us_title": "Infraestructura de frontend del modo en vivo",
+    "us_points": 5,
+    "producto": "Cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-09-22T18:37:38.713538+00:00",
+    "completed_at": "2026-09-22T21:18:50.761206+00:00",
+    "total_elapsed_seconds": 9672,
+    "effective_seconds": 9672,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-09-22T18:37:38.944382+00:00",
+      "completed_at": "2026-09-22T18:38:04.862406+00:00",
+      "elapsed_seconds": 25,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-09-22T18:38:05.043108+00:00",
+      "completed_at": "2026-09-22T18:40:01.460164+00:00",
+      "elapsed_seconds": 116,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-09-22T18:40:01.720146+00:00",
+      "completed_at": "2026-09-22T18:41:17.884493+00:00",
+      "elapsed_seconds": 76,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación Guiada por Tareas",
+      "started_at": "2026-09-22T18:41:18.368629+00:00",
+      "completed_at": "2026-09-22T18:52:50.865764+00:00",
+      "elapsed_seconds": 692,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "T1",
+          "task_name": "Crear cliente sesion-en-vivo-api.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-09-22T18:44:17.489155+00:00",
+          "completed_at": "2026-09-22T18:44:55.965861+00:00",
+          "elapsed_seconds": 38,
+          "actual_minutes": 0.63,
+          "variance_minutes": -29.37,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T2",
+          "task_name": "Crear canal-sesion-en-vivo.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-09-22T18:44:57.797076+00:00",
+          "completed_at": "2026-09-22T18:45:21.051700+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -29.62,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T3",
+          "task_name": "Crear hook use-canal-sesion-en-vivo.ts",
+          "task_type": "frontend",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-09-22T18:45:21.252716+00:00",
+          "completed_at": "2026-09-22T18:45:31.909194+00:00",
+          "elapsed_seconds": 10,
+          "actual_minutes": 0.17,
+          "variance_minutes": -14.83,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T4",
+          "task_name": "Crear StageLayout y tokens CSS",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-22T18:45:32.103019+00:00",
+          "completed_at": "2026-09-22T18:45:56.554236+00:00",
+          "elapsed_seconds": 24,
+          "actual_minutes": 0.4,
+          "variance_minutes": -19.6,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T5",
+          "task_name": "Agregar rutas y placeholders",
+          "task_type": "frontend",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-09-22T18:45:56.772538+00:00",
+          "completed_at": "2026-09-22T18:46:27.121463+00:00",
+          "elapsed_seconds": 30,
+          "actual_minutes": 0.5,
+          "variance_minutes": -19.5,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "T6",
+          "task_name": "Tests Vitest de la infraestructura",
+          "task_type": "frontend",
+          "estimated_minutes": 60.0,
+          "started_at": "2026-09-22T18:46:27.338235+00:00",
+          "completed_at": "2026-09-22T18:52:33.481294+00:00",
+          "elapsed_seconds": 366,
+          "actual_minutes": 6.1,
+          "variance_minutes": -53.9,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-09-22T18:52:51.043109+00:00",
+      "completed_at": "2026-09-22T18:52:54.933585+00:00",
+      "elapsed_seconds": 3,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-09-22T18:52:55.093860+00:00",
+      "completed_at": "2026-09-22T18:52:57.603675+00:00",
+      "elapsed_seconds": 2,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-09-22T18:52:57.775750+00:00",
+      "completed_at": "2026-09-22T18:53:05.896749+00:00",
+      "elapsed_seconds": 8,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-09-22T18:53:06.069652+00:00",
+      "completed_at": "2026-09-22T21:17:20.161245+00:00",
+      "elapsed_seconds": 8654,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-09-22T21:17:20.349940+00:00",
+      "completed_at": "2026-09-22T21:18:46.676166+00:00",
+      "elapsed_seconds": 86,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-09-22T21:18:46.816981+00:00",
+      "completed_at": "2026-09-22T21:18:48.861644+00:00",
+      "elapsed_seconds": 2,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 6,
+    "completed_tasks": 6,
+    "total_phases": 10,
+    "estimated_total_minutes": 175.0,
+    "actual_total_minutes": 8.18,
+    "variance_minutes": -166.82,
+    "variance_percent": -95.32
+  }
+}

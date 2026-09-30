@@ -1,0 +1,4 @@
+test:coverage #1 | reposo=5.08 | 176s | rc=0 | Tests  639 passed (639) | Statements : 92.32% ( 2826/3061 ) Branches : 83.03% ( 1346/1621 ) 
+test:coverage #2 | reposo=9.41 | 138s | rc=0 | Tests  639 passed (639) | Statements : 92.32% ( 2826/3061 ) Branches : 83.03% ( 1346/1621 ) 
+test:coverage #3 | reposo=9.21 | 106s | rc=0 | Tests  639 passed (639) | Statements : 92.32% ( 2826/3061 ) Branches : 83.03% ( 1346/1621 ) 
+test (CI) | 124s | rc=0 | Tests  639 passed (639)

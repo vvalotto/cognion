@@ -9,12 +9,14 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
 from src.identidad.entities.usuario import Estudiante
+from src.identidad.frameworks.db.models import UsuarioModel
 from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
@@ -26,6 +28,7 @@ class EstudianteConsultaPortInProcess(EstudianteConsultaPort):
 
     def __init__(self, session: AsyncSession) -> None:
         """Recibe la sesión async compartida con el repositorio de `Usuario`."""
+        self._session = session
         self._usuario_repositorio = SQLAlchemyUsuarioRepository(session)
 
     async def existe(self, estudiante_id: UUID) -> bool:
@@ -41,3 +44,12 @@ class EstudianteConsultaPortInProcess(EstudianteConsultaPort):
         if usuario is None or not isinstance(usuario.perfil, Estudiante):
             return None
         return usuario.perfil.comision_id
+
+    async def obtener_nombres(self, ids: list[UUID]) -> dict[UUID, str]:
+        """Resuelve `nombre` para `ids` en una sola consulta por lote (`US-6.3.1`)."""
+        if not ids:
+            return {}
+        resultado = await self._session.execute(
+            select(UsuarioModel.id, UsuarioModel.nombre).where(UsuarioModel.id.in_(ids))
+        )
+        return {fila.id: fila.nombre for fila in resultado}

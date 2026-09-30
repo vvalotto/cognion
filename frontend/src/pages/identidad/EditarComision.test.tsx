@@ -1,7 +1,9 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
+import { fetchConMaterias, llamadasSinMaterias } from "@/test/fetch-con-materias"
 
 import { EditarComision } from "@/pages/identidad/EditarComision"
 
@@ -42,17 +44,22 @@ describe("EditarComision", () => {
   })
 
   it("precarga el horario actual de la comisión", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, comisionApi))
+    fetchConMaterias([
+      jsonResponse(200, comisionApi),
+    ])
 
     renderEditarComision()
 
-    expect(await screen.findByLabelText("Horario")).toHaveValue("Lunes 18-20hs")
+    // El formulario se dibuja antes de que llegue la comisión: esperar el valor, no solo el campo.
+    const campo = await screen.findByLabelText("Horario")
+    await waitFor(() => expect(campo).toHaveValue("Lunes 18-20hs"))
   })
 
   it("guarda el horario corregido y vuelve al detalle de la comisión", async () => {
-    vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, comisionApi))
-      .mockResolvedValueOnce(jsonResponse(200, { ...comisionApi, horario: "Martes 19-21hs" }))
+    fetchConMaterias([
+      jsonResponse(200, comisionApi),
+      jsonResponse(200, { ...comisionApi, horario: "Martes 19-21hs" }),
+    ])
     const user = userEvent.setup()
 
     renderEditarComision()
@@ -63,13 +70,15 @@ describe("EditarComision", () => {
     await user.click(screen.getByRole("button", { name: "Guardar cambios" }))
 
     expect(await screen.findByText("Detalle de comisión")).toBeInTheDocument()
-    const ultimaLlamada = vi.mocked(fetch).mock.calls.at(-1)
+    const ultimaLlamada = llamadasSinMaterias().at(-1)
     expect(String(ultimaLlamada?.[0])).toMatch(/\/comisiones\/c1$/)
     expect(ultimaLlamada?.[1]?.method).toBe("PATCH")
   })
 
   it("cancelar vuelve al detalle de la comisión sin ejecutar ningún cambio", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, comisionApi))
+    fetchConMaterias([
+      jsonResponse(200, comisionApi),
+    ])
     const user = userEvent.setup()
 
     renderEditarComision()
@@ -78,6 +87,6 @@ describe("EditarComision", () => {
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
     expect(await screen.findByText("Detalle de comisión")).toBeInTheDocument()
-    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1)
+    expect(llamadasSinMaterias()).toHaveLength(1)
   })
 })

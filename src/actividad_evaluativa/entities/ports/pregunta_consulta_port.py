@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
 
+from src.actividad_evaluativa.entities.puntaje_en_vivo import NivelesDePregunta
+
 
 @dataclass(frozen=True)
 class ContenidoPregunta:
@@ -95,4 +97,13 @@ class PreguntaConsultaPort(ABC):
         Usado por `#est-rendir` (`US-3.4.6`) para renderizar la pregunta actual — a diferencia
         de `obtener_detalle_correccion`, que sí expone qué opción es correcta y no debe
         reusarse antes de que el estudiante finalice la evaluación.
+        """
+
+    @abstractmethod
+    async def obtener_niveles(self, pregunta_id: UUID) -> NivelesDePregunta:
+        """Devuelve la dificultad y la importancia vigentes de `pregunta_id`.
+
+        Insumo del puntaje de la sesión en vivo (`US-6.2.4`, RF-10). El adapter es el único
+        lugar que conoce los enums de Banco de Preguntas — el puerto expone solo el vocabulario
+        propio de Actividad Evaluativa (`NivelPregunta`).
         """

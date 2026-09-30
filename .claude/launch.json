@@ -6,6 +6,19 @@
       "runtimeExecutable": "sh",
       "runtimeArgs": ["-c", "cd frontend && npm run dev"],
       "port": 5173
+    },
+    {
+      "name": "cognion-backend",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", ".venv/bin/uvicorn src.app:app --port 8000"],
+      "port": 8000,
+      "url": "http://localhost:8000"
+    },
+    {
+      "name": "cognion-frontend-red",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "cd frontend && VITE_API_BASE_URL=http://$(ipconfig getifaddr en0):5173/api npm run dev -- --host"],
+      "port": 5173
     }
   ]
 }

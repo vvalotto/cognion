@@ -76,6 +76,7 @@ from src.identidad.use_cases.listar_materias_del_estudiante import (
     ListarMateriasDelEstudianteUseCase,
 )
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
+from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
@@ -136,8 +137,10 @@ def get_invitaciones_controller(session: SessionDep) -> InvitacionesController:
     comision_repo = SQLAlchemyComisionRepository(session)
     invitacion_repo = SQLAlchemyInvitacionRepository(session)
     notificador = get_notificador()
+    materia_port = MateriaPortInProcess(session)
     return InvitacionesController(
-        GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador)
+        GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador),
+        ObtenerInvitacionUseCase(invitacion_repo, comision_repo, materia_port),
     )
 
 

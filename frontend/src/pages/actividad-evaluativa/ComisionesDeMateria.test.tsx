@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react"
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
@@ -104,15 +104,17 @@ describe("ComisionesDeMateria", () => {
     renderComisionesDeMateria()
     await screen.findByText("Lunes 18-20hs")
 
+    // Las filas salen con "…" y el resumen de cada comisión llega en pedidos aparte: esperar los
+    // números de cada fila, no solo la fila.
     const filaC1 = await screen.findByRole("row", { name: /Lunes 18-20hs/ })
     const celdasC1 = within(filaC1).getAllByRole("cell")
-    expect(celdasC1[1]).toHaveTextContent("2") // alumnos
+    await waitFor(() => expect(celdasC1[1]).toHaveTextContent("2")) // alumnos
     expect(celdasC1[2]).toHaveTextContent("1") // en curso (sin restricción, aplica)
     expect(celdasC1[3]).toHaveTextContent("1") // planificadas (restringida a c1, aplica)
 
     const filaC2 = screen.getByRole("row", { name: /Martes 10-13hs/ })
     const celdasC2 = within(filaC2).getAllByRole("cell")
-    expect(celdasC2[1]).toHaveTextContent("1") // alumnos
+    await waitFor(() => expect(celdasC2[1]).toHaveTextContent("1")) // alumnos
     expect(celdasC2[2]).toHaveTextContent("1") // en curso (sin restricción, aplica)
     expect(celdasC2[3]).toHaveTextContent("0") // planificadas (restringida a c1, no aplica)
   })

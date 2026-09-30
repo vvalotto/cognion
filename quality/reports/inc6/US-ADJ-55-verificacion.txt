@@ -1,0 +1,6 @@
+test #1 | reposo=4.58 | 115s | rc=0 | Tests  671 passed (671) 
+test:coverage #1 | reposo=9.59 | 120s | rc=0 | Tests  671 passed (671) Statements : 92.36% ( 2905/3145 ) Branches : 83.35% ( 1407/1688 ) 
+test #2 | reposo=9.65 | 104s | rc=0 | Tests  671 passed (671) 
+test:coverage #2 | reposo=9.47 | 118s | rc=0 | Tests  671 passed (671) Statements : 92.36% ( 2905/3145 ) Branches : 83.35% ( 1407/1688 ) 
+test #3 | reposo=9.97 | 109s | rc=0 | Tests  671 passed (671) 
+test:coverage #3 | reposo=9.87 | 120s | rc=0 | Tests  671 passed (671) Statements : 92.36% ( 2905/3145 ) Branches : 83.35% ( 1407/1688 ) 

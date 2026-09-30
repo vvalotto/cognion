@@ -15,6 +15,7 @@ from src.banco_preguntas.frameworks.api.schemas import (
     MateriaResponse,
 )
 from src.banco_preguntas.frameworks.dependencies import (
+    get_current_user,
     get_materias_controller,
     require_administrador,
     require_docente_o_administrador,
@@ -22,6 +23,14 @@ from src.banco_preguntas.frameworks.dependencies import (
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
+from src.shared.entities.jwt import JWTPayload
+from src.shared.entities.tipo_perfil import TipoPerfil
+
+
+def _docente_id_o_none(usuario: JWTPayload) -> UUID | None:
+    """`usuario_id` si es Docente, `None` si es Administrador (sin filtro, ve todo)."""
+    return usuario.usuario_id if usuario.rol is TipoPerfil.DOCENTE else None
+
 
 router = APIRouter(prefix="/materias", tags=["banco_preguntas"])
 
@@ -109,6 +118,7 @@ async def eliminar_materia(
 )
 async def listar_materias(
     incluir_inactivas: bool = False,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: MateriasController = Depends(get_materias_controller),
 ) -> list[MateriaListItemResponse]:
     """Lista las materias con la cantidad de preguntas activas de cada una.
@@ -116,9 +126,10 @@ async def listar_materias(
     Rol `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3).
     `incluir_inactivas=True` también trae las deshabilitadas — lo usa la pantalla de gestión
     de Materias para poder reactivarlas; el resto de los consumidores (selectores) sigue
-    viendo solo las activas.
+    viendo solo las activas. Un Docente solo ve las materias donde tiene al menos una
+    Comisión asignada (`US-ADJ-57`); el Administrador ve todas, sin filtrar.
     """
-    materias = await controller.listar_materias(incluir_inactivas)
+    materias = await controller.listar_materias(incluir_inactivas, _docente_id_o_none(usuario))
     return [
         MateriaListItemResponse(
             id=materia.id,

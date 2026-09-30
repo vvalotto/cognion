@@ -6,6 +6,7 @@ from src.actividad_evaluativa.entities.ports.actividad_query_port import (
     ActividadResumen,
 )
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
+from tests.unit.inc3._fakes import FakeComisionConsultaPort
 
 
 class FakeActividadQueryPort(ActividadQueryPort):
@@ -46,7 +47,7 @@ class TestListarActividadesUseCase:
         materia_id = uuid4()
         query_port = FakeActividadQueryPort()
         query_port.resumenes[materia_id] = [_resumen(materia_id)]
-        use_case = ListarActividadesUseCase(query_port)
+        use_case = ListarActividadesUseCase(query_port, FakeComisionConsultaPort())
 
         resultado = await use_case.execute(materia_id)
 
@@ -55,7 +56,7 @@ class TestListarActividadesUseCase:
 
     async def test_lista_vacia_si_la_materia_no_tiene_actividades(self):
         query_port = FakeActividadQueryPort()
-        use_case = ListarActividadesUseCase(query_port)
+        use_case = ListarActividadesUseCase(query_port, FakeComisionConsultaPort())
 
         resultado = await use_case.execute(uuid4())
 

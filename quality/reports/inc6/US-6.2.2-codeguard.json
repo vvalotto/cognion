@@ -1,0 +1,3860 @@
+{
+  "summary": {
+    "total_files": 7,
+    "checks_executed": 9,
+    "elapsed_seconds": 75.17,
+    "timestamp": "2026-09-20T17:15:22.541897",
+    "total_issues": 182,
+    "errors": 2,
+    "warnings": 133,
+    "infos": 47
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'opciones_mostradas_en' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 51
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'pregunta_actual_cerrada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 53
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'crear' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 55
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'reconstruir' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 83
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'validar_para_unirse' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 109
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'iniciar' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 118
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: attribute 'pregunta_actual_cerrada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 130
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'mostrar_opciones' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 132
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: attribute 'opciones_mostradas_en' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 143
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'pregunta_actual' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 145
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: attribute 'opciones_mostradas_en' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 169
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 63.9 (grade A)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.57/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'inicial' should be 'initial,'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 35
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'requiere' should be 'require'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 66
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 93
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 106
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 107
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 158
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 162
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 166
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 168
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": 169
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ConcurrenciaOptimistaError' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 13
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'MateriaNoExiste' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 40
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PreguntasInsuficientes' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 49
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PeriodoInvalido' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 62
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'CantidadIntentosInvalida' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 75
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ActividadNoExiste' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 87
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'NoSePuedeAcortarConEvaluacionesActivas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 96
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ActividadYaCerrada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 108
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EstudianteNoExiste' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 117
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'FueraDePeriodo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 126
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionNoExiste' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 139
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'PreguntaNoAsignada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 148
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'IntentosAgotados' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 161
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionSuspendida' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 174
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionYaFinalizada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 185
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionYaSuspendida' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 194
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionNoSuspendida' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 203
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'EvaluacionNoFinalizada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 214
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'ComisionNoExiste' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 226
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'TiempoLimiteInvalido' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 235
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SesionNoExiste' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 247
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SesionYaFinalizada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 256
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SesionYaIniciada' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 265
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SesionNoEnCurso' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 274
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'OpcionesYaMostradas' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 283
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'doble' should be 'double'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 16
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'comando' should be 'commando'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 17
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'excede' should be 'exceed'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 50
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'ser' should be 'set'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 70
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'ser' should be 'set'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 82
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'momento' should be 'memento'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 104
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'momento' should be 'memento'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 134
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'requiere' should be 'require'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 175
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'requiere' should be 'require'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 186
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'requiere' should be 'require'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 195
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'requiere' should be 'require'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 204
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'requiere' should be 'require'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 215
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Comision' should be 'Commission'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 227
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'ser' should be 'set'",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": 242
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/errors.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 34
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'desde_participacion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 60
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 85
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 113
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 66.0 (grade A)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.78/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 35
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 42
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 43
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 44
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 45
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 46
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 47
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 48
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 87
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 90
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 92
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 93
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Falso' should be 'False'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 104
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 116
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 121
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 123
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": 124
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'logger' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 47
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'crear_sesion_en_vivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 67
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'iniciar_sesion_en_vivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 96
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'mostrar_opciones_en_vivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 118
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'unirse_a_sesion_en_vivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 140
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'canal_sesion_en_vivo' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 167
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 68.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 52
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 55
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 56
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 57
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 58
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 59
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 60
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 61
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 62
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 63
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'responde' should be 'respond,'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 77
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 79
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 93
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 107
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 115
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 129
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 137
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'Suscribe' should be 'Subscribe'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 171
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'cliente' should be 'client,'",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 171
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "error",
+      "message": "pylint execution timed out (>5s)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 60
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 122
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 127
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 150
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 159
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 177
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 180
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: variable 'require_estudiante_o_docente' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 183
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 192
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 206
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 216
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 223
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_connection_manager' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 251
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 261
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: function 'get_sesiones_en_vivo_controller' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 266
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'accesible' should be 'accessible'",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 187
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'hace' should be 'have'",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 188
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'SesionesEnVivoController' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": 23
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'crear' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": 39
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "info",
+      "message": "✓ No spelling errors detected",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: class 'MostrarOpcionesEnVivoUseCase' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 52
+    },
+    {
+      "check": "DeadCode",
+      "severity": "warning",
+      "message": "Dead code: method 'execute' is never used (60% confidence)",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 66
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 76.4 (grade A)",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.71/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 77
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 79
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 82
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 84
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 101
+    },
+    {
+      "check": "Spelling",
+      "severity": "warning",
+      "message": "Spelling: 'sesion' should be 'session'",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": 103
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ No type errors detected",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opciones_mostradas_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_actual_cerrada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 53
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'crear' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 55
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'reconstruir' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 83
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'validar_para_unirse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 109
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'iniciar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 118
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: attribute 'pregunta_actual_cerrada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 130
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'mostrar_opciones' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 132
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: attribute 'opciones_mostradas_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 143
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'pregunta_actual' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 145
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: attribute 'opciones_mostradas_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 169
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'inicial' should be 'initial,'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 35
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 66
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 93
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 106
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 107
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 158
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 162
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 166
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 168
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 169
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ConcurrenciaOptimistaError' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 13
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'MateriaNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntasInsuficientes' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PeriodoInvalido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CantidadIntentosInvalida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 87
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'NoSePuedeAcortarConEvaluacionesActivas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 96
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadYaCerrada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 108
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EstudianteNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 117
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'FueraDePeriodo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 126
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 139
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaNoAsignada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 148
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'IntentosAgotados' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 161
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionSuspendida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 174
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionYaFinalizada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 185
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionYaSuspendida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 194
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionNoSuspendida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 203
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionNoFinalizada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 214
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 226
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'TiempoLimiteInvalido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 235
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 247
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionYaFinalizada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 256
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionYaIniciada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 265
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionNoEnCurso' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 274
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'OpcionesYaMostradas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 283
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'doble' should be 'double'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 16
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comando' should be 'commando'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 17
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'excede' should be 'exceed'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 50
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 70
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 82
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 104
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 134
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 175
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 186
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 195
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 204
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 215
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 227
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 242
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_participacion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 85
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 113
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 35
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 42
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 43
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 44
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 45
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 46
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 47
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 48
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 87
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 90
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 92
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 93
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 104
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 116
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 121
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 123
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 124
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'logger' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'crear_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'iniciar_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 96
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'mostrar_opciones_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 118
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'unirse_a_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 140
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'canal_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 167
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 52
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 55
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 56
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 57
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 58
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 59
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 60
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 61
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 62
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 63
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'responde' should be 'respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 77
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 79
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 93
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 107
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 115
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 129
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 137
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Suscribe' should be 'Subscribe'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 171
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 171
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 122
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 127
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 150
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 177
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 180
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante_o_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 183
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 192
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 206
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 216
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 223
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_connection_manager' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 251
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 261
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_sesiones_en_vivo_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 266
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'accesible' should be 'accessible'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 187
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 188
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionesEnVivoController' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'crear' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": 39
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'MostrarOpcionesEnVivoUseCase' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'execute' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 66
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 77
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 79
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 82
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 84
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 101
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 103
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 63.9 (grade A)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.57/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 66.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.78/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 68.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 76.4 (grade A)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.71/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "api/sesiones_en_vivo_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'logger' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 47
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'crear_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 67
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'iniciar_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 96
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'mostrar_opciones_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 118
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'unirse_a_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 140
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'canal_sesion_en_vivo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 167
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 68.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 52
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 55
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 56
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 57
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 58
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 59
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 60
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 61
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 62
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 63
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'responde' should be 'respond,'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 77
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 79
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 93
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 107
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 115
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 129
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 137
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Suscribe' should be 'Subscribe'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 171
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'cliente' should be 'client,'",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 171
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "error",
+        "message": "pylint execution timed out (>5s)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      }
+    ],
+    "controllers/sesiones_en_vivo_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionesEnVivoController' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": 23
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'crear' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": 39
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "info",
+        "message": "✓ No spelling errors detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/sesiones_en_vivo_controller.py",
+        "line": null
+      }
+    ],
+    "entities/actividad_evaluativa_en_vivo.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'opciones_mostradas_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 51
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'pregunta_actual_cerrada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 53
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'crear' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 55
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'reconstruir' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 83
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'validar_para_unirse' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 109
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'iniciar' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 118
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: attribute 'pregunta_actual_cerrada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 130
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'mostrar_opciones' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 132
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: attribute 'opciones_mostradas_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 143
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'pregunta_actual' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 145
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: attribute 'opciones_mostradas_en' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 169
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 63.9 (grade A)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.57/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'inicial' should be 'initial,'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 35
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 66
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 93
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 106
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 107
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 158
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 162
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 166
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 168
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": 169
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/actividad_evaluativa_en_vivo.py",
+        "line": null
+      }
+    ],
+    "entities/errors.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ConcurrenciaOptimistaError' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 13
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'MateriaNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 40
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntasInsuficientes' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 49
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PeriodoInvalido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 62
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'CantidadIntentosInvalida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 75
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 87
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'NoSePuedeAcortarConEvaluacionesActivas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 96
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ActividadYaCerrada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 108
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EstudianteNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 117
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'FueraDePeriodo' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 126
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 139
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'PreguntaNoAsignada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 148
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'IntentosAgotados' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 161
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionSuspendida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 174
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionYaFinalizada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 185
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionYaSuspendida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 194
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionNoSuspendida' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 203
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'EvaluacionNoFinalizada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 214
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'ComisionNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 226
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'TiempoLimiteInvalido' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 235
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionNoExiste' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 247
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionYaFinalizada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 256
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionYaIniciada' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 265
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'SesionNoEnCurso' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 274
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'OpcionesYaMostradas' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 283
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'doble' should be 'double'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 16
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'comando' should be 'commando'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 17
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'excede' should be 'exceed'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 50
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 70
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 82
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 104
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'momento' should be 'memento'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 134
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 175
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 186
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 195
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 204
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'requiere' should be 'require'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 215
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Comision' should be 'Commission'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 227
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'ser' should be 'set'",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": 242
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/errors.py",
+        "line": null
+      }
+    ],
+    "entities/eventos_en_vivo.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 34
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_participacion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 60
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 85
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'desde_sesion' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 113
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 66.0 (grade A)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.78/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 35
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 42
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 43
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 44
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 45
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 46
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 47
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 48
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 87
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 90
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 92
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 93
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'Falso' should be 'False'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 104
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 116
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 121
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 123
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": 124
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/entities/eventos_en_vivo.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 60
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_event_store' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 122
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 127
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_query_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 150
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_actividades_estudiante_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 159
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 177
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 180
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: variable 'require_estudiante_o_docente' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 183
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_evaluaciones_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 192
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_pregunta_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 206
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_revision_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 216
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'build_verificar_vencimientos_use_case' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 223
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_connection_manager' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 251
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_comision_consulta_port' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 261
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: function 'get_sesiones_en_vivo_controller' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 266
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'accesible' should be 'accessible'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 187
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'hace' should be 'have'",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 188
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "use_cases/mostrar_opciones_en_vivo.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: class 'MostrarOpcionesEnVivoUseCase' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 52
+      },
+      {
+        "check": "DeadCode",
+        "severity": "warning",
+        "message": "Dead code: method 'execute' is never used (60% confidence)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 66
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 76.4 (grade A)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.71/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 77
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 79
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 82
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 84
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 101
+      },
+      {
+        "check": "Spelling",
+        "severity": "warning",
+        "message": "Spelling: 'sesion' should be 'session'",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": 103
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ No type errors detected",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/use_cases/mostrar_opciones_en_vivo.py",
+        "line": null
+      }
+    ]
+  }
+}

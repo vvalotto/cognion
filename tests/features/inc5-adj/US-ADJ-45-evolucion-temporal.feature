@@ -28,7 +28,7 @@ Feature: Docente consulta la evolución temporal de aciertos (US-ADJ-45)
   Scenario: Comisión que no pertenece a la materia
     Given una comisión de otra materia
     When un Docente hace GET /analytics/materias/X/comisiones/{esa comisión}/evolucion-temporal
-    Then recibe 422
+    Then recibe 403
 
   @error-case
   Scenario: Sin autenticación

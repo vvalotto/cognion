@@ -121,7 +121,12 @@ describe("identidad-comisiones-api", () => {
       const [url, init] = vi.mocked(fetch).mock.calls[0]
       expect(String(url)).toContain("/comisiones/c1")
       expect(init?.method ?? "GET").toBe("GET")
-      expect(comision).toEqual({ id: "c1", horario: "Lunes 18-20hs", docentesAsignados: ["d1"] })
+      expect(comision).toEqual({
+        id: "c1",
+        materiaId: "m1",
+        horario: "Lunes 18-20hs",
+        docentesAsignados: ["d1"],
+      })
     })
 
     it("mapea docentes_asignados vacío", async () => {

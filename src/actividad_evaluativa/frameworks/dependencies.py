@@ -13,10 +13,15 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
+from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.frameworks.adapters.actividad_query_repository import (
     SQLAlchemyActividadQueryRepository,
+)
+from src.actividad_evaluativa.frameworks.adapters.comision_consulta_port_in_process import (
+    ComisionConsultaPortInProcess,
 )
 from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
@@ -33,11 +38,25 @@ from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_proce
 from src.actividad_evaluativa.frameworks.adapters.notificacion_port_in_process import (
     NotificacionPortInProcess,
 )
+from src.actividad_evaluativa.frameworks.adapters.participantes_sesion_query_repository import (
+    SQLAlchemyParticipantesSesionQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
+from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
+    SQLAlchemyProyeccionesEnVivo,
+    SQLAlchemyProyeccionesEnVivoQuery,
+)
+from src.actividad_evaluativa.frameworks.adapters.sesiones_en_vivo_query_repository import (
+    SQLAlchemySesionesEnVivoQueryRepository,
+)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.websockets.connection_manager import ConnectionManager
+from src.actividad_evaluativa.frameworks.websockets.websocket_canal_tiempo_real import (
+    WebSocketCanalTiempoReal,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
@@ -48,35 +67,82 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudia
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
+    ConduccionEnVivoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
+    ParticipacionesEnVivoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.revision_controller import (
     RevisionController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_controller import (
+    SesionesEnVivoController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_listado_controller import (
+    SesionesEnVivoListadoController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
+    SesionesEnVivoQueryController,
+)
+from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
+    AvanzarSiguientePreguntaUseCase,
+)
+from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
+    CancelarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
+from src.actividad_evaluativa.use_cases.cerrar_pregunta_actual import (
+    CerrarPreguntaActualUseCase,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
     CrearActividadPeriodoAbiertoUseCase,
 )
+from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.finalizar_sesion_en_vivo import (
+    FinalizarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import (
+    IniciarSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.listar_actividades import ListarActividadesUseCase
 from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
     ListarActividadesVisiblesUseCase,
 )
+from src.actividad_evaluativa.use_cases.listar_participantes import ListarParticipantesUseCase
+from src.actividad_evaluativa.use_cases.listar_sesiones_en_vivo import ListarSesionesEnVivoUseCase
 from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import (
     ModificarPeriodoDisponibilidadUseCase,
 )
 from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
     ModificarTituloActividadUseCase,
 )
+from src.actividad_evaluativa.use_cases.mostrar_opciones_en_vivo import (
+    MostrarOpcionesEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.obtener_actividad import ObtenerActividadUseCase
+from src.actividad_evaluativa.use_cases.obtener_estado_sesion import ObtenerEstadoSesionUseCase
+from src.actividad_evaluativa.use_cases.obtener_ranking import ObtenerRankingUseCase
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
 from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
+from src.actividad_evaluativa.use_cases.responder_pregunta_en_vivo import (
+    ResponderPreguntaEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
+from src.actividad_evaluativa.use_cases.unirse_a_sesion_en_vivo import (
+    UnirseASesionEnVivoUseCase,
+)
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
 from src.actividad_evaluativa.use_cases.verificar_vencimientos import (
     VerificarVencimientosUseCase,
 )
@@ -103,28 +169,34 @@ def get_actividades_controller(session: SessionDep) -> ActividadesController:
     event_store = SQLAlchemyEventStore(session)
     evaluacion_activa_query = SQLAlchemyEvaluacionActivaQueryRepository(session)
     notificacion = NotificacionPortInProcess(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
     return ActividadesController(
         CrearActividadPeriodoAbiertoUseCase(
-            materia_consulta, pregunta_consulta, event_store, notificacion
+            materia_consulta, pregunta_consulta, event_store, notificacion, autorizacion
         ),
-        ModificarPeriodoDisponibilidadUseCase(event_store, evaluacion_activa_query),
+        ModificarPeriodoDisponibilidadUseCase(
+            event_store, evaluacion_activa_query, comision_consulta
+        ),
         CerrarActividadUseCase(
             event_store,
             evaluacion_activa_query,
             FinalizarEvaluacionUseCase(event_store),
             materia_consulta,
             notificacion,
+            autorizacion,
         ),
-        ModificarTituloActividadUseCase(event_store),
+        ModificarTituloActividadUseCase(event_store, comision_consulta),
     )
 
 
 def get_actividades_query_controller(session: SessionDep) -> ActividadesQueryController:
     """Arma el `ActividadesQueryController` (consultas de solo lectura) con sus dependencias."""
     actividad_query = SQLAlchemyActividadQueryRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
     return ActividadesQueryController(
-        ListarActividadesUseCase(actividad_query),
-        ObtenerActividadUseCase(actividad_query),
+        ListarActividadesUseCase(actividad_query, comision_consulta),
+        ObtenerActividadUseCase(actividad_query, comision_consulta),
     )
 
 
@@ -210,4 +282,141 @@ def build_verificar_vencimientos_use_case(session: AsyncSession) -> VerificarVen
         SuspenderEvaluacionUseCase(event_store),
         FinalizarEvaluacionUseCase(event_store),
         umbral_inactividad,
+    )
+
+
+_connection_manager = ConnectionManager()
+"""Singleton del proceso (`US-6.1.1`) — vive fuera del ciclo de request/response de FastAPI,
+mismo criterio que el background task de `VerificarVencimientosUseCase` (`US-3.2.4`): las
+conexiones WebSocket de una sesión deben sobrevivir a cada request individual, no solo a la
+sesión de base de datos de un endpoint."""
+
+
+def get_connection_manager() -> ConnectionManager:
+    """Provee el `ConnectionManager` singleton del proceso."""
+    return _connection_manager
+
+
+def get_canal_tiempo_real() -> CanalTiempoRealPort:
+    """Provee la implementación de `CanalTiempoRealPort` sobre el `ConnectionManager` singleton."""
+    return WebSocketCanalTiempoReal(_connection_manager)
+
+
+def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
+    """Provee `ComisionConsultaPort` (Actividad Evaluativa → Identidad, `US-6.1.1`)."""
+    return ComisionConsultaPortInProcess(session)
+
+
+def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
+    """Arma el `SesionesEnVivoController` (`US-6.1.2` a `6.1.4`, `US-ADJ-58`)."""
+    event_store = SQLAlchemyEventStore(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    return SesionesEnVivoController(
+        CrearSesionEnVivoUseCase(
+            comision_consulta,
+            PreguntaConsultaPortInProcess(session),
+            event_store,
+        ),
+        UnirseASesionEnVivoUseCase(
+            EstudianteConsultaPortInProcess(session),
+            event_store,
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            get_canal_tiempo_real(),
+            SQLAlchemyProyeccionesEnVivo(session),
+        ),
+        IniciarSesionEnVivoUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            VerificarAutorizacionComisionService(comision_consulta),
+        ),
+        CancelarSesionEnVivoUseCase(event_store, get_canal_tiempo_real(), comision_consulta),
+    )
+
+
+def get_conduccion_en_vivo_controller(session: SessionDep) -> ConduccionEnVivoController:
+    """Arma el `ConduccionEnVivoController` con sus dependencias (`US-6.2.2` a `US-6.2.7`)."""
+    event_store = SQLAlchemyEventStore(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    autorizacion = VerificarAutorizacionComisionService(comision_consulta)
+    return ConduccionEnVivoController(
+        MostrarOpcionesEnVivoUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+            comision_consulta,
+        ),
+        CerrarPreguntaActualUseCase(
+            event_store,
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+            EstudianteConsultaPortInProcess(session),
+            autorizacion,
+        ),
+        AvanzarSiguientePreguntaUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            get_canal_tiempo_real(),
+            comision_consulta,
+        ),
+        FinalizarSesionEnVivoUseCase(
+            event_store,
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            get_canal_tiempo_real(),
+            EstudianteConsultaPortInProcess(session),
+            autorizacion,
+        ),
+    )
+
+
+def get_sesiones_en_vivo_query_controller(session: SessionDep) -> SesionesEnVivoQueryController:
+    """Arma el `SesionesEnVivoQueryController` con sus dependencias de lectura (`US-6.2.8`)."""
+    event_store = SQLAlchemyEventStore(session)
+    return SesionesEnVivoQueryController(
+        ObtenerEstadoSesionUseCase(
+            event_store,
+            PreguntaConsultaPortInProcess(session),
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            EstudianteConsultaPortInProcess(session),
+        ),
+        ListarParticipantesUseCase(
+            event_store,
+            SQLAlchemyParticipantesSesionQueryRepository(session),
+            EstudianteConsultaPortInProcess(session),
+            ComisionConsultaPortInProcess(session),
+        ),
+        ObtenerRankingUseCase(
+            event_store,
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            EstudianteConsultaPortInProcess(session),
+        ),
+    )
+
+
+def get_sesiones_en_vivo_listado_controller(
+    session: SessionDep,
+) -> SesionesEnVivoListadoController:
+    """Arma el `SesionesEnVivoListadoController`, separado del `...QueryController` (`US-6.3.2`)."""
+    return SesionesEnVivoListadoController(
+        ListarSesionesEnVivoUseCase(
+            EstudianteConsultaPortInProcess(session),
+            SQLAlchemySesionesEnVivoQueryRepository(session),
+            MateriaConsultaPortInProcess(session),
+        )
+    )
+
+
+def get_participaciones_en_vivo_controller(session: SessionDep) -> ParticipacionesEnVivoController:
+    """Arma el `ParticipacionesEnVivoController` con sus dependencias concretas (`US-6.2.4`)."""
+    return ParticipacionesEnVivoController(
+        ResponderPreguntaEnVivoUseCase(
+            SQLAlchemyEventStore(session),
+            PreguntaConsultaPortInProcess(session),
+            SQLAlchemyProyeccionesEnVivo(session),
+            SQLAlchemyProyeccionesEnVivoQuery(session),
+            get_canal_tiempo_real(),
+        )
     )

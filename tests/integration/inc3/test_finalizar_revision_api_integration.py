@@ -18,6 +18,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
@@ -132,6 +133,7 @@ async def _actividad_vigente(
     `cantidad_preguntas` no supere las preguntas activas disponibles al momento de crearla.
     """
     materia_id, banco_id = await _crear_materia(client, admin_headers)
+    await asignar_docente_a_materia(materia_id, docente_headers)
     for _ in range(cantidad_preguntas):
         await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
     apertura = datetime.now(UTC) - timedelta(days=1)
@@ -245,6 +247,7 @@ class TestRevisionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             pregunta_correcta = await _cargar_verdadero_falso(
                 client, docente_headers, banco_id, True
             )
@@ -303,6 +306,7 @@ class TestRevisionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -335,6 +339,7 @@ class TestRevisionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -446,6 +451,7 @@ class TestRevisionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             pregunta_id = await _cargar_verdadero_falso(client, docente_headers, banco_id, True)
             apertura = datetime.now(UTC) - timedelta(days=1)
             cierre = apertura + timedelta(days=7)
@@ -484,6 +490,7 @@ class TestRevisionAPIIntegration:
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id, banco_id = await _crear_materia(client, admin_headers)
+            await asignar_docente_a_materia(materia_id, docente_headers)
             pregunta_id, opciones_texto = await _cargar_opcion_multiple(
                 client, docente_headers, banco_id, indice_correcto=1
             )

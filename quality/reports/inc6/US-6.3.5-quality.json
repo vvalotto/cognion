@@ -1,0 +1,27 @@
+{
+  "us_id": "US-6.3.5",
+  "stack": "frontend (React 19 + TypeScript + Vite) — sin cambios de backend",
+  "gates_adaptados": true,
+  "adaptacion_referencia": "docs/plans/inc6/US-6.3.5-context.md",
+  "resultados": {
+    "frontend": {
+      "oxlint": { "errores": 0, "warnings": 6, "detalle": "warnings preexistentes (button.tsx, badge.tsx, AuthLayout.tsx, DesempenoResumenDetalle.tsx, RendirEvaluacion.test.tsx x2), no introducidos por esta US" },
+      "tsc_b": { "errores": 0 },
+      "vitest": {
+        "test_files": 88,
+        "tests": 548,
+        "passed": 548,
+        "failed": 0,
+        "nota": "corrida con --testTimeout=20000 para evitar timeouts por sobrecarga de instrumentación v8 bajo --coverage en el suite completo, mismo criterio que US-6.3.4"
+      },
+      "coverage_global": {
+        "statements_pct": 91.95,
+        "branches_pct": 82.08,
+        "functions_pct": 87.63,
+        "lines_pct": 94.77,
+        "umbral_referencia_pct": 80
+      }
+    }
+  },
+  "estado": "APROBADO"
+}

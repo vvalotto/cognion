@@ -95,6 +95,7 @@ export async function crearComision(
 
 export interface ComisionDetalleResponse {
   id: string
+  materiaId: string
   horario: string
   docentesAsignados: string[]
   activa: boolean
@@ -112,6 +113,7 @@ interface ComisionDetalleApiResponse {
 function mapearDetalle(response: ComisionDetalleApiResponse): ComisionDetalleResponse {
   return {
     id: response.id,
+    materiaId: response.materia_id,
     horario: response.horario,
     activa: response.activa,
     docentesAsignados: response.docentes_asignados,

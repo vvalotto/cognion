@@ -19,6 +19,10 @@ from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import (
     DetalleCorreccionPregunta,
     PreguntaConsultaPort,
 )
+from src.actividad_evaluativa.entities.puntaje_en_vivo import (
+    NivelesDePregunta,
+    NivelPregunta,
+)
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
     SQLAlchemyBancoRepository,
@@ -128,3 +132,18 @@ class PreguntaConsultaPortInProcess(PreguntaConsultaPort):
             )
 
         return ContenidoPregunta(texto=pregunta.texto, opciones=None)
+
+    async def obtener_niveles(self, pregunta_id: UUID) -> NivelesDePregunta:
+        """Mapea dificultad e importancia de la `PreguntaPlantilla` vigente a `NivelPregunta`.
+
+        Mismo criterio defensivo que los demás métodos ante `pregunta is None`. Los enums de
+        Banco comparten el valor textual (`"bajo"`/`"medio"`/`"alto"`) con `NivelPregunta`.
+        """
+        pregunta = await self._pregunta_repositorio.obtener_por_id(pregunta_id)
+        if pregunta is None:
+            raise PreguntaNoAsignada(None, pregunta_id)
+
+        return NivelesDePregunta(
+            dificultad=NivelPregunta(pregunta.dificultad.value),
+            importancia=NivelPregunta(pregunta.importancia.value),
+        )
