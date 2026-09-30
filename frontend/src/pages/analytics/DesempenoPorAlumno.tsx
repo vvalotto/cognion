@@ -12,6 +12,7 @@ import {
 } from "@/lib/identidad-comisiones-api"
 import {
   armarFilas,
+  armarFilasEnVivo,
   DesempenoResumenDetalle,
   type FilaDesempeno,
 } from "@/pages/analytics/DesempenoResumenDetalle"
@@ -192,6 +193,8 @@ export function DesempenoPorAlumno() {
           desempeno={desempeno}
           filas={filas}
           mensajeVacio="Este estudiante todavía no finalizó ninguna evaluación de esta materia."
+          filasEnVivo={armarFilasEnVivo(desempeno)}
+          mensajeVacioEnVivo="Este estudiante todavía no participó en sesiones en vivo de esta materia."
         />
       )}
     </div>

@@ -58,6 +58,8 @@ Misma paleta y tipografía que `wireframes-actividad-evaluativa.md` §1 (azul in
 | Contraste | Fondo oscuro (`#0F1B24`) + texto claro (`#FFFFFF`/`#6FE39A`) — ratio ≥ 7:1 (WCAG AAA) | Más estricto que el AA general del resto del sistema (RNF Usabilidad, escenario general) porque acá no hay control de brillo/ángulo de lectura como en una pantalla personal — reduce el deslumbramiento en aulas con luz natural |
 | Layout | Una sola columna centrada, sin scroll, máximo 3-4 elementos por pantalla (pregunta, timer, una acción) | Un proyector no se "recorre" como una pantalla personal — todo lo relevante debe entrar en el primer vistazo |
 | Paleta de proyección | Tokens propios (`--stage-*`), no los mismos que el resto del sistema (`--card`/`--background` claros) | El resto del sistema prioriza legibilidad de cerca en pantalla propia; la proyección prioriza contraste a distancia — son necesidades distintas, mismo criterio que un dashboard vs. un formulario |
+| Cajas de opción (texto sobre color) | ≥ 4,5:1 (AAA para texto grande: 28 px en negrita) — rojo `#c93a3e` 5,05:1, azul `#287aaa` 4,71:1, amarillo `#d9a324` con texto `#2a1c00` 7,29:1, verde `#378257` 4,67:1 | **Decisión de Víctor (2026-09-26, H3 de `US-6.3.10`):** el 7:1 del texto general no se exige a las cajas de color — llevarlas ahí volvía los colores tan oscuros que se confundían entre sí. Azul y verde se oscurecieron desde `#2f8fc7`/`#3f9463` (3,57:1 y 3,73:1) sin cambiar el tono; las tarjetas del celular usan los mismos colores |
+| Enunciado con las opciones a la vista | 30 px (40 px con la pregunta sola) | **Decisión de Víctor (2026-09-26, H4 de `US-6.3.10`):** se mantiene el prototipo — la pregunta ya se leyó en grande en el paso anterior y así entran las cuatro cajas sin scroll a 1920×1080. Se confirma a ojo en el proyector real |
 
 Estos criterios aplican únicamente a las pantallas `stage-*` (Docente, vista de proyección,
 §2.3-2.7) — las pantallas del Estudiante (§3) y la de creación/sala de espera del Docente (§2.1,
@@ -408,5 +410,69 @@ real (celular y proyector) que exige el gate de diseño para este escenario (`CL
 
 **Decisión de Víctor (2026-09-22):** la validación en dispositivo real de §6 se difiere al
 momento de implementar `US-6.3.5` a `US-6.3.9` (frontend real, no el prototipo estático) — no
-bloquea el arranque del backend (`US-6.3.1` a `US-6.3.3`) ni el resto de la Iteración 3. La
-aprobación explícita en el Issue #422 sigue pendiente hasta ese momento.
+bloquea el arranque del backend (`US-6.3.1` a `US-6.3.3`) ni el resto de la Iteración 3. Validada
+en la UAT de cierre de `US-6.3.10` (Tramo 2, revisión manual de Víctor en Mac/iPhone/iPad,
+2026-09-26) — aprobación explícita registrada al cerrar el Issue #422 (barrido documental §12).
+
+---
+
+## 8. Ampliaciones de `Incremento 6-ADJ` (`US-ADJ-58`)
+
+Origen: revisión manual de la app (2026-09-26), hallazgos #4 y #6
+(`quality/reports/uat/inc6/revision-manual-app.md`). Decisiones de Víctor (2026-09-27): estado
+propio `Cancelada`; solo se cancela una sesión `EnEspera`; sin email, solo el aviso por el
+canal; al finalizar con la pregunta abierta, esta no se cierra (sin histograma) y las
+respuestas ya dadas cuentan para el ranking. Pantallas 20 a 22 del prototipo.
+
+### 8.1 Sala de espera del Docente (`#doc-sala-espera`, modificada)
+
+| Elemento | Detalle |
+|---|---|
+| "Iniciar sesión" | Deshabilitado con 0 participantes. Reemplaza el "se puede iniciar igual" de H9 (§6.9): ahora es una regla del dominio (INV-AEV-11, `SinParticipantes`), no solo de la pantalla |
+| "‹ Salir" | Sale sin tocar la sesión; se retoma con "Continuar" (H6). Ya implementado en la revisión manual |
+| "Cancelar sesión" | Botón secundario en rojo contorneado, separado de "Iniciar" para no tocarlo sin querer → `#doc-cancelar-sesion` |
+
+### 8.2 Confirmar cancelación (`#doc-cancelar-sesion`, nueva)
+
+| Elemento | Detalle |
+|---|---|
+| Actor | Docente |
+| Comando | `CancelarSesionEnVivo(sesion_id)` — solo `EnEspera` (INV-AEV-10) |
+| Contenido | Resumen de la sesión (preguntas, participantes en la sala) y aviso de que los estudiantes en la sala ven la cancelación |
+| Acciones | "Volver a la sala" (no hace nada) · "Cancelar sesión" (destructiva) → vuelve al detalle de la Comisión; la sesión deja de figurar en "Sesiones en vivo activas" |
+| Errores | `422` si la sesión ya se inició o ya estaba cancelada: mensaje en la misma pantalla y enlace a la sala |
+
+### 8.3 Sesión cancelada — Estudiante (`#est-sesion-cancelada`, nueva)
+
+| Elemento | Detalle |
+|---|---|
+| Actor | Estudiante que estaba en la sala de espera |
+| Disparador | Mensaje `sesion_cancelada` del canal WebSocket; o, al reconectar, `GET estado` con estado `Cancelada` |
+| Contenido | "El Docente canceló la sesión" + aclaración de que no se registró ninguna respuesta |
+| Acción | "Volver a mis actividades" |
+| Listados | Una sesión `Cancelada` no aparece en las tarjetas del Estudiante ni en "Sesiones en vivo activas" del Docente |
+
+### 8.4 Finalizar desde cualquier etapa de la proyección (modifica §2.3 a §2.6)
+
+| Etapa | "Finalizar sesión" |
+|---|---|
+| Pregunta sola (`#stage-pregunta-sola`) | Botón secundario (contorneado) → confirmación `#stage-confirmar-finalizar` |
+| Pregunta con opciones (`#stage-pregunta-opciones`) | Botón secundario, al lado de "Cerrar pregunta" → confirmación `#stage-confirmar-finalizar` |
+| Histograma (`#stage-histograma`) | Botón directo, sin confirmación: la pregunta ya está cerrada, no se corta nada |
+| Ranking (`#stage-ranking`) | Sin cambios (§2.6), sin confirmación |
+
+La confirmación se pide solo cuando hay una pregunta abierta, porque es el único caso en que
+finalizar descarta algo (el cierre de esa pregunta). Con la pregunta ya cerrada, finalizar
+tiene el mismo efecto que en el ranking.
+
+### 8.5 Confirmar finalizar con la pregunta abierta (`#stage-confirmar-finalizar`, nueva)
+
+| Elemento | Detalle |
+|---|---|
+| Actor | Docente (lo ve el aula en la proyección) |
+| Comando | `FinalizarSesionEnVivo(sesion_id)` — INV-AEV-03 deja de exigir la pregunta cerrada |
+| Contenido | "¿Finalizar la sesión ahora?" + aviso: la pregunta N no se cierra ni muestra su histograma; las respuestas ya dadas cuentan para el ranking final |
+| Acciones | "Volver a la pregunta" (vuelve a la etapa en la que estaba) · "Finalizar sesión" → `#stage-final` |
+| Estudiantes | Reciben `sesion_finalizada` como siempre → `#est-resultado-final`; quien tenía la pregunta en pantalla sin responder pasa directo al resultado final |
+
+**Aprobación:** aprobado por Víctor 2026-09-27 (gate UX de `US-ADJ-58`), incluida la confirmación solo con la pregunta abierta (§8.4).

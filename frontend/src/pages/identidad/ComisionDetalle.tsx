@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { rutaMateria, useNombreMateria } from "@/pages/identidad/useNombreMateria"
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -23,6 +24,7 @@ export function ComisionDetalle() {
   const navigate = useNavigate()
 
   const [comision, setComision] = useState<ComisionDetalleResponse | null>(null)
+  const nombreMateria = useNombreMateria(comision?.materiaId)
   const [docentes, setDocentes] = useState<CuentaResponse[]>([])
   const [docenteSeleccionado, setDocenteSeleccionado] = useState("")
   const [estudiantes, setEstudiantes] = useState<EstudianteResumenResponse[] | null>(null)
@@ -77,14 +79,15 @@ export function ComisionDetalle() {
     <div>
       <Breadcrumb
         items={[
-          { label: "Comisiones", to: "/comisiones" },
+          { label: "Materias", to: "/materias" },
+          { label: nombreMateria ?? "…", to: rutaMateria(comision?.materiaId) },
           { label: comision?.horario ?? "…" },
         ]}
       />
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">{comision?.horario ?? "Cargando…"}</h1>
-        <Button variant="outline" onClick={() => navigate("/comisiones")}>
-          ‹ Volver a Comisiones
+        <Button variant="outline" onClick={() => navigate(rutaMateria(comision?.materiaId))}>
+          ‹ Volver a la materia
         </Button>
       </div>
 

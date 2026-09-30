@@ -37,18 +37,26 @@ class ConduccionEnVivoController:
         self._avanzar_siguiente_pregunta = avanzar_siguiente_pregunta
         self._finalizar_sesion = finalizar_sesion
 
-    async def mostrar_opciones(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def mostrar_opciones(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Delega la revelación de opciones en el caso de uso correspondiente."""
-        return await self._mostrar_opciones.execute(sesion_id)
+        return await self._mostrar_opciones.execute(sesion_id, docente_id)
 
-    async def cerrar_pregunta(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def cerrar_pregunta(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Delega el cierre de la pregunta actual en el caso de uso correspondiente."""
-        return await self._cerrar_pregunta.execute(sesion_id)
+        return await self._cerrar_pregunta.execute(sesion_id, docente_id)
 
-    async def avanzar_siguiente_pregunta(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def avanzar_siguiente_pregunta(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Avanza a la siguiente pregunta de la sesión."""
-        return await self._avanzar_siguiente_pregunta.execute(sesion_id)
+        return await self._avanzar_siguiente_pregunta.execute(sesion_id, docente_id)
 
-    async def finalizar_sesion(self, sesion_id: UUID) -> ActividadEvaluativaEnVivo:
+    async def finalizar_sesion(
+        self, sesion_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadEvaluativaEnVivo:
         """Finaliza la sesión y transmite el ranking final."""
-        return await self._finalizar_sesion.execute(sesion_id)
+        return await self._finalizar_sesion.execute(sesion_id, docente_id)

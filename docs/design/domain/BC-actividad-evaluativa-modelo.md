@@ -638,9 +638,14 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
    |
    └────────────────────────────────────────────────────────────────────────────┘
    |
-🟦 FinalizarSesionEnVivo(sesion_id)            — Docente, tras cerrar la última pregunta
+🟦 FinalizarSesionEnVivo(sesion_id)            — Docente, en cualquier etapa (US-ADJ-58)
    |
 🟧 SesionEnVivoFinalizada       (estado: Finalizada, ranking final)              🟨 ActividadEvaluativaEnVivo
+
+   — o, si nunca se inició —
+🟦 CancelarSesionEnVivo(sesion_id)             — Docente, solo EnEspera (US-ADJ-58)
+   |
+🟧 SesionEnVivoCancelada        (estado: Cancelada, terminal)                    🟨 ActividadEvaluativaEnVivo
 
 [Estudiante]
    |
@@ -678,11 +683,12 @@ ninguna Policy que dispare sola ningún paso de la dinámica en vivo, a diferenc
 | Comando | Actor | Aggregate | Evento(s) | Excepciones |
 |---|---|---|---|---|
 | `CrearSesionEnVivo(comision_id, unidad_tematica?, tema?, cantidad_preguntas, tiempo_limite_por_pregunta_segundos)` | Docente | `ActividadEvaluativaEnVivo` (crea) | `SesionEnVivoCreada` | `ComisionNoExiste`, `PreguntasInsuficientes` (INV-AEV-01), `TiempoLimiteInvalido` (INV-AEV-02, > 0) |
-| `IniciarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (inicia) | `SesionEnVivoIniciada` | `SesionNoExiste`, `SesionYaIniciada` |
+| `IniciarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (inicia) | `SesionEnVivoIniciada` | `SesionNoExiste`, `SesionYaIniciada`, `SesionYaCancelada`, `SinParticipantes` (INV-AEV-11, `US-ADJ-58`) |
+| `CancelarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (cancela) | `SesionEnVivoCancelada` | `SesionNoExiste`, `SesionYaIniciada`, `SesionYaCancelada` (INV-AEV-10, `US-ADJ-58`) |
 | `MostrarOpcionesDeLaPregunta(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (revela opciones, arranca el timer) | `OpcionesEnVivoMostradas` | `SesionNoExiste`, `SesionNoEnCurso`, `OpcionesYaMostradas` |
 | `CerrarPreguntaActual(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (avanza estado interno) | `PreguntaEnVivoCerrada` | `SesionNoExiste`, `SesionNoEnCurso`, `OpcionesNoMostradasTodavia` (INV-AEV-09), `PreguntaYaCerrada` |
 | `AvanzarSiguientePregunta(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (avanza `pregunta_actual`) | `SiguientePreguntaPresentada` | `SesionNoExiste`, `PreguntaActualNoCerrada` (INV-AEV-03), `NoQuedanPreguntas` |
-| `FinalizarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (finaliza) | `SesionEnVivoFinalizada` | `SesionNoExiste`, `SesionYaFinalizada`, `PreguntaActualNoCerrada` |
+| `FinalizarSesionEnVivo(sesion_id)` | Docente | `ActividadEvaluativaEnVivo` (finaliza) | `SesionEnVivoFinalizada` | `SesionNoExiste`, `SesionYaFinalizada`, `SesionNoEnCurso` — desde `US-ADJ-58` ya no `PreguntaActualNoCerrada` (INV-AEV-03 modificado) |
 | `UnirseASesionEnVivo(sesion_id, estudiante_id)` | Estudiante | `ParticipacionEnVivo` (crea, o no-op si ya existe — idempotente) | `EstudianteUnido` | `SesionNoExiste`, `SesionYaFinalizada` |
 | `ResponderPreguntaEnVivo(sesion_id, estudiante_id, pregunta_id, respuesta)` | Estudiante | `ParticipacionEnVivo` (agrega una `RespuestaEnVivo`) | `RespuestaEnVivoRegistrada` | `ParticipacionNoExiste` (no se unió), `PreguntaNoActual`, `OpcionesNoMostradasTodavia` (INV-AEV-09 — no se puede responder antes de que el Docente las revele), `PreguntaYaCerrada`, `TiempoAgotado` (INV-AEV-08, medido desde `OpcionesEnVivoMostradas`), `RespuestaYaRegistrada` (INV-AEV-07, un solo intento) |
 
@@ -716,25 +722,38 @@ el ranking completo de todos los estudiantes sigue reservado para `PreguntaEnViv
 | `unidad_tematica` / `tema` | string \| null | mismo criterio que `ActividadEvaluativaPeriodoAbierto` (§5) — filtros opcionales combinables del set aleatorio |
 | `preguntas` | lista de `PreguntaAsignada` (VO, mismo tipo que §5) | fijada por completo en `SesionEnVivoCreada` — inmutable en cantidad y orden, RF-08 ("todos reciben el mismo set") |
 | `tiempo_limite_por_pregunta_segundos` | int | fijo para toda la sesión (spike RF-10) — inmutable después de creada |
-| `estado` | `EnEspera \| EnCurso \| Finalizada` | |
+| `estado` | `EnEspera \| EnCurso \| Finalizada \| Cancelada` | `Cancelada` (`US-ADJ-58`): terminal, solo desde `EnEspera`; no aparece en los listados de sesiones activas ni la cuenta Analytics como sesión jugada |
 | `pregunta_actual_indice` | int \| null | `null` en `EnEspera`; posición dentro de `preguntas` mientras `EnCurso` |
 | `opciones_mostradas` | bool | `false` al presentar cada pregunta (`SesionEnVivoIniciada`/`SiguientePreguntaPresentada`); `true` tras `MostrarOpcionesDeLaPregunta` (INV-AEV-09) — agregado en la ronda de wireframing (`US-6.0.2`) |
-| `pregunta_actual_cerrada` | bool | controla `AvanzarSiguientePregunta`/`FinalizarSesionEnVivo` (INV-AEV-03) |
+| `pregunta_actual_cerrada` | bool | controla `AvanzarSiguientePregunta` (INV-AEV-03) |
 
 **Invariantes:**
 - **INV-AEV-01:** `cantidad_preguntas` ≤ cantidad de `PreguntaPlantilla` activas que matchean
   `materia_id`/`unidad_tematica`/`tema` al momento de crear la sesión — mismo criterio que
   INV-AE-01.
 - **INV-AEV-02:** `tiempo_limite_por_pregunta_segundos` > 0.
-- **INV-AEV-03:** `AvanzarSiguientePregunta` y `FinalizarSesionEnVivo` requieren
-  `pregunta_actual_cerrada = true` — no se puede pasar a la siguiente pregunta ni terminar la
-  sesión con la pregunta actual todavía abierta a respuestas.
+- **INV-AEV-03:** `AvanzarSiguientePregunta` requiere `pregunta_actual_cerrada = true` — no
+  se puede pasar a la siguiente pregunta con la actual todavía abierta a respuestas.
+  **Modificado por `US-ADJ-58` (2026-09-27):** `FinalizarSesionEnVivo` ya no lo exige — el
+  Docente termina la sesión en cualquier etapa. Una pregunta abierta al finalizar queda sin
+  cerrar (no se emite `PreguntaEnVivoCerrada`, no hay histograma) y las respuestas que ya
+  recibió cuentan para el ranking, que se actualiza al responder, no al cerrar.
 - **INV-AEV-09:** `ResponderPreguntaEnVivo` y `CerrarPreguntaActual` requieren
   `opciones_mostradas = true` de la pregunta actual — no se puede responder ni cerrar una
   pregunta cuyas opciones el Docente todavía no reveló (`OpcionesNoMostradasTodavia`).
   `MostrarOpcionesDeLaPregunta` sobre una pregunta que ya las tiene mostradas se rechaza
   (`OpcionesYaMostradas`, no reemite el evento) — mismo criterio de no-op silencioso que
   `PreguntaYaCerrada`.
+
+- **INV-AEV-10 (`US-ADJ-58`):** `CancelarSesionEnVivo` solo en `EnEspera` — una sesión
+  iniciada se termina con `FinalizarSesionEnVivo` (`SesionYaIniciada`); una ya cancelada no se
+  cancela de nuevo (`SesionYaCancelada`). Una sesión `Cancelada` rechaza unirse e iniciar con
+  `SesionYaCancelada`.
+- **INV-AEV-11 (`US-ADJ-58`):** `IniciarSesionEnVivo` requiere al menos una
+  `ParticipacionEnVivo` (`SinParticipantes`). Lo valida el Use Case, no el aggregate: las
+  participaciones viven en `ParticipacionEnVivo` y se consultan por
+  `ParticipantesSesionQueryPort` — mismo criterio que INV-AEV-01. Reemplaza el "no exige
+  participantes" de `US-6.1.4`, decidido en la revisión manual de 2026-09-26.
 
 **Sin estado propio de las participaciones de los estudiantes** — mismo criterio que §5, el
 aggregate no crece con la cantidad de alumnos ni de respuestas.
@@ -815,6 +834,7 @@ en `VerificadorDeVencimientos`, §6b):
 | `OpcionesEnVivoMostradas` | Las 4 opciones (texto, con color sólido de fondo por opción — sin ícono, ver wireframes §1.1) — sin indicar la correcta; arranca el temporizador visible; conteo total de respuestas recibidas, actualizado en vivo a medida que llegan (sin desglose por opción, §15) | Todos los conectados |
 | `PreguntaEnVivoCerrada` | Un único payload con la respuesta correcta + `distribucion_por_pregunta` (histograma, §15) + `ranking_por_sesion` (§15) — **la secuencia histograma → ranking es puramente de presentación**: el cliente de proyección muestra primero el histograma y, tras unos segundos (temporizador local, sin round-trip al servidor — confirmado con Víctor, no es un comando de dominio nuevo), pasa solo a la vista de ranking con los mismos datos ya recibidos | Todos los conectados |
 | `SesionEnVivoFinalizada` | Ranking final | Todos los conectados |
+| `SesionEnVivoCancelada` | `{"tipo": "sesion_cancelada"}`, sin datos (`US-ADJ-58`) | Todos los conectados (en la práctica, los Estudiantes en la sala de espera) |
 | `EstudianteUnido` | Conteo/lista de participantes actualizada | Docente (vista de sala de espera) |
 
 **Nota de UX (`US-6.0.2`, 2026-09-17, segunda ronda con Víctor):** la presentación de cada
@@ -924,6 +944,12 @@ primera ronda, ambas con impacto en el modelo, no solo en la UI:**
   de dominio (`docs/plans/inc6/inc6-candidatas.md`).
 
 ## 18. Próximo paso
+
+**Ampliación de `US-ADJ-58` (`Incremento 6-ADJ`, 2026-09-27):** comando `CancelarSesionEnVivo`, evento
+`SesionEnVivoCancelada`, estado `Cancelada`, INV-AEV-10 e INV-AEV-11 nuevos e INV-AEV-03
+modificado (§§12-14, §16). Decisiones de Víctor: estado propio (no `Finalizada` con marca),
+sin cancelar una sesión `EnCurso`, sin email a los Estudiantes, y al finalizar con la pregunta
+abierta esta no se cierra.
 
 Modelo completo, sin hot spots abiertos (§17, resueltos en una única ronda) — aprobado por
 Víctor 2026-09-17 en el comentario de cierre del Issue

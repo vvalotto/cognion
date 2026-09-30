@@ -62,10 +62,15 @@ class FakeComisionConsultaPort(ComisionConsultaPort):
     def __init__(self) -> None:
         """Inicializa el conjunto de materias con Comisiones asociadas."""
         self.materias_con_comisiones: set[UUID] = set()
+        self.docentes_asignados_por_materia: dict[UUID, set[UUID]] = {}
 
     async def tiene_comisiones(self, materia_id: UUID) -> bool:
         """Indica si existe alguna comisión que referencie esta materia."""
         return materia_id in self.materias_con_comisiones
+
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia (`US-ADJ-57`)."""
+        return docente_id in self.docentes_asignados_por_materia.get(materia_id, set())
 
 
 class FakeBancoRepository(BancoRepositoryPort):

@@ -17,8 +17,7 @@ import { expect, test } from "./soporte/prueba"
 
 /**
  * Circuito 8 — legibilidad en proyección (§1.1 del wireframe) medida en el navegador a 1920×1080, y
- * tamaño táctil de las tarjetas en el celular (≥ 44 px). Las cajas de opción se miden y se informan
- * (contraste de colores de marca aprobados en el prototipo), sin bloquear.
+ * tamaño táctil de las tarjetas en el celular (≥ 44 px). Las cajas de opción exigen ≥ 4,5:1 (H3).
  */
 test("legibilidad de la proyección y tamaño táctil del celular", async ({ browser }, testInfo) => {
   const doc = await docente(browser)
@@ -85,7 +84,10 @@ test("legibilidad de la proyección y tamaño táctil del celular", async ({ bro
   expect.soft(informe.tarjetaAltoPx as number, "tarjeta ≥ 44 px de alto").toBeGreaterThanOrEqual(44)
   expect.soft(informe.tarjetaAnchoPx as number, "tarjeta ≥ 44 px de ancho").toBeGreaterThanOrEqual(44)
   expect.soft(informe.celularSinScrollHorizontal, "celular sin scroll horizontal").toBe(true)
-  // Cajas de opción: se informan, no bloquean (colores aprobados en el prototipo).
+  // Cajas de opción: ≥ 4,5:1 (texto grande, decisión H3 de US-6.3.10); el 7:1 es para el texto general.
+  for (const c of "abcd") {
+    expect.soft(m(`caja-${c}`).contraste, `caja ${c}: contraste ≥ 4,5:1`).toBeGreaterThanOrEqual(4.5)
+  }
   testInfo.annotations.push({
     type: "contraste-cajas",
     description: "abcd".split("").map((c) => `${c}=${m(`caja-${c}`).contraste}:1`).join(", "),

@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event"
 import { MemoryRouter, Route, Routes } from "react-router"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
+import { fetchConMaterias, llamadasSinMaterias } from "@/test/fetch-con-materias"
+
 import { NuevaComision } from "@/pages/identidad/NuevaComision"
 import { setSession } from "@/lib/session"
 
@@ -25,7 +27,7 @@ function renderNuevaComision(initialPath = "/comisiones/nueva") {
     <MemoryRouter initialEntries={[initialPath]}>
       <Routes>
         <Route path="/comisiones/nueva" element={<NuevaComision />} />
-        <Route path="/comisiones" element={<p>Comisiones listado</p>} />
+        <Route path="/materias/:materiaId/ver" element={<p>Detalle de materia</p>} />
         <Route path="/comisiones/:comisionId" element={<p>Comisión detalle</p>} />
       </Routes>
     </MemoryRouter>,
@@ -52,9 +54,8 @@ describe("NuevaComision", () => {
   })
 
   it("preselecciona la materia si llega con ?materiaId= y crea la comisión con éxito", async () => {
-    vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, materias))
-      .mockResolvedValueOnce(jsonResponse(201, { id: "c1" }))
+    // GET /materias (selector y breadcrumb) se responde por URL; el resto, en orden.
+    fetchConMaterias([jsonResponse(201, { id: "c1" })], materias)
 
     renderNuevaComision("/comisiones/nueva?materiaId=m2")
     await waitFor(() =>
@@ -66,7 +67,7 @@ describe("NuevaComision", () => {
     await user.click(screen.getByRole("button", { name: "Crear Comisión" }))
 
     expect(await screen.findByText("Comisión detalle")).toBeInTheDocument()
-    const [, init] = vi.mocked(fetch).mock.calls[1]
+    const [, init] = llamadasSinMaterias()[0]
     expect(JSON.parse(init?.body as string)).toEqual({
       materia_id: "m2",
       horario: "Martes y Jueves 18-20hs",
@@ -75,7 +76,7 @@ describe("NuevaComision", () => {
   })
 
   it("permite cambiar la materia seleccionada", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materias))
+    fetchConMaterias([], materias)
     renderNuevaComision("/comisiones/nueva?materiaId=m1")
     await waitFor(() => expect(screen.getByLabelText("Materia")).toHaveValue("m1"))
 
@@ -86,22 +87,32 @@ describe("NuevaComision", () => {
   })
 
   it("sin preselección, usa la primera materia del listado", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materias))
+    fetchConMaterias([], materias)
 
     renderNuevaComision()
 
     await waitFor(() => expect(screen.getByLabelText("Materia")).toHaveValue("m1"))
   })
 
-  it("cancelar vuelve al listado sin crear nada", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, materias))
+  it("cancelar vuelve al detalle de la materia sin crear nada", async () => {
+    fetchConMaterias([], materias)
     renderNuevaComision("/comisiones/nueva?materiaId=m1")
     await waitFor(() => expect(screen.getByLabelText("Materia")).toHaveValue("m1"))
 
     const user = userEvent.setup()
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
-    expect(await screen.findByText("Comisiones listado")).toBeInTheDocument()
-    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(await screen.findByText("Detalle de materia")).toBeInTheDocument()
+    expect(llamadasSinMaterias()).toHaveLength(0)
+  })
+
+  it("el breadcrumb cuelga de la materia", async () => {
+    fetchConMaterias([], materias)
+    renderNuevaComision("/comisiones/nueva?materiaId=m2")
+
+    expect(await screen.findByRole("link", { name: "Gestión de Proyectos" })).toHaveAttribute(
+      "href",
+      "/materias/m2/ver",
+    )
   })
 })

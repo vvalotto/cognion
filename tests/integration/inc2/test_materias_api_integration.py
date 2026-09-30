@@ -5,6 +5,7 @@ from httpx import ASGITransport, AsyncClient
 from src.app import app
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 class TestMateriasAPIIntegration:
@@ -82,6 +83,7 @@ class TestListarMateriasAPIIntegration:
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
             banco_id = creada.json()["banco_id"]
+            await asignar_docente_a_materia(creada.json()["id"], docente_headers)
 
             await client.post(
                 "/preguntas/verdadero-falso",

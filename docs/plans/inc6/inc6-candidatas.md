@@ -252,3 +252,30 @@ Specs en `docs/specs/inc6/US-6.3.0.md` a `US-6.3.10.md`.
 
 **Hito de la iteración:** el Docente conduce una sesión en vivo completa desde la pantalla de proyección, con los
 Estudiantes participando desde el celular, sin salir del navegador.
+
+---
+
+## Hallazgo de alcance durante la validación de `US-6.3.10` (2026-09-25)
+
+Los resultados de las sesiones en vivo **no** llegan al desempeño del Estudiante ni a los reportes del Docente:
+Analytics solo lee período abierto. `RF-15` lo pedía explícitamente; el modelo de Analytics lo había dejado fuera
+en el Incremento 4 porque el modo en vivo no existía, y ningún incremento lo retomó. **Decisión de Víctor:**
+especificarlo como **`US-ADJ-56`** (`docs/specs/ajustes/US-ADJ-56.md`) e implementarlo **después** del cierre de
+`BL-011`, sin frenar la baseline.
+
+## Hallazgo de autorización durante la validación de `US-6.3.10` (2026-09-25)
+
+Un Docente ve y puede operar sobre materias que no tiene asignadas (Banco de Preguntas, Comisiones, actividades,
+sesiones en vivo, reportes): ningún BC filtra por la asignación Docente ↔ Comisión, porque el sistema nació con un
+único Docente y el autoregistro (`RF-25`) habilitó varios. **Decisión de Víctor (opción a):** cada Docente ve y opera
+solo sobre las materias de sus Comisiones; especificado como **`US-ADJ-57`** (`docs/specs/ajustes/US-ADJ-57.md`),
+se implementa **después** del cierre de `BL-011`. Absorbe el ítem abierto "sin ownership de sesión".
+
+
+## Cambio de secuencia: iteración de ajuste `Incremento 6-ADJ` antes de `BL-011` (2026-09-26)
+
+Tras la revisión manual de la app (2026-09-26), Víctor decidió **no** dejar `US-ADJ-56` y
+`US-ADJ-57` para después de la baseline, como decían las dos notas anteriores. Se agrupan con
+`US-ADJ-58` (cancelar y finalizar sesiones, hallazgos #4 y #6 de la revisión) y con los ajustes
+diferidos de `SP-ADJ-01` (`US-ADJ-07`/`08`) en la iteración de ajuste `Incremento 6-ADJ`
+(`docs/plans/sp-adj-02/sp-adj-02-candidatas.md`). `BL-011` cierra al terminarla.

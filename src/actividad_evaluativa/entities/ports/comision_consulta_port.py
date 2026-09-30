@@ -15,8 +15,25 @@ from uuid import UUID
 
 
 class ComisionConsultaPort(ABC):
-    """Operación de consulta requerida sobre `Comision` de BC Identidad."""
+    """Operaciones de consulta requeridas sobre `Comision` de BC Identidad."""
 
     @abstractmethod
     async def obtener_materia_id(self, comision_id: UUID) -> UUID | None:
         """Devuelve el `materia_id` de la Comisión, o `None` si `comision_id` no existe."""
+
+    @abstractmethod
+    async def esta_asignado_a_materia(self, docente_id: UUID, materia_id: UUID) -> bool:
+        """Indica si el docente tiene al menos una comisión asignada en esa materia (`US-ADJ-57`).
+
+        Nivel de autorización usado por las actividades de período abierto — no tienen
+        restricción de comisión puntual (aplican a toda la materia, decisión de Víctor
+        2026-09-27), a diferencia de las sesiones en vivo.
+        """
+
+    @abstractmethod
+    async def esta_asignado_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
+        """Indica si el docente está asignado a esa comisión puntual (`US-ADJ-57`).
+
+        Nivel de autorización usado por las sesiones en vivo — se dan en una Comisión concreta,
+        a diferencia de las actividades de período abierto.
+        """

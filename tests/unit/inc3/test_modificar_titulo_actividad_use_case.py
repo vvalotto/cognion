@@ -8,7 +8,7 @@ from src.actividad_evaluativa.use_cases.modificar_periodo_disponibilidad import 
 from src.actividad_evaluativa.use_cases.modificar_titulo_actividad import (
     ModificarTituloActividadUseCase,
 )
-from tests.unit.inc3._fakes import FakeEventStore
+from tests.unit.inc3._fakes import FakeComisionConsultaPort, FakeEventStore
 from tests.unit.inc3.test_modificar_periodo_disponibilidad_use_case import _crear_actividad, _fechas
 
 
@@ -17,7 +17,7 @@ class TestModificarTituloActividadUseCase:
         event_store = FakeEventStore()
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
-        use_case = ModificarTituloActividadUseCase(event_store)
+        use_case = ModificarTituloActividadUseCase(event_store, FakeComisionConsultaPort())
 
         actividad = await use_case.execute(actividad_id, "Parcial 1 (final)")
 
@@ -36,7 +36,7 @@ class TestModificarTituloActividadUseCase:
             1,
             [EventoParaAlmacenar(event_type="ActividadEvaluativaCerrada", payload={})],
         )
-        use_case = ModificarTituloActividadUseCase(event_store)
+        use_case = ModificarTituloActividadUseCase(event_store, FakeComisionConsultaPort())
 
         actividad = await use_case.execute(actividad_id, "Título corregido")
 
@@ -45,7 +45,7 @@ class TestModificarTituloActividadUseCase:
 
     async def test_rechaza_actividad_inexistente(self):
         event_store = FakeEventStore()
-        use_case = ModificarTituloActividadUseCase(event_store)
+        use_case = ModificarTituloActividadUseCase(event_store, FakeComisionConsultaPort())
 
         with pytest.raises(ActividadNoExiste):
             await use_case.execute(uuid4(), "Título")
@@ -54,7 +54,7 @@ class TestModificarTituloActividadUseCase:
         event_store = FakeEventStore()
         apertura, cierre = _fechas()
         actividad_id = await _crear_actividad(event_store, apertura, cierre)
-        use_case = ModificarTituloActividadUseCase(event_store)
+        use_case = ModificarTituloActividadUseCase(event_store, FakeComisionConsultaPort())
 
         actividad = await use_case.execute(actividad_id, "")
 

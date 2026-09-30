@@ -4,9 +4,10 @@
 > [#227](https://github.com/vvalotto/cognion/issues/227) (US-4.0.1, Iteración 0, Incremento
 > 4, cerrado 2026-09-04). Incremento 4 completo y validado (`BL-006`) — actualizado
 > 2026-09-16 durante la revisión documental transversal del Incremento 5-ADJ.**
-> Alcance de este modelo: RF-15 (vista de desempeño individual del estudiante, acotada a
-> evaluaciones de período abierto — sin sesiones en vivo, que no existen todavía, Incremento
-> 6), RF-16 (seguimiento por alumno) y RF-17 (seguimiento por curso y tema). RF-18 (KPIs
+> Alcance de este modelo: RF-15 (vista de desempeño individual del estudiante — evaluaciones
+> de período abierto y, desde `US-ADJ-56` (2026-09-27), también sesiones en vivo del modo en
+> vivo del Incremento 6), RF-16 (seguimiento por alumno) y RF-17 (seguimiento por curso y
+> tema, no incluye el modo en vivo — decisión de Víctor, `US-ADJ-56`). RF-18 (KPIs
 > históricos) queda fuera — Incremento 7.
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-15, RF-16, RF-17), `docs/rf/ARQ_v1.md` (Analytics = Supporting
@@ -83,10 +84,13 @@ puertos/Use Case nuevos en vez de ensanchar los existentes.
 | `ObtenerDesempenoPorEvaluacion(estudiante_id, materia_id?)` | Estudiante (su propio `estudiante_id`) o Docente (`estudiante_id` elegido) | RF-15, RF-16 | Una fila por `Evaluacion` finalizada del estudiante (filtrada por materia si se indica): `evaluacion_id`, `actividad_id`, `materia_id`, `finalizada_en`, `cantidad_correctas`, `cantidad_incorrectas` |
 | `ObtenerDesempenoAcumuladoPorMateria(estudiante_id, materia_id)` | Estudiante o Docente | RF-15, RF-16 | Suma de correctas/incorrectas de todas las `Evaluacion` finalizadas del estudiante en esa materia — agregación sobre el mismo dato de la query anterior, sin fuente adicional |
 | `ObtenerTasaErrorPorTema(materia_id, comision_id?)` | Docente | RF-17 | Una fila por `(unidad_tematica, tema)` de la materia: `cantidad_respuestas`, `cantidad_incorrectas`, `tasa_error` — agregado sobre todas las comisiones de la materia si `comision_id` se omite, o acotado al roster de una comisión puntual si se indica |
+| `ObtenerSesionesEnVivoFinalizadas(estudiante_id, materia_id?)` (`US-ADJ-56`) | Estudiante o Docente | RF-15, RF-16 | Una fila por sesión en vivo `Finalizada` en la que participó el estudiante: `sesion_id`, `comision_id`, `finalizada_en`, `cantidad_preguntas`, `cantidad_correctas`, `cantidad_incorrectas`, `puntaje_final`, `posicion`, `total_participantes` — sección propia, no se suma al acumulado de `ObtenerDesempenoAcumuladoPorMateria` |
 
-**Nota de alcance RF-15:** el RF menciona también sesiones en vivo ("para sesiones en vivo, ve
-su puntaje y posición en el ranking") — ese tipo de sesión no existe todavía (Incremento 6). Las
-tres queries de arriba cubren exclusivamente evaluaciones de período abierto.
+**Nota de alcance RF-15 (actualizada por `US-ADJ-56`, 2026-09-27):** el RF menciona también
+sesiones en vivo ("para sesiones en vivo, ve su puntaje y posición en el ranking") — ese gap
+quedó cerrado con la query de arriba, una vez que el modo en vivo del Incremento 6 existió.
+Decisiones de Víctor: el acumulado de período abierto y el de vivo se muestran **separados**
+(nunca se suman); RF-17 (tasa de error por tema) **no** incluye el modo en vivo.
 
 ---
 
@@ -103,6 +107,18 @@ Python de `src/actividad_evaluativa/`, mismo patrón que los adapters in-process
 |---|---|
 | `listar_evaluaciones_finalizadas(estudiante_id, materia_id: UUID \| None)` | Una fila por `Evaluacion` finalizada del estudiante — `evaluacion_id`, `actividad_id`, `materia_id`, `finalizada_en`, `cantidad_correctas`, `cantidad_incorrectas` |
 | `listar_respuestas_vigentes_de_materia(materia_id, estudiante_ids: list[UUID] \| None)` | Una fila por `Respuesta` vigente (`pregunta_id`, `estudiante_id`, `es_correcta`) de toda `Evaluacion` finalizada de la materia, filtrado a `estudiante_ids` si se indica (roster de una comisión) — insumo de `ObtenerTasaErrorPorTema` |
+
+### `SesionEnVivoDesempenoConsultaPort` → BC Actividad Evaluativa (`US-ADJ-56`)
+
+Segundo puerto de Analytics hacia Actividad Evaluativa, junto a `EvaluacionDesempenoConsultaPort`
+— mismo criterio de adapter in-process propio, sin invocar Use Case ajeno. Agrupa los streams
+`ActividadEvaluativaEnVivo`/`ParticipacionEnVivo` (`BC-actividad-evaluativa-modelo.md` §14) y lee
+también `ranking_por_sesion` (`US-6.2.3`) para resolver `posicion`/`total_participantes` sin
+reimplementar el desempate ya resuelto por esa proyección.
+
+| Método | Devuelve |
+|---|---|
+| `listar_sesiones_finalizadas(estudiante_id, materia_id: UUID \| None)` | Una fila por sesión en vivo `Finalizada` en la que participó el estudiante — `sesion_id`, `comision_id`, `materia_id`, `finalizada_en`, `cantidad_preguntas`, `cantidad_correctas`, `cantidad_incorrectas`, `puntaje_final`, `posicion`, `total_participantes` |
 
 ### `PreguntaMetadatoConsultaPort` → BC Banco de Preguntas
 

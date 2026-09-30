@@ -26,6 +26,7 @@ AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 _ESTADO_POR_EVENTO = {
     "SesionEnVivoIniciada": EstadoSesionEnVivo.EN_CURSO,
     "SesionEnVivoFinalizada": EstadoSesionEnVivo.FINALIZADA,
+    "SesionEnVivoCancelada": EstadoSesionEnVivo.CANCELADA,
 }
 
 

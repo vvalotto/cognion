@@ -3,7 +3,36 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-21 — Especificación de la Iteración 3 del Incremento 6
+> Última actualización: 2026-09-30 — Planificación del Incremento 7: **RF-18** (KPIs
+> históricos) sale de la Iteración 1 del Incremento 7 (reemplazada por una iteración de UAT
+> manual completa, decisión de Víctor) — pasa de Incremento `7` a **sin incremento
+> asignado** (columna Incremento: `—`), estado sin cambios ("Planificado"). Ver
+> `docs/rf/PLAN_v1.md` (revisión 2026-09-30) y `docs/plans/inc7/inc7-candidatas.md`.
+>
+> 2026-09-30 — Cierre de `BL-011` (Incremento 6 + Incremento 6-ADJ
+> juntos): **RF-08, RF-09 y RF-10 pasan de "Implementado" a "Validado"**, referenciando
+> `.cm/baselines/BL-011-sesion-en-vivo-y-ajuste-tecnico.md`. Checkpoint de staging del RNF en
+> Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4) sigue pendiente, sin relación con este
+> cierre.
+>
+> 2026-09-30 — Barrido documental §12 (`Incremento 6-ADJ`, `US-ADJ-52`
+> aplicado también aquí): `US-6.3.0` a `US-6.3.10` pasan de "especificadas" a "cerradas" en las
+> filas de RF-08/09/10 (Iteración 3 del Incremento 6, frontend del modo en vivo, cerrada
+> 2026-09-25). Sin cambio de estado de RF en ese momento: RF-08, RF-09 y RF-10 seguían en
+> "Implementado" — pasaron a "Validado" recién al cierre de `BL-011` (arriba), pendiente del
+> checkpoint de staging del RNF (`PROCEDIMIENTO-UAT.md` §4).
+>
+> 2026-09-27 en adelante — `Incremento 6-ADJ`: `US-ADJ-58` (cancelar/finalizar en cualquier
+> etapa, no iniciar sin participantes) cerrada, ya reflejada en las filas de RF-08/RF-09;
+> `US-ADJ-56` (sesiones en vivo suman a "Mi desempeño"/"Desempeño por alumno") cerrada, ya
+> reflejada en las filas de RF-15/RF-16; `US-ADJ-57` (Docente solo ve/opera sus propios
+> recursos — Identidad, Banco de Preguntas, Actividad Evaluativa, Analytics, las 4 partes)
+> cerrada — sin RF asociado, no mueve ninguna fila (mismo criterio que `US-2.1.2`/`US-2.1.6`);
+> `US-ADJ-08` (vista previa de la invitación antes de registrarse) y `US-ADJ-07` (nombre
+> legible de la comisión en el detalle de cuenta) cerradas — ambas amplían RF-01 (ya
+> `Validado` desde `BL-002`) sin mover fila, mismo criterio.
+>
+> 2026-09-21 — Especificación de la Iteración 3 del Incremento 6
 > (frontend del modo en vivo): `US-6.3.0` a `US-6.3.10` (Issues #412 a #422). Sin cambio de
 > estado de RF: RF-08, RF-09 y RF-10 siguen en "Implementado" (backend) y pasarán a "Validado"
 > recién al cierre de baseline del Incremento 6, con el frontend implementado y su UAT en
@@ -185,18 +214,18 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 | RF-05 | Banco de preguntas | 2 | US-2.1.3, US-2.1.4, US-2.1.5 (backend); US-2.1.11, US-2.1.12 (frontend) | Validado |
 | RF-06 | Banco de preguntas | 2 | US-2.1.7 (backend); US-2.1.10 (frontend) | Validado |
 | RF-07 | Banco de preguntas | 7 | — | Planificado |
-| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, especificadas) | Implementado |
-| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, especificadas) | Implementado |
-| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, especificadas) | Implementado |
+| RF-08 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.1.1, US-6.1.2, US-6.1.3, US-6.1.4, US-6.2.8, US-6.2.9 (backend); US-6.3.2, US-6.3.4, US-6.3.5, US-6.3.8, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: cancelar e iniciar solo con participantes) | Validado |
+| RF-09 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.2, US-6.2.4, US-6.2.5, US-6.2.6, US-6.2.7, US-6.2.8, US-6.2.9 (backend); US-6.3.0, US-6.3.1, US-6.3.3, US-6.3.4, US-6.3.6, US-6.3.7, US-6.3.9, US-6.3.10 (Iteración 3, cerradas); US-ADJ-58 (`Incremento 6-ADJ`: finalizar en cualquier etapa) | Validado |
+| RF-10 | Actividad Evaluativa | 6 | US-6.0.1, US-6.0.2 (modelado); US-6.2.1, US-6.2.3, US-6.2.4, US-6.2.5, US-6.2.7, US-6.2.9 (backend); US-6.3.1, US-6.3.7, US-6.3.9 (Iteración 3, cerradas) | Validado |
 | RF-11 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.2 (backend); US-3.4.3 (frontend) | Validado |
 | RF-11b | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.3.1, US-3.3.2 (backend); US-3.4.4 (frontend) | Validado |
 | RF-12 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.1.3 (backend); US-3.4.5, US-3.4.6 (frontend) | Validado |
 | RF-13 | Actividad Evaluativa | 3 | US-3.0.1, US-3.0.2 (modelado); US-3.2.1, US-3.2.2, US-3.2.3 (backend); US-3.4.7 (frontend) | Validado |
 | RF-14 | Notificaciones | 5 | US-5.0.1 (modelado); US-5.1.1 (infraestructura); US-5.1.2, US-5.1.3 (backend) | Validado |
-| RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend) | Validado |
-| RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.1, US-4.2.2 (backend, cerradas); US-4.2.5 (frontend, cerrada) | Validado |
+| RF-15 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.1.1, US-4.1.2 (backend); US-4.1.3 (frontend); US-ADJ-56 (`Incremento 6-ADJ`: sesiones en vivo, backend + frontend) | Validado |
+| RF-16 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.1, US-4.2.2 (backend, cerradas); US-4.2.5 (frontend, cerrada); US-ADJ-56 (`Incremento 6-ADJ`: sesiones en vivo, backend + frontend) | Validado |
 | RF-17 | Analytics | 4 | US-4.0.1, US-4.0.2 (modelado); US-4.2.2, US-4.2.3, US-4.2.4 (backend, cerradas); US-4.2.6 (frontend, cerrada) | Validado |
-| RF-18 | Analytics | 7 | — | Planificado |
+| RF-18 | Analytics | — | — | Planificado |
 | RF-19 | Identidad | 2 | US-2.2.1, US-2.2.5 (backend); US-2.2.8, US-2.2.9 (frontend) | Validado |
 | RF-20 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-44 (backend); US-ADJ-48 (frontend) | Validado |
 | RF-21 | Analytics | 5-ADJ | US-ADJ-32, US-ADJ-33, US-ADJ-34 (modelado); US-ADJ-45 (backend); US-ADJ-49 (frontend) | Validado |
@@ -207,6 +236,11 @@ No usar "definido" sin calificar a cuál de estos cuatro corresponde.
 
 > RF-19 agregado 2026-07-17 (elicitación dedicada, ver `docs/rf/RF_v1.md` revisión 2026-07-17
 > y `docs/design/domain/BC-identidad-modelo.md` §11) — agrupado con RF-03 en el Incremento 2.
+
+> RF-18 diferido sin incremento asignado 2026-09-30 — su Iteración 1 original del Incremento 7
+> (`docs/rf/PLAN_v1.md`) se reemplaza por una iteración de UAT manual completa de cierre de
+> alcance v1 (decisión de Víctor, `docs/plans/inc7/inc7-candidatas.md`). Sin cambio de estado
+> ("Planificado" antes y después) — solo pierde el incremento asignado.
 
 > RF-20 a RF-23 agregados 2026-09-09 (elicitación dedicada durante la prueba manual E2E de
 > estabilización post-`BL-007`, ver `docs/rf/RF_v1.md` revisión 2026-09-09) — informes nuevos

@@ -18,12 +18,11 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
     SQLAlchemyEventStore,
 )
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
     finalizar_sesion,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     preparar_sesion,
@@ -47,6 +46,7 @@ async def _limpiar_tablas() -> None:
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM materia"))
         await session.execute(text("DELETE FROM administrador"))
+        await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM usuario"))
         await session.commit()
 
@@ -63,8 +63,9 @@ def context():
     return {}
 
 
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+def _docente(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`)."""
+    return run_async(headers_docente_de_sesion(sesion_id))
 
 
 async def _post(sesion_id: str, accion: str, headers: dict[str, str]):
@@ -82,7 +83,8 @@ async def _reconstruir(sesion_id: str) -> tuple[ActividadEvaluativaEnVivo, list]
 
 async def _mostrar_y_cerrar(sesion_id: str) -> None:
     await mostrar_opciones(sesion_id)
-    assert (await _post(sesion_id, "cerrar-pregunta", _docente())).status_code == 200
+    docente = await headers_docente_de_sesion(sesion_id)
+    assert (await _post(sesion_id, "cerrar-pregunta", docente)).status_code == 200
 
 
 async def _armar(context, avances: int, cerrar: bool = True) -> None:
@@ -93,7 +95,8 @@ async def _armar(context, avances: int, cerrar: bool = True) -> None:
     context.update(sesion_id=sesion_id, headers_estudiante=headers_estudiante)
     for _ in range(avances):
         await _mostrar_y_cerrar(sesion_id)
-        assert (await _post(sesion_id, "avanzar", _docente())).status_code == 200
+        docente = await headers_docente_de_sesion(sesion_id)
+        assert (await _post(sesion_id, "avanzar", docente)).status_code == 200
     if cerrar:
         await _mostrar_y_cerrar(sesion_id)
     else:
@@ -127,7 +130,8 @@ def sesion_en_espera_o_finalizada(context):
         finalizada, _ = await preparar_sesion()
         await iniciar_sesion(finalizada)
         await mostrar_opciones(finalizada)
-        await _post(finalizada, "cerrar-pregunta", _docente())
+        docente = await headers_docente_de_sesion(finalizada)
+        await _post(finalizada, "cerrar-pregunta", docente)
         await finalizar_sesion(finalizada)
         return [en_espera, finalizada]
 
@@ -147,8 +151,8 @@ def usuario_estudiante(context):
 @when("el Docente avanza")
 def docente_avanza_con_conectados(context):
     """Avanza con el Docente y un Estudiante conectados al canal, para verificar el broadcast."""
-    docente = _docente()
     sesion_id = context["sesion_id"]
+    docente = _docente(sesion_id)
     tokens = [
         docente["Authorization"].split()[1],
         context["headers_estudiante"]["Authorization"].split()[1],
@@ -173,7 +177,7 @@ def docente_avanza_con_conectados(context):
 @when("el Docente intenta avanzar")
 def docente_intenta_avanzar(context):
     ids = context.get("sesiones") or [context["sesion_id"]]
-    context["responses"] = [run_async(_post(i, "avanzar", _docente())) for i in ids]
+    context["responses"] = [run_async(_post(i, "avanzar", _docente(i))) for i in ids]
     context["response"] = context["responses"][0]
 
 

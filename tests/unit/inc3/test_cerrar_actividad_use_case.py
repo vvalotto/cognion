@@ -18,7 +18,15 @@ from src.actividad_evaluativa.use_cases.finalizar_evaluacion import (
     AGGREGATE_TYPE_EVALUACION,
     FinalizarEvaluacionUseCase,
 )
-from tests.unit.inc3._fakes import FakeEventStore, FakeMateriaConsultaPort, FakeNotificacionPort
+from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
+    VerificarAutorizacionComisionService,
+)
+from tests.unit.inc3._fakes import (
+    FakeComisionConsultaPort,
+    FakeEventStore,
+    FakeMateriaConsultaPort,
+    FakeNotificacionPort,
+)
 from tests.unit.inc3.test_modificar_periodo_disponibilidad_use_case import (
     FakeEvaluacionActivaQueryPort,
     _resumen_activo,
@@ -37,6 +45,7 @@ def _use_case(
         FinalizarEvaluacionUseCase(event_store),
         materia_consulta or FakeMateriaConsultaPort(),
         notificacion or FakeNotificacionPort(),
+        VerificarAutorizacionComisionService(FakeComisionConsultaPort()),
     )
 
 

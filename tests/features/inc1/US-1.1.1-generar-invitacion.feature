@@ -23,3 +23,9 @@ Feature: Generación de invitación por Docente (US-1.1.1)
     When intenta ejecutar GenerarInvitacion sobre esa comisión
     Then el sistema rechaza la operación con DocenteNoAsignadoAComision
     And ninguna Invitación se crea
+
+  # Nota (`US-ADJ-57`): el Docente que llama es el mismo bajo prueba en este escenario, así que
+  # la autorización (403, `ComisionNoAutorizada`) se resuelve antes que la validación de negocio
+  # de arriba (422) — ambas comparten la misma causa. La validación 422 original sigue vigente
+  # cuando el docente *destino* de la invitación es un tercero distinto de quien llama, ya
+  # asignado a la comisión (ver `US-ADJ-26-generar-link-invitacion.feature`).

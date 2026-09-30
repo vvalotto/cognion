@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.banco_preguntas.entities.errors import (
     BancoNoExiste,
+    MateriaNoAutorizada,
     OpcionesInvalidas,
     PreguntaInactiva,
     PreguntaNoExiste,
@@ -23,10 +24,15 @@ from src.banco_preguntas.frameworks.api.schemas import (
     PreguntaOpcionMultipleResponse,
     PreguntaVerdaderoFalsoResponse,
 )
-from src.banco_preguntas.frameworks.dependencies import get_preguntas_controller, require_docente
+from src.banco_preguntas.frameworks.dependencies import (
+    get_current_user,
+    get_preguntas_controller,
+    require_docente,
+)
 from src.banco_preguntas.interface_adapters.controllers.preguntas_controller import (
     PreguntasController,
 )
+from src.shared.entities.jwt import JWTPayload
 
 router = APIRouter(prefix="/preguntas", tags=["banco_preguntas"])
 
@@ -39,11 +45,13 @@ router = APIRouter(prefix="/preguntas", tags=["banco_preguntas"])
 )
 async def cargar_pregunta_opcion_multiple(
     body: CargarPreguntaOpcionMultipleRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
 ) -> PreguntaOpcionMultipleResponse:
     """Carga una pregunta de opción múltiple.
 
-    Responde 404 si el banco no existe, 422 si las opciones son inválidas.
+    Responde 404 si el banco no existe, 422 si las opciones son inválidas, 403 si el Docente
+    no tiene ninguna Comisión asignada en la materia del banco (`US-ADJ-57`).
     """
     try:
         pregunta, _evento = await controller.cargar_pregunta_opcion_multiple(
@@ -56,6 +64,7 @@ async def cargar_pregunta_opcion_multiple(
                 importancia=body.importancia,
             ),
             opciones=[Opcion(texto=o.texto, es_correcta=o.es_correcta) for o in body.opciones],
+            docente_id=usuario.usuario_id,
         )
     except BancoNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
@@ -63,6 +72,8 @@ async def cargar_pregunta_opcion_multiple(
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     return PreguntaOpcionMultipleResponse(
         id=pregunta.id,
@@ -85,11 +96,13 @@ async def cargar_pregunta_opcion_multiple(
 )
 async def cargar_pregunta_verdadero_falso(
     body: CargarPreguntaVerdaderoFalsoRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
 ) -> PreguntaVerdaderoFalsoResponse:
     """Carga una pregunta Verdadero/Falso.
 
-    Responde 404 si el banco no existe.
+    Responde 404 si el banco no existe, 403 si el Docente no tiene ninguna Comisión
+    asignada en la materia del banco (`US-ADJ-57`).
     """
     try:
         pregunta, _evento = await controller.cargar_pregunta_verdadero_falso(
@@ -102,9 +115,12 @@ async def cargar_pregunta_verdadero_falso(
                 importancia=body.importancia,
             ),
             respuesta_correcta=body.respuesta_correcta,
+            docente_id=usuario.usuario_id,
         )
     except BancoNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     return PreguntaVerdaderoFalsoResponse(
         id=pregunta.id,
@@ -128,13 +144,15 @@ async def cargar_pregunta_verdadero_falso(
 async def editar_pregunta(
     pregunta_id: UUID,
     body: EditarPreguntaRequest,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
 ) -> PreguntaOpcionMultipleResponse | PreguntaVerdaderoFalsoResponse:
     """Edita una pregunta existente (texto, opciones/respuesta, metadatos).
 
     El tipo de la pregunta (Opción Múltiple / Verdadero-Falso) no es editable.
     Responde 404 si la pregunta no existe, 409 si está inactiva, 422 si las opciones editadas
-    son inválidas.
+    son inválidas, 403 si el Docente no tiene ninguna Comisión asignada en la materia del
+    banco de la pregunta (`US-ADJ-57`).
     """
     try:
         pregunta, _evento = await controller.editar_pregunta(
@@ -152,6 +170,7 @@ async def editar_pregunta(
                 else None
             ),
             respuesta_correcta=body.respuesta_correcta,
+            docente_id=usuario.usuario_id,
         )
     except PreguntaNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
@@ -161,6 +180,8 @@ async def editar_pregunta(
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
     if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
         return PreguntaOpcionMultipleResponse(
@@ -195,16 +216,20 @@ async def editar_pregunta(
 )
 async def eliminar_pregunta(
     pregunta_id: UUID,
+    usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
 ) -> None:
     """Elimina (baja lógica) una pregunta existente.
 
     La fila persiste con `activa = false` — no se borra físicamente (INV-BP-04).
-    Responde 404 si la pregunta no existe, 409 si ya estaba eliminada.
+    Responde 404 si la pregunta no existe, 409 si ya estaba eliminada, 403 si el Docente no
+    tiene ninguna Comisión asignada en la materia del banco de la pregunta (`US-ADJ-57`).
     """
     try:
-        await controller.eliminar_pregunta(pregunta_id=pregunta_id)
+        await controller.eliminar_pregunta(pregunta_id=pregunta_id, docente_id=usuario.usuario_id)
     except PreguntaNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except PreguntaYaEliminada as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    except MateriaNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc

@@ -22,6 +22,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
@@ -74,6 +75,7 @@ async def _crear_actividad_vigente(
     client: AsyncClient, admin_headers: dict, docente_headers: dict
 ) -> str:
     materia_id, banco_id = await _crear_materia(client, admin_headers)
+    await asignar_docente_a_materia(materia_id, docente_headers)
     await _cargar_verdadero_falso(client, docente_headers, banco_id)
     apertura = datetime.now(UTC) - timedelta(days=1)
     cierre = apertura + timedelta(days=7)

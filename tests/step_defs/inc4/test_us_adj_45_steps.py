@@ -29,6 +29,10 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import (
+    asignar_docente_a_comision_existente,
+    asignar_docente_a_materia,
+)
 
 scenarios("../../features/inc5-adj/US-ADJ-45-evolucion-temporal.feature")
 
@@ -45,6 +49,7 @@ async def _limpiar_tablas() -> None:
     async with SessionLocal() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM estudiante"))
+        await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
         await session.execute(text("DELETE FROM administrador"))
@@ -207,6 +212,7 @@ def estudiante_con_tres_evaluaciones(context):
 
     context["materia_id"], context["estudiante_id"], context["actividades"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
 
 
 @given("una comisión de 3 estudiantes donde solo 2 finalizaron la actividad A")
@@ -236,6 +242,8 @@ def comision_con_participacion_parcial(context):
 
     context["materia_id"], context["comision_id"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
+    run_async(asignar_docente_a_comision_existente(str(context["comision_id"]), context["headers"]))
 
 
 @given("un estudiante sin ninguna Evaluacion finalizada en la materia")
@@ -248,6 +256,7 @@ def estudiante_sin_evaluaciones(context):
 
     context["materia_id"], context["estudiante_id"] = run_async(_setup())
     context["headers"] = _headers_docente()
+    run_async(asignar_docente_a_materia(str(context["materia_id"]), context["headers"]))
 
 
 @given("una comisión de otra materia")
@@ -352,11 +361,6 @@ def valida_200_lista_vacia(context):
     response = context["response"]
     assert response.status_code == 200
     assert response.json() == []
-
-
-@then("recibe 422")
-def valida_422(context):
-    assert context["response"].status_code == 422
 
 
 @then("recibe 401")

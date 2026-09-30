@@ -27,10 +27,14 @@ class ActividadesQueryController:
         self._listar_actividades = listar_actividades
         self._obtener_actividad = obtener_actividad
 
-    async def listar_actividades(self, materia_id: UUID) -> list[ActividadResumen]:
+    async def listar_actividades(
+        self, materia_id: UUID, docente_id: UUID | None = None
+    ) -> list[ActividadResumen]:
         """Delega el listado de actividades de una materia en el Use Case correspondiente."""
-        return await self._listar_actividades.execute(materia_id)
+        return await self._listar_actividades.execute(materia_id, docente_id)
 
-    async def obtener_actividad(self, actividad_id: UUID) -> ActividadResumen:
+    async def obtener_actividad(
+        self, actividad_id: UUID, docente_id: UUID | None = None
+    ) -> ActividadResumen:
         """Delega el detalle de una actividad puntual en el Use Case correspondiente."""
-        return await self._obtener_actividad.execute(actividad_id)
+        return await self._obtener_actividad.execute(actividad_id, docente_id)

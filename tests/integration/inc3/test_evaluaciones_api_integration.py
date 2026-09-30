@@ -16,6 +16,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
+from tests.integration.conftest import asignar_docente_a_materia
 
 
 def _headers_para(usuario: Usuario) -> dict[str, str]:
@@ -48,6 +49,7 @@ async def _crear_materia_con_preguntas(
     nombre = f"Ingeniería de Software {uuid.uuid4()}"
     creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
     banco_id = creada.json()["banco_id"]
+    await asignar_docente_a_materia(creada.json()["id"], docente_headers)
 
     for i in range(cantidad):
         await client.post(
@@ -313,6 +315,7 @@ class TestRendirEvaluacionAPIIntegration:
             creada = await client.post("/materias", json={"nombre": nombre}, headers=admin_headers)
             banco_id = creada.json()["banco_id"]
             materia_id = creada.json()["id"]
+            await asignar_docente_a_materia(materia_id, docente_headers)
 
             await _crear_pregunta_opcion_multiple(
                 client,

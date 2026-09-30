@@ -26,6 +26,7 @@ from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
+    headers_docente_de_comision,
     iniciar_sesion,
     iniciar_y_finalizar,
     preparar_sesion,
@@ -76,7 +77,7 @@ async def _crear_sesion(comision_id: str) -> str:
                 "cantidad_preguntas": 5,
                 "tiempo_limite_por_pregunta_segundos": 30,
             },
-            headers=_docente(),
+            headers=await headers_docente_de_comision(comision_id),
         )
     assert respuesta.status_code == 201, respuesta.text
     return respuesta.json()["id"]

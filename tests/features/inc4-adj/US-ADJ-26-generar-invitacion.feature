@@ -28,7 +28,12 @@ Feature: Docente genera el link de invitación de una Comisión (US-ADJ-26)
   Scenario: Docente no asignado no puede generar la invitación
     Given una comisión sin el docente autenticado entre sus docentes_asignados
     When ese Docente hace POST /comisiones/{comision_id}/invitaciones
-    Then recibe 422
+    Then recibe 403
+
+  # Nota (`US-ADJ-57`): antes daba 422 (`DocenteNoAsignadoAComision`, validación del docente
+  # *destino*) — acá el Docente que llama es el mismo bajo prueba, así que la autorización
+  # (403, `ComisionNoAutorizada`) se resuelve primero. El 422 sigue vigente cuando el docente
+  # destino de la invitación es un tercero distinto de quien llama.
 
   @error-case
   Scenario: Generar invitación de una Comisión inexistente

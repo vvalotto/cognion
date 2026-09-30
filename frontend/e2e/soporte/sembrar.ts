@@ -42,7 +42,8 @@ async function crearPreguntas(bancoId: string, token: string) {
  * Estudiantes. Prefijo único por corrida; `limpiar.ts` borra todo al final.
  */
 export default async function sembrar() {
-  const prefijo = `uat-e2e-${Date.now()}`
+  // `E2E_PREFIJO` corto (ej. "valid") deja emails tipeables desde un celular para la validación manual.
+  const prefijo = process.env.E2E_PREFIJO ?? `uat-e2e-${Date.now()}`
   const email = (rol: string) => `${prefijo}-${rol}@fiuner.edu.ar`
 
   execFileSync(join(RAIZ, ".venv/bin/python"), [join(RAIZ, "scripts/seed_admin.py")], {
@@ -70,7 +71,6 @@ export default async function sembrar() {
     nombre: materiaNombre,
   })
   if (materia.status !== 201) throw new Error(`materia: HTTP ${materia.status}`)
-  await crearPreguntas(materia.body.banco_id, docenteToken)
 
   const comision = await api<{ id: string }>("POST", "/comisiones", adminToken, {
     materia_id: materia.body.id,
@@ -79,6 +79,10 @@ export default async function sembrar() {
   })
   if (comision.status !== 201) throw new Error(`comision: HTTP ${comision.status}`)
   await api("POST", `/comisiones/${comision.body.id}/docentes`, adminToken, { docente_id: docente.id })
+
+  // `US-ADJ-57`: cargar preguntas exige que el Docente tenga una Comisión asignada en la
+  // materia del banco — se asigna la Comisión arriba, antes de este paso, no después.
+  await crearPreguntas(materia.body.banco_id, docenteToken)
 
   const estudiantes: Usuario[] = []
   for (let n = 1; n <= CANTIDAD_ESTUDIANTES; n++) {

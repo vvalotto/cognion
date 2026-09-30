@@ -19,6 +19,7 @@ from src.identidad.frameworks.security.password_hasher import BcryptPasswordHash
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
+from src.identidad.frameworks.db.models import comision_docentes
 from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
@@ -30,6 +31,43 @@ from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 def headers_de(usuario_id: uuid.UUID, rol: TipoPerfil) -> dict[str, str]:
     """Header `Authorization` con un JWT válido del rol indicado."""
     return {"Authorization": f"Bearer {PyJWTIssuer().emitir(usuario_id, rol).token}"}
+
+
+async def headers_docente_de_comision(comision_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión indicada (`US-ADJ-57`).
+
+    Reemplaza `headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)` (anónimo, sin Comisión) al operar
+    sobre una Comisión ya existente — `POST /sesiones-en-vivo` y el resto de los endpoints de
+    conducción exigen que el Docente que llama esté asignado a ella.
+    """
+    async with SessionLocal() as session:
+        resultado = await session.execute(
+            comision_docentes.select().where(
+                comision_docentes.c.comision_id == uuid.UUID(comision_id)
+            )
+        )
+        fila = resultado.first()
+        assert fila is not None, f"Comisión {comision_id} sin Docente asignado"
+        return headers_de(fila.docente_id, TipoPerfil.DOCENTE)
+
+
+async def headers_docente_de_sesion(sesion_id: str) -> dict[str, str]:
+    """Headers del Docente realmente asignado a la Comisión de la sesión (`US-ADJ-57`).
+
+    Reemplaza `headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)` (anónimo, sin Comisión) en los
+    helpers que operan sobre una sesión ya creada — los endpoints de conducción ahora exigen
+    que el Docente que llama esté asignado a la Comisión de la sesión. Si `sesion_id` no tiene
+    stream (caso "sesión inexistente" de varios tests), devuelve un Docente anónimo — el
+    endpoint responde `SesionNoExiste` (404) antes de llegar al chequeo de pertenencia.
+    """
+    async with SessionLocal() as session:
+        eventos = await SQLAlchemyEventStore(session).load(
+            "ActividadEvaluativaEnVivo", uuid.UUID(sesion_id)
+        )
+        if not eventos:
+            return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+        comision_id = str(uuid.UUID(eventos[0].payload["comision_id"]))
+    return await headers_docente_de_comision(comision_id)
 
 
 async def crear_estudiante(comision_id: str) -> tuple[str, dict[str, str]]:
@@ -76,15 +114,41 @@ async def preparar_sesion(
 
     Devuelve `(sesion_id, comision_id)`. Usa la API real para crear la sesión. Las preguntas son
     de Verdadero/Falso salvo que `opcion_multiple` sea `True` (opciones "A" a "D", la "B" correcta).
+    `US-ADJ-57`: cargar preguntas exige que el Docente tenga una Comisión asignada en la
+    materia — la Comisión se crea y se asigna antes del loop, no después.
     """
     admin = headers_de(uuid.uuid4(), TipoPerfil.ADMINISTRADOR)
-    docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         creada = await client.post(
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin
         )
         banco_id = creada.json()["banco_id"]
         materia_id = creada.json()["id"]
+
+        async with SessionLocal() as session:
+            admin_usuario = Usuario.crear(
+                "Admin",
+                f"admin.{uuid.uuid4()}@fiuner.edu.ar",
+                BcryptPasswordHasher().hash("x"),
+                TipoPerfil.ADMINISTRADOR,
+            )
+            await SQLAlchemyUsuarioRepository(session).guardar(admin_usuario)
+            docente_usuario = Usuario.crear(
+                "Docente",
+                f"docente.{uuid.uuid4()}@fiuner.edu.ar",
+                BcryptPasswordHasher().hash("x"),
+                TipoPerfil.DOCENTE,
+            )
+            await SQLAlchemyUsuarioRepository(session).guardar(docente_usuario)
+
+            comision_repo = SQLAlchemyComisionRepository(session)
+            comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin_usuario.id)
+            await comision_repo.guardar(comision)
+            comision.asignar_docente(docente_usuario.id)
+            await comision_repo.actualizar(comision)
+
+        docente = headers_de(docente_usuario.id, TipoPerfil.DOCENTE)
+
         for i in range(cantidad_preguntas):
             comun = {
                 "banco_id": banco_id,
@@ -105,17 +169,6 @@ async def preparar_sesion(
                 cuerpo = {**comun, "respuesta_correcta": True}
             await client.post(ruta, json=cuerpo, headers=docente)
 
-        async with SessionLocal() as session:
-            admin_usuario = Usuario.crear(
-                "Admin",
-                f"admin.{uuid.uuid4()}@fiuner.edu.ar",
-                BcryptPasswordHasher().hash("x"),
-                TipoPerfil.ADMINISTRADOR,
-            )
-            await SQLAlchemyUsuarioRepository(session).guardar(admin_usuario)
-            comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin_usuario.id)
-            await SQLAlchemyComisionRepository(session).guardar(comision)
-
         respuesta = await client.post(
             "/sesiones-en-vivo",
             json={
@@ -128,12 +181,36 @@ async def preparar_sesion(
     return respuesta.json()["id"], str(comision.id)
 
 
+async def asegurar_participante(sesion_id: str) -> None:
+    """Une a un Estudiante nuevo **solo si** la sesión todavía no tiene ninguno (INV-AEV-11).
+
+    Desde `US-ADJ-58` no se inicia una sesión sin participantes. Los tests que no se ocupan de los
+    participantes siguen iniciando igual; los que ya unen a sus Estudiantes no cambian su conteo.
+    """
+    docente = await headers_docente_de_sesion(sesion_id)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        participantes = await client.get(
+            f"/sesiones-en-vivo/{sesion_id}/participantes", headers=docente
+        )
+        assert participantes.status_code == 200, participantes.text
+        if participantes.json():
+            return
+        estado = await client.get(f"/sesiones-en-vivo/{sesion_id}", headers=docente)
+        assert estado.status_code == 200, estado.text
+    _, headers = await crear_estudiante(estado.json()["comision_id"])
+    await unirse_a_sesion(sesion_id, headers)
+
+
 async def iniciar_sesion(sesion_id: str) -> None:
-    """Inicia la sesión por la API real (US-6.1.4) — reemplaza la siembra de `SesionEnVivoIniciada`."""
+    """Inicia la sesión por la API real (US-6.1.4) — reemplaza la siembra de `SesionEnVivoIniciada`.
+
+    Si nadie se unió todavía, une a un Estudiante antes (`asegurar_participante`, INV-AEV-11).
+    """
+    await asegurar_participante(sesion_id)
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/iniciar",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 
@@ -143,7 +220,7 @@ async def cerrar_pregunta_actual(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/cerrar-pregunta",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 
@@ -156,7 +233,7 @@ async def finalizar_sesion(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/finalizar",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 
@@ -186,7 +263,7 @@ async def mostrar_opciones(sesion_id: str) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         respuesta = await client.post(
             f"/sesiones-en-vivo/{sesion_id}/mostrar-opciones",
-            headers=headers_de(uuid.uuid4(), TipoPerfil.DOCENTE),
+            headers=await headers_docente_de_sesion(sesion_id),
         )
     assert respuesta.status_code == 200, respuesta.text
 

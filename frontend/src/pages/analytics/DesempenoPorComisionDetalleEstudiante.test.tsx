@@ -21,7 +21,7 @@ function jsonResponse(status: number, body: unknown): Response {
 }
 
 function desempeno(evaluaciones: unknown[], resumen: Record<string, number>) {
-  return { evaluaciones, resumen }
+  return { evaluaciones, resumen, sesiones_en_vivo: [] }
 }
 
 function evaluacionDetalle(

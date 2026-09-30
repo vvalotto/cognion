@@ -9,7 +9,33 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-30
+
 ### Added
+- **US-6.0.1/US-6.0.2** (modelado del modo en vivo): event storming de `ActividadEvaluativaEnVivo`
+  (agregado hermano de `ActividadEvaluativaPeriodoAbierto`, `ADR-015`) y wireframes/prototipo
+  navegable aprobados, seis rondas de ajuste — la sesión en vivo se crea desde el detalle de una
+  Comisión puntual, no desde la Materia. Spike del algoritmo de puntaje resuelto antes del
+  modelado (`Puntaje = 1000 × FactorTiempo × FactorDificultad × FactorImportancia`).
+- **US-6.1.1** (infraestructura de tiempo real): canal WebSocket por `sesion_id` con JWT por
+  query param, `ComisionConsultaPort` de Actividad Evaluativa hacia Identidad.
+- **US-6.1.2/US-6.1.3/US-6.1.4** (backend): crear una sesión en vivo desde una Comisión, unirse
+  (idempotente, sin duplicar participante), iniciar la sesión y presentar la primera pregunta.
+- **US-6.2.1 a US-6.2.9** (backend, dinámica en tiempo real): cálculo de puntaje server-side,
+  mostrar opciones, read models `ranking_por_sesion`/`distribucion_por_pregunta`, responder con
+  feedback personal inmediato, cerrar la pregunta actual (respuesta correcta + histograma +
+  ranking en un único broadcast), avanzar a la siguiente pregunta, finalizar la sesión sin
+  restricción de última pregunta, consultas de estado/participantes/ranking para reconexión y
+  sala de espera, y verificación E2E del RNF de rendimiento (p95 43,81 ms del use case
+  `CerrarPreguntaActual` con 60 participantes simultáneos, umbral 100 ms).
+- **US-ADJ-08** (Estudiante ve la materia/comisión de la invitación antes de registrarse):
+  endpoint público de solo lectura `GET /identidad/invitaciones/{token}` (`ObtenerInvitacionUseCase`,
+  reutiliza `Invitacion.verificar_vigente()` sin consumir la invitación, resuelve materia/horario
+  con los mismos puertos que `RegistroController`) y chip "Te vas a unir a {materia} — {horario}"
+  en `Registro.tsx` antes del formulario — usa el horario de la Comisión en vez de una letra
+  inexistente en el dominio (nota de diseño de la spec). 404 si el token no existe, 422 si venció
+  o ya fue usada.
+
 - **US-6.3.4** (Infraestructura de frontend del modo en vivo): primer uso de WebSockets del
   frontend — cliente API tipado (`sesion-en-vivo-api.ts`, 12 funciones), canal WebSocket con
   reconexión y backoff exponencial (`canal-sesion-en-vivo.ts`), hook seguro ante `StrictMode`
@@ -62,6 +88,25 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
   navegador. **Corrige dos bloqueantes** que Vitest no veía: el estado de la sesión (`EnEspera`/`EnCurso`/
   `Finalizada` del backend) y los mensajes del WebSocket en snake_case. Proxy de desarrollo de Vite (`/api`)
   para probar desde un celular de la red.
+- **US-ADJ-56** (el desempeño del Estudiante incluye las sesiones en vivo): "Mi desempeño" y "Desempeño por
+  alumno" ganan la sección "Sesiones en vivo" (comisión, fecha, puntaje, posición, correctas/incorrectas),
+  separada del acumulado de período abierto. Segundo puerto de Analytics hacia Actividad Evaluativa
+  (`SesionEnVivoDesempenoConsultaPort`, in-process) que agrupa los streams `ActividadEvaluativaEnVivo`/
+  `ParticipacionEnVivo` y lee `ranking_por_sesion` para la posición — sin endpoint nuevo, sin migración.
+- **US-ADJ-58** (cancelar una sesión no iniciada, finalizar en cualquier etapa, no iniciar sin
+  participantes): estado propio `Cancelada` (no reutiliza `Finalizada`), `finalizar()` relaja
+  INV-AEV-03 para no exigir la última pregunta, validación de "al menos un participante" también
+  en el backend (no solo en la UI).
+- **US-ADJ-57** (cada Docente ve y opera solo sobre las materias de sus Comisiones): primitivas
+  nuevas en Identidad, `docente_pertenece_a_comision`/`docente_tiene_comision_en_materia`,
+  consumidas ampliando el `ComisionConsultaPort` propio de cada uno de los otros 3 BC (Banco de
+  Preguntas, Actividad Evaluativa, Analytics) — sin importar directamente entre BCs.
+
+### Fixed
+- **US-ADJ-07** (nombre legible de la comisión en el detalle de cuenta): `CuentaDetalle.tsx`
+  mostraba el UUID crudo de `comisionId` para cuentas de perfil Estudiante — ahora resuelve
+  `{Materia} — {horario}` vía `GET /comisiones/{id}` (`US-ADJ-25`), mismo patrón que
+  `ComisionDetalle.tsx`.
 
 ## [0.7.1] - 2026-09-17
 

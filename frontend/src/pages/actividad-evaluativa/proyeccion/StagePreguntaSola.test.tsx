@@ -24,7 +24,7 @@ afterEach(cleanup)
 
 describe("StagePreguntaSola", () => {
   it("muestra el enunciado, 'Pregunta 1 de N' y el botón, sin opciones", () => {
-    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={() => {}} />)
+    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={() => {}} onFinalizar={() => {}} />)
 
     expect(screen.getByRole("heading", { name: /depender de una clase concreta/ })).toBeInTheDocument()
     expect(screen.getByText("Pregunta 1 de 5")).toBeInTheDocument()
@@ -34,20 +34,28 @@ describe("StagePreguntaSola", () => {
   })
 
   it("el enunciado usa la tipografía de proyección (≥ 40 px)", () => {
-    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={() => {}} />)
+    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={() => {}} onFinalizar={() => {}} />)
     expect(screen.getByRole("heading").className).toContain("text-[40px]")
   })
 
   it("pulsar el botón avisa al contenedor", async () => {
     const onMostrar = vi.fn()
-    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={onMostrar} />)
+    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={onMostrar} onFinalizar={() => {}} />)
 
     await userEvent.click(screen.getByRole("button", { name: "Mostrar opciones" }))
     expect(onMostrar).toHaveBeenCalledTimes(1)
   })
 
   it("mientras envía el botón queda deshabilitado", () => {
-    render(<StagePreguntaSola vista={vista} enviando onMostrarOpciones={() => {}} />)
+    render(<StagePreguntaSola vista={vista} enviando onMostrarOpciones={() => {}} onFinalizar={() => {}} />)
     expect(screen.getByRole("button", { name: "Mostrar opciones" })).toBeDisabled()
+  })
+
+  it("'Finalizar sesión' avisa al contenedor para pedir confirmación (US-ADJ-58)", async () => {
+    const onFinalizar = vi.fn()
+    render(<StagePreguntaSola vista={vista} enviando={false} onMostrarOpciones={() => {}} onFinalizar={onFinalizar} />)
+
+    await userEvent.click(screen.getByRole("button", { name: "Finalizar sesión" }))
+    expect(onFinalizar).toHaveBeenCalledTimes(1)
   })
 })
