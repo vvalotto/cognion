@@ -1171,9 +1171,15 @@ en 7 puntos, ejecutándose de a uno:
    (`@testing-library/jest-dom`, patch trivial) — conflicto mecánico de `package-lock.json`
    contra `develop` tras los otros merges, no valía la pena resolver a mano, Dependabot lo
    regenera solo en su próximo escaneo.
-7. ⬜ Decidir destino de la branch `docs/modelo-datos-postgresql` (commit del 20-sep, modelo
-   de datos de Postgres documentado para solo 3 de 5 BC — desactualizado, le faltan
-   Analytics/Notificaciones/tablas del modo en vivo).
+7. ✅ Rescatado el contenido de `docs/modelo-datos-postgresql` (commit del 20-sep, nunca
+   mergeada) y actualizado antes de incorporarlo:
+   `docs/architecture/24{,a,b,c}-modelo-datos-*.md` — agrega los streams
+   `ActividadEvaluativaEnVivo`/`ParticipacionEnVivo` y las tablas
+   `ranking_por_sesion`/`distribucion_por_pregunta` (Incremento 6, no existían el 20-sep).
+   Analytics y Notificaciones confirmado sin tablas propias (`src/*/frameworks/db/models.py`)
+   — el índice ya lo documentaba bien. Branch local borrada, contenido absorbido en commits
+   propios. **Cierra completo el plan de higiene de repositorio de 7 puntos** — falta armar
+   el PR final con todo lo acumulado en la branch `docs/higiene-repositorio-claude-md`.
 
 ---
 
