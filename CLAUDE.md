@@ -1137,9 +1137,16 @@ deshabilitada puede seguir iniciando sesión, y el sistema puede quedar sin Admi
 operativo; sin pérdida de datos) y `plan-de-correccion.md` aprobado por Víctor. Decisión: se
 inserta el **Incremento 7-ADJ** (`US-ADJ-59` a `62`) **antes** de RF-07.
 
-**Próximo paso:** abrir el Incremento 7-ADJ (Milestone, `inc7-adj-candidatas.md`, specs
-`US-ADJ-59` a `62`); después, Iteración 2 (RF-07). Ítem abierto aparte, no bloqueante:
-checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
+**Incremento 7-ADJ abierto 2026-10-02** (Milestone
+[#15](https://github.com/vvalotto/cognion/milestone/15),
+`docs/plans/inc7-adj/inc7-adj-candidatas.md`): orden `US-ADJ-59` (cuenta deshabilitada no
+inicia sesión) → `60` (siempre ≥ 1 Administrador operativo) → `62` (recuperar contraseña
+desbloquea) → `61` (estado "cerrada" visible al Estudiante), más el spike de #1 y los arreglos
+informales #7 y #9. Cierre previsto como `BL-012`.
+
+**Próximo paso:** especificar `US-ADJ-59` (Issue + spec) y el spike de #1; después, Iteración 2
+(RF-07). Ítem abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS
+real (`PROCEDIMIENTO-UAT.md` §4).
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
