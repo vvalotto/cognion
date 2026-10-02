@@ -1,6 +1,6 @@
 # Incremento 7 — Cierre de alcance v1
 
-**Estado:** planificado, no iniciado (abierto para planificación 2026-09-30, al cerrar `BL-011`)
+**Estado:** **Iteración 1 (UAT manual) cerrada 2026-10-02**; Iteración 2 (RF-07) pendiente, sin spike resuelto. Entre ambas se inserta el **Incremento 7-ADJ** (ver más abajo). Abierto para planificación 2026-09-30, al cerrar `BL-011`.
 **Milestone:** sin crear todavía en GitHub
 **Política:** último incremento de `docs/rf/PLAN_v1.md` (0 a 7) — sin BC nuevo, no requiere
 Iteración 0 de Modelado (regla de `PLAN_v1.md` §"Resumen de la estrategia": "todo incremento
@@ -54,6 +54,36 @@ Sin detalle todavía — se especifica después de cerrar la Iteración 1, y sol
 resolver el spike de decisión (parseo automático vs. asistido) con Víctor presente, mismo
 criterio ya aplicado al spike de puntaje del Incremento 6.
 
+## Cierre de la Iteración 1 (2026-10-02)
+
+UAT ejecutada en mini-sesiones (Víctor ejecuta, la sesión conduce y verifica cada paso contra
+la base): 30 pasos sobre los 4 roles, RBAC transversal y sesión en vivo con iPhone/iPad reales.
+Artefactos en `quality/reports/uat/inc7/` (PR #472): `plan-de-pruebas.md`,
+`registro-ejecuciones.md`, `registro-hallazgos.md` (11 hallazgos: 2 🔴, 6 🟡, 3 ⚪; 3 resueltos
+en el momento) y `plan-de-correccion.md`, **aprobado por Víctor** con sus 6 decisiones.
+Sin pérdida de datos en ningún paso; los dos 🔴 son reglas del ciclo de vida de la cuenta, no
+fallos de pantalla.
+
+## Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1 (decidido 2026-10-02)
+
+Va **antes** de la Iteración 2 (RF-07), fuera de la secuencia 0–7 de `PLAN_v1.md`, mismo
+criterio que `3-ADJ` a `6-ADJ`. Detalle y decisiones en
+`quality/reports/uat/inc7/plan-de-correccion.md` §3, §5 y §7:
+
+| Orden | Ítem | Track |
+|---|---|---|
+| 0 | Commit de los fixes de #3 y #8 | Informal — hecho (PR #472) |
+| 1 | Spike #1 (autoregistro `201` sin persistir, contra build de producción) y re-prueba #6 (iPhone) | Verificación |
+| 2 | `US-ADJ-59` — cuenta deshabilitada no inicia sesión (#11), solo en login | Formal |
+| 3 | `US-ADJ-60` — siempre ≥ 1 Administrador operativo (#4), bloqueo temporal para el último | Formal |
+| 4 | `US-ADJ-61` — estado "cerrada" visible para el Estudiante (#10), con gate UX | Formal |
+| 5 | #7 (texto del ranking) y #9 (evolución temporal) | Informal |
+| 6 | `US-ADJ-62` — recuperar contraseña también desbloquea (#5) | Formal |
+
+Milestone, Issues y specs de `US-ADJ-59` a `62` se crean al abrir el incremento (no existen
+todavía).
+
 ## Próximo paso
 
-Escribir el `plan-de-pruebas.md` de la Iteración 1 junto con Víctor.
+Abrir el Incremento 7-ADJ (Milestone, `inc7-adj-candidatas.md`, specs `US-ADJ-59` a `62`).
+Después, la Iteración 2 (RF-07) con su spike de decisión.

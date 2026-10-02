@@ -3,7 +3,7 @@
 **Incremento:** 7, Iteración 1 (`docs/plans/inc7/inc7-candidatas.md`)
 **Procedimiento:** `docs/plans/PROCEDIMIENTO-UAT.md` §11
 **Fecha:** 2026-10-02
-**Estado:** borrador para aprobación de Víctor — **gate de cierre de la Iteración 1**
+**Estado:** **aprobado por Víctor el 2026-10-02** (6 decisiones, §7) — **gate de cierre de la Iteración 1 cumplido**
 **Insumos:** `plan-de-pruebas.md`, `registro-ejecuciones.md` (30 pasos), `registro-hallazgos.md` (11 hallazgos)
 
 > Documento de **priorización, no de ejecución**: propone qué se hace con cada hallazgo y en
