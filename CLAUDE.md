@@ -1144,8 +1144,12 @@ inicia sesión) → `60` (siempre ≥ 1 Administrador operativo) → `62` (recup
 desbloquea) → `61` (estado "cerrada" visible al Estudiante), más el spike de #1 y los arreglos
 informales #7 y #9. Cierre previsto como `BL-012`.
 
-**Próximo paso:** especificar `US-ADJ-59` (Issue + spec) y el spike de #1; después, Iteración 2
-(RF-07). Ítem abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS
+**Specs e Issues del 7-ADJ creados 2026-10-02** (`US-ADJ-59` a `62`, Issues #474 a #477, con
+decisiones por defecto a confirmar por Víctor; la Parte B de frontend de cada una está
+bloqueada por el gate UX).
+
+**Próximo paso:** confirmar esas decisiones y empezar por la Parte A (backend) de `US-ADJ-59`, con
+el spike de #1 en paralelo; después, Iteración 2 (RF-07). Ítem abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS
 real (`PROCEDIMIENTO-UAT.md` §4).
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
