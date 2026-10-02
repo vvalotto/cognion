@@ -61,7 +61,8 @@ export function EliminarCuenta() {
         <p>
           Si tiene datos asociados (Comisiones asignadas o creadas, evaluaciones rendidas), la
           cuenta se deshabilita en vez de borrarse — deja de poder iniciar sesión, pero no afecta
-          lo que ya existe.
+          lo que ya existe. <strong>Si no tiene datos asociados, se borra en forma permanente y
+          no se puede deshacer.</strong>
         </p>
       </div>
 

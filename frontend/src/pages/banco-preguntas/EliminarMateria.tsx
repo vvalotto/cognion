@@ -63,7 +63,8 @@ export function EliminarMateria() {
         <p>
           Si tiene preguntas cargadas o Comisiones asociadas, la materia se deshabilita en vez
           de borrarse — deja de estar disponible para nuevas Comisiones, pero no afecta lo que
-          ya existe.
+          ya existe. <strong>Si no tiene nada asociado, se borra en forma permanente y no se
+          puede deshacer.</strong>
         </p>
       </div>
 
