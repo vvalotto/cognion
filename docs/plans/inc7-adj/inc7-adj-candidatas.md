@@ -1,6 +1,6 @@
 # Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1 (antes de RF-07)
 
-**Estado:** en planificación (abierto 2026-10-02; sin specs ni Issues todavía)
+**Estado:** en planificación (abierto 2026-10-02; specs e Issues creados el mismo día)
 **Milestone:** [Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1](https://github.com/vvalotto/cognion/milestone/15)
 **Política:** mismo criterio de nomenclatura que `Incremento 3-ADJ` a `6-ADJ` — ajuste insertado
 fuera de la secuencia numérica 0-7 de `docs/rf/PLAN_v1.md`, sin renumerar. Va **antes** de la
@@ -25,10 +25,10 @@ spike de RF-07 (parseo automático vs. asistido) necesita a Víctor presente de 
 | # | Ítem | Hallazgo | Qué | Track | Issue |
 |---|---|---|---|---|---|
 | 0 | Verificación | #1, #6 | Spike de #1 (autoregistro `201` sin persistir) contra un build de producción (`npm run build` + `vite preview`, ≥ 5 repeticiones mirando el log y la base; incluir el `422` inexplicado de la recuperación de contraseña). Re-prueba de #6 con el iPhone (y staging con WSS cuando exista) | Verificación — no se codea hasta ver el resultado | — |
-| 1 | `US-ADJ-59` | #11 🔴 | Una cuenta deshabilitada no puede iniciar sesión (solo en login; sesiones ya emitidas viven hasta expirar, `ADR-013`) | Formal | por crear |
-| 2 | `US-ADJ-60` | #4 🔴 | Siempre existe ≥ 1 Administrador operativo: nunca se borra físicamente, no se deshabilita el último activo, y el último activo se bloquea solo de forma **temporal** (~15 min) en vez de permanente | Formal | por crear |
-| 3 | `US-ADJ-62` | #5 🟡 | Recuperar la contraseña también desbloquea la cuenta (resetea `bloqueada` y los contadores de intentos) | Formal | por crear |
-| 4 | `US-ADJ-61` | #10 🟡 | Estado `cerrada` visible para el Estudiante: nuevo valor en `EstadoVisible`, badge "Cerrada", mensaje propio en `FueraDePeriodo`, y "Mis materias" no cuenta una cerrada como pendiente | Formal, con gate UX previo | por crear |
+| 1 | `US-ADJ-59` | #11 🔴 | Una cuenta deshabilitada no puede iniciar sesión (solo en login; sesiones ya emitidas viven hasta expirar, `ADR-013`) | Formal | [#474](https://github.com/vvalotto/cognion/issues/474) |
+| 2 | `US-ADJ-60` | #4 🔴 | Siempre existe ≥ 1 Administrador operativo: nunca se borra físicamente, no se deshabilita el último activo, y el último activo se bloquea solo de forma **temporal** (~15 min) en vez de permanente | Formal | [#475](https://github.com/vvalotto/cognion/issues/475) |
+| 3 | `US-ADJ-62` | #5 🟡 | Recuperar la contraseña también desbloquea la cuenta (resetea `bloqueada` y los contadores de intentos) | Formal | [#477](https://github.com/vvalotto/cognion/issues/477) |
+| 4 | `US-ADJ-61` | #10 🟡 | Estado `cerrada` visible para el Estudiante: nuevo valor en `EstadoVisible`, badge "Cerrada", mensaje propio en `FueraDePeriodo`, y "Mis materias" no cuenta una cerrada como pendiente | Formal, con gate UX previo | [#476](https://github.com/vvalotto/cognion/issues/476) |
 | 5 | Texto del ranking | #7 🟡 | "Todavía no hay evaluaciones de período abierto finalizadas con preguntas de esta materia." No se toca "Desempeño por tema" | Informal (solo `frontend/`) | — |
 | 6 | Evolución temporal | #9 ⚪ | Etiqueta del eje X truncada y serie "Promedio de la comisión" no visible con un solo dato — revisar con ≥ 2 estudiantes antes de corregir | Informal (solo `frontend/`) | — |
 | 7 | Cierre | — | `BL-012`: DesignReviewer + ArchitectAnalyst manual, pase de navegador real que repite los pasos de la UAT afectados (login/baja/bloqueo/recuperación de cuenta, actividad cerrada), matriz de trazabilidad, `CHANGELOG.md` | Cierre de baseline | — |
@@ -64,17 +64,29 @@ entrar en cualquier hueco.
    se decidió el 2026-09-27 en `US-ADJ-56`).
 6. Los fixes de #3 y #8 se commitearon aparte (PR #472, mergeado).
 
-## Detalle a decidir al especificar
+## Decisiones por defecto de las specs (a confirmar por Víctor)
 
-- **`US-ADJ-59`:** qué error devuelve el login a una cuenta deshabilitada (¿el mismo de
-  credenciales inválidas, para no revelar el estado, o uno propio?) y si se chequea antes o
-  después de verificar la contraseña. Se propone antes, sin filtrar si la contraseña era
-  correcta.
-- **`US-ADJ-60`:** cómo se cuenta "Administrador activo" en el momento del tercer intento
-  fallido (consulta al repositorio dentro del use case) y dónde vive el tiempo de bloqueo
-  temporal (¿campo `bloqueada_hasta`? ¿configuración en `settings.py`?). Posible invariante
-  nueva `INV-ID-xx` en `BC-identidad-modelo.md` y, si se elige un campo nuevo, migración.
-- **`US-ADJ-61`:** nombre y color del badge, y texto exacto del mensaje de actividad cerrada.
+Las specs (`docs/specs/ajustes/US-ADJ-59.md` a `62.md`) cerraron los detalles que el plan dejaba
+abiertos con una propuesta por defecto. **Ninguna está confirmada todavía:**
+
+- **`US-ADJ-59`:** error propio `403` con `detail` estructurado `cuenta_deshabilitada` (en vez de
+  reutilizar el `401` de credenciales inválidas); se chequea **antes** de verificar la contraseña
+  y de `bloqueada`, sin consumir intentos.
+- **`US-ADJ-60`:** campo nuevo `usuario.bloqueada_hasta` con vencimiento **perezoso** (sin proceso
+  de fondo); duración 15 min en `settings.py` (`administrador_bloqueo_temporal_minutos`);
+  "operativo" = Administrador ni deshabilitado ni bloqueado (el bloqueo temporal también deja de
+  contarlo); la regla cubre los **dos** caminos de bloqueo (login y cambio de la propia
+  contraseña); `409` con `detail` estructurado para la baja del último; el conteo va en
+  `UsuarioRepositoryPort` para no sumar dependencias (CBO). Condición de carrera entre dos
+  Administradores aceptada y documentada.
+- **`US-ADJ-61`:** badge "Cerrada" neutro; cierre manual y vencimiento por fecha se muestran
+  igual; `finalizada` gana sobre `cerrada`; texto neutro cuando se llega por el `422` sin
+  contexto.
+- **`US-ADJ-62`:** `recuperar_password` delega en `resetear_password` (misma lógica de
+  desbloqueo); no reactiva cuentas deshabilitadas; revierte una decisión de `US-ADJ-39`.
+
+**Gate UX pendiente en las cuatro:** la Parte A (backend) de cada una se puede implementar sin
+él; la Parte B (frontend) necesita antes wireframes/prototipo actualizados y aprobados.
 
 ## Fuera de alcance
 

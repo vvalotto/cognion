@@ -81,11 +81,12 @@ criterio que `3-ADJ` a `6-ADJ`. Detalle y decisiones en
 | 6 | `US-ADJ-62` — recuperar contraseña también desbloquea (#5) | Formal |
 
 **Abierto 2026-10-02:** Milestone [#15](https://github.com/vvalotto/cognion/milestone/15) y
-`docs/plans/inc7-adj/inc7-adj-candidatas.md`. Las specs de `US-ADJ-59` a `62` y sus Issues se
-crean una por una, con Víctor, después (no existen todavía). El orden pasó a `59` → `60` →
+`docs/plans/inc7-adj/inc7-adj-candidatas.md`. Specs `US-ADJ-59` a `62` e Issues #474 a #477
+creados el mismo día. El orden pasó a `59` → `60` →
 `62` → `61` (ver ese archivo).
 
 ## Próximo paso
 
-Especificar `US-ADJ-59` (Issue + spec) y arrancar el spike de #1 en paralelo. Después, la
+Confirmar las decisiones por defecto de las specs `US-ADJ-59` a `62` (Issues #474 a #477) y
+empezar por la Parte A (backend) de `US-ADJ-59`, con el spike de #1 en paralelo. Después, la
 Iteración 2 (RF-07) con su spike de decisión.
