@@ -80,10 +80,12 @@ criterio que `3-ADJ` a `6-ADJ`. Detalle y decisiones en
 | 5 | #7 (texto del ranking) y #9 (evolución temporal) | Informal |
 | 6 | `US-ADJ-62` — recuperar contraseña también desbloquea (#5) | Formal |
 
-Milestone, Issues y specs de `US-ADJ-59` a `62` se crean al abrir el incremento (no existen
-todavía).
+**Abierto 2026-10-02:** Milestone [#15](https://github.com/vvalotto/cognion/milestone/15) y
+`docs/plans/inc7-adj/inc7-adj-candidatas.md`. Las specs de `US-ADJ-59` a `62` y sus Issues se
+crean una por una, con Víctor, después (no existen todavía). El orden pasó a `59` → `60` →
+`62` → `61` (ver ese archivo).
 
 ## Próximo paso
 
-Abrir el Incremento 7-ADJ (Milestone, `inc7-adj-candidatas.md`, specs `US-ADJ-59` a `62`).
-Después, la Iteración 2 (RF-07) con su spike de decisión.
+Especificar `US-ADJ-59` (Issue + spec) y arrancar el spike de #1 en paralelo. Después, la
+Iteración 2 (RF-07) con su spike de decisión.
