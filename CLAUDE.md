@@ -917,7 +917,9 @@ ranking/tema/comisión/detalle-por-evaluación. 1197/1197 tests backend, 497/497
 DesignReviewer 0 CRITICAL. **Hallazgo detectado y no resuelto en esta UAT** (deuda de
 `frontend/`, reportada aparte, no bloqueante): `HomeDocente.tsx` sigue con cards directas a
 "Desempeño por alumno"/"por tema" sin pasar por la landing "Reportes" ni incluir los otros 2
-informes nuevos.
+informes nuevos. **Resuelto después** (PR #374, "unificar Reportes en Home del Docente": una
+sola card "Reportes" hacia `/analytics`) — la UAT del Incremento 7 lo confirmó con la home
+real del Docente.
 
 **Iteración 5 — Revisión documental de cierre, en curso** (`US-ADJ-52`, Issue #372, tipo
 Documentación — sin código de producción). Alcance: numeración definitiva de RF-24
@@ -1129,9 +1131,15 @@ queda diferido sin incremento asignado (`docs/rf/RF_v1.md` revisión 2026-09-30,
 Iteración 2 (`RF-07`, importación desde PDF) no cambia — spike de decisión (parseo automático
 vs. asistido) pendiente, con Víctor presente, antes de especificarla.
 
-**Próximo paso:** escribir el `plan-de-pruebas.md` de la Iteración 1 junto con Víctor. Ítem
-abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS real
-(`PROCEDIMIENTO-UAT.md` §4).
+**Iteración 1 (UAT manual) cerrada 2026-10-02** (PR #472, `quality/reports/uat/inc7/`): 30
+pasos sobre los 4 roles, RBAC y sesión en vivo con iPhone/iPad, 11 hallazgos (2 🔴: una cuenta
+deshabilitada puede seguir iniciando sesión, y el sistema puede quedar sin Administrador
+operativo; sin pérdida de datos) y `plan-de-correccion.md` aprobado por Víctor. Decisión: se
+inserta el **Incremento 7-ADJ** (`US-ADJ-59` a `62`) **antes** de RF-07.
+
+**Próximo paso:** abrir el Incremento 7-ADJ (Milestone, `inc7-adj-candidatas.md`, specs
+`US-ADJ-59` a `62`); después, Iteración 2 (RF-07). Ítem abierto aparte, no bloqueante:
+checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan

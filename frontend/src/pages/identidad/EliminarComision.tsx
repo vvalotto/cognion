@@ -65,6 +65,8 @@ export function EliminarComision() {
         <p>
           Si tiene estudiantes inscriptos, la comisión se deshabilita en vez de borrarse — deja
           de estar disponible para nuevas inscripciones, pero no afecta a quienes ya cursan.
+          <strong> Si no tiene estudiantes inscriptos, se borra en forma permanente y no se
+          puede deshacer.</strong>
         </p>
       </div>
 
