@@ -10,6 +10,7 @@ import { useAuthBrand } from "@/layouts/AuthLayout"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { LoginError } from "@/pages/identidad/LoginError"
 import { LoginCuentaBloqueadaError } from "@/pages/identidad/LoginCuentaBloqueadaError"
+import { LoginCuentaBloqueadaTemporalError } from "@/pages/identidad/LoginCuentaBloqueadaTemporalError"
 import { LoginCuentaDeshabilitadaError } from "@/pages/identidad/LoginCuentaDeshabilitadaError"
 import { setSession, type Rol } from "@/lib/session"
 
@@ -29,6 +30,14 @@ function esCuentaDeshabilitada(detail: unknown): boolean {
   )
 }
 
+/** El `403` de bloqueo temporal trae `reintentar_en_segundos` (`US-ADJ-60`); `null` si no aplica. */
+function segundosDeBloqueoTemporal(detail: unknown): number | null {
+  if (typeof detail !== "object" || detail === null) return null
+  const { codigo, reintentar_en_segundos } = detail as Record<string, unknown>
+  if (codigo !== "cuenta_bloqueada_temporal") return null
+  return typeof reintentar_en_segundos === "number" ? reintentar_en_segundos : 1
+}
+
 /** Pantalla de login (§2.1/§2.2 `wireframes-identidad.md`) — consume `POST /identidad/login`. */
 export function Login() {
   const navigate = useNavigate()
@@ -36,6 +45,7 @@ export function Login() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
   const [bloqueo, setBloqueo] = useState<"bloqueada" | "deshabilitada" | null>(null)
+  const [segundosTemporal, setSegundosTemporal] = useState<number | null>(null)
   const bloqueada = bloqueo !== null
   const { setOcultarMarca } = useAuthBrand()
 
@@ -60,6 +70,7 @@ export function Login() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(false)
+    setSegundosTemporal(null)
 
     try {
       const response = await apiFetch<LoginResponse>("/identidad/login", {
@@ -72,6 +83,12 @@ export function Login() {
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 403) {
+        const segundos = segundosDeBloqueoTemporal(err.detail)
+        if (segundos !== null) {
+          setPassword("")
+          setSegundosTemporal(segundos)
+          return
+        }
         setBloqueo(esCuentaDeshabilitada(err.detail) ? "deshabilitada" : "bloqueada")
         return
       }
@@ -100,6 +117,7 @@ export function Login() {
 
       {bloqueo === "deshabilitada" && <LoginCuentaDeshabilitadaError />}
       {bloqueo === "bloqueada" && <LoginCuentaBloqueadaError />}
+      {segundosTemporal !== null && <LoginCuentaBloqueadaTemporalError segundos={segundosTemporal} />}
       {bloqueo === null && error && <LoginError />}
 
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>

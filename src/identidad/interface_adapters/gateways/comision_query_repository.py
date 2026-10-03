@@ -100,16 +100,6 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         resultado = await self._session.execute(query)
         return resultado.first() is not None
 
-    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
-        """Indica si el administrador creó alguna comisión (activa o no)."""
-        query = (
-            select(ComisionModel.id)
-            .where(ComisionModel.administrador_id == administrador_id)
-            .limit(1)
-        )
-        resultado = await self._session.execute(query)
-        return resultado.first() is not None
-
     async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
         """Indica si el docente está asignado a esa comisión puntual."""
         query = (

@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-10-03T12:58:32.945512+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 276,
-    "effective_seconds": 276,
+    "total_elapsed_seconds": 2297,
+    "effective_seconds": 2297,
     "paused_seconds": 0
   },
   "phases": [
@@ -40,6 +40,83 @@
       "phase_number": 2,
       "phase_name": "Plan de Implementación",
       "started_at": "2026-10-03T13:03:09.507582+00:00",
+      "completed_at": "2026-10-03T13:03:47.654219+00:00",
+      "elapsed_seconds": 38,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-03T13:03:47.786665+00:00",
+      "completed_at": "2026-10-03T13:05:25.701758+00:00",
+      "elapsed_seconds": 97,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-10-03T13:05:25.847670+00:00",
+      "completed_at": "2026-10-03T13:06:47.982096+00:00",
+      "elapsed_seconds": 82,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-10-03T13:06:48.125920+00:00",
+      "completed_at": "2026-10-03T13:07:50.565585+00:00",
+      "elapsed_seconds": 62,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-10-03T13:07:50.700989+00:00",
+      "completed_at": "2026-10-03T13:21:14.224271+00:00",
+      "elapsed_seconds": 803,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-10-03T13:21:14.381204+00:00",
+      "completed_at": "2026-10-03T13:29:02.908055+00:00",
+      "elapsed_seconds": 468,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-10-03T13:29:03.053428+00:00",
+      "completed_at": "2026-10-03T13:36:49.849508+00:00",
+      "elapsed_seconds": 466,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte Final",
+      "started_at": "2026-10-03T13:36:49.993348+00:00",
       "completed_at": null,
       "elapsed_seconds": 0,
       "status": "in_progress",
@@ -52,7 +129,7 @@
   "summary": {
     "total_tasks": 0,
     "completed_tasks": 0,
-    "total_phases": 3,
+    "total_phases": 10,
     "estimated_total_minutes": 0,
     "actual_total_minutes": 0,
     "variance_minutes": 0,

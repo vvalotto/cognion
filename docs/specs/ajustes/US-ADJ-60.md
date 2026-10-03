@@ -1,6 +1,6 @@
 # US-ADJ-60: El sistema siempre conserva al menos un Administrador operativo
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1`
 (decisión de Víctor, 2026-10-02; reglas confirmadas en el plan de corrección §7)
 **Tipo**: `feat` backend + migración + frontend

@@ -53,6 +53,13 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
     async def eliminar(self, usuario_id: UUID) -> None:
         self.usuarios.pop(usuario_id, None)
 
+    async def contar_administradores_operativos(self, excluyendo: UUID | None = None) -> int:
+        return sum(
+            1
+            for u in self.usuarios.values()
+            if u.id != excluyendo and u.es_administrador_operativo()
+        )
+
 
 class FakeCuentaQueryRepository(CuentaQueryPort):
     def __init__(self) -> None:
@@ -113,7 +120,6 @@ class FakeComisionQueryRepository(ComisionQueryPort):
         self.estudiantes_por_comision: dict[UUID, list[EstudianteResumen]] = {}
         self.estudiantes_con_email_por_comision: dict[UUID, list[EstudianteConEmail]] = {}
         self.docentes_con_comisiones: set[UUID] = set()
-        self.administradores_con_comisiones: set[UUID] = set()
 
     def agregar_comision(self, comision: Comision) -> None:
         self.comisiones_por_materia.setdefault(comision.materia_id, []).append(comision)
@@ -134,9 +140,6 @@ class FakeComisionQueryRepository(ComisionQueryPort):
 
     async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
         return docente_id in self.docentes_con_comisiones
-
-    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
-        return administrador_id in self.administradores_con_comisiones
 
     async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
         for comisiones in self.comisiones_por_materia.values():

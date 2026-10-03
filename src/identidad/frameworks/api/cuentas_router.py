@@ -10,6 +10,7 @@ from src.identidad.entities.errors import (
     EmailYaRegistrado,
     PasswordDemasiadoCorta,
     PasswordSinComplejidadSuficiente,
+    UltimoAdministradorOperativoError,
     UsuarioNoExiste,
 )
 from src.identidad.entities.usuario import Estudiante, Usuario
@@ -150,12 +151,18 @@ async def eliminar_cuenta(
     """Borra la cuenta, o la deshabilita si tiene datos asociados (Comisiones, evaluaciones).
 
     204 si se borró físicamente; 200 con la cuenta (`deshabilitada=true`) si se deshabilitó.
-    404 si la cuenta no existe.
+    Un Administrador siempre se deshabilita (nunca se borra). 404 si la cuenta no existe; 409 con
+    `detail.codigo = "ultimo_administrador_operativo"` si es el único Administrador operativo.
     """
     try:
         usuario = await controller.eliminar_cuenta(usuario_id)
     except UsuarioNoExiste as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except UltimoAdministradorOperativoError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"codigo": "ultimo_administrador_operativo", "mensaje": str(exc)},
+        ) from exc
 
     if usuario is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)

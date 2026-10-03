@@ -135,31 +135,6 @@ class TestTieneComisionesAsignadas:
         assert resultado is False
 
 
-class TestTieneComisionesCreadas:
-    async def test_administrador_con_comision_creada_devuelve_true(self, session):
-        usuario_repo = SQLAlchemyUsuarioRepository(session)
-        comision_repo = SQLAlchemyComisionRepository(session)
-        query_repo = SQLAlchemyComisionQueryRepository(session)
-        admin = Usuario.crear("Vic", "vic.query8@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
-        await usuario_repo.guardar(admin)
-        comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
-        await comision_repo.guardar(comision)
-
-        resultado = await query_repo.tiene_comisiones_creadas(admin.id)
-
-        assert resultado is True
-
-    async def test_administrador_sin_comisiones_creadas_devuelve_false(self, session):
-        usuario_repo = SQLAlchemyUsuarioRepository(session)
-        query_repo = SQLAlchemyComisionQueryRepository(session)
-        admin = Usuario.crear("Vic", "vic.query9@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
-        await usuario_repo.guardar(admin)
-
-        resultado = await query_repo.tiene_comisiones_creadas(admin.id)
-
-        assert resultado is False
-
-
 class TestDocentePerteneceAComision:
     """`US-ADJ-57`: primitiva de pertenencia a una comisión puntual."""
 
