@@ -32,6 +32,14 @@ class UsuarioRepositoryPort(ABC):
         ...
 
     @abstractmethod
+    async def contar_administradores_operativos(self, excluyendo: UUID | None = None) -> int:
+        """Cuenta los Administradores ni deshabilitados ni bloqueados (INV-ID-20).
+
+        `excluyendo` omite a ese usuario del conteo (para saber si existe *otro* operativo).
+        """
+        ...
+
+    @abstractmethod
     async def obtener_por_id(self, usuario_id: UUID) -> Usuario | None:
         """Busca un usuario por id, o `None` si no existe."""
         ...

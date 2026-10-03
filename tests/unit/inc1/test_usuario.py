@@ -196,14 +196,14 @@ class TestUsuarioRegistrarFalloCambioPassword:
         assert resultado is False
         assert usuario.bloqueada is False
 
-    def test_tercer_fallo_bloquea_y_devuelve_true(self):
+    def test_tercer_fallo_devuelve_true_y_deja_el_bloqueo_al_llamador(self):
         usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         usuario.intentos_fallidos_password = 2
 
         resultado = usuario.registrar_fallo_cambio_password()
 
         assert resultado is True
-        assert usuario.bloqueada is True
+        assert usuario.bloqueada is False
         assert usuario.intentos_fallidos_password == 3
 
 

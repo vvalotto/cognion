@@ -82,4 +82,39 @@ describe("EliminarCuenta", () => {
     expect(await screen.findByText("Cuentas listado")).toBeInTheDocument()
     expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1)
   })
+
+  describe("Administrador (US-ADJ-60)", () => {
+    const adminResponse = { ...cuentaResponse, perfil: "administrador", nombre: "Víctor" }
+
+    it("avisa que se deshabilita y se puede reactivar, sin prometer un borrado", async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, adminResponse))
+
+      renderEliminarCuenta()
+
+      expect(await screen.findByText("Deshabilitar cuenta")).toBeInTheDocument()
+      const aviso = screen.getByRole("alert")
+      expect(aviso).toHaveTextContent("se puede reactivar")
+      expect(aviso).not.toHaveTextContent("se borra en forma permanente")
+      expect(screen.getByRole("button", { name: "Sí, deshabilitar" })).toBeInTheDocument()
+    })
+
+    it("el 409 del único Administrador operativo muestra el error y no navega", async () => {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(jsonResponse(200, adminResponse))
+        .mockResolvedValueOnce(
+          jsonResponse(409, {
+            detail: { codigo: "ultimo_administrador_operativo", mensaje: "No se puede." },
+          }),
+        )
+      const user = userEvent.setup()
+
+      renderEliminarCuenta()
+      await screen.findByText("Deshabilitar cuenta")
+      await user.click(screen.getByRole("button", { name: "Sí, deshabilitar" }))
+
+      expect(await screen.findByText("No se puede deshabilitar esta cuenta")).toBeInTheDocument()
+      expect(screen.queryByText("Cuentas listado")).toBeNull()
+      expect(screen.getByRole("button", { name: "Sí, deshabilitar" })).toBeEnabled()
+    })
+  })
 })

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+from datetime import datetime
 from uuid import UUID
 
 from src.identidad.entities.eventos import CuentaBloqueada
@@ -119,6 +121,32 @@ class CuentaDeshabilitadaError(Exception):
         """Guarda el id de la cuenta deshabilitada y arma el mensaje de la excepción."""
         self.usuario_id = usuario_id
         super().__init__("La cuenta está deshabilitada. Contactá a un administrador.")
+
+
+class CuentaBloqueadaTemporalmenteError(Exception):
+    """El último Administrador operativo está bloqueado hasta `bloqueada_hasta` (INV-ID-21)."""
+
+    def __init__(self, usuario_id: UUID, bloqueada_hasta: datetime) -> None:
+        """Guarda el id de la cuenta y el instante en que vence el bloqueo."""
+        self.usuario_id = usuario_id
+        self.bloqueada_hasta = bloqueada_hasta
+        super().__init__("La cuenta está bloqueada temporalmente. Volvé a intentar más tarde.")
+
+    def segundos_restantes(self, ahora: datetime) -> int:
+        """Segundos que faltan para que venza el bloqueo (mínimo 1)."""
+        return max(1, math.ceil((self.bloqueada_hasta - ahora).total_seconds()))
+
+
+class UltimoAdministradorOperativoError(Exception):
+    """Se intentó dar de baja al único Administrador operativo (INV-ID-20)."""
+
+    def __init__(self, usuario_id: UUID) -> None:
+        """Guarda el id de la cuenta y arma el mensaje de la excepción."""
+        self.usuario_id = usuario_id
+        super().__init__(
+            "No se puede deshabilitar al único Administrador operativo. "
+            "Creá o reactivá otro Administrador primero."
+        )
 
 
 class UsuarioNoExiste(Exception):

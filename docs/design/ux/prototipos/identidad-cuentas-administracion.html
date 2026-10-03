@@ -274,6 +274,9 @@
   <button data-target="cambiar-password-exito">6. Contraseña cambiada</button>
   <button data-target="login-bloqueada">7. Login — cuenta bloqueada</button>
   <button data-target="login-deshabilitada">8. Login — cuenta deshabilitada (US-ADJ-59)</button>
+  <button data-target="eliminar-cuenta-admin">9. Deshabilitar Administrador (US-ADJ-60)</button>
+  <button data-target="eliminar-cuenta-ultimo-admin">10. Error — único Administrador (US-ADJ-60)</button>
+  <button data-target="login-bloqueada-temporal">11. Login — bloqueada temporalmente (US-ADJ-60)</button>
 </nav>
 
 <!-- 1. LISTADO DE CUENTAS -->
@@ -561,6 +564,99 @@
       <div class="field"><label>Email</label><input type="email" value="mgonzalez@fiuner.edu.ar" disabled></div>
       <div class="field"><label>Contraseña</label><input type="password" disabled></div>
       <button class="btn full" disabled style="opacity:0.5; cursor:not-allowed;">Ingresar</button>
+    </div>
+  </div>
+</section>
+
+<!-- 9. DESHABILITAR ADMINISTRADOR (US-ADJ-60) -->
+<section class="screen" id="eliminar-cuenta-admin">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Administrador</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Administración &nbsp;›&nbsp; Cuentas &nbsp;›&nbsp; <span class="current">Deshabilitar</span></div>
+    <h1 class="page-title">Deshabilitar cuenta</h1>
+    <p class="page-subtitle">Cuenta de Administrador</p>
+
+    <div class="form-card">
+      <div class="field">
+        <label>Cuenta a deshabilitar</label>
+        <p style="margin:0; font-weight:600;">Laura Benítez</p>
+        <div class="hint">lbenitez@fiuner.edu.ar · Administrador</div>
+      </div>
+      <div class="alert warning">
+        <span class="icon">ℹ</span>
+        <div class="body">
+          <strong>Un Administrador nunca se borra</strong>
+          La cuenta se deshabilita: deja de poder iniciar sesión, pero no se pierde nada y se puede reactivar desde el listado. No se puede deshabilitar al único Administrador operativo.
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn destructive" onclick="go('eliminar-cuenta-ultimo-admin')">Sí, deshabilitar</button>
+        <button class="btn outline" onclick="go('cuentas')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. ERROR — ÚNICO ADMINISTRADOR OPERATIVO (US-ADJ-60) -->
+<section class="screen" id="eliminar-cuenta-ultimo-admin">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">VV</span>Víctor Valotto · Administrador</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Administración &nbsp;›&nbsp; Cuentas &nbsp;›&nbsp; <span class="current">Deshabilitar</span></div>
+    <h1 class="page-title">Deshabilitar cuenta</h1>
+    <p class="page-subtitle">Cuenta de Administrador</p>
+
+    <div class="form-card">
+      <div class="alert destructive">
+        <span class="icon">⛔</span>
+        <div class="body">
+          <strong>No se puede deshabilitar esta cuenta</strong>
+          Es el único Administrador operativo. El sistema necesita al menos uno activo: habilitá primero a otro Administrador y volvé a intentar.
+        </div>
+      </div>
+      <div class="field">
+        <label>Cuenta a deshabilitar</label>
+        <p style="margin:0; font-weight:600;">Laura Benítez</p>
+        <div class="hint">lbenitez@fiuner.edu.ar · Administrador</div>
+      </div>
+      <div class="alert warning">
+        <span class="icon">ℹ</span>
+        <div class="body">
+          <strong>Un Administrador nunca se borra</strong>
+          La cuenta se deshabilita: deja de poder iniciar sesión, pero no se pierde nada y se puede reactivar desde el listado. No se puede deshabilitar al único Administrador operativo.
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn destructive" onclick="go('eliminar-cuenta-ultimo-admin')">Sí, deshabilitar</button>
+        <button class="btn outline" onclick="go('cuentas')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. LOGIN — BLOQUEADA TEMPORALMENTE (US-ADJ-60) -->
+<section class="screen" id="login-bloqueada-temporal">
+  <div class="app-body narrow" style="display:flex; align-items:center; justify-content:center; min-height:80vh;">
+    <div class="form-card" style="width:100%; max-width:380px;">
+      <h1 class="page-title">Iniciar sesión</h1>
+      <p class="page-subtitle">Ingresá con tu email y contraseña</p>
+
+      <div class="alert destructive">
+        <span class="icon">⏳</span>
+        <div class="body">
+          <strong>Cuenta bloqueada temporalmente</strong>
+          Superaste el máximo de intentos. Podés volver a intentar en unos 15 minutos.
+        </div>
+      </div>
+
+      <div class="field"><label>Email</label><input type="email" value="admin@fiuner.edu.ar"></div>
+      <div class="field"><label>Contraseña</label><input type="password"></div>
+      <button class="btn full">Ingresar</button>
     </div>
   </div>
 </section>

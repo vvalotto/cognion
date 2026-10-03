@@ -35,6 +35,7 @@ class UsuarioModel(Base):
     intentos_fallidos_password: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     creado_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     deshabilitada: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    bloqueada_hasta: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class AdministradorModel(Base):

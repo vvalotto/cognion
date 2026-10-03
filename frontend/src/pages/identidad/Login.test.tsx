@@ -186,6 +186,40 @@ describe("Login", () => {
     expect(alerta).not.toHaveTextContent("Cuenta deshabilitada")
   })
 
+  it("bloqueo temporal muestra su alerta con los minutos y deja el formulario habilitado (US-ADJ-60)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, {
+        detail: {
+          codigo: "cuenta_bloqueada_temporal",
+          mensaje: "La cuenta está bloqueada temporalmente.",
+          reintentar_en_segundos: 840,
+        },
+      })
+    )
+
+    renderLogin()
+    await completarFormulario("admin@fiuner.edu.ar", "cualquiera")
+
+    const alerta = await screen.findByRole("alert")
+    expect(alerta).toHaveTextContent("Cuenta bloqueada temporalmente")
+    expect(alerta).toHaveTextContent("unos 14 minutos")
+    expect(screen.getByLabelText("Email")).toBeEnabled()
+    expect(screen.getByLabelText("Contraseña")).toBeEnabled()
+    expect(screen.getByRole("button", { name: "Ingresar" })).toBeEnabled()
+    expect(getSession()).toBeNull()
+  })
+
+  it("bloqueo temporal sin segundos usa un minuto como mínimo (US-ADJ-60)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, { detail: { codigo: "cuenta_bloqueada_temporal", mensaje: "x" } })
+    )
+
+    renderLogin()
+    await completarFormulario("admin@fiuner.edu.ar", "cualquiera")
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("unos 1 minuto.")
+  })
+
   it("mostrar/ocultar contraseña (US-ADJ-35) no pierde el valor tipeado ni rompe el submit", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(200, {

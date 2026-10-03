@@ -57,6 +57,7 @@ class Usuario:
     intentos_fallidos_password: int = 0
     creado_en: datetime = field(default_factory=_ahora)
     deshabilitada: bool = False
+    bloqueada_hasta: datetime | None = None
 
     @property
     def tipo_perfil(self) -> TipoPerfil:
@@ -144,6 +145,7 @@ class Usuario:
         estaba_bloqueada = self.bloqueada
         self.password_hash = password_hash_nuevo
         self.bloqueada = False
+        self.bloqueada_hasta = None
         self.intentos_fallidos_login = 0
         self.intentos_fallidos_password = 0
         return estaba_bloqueada
@@ -171,15 +173,12 @@ class Usuario:
     def registrar_fallo_cambio_password(self) -> bool:
         """Registra un intento fallido de cambio de la propia contraseña (INV-ID-10).
 
-        Incrementa `intentos_fallidos_password`; al 3er fallo consecutivo bloquea la cuenta.
-        Devuelve `True` si este fallo bloqueó la cuenta (el llamador decide si corresponde
-        emitir `CuentaBloqueada`).
+        Solo incrementa `intentos_fallidos_password`. Devuelve `True` si con este fallo se
+        alcanzó el umbral de bloqueo (3 consecutivos): el llamador resuelve entonces la política
+        con `bloquear_por_intentos_fallidos()`.
         """
         self.intentos_fallidos_password += 1
-        if self.intentos_fallidos_password >= _INTENTOS_MAXIMOS_CAMBIO_PASSWORD:
-            self.bloqueada = True
-            return True
-        return False
+        return self.intentos_fallidos_password >= _INTENTOS_MAXIMOS_CAMBIO_PASSWORD
 
     def intentos_restantes_cambio_password(self) -> int:
         """Cantidad de fallos que quedan antes del bloqueo automático (INV-ID-10)."""

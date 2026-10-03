@@ -7,8 +7,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.identidad.entities.errors import (
     CredencialesInvalidas,
     CuentaBloqueadaError,
+    CuentaBloqueadaTemporalmenteError,
     CuentaDeshabilitadaError,
 )
+from src.identidad.frameworks.api.bloqueo_temporal import respuesta_bloqueo_temporal
 from src.identidad.frameworks.api.schemas import LoginRequest, LoginResponse
 from src.identidad.frameworks.dependencies import get_auth_controller
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
@@ -27,7 +29,8 @@ async def login(
     cuenta está bloqueada por 3 intentos fallidos consecutivos (`US-2.2.1`), con el `detail` en
     texto plano. Responde 403 también si la cuenta está deshabilitada (`US-ADJ-59`), pero con un
     `detail` estructurado `{"codigo": "cuenta_deshabilitada", "mensaje": ...}` para que el
-    frontend distinga los dos casos sin interpretar el texto.
+    frontend distinga los dos casos sin interpretar el texto. Responde 403 `cuenta_bloqueada_temporal`
+    (con `reintentar_en_segundos`) si es el último Administrador operativo bloqueado (`US-ADJ-60`).
     """
     try:
         jwt_vo, _evento = await controller.iniciar_sesion(body.email, body.password)
@@ -36,6 +39,8 @@ async def login(
             status_code=status.HTTP_403_FORBIDDEN,
             detail={"codigo": "cuenta_deshabilitada", "mensaje": str(exc)},
         ) from exc
+    except CuentaBloqueadaTemporalmenteError as exc:
+        raise respuesta_bloqueo_temporal(exc) from exc
     except CuentaBloqueadaError as exc:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except CredencialesInvalidas as exc:

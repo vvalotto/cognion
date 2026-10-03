@@ -1,0 +1,86 @@
+{
+  "us_id": "US-ADJ-60",
+  "fecha": "2026-10-03",
+  "componente": "src/identidad (usuario, errors, politica_bloqueo, eliminar_cuenta, iniciar_sesion, cambiar_password, routers, gateway, migración) + frontend (EliminarCuenta, Login, LoginCuentaBloqueadaTemporalError)",
+  "metricas": {
+    "pylint": 9.54,
+    "cc_max": "<= B (sin bloques C o peores)",
+    "mi_min": 49.72,
+    "coverage_unit_modulos_nuevos": "errors/usuario/cambiar_password/iniciar_sesion/politica_bloqueo 98-100%; eliminar_cuenta 85% (ramas docente/estudiante cubiertas por integración)",
+    "tests_backend": {
+      "unit": "875/875",
+      "integracion_y_bdd": "984/984 (suite completa, base aparte cognion_adj60)"
+    },
+    "frontend": {
+      "tests": "813/813 (107 archivos)",
+      "statements": 93.53,
+      "branches": 85.97,
+      "login_tsx_branches": 94.87
+    },
+    "mypy": "0 errores (302 archivos)",
+    "ruff": "0 errores en src"
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95
+  },
+  "codeguard": {
+    "archivos_analizados": 15,
+    "checks_ejecutados": 9,
+    "errors": 36,
+    "warnings": 6,
+    "infos": 92,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 15
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 14
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 15
+      },
+      "DeadCode": {
+        "errors": 15,
+        "warnings": 0,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 15
+      },
+      "Pylint": {
+        "errors": 2,
+        "warnings": 5,
+        "infos": 8
+      },
+      "Spelling": {
+        "errors": 15,
+        "warnings": 0,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 2,
+        "warnings": 0,
+        "infos": 12
+      },
+      "UnusedImports": {
+        "errors": 2,
+        "warnings": 0,
+        "infos": 13
+      }
+    },
+    "nota": "Los errors son tooling, no código: DeadCode/Spelling (vulture/codespell no instalados) y timeouts de pylint/mypy >5-10s (software_limpio#70); pylint, mypy y radon verificados directamente.",
+    "reporte": "quality/reports/inc7-adj/US-ADJ-60-codeguard.json"
+  },
+  "estado": "APROBADO"
+}

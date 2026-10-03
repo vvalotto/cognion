@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+from src.identidad.entities.bloqueo_cuenta import bloquear_por_intentos_fallidos
 from src.identidad.entities.errors import (
-    CuentaBloqueadaError,
     PasswordActualIncorrecta,
     UsuarioNoExiste,
 )
@@ -13,6 +14,10 @@ from src.identidad.entities.eventos import CuentaBloqueada, PasswordCambiada
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.usuario import Usuario
+from src.identidad.use_cases.politica_bloqueo import (
+    es_ultimo_administrador_operativo,
+    rechazar_si_bloqueada,
+)
 
 
 class CambiarPasswordUseCase:
@@ -24,9 +29,13 @@ class CambiarPasswordUseCase:
     """
 
     def __init__(
-        self, usuario_repositorio: UsuarioRepositoryPort, hasher: PasswordHasherPort
+        self,
+        usuario_repositorio: UsuarioRepositoryPort,
+        hasher: PasswordHasherPort,
+        duracion_bloqueo_temporal: timedelta = timedelta(minutes=15),
     ) -> None:
-        """Recibe el repositorio de usuarios y el hasher de contraseñas a usar."""
+        """Recibe el repositorio, el hasher y la duración del bloqueo temporal (INV-ID-21)."""
+        self._duracion_bloqueo_temporal = duracion_bloqueo_temporal
         self._usuario_repositorio = usuario_repositorio
         self._hasher = hasher
 
@@ -45,14 +54,20 @@ class CambiarPasswordUseCase:
         if usuario is None:
             raise UsuarioNoExiste(usuario_id)
 
-        if usuario.bloqueada:
-            raise CuentaBloqueadaError(usuario.id)
+        ahora = datetime.now(UTC)
+        await rechazar_si_bloqueada(self._usuario_repositorio, usuario, ahora)
 
         if not self._hasher.verificar(password_actual, usuario.password_hash):
-            bloqueada_ahora = usuario.registrar_fallo_cambio_password()
+            alcanzo_umbral = usuario.registrar_fallo_cambio_password()
             exc = PasswordActualIncorrecta()
             exc.intentos_restantes = usuario.intentos_restantes_cambio_password()
-            if bloqueada_ahora:
+            if alcanzo_umbral:
+                es_ultimo = await es_ultimo_administrador_operativo(
+                    self._usuario_repositorio, usuario
+                )
+                bloquear_por_intentos_fallidos(
+                    usuario, es_ultimo, ahora, self._duracion_bloqueo_temporal
+                )
                 exc.evento_cuenta_bloqueada = CuentaBloqueada(usuario_id=usuario.id)
             await self._usuario_repositorio.actualizar(usuario)
             raise exc
