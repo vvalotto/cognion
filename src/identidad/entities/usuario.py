@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from src.identidad.entities.errors import PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente
@@ -179,40 +179,6 @@ class Usuario:
         """
         self.intentos_fallidos_password += 1
         return self.intentos_fallidos_password >= _INTENTOS_MAXIMOS_CAMBIO_PASSWORD
-
-    def es_administrador_operativo(self) -> bool:
-        """Indica si es un Administrador que puede operar: ni deshabilitado ni bloqueado."""
-        return (
-            isinstance(self.perfil, Administrador) and not self.deshabilitada and not self.bloqueada
-        )
-
-    def bloquear_por_intentos_fallidos(
-        self, es_ultimo_administrador: bool, ahora: datetime, duracion: timedelta
-    ) -> None:
-        """Bloquea la cuenta tras el 3er fallo consecutivo (INV-ID-10, INV-ID-21).
-
-        El último Administrador operativo queda bloqueado solo hasta `ahora + duracion`, para que
-        el sistema no quede sin quien lo opere; cualquier otra cuenta, de forma permanente.
-        """
-        self.bloqueada = True
-        self.bloqueada_hasta = ahora + duracion if es_ultimo_administrador else None
-
-    def tiene_bloqueo_temporal_vigente(self, ahora: datetime) -> bool:
-        """Indica si está bloqueada con un bloqueo temporal que todavía no venció."""
-        return self.bloqueada and self.bloqueada_hasta is not None and ahora < self.bloqueada_hasta
-
-    def levantar_bloqueo_si_vencio(self, ahora: datetime) -> bool:
-        """Levanta un bloqueo temporal ya vencido, reseteando los contadores (vencimiento perezoso).
-
-        Devuelve `True` si levantó el bloqueo. No toca un bloqueo permanente ni uno vigente.
-        """
-        if not self.bloqueada or self.bloqueada_hasta is None or ahora < self.bloqueada_hasta:
-            return False
-        self.bloqueada = False
-        self.bloqueada_hasta = None
-        self.intentos_fallidos_login = 0
-        self.intentos_fallidos_password = 0
-        return True
 
     def intentos_restantes_cambio_password(self) -> int:
         """Cantidad de fallos que quedan antes del bloqueo automático (INV-ID-10)."""

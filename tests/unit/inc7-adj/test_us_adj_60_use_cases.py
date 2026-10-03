@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
+from src.identidad.entities.bloqueo_cuenta import es_administrador_operativo
 from src.identidad.entities.errors import (
     CredencialesInvalidas,
     CuentaBloqueadaError,
@@ -84,7 +85,7 @@ class TestEliminarAdministrador:
         resultado = await _eliminar(repo).execute(a.id)
 
         assert resultado is a
-        assert b.es_administrador_operativo()
+        assert es_administrador_operativo(b)
 
     async def test_docente_sin_datos_sigue_borrandose_fisicamente(self):
         repo = FakeUsuarioRepository()

@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+from src.identidad.entities.bloqueo_cuenta import bloquear_por_intentos_fallidos
 from src.identidad.entities.errors import (
     PasswordActualIncorrecta,
     UsuarioNoExiste,
@@ -64,8 +65,8 @@ class CambiarPasswordUseCase:
                 es_ultimo = await es_ultimo_administrador_operativo(
                     self._usuario_repositorio, usuario
                 )
-                usuario.bloquear_por_intentos_fallidos(
-                    es_ultimo, ahora, self._duracion_bloqueo_temporal
+                bloquear_por_intentos_fallidos(
+                    usuario, es_ultimo, ahora, self._duracion_bloqueo_temporal
                 )
                 exc.evento_cuenta_bloqueada = CuentaBloqueada(usuario_id=usuario.id)
             await self._usuario_repositorio.actualizar(usuario)

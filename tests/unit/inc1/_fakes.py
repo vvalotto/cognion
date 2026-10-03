@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+from src.identidad.entities.bloqueo_cuenta import es_administrador_operativo
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.entities.ports.canal_recuperacion_port import CanalRecuperacionPort
@@ -57,7 +58,7 @@ class FakeUsuarioRepository(UsuarioRepositoryPort):
         return sum(
             1
             for u in self.usuarios.values()
-            if u.id != excluyendo and u.es_administrador_operativo()
+            if u.id != excluyendo and es_administrador_operativo(u)
         )
 
 

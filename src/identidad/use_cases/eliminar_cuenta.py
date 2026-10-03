@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from src.identidad.entities.bloqueo_cuenta import es_administrador_operativo
 from src.identidad.entities.errors import UltimoAdministradorOperativoError, UsuarioNoExiste
 from src.identidad.entities.ports.comision_query_port import ComisionQueryPort
 from src.identidad.entities.ports.evaluacion_consulta_port import EvaluacionConsultaPort
@@ -68,7 +69,7 @@ class EliminarCuentaUseCase:
 
     async def _deshabilitar_administrador(self, usuario: Usuario) -> Usuario:
         """Baja lógica de un Administrador, salvo que sea el único operativo (INV-ID-19/20)."""
-        if usuario.es_administrador_operativo():
+        if es_administrador_operativo(usuario):
             otros = await self._usuario_repositorio.contar_administradores_operativos(
                 excluyendo=usuario.id
             )

@@ -14,7 +14,8 @@
 ## Componentes Implementados
 
 ### Entities
-- ✅ `usuario.py` — `bloqueada_hasta`, `es_administrador_operativo()`, `bloquear_por_intentos_fallidos()` (política INV-ID-21 en un único método), `tiene_bloqueo_temporal_vigente()`, `levantar_bloqueo_si_vencio()` (vencimiento perezoso); `resetear_password` limpia `bloqueada_hasta`; `registrar_fallo_cambio_password` solo cuenta (la política la aplica el use case)
+- ✅ `usuario.py` — `bloqueada_hasta`; `resetear_password` limpia `bloqueada_hasta`; `registrar_fallo_cambio_password` solo cuenta (la política la aplica el use case)
+- ✅ `bloqueo_cuenta.py` (nuevo) — política INV-ID-20/21 como funciones de dominio: `es_administrador_operativo`, `bloquear_por_intentos_fallidos`, `tiene_bloqueo_temporal_vigente`, `levantar_bloqueo_si_vencio` (vencimiento perezoso). Se extrajo de `Usuario` porque el pre-push gate (DesignReviewer) marcó 3 CRITICAL (CBO 11/10, GodObject 16/15, WMC 35/25) al crecer la entidad; tras la extracción: 0 CRITICAL
 - ✅ `errors.py` — `CuentaBloqueadaTemporalmenteError`, `UltimoAdministradorOperativoError`
 - ✅ `ports/usuario_repository_port.py` — `contar_administradores_operativos(excluyendo)`; se retiró `tiene_comisiones_creadas` de `ComisionQueryPort` (sin usos)
 
