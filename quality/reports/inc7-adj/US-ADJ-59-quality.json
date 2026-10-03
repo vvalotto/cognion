@@ -1,0 +1,95 @@
+{
+  "us_id": "US-ADJ-59",
+  "fecha": "2026-10-03",
+  "componente": "src/identidad (use_cases/iniciar_sesion.py, entities/errors.py, frameworks/api/auth_router.py) + frontend/src/pages/identidad (Login, LoginCuentaDeshabilitadaError)",
+  "metricas": {
+    "pylint": 9.93,
+    "cc_promedio": 1.73,
+    "cc_max": 6,
+    "mi_promedio": null,
+    "mi_min": 68.97,
+    "coverage": 97.6,
+    "coverage_modulos_tocados": 99.0,
+    "tests_backend": {
+      "unit": "853/853 (suite completa de tests/unit)",
+      "integracion_y_bdd_identidad": "267/267 + 12/12 nuevos, contra base aparte (cognion_us59)"
+    },
+    "frontend": {
+      "tests": "807/807 (Vitest, suite completa, 106 archivos)",
+      "statements": 93.51,
+      "branches": 85.79,
+      "login_tsx": {
+        "statements": 94.87,
+        "branches": 92.59
+      }
+    }
+  },
+  "umbrales": {
+    "pylint_min": 8.0,
+    "cc_max": 10,
+    "mi_min": 20,
+    "coverage_min": 95
+  },
+  "codeguard": {
+    "archivos_analizados": 3,
+    "errors": 14,
+    "warnings": 1,
+    "infos": 12,
+    "checks": {
+      "Security": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "PEP8": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "Complexity": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "DeadCode": {
+        "errors": 3,
+        "warnings": 0,
+        "infos": 0
+      },
+      "Maintainability": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 3
+      },
+      "Pylint": {
+        "errors": 2,
+        "warnings": 1,
+        "infos": 0
+      },
+      "Spelling": {
+        "errors": 3,
+        "warnings": 0,
+        "infos": 0
+      },
+      "Types": {
+        "errors": 3,
+        "warnings": 0,
+        "infos": 0
+      },
+      "UnusedImports": {
+        "errors": 3,
+        "warnings": 0,
+        "infos": 0
+      }
+    },
+    "reporte": "quality/reports/inc7-adj/US-ADJ-59-codeguard.json"
+  },
+  "estado": "APROBADO",
+  "observaciones": [
+    "CodeGuard (--analysis-type full): los errors de DeadCode/Spelling son de tooling (vulture y codespell no instalados en el venv) y los de Pylint/Types/UnusedImports son timeouts conocidos (>10s/>5s, software_limpio#70); no son defectos del código. Verificación directa: pylint 9.93/10 (único mensaje, R0903 too-few-public-methods preexistente del use case), mypy src/ completo 0 errores (300 archivos), radon CC máx 6 / MI mín 68.97.",
+    "Cobertura: errors.py 97.6% (las 2 líneas sin cubrir, 216-217, son de MateriaNoAutorizada, ajenas a esta US) e iniciar_sesion.py 100%. auth_router.py queda fuera por la configuración del proyecto (omit src/*/frameworks/*); su comportamiento está cubierto por los 6 tests de integración nuevos.",
+    "Integración + BDD corridos contra una base aparte (cognion_us59, creada y migrada solo para esta verificación y luego borrada), no contra la base de desarrollo: 6/6 integración y 6/6 BDD nuevos; 267/267 de la suite de Identidad (inc1, inc2, inc5-adj) sin regresiones. Un primer intento falló por un error del fixture del test (`guardar()` no persiste `deshabilitada`/`bloqueada`, solo `actualizar()`), corregido antes de commitear.",
+    "Frontend: oxlint 0 errores (warnings preexistentes ajenos), tsc -b limpio.",
+    "El escenario @frontend del feature se verifica con Vitest (Login.test.tsx, LoginCuentaDeshabilitadaError.test.tsx), no con BDD."
+  ]
+}

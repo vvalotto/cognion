@@ -1,6 +1,6 @@
 # US-ADJ-59: Una cuenta deshabilitada no puede iniciar sesión
 
-**Estado**: `Especificada`
+**Estado**: `Implementada` (2026-10-03) — PR pendiente de mergear
 **Iteracion / Sprint**: `Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1`
 (decisión de Víctor, 2026-10-02: el 7-ADJ va antes de RF-07)
 **Tipo**: `fix` backend + frontend
