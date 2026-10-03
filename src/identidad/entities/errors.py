@@ -108,6 +108,19 @@ class CuentaBloqueadaError(Exception):
         super().__init__("La cuenta está bloqueada. Contactá a un administrador.")
 
 
+class CuentaDeshabilitadaError(Exception):
+    """La cuenta fue dada de baja (`deshabilitada = true`) y no puede iniciar sesión (INV-ID-18).
+
+    Distinta de `CuentaBloqueadaError`: la baja es una decisión manual del Administrador, no un
+    efecto de intentos fallidos, y solo la revierte `Usuario.activar()` (`US-ADJ-59`).
+    """
+
+    def __init__(self, usuario_id: UUID) -> None:
+        """Guarda el id de la cuenta deshabilitada y arma el mensaje de la excepción."""
+        self.usuario_id = usuario_id
+        super().__init__("La cuenta está deshabilitada. Contactá a un administrador.")
+
+
 class UsuarioNoExiste(Exception):
     """Se referenció un usuario que no está registrado (`US-2.2.3`)."""
 

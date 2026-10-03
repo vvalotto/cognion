@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.identidad.entities.errors import CredencialesInvalidas, CuentaBloqueadaError
+from src.identidad.entities.errors import (
+    CredencialesInvalidas,
+    CuentaBloqueadaError,
+    CuentaDeshabilitadaError,
+)
 from src.identidad.frameworks.api.schemas import LoginRequest, LoginResponse
 from src.identidad.frameworks.dependencies import get_auth_controller
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
@@ -20,10 +24,18 @@ async def login(
     """Autentica un Usuario y emite su JWT; responde 401 genérico ante credenciales inválidas.
 
     El mensaje de error no distingue si el email existe o no (`US-1.1.4`). Responde 403 si la
-    cuenta está bloqueada por 3 intentos fallidos consecutivos (`US-2.2.1`).
+    cuenta está bloqueada por 3 intentos fallidos consecutivos (`US-2.2.1`), con el `detail` en
+    texto plano. Responde 403 también si la cuenta está deshabilitada (`US-ADJ-59`), pero con un
+    `detail` estructurado `{"codigo": "cuenta_deshabilitada", "mensaje": ...}` para que el
+    frontend distinga los dos casos sin interpretar el texto.
     """
     try:
         jwt_vo, _evento = await controller.iniciar_sesion(body.email, body.password)
+    except CuentaDeshabilitadaError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={"codigo": "cuenta_deshabilitada", "mensaje": str(exc)},
+        ) from exc
     except CuentaBloqueadaError as exc:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except CredencialesInvalidas as exc:
