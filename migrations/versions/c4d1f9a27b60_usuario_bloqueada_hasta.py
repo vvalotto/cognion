@@ -20,7 +20,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Agrega `usuario.bloqueada_hasta` (bloqueo temporal del último Administrador, INV-ID-21)."""
-    op.add_column("usuario", sa.Column("bloqueada_hasta", sa.DateTime(timezone=True), nullable=True))
+    op.add_column(
+        "usuario", sa.Column("bloqueada_hasta", sa.DateTime(timezone=True), nullable=True)
+    )
 
 
 def downgrade() -> None:
