@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-10-03T12:58:32.945512+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 0,
-    "effective_seconds": 0,
+    "total_elapsed_seconds": 247,
+    "effective_seconds": 247,
     "paused_seconds": 0
   },
   "phases": [
@@ -18,6 +18,17 @@
       "phase_number": 0,
       "phase_name": "Validación de Contexto",
       "started_at": "2026-10-03T12:58:33.306382+00:00",
+      "completed_at": "2026-10-03T13:02:40.035087+00:00",
+      "elapsed_seconds": 246,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Generación de Escenarios BDD",
+      "started_at": "2026-10-03T13:02:40.161188+00:00",
       "completed_at": null,
       "elapsed_seconds": 0,
       "status": "in_progress",
@@ -30,7 +41,7 @@
   "summary": {
     "total_tasks": 0,
     "completed_tasks": 0,
-    "total_phases": 1,
+    "total_phases": 2,
     "estimated_total_minutes": 0,
     "actual_total_minutes": 0,
     "variance_minutes": 0,
