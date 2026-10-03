@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-10-03T12:58:32.945512+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 247,
-    "effective_seconds": 247,
+    "total_elapsed_seconds": 276,
+    "effective_seconds": 276,
     "paused_seconds": 0
   },
   "phases": [
@@ -29,6 +29,17 @@
       "phase_number": 1,
       "phase_name": "Generación de Escenarios BDD",
       "started_at": "2026-10-03T13:02:40.161188+00:00",
+      "completed_at": "2026-10-03T13:03:09.384495+00:00",
+      "elapsed_seconds": 29,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de Implementación",
+      "started_at": "2026-10-03T13:03:09.507582+00:00",
       "completed_at": null,
       "elapsed_seconds": 0,
       "status": "in_progress",
@@ -41,7 +52,7 @@
   "summary": {
     "total_tasks": 0,
     "completed_tasks": 0,
-    "total_phases": 2,
+    "total_phases": 3,
     "estimated_total_minutes": 0,
     "actual_total_minutes": 0,
     "variance_minutes": 0,
