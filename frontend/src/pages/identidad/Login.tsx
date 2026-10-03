@@ -10,6 +10,7 @@ import { useAuthBrand } from "@/layouts/AuthLayout"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { LoginError } from "@/pages/identidad/LoginError"
 import { LoginCuentaBloqueadaError } from "@/pages/identidad/LoginCuentaBloqueadaError"
+import { LoginCuentaDeshabilitadaError } from "@/pages/identidad/LoginCuentaDeshabilitadaError"
 import { setSession, type Rol } from "@/lib/session"
 
 interface LoginResponse {
@@ -18,13 +19,24 @@ interface LoginResponse {
   expira_en: string
 }
 
+/** El `403` de cuenta deshabilitada trae `detail.codigo`; el de bloqueada, texto plano (`US-ADJ-59`). */
+function esCuentaDeshabilitada(detail: unknown): boolean {
+  return (
+    typeof detail === "object" &&
+    detail !== null &&
+    "codigo" in detail &&
+    (detail as { codigo: unknown }).codigo === "cuenta_deshabilitada"
+  )
+}
+
 /** Pantalla de login (§2.1/§2.2 `wireframes-identidad.md`) — consume `POST /identidad/login`. */
 export function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
-  const [bloqueada, setBloqueada] = useState(false)
+  const [bloqueo, setBloqueo] = useState<"bloqueada" | "deshabilitada" | null>(null)
+  const bloqueada = bloqueo !== null
   const { setOcultarMarca } = useAuthBrand()
 
   useEffect(() => {
@@ -60,7 +72,7 @@ export function Login() {
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 403) {
-        setBloqueada(true)
+        setBloqueo(esCuentaDeshabilitada(err.detail) ? "deshabilitada" : "bloqueada")
         return
       }
       if (err instanceof ApiError) {
@@ -86,7 +98,9 @@ export function Login() {
         </>
       )}
 
-      {bloqueada ? <LoginCuentaBloqueadaError /> : error && <LoginError />}
+      {bloqueo === "deshabilitada" && <LoginCuentaDeshabilitadaError />}
+      {bloqueo === "bloqueada" && <LoginCuentaBloqueadaError />}
+      {bloqueo === null && error && <LoginError />}
 
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <fieldset className="flex flex-col gap-3" disabled={bloqueada}>

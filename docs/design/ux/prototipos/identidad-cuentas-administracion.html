@@ -273,6 +273,7 @@
   <button data-target="cambiar-password-error">5b. Error — actual incorrecta</button>
   <button data-target="cambiar-password-exito">6. Contraseña cambiada</button>
   <button data-target="login-bloqueada">7. Login — cuenta bloqueada</button>
+  <button data-target="login-deshabilitada">8. Login — cuenta deshabilitada (US-ADJ-59)</button>
 </nav>
 
 <!-- 1. LISTADO DE CUENTAS -->
@@ -530,6 +531,30 @@
         <div class="body">
           <strong>Cuenta bloqueada</strong>
           Superaste el máximo de intentos permitidos. Contactá a un Administrador para restablecer tu contraseña.
+        </div>
+      </div>
+
+      <div class="field"><label>Email</label><input type="email" value="mgonzalez@fiuner.edu.ar" disabled></div>
+      <div class="field"><label>Contraseña</label><input type="password" disabled></div>
+      <button class="btn full" disabled style="opacity:0.5; cursor:not-allowed;">Ingresar</button>
+    </div>
+  </div>
+</section>
+
+<!-- 8. LOGIN — CUENTA DESHABILITADA (US-ADJ-59) -->
+<section class="screen" id="login-deshabilitada">
+  <div class="app-body narrow" style="display:flex; align-items:center; justify-content:center; min-height:80vh;">
+    <div class="form-card" style="width:100%; max-width:380px;">
+      <div class="center-icon" style="color: var(--primary);">
+        <svg viewBox="0 0 44 44" width="40" height="40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <h1 class="page-title" style="text-align:center;">Ingresar</h1>
+
+      <div class="alert destructive">
+        <span class="icon">🚫</span>
+        <div class="body">
+          <strong>Cuenta deshabilitada</strong>
+          Tu cuenta fue dada de baja y no puede iniciar sesión. Contactá a un Administrador.
         </div>
       </div>
 

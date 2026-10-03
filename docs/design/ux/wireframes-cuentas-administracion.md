@@ -119,6 +119,22 @@ entre BCs e iteraciones, sin redefinir tokens nuevos.
 > que ya mostraba el layout propio descripto arriba. Corregido para que la spec escrita deje
 > de contradecir al prototipo, que es la fuente de verdad.
 
+### 2.9 Login — cuenta deshabilitada (`#login-deshabilitada`) — `US-ADJ-59`
+
+**Evento:** intento de `IniciarSesion` sobre una cuenta con `deshabilitada = true` (INV-ID-18).
+El backend responde `403` con `detail.codigo = "cuenta_deshabilitada"`; el frontend lo distingue
+del `403` de cuenta bloqueada (que sigue siendo texto plano).
+
+| Elemento | Detalle |
+|---|---|
+| Layout | Idéntico a `#login-bloqueada` (§2.8): tarjeta centrada sin el bloque de marca, ícono de la app (40px) sobre el título "Ingresar" |
+| Alerta | Destructiva, con ícono 🚫: "Cuenta deshabilitada" — "Tu cuenta fue dada de baja y no puede iniciar sesión. Contactá a un Administrador." — **sin** link de recuperación de contraseña: recuperarla no reactiva una cuenta deshabilitada (solo un Administrador la reactiva) |
+| Formulario | Campos deshabilitados, botón "Ingresar" a todo el ancho, deshabilitado — igual que §2.8 |
+| Diferencia con §2.8 | Cambian el ícono (🚫 en vez de 🔒), el título y el texto; no hay cuenta "pendiente de desbloqueo", la acción es siempre hablar con un Administrador |
+
+Fuente de verdad visual: prototipo `identidad-cuentas-administracion.html`, pantalla
+"8. Login — cuenta deshabilitada".
+
 ---
 
 ## 3. Responsive

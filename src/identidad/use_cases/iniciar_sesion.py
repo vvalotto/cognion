@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from src.identidad.entities.errors import CredencialesInvalidas, CuentaBloqueadaError
+from src.identidad.entities.errors import (
+    CredencialesInvalidas,
+    CuentaBloqueadaError,
+    CuentaDeshabilitadaError,
+)
 from src.identidad.entities.eventos import CuentaBloqueada, SesionIniciada
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
@@ -16,7 +20,8 @@ class IniciarSesionUseCase:
     """Verifica credenciales y emite un JWT con el rol del `Usuario` autenticado (RF-02).
 
     Lleva el contador de intentos fallidos de login y bloquea la cuenta al 3er fallo
-    consecutivo (RF-19, INV-ID-10, `US-2.2.1`).
+    consecutivo (RF-19, INV-ID-10, `US-2.2.1`). Rechaza antes que nada las cuentas dadas de baja
+    (`deshabilitada`, INV-ID-18, `US-ADJ-59`).
     """
 
     def __init__(
@@ -35,12 +40,18 @@ class IniciarSesionUseCase:
 
         Lanza `CredencialesInvalidas` tanto si el email no existe como si la contraseña no
         verifica contra el hash guardado — el mismo error en ambos casos, para no filtrar si
-        una cuenta existe (`US-1.1.4`). Lanza `CuentaBloqueadaError` sin verificar la
-        contraseña si la cuenta ya está bloqueada (no consume intentos adicionales).
+        una cuenta existe (`US-1.1.4`). Lanza `CuentaDeshabilitadaError` sin verificar la
+        contraseña ni tocar los contadores si la cuenta está dada de baja (INV-ID-18) — tiene
+        prioridad sobre el bloqueo porque es la decisión manual del Administrador. Lanza
+        `CuentaBloqueadaError` sin verificar la contraseña si la cuenta ya está bloqueada (no
+        consume intentos adicionales).
         """
         usuario = await self._usuario_repositorio.obtener_por_email(email)
         if usuario is None:
             raise CredencialesInvalidas
+
+        if usuario.deshabilitada:
+            raise CuentaDeshabilitadaError(usuario.id)
 
         if usuario.bloqueada:
             raise CuentaBloqueadaError(usuario.id)
