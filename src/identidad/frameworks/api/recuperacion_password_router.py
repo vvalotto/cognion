@@ -56,8 +56,9 @@ async def confirmar_recuperacion_password(
 
     Responde 422 si el token no es válido (inexistente, vencido o ya usado — mismo status y
     criterio que `InvitacionInvalida`/`InvitacionVencida`/`InvitacionYaUsada` en
-    `registro_router.py`) o si `password_nueva` no cumple INV-ID-11 ampliada. No desbloquea la
-    cuenta ni resetea sus contadores de intentos fallidos.
+    `registro_router.py`) o si `password_nueva` no cumple INV-ID-11 ampliada. Desbloquea la
+    cuenta y resetea sus contadores de intentos fallidos (`US-ADJ-62`); no reactiva una cuenta
+    deshabilitada.
     """
     try:
         await controller.confirmar(body.token, body.password_nueva)

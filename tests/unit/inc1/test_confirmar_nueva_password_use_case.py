@@ -42,7 +42,9 @@ class TestConfirmarNuevaPasswordUseCase:
         await token_repo.guardar(token)
 
         use_case = ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, hasher)
-        usuario_actualizado, evento = await use_case.execute(token.token, "Segura#2026x")
+        usuario_actualizado, evento, _desbloqueo = await use_case.execute(
+            token.token, "Segura#2026x"
+        )
 
         assert usuario_actualizado.password_hash == "hashed:Segura#2026x"
         assert evento.usuario_id == usuario.id
@@ -127,18 +129,48 @@ class TestConfirmarNuevaPasswordUseCase:
         assert usuario.password_hash == "hash-viejo"
         assert token.usado_en is None
 
-    async def test_no_desbloquea_una_cuenta_bloqueada(self):
+    async def test_desbloquea_una_cuenta_bloqueada_y_emite_cuenta_desbloqueada(self):
         usuario_repo = FakeUsuarioRepository()
         token_repo = FakeTokenRecuperacionPasswordRepository()
-        hasher = FakePasswordHasher()
         usuario = _usuario()
         usuario.bloqueada = True
+        usuario.intentos_fallidos_login = 3
         await usuario_repo.guardar(usuario)
         token = TokenRecuperacionPassword.crear(usuario.id)
         await token_repo.guardar(token)
 
-        use_case = ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, hasher)
-        usuario_actualizado, _evento = await use_case.execute(token.token, "Segura#2026x")
+        use_case = ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, FakePasswordHasher())
+        actualizado, _evento, desbloqueo = await use_case.execute(token.token, "Segura#2026x")
 
-        assert usuario_actualizado.password_hash == "hashed:Segura#2026x"
-        assert usuario_actualizado.bloqueada is True
+        assert actualizado.password_hash == "hashed:Segura#2026x"
+        assert actualizado.bloqueada is False
+        assert actualizado.intentos_fallidos_login == 0
+        assert desbloqueo is not None
+        assert desbloqueo.usuario_id == usuario.id
+
+    async def test_no_emite_cuenta_desbloqueada_si_no_estaba_bloqueada(self):
+        usuario_repo = FakeUsuarioRepository()
+        token_repo = FakeTokenRecuperacionPasswordRepository()
+        usuario = _usuario()
+        await usuario_repo.guardar(usuario)
+        token = TokenRecuperacionPassword.crear(usuario.id)
+        await token_repo.guardar(token)
+
+        use_case = ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, FakePasswordHasher())
+        _actualizado, _evento, desbloqueo = await use_case.execute(token.token, "Segura#2026x")
+
+        assert desbloqueo is None
+
+    async def test_no_reactiva_una_cuenta_deshabilitada(self):
+        usuario_repo = FakeUsuarioRepository()
+        token_repo = FakeTokenRecuperacionPasswordRepository()
+        usuario = _usuario()
+        usuario.deshabilitada = True
+        await usuario_repo.guardar(usuario)
+        token = TokenRecuperacionPassword.crear(usuario.id)
+        await token_repo.guardar(token)
+
+        use_case = ConfirmarNuevaPasswordUseCase(usuario_repo, token_repo, FakePasswordHasher())
+        actualizado, _evento, _desbloqueo = await use_case.execute(token.token, "Segura#2026x")
+
+        assert actualizado.deshabilitada is True
