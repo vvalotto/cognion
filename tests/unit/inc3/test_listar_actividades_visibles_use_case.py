@@ -127,29 +127,54 @@ class TestListarActividadesVisiblesUseCase:
         assert resultado[0].estado == "finalizada"
         assert resultado[0].evaluacion_id == evaluacion_id
 
-    async def test_cerrada_sin_rendir_se_muestra_como_pendiente(self):
-        """No hay badge propio para 'cerrada sin rendir' — mismo prototipo aprobado (`US-3.4.5`)."""
+    async def _estado_de(self, resumen_kwargs: dict, *, finalizada: bool = False):
+        """Lista una única actividad (con `resumen_kwargs`) y devuelve su `ActividadVisible`."""
         materia_id = uuid4()
         estudiante_id = uuid4()
         ahora = datetime.now(UTC)
+        actividad_id = uuid4()
         actividad_query = FakeActividadQueryPort()
         actividad_query.resumenes[materia_id] = [
-            _resumen(
-                materia_id,
-                ahora,
-                fecha_apertura=ahora - timedelta(days=8),
-                fecha_cierre=ahora - timedelta(days=1),
-            )
+            _resumen(materia_id, ahora, actividad_id=actividad_id, **resumen_kwargs)
         ]
         evaluacion_query = FakeEvaluacionEstudianteQueryPort()
-        estudiante_consulta = FakeEstudianteConsultaPort()
+        if finalizada:
+            evaluacion_query.finalizadas.add(Evaluacion.id_para(actividad_id, estudiante_id))
         use_case = ListarActividadesVisiblesUseCase(
-            actividad_query, evaluacion_query, estudiante_consulta
+            actividad_query, evaluacion_query, FakeEstudianteConsultaPort()
+        )
+        resultado = await use_case.execute(materia_id, estudiante_id)
+        return resultado[0], Evaluacion.id_para(actividad_id, estudiante_id)
+
+    async def test_vencida_por_fecha_sin_rendir_se_muestra_como_cerrada(self):
+        ahora = datetime.now(UTC)
+
+        visible, _ = await self._estado_de(
+            {"fecha_apertura": ahora - timedelta(days=8), "fecha_cierre": ahora - timedelta(days=1)}
         )
 
-        resultado = await use_case.execute(materia_id, estudiante_id)
+        assert visible.estado == "cerrada"
+        assert visible.evaluacion_id is None
 
-        assert resultado[0].estado == "pendiente"
+    async def test_cerrada_manualmente_sin_rendir_se_muestra_como_cerrada(self):
+        visible, _ = await self._estado_de({"cerrada_manualmente": True})
+
+        assert visible.estado == "cerrada"
+
+    async def test_cerrada_y_con_evaluacion_finalizada_gana_finalizada(self):
+        ahora = datetime.now(UTC)
+
+        visible, evaluacion_id = await self._estado_de(
+            {
+                "fecha_apertura": ahora - timedelta(days=8),
+                "fecha_cierre": ahora - timedelta(days=1),
+                "cerrada_manualmente": True,
+            },
+            finalizada=True,
+        )
+
+        assert visible.estado == "finalizada"
+        assert visible.evaluacion_id == evaluacion_id
 
     async def test_actividad_restringida_a_otra_comision_no_es_visible(self):
         materia_id = uuid4()
