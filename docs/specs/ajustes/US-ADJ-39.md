@@ -1,6 +1,6 @@
 # US-ADJ-39: Confirmar nueva contraseña con token de recuperación (endpoint público)
 
-**Estado**: `Especificada`
+**Estado**: `Especificada` — **enmendada por `US-ADJ-62`** (2026-10-04): este flujo ahora desbloquea la cuenta y resetea los contadores; las menciones de abajo a "no desbloquea" quedan reemplazadas por esa regla.
 **Iteracion / Sprint**: `Incremento 5-ADJ — Identidad Autoservicio y Analytics del Docente`,
 Iteración 2
 **Tipo**: `feature` (backend nuevo, endpoint público)
@@ -49,9 +49,8 @@ canjear ese token por una contraseña nueva.
      ampliada, `US-ADJ-36`) — mismas excepciones `PasswordDemasiadoCorta`/
      `PasswordSinComplejidadSuficiente` que ya lanzan `CambiarPassword`/`ResetearPassword`.
    - Si la contraseña es válida: hashea, actualiza `Usuario.password_hash` (mismo método que
-     `resetear_password()` de `US-2.2.4`, sin tocar `bloqueada` ni los contadores de intentos
-     fallidos — nota de diseño explícita en `wireframes-identidad-autoservicio.md` §3.1: una
-     cuenta bloqueada sigue bloqueada tras este flujo), marca `usado_en` en el token, persiste
+     `resetear_password()` de `US-2.2.4`, y desde `US-ADJ-62` también desbloquea la cuenta y resetea los contadores de intentos
+     fallidos — ya no "sigue bloqueada tras este flujo"), marca `usado_en` en el token, persiste
      ambos cambios en una sola transacción, y emite `PasswordRecuperada`.
 2. Endpoint nuevo `POST /identidad/recuperar-password/confirmar` (público) — body `{token,
    password_nueva}`, responde `200 OK` con `PasswordRecuperada` en éxito, o el status/detail
@@ -82,7 +81,7 @@ canjear ese token por una contraseña nueva.
 - Un token vencido, inválido, o ya usado no modifica nada y responde con el error específico.
 - Una `password_nueva` que no cumple INV-ID-11 no modifica nada, aunque el token sea válido.
 - El mismo token no puede canjearse dos veces.
-- El estado `bloqueada`/contadores de intentos fallidos de `Usuario` no cambia por este flujo.
+- *(Enmendada por `US-ADJ-62`)* `bloqueada` pasa a `false` y los contadores de intentos fallidos a 0; `deshabilitada` no cambia.
 
 ### Invariantes
 
@@ -128,11 +127,11 @@ Feature: Confirmar nueva contraseña con token de recuperación (US-ADJ-39)
     Then la respuesta es un error PasswordDemasiadoCorta
     And el token sigue sin usar
 
-  Scenario: Confirmar no desbloquea una cuenta bloqueada
+  Scenario: Confirmar desbloquea una cuenta bloqueada (enmendado por US-ADJ-62)
     Given un Usuario bloqueado con un TokenRecuperacionPassword vigente
     When se confirma una contraseña nueva válida con ese token
     Then Usuario.password_hash queda actualizado
-    And Usuario.bloqueada sigue en true
+    And Usuario.bloqueada es false
 ```
 
 ---

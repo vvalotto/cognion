@@ -87,7 +87,9 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
   consecutivos sobre `Usuario` (`intentos_fallidos_login`, `intentos_fallidos_password`).
 - **INV-ID-10:** un acierto resetea a cero el contador de su propio flujo; al tercer fallo
   consecutivo en cualquiera de los dos, `Usuario.bloqueada = true` (evento `CuentaBloqueada`) y
-  el usuario no puede volver a intentar hasta que un Administrador ejecute `ResetearPassword`.
+  el usuario no puede volver a intentar hasta que un Administrador ejecute `ResetearPassword`
+  **o el propio usuario canjee un token de recuperación por email (`ConfirmarNuevaPassword`,
+  enmienda `US-ADJ-62`)** — ambos caminos desbloquean y resetean los dos contadores.
   **Enmienda (`US-ADJ-60`, INV-ID-21):** si quien falla es el **último Administrador operativo**,
   el bloqueo es **temporal** (`bloqueada_hasta = ahora + 15 min`, configurable) y vence solo — el
   sistema nunca queda sin quien lo opere. La política vive en `Usuario.bloquear_por_intentos_fallidos`;
@@ -358,7 +360,7 @@ https://github.com/vvalotto/cognion/issues/2 (DoD tipo `Modelado`, `WORKFLOW-DES
 | Comando | Actor | Aggregate | Evento(s) | Excepciones |
 |---|---|---|---|---|
 | `SolicitarRecuperacionPassword(email)` | Sin autenticar | `TokenRecuperacionPassword` (crea) | `RecuperacionPasswordSolicitada` | Ninguna expuesta al llamante — ver INV-ID-17 (no filtrar existencia de cuenta) |
-| `ConfirmarNuevaPassword(token, password_nueva)` | Sin autenticar | `TokenRecuperacionPassword` (consulta) → `Usuario` (muta) | `PasswordRecuperada` | `TokenRecuperacionVencido`, `TokenRecuperacionInvalido`, `TokenRecuperacionYaUsado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
+| `ConfirmarNuevaPassword(token, password_nueva)` | Sin autenticar | `TokenRecuperacionPassword` (consulta) → `Usuario` (muta) | `PasswordRecuperada`; además `CuentaDesbloqueada` si la cuenta estaba bloqueada (`US-ADJ-62`) | `TokenRecuperacionVencido`, `TokenRecuperacionInvalido`, `TokenRecuperacionYaUsado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
 | `AutoregistrarDocente(nombre, email, password)` | Sin autenticar | `Usuario` + `Docente` (crea ambos, misma transacción) | `UsuarioAutoregistrado` | `EmailYaRegistrado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
 | `AutoregistrarEstudiante(nombre, email, password, comision_id)` | Sin autenticar | `Usuario` + `Estudiante` (crea ambos, misma transacción) | `UsuarioAutoregistrado` | `EmailYaRegistrado`, `ComisionNoExiste`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
 
@@ -407,7 +409,8 @@ puerto propio de Identidad hacia Notificaciones, adapter in-process), no por imp
 ### 13.4 Cambios sobre `Usuario` y sus perfiles (ampliación de §4)
 
 Sin atributos nuevos en `Usuario` — `ConfirmarNuevaPassword` reutiliza
-`password_hash`/`validar_password_nueva` ya existentes (mismo método que `CambiarPassword` y
+`password_hash`/`validar_password_nueva` ya existentes y, desde `US-ADJ-62`, `resetear_password()`
+(desbloquea y resetea contadores, sin tocar `deshabilitada`) (mismo método que `CambiarPassword` y
 `ResetearPassword`, ahora con la regla ampliada de INV-ID-11). `AutoregistrarDocente`/
 `AutoregistrarEstudiante` crean `Usuario` + perfil exactamente igual que `CrearUsuario` y
 `RegistrarEstudiante` (misma transacción, mismas invariantes INV-ID-04/06/09) — la única
