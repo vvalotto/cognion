@@ -6,7 +6,7 @@
 - **Iteración:** `Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1` (tercera US)
 - **Puntos estimados:** 2
 - **Tiempo real:** ver `.claude/tracking/US-ADJ-62-tracking.json` (PRIN-001)
-- **Estado:** ✅ Parte A (backend) COMPLETADA · ⏳ Parte B (frontend) pendiente del gate UX
+- **Estado:** ✅ COMPLETADA — Parte A (backend, PR #481) y Parte B (frontend)
 - **Fecha completado (Parte A):** 2026-10-04
 - **Origen:** UAT manual de cierre de alcance v1, hallazgo **#5** 🟡 (`quality/reports/uat/inc7/registro-hallazgos.md`)
 - **Aporta:** quien canjea el link de recuperación recibido por email ya no queda bloqueado: la cuenta se desbloquea y los contadores vuelven a 0. Revierte la decisión de `US-ADJ-39`.
@@ -25,7 +25,8 @@
 - ✅ `recuperacion_password_router.py` — docstring; contrato HTTP sin cambios (mismo endpoint y status)
 
 ### Frontend
-- ⏳ `LoginCuentaBloqueadaError.tsx` — **no implementado**: el copy de `#login-bloqueada` está aprobado con la regla anterior; hay que actualizar prototipo y `wireframes-cuentas-administracion.md` §2.8 y obtener la aprobación de Víctor (gate UX). Sin esto el Issue #477 no se cierra.
+- ✅ `LoginCuentaBloqueadaError.tsx` — el copy ofrece "recuperar tu contraseña por email" (link a `/recuperar-password`) o pedirle a un Administrador que restablezca. Gate UX: prototipo `#login-bloqueada` y `wireframes-cuentas-administracion.md` §2.8 actualizados y aprobados por Víctor el 2026-10-04.
+- Tests: `LoginCuentaBloqueadaError.test.tsx` (2) y `Login.test.tsx` (aserción del link) — 93/93 en `pages/identidad`; `tsc -b` y `oxlint` sin errores.
 
 ### Documentación
 - ✅ `BC-identidad-modelo.md` (enmienda a INV-ID-10, `CuentaDesbloqueada` en `ConfirmarNuevaPassword`), `US-ADJ-39.md` (enmendada), `wireframes-identidad-autoservicio.md` §3.1 y "Fuera de alcance", spec de esta US
@@ -50,5 +51,5 @@ Verificación: `mypy` 0 errores (303 archivos), `ruff` limpio en los archivos to
 
 ## Próximos pasos
 
-1. Parte B: actualizar prototipo y wireframe §2.8 con el copy que ofrece la recuperación por email y el link a `/recuperar-password`; aprobación de Víctor; luego `LoginCuentaBloqueadaError.tsx` + test.
-2. Cerrar el Issue #477 recién al completar la Parte B.
+1. Cerrar el Issue #477 al mergear el PR de la Parte B.
+2. Verificación en navegador real del flujo bloqueo → recuperar por email → login (pendiente, track de UAT).

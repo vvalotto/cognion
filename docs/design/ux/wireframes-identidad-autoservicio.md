@@ -68,8 +68,8 @@ esa spec:**
 *(Enmendada por `US-ADJ-62`.)* Recuperar la contraseña por este flujo **sí desbloquea** la
 cuenta: `ConfirmarNuevaPassword` resetea `Usuario.bloqueada` y los contadores de intentos
 fallidos (`BC-identidad-modelo.md` §13.4). Por eso el mensaje de `#login-bloqueada` debe ofrecer
-también este camino (link a `/recuperar-password`); ese copy está **pendiente de aprobación de
-UX** (Parte B de `US-ADJ-62`). No reactiva cuentas `deshabilitadas`.
+también este camino (link a `/recuperar-password`); ese copy fue **aprobado el 2026-10-04**
+(Parte B de `US-ADJ-62`, `wireframes-cuentas-administracion.md` §2.8). No reactiva cuentas `deshabilitadas`.
 
 ---
 
@@ -215,8 +215,8 @@ No aplica el escenario 2 de RNF Usabilidad (legibilidad en proyección) — mism
   en v1, `BC-identidad-modelo.md` §13.4, INV-ID-16).
 - Aprobación del Administrador sobre cuentas autoregistradas — decisión ya tomada (activa de
   inmediato).
-- El copy nuevo de `#login-bloqueada` (ofrecer la recuperación por email) — Parte B de
-  `US-ADJ-62`, pendiente de aprobación de UX, ver nota de §3.1.
+- Cambios a `#login-bloqueada` más allá del link a la recuperación por email (`US-ADJ-62`,
+  ver nota de §3.1).
 - Rediseño del `.who` estático en pantallas que todavía no se tocan en este incremento — el
   cambio a `.who-btn`/`.user-menu` se aplica al componente compartido, así que se propaga solo
   con el cambio de `AppNav.tsx`, sin tocar cada pantalla una por una.
