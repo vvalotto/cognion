@@ -118,6 +118,10 @@ describe("Login", () => {
     await completarFormulario("bloqueado@fiuner.edu.ar", "cualquiera")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Cuenta bloqueada")
+    expect(screen.getByRole("link", { name: "recuperar tu contraseña por email" })).toHaveAttribute(
+      "href",
+      "/recuperar-password"
+    )
     expect(screen.getByLabelText("Email")).toBeDisabled()
     expect(screen.getByLabelText("Contraseña")).toBeDisabled()
     expect(screen.getByRole("button", { name: "Ingresar" })).toBeDisabled()

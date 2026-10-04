@@ -110,7 +110,7 @@ entre BCs e iteraciones, sin redefinir tokens nuevos.
 | Elemento | Detalle |
 |---|---|
 | Layout | Propio de esta pantalla — tarjeta centrada sin el bloque de marca (`Cognión`/subtítulo) del resto de `AuthLayout`, ícono de la app (40px) centrado sobre el título "Ingresar" — no reutiliza el encabezado de `wireframes-identidad.md` §2.2 |
-| Alerta | Destructiva, con ícono 🔒: "Cuenta bloqueada" — "Superaste el máximo de intentos permitidos. Contactá a un Administrador para restablecer tu contraseña." — sin link de recuperación self-service (no existe en v1) |
+| Alerta | Destructiva, con ícono 🔒: "Cuenta bloqueada" — "Superaste el máximo de intentos permitidos. Podés **recuperar tu contraseña por email** o pedirle a un Administrador que la restablezca." — "recuperar tu contraseña por email" es un link a `/recuperar-password` (`wireframes-identidad-autoservicio.md` §4); recuperarla desbloquea la cuenta (`US-ADJ-62`). *Enmendado por `US-ADJ-62`: antes decía "Contactá a un Administrador para restablecer tu contraseña", sin link, porque la recuperación self-service no desbloqueaba.* |
 | Formulario | Campos deshabilitados tras el bloqueo, botón "Ingresar" a todo el ancho, deshabilitado |
 
 > Corrección 2026-08-23 (UAT/UX en vivo): la primera versión de esta fila decía que la
