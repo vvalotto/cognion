@@ -1,4 +1,5 @@
 import uuid
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -159,23 +160,39 @@ class TestUsuarioRecuperarPassword:
 
         assert usuario.password_hash == "hash-nuevo"
 
-    def test_no_desbloquea_una_cuenta_bloqueada(self):
+    def test_desbloquea_una_cuenta_bloqueada_y_devuelve_true(self):
         usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         usuario.bloqueada = True
 
-        usuario.recuperar_password("hash-nuevo")
+        estaba_bloqueada = usuario.recuperar_password("hash-nuevo")
 
-        assert usuario.bloqueada is True
+        assert estaba_bloqueada is True
+        assert usuario.bloqueada is False
 
-    def test_no_toca_los_contadores_de_intentos_fallidos(self):
+    def test_devuelve_false_si_la_cuenta_no_estaba_bloqueada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+
+        assert usuario.recuperar_password("hash-nuevo") is False
+
+    def test_resetea_los_contadores_y_el_bloqueo_temporal(self):
         usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         usuario.intentos_fallidos_login = 2
         usuario.intentos_fallidos_password = 1
+        usuario.bloqueada_hasta = datetime.now(UTC) + timedelta(minutes=5)
 
         usuario.recuperar_password("hash-nuevo")
 
-        assert usuario.intentos_fallidos_login == 2
-        assert usuario.intentos_fallidos_password == 1
+        assert usuario.intentos_fallidos_login == 0
+        assert usuario.intentos_fallidos_password == 0
+        assert usuario.bloqueada_hasta is None
+
+    def test_no_reactiva_una_cuenta_deshabilitada(self):
+        usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
+        usuario.deshabilitada = True
+
+        usuario.recuperar_password("hash-nuevo")
+
+        assert usuario.deshabilitada is True
 
 
 class TestUsuarioRegistrarFalloCambioPassword:

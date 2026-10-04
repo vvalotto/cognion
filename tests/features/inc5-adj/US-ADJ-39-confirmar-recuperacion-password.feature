@@ -40,9 +40,10 @@ Feature: Confirmar nueva contraseña con token de recuperación (US-ADJ-39)
     Then la respuesta es un error PasswordDemasiadoCorta
     And el token sigue sin usar
 
+  # Enmendado por US-ADJ-62: antes afirmaba que la cuenta seguía bloqueada.
   @recuperacion-password @seguridad
-  Scenario: Confirmar no desbloquea una cuenta bloqueada
+  Scenario: Confirmar desbloquea una cuenta bloqueada
     Given un Usuario bloqueado con un TokenRecuperacionPassword vigente
     When se confirma una contraseña nueva válida con ese token
     Then Usuario.password_hash queda actualizado
-    And Usuario.bloqueada sigue en true
+    And Usuario.bloqueada es false

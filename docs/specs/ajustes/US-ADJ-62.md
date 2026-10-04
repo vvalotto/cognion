@@ -1,6 +1,6 @@
 # US-ADJ-62: Recuperar la contraseña por autoservicio también desbloquea la cuenta
 
-**Estado**: `Especificada`
+**Estado**: `Parte A (backend) implementada 2026-10-04`; Parte B (frontend) pendiente del gate UX
 **Iteracion / Sprint**: `Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1`
 (decisión de Víctor, 2026-10-02: recuperar la contraseña **sí desbloquea**, plan de corrección §7
 decisión 4)

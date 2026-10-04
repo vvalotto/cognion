@@ -239,7 +239,7 @@ def entonces_token_sigue_sin_usar(context):
     assert run_async(_token_usado_en(context["token"])) is None
 
 
-@then("Usuario.bloqueada sigue en true")
-def entonces_usuario_sigue_bloqueado(context):
+@then("Usuario.bloqueada es false")
+def entonces_usuario_desbloqueado(context):
     usuario = run_async(_usuario_por_email(context["email"]))
-    assert usuario.bloqueada is True
+    assert usuario.bloqueada is False

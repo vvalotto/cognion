@@ -134,7 +134,7 @@ class TestConfirmarRecuperacionPasswordAPIIntegration:
             )
             assert login_con_password_vieja.status_code == 200
 
-    async def test_confirmar_no_desbloquea_una_cuenta_bloqueada(self, admin_headers, session):
+    async def test_confirmar_desbloquea_una_cuenta_bloqueada(self, admin_headers, session):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             email = await _crear_docente_y_token(client, admin_headers)
@@ -161,7 +161,10 @@ class TestConfirmarRecuperacionPasswordAPIIntegration:
                 "/identidad/login",
                 json={"email": email, "password": "NuevaClave2#xyz"},
             )
-            assert login_response.status_code == 403
+            assert login_response.status_code == 200
 
+        session.expire_all()
         resultado = await session.execute(select(UsuarioModel).where(UsuarioModel.email == email))
-        assert resultado.scalar_one().bloqueada is True
+        usuario = resultado.scalar_one()
+        assert usuario.bloqueada is False
+        assert usuario.intentos_fallidos_login == 0
