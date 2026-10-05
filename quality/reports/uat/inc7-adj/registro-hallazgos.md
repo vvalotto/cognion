@@ -5,6 +5,7 @@ Severidades según `docs/plans/PROCEDIMIENTO-UAT.md` §8. Origen de cada hallazg
 | # | Paso | Hallazgo | Severidad | Estado |
 |---|---|---|---|---|
 | 1 (UAT v1) | Bloque 1 | Autoregistro: `201` sin persistir, intermitente, solo desde el navegador en dev; y un `422` en la recuperación de contraseña con URL y token correctos | 🟡 Observación | **No reproducible** (13 envíos: 10 autoregistros de Docente en dev y build, 1 de Estudiante, 2 recuperaciones completas; cada 201 persistió, 0 duplicados, sin `422`). Cerrado sin cambios de código. Si reaparece: capturar en el momento el log del backend y la fila de `usuario` |
+| O-1 | Bloque 3 / 4 (login) | El **3.er intento fallido** —el que bloquea la cuenta— sigue mostrando "Email o contraseña incorrectos"; la alerta de bloqueo (temporal o permanente) aparece recién en el **4.º** intento. Es lo que fija el contrato (`US-ADJ-60`: "el siguiente login responde 403"; mismo criterio desde `US-2.2.1`), no una regresión. Consecuencia de UX: el usuario no sabe que su 3.er intento lo bloqueó | ⚪ Observación (UX, conforme a la spec) | Abierto — a decisión de Víctor: dejar como está, o avisar en el 3.er intento (tocaría `src/`: respuesta del login → track formal) |
 
 ## Notas y límites de esta conclusión
 
