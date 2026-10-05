@@ -2,6 +2,7 @@ import { useLocation } from "react-router"
 
 import { Breadcrumb } from "@/components/Breadcrumb"
 import { Card } from "@/components/ui/card"
+import { cerroAntesDeLoPrevisto } from "@/lib/cierre-actividad"
 
 interface FueraDePeriodoState {
   titulo?: string
@@ -51,7 +52,7 @@ export function FueraDePeriodo() {
             <p className="mb-2 text-3xl text-muted-foreground">🔒</p>
             <h2 className="mb-2 font-semibold">Esta actividad ya cerró</h2>
             <p className="text-sm text-muted-foreground">
-              {fechaCierre && (
+              {fechaCierre && !cerroAntesDeLoPrevisto(fechaCierre) && (
                 <>
                   Cerró el <strong>{formatearFecha(fechaCierre)}</strong>.{" "}
                 </>
