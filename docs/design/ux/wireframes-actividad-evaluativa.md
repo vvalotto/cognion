@@ -132,8 +132,8 @@ Iteración 1; a nivel UX es el mismo punto de entrada).
 |---|---|
 | Contexto | Breadcrumb "Mis materias › {Materia} › Actividades" |
 | Tarjetas | Una por actividad visible para su comisión: título, ventana, `Badge` de estado desde la perspectiva del estudiante |
-| Estados del `Badge` | `Pendiente de responder` (dentro del período, sin `Evaluacion` finalizada) · `Todavía no abrió` (antes de `fecha_apertura`) · `Finalizada — ver revisión` (el estudiante ya finalizó su `Evaluacion`) |
-| Navegación | `Pendiente de responder` → `#est-rendir` (o `#est-suspendida` si ya existe una `Evaluacion` `Suspendida`, ver INV-AE-11); `Todavía no abrió` → `#est-fuera-periodo`; `Finalizada` → `#est-revision` |
+| Estados del `Badge` | `Pendiente de responder` (dentro del período, sin `Evaluacion` finalizada) · `Todavía no abrió` (antes de `fecha_apertura`) · **`Cerrada`** (la actividad se cerró a mano o venció `fecha_cierre` y el estudiante no la rindió; gris neutro con borde — cerrar es un estado normal, no un error; cierre manual y vencimiento por fecha se muestran igual) · `Finalizada — ver revisión` (el estudiante ya finalizó su `Evaluacion`; gana sobre `Cerrada`: quien ya rindió sigue viendo su revisión). *Enmendado por `US-ADJ-61`: el diseño original tenía solo 3 estados y mostraba "Pendiente" para una actividad cerrada sin rendir.* |
+| Navegación | `Pendiente de responder` → `#est-rendir` (o `#est-suspendida` si ya existe una `Evaluacion` `Suspendida`, ver INV-AE-11); `Todavía no abrió` → `#est-fuera-periodo`; **`Cerrada` → `#est-fuera-periodo-cerrada`**; `Finalizada` → `#est-revision` |
 | Fuera de alcance | No se distingue visualmente `EnCurso` de `Suspendida` en esta grilla — ambas caen en "Pendiente de responder"; la distinción ocurre recién al entrar (`IniciarEvaluacion` es idempotente, retoma sin diferenciar el origen) |
 
 ### 3.2 Fuera de período (`#est-fuera-periodo`)
@@ -143,9 +143,10 @@ Iteración 1; a nivel UX es el mismo punto de entrada).
 
 | Elemento | Detalle |
 |---|---|
-| Mensaje | Un único estado visual cubre los dos casos que pide el criterio de aceptación de `US-3.0.2` (antes de apertura, después de cierre) — mismo criterio que `US-1.1.3` (mensaje genérico sin distinguir motivo al estudiante) |
-| Caso "antes de apertura" | Muestra la fecha/hora exacta de apertura |
-| Caso "después de cierre, nunca iniciada" | Mismo layout — nota aclaratoria al pie distingue el caso sin necesitar una pantalla separada (ver nota en el prototipo) |
+| Variantes | Según el contexto con el que se llega (*enmendado por `US-ADJ-61`*; antes un único mensaje cubría "antes de apertura" y "después de cierre" con una nota al pie que admitía la ambigüedad — **esa nota se retira**) |
+| `#est-fuera-periodo` — todavía no abrió | Ícono 🕒, "Todavía no está disponible", muestra la fecha/hora exacta de apertura y "Volvé a entrar a partir de ese momento" |
+| `#est-fuera-periodo-cerrada` — ya cerró | Ícono 🔒, "Esta actividad ya cerró", muestra la fecha/hora de cierre y "Ya no se puede rendir"; no invita a volver |
+| `#est-fuera-periodo-neutro` — sin contexto | Ícono ℹ️, "Esta actividad no está disponible en este momento"; se llega por el `422` de `IniciarEvaluacion` o abriendo el link directo, donde no se sabe el motivo |
 | Diferencia con `#est-revision` | Si el estudiante **ya** tiene una `Evaluacion` `Finalizada` para esa actividad (por vencimiento automático, `VerificadorDeVencimientos` Regla 2, o porque la finalizó él mismo), no cae acá — va directo a la revisión (RF-13 sigue disponible aunque el período ya cerró) |
 
 ### 3.3 Rendir evaluación (`#est-rendir`)

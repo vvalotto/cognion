@@ -1,6 +1,6 @@
 # US-ADJ-61: La actividad cerrada se ve como cerrada para el Estudiante
 
-**Estado**: `Parte A (backend) implementada 2026-10-04`; Parte B (frontend) pendiente del gate UX
+**Estado**: `Implementada` — Parte A (backend) 2026-10-04 (PR #483); Parte B (frontend, gate UX aprobado por Víctor el 2026-10-05)
 **Iteracion / Sprint**: `Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1`
 (decisión de Víctor, 2026-10-02; el plan de corrección la prioriza P2 y exige gate UX)
 **Tipo**: `fix` backend + frontend

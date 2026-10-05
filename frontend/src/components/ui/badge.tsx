@@ -25,6 +25,7 @@ const badgeVariants = cva(
         "estado-cerrada": "bg-red-50 text-red-800",
         "visible-pendiente": "bg-green-50 text-green-800",
         "visible-todavia-no-abrio": "bg-amber-50 text-amber-800",
+        "visible-cerrada": "border border-border bg-muted text-foreground",
         "visible-finalizada": "bg-blue-50 text-blue-800",
         "revision-correcta": "bg-green-50 text-green-800",
         "revision-incorrecta": "bg-red-50 text-red-800",

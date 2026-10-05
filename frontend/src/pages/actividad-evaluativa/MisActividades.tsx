@@ -29,12 +29,17 @@ import { listarMisMaterias, type MateriaEstudianteResponse } from "@/lib/identid
 const ETIQUETA_ESTADO: Record<EstadoVisible, string> = {
   pendiente: "Pendiente de responder",
   todavia_no_abrio: "Todavía no abrió",
+  cerrada: "Cerrada",
   finalizada: "Finalizada — ver revisión",
 }
 
-const VARIANTE_ESTADO: Record<EstadoVisible, "visible-pendiente" | "visible-todavia-no-abrio" | "visible-finalizada"> = {
+const VARIANTE_ESTADO: Record<
+  EstadoVisible,
+  "visible-pendiente" | "visible-todavia-no-abrio" | "visible-cerrada" | "visible-finalizada"
+> = {
   pendiente: "visible-pendiente",
   todavia_no_abrio: "visible-todavia-no-abrio",
+  cerrada: "visible-cerrada",
   finalizada: "visible-finalizada",
 }
 
@@ -135,7 +140,21 @@ export function MisActividades() {
   function irA(actividad: ActividadVisibleResponse) {
     if (actividad.estado === "todavia_no_abrio") {
       navigate(`/mis-actividades/${actividad.id}/fuera-de-periodo`, {
-        state: { titulo: tituloDeActividad(actividad), fechaApertura: actividad.fechaApertura },
+        state: {
+          titulo: tituloDeActividad(actividad),
+          estado: "todavia_no_abrio",
+          fechaApertura: actividad.fechaApertura,
+        },
+      })
+      return
+    }
+    if (actividad.estado === "cerrada") {
+      navigate(`/mis-actividades/${actividad.id}/fuera-de-periodo`, {
+        state: {
+          titulo: tituloDeActividad(actividad),
+          estado: "cerrada",
+          fechaCierre: actividad.fechaCierre,
+        },
       })
       return
     }
