@@ -12,6 +12,8 @@ Documento de **priorización, no de ejecución** (`PROCEDIMIENTO-UAT.md` §11): 
 | O-1 | ⚪ | El 3.er intento fallido (el que bloquea) sigue diciendo "Email o contraseña incorrectos"; el bloqueo se informa en el 4.º | Formal (`src/`) si se cambia | Decisión de producto: dejarlo (cumple la spec) o avisar en el 3.er intento. Recomendación: dejarlo — cambiarlo revela el umbral de bloqueo y rompe `US-ADJ-60`/`US-2.2.1` ya validadas | — |
 | O-2 | ⚪ | `**` al inicio de una pregunta de la siembra | Dato | Corregir el texto de esa pregunta en el banco (edición desde la UI) | XS |
 
+**Estado (2026-10-05):** plan aprobado por Víctor. **H-1 y H-2 resueltos** en el PR #486 (`6c86755`), verificados en navegador real. O-1 y O-2 sin cambios de código.
+
 **Secuencia propuesta:** H-1 y H-2 en un solo PR informal de `frontend/` (mismo criterio que #7/#9); O-2 a mano; O-1 sin acción salvo decisión contraria.
 
 **Cierre del 7-ADJ:** con H-1/H-2 resueltos (o aceptados) y este plan aprobado → `BL-012` (matriz de trazabilidad, `CHANGELOG`, merge `develop → main` y tag; hoy `develop` va por delante de `v0.8.0`).
