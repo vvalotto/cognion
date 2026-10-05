@@ -97,6 +97,55 @@ describe("EvolucionTemporal", () => {
     expect(svg.querySelectorAll("circle")).toHaveLength(2)
   })
 
+  it("una sola actividad con título largo: la etiqueta del eje no se trunca", async () => {
+    const titulo = "Parcial numero 1 de Ingeniería"
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [puntoEstudiante("a1", titulo, "2026-08-01T00:00:00Z", 67)]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, [puntoComision("a1", titulo, 67)]))
+
+    renderPantalla()
+
+    await screen.findByRole("img", { name: /evolución temporal/i })
+    expect(screen.getAllByText(titulo).length).toBeGreaterThan(0)
+    expect(screen.queryByText(/…$/)).not.toBeInTheDocument()
+  })
+
+  it("muchas actividades con títulos largos: acorta la etiqueta y deja el título completo en el tooltip", async () => {
+    const titulos = Array.from({ length: 10 }, (_, i) => `Evaluación integradora número ${i + 1}`)
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(
+          200,
+          titulos.map((t, i) => puntoEstudiante(`a${i}`, t, `2026-08-${10 + i}T00:00:00Z`, 50)),
+        ),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, titulos.map((t, i) => puntoComision(`a${i}`, t, 60))))
+
+    renderPantalla()
+
+    const svg = await screen.findByRole("img", { name: /evolución temporal/i })
+    const etiquetas = Array.from(svg.querySelectorAll("text")).filter((t) => t.textContent?.includes("…"))
+    expect(etiquetas.length).toBe(10)
+    expect(svg.querySelector("title")?.textContent).toBe(titulos[0])
+  })
+
+  it("con un solo dato, el promedio de la comisión se dibuja como anillo visible aunque coincida", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(200, [puntoEstudiante("a1", "Parcial 1", "2026-08-01T00:00:00Z", 67)]),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, [puntoComision("a1", "Parcial 1", 67)]))
+
+    renderPantalla()
+
+    const svg = await screen.findByRole("img", { name: /evolución temporal/i })
+    const circulos = Array.from(svg.querySelectorAll("circle"))
+    expect(circulos.some((c) => c.getAttribute("fill") === "none" && c.getAttribute("r") === "7")).toBe(true)
+    expect(circulos.some((c) => c.getAttribute("fill") === "#1d75b5" && c.getAttribute("r") === "4")).toBe(true)
+  })
+
   it("actividad no rendida por el estudiante: no aparece en la serie del estudiante", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(
@@ -114,7 +163,8 @@ describe("EvolucionTemporal", () => {
     const svg = await screen.findByRole("img", { name: /evolución temporal/i })
     // 1 punto de estudiante + 2 de comisión = 3 círculos, sin duplicar el eje X (2 actividades)
     expect(svg.querySelectorAll("circle")).toHaveLength(3)
-    expect(screen.getAllByText("Parcial 2")).toHaveLength(1)
+    const titulosDelEje = Array.from(svg.querySelectorAll("title")).map((t) => t.textContent)
+    expect(titulosDelEje.filter((t) => t === "Parcial 2")).toHaveLength(1)
   })
 
   it("sin ninguna evaluación finalizada: muestra el estado vacío, sin gráfico", async () => {
