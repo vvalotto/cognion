@@ -89,6 +89,19 @@ describe("MisActividades", () => {
     expect(await screen.findByText("Fuera de período")).toBeInTheDocument()
   })
 
+  it("muestra el Badge 'Cerrada' (no 'Pendiente') y navega a fuera de período", async () => {
+    mockMateriaYActividades([actividadVisible("cerrada")])
+    renderMisActividades()
+
+    expect(await screen.findByText("Cerrada")).toBeInTheDocument()
+    expect(screen.queryByText("Pendiente de responder")).not.toBeInTheDocument()
+
+    const user = userEvent.setup()
+    await user.click(screen.getByText("Parcial 1"))
+
+    expect(await screen.findByText("Fuera de período")).toBeInTheDocument()
+  })
+
   it("muestra el Badge 'Finalizada — ver revisión' y navega a la revisión", async () => {
     mockMateriaYActividades([actividadVisible("finalizada", "eval-1")])
     renderMisActividades()
