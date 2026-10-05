@@ -24,6 +24,7 @@ import {
   type ActividadVisibleResponse,
   type EstadoVisible,
 } from "@/lib/actividad-evaluativa-api"
+import { cerroAntesDeLoPrevisto } from "@/lib/cierre-actividad"
 import { listarMisMaterias, type MateriaEstudianteResponse } from "@/lib/identidad-estudiante-api"
 
 const ETIQUETA_ESTADO: Record<EstadoVisible, string> = {
@@ -239,8 +240,10 @@ export function MisActividades() {
                 >
                   <TableCell className="font-medium">{tituloDeActividad(actividad)}</TableCell>
                   <TableCell className="text-xs text-muted-foreground">
-                    Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
-                    {formatearFecha(actividad.fechaCierre)}
+                    Abre {formatearFecha(actividad.fechaApertura)} ·{" "}
+                    {actividad.estado === "cerrada" && cerroAntesDeLoPrevisto(actividad.fechaCierre)
+                      ? "Cerrada antes de lo previsto"
+                      : `Cierra ${formatearFecha(actividad.fechaCierre)}`}
                   </TableCell>
                   <TableCell>
                     <Badge variant={VARIANTE_ESTADO[actividad.estado]}>
