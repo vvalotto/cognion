@@ -66,3 +66,31 @@ Cuenta usada: Sara Jovanovich (Estudiante con evaluaciones → la baja es lógic
 **Restauración al terminar (2026-10-05):** Camila reactivada; Sara y Camila con su contraseña de la siembra (hash copiado de otro Estudiante, porque `prueba-uat` no pasa la política de 12 caracteres que impone el endpoint); Administrador de prueba y sus tokens borrados. `psql`: 20 usuarios, 0 deshabilitados, 0 bloqueados, 1 Administrador.
 
 Nota del método: en el navegador integrado, las capturas de pantalla a veces muestran el estado anterior de la página (desfase de render). Para los resultados se tomó como referencia el DOM (`get_page_text`, `javascript_tool`) y la base.
+
+## 2026-10-05 — Bloque 5: `US-ADJ-61` (la actividad cerrada se ve como cerrada)
+
+Preparación (API, como Docente Víctor): 3 actividades nuevas en Ingeniería de Software — "UAT Cerrada a mano" (vigente), "UAT Vencida por fecha" (apertura -8 d, cierre -1 d) y "UAT Finalizada y luego cerrada" (Sara la inicia y finaliza, luego el Docente la cierra). El cierre de la primera se hizo **por la UI** (Docente → detalle → "Cerrar actividad ahora" → confirmación; el detalle pasa a "Cerrada"). Observador: Lucía, que no rindió nada, y Sara.
+
+| Caso | Resultado |
+|---|---|
+| 5.1 Listado del Estudiante (Lucía) | ✅ Cerrada a mano y vencida por fecha → badge **"Cerrada"**; Parcial 1 y 2 siguen "Pendiente de responder". Estilo del badge verificado en el navegador: gris neutro (`rgb(244,247,249)`) con borde 1 px, distinto del verde de "Pendiente" |
+| 5.2 Abrir la actividad cerrada | ✅ "Esta actividad ya cerró … Ya no se puede rendir"; sin "volvé a entrar". ⚠️ **Hallazgo H-1** (fecha mostrada) |
+| 5.3 "Mis materias" | ✅ "2 pendientes" (solo Parcial 1 y 2): las 3 cerradas no cuentan |
+| 5.4 Vencida por fecha sin rendir | ✅ Mismo badge "Cerrada" (ver 5.1) |
+| 5.5 Sara (finalizó "UAT Finalizada y luego cerrada", que luego se cerró) | ✅ Ve "Finalizada — ver revisión" en esa y en Parcial 1 y 2; las dos que no rindió, "Cerrada" |
+| 5.6 Sin contexto | ✅ Recargando la ruta con el `history.state` vaciado, y entrando directo a `/rendir` de la actividad cerrada (camino del `422`): "Esta actividad no está disponible en este momento" |
+
+## 2026-10-05 — Bloque 6: hallazgos #7 y #9 y fixes #3 y #8
+
+Preparación: comisión "Comision UAT - Jueves de 8 a 10" en Gestión de Proyectos con Alejandra Morales asignada (por API), para tener una materia sin presentaciones visible para un Docente.
+
+| Caso | Resultado |
+|---|---|
+| 6.1 "Preguntas más falladas", Gestión de Proyectos (Alejandra) | ✅ "Esta materia todavía no tiene preguntas presentadas en actividades de período abierto. Las sesiones en vivo no se incluyen en este informe." |
+| 6.2 Ranking con datos (Ing. de Software, Víctor) | ✅ "1 presentación · 1 fallo", "2 presentaciones · 2 fallos", "2 presentaciones · 0 fallos" |
+| 6.3 "Evolución temporal" (Sara: 3 actividades; Máximo: 1 punto propio) | ✅ parcial: el promedio de la comisión se dibuja como **anillo hueco** y es visible aunque coincida con el punto del estudiante (y con un solo dato propio); el título completo está en el tooltip. ❌ **Hallazgo H-2**: la última etiqueta del eje queda cortada contra el borde derecho del gráfico ("UAT Finalizada y lue") |
+| 6.4 Fixes #3 y #8 | ✅ #3 ya verificado en 2.1 (la pantalla avisa del borrado permanente). #8: la revisión de Sara arranca en **"1."** |
+
+Datos de prueba que **quedan** en la base de desarrollo para que se puedan ver: las 3 actividades "UAT …" (y la evaluación finalizada de Sara en una de ellas) y la comisión "Comision UAT - Jueves de 8 a 10" con Alejandra asignada. Se eliminan re-sembrando.
+
+Pendiente de toda la UAT: Bloque 7 (iPhone, hallazgo #6) — fuera de esta UAT por decisión de Víctor.
