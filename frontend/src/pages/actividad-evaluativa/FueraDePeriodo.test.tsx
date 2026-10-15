@@ -55,6 +55,18 @@ describe("FueraDePeriodo", () => {
     expect(screen.queryByText(/Volvé a entrar/)).not.toBeInTheDocument()
   })
 
+  it("con estado 'cerrada' y fecha de cierre futura (cierre manual) no muestra esa fecha", () => {
+    renderFueraDePeriodo({
+      titulo: "Parcial de prueba",
+      estado: "cerrada",
+      fechaCierre: "2099-01-01T00:00:00+00:00",
+    })
+
+    expect(screen.getByText("Esta actividad ya cerró")).toBeInTheDocument()
+    expect(screen.queryByText(/Cerró el/)).not.toBeInTheDocument()
+    expect(screen.getByText(/Ya no se puede rendir/)).toBeInTheDocument()
+  })
+
   it("con estado 'cerrada' y sin fecha igual dice que ya cerró", () => {
     renderFueraDePeriodo({ titulo: "Parcial de prueba", estado: "cerrada" })
 

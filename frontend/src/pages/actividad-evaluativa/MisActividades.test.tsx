@@ -14,13 +14,17 @@ function jsonResponse(status: number, body: unknown): Response {
   })
 }
 
-function actividadVisible(estado: string, evaluacionId: string | null = null) {
+function actividadVisible(
+  estado: string,
+  evaluacionId: string | null = null,
+  fechaCierre = "2026-09-01T00:00:00+00:00",
+) {
   return {
     id: "act-1",
     materia_id: MATERIA_ID,
     titulo: "Parcial 1",
     fecha_apertura: "2026-08-01T00:00:00+00:00",
-    fecha_cierre: "2026-09-01T00:00:00+00:00",
+    fecha_cierre: fechaCierre,
     estado,
     evaluacion_id: evaluacionId,
   }
@@ -100,6 +104,24 @@ describe("MisActividades", () => {
     await user.click(screen.getByText("Parcial 1"))
 
     expect(await screen.findByText("Fuera de período")).toBeInTheDocument()
+  })
+
+  it("una actividad cerrada cuya fecha de cierre ya pasó (venció) muestra 'Cierra {fecha}'", async () => {
+    mockMateriaYActividades([actividadVisible("cerrada")])
+    renderMisActividades()
+
+    expect(await screen.findByText("Cerrada")).toBeInTheDocument()
+    expect(screen.getByText(/· Cierra /)).toBeInTheDocument()
+    expect(screen.queryByText(/Cerrada antes de lo previsto/)).not.toBeInTheDocument()
+  })
+
+  it("una actividad cerrada a mano (fecha de cierre futura) no muestra esa fecha como si fuera el cierre", async () => {
+    mockMateriaYActividades([actividadVisible("cerrada", null, "2099-01-01T00:00:00+00:00")])
+    renderMisActividades()
+
+    expect(await screen.findByText("Cerrada")).toBeInTheDocument()
+    expect(screen.getByText(/Cerrada antes de lo previsto/)).toBeInTheDocument()
+    expect(screen.queryByText(/· Cierra /)).not.toBeInTheDocument()
   })
 
   it("muestra el Badge 'Finalizada — ver revisión' y navega a la revisión", async () => {

@@ -131,6 +131,41 @@ describe("EvolucionTemporal", () => {
     expect(svg.querySelector("title")?.textContent).toBe(titulos[0])
   })
 
+  it("las etiquetas de los extremos no se salen del gráfico aunque el título sea largo", async () => {
+    const titulos = [
+      "Evaluación integradora número uno de la unidad",
+      "Parcial 2",
+      "Evaluación integradora número tres de la unidad",
+    ]
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(
+          200,
+          titulos.map((t, i) => puntoEstudiante(`a${i}`, t, `2026-08-${10 + i}T00:00:00Z`, 50)),
+        ),
+      )
+      .mockResolvedValueOnce(jsonResponse(200, titulos.map((t, i) => puntoComision(`a${i}`, t, 60))))
+
+    renderPantalla()
+
+    const svg = await screen.findByRole("img", { name: /evolución temporal/i })
+    const ancho = Number(svg.getAttribute("viewBox")?.split(" ")[2])
+    const etiquetas = Array.from(svg.querySelectorAll("text")).filter(
+      (t) => t.getAttribute("text-anchor") === "middle",
+    )
+    expect(etiquetas.length).toBe(3)
+    for (const t of etiquetas) {
+      const visible = Array.from(t.childNodes)
+        .filter((n) => n.nodeType === Node.TEXT_NODE)
+        .map((n) => n.textContent ?? "")
+        .join("")
+      const mitad = (visible.length * 5.5) / 2
+      const x = Number(t.getAttribute("x"))
+      expect(x - mitad).toBeGreaterThanOrEqual(0)
+      expect(x + mitad).toBeLessThanOrEqual(ancho)
+    }
+  })
+
   it("con un solo dato, el promedio de la comisión se dibuja como anillo visible aunque coincida", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(

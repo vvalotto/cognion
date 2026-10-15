@@ -57,6 +57,8 @@ function coordenadaY(porcentaje: number): number {
 /** Ancho aproximado de un carácter de las etiquetas del eje (texto de 10px). */
 const ANCHO_CARACTER_ETIQUETA = 5.5
 const MIN_CARACTERES_ETIQUETA = 8
+/** Aire mínimo entre el texto de una etiqueta y el borde del SVG. */
+const MARGEN_BORDE_ETIQUETA = 4
 
 /**
  * Máximo de caracteres de una etiqueta del eje X según el ancho que le toca a cada actividad:
@@ -66,6 +68,18 @@ const MIN_CARACTERES_ETIQUETA = 8
 function maxCaracteresEtiqueta(totalActividades: number): number {
   const anchoPorActividad = ANCHO_GRAFICO / Math.max(totalActividades, 1)
   return Math.max(MIN_CARACTERES_ETIQUETA, Math.floor(anchoPorActividad / ANCHO_CARACTER_ETIQUETA))
+}
+
+/**
+ * Posición X de la etiqueta de una actividad: centrada sobre su punto, pero desplazada lo mínimo
+ * para que el texto quepa dentro del SVG. Las de los extremos quedan pegadas al borde del gráfico
+ * y centradas se cortaban (hallazgo H-2 de la UAT 7-ADJ).
+ */
+function xEtiqueta(indice: number, total: number, etiqueta: string): number {
+  const mitadAncho = (etiqueta.length * ANCHO_CARACTER_ETIQUETA) / 2
+  const minimo = mitadAncho + MARGEN_BORDE_ETIQUETA
+  const maximo = ANCHO - mitadAncho - MARGEN_BORDE_ETIQUETA
+  return Math.min(Math.max(coordenadaX(indice, total), minimo), maximo)
 }
 
 function etiquetaEje(titulo: string, maxCaracteres: number): string {
@@ -232,18 +246,24 @@ export function EvolucionTemporal() {
                 {valor}%
               </text>
             ))}
-            {eje.map((actividad, i) => (
-              <text
-                key={actividad.actividadId}
-                x={coordenadaX(i, eje.length)}
-                y={ALTO - MARGEN.bottom + 16}
-                textAnchor="middle"
-                className="fill-muted-foreground text-[10px]"
-              >
-                <title>{actividad.tituloActividad}</title>
-                {etiquetaEje(actividad.tituloActividad, maxCaracteresEtiqueta(eje.length))}
-              </text>
-            ))}
+            {eje.map((actividad, i) => {
+              const etiqueta = etiquetaEje(
+                actividad.tituloActividad,
+                maxCaracteresEtiqueta(eje.length),
+              )
+              return (
+                <text
+                  key={actividad.actividadId}
+                  x={xEtiqueta(i, eje.length, etiqueta)}
+                  y={ALTO - MARGEN.bottom + 16}
+                  textAnchor="middle"
+                  className="fill-muted-foreground text-[10px]"
+                >
+                  <title>{actividad.tituloActividad}</title>
+                  {etiqueta}
+                </text>
+              )
+            })}
             <SerieGrafico
               puntos={serieComision}
               ejeLength={eje.length}
