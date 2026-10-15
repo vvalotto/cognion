@@ -1159,7 +1159,7 @@ observaciones O-1 (el 3.er intento fallido no avisa del bloqueo — es el contra
 cambio de código. **Métricas al cerrar:** 1883 tests backend (cobertura 96.94 %), 827 frontend (93.56 % statements / 86.14 %
 branches), `ruff`/`mypy`/`tsc` 0 errores, `pylint` 9.59, `designreviewer` 0 CRITICAL (334 advertencias), `architectanalyst` 7
 CRITICAL (mismo "Zone of Pain" aceptado). Sin cambio de estado de ningún RF (ajustes sobre RF ya Validado). **Pendientes que
-arrastra:** hallazgo #6 (demora en el iPhone) sin reprobar — diferido por decisión de Víctor, el DoD original lo incluía; el
+arrastra:** hallazgo #6 (demora en el iPhone) **desestimado por Víctor el 2026-10-15** (el DoD original lo incluía); el
 checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4). **Merge `develop → main` y tag `v0.8.1`
 pendientes de confirmación explícita de Víctor.** Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
 automático y asistido necesita decisión suya antes de especificar.

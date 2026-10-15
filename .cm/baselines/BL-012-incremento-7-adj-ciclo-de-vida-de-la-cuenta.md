@@ -8,7 +8,7 @@
 | Git tag inicial | `v0.8.0` (`BL-011`) |
 | Git tag cierre | `v0.8.1` (PATCH — incremento fuera de la secuencia de `PLAN_v1.md`, mismo criterio de versionado que `BL-005` → `v0.5.1`, `BL-007` → `v0.6.1`, `BL-010` → `v0.7.1`) |
 | Estado | ✅ Completado en `develop`. Merge `develop → main` y tag `v0.8.1`: pendientes de confirmación explícita de Víctor |
-| DoD | Las 4 US formales (`US-ADJ-59` a `62`) cerradas con su PR mergeado y su Issue cerrado; spike del hallazgo #1 resuelto; hallazgos #7 y #9 corregidos; un pase de navegador real al cierre con la base resembrada; `BL-012` registrada. **No cumplido, diferido por decisión de Víctor (2026-10-05):** re-prueba del hallazgo #6 con el iPhone (ver "Pendientes que arrastra") |
+| DoD | Las 4 US formales (`US-ADJ-59` a `62`) cerradas con su PR mergeado y su Issue cerrado; spike del hallazgo #1 resuelto; hallazgos #7 y #9 corregidos; un pase de navegador real al cierre con la base resembrada; `BL-012` registrada. **Hallazgo #6 (iPhone) desestimado por decisión de Víctor (2026-10-15)** — el DoD original pedía re-probarlo; ya no aplica |
 
 ---
 
@@ -53,7 +53,7 @@ cumplir; tocan `src/` y por eso fueron por el track formal.
   desde el navegador, modo dev (StrictMode) y build de producción, con el log del backend y
   `psql` contrastando cada uno.
 - **UAT de cierre en navegador real** (`quality/reports/uat/inc7-adj/`, PR #494): Bloques 0 a 6
-  sin hallazgos 🔴. El hallazgo #6 (demora en el iPhone) quedó fuera por decisión de Víctor.
+  sin hallazgos 🔴. El hallazgo #6 (demora en el iPhone) quedó fuera de la UAT y fue **desestimado** por Víctor el 2026-10-15.
 
 Entre `v0.8.0` y este cierre entraron también cambios que no son del 7-ADJ pero quedan en esta
 baseline: higiene de repositorio (PR #471), el fix de `/` sin sesión que había quedado 22 días
@@ -118,7 +118,7 @@ backfill; round-trip `upgrade`/`downgrade` verificado en `US-ADJ-60`.
 ## UAT de cierre
 
 UAT de cierre en navegador real, ejecutada el 2026-10-05 (`quality/reports/uat/inc7-adj/`, PR
-#494): 7 bloques planificados, 6 ejecutados (el Bloque 7, hallazgo #6 del iPhone, fuera de
+#494): 7 bloques planificados, 6 ejecutados (el Bloque 7, hallazgo #6 del iPhone, desestimado el 2026-10-15 y fuera de
 alcance por decisión de Víctor). Backend y frontend levantados contra la base de desarrollo
 resembrada (`tests/uat/datos-reales/sembrar.py`: 1 Administrador, 2 Docentes, 17 Estudiantes,
 110 preguntas, 2 actividades), cada paso contrastado con el log del backend y `psql`.
@@ -183,9 +183,7 @@ referenciando esta baseline.
   exista; anotado en `CLAUDE.md` §Quality gates.
 - **Las capturas del navegador integrado a veces muestran el estado anterior de la página** (desfase
   de render). En la UAT se tomó como referencia el DOM y la base, no la captura.
-- **El DoD del incremento incluía "#6 re-probado con el iPhone" y se dejó fuera de la UAT.** Es
-  una decisión legítima de Víctor, pero el DoD y el alcance real de la UAT divergieron: cuando se
-  decide dejar un ítem fuera, conviene reescribir el DoD en el momento, no al cerrar.
+- **El DoD del incremento incluía "#6 re-probado con el iPhone" y se dejó fuera de la UAT.** Víctor lo **desestimó** el 2026-10-15, así que el DoD queda sin ese ítem; cuando se decide dejar un ítem fuera, conviene reescribir el DoD en el momento, no al cerrar.
 - **Observación O-1** (el tercer intento no avisa del bloqueo) cumple la spec pero deja al usuario
   sin información; queda abierta a decisión de producto.
 
@@ -193,13 +191,14 @@ referenciando esta baseline.
 
 ## Pendientes que arrastra
 
-- **Hallazgo #6** (demora de ~10 s en el iPhone al mostrar opciones en la sesión en vivo): sin
-  reprobar con el iPhone; el iPad anduvo bien. Requiere el dispositivo y/o staging con WSS real
-  (`PROCEDIMIENTO-UAT.md` §4, ítem abierto aparte).
+- **Hallazgo #6 (iPhone): desestimado** por Víctor el 2026-10-15; no queda pendiente. Si reaparece en uso real, se reabre con repro. El checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4) sigue siendo un ítem abierto aparte.
 - 2 tests BDD de `US-3.2.2` que fallaron en un entorno local (`KeyError: 'id'` en el setup) y
   pasaron en el CI; sin causa identificada.
-- 3 PRs de Dependabot abiertos contra `main` (#468, #469, #470) y otros 7 contra `develop`
-  (#487 a #493), tres de ellos saltos de versión mayor (`vitest` 4→5, `jsdom` 29→30, `react-dom`).
+- **Cola de Dependabot cerrada sin mergear** por decisión de Víctor (2026-10-15): 10 PRs (#468 a #470 contra `main`; #487 a #493 contra `develop`), tres de ellos saltos de versión mayor (`vitest` 4→5, `jsdom` 29→30, `react-dom`). Dependabot puede volver a abrirlos (`@dependabot reopen`).
+  **Quedan 12 alertas de seguridad abiertas** (8 high, 4 medium; consultadas el 2026-10-15) en dependencias: `PyJWT`,
+  `virtualenv` (4), `brace-expansion` (3), `fast-uri`, `browserslist` (2, sin PR) y `@modelcontextprotocol/sdk`. Cinco de los PRs
+  cerrados las corregían (#468, #469, #470, #492, #493). Contexto: Incrementos 3 a 7 corren con datos de prueba/locales y el
+  deploy real sigue sin hacerse (`cd.yml` solo construye la imagen), pero conviene resolverlas antes de cualquier despliegue.
 
 ---
 
