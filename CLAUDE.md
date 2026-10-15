@@ -1160,8 +1160,8 @@ cambio de código. **Métricas al cerrar:** 1883 tests backend (cobertura 96.94 
 branches), `ruff`/`mypy`/`tsc` 0 errores, `pylint` 9.59, `designreviewer` 0 CRITICAL (334 advertencias), `architectanalyst` 7
 CRITICAL (mismo "Zone of Pain" aceptado). Sin cambio de estado de ningún RF (ajustes sobre RF ya Validado). **Pendientes que
 arrastra:** hallazgo #6 (demora en el iPhone) **desestimado por Víctor el 2026-10-15** (el DoD original lo incluía); el
-checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4). **Merge `develop → main` y tag `v0.8.1`
-pendientes de confirmación explícita de Víctor.** Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
+checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4). **Merge `develop → main` (`20d9dcc`) y tag
+`v0.8.1` ejecutados el 2026-10-15** a confirmación explícita de Víctor; Milestone #15 cerrado. Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
 automático y asistido necesita decisión suya antes de especificar.
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de

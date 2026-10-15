@@ -7,7 +7,7 @@
 | Fecha cierre | 2026-10-15 |
 | Git tag inicial | `v0.8.0` (`BL-011`) |
 | Git tag cierre | `v0.8.1` (PATCH — incremento fuera de la secuencia de `PLAN_v1.md`, mismo criterio de versionado que `BL-005` → `v0.5.1`, `BL-007` → `v0.6.1`, `BL-010` → `v0.7.1`) |
-| Estado | ✅ Completado en `develop`. Merge `develop → main` y tag `v0.8.1`: pendientes de confirmación explícita de Víctor |
+| Estado | ✅ Completado — mergeado a `develop` (PR #495) y a `main` (merge `20d9dcc`), tag `v0.8.1` aplicado el 2026-10-15 |
 | DoD | Las 4 US formales (`US-ADJ-59` a `62`) cerradas con su PR mergeado y su Issue cerrado; spike del hallazgo #1 resuelto; hallazgos #7 y #9 corregidos; un pase de navegador real al cierre con la base resembrada; `BL-012` registrada. **Hallazgo #6 (iPhone) desestimado por decisión de Víctor (2026-10-15)** — el DoD original pedía re-probarlo; ya no aplica |
 
 ---
@@ -219,7 +219,6 @@ referenciando esta baseline.
 
 ## Próximo paso
 
-Merge `develop → main` y tag `v0.8.1` (con confirmación explícita de Víctor), cierre del Milestone
-[#15](https://github.com/vvalotto/cognion/milestone/15). Después, Iteración 2 del Incremento 7:
-`RF-07` (importación desde PDF), cuyo spike entre parseo automático y asistido necesita decisión
-de Víctor antes de especificar.
+Ejecutado el 2026-10-15: merge `develop → main` (`20d9dcc`), tag anotado `v0.8.1` y Milestone [#15](https://github.com/vvalotto/cognion/milestone/15) cerrado, a confirmación explícita de Víctor. `main` conserva además varios bumps de Dependabot que se mergearon directo a esa rama el 2026-09-30 y no están en `develop` (solo difieren los lockfiles `frontend/package-lock.json` y `uv.lock`): el CI corre únicamente sobre `develop`, así que el árbol tagueado incluye versiones de dependencias que esta baseline no probó; conviene bajar `main` a `develop` en algún momento.
+
+Después, Iteración 2 del Incremento 7: `RF-07` (importación desde PDF), cuyo spike entre parseo automático y asistido necesita decisión de Víctor antes de especificar.
