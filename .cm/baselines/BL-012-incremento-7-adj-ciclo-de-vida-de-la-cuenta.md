@@ -192,13 +192,28 @@ referenciando esta baseline.
 ## Pendientes que arrastra
 
 - **Hallazgo #6 (iPhone): desestimado** por Víctor el 2026-10-15; no queda pendiente. Si reaparece en uso real, se reabre con repro. El checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4) sigue siendo un ítem abierto aparte.
-- 2 tests BDD de `US-3.2.2` que fallaron en un entorno local (`KeyError: 'id'` en el setup) y
-  pasaron en el CI; sin causa identificada.
-- **Cola de Dependabot cerrada sin mergear** por decisión de Víctor (2026-10-15): 10 PRs (#468 a #470 contra `main`; #487 a #493 contra `develop`), tres de ellos saltos de versión mayor (`vitest` 4→5, `jsdom` 29→30, `react-dom`). Dependabot puede volver a abrirlos (`@dependabot reopen`).
+- **3 tests BDD intermitentes** (`US-3.2.1` y `US-3.2.2`, "fuera del período vigente"): fallaron solo en una corrida local
+  (`KeyError: 'id'` al armar el escenario) y pasaron en el CI y en la suite completa de esta baseline (1883 tests, sin fallos);
+  sin causa identificada, se sospecha dependencia del reloj o la zona horaria. Issue [#501](https://github.com/vvalotto/cognion/issues/501).
+- **Cola de Dependabot cerrada sin mergear** por decisión de Víctor (2026-10-15): 10 PRs (#468 a #470 contra `main`; #487 a #493 contra `develop`), tres de ellos saltos de versión mayor (`vitest` 4→5, `jsdom` 29→30, `react-dom`). Dependabot puede volver a abrirlos (`@dependabot reopen`). Issue [#499](https://github.com/vvalotto/cognion/issues/499).
   **Quedan 12 alertas de seguridad abiertas** (8 high, 4 medium; consultadas el 2026-10-15) en dependencias: `PyJWT`,
   `virtualenv` (4), `brace-expansion` (3), `fast-uri`, `browserslist` (2, sin PR) y `@modelcontextprotocol/sdk`. Cinco de los PRs
   cerrados las corregían (#468, #469, #470, #492, #493). Contexto: Incrementos 3 a 7 corren con datos de prueba/locales y el
   deploy real sigue sin hacerse (`cd.yml` solo construye la imagen), pero conviene resolverlas antes de cualquier despliegue.
+
+---
+
+## Issues abiertos al cerrar (deuda y decisiones para más adelante)
+
+| Issue | Tema | Tipo |
+|---|---|---|
+| [#496](https://github.com/vvalotto/cognion/issues/496) | Corregir `DependencyGraphBuilder` upstream (`software_limpio#77`) y reactivar `LayerViolationsAnalyzer` | mejora |
+| [#497](https://github.com/vvalotto/cognion/issues/497) | `import-linter` en el CI para hacer cumplir capas y aislamiento entre BC | mejora |
+| [#498](https://github.com/vvalotto/cognion/issues/498) | Decidir el acoplamiento de los adaptadores in-process a internals de otro BC (ADR) | spike |
+| [#499](https://github.com/vvalotto/cognion/issues/499) | Resolver las 12 alertas de seguridad de dependencias abiertas | dependencias |
+| [#500](https://github.com/vvalotto/cognion/issues/500) | Revisar el tamaño de `actividad_evaluativa`: ¿dos contextos? | spike |
+| [#501](https://github.com/vvalotto/cognion/issues/501) | Estabilizar los 3 tests BDD intermitentes de "fuera del período vigente" | bug |
+| [#502](https://github.com/vvalotto/cognion/issues/502) | Decidir si el 3.er intento fallido debe avisar del bloqueo (O-1) | spike |
 
 ---
 
