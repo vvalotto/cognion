@@ -9,6 +9,57 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-15
+
+### Added
+- **Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1** (cierre de baseline
+  `BL-012`). Insertado fuera de la secuencia numérica de `PLAN_v1.md` (mismo criterio que
+  Incremento 3-ADJ a 6-ADJ), antes de la Iteración 2 del Incremento 7 (RF-07). Origen: los 11
+  hallazgos de la UAT manual de cierre de alcance v1 (Incremento 7, Iteración 1,
+  `quality/reports/uat/inc7/`), dos de ellos 🔴.
+  - **`US-ADJ-59`**: una cuenta deshabilitada ya no puede iniciar sesión — `403` con `detail`
+    estructurado `cuenta_deshabilitada`, chequeado antes de la contraseña y de `bloqueada`, sin
+    consumir intentos; alerta propia en el login
+  - **`US-ADJ-60`**: el sistema siempre conserva al menos un Administrador operativo — un
+    Administrador nunca se borra (la baja es una deshabilitación reversible), `409` si se intenta
+    deshabilitar al último operativo, y el bloqueo automático del último Administrador pasa a ser
+    **temporal** (15 minutos, `settings.administrador_bloqueo_temporal_minutos`, vencimiento
+    perezoso). Migración `c4d1f9a27b60` (`usuario.bloqueada_hasta`)
+  - **`US-ADJ-62`**: recuperar la contraseña por email también desbloquea la cuenta (resetea
+    `bloqueada`, `bloqueada_hasta` y los contadores) y libera al último Administrador bloqueado
+    temporalmente; no reactiva una cuenta deshabilitada. Revierte una decisión de `US-ADJ-39`.
+    La alerta de "Cuenta bloqueada" ofrece el link a la recuperación por email
+  - **`US-ADJ-61`**: la actividad cerrada (a mano o vencida) se muestra como cerrada al Estudiante
+    — nuevo estado `cerrada` en `EstadoVisible`, badge "Cerrada", pantalla "Esta actividad ya
+    cerró" y texto neutro cuando se llega sin contexto; "Mis materias" ya no cuenta una cerrada
+    como pendiente; `finalizada` sigue ganando
+  - UAT de cierre del incremento en navegador real (`quality/reports/uat/inc7-adj/`): Bloques 0 a
+    6 sin hallazgos 🔴; el hallazgo #1 de la UAT v1 (autoregistro `201` sin persistir) quedó
+    **no reproducible** (13 envíos, modo dev y build de producción)
+
+### Fixed
+- `/` sin sesión no redirigía a `/login` — el fix, escrito el 2026-09-08, había quedado sin
+  mergear 22 días (PR #292)
+- UAT v1, hallazgos #3 y #8: la pantalla de eliminar una cuenta avisa que el borrado es
+  permanente; la revisión del Estudiante numera desde 1 (PR #472)
+- UAT v1, hallazgos #7 y #9: el mensaje vacío de "Preguntas más falladas" aclara que cuenta solo
+  período abierto, singular/plural en "presentación(es)" y "fallo(s)"; en "Evolución temporal"
+  la etiqueta del eje X deja de truncarse a un largo fijo y el promedio de la comisión se dibuja
+  como anillo para no quedar tapado (PR #485)
+- UAT 7-ADJ, hallazgos H-1 y H-2: una actividad cerrada a mano ya no muestra su fecha de cierre
+  programada (futura) como si fuera la de cierre; las etiquetas del eje X de "Evolución temporal"
+  se desplazan lo mínimo para no cortarse contra el borde del gráfico (PR #486)
+
+### Changed
+- Higiene de repositorio (plan de 7 puntos, 2026-09-30): branches y worktrees huérfanos borrados,
+  PRs abandonados cerrados, cola de Dependabot resuelta verificando cada bump con CI real,
+  `tests/uat/datos-reales/` blindado en `.gitignore`, `docs/architecture/24*-modelo-datos-*.md`
+  rescatado y actualizado con las tablas del Incremento 6 (PR #471)
+- Dependencias: `react-router` 7→8 (salto mayor, verificado con `tsc -b` y suite completa),
+  `lucide-react`, `@testing-library/react`, `pyjwt` y otros bumps menores de Dependabot
+- Planificación del Incremento 7: la Iteración 1 (RF-18, KPIs históricos) se reemplaza por una
+  iteración de UAT manual completa; RF-18 queda sin incremento asignado (PR #465)
+
 ## [0.8.0] - 2026-09-30
 
 ### Added

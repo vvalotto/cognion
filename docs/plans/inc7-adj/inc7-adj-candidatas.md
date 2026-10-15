@@ -1,6 +1,6 @@
 # Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1 (antes de RF-07)
 
-**Estado:** en planificación (abierto 2026-10-02; specs e Issues creados el mismo día)
+**Estado:** cerrado 2026-10-15 como `BL-012` (abierto 2026-10-02; specs e Issues creados el mismo día). Las 4 US formales y los 2 informales cerrados; UAT de cierre en `quality/reports/uat/inc7-adj/`. Pendiente diferido, por decisión de Víctor (2026-10-05): re-prueba del hallazgo #6 con el iPhone
 **Milestone:** [Incremento 7-ADJ — Ciclo de vida de la cuenta y ajustes de la UAT v1](https://github.com/vvalotto/cognion/milestone/15)
 **Política:** mismo criterio de nomenclatura que `Incremento 3-ADJ` a `6-ADJ` — ajuste insertado
 fuera de la secuencia numérica 0-7 de `docs/rf/PLAN_v1.md`, sin renumerar. Va **antes** de la
