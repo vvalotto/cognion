@@ -1148,9 +1148,21 @@ informales #7 y #9. Cierre previsto como `BL-012`.
 decisiones por defecto a confirmar por Víctor; la Parte B de frontend de cada una está
 bloqueada por el gate UX).
 
-**Próximo paso:** confirmar esas decisiones y empezar por la Parte A (backend) de `US-ADJ-59`, con
-el spike de #1 en paralelo; después, Iteración 2 (RF-07). Ítem abierto aparte, no bloqueante: checkpoint de staging del RNF en Fly.io con WSS
-real (`PROCEDIMIENTO-UAT.md` §4).
+**Incremento 7-ADJ ejecutado y `BL-012` registrada 2026-10-15** (`.cm/baselines/BL-012-incremento-7-adj-ciclo-de-vida-de-la-cuenta.md`).
+Las 4 US formales cerradas, cada una en Parte A (backend) y, donde hubo UI, Parte B (frontend, tras el gate UX): `US-ADJ-59`
+(PR #479, una cuenta deshabilitada no inicia sesión), `US-ADJ-60` (PR #480, siempre ≥ 1 Administrador operativo; el bloqueo del
+último es temporal, 15 min; migración `c4d1f9a27b60`), `US-ADJ-62` (PR #481/#482, recuperar la contraseña desbloquea; revierte una
+decisión de `US-ADJ-39`) y `US-ADJ-61` (PR #483/#484, badge "Cerrada" para el Estudiante). Arreglos informales de `frontend/`: #3/#8
+(PR #472), #7/#9 (PR #485) y H-1/H-2 de la UAT de cierre (PR #486). **Spike del hallazgo #1: no reproducible** (13 envíos, dev y
+build). **UAT de cierre en navegador real** (2026-10-05, `quality/reports/uat/inc7-adj/`, PR #494): Bloques 0 a 6 sin hallazgos 🔴;
+observaciones O-1 (el 3.er intento fallido no avisa del bloqueo — es el contrato de la spec) y O-2 (dato sucio de la siembra) sin
+cambio de código. **Métricas al cerrar:** 1883 tests backend (cobertura 96.94 %), 827 frontend (93.56 % statements / 86.14 %
+branches), `ruff`/`mypy`/`tsc` 0 errores, `pylint` 9.59, `designreviewer` 0 CRITICAL (334 advertencias), `architectanalyst` 7
+CRITICAL (mismo "Zone of Pain" aceptado). Sin cambio de estado de ningún RF (ajustes sobre RF ya Validado). **Pendientes que
+arrastra:** hallazgo #6 (demora en el iPhone) **desestimado por Víctor el 2026-10-15** (el DoD original lo incluía); el
+checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4). **Merge `develop → main` y tag `v0.8.1`
+pendientes de confirmación explícita de Víctor.** Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
+automático y asistido necesita decisión suya antes de especificar.
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
@@ -1374,6 +1386,10 @@ el merge es a la rama default.
   no por esa razón. Probado y descartado (válido igual, independiente de la causa real):
   `analysis_depth=2` no lo resuelve — los críticos suben de 5 a 15. Ninguna retro futura debe
   volver a proponer "recalibrar" sin revisar antes esta nota ni el Issue upstream.
+- **`architectanalyst` siempre con `--config pyproject.toml`** (detectado en `BL-012`): sin ese flag no lee
+  `[tool.architectanalyst]` y busca `src/coverage.json` (el default) en vez de `../coverage.json` — el
+  `CoverageAnalyzer` avisa "no se encontró coverage.json" aunque el archivo exista en la raíz. Con el flag
+  reporta el % real. Mismo criterio que `designreviewer`.
 - **Orden obligatorio al cerrar baseline: generar `coverage.json` antes de correr
   `architectanalyst`** (`US-ADJ-15`): `CoverageAnalyzer` busca el reporte relativo al `PATH`
   posicional del CLI (`src/` en este proyecto), no a la raíz del repo — con

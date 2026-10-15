@@ -3,7 +3,16 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-09-30 — Planificación del Incremento 7: **RF-18** (KPIs
+> Última actualización: 2026-10-15 — Cierre de `BL-012` (Incremento 7-ADJ — Ciclo de vida de la
+> cuenta y ajustes de la UAT v1): `US-ADJ-59` (cuenta deshabilitada no inicia sesión), `US-ADJ-60`
+> (siempre ≥ 1 Administrador operativo, bloqueo temporal del último), `US-ADJ-61` (actividad
+> cerrada visible para el Estudiante) y `US-ADJ-62` (recuperar la contraseña desbloquea) cerradas,
+> más los arreglos informales #3/#7/#8/#9 y H-1/H-2 de la UAT. **Sin cambio de estado de ningún
+> RF**: son ajustes sobre RF ya "Validado" (Identidad: RF-02, RF-03, RF-19, RF-24; Actividad Evaluativa: listado y revisión del Estudiante), mismo
+> criterio que `US-ADJ-57`/`US-ADJ-58` — no se agregan filas. Evidencia: `.cm/baselines/BL-012-incremento-7-adj-ciclo-de-vida-de-la-cuenta.md`
+> y `quality/reports/uat/inc7-adj/`.
+>
+> 2026-09-30 — Planificación del Incremento 7: **RF-18** (KPIs
 > históricos) sale de la Iteración 1 del Incremento 7 (reemplazada por una iteración de UAT
 > manual completa, decisión de Víctor) — pasa de Incremento `7` a **sin incremento
 > asignado** (columna Incremento: `—`), estado sin cambios ("Planificado"). Ver

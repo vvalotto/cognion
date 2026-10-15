@@ -18,4 +18,4 @@ Documento de **priorización, no de ejecución** (`PROCEDIMIENTO-UAT.md` §11): 
 
 **Cierre del 7-ADJ:** con H-1/H-2 resueltos (o aceptados) y este plan aprobado → `BL-012` (matriz de trazabilidad, `CHANGELOG`, merge `develop → main` y tag; hoy `develop` va por delante de `v0.8.0`).
 
-**Fuera de esta UAT, siguen abiertos:** hallazgo #6 (demora en el iPhone, necesita el dispositivo y/o staging con WSS real) y los 3 PRs de Dependabot (#468/#469/#470).
+**Hallazgo #6 (demora en el iPhone): desestimado por decisión de Víctor (2026-10-15)**, sin re-prueba. **Los 10 PRs de Dependabot se cerraron** sin mergear el mismo día; las alertas de seguridad asociadas siguen abiertas y están en el Issue #499. La deuda restante quedó en los Issues #496 a #502.

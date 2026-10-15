@@ -130,7 +130,7 @@ Tres reglas, una invariante nueva ("existe ≥ 1 Administrador no deshabilitado 
   `AutoregistroDocente.tsx` y pantallas hermanas). **Dato extra:** en la recuperación de
   contraseña hubo un `422` desde el navegador con URL y token correctos que no se reprodujo por
   `curl` ni con un token nuevo — misma familia, tampoco explicado; incluirlo en el spike.
-- **#6 — demora en el iPhone.** Reprobar el iPhone (misma sesión en vivo que el iPad) y, cuando
+- **#6 — demora en el iPhone** *(desestimado por Víctor el 2026-10-15, ver `registro-hallazgos.md`)*. Reprobar el iPhone (misma sesión en vivo que el iPad) y, cuando
   exista, contra staging con WSS real (`PROCEDIMIENTO-UAT.md` §4, ítem abierto). Si el iPhone
   anda bien, cerrar como puntual de la primera corrida. Si repite, es un caso del "WebSocket
   zombi" de Safari iOS y se abre `US-ADJ` con repro.

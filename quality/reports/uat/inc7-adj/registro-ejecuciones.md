@@ -93,4 +93,4 @@ Preparación: comisión "Comision UAT - Jueves de 8 a 10" en Gestión de Proyect
 
 Datos de prueba que **quedan** en la base de desarrollo para que se puedan ver: las 3 actividades "UAT …" (y la evaluación finalizada de Sara en una de ellas) y la comisión "Comision UAT - Jueves de 8 a 10" con Alejandra asignada. Se eliminan re-sembrando.
 
-Pendiente de toda la UAT: Bloque 7 (iPhone, hallazgo #6) — fuera de esta UAT por decisión de Víctor.
+Bloque 7 (iPhone, hallazgo #6): fuera de esta UAT por decisión de Víctor y luego **desestimado** por él el 2026-10-15; no queda pendiente.
