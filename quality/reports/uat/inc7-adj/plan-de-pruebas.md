@@ -95,7 +95,7 @@ Hipótesis a descartar o confirmar: doble envío / `AbortController` bajo `Stric
 | 6.3 | "Evolución temporal" con **1 dato** y con **≥ 2 estudiantes / ≥ 2 actividades** | Etiqueta del eje no truncada (o truncada por ancho + tooltip); promedio de la comisión visible como anillo |
 | 6.4 | Modal de eliminación de una cuenta / revisión numerada (fixes #3 y #8 del PR #472) | Avisa el borrado permanente; la revisión empieza en 1 |
 
-### Bloque 7 — Hallazgo #6: demora en el iPhone (requiere el dispositivo)
+### Bloque 7 — Hallazgo #6: demora en el iPhone (requiere el dispositivo) — *no ejecutado; hallazgo desestimado por Víctor el 2026-10-15*
 | # | Pasos | Esperado |
 |---|---|---|
 | 7.1 | Sesión en vivo con el iPhone por el proxy de dev, misma red que el iPad de la UAT v1; mostrar opciones de la 1.ª pregunta | Sin demora notable (≈ ≤ 2 s) |
