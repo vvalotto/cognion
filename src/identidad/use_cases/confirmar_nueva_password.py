@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from src.identidad.entities.errors import TokenRecuperacionInvalido, UsuarioNoExiste
-from src.identidad.entities.eventos import PasswordRecuperada
+from src.identidad.entities.eventos import CuentaDesbloqueada, PasswordRecuperada
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.token_recuperacion_password_repository_port import (
     TokenRecuperacionPasswordRepositoryPort,
@@ -29,14 +29,17 @@ class ConfirmarNuevaPasswordUseCase:
         self._token_repositorio = token_repositorio
         self._hasher = hasher
 
-    async def execute(self, token: str, password_nueva: str) -> tuple[Usuario, PasswordRecuperada]:
-        """Actualiza `Usuario.password_hash` y marca el token como usado.
+    async def execute(
+        self, token: str, password_nueva: str
+    ) -> tuple[Usuario, PasswordRecuperada, CuentaDesbloqueada | None]:
+        """Actualiza `Usuario.password_hash`, desbloquea la cuenta y marca el token como usado.
 
         Lanza `TokenRecuperacionInvalido` si el token no corresponde a ninguno existente,
         `TokenRecuperacionYaUsado`/`TokenRecuperacionVencido` si ya no está vigente
         (INV-ID-13), o `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` si
-        `password_nueva` no cumple INV-ID-11 ampliada. No toca `bloqueada` ni los contadores
-        de intentos fallidos del `Usuario` — una cuenta bloqueada sigue bloqueada.
+        `password_nueva` no cumple INV-ID-11 ampliada. Desbloquea la cuenta y resetea sus
+        contadores (`US-ADJ-62`); `CuentaDesbloqueada` solo se emite si estaba bloqueada.
+        No reactiva una cuenta `deshabilitada`.
         """
         token_recuperacion = await self._buscar_token_vigente(token)
 
@@ -47,7 +50,7 @@ class ConfirmarNuevaPasswordUseCase:
         Usuario.validar_password_nueva(password_nueva)
 
         password_hash = self._hasher.hash(password_nueva)
-        usuario.recuperar_password(password_hash)
+        estaba_bloqueada = usuario.recuperar_password(password_hash)
         await self._usuario_repositorio.actualizar(usuario)
 
         ahora = datetime.now(UTC)
@@ -55,7 +58,8 @@ class ConfirmarNuevaPasswordUseCase:
         await self._token_repositorio.actualizar(token_recuperacion)
 
         evento = PasswordRecuperada(usuario_id=usuario.id)
-        return usuario, evento
+        evento_desbloqueo = CuentaDesbloqueada(usuario_id=usuario.id) if estaba_bloqueada else None
+        return usuario, evento, evento_desbloqueo
 
     async def _buscar_token_vigente(self, token: str) -> TokenRecuperacionPassword:
         """Busca el token por valor y valida su vigencia sin consumirlo.

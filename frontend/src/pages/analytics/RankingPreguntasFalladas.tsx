@@ -148,7 +148,8 @@ export function RankingPreguntasFalladas() {
 
       {!error && ranking !== null && ranking.length === 0 && (
         <p className="mt-4 text-sm text-muted-foreground">
-          Esta materia todavía no tiene ninguna pregunta presentada.
+          Esta materia todavía no tiene preguntas presentadas en actividades de período abierto. Las
+          sesiones en vivo no se incluyen en este informe.
         </p>
       )}
 
@@ -182,7 +183,9 @@ export function RankingPreguntasFalladas() {
                       </span>
                     </div>
                     <p className="mt-1 pl-6 text-xs text-muted-foreground">
-                      {fila.cantidadPresentaciones} presentaciones · {fila.cantidadFallos} fallos
+                      {fila.cantidadPresentaciones}{" "}
+                      {fila.cantidadPresentaciones === 1 ? "presentación" : "presentaciones"} ·{" "}
+                      {fila.cantidadFallos} {fila.cantidadFallos === 1 ? "fallo" : "fallos"}
                     </p>
                   </div>
                 )

@@ -1,7 +1,10 @@
+import { Link } from "react-router"
+
 /**
  * Alerta de cuenta bloqueada en login — pantalla `#login-bloqueada` del prototipo
  * `identidad-cuentas-administracion.html` (fuente de verdad UX, no `wireframes-identidad.md`
- * §2.2 como el resto de errores de login).
+ * §2.2 como el resto de errores de login). Ofrece la recuperación por email (`US-ADJ-62`):
+ * recuperar la contraseña desbloquea la cuenta.
  */
 export function LoginCuentaBloqueadaError() {
   return (
@@ -13,8 +16,11 @@ export function LoginCuentaBloqueadaError() {
       <div>
         <p className="font-medium">Cuenta bloqueada</p>
         <p>
-          Superaste el máximo de intentos permitidos. Contactá a un Administrador para
-          restablecer tu contraseña.
+          Superaste el máximo de intentos permitidos. Podés{" "}
+          <Link to="/recuperar-password" className="font-semibold underline underline-offset-2">
+            recuperar tu contraseña por email
+          </Link>{" "}
+          o pedirle a un Administrador que la restablezca.
         </p>
       </div>
     </div>

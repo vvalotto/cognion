@@ -118,6 +118,10 @@ describe("Login", () => {
     await completarFormulario("bloqueado@fiuner.edu.ar", "cualquiera")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Cuenta bloqueada")
+    expect(screen.getByRole("link", { name: "recuperar tu contraseña por email" })).toHaveAttribute(
+      "href",
+      "/recuperar-password"
+    )
     expect(screen.getByLabelText("Email")).toBeDisabled()
     expect(screen.getByLabelText("Contraseña")).toBeDisabled()
     expect(screen.getByRole("button", { name: "Ingresar" })).toBeDisabled()
@@ -135,6 +139,89 @@ describe("Login", () => {
     expect(await screen.findByRole("alert")).not.toHaveTextContent(
       "Email o contraseña incorrectos"
     )
+  })
+
+  it("cuenta deshabilitada muestra su propia alerta y deshabilita el formulario (US-ADJ-59)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, {
+        detail: {
+          codigo: "cuenta_deshabilitada",
+          mensaje: "La cuenta está deshabilitada. Contactá a un administrador.",
+        },
+      })
+    )
+
+    renderLogin()
+    await completarFormulario("baja@fiuner.edu.ar", "cualquiera")
+
+    const alerta = await screen.findByRole("alert")
+    expect(alerta).toHaveTextContent("Cuenta deshabilitada")
+    expect(alerta).not.toHaveTextContent("Cuenta bloqueada")
+    expect(screen.getByLabelText("Email")).toBeDisabled()
+    expect(screen.getByLabelText("Contraseña")).toBeDisabled()
+    expect(screen.getByRole("button", { name: "Ingresar" })).toBeDisabled()
+    expect(getSession()).toBeNull()
+  })
+
+  it("cuenta deshabilitada no muestra el link 'Registrate' (US-ADJ-59)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, {
+        detail: { codigo: "cuenta_deshabilitada", mensaje: "La cuenta está deshabilitada." },
+      })
+    )
+
+    renderLogin()
+    await completarFormulario("baja@fiuner.edu.ar", "cualquiera")
+    await screen.findByRole("alert")
+
+    expect(screen.queryByRole("link", { name: "Registrate" })).toBeNull()
+  })
+
+  it("un 403 con detail estructurado de otro código se trata como cuenta bloqueada (US-ADJ-59)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, { detail: { codigo: "otro_motivo", mensaje: "Acceso restringido." } })
+    )
+
+    renderLogin()
+    await completarFormulario("x@fiuner.edu.ar", "cualquiera")
+
+    const alerta = await screen.findByRole("alert")
+    expect(alerta).toHaveTextContent("Cuenta bloqueada")
+    expect(alerta).not.toHaveTextContent("Cuenta deshabilitada")
+  })
+
+  it("bloqueo temporal muestra su alerta con los minutos y deja el formulario habilitado (US-ADJ-60)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, {
+        detail: {
+          codigo: "cuenta_bloqueada_temporal",
+          mensaje: "La cuenta está bloqueada temporalmente.",
+          reintentar_en_segundos: 840,
+        },
+      })
+    )
+
+    renderLogin()
+    await completarFormulario("admin@fiuner.edu.ar", "cualquiera")
+
+    const alerta = await screen.findByRole("alert")
+    expect(alerta).toHaveTextContent("Cuenta bloqueada temporalmente")
+    expect(alerta).toHaveTextContent("unos 14 minutos")
+    expect(screen.getByLabelText("Email")).toBeEnabled()
+    expect(screen.getByLabelText("Contraseña")).toBeEnabled()
+    expect(screen.getByRole("button", { name: "Ingresar" })).toBeEnabled()
+    expect(getSession()).toBeNull()
+  })
+
+  it("bloqueo temporal sin segundos usa un minuto como mínimo (US-ADJ-60)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(403, { detail: { codigo: "cuenta_bloqueada_temporal", mensaje: "x" } })
+    )
+
+    renderLogin()
+    await completarFormulario("admin@fiuner.edu.ar", "cualquiera")
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("unos 1 minuto.")
   })
 
   it("mostrar/ocultar contraseña (US-ADJ-35) no pierde el valor tipeado ni rompe el submit", async () => {

@@ -72,7 +72,7 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
 | `CrearUsuario(nombre, email, password, perfil)` | Administrador | `Usuario` + perfil (`Docente`/`Administrador`/`Estudiante`) — crea ambos, misma transacción | `UsuarioCreado` | `EmailYaRegistrado` |
 | `GenerarInvitacion(comision_id, docente_id)` | Docente | `Invitación` (crea) — valida contra `Comisión.docentes_asignados` | `InvitacionGenerada` | `DocenteNoAsignadoAComision` (INV-ID-08) |
 | `RegistrarEstudiante(token, nombre, email, password)` | Estudiante | `Invitación` (consulta) → `Usuario` + `Estudiante` (crea ambos, misma transacción) | `InvitacionAceptada`, `UsuarioRegistrado` | `InvitacionVencida`, `InvitacionInvalida`, `InvitacionYaUsada`, `EmailYaRegistrado` |
-| `IniciarSesion(email, password)` | Docente, Administrador, Estudiante | `Usuario` (consulta, incluye `perfil`) | `SesionIniciada` (JWT con claim `rol` derivado del tipo de `perfil`) | `CredencialesInvalidas`, `CuentaBloqueadaError` (cuenta ya bloqueada, INV-ID-10 — `US-2.2.1`) |
+| `IniciarSesion(email, password)` | Docente, Administrador, Estudiante | `Usuario` (consulta, incluye `perfil`) | `SesionIniciada` (JWT con claim `rol` derivado del tipo de `perfil`) | `CredencialesInvalidas`, `CuentaDeshabilitadaError` (cuenta dada de baja, INV-ID-18 — `US-ADJ-59`; se chequea antes que el bloqueo y que la contraseña), `CuentaBloqueadaError` (cuenta ya bloqueada, INV-ID-10 — `US-2.2.1`), `CuentaBloqueadaTemporalmenteError` (último Administrador operativo bloqueado, INV-ID-21 — `US-ADJ-60`; se levanta solo al vencer) |
 
 **Diferidos — modelados, sin US en el Incremento 1** (RF-19 elicitado 2026-07-17, ver
 `docs/rf/RF_v1.md`; agrupados con RF-03 en el Incremento 2 — mismo mecanismo de desbloqueo):
@@ -87,7 +87,13 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
   consecutivos sobre `Usuario` (`intentos_fallidos_login`, `intentos_fallidos_password`).
 - **INV-ID-10:** un acierto resetea a cero el contador de su propio flujo; al tercer fallo
   consecutivo en cualquiera de los dos, `Usuario.bloqueada = true` (evento `CuentaBloqueada`) y
-  el usuario no puede volver a intentar hasta que un Administrador ejecute `ResetearPassword`.
+  el usuario no puede volver a intentar hasta que un Administrador ejecute `ResetearPassword`
+  **o el propio usuario canjee un token de recuperación por email (`ConfirmarNuevaPassword`,
+  enmienda `US-ADJ-62`)** — ambos caminos desbloquean y resetean los dos contadores.
+  **Enmienda (`US-ADJ-60`, INV-ID-21):** si quien falla es el **último Administrador operativo**,
+  el bloqueo es **temporal** (`bloqueada_hasta = ahora + 15 min`, configurable) y vence solo — el
+  sistema nunca queda sin quien lo opere. La política vive en `Usuario.bloquear_por_intentos_fallidos`;
+  el vencimiento es perezoso (se evalúa al iniciar sesión o cambiar la contraseña, sin proceso de fondo).
 - **INV-ID-11:** toda contraseña nueva (`CrearUsuario`, `RegistrarEstudiante`,
   `CambiarPassword`, `ResetearPassword`) tiene un mínimo de 8 caracteres — regla transversal,
   no exclusiva de RF-19 (extiende RF-01 y la alta directa de usuario, ver revisión
@@ -144,11 +150,17 @@ huérfano).
 | `bloqueada` | bool | `true` tras 3 intentos fallidos consecutivos (RF-19, INV-ID-10) |
 | `intentos_fallidos_login` | int | se resetea a 0 en cada login exitoso |
 | `intentos_fallidos_password` | int | se resetea a 0 en cada `CambiarPassword` exitoso — contador independiente del de login |
+| `bloqueada_hasta` | datetime? | `US-ADJ-60`: fin del bloqueo temporal del último Administrador operativo (INV-ID-21); `NULL` = bloqueo permanente o cuenta no bloqueada. Lo limpia `ResetearPassword` y el vencimiento perezoso |
+| `deshabilitada` | bool | baja lógica manual del Administrador (`EliminarCuenta` con datos asociados); distinta de `bloqueada`. La revierte solo `activar()`, no un reseteo de contraseña ni una recuperación (INV-ID-18). Agregado en la estabilización de portales (2026-09-09/10); no figuraba en este modelo hasta `US-ADJ-59` |
 
 **Invariantes:**
 - **INV-ID-04:** `email` único en todo el sistema (sin distinción de rol).
 - **INV-ID-06:** `password_hash` nunca se persiste ni se expone en texto plano — solo bcrypt
   (`ADR-014`).
+- **INV-ID-18 (`US-ADJ-59`):** una cuenta con `deshabilitada = true` no puede iniciar sesión, sin importar si la contraseña es correcta. El rechazo ocurre antes de verificar la contraseña y de mirar `bloqueada`, y no consume intentos fallidos. Las sesiones (JWT) ya emitidas viven hasta expirar (`ADR-013`).
+- **INV-ID-19 (`US-ADJ-60`):** un `Usuario` con perfil `Administrador` nunca se elimina físicamente: `EliminarCuenta` siempre hace baja lógica (`deshabilitada = true`), tenga o no Comisiones creadas.
+- **INV-ID-20 (`US-ADJ-60`):** debe existir siempre al menos un Administrador operativo (perfil `Administrador`, no deshabilitado, no bloqueado). No se puede deshabilitar al último (`UltimoAdministradorOperativoError`, `409`); dar de baja a uno ya deshabilitado o bloqueado es idempotente. Condición de carrera entre dos Administradores que se deshabilitan a la vez: aceptada a esta escala.
+- **INV-ID-21 (`US-ADJ-60`, enmienda a INV-ID-10):** el bloqueo automático por intentos fallidos del último Administrador operativo es temporal y vence solo; el de cualquier otra cuenta es permanente hasta que un Administrador (o la recuperación, `US-ADJ-62`) la desbloquee.
 - **INV-ID-09:** todo `Usuario` tiene exactamente un `perfil` (`Estudiante`, `Docente` o
   `Administrador`), asignado en el momento de creación y no reasignable en v1 (no hay RF de
   cambio de rol).
@@ -348,7 +360,7 @@ https://github.com/vvalotto/cognion/issues/2 (DoD tipo `Modelado`, `WORKFLOW-DES
 | Comando | Actor | Aggregate | Evento(s) | Excepciones |
 |---|---|---|---|---|
 | `SolicitarRecuperacionPassword(email)` | Sin autenticar | `TokenRecuperacionPassword` (crea) | `RecuperacionPasswordSolicitada` | Ninguna expuesta al llamante — ver INV-ID-17 (no filtrar existencia de cuenta) |
-| `ConfirmarNuevaPassword(token, password_nueva)` | Sin autenticar | `TokenRecuperacionPassword` (consulta) → `Usuario` (muta) | `PasswordRecuperada` | `TokenRecuperacionVencido`, `TokenRecuperacionInvalido`, `TokenRecuperacionYaUsado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
+| `ConfirmarNuevaPassword(token, password_nueva)` | Sin autenticar | `TokenRecuperacionPassword` (consulta) → `Usuario` (muta) | `PasswordRecuperada`; además `CuentaDesbloqueada` si la cuenta estaba bloqueada (`US-ADJ-62`) | `TokenRecuperacionVencido`, `TokenRecuperacionInvalido`, `TokenRecuperacionYaUsado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
 | `AutoregistrarDocente(nombre, email, password)` | Sin autenticar | `Usuario` + `Docente` (crea ambos, misma transacción) | `UsuarioAutoregistrado` | `EmailYaRegistrado`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
 | `AutoregistrarEstudiante(nombre, email, password, comision_id)` | Sin autenticar | `Usuario` + `Estudiante` (crea ambos, misma transacción) | `UsuarioAutoregistrado` | `EmailYaRegistrado`, `ComisionNoExiste`, `PasswordDemasiadoCorta`/`PasswordSinComplejidadSuficiente` (INV-ID-11 ampliada) |
 
@@ -397,7 +409,8 @@ puerto propio de Identidad hacia Notificaciones, adapter in-process), no por imp
 ### 13.4 Cambios sobre `Usuario` y sus perfiles (ampliación de §4)
 
 Sin atributos nuevos en `Usuario` — `ConfirmarNuevaPassword` reutiliza
-`password_hash`/`validar_password_nueva` ya existentes (mismo método que `CambiarPassword` y
+`password_hash`/`validar_password_nueva` ya existentes y, desde `US-ADJ-62`, `resetear_password()`
+(desbloquea y resetea contadores, sin tocar `deshabilitada`) (mismo método que `CambiarPassword` y
 `ResetearPassword`, ahora con la regla ampliada de INV-ID-11). `AutoregistrarDocente`/
 `AutoregistrarEstudiante` crean `Usuario` + perfil exactamente igual que `CrearUsuario` y
 `RegistrarEstudiante` (misma transacción, mismas invariantes INV-ID-04/06/09) — la única

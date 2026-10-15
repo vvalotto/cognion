@@ -171,7 +171,7 @@ describe("RankingPreguntasFalladas", () => {
     await user.selectOptions(screen.getByLabelText("Materia"), "m1")
 
     expect(
-      await screen.findByText("Esta materia todavía no tiene ninguna pregunta presentada."),
+      await screen.findByText(/no tiene preguntas presentadas en actividades de período abierto/),
     ).toBeInTheDocument()
   })
 

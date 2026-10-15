@@ -2,7 +2,7 @@
 
 > Estado documental: vigente
 > Fuente de verdad para: estrategia y procedimiento de pruebas de aceptación
-> Última actualización: 2026-07-13
+> Última actualización: 2026-09-30 — agrega §11, UAT manual completa de cierre de alcance v1
 > Fuente normativa relacionada: `docs/plans/PLAN-CM.md` §10 (Quality Gates), §11 (Versionado, Entregas y Builds)
 
 ---
@@ -161,4 +161,38 @@ sin hallazgos 🔴 Bloqueantes sin resolver.
 | `quality/reports/uat/incN/report.md` | Reporte de ejecución con resultado final y hallazgos clasificados |
 | `tests/uat/incN/seed_incN.py` | Script de siembra de datos realistas |
 | `tests/uat/incN/run_uat.sh` | Orquestación completa |
+
+---
+
+## 11. UAT manual completa de cierre de alcance v1 (Incremento 7, Iteración 1)
+
+Categoría distinta de la de las §5-10: no es una verificación automatizada (Capa 1/Capa 2)
+del DoD de un incremento puntual, sino una **aceptación manual, exploratoria y de alcance
+completo** — Víctor, como usuario real, recorre el sistema entero (los siete incrementos de
+`PLAN_v1.md` acumulados) antes de dar el alcance v1 por cerrado. Reemplaza a la Iteración 1
+original del Incremento 7 (`RF-18`, KPIs históricos — diferido, ver `docs/rf/PLAN_v1.md`
+revisión 2026-09-30).
+
+No sigue la plantilla de `design.md`/`capa1-pytest.txt`/`capa2-http.json`/`report.md` de
+§5-10 (esas son verificaciones automatizadas, escritas y ejecutadas por la sesión de Claude
+Code contra un DoD acotado). Esta es responsabilidad de Víctor y produce cuatro artefactos
+propios, todos en `quality/reports/uat/inc7/`:
+
+| Artefacto | Contenido | Quién lo escribe |
+|---|---|---|
+| `plan-de-pruebas.md` | Alcance de la UAT (qué se recorre, qué RF/flujos cubre, criterio de aceptación), escrito **antes** de ejecutar | Víctor (con ayuda de la sesión para estructurarlo) |
+| `registro-ejecuciones.md` | Bitácora de cada paso ejecutado — qué se probó, cuándo, resultado — mismo espíritu narrado que `tests/uat/datos-reales/bitacora*.md` de incrementos anteriores | Narrado por Víctor, escrito por la sesión de Claude Code en vivo |
+| `registro-hallazgos.md` | Cada hallazgo, clasificado por severidad (🔴/🟡/⚪, §8) | Sesión de Claude Code, a partir de lo que Víctor reporta |
+| `plan-de-correccion.md` | Documento de **priorización**, no de ejecución — propone para cada hallazgo si se resuelve directo (track informal), como US-ADJ (track formal) o si abre un incremento nuevo; no implementa nada por sí mismo | Sesión de Claude Code, a partir del registro de hallazgos, para que Víctor lo confirme |
+
+**Gate de cierre de esta iteración:** el `plan-de-correccion.md` aprobado por Víctor. La
+iteración en sí no resuelve los hallazgos — eso es trabajo posterior (Iteración 2 del propio
+Incremento 7 si el hallazgo es chico, o un incremento de ajuste nuevo si es grande), igual
+que cualquier hallazgo de UAT se clasifica siempre antes de codear (`CLAUDE.md` §"Clasificación
+de hallazgos en UAT").
+
+Esta UAT también es la oportunidad natural para resolver, si corresponde, la decisión de
+infraestructura de producción pendiente (`CLAUDE.md` §"Ítems abiertos que requieren decisión")
+— el mecanismo de backup asociado y el checkpoint de staging con WSS real (§4) siguen sin
+depender de esta iteración salvo que Víctor decida resolverlos en el mismo momento.
 | `tests/uat/inc5/simular_concurrencia.py` | Solo Incremento 5 — simulador de clientes WS concurrentes |

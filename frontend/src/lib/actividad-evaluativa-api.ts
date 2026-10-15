@@ -49,7 +49,7 @@ export interface ActividadResumenResponse {
   tema: string | null
 }
 
-export type EstadoVisible = "pendiente" | "todavia_no_abrio" | "finalizada"
+export type EstadoVisible = "pendiente" | "todavia_no_abrio" | "cerrada" | "finalizada"
 
 export interface ActividadVisibleResponse {
   id: string

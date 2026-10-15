@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Annotated
 
 from fastapi import Depends
@@ -82,6 +83,7 @@ from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
     SolicitarRecuperacionPasswordUseCase,
 )
+from src.settings import settings
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import get_session
@@ -210,7 +212,14 @@ def get_perfil_controller(session: SessionDep) -> PerfilController:
     """Arma el `PerfilController` con sus dependencias concretas."""
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     hasher = get_password_hasher()
-    return PerfilController(CambiarPasswordUseCase(usuario_repo, hasher))
+    return PerfilController(
+        CambiarPasswordUseCase(usuario_repo, hasher, _duracion_bloqueo_temporal())
+    )
+
+
+def _duracion_bloqueo_temporal() -> timedelta:
+    """Duración del bloqueo temporal del último Administrador operativo (INV-ID-21)."""
+    return timedelta(minutes=settings.administrador_bloqueo_temporal_minutos)
 
 
 def get_auth_controller(session: SessionDep) -> AuthController:
@@ -218,7 +227,9 @@ def get_auth_controller(session: SessionDep) -> AuthController:
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     hasher = get_password_hasher()
     jwt_issuer = get_jwt_issuer()
-    return AuthController(IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer))
+    return AuthController(
+        IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer, _duracion_bloqueo_temporal())
+    )
 
 
 def get_canal_recuperacion() -> CanalRecuperacionPort:

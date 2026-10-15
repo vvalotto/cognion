@@ -19,7 +19,7 @@ from src.actividad_evaluativa.entities.ports.evaluacion_estudiante_query_port im
 )
 
 EstadoVisible = str
-"""`"pendiente" | "todavia_no_abrio" | "finalizada"` (ver `_estado_para`)."""
+"""`"pendiente" | "todavia_no_abrio" | "cerrada" | "finalizada"` (ver `_estado_para`)."""
 
 
 @dataclass(frozen=True)
@@ -96,18 +96,18 @@ def _a_visible(
 
 
 def _estado_para(resumen: ActividadResumen, finalizada: bool, ahora: datetime) -> EstadoVisible:
-    """Deriva el `Badge` del Estudiante — solo 3 estados, fieles al prototipo aprobado.
+    """Deriva el `Badge` del Estudiante, en este orden de prioridad (`US-ADJ-61`).
 
-    Ver `docs/design/ux/prototipos/actividad-evaluativa-periodo-abierto.html` `#est-actividades`.
-    `"finalizada"` si ya tiene una `Evaluacion` `Finalizada`; `"todavia_no_abrio"` con
-    `fecha_apertura` futura; `"pendiente"` en cualquier otro caso — incluye tanto el período
-    vigente como una actividad ya cerrada sin que el Estudiante haya rendido (ese caso se
-    resuelve recién al intentar iniciar, `US-3.4.6`, con el 422 de `FueraDePeriodo` — no hay un
-    badge propio para "cerrada sin rendir" en la grilla, mismo criterio que
-    `EnCurso`/`Suspendida` no distinguidas).
+    `"finalizada"` si ya tiene una `Evaluacion` `Finalizada` (gana siempre: la revisión sigue
+    disponible aunque el período haya cerrado, RF-13); `"cerrada"` si la actividad se cerró a
+    mano o venció su `fecha_cierre` sin que el Estudiante la rindiera — mismo criterio que
+    `actividades_router._estado_actividad` del lado del Docente; `"todavia_no_abrio"` con
+    `fecha_apertura` futura; `"pendiente"` solo dentro del período vigente.
     """
     if finalizada:
         return "finalizada"
+    if resumen.cerrada_manualmente or resumen.fecha_cierre <= ahora:
+        return "cerrada"
     if resumen.fecha_apertura > ahora:
         return "todavia_no_abrio"
     return "pendiente"

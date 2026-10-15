@@ -1,6 +1,6 @@
 # US-3.4.5: Estudiante ve sus materias y las actividades disponibles
 
-**Estado**: `Especificada`
+**Estado**: `Especificada` — **enmendada por `US-ADJ-61`** (2026-10-04): el listado del Estudiante agrega un 4.º estado `"cerrada"` (actividad cerrada a mano o vencida, sin rendir); los 3 badges de abajo dejan de ser los únicos.
 **Iteracion / Sprint**: `INC-3.4`
 **Tipo**: `feat backend + frontend`
 **Agregado principal afectado**: — (consulta cruzando BCs, sin cambios de invariantes)

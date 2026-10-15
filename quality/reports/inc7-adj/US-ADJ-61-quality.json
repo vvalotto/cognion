@@ -1,0 +1,41 @@
+{
+  "us_id": "US-ADJ-61",
+  "fecha": "2026-10-04",
+  "componente": "src/actividad_evaluativa/use_cases/listar_actividades_visibles.py — Parte A backend",
+  "alcance_de_la_fase": "Revisión de calidad de código; no se re-ejecutó la suite en Fase 7 (ya corrida en Fases 4-6).",
+  "metricas": {
+    "pylint": 9.76,
+    "pylint_nota": "único aviso: R0903 too-few-public-methods en el use case (preexistente, un solo método execute por diseño)",
+    "cc_max": "A (promedio 3.33)",
+    "mi_min": 69.34,
+    "coverage": "no medida en esta fase",
+    "tests": {
+      "unit": "881/881",
+      "bdd_us_adj_61": "5/5",
+      "regresion_inc3_integracion_y_bdd": "177 pasaron, 3 fallan por causa preexistente (KeyError 'id' en el setup de test_us_3_2_1 'rechazo fuera del período vigente' y test_us_3_2_2 'rechazo al reanudar fuera del período' / 'suspender no valida período'); confirmado que fallan igual sin este cambio"
+    },
+    "mypy": "0 errores (303 archivos)",
+    "ruff": "0 errores"
+  },
+  "umbrales": {"pylint_min": 8.0, "cc_max": 10, "mi_min": 20, "coverage_min": 95},
+  "codeguard": {
+    "archivos_analizados": 1,
+    "checks_ejecutados": 9,
+    "errors": 5,
+    "warnings": 0,
+    "infos": 4,
+    "checks": {
+      "Security": {"errors": 0, "warnings": 0, "infos": 1},
+      "PEP8": {"errors": 0, "warnings": 0, "infos": 1},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 1},
+      "DeadCode": {"errors": 1, "warnings": 0, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 1},
+      "Pylint": {"errors": 1, "warnings": 0, "infos": 0},
+      "Spelling": {"errors": 1, "warnings": 0, "infos": 0},
+      "Types": {"errors": 1, "warnings": 0, "infos": 0},
+      "UnusedImports": {"errors": 1, "warnings": 0, "infos": 0}
+    },
+    "nota": "Los 5 errors son de tooling, no del código: vulture y codespell no instalados; mypy y pylint superaron su timeout (10s/5s). mypy y pylint directos pasan limpios."
+  },
+  "estado": "APROBADO"
+}

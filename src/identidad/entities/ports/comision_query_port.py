@@ -69,15 +69,6 @@ class ComisionQueryPort(ABC):
         ...
 
     @abstractmethod
-    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
-        """Indica si el administrador creó alguna comisión (activa o no).
-
-        `comision.administrador_id` es `NOT NULL` sin `ON DELETE CASCADE` — borrar un
-        Administrador que ya creó una Comisión violaría esa FK si no se detecta antes.
-        """
-        ...
-
-    @abstractmethod
     async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
         """Indica si el docente está asignado a esa comisión puntual (`US-ADJ-57`).
 

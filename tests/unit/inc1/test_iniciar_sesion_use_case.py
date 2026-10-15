@@ -2,7 +2,11 @@ import uuid
 
 import pytest
 
-from src.identidad.entities.errors import CredencialesInvalidas, CuentaBloqueadaError
+from src.identidad.entities.errors import (
+    CredencialesInvalidas,
+    CuentaBloqueadaError,
+    CuentaDeshabilitadaError,
+)
 from src.identidad.entities.eventos import CuentaBloqueada, SesionIniciada
 from src.identidad.entities.usuario import Usuario
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
@@ -168,3 +172,96 @@ class TestBloqueoCuentaLogin:
 
         assert exc.value.usuario_id == usuario.id
         assert usuario_repo.usuarios[usuario.id].intentos_fallidos_login == 3
+
+
+class TestCuentaDeshabilitadaLogin:
+    """US-ADJ-59 (INV-ID-18): una cuenta deshabilitada no puede iniciar sesión."""
+
+    def _crear_usuario(self, hasher: FakePasswordHasher, **overrides: object) -> Usuario:
+        usuario = Usuario.crear(
+            "Docente", "docente@fiuner.edu.ar", hasher.hash("Docente#2026"), TipoPerfil.DOCENTE
+        )
+        for campo, valor in overrides.items():
+            setattr(usuario, campo, valor)
+        return usuario
+
+    async def test_rechaza_con_la_contrasena_correcta_y_no_emite_jwt(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        jwt_issuer = FakeJWTIssuer()
+        usuario = self._crear_usuario(hasher, deshabilitada=True)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer)
+
+        with pytest.raises(CuentaDeshabilitadaError) as exc:
+            await use_case.execute("docente@fiuner.edu.ar", "Docente#2026")
+
+        assert exc.value.usuario_id == usuario.id
+        assert jwt_issuer.emitidos == []
+
+    async def test_el_rechazo_no_depende_de_la_contrasena_ni_consume_intentos(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher, deshabilitada=True)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        with pytest.raises(CuentaDeshabilitadaError):
+            await use_case.execute("docente@fiuner.edu.ar", "password-incorrecta")
+
+        actualizado = usuario_repo.usuarios[usuario.id]
+        assert actualizado.intentos_fallidos_login == 0
+        assert actualizado.bloqueada is False
+
+    async def test_el_mensaje_invita_a_contactar_a_un_administrador(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher, deshabilitada=True)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        with pytest.raises(CuentaDeshabilitadaError) as exc:
+            await use_case.execute("docente@fiuner.edu.ar", "Docente#2026")
+
+        assert "deshabilitada" in str(exc.value)
+        assert "administrador" in str(exc.value)
+
+    async def test_deshabilitada_tiene_prioridad_sobre_bloqueada(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(
+            hasher, deshabilitada=True, bloqueada=True, intentos_fallidos_login=3
+        )
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        with pytest.raises(CuentaDeshabilitadaError):
+            await use_case.execute("docente@fiuner.edu.ar", "Docente#2026")
+
+        assert usuario_repo.usuarios[usuario.id].intentos_fallidos_login == 3
+
+    async def test_reactivar_la_cuenta_restituye_el_acceso(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        jwt_issuer = FakeJWTIssuer()
+        usuario = self._crear_usuario(hasher, deshabilitada=True)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer)
+
+        usuario.activar()
+        jwt_vo, _evento = await use_case.execute("docente@fiuner.edu.ar", "Docente#2026")
+
+        assert jwt_vo.rol == TipoPerfil.DOCENTE
+        assert len(jwt_issuer.emitidos) == 1
+
+    async def test_una_cuenta_activa_no_cambia_de_comportamiento(self):
+        usuario_repo = FakeUsuarioRepository()
+        hasher = FakePasswordHasher()
+        usuario = self._crear_usuario(hasher)
+        usuario_repo.usuarios[usuario.id] = usuario
+        use_case = IniciarSesionUseCase(usuario_repo, hasher, FakeJWTIssuer())
+
+        jwt_vo, evento = await use_case.execute("docente@fiuner.edu.ar", "Docente#2026")
+
+        assert jwt_vo.rol == TipoPerfil.DOCENTE
+        assert evento.usuario_id == usuario.id

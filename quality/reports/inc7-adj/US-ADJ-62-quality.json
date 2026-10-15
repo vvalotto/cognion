@@ -1,0 +1,37 @@
+{
+  "us_id": "US-ADJ-62",
+  "fecha": "2026-10-04",
+  "componente": "src/identidad (usuario, eventos, confirmar_nueva_password, recuperacion_password_controller, recuperacion_password_router) — Parte A backend",
+  "alcance_de_la_fase": "Revisión de calidad de código. Por decisión de Víctor no se re-ejecutó la suite completa en Fase 7: los tests ya se habían corrido en Fases 4-6.",
+  "metricas": {
+    "pylint": 9.85,
+    "pylint_nota": "único aviso: R0903 too-few-public-methods en ConfirmarNuevaPasswordUseCase (preexistente, un solo método execute por diseño)",
+    "cc_max": "B (8) en Usuario.validar_password_nueva, preexistente; código nuevo/modificado en A",
+    "cc_promedio": "A (1.49)",
+    "mi_min": 64.10,
+    "coverage": "no medida en esta fase (no se re-ejecutó la suite); tests de las Fases 4-6: unit 879/879, integración inc7-adj+inc5-adj 20/20, BDD US-ADJ-62 + US-ADJ-39 13/13",
+    "mypy": "0 errores (303 archivos)",
+    "ruff": "0 errores en src/identidad"
+  },
+  "umbrales": {"pylint_min": 8.0, "cc_max": 10, "mi_min": 20, "coverage_min": 95},
+  "codeguard": {
+    "archivos_analizados": 5,
+    "checks_ejecutados": 9,
+    "errors": 14,
+    "warnings": 2,
+    "infos": 29,
+    "checks": {
+      "Security": {"errors": 1, "warnings": 0, "infos": 4},
+      "PEP8": {"errors": 0, "warnings": 1, "infos": 4},
+      "Complexity": {"errors": 0, "warnings": 0, "infos": 5},
+      "DeadCode": {"errors": 5, "warnings": 0, "infos": 0},
+      "Maintainability": {"errors": 0, "warnings": 0, "infos": 5},
+      "Pylint": {"errors": 0, "warnings": 1, "infos": 4},
+      "Spelling": {"errors": 5, "warnings": 0, "infos": 0},
+      "Types": {"errors": 2, "warnings": 0, "infos": 3},
+      "UnusedImports": {"errors": 1, "warnings": 0, "infos": 4}
+    },
+    "nota": "Los 14 errors no son hallazgos de código: vulture y codespell no están instalados en el entorno (DeadCode y Spelling, 10 errors) y bandit/mypy/pylint excedieron su timeout de 10s/5s mientras corría la suite en paralelo (4 errors). mypy y pylint directos pasan limpios. Reporte: quality/reports/inc7-adj/US-ADJ-62-codeguard.json"
+  },
+  "estado": "APROBADO"
+}

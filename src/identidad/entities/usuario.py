@@ -57,6 +57,7 @@ class Usuario:
     intentos_fallidos_password: int = 0
     creado_en: datetime = field(default_factory=_ahora)
     deshabilitada: bool = False
+    bloqueada_hasta: datetime | None = None
 
     @property
     def tipo_perfil(self) -> TipoPerfil:
@@ -144,20 +145,20 @@ class Usuario:
         estaba_bloqueada = self.bloqueada
         self.password_hash = password_hash_nuevo
         self.bloqueada = False
+        self.bloqueada_hasta = None
         self.intentos_fallidos_login = 0
         self.intentos_fallidos_password = 0
         return estaba_bloqueada
 
-    def recuperar_password(self, password_hash_nuevo: str) -> None:
-        """Fija `password_hash_nuevo` tras un canje de token de recuperación (`US-ADJ-39`).
+    def recuperar_password(self, password_hash_nuevo: str) -> bool:
+        """Fija `password_hash_nuevo` tras un canje de token de recuperación (`US-ADJ-62`).
 
-        No toca `bloqueada` ni `intentos_fallidos_login`/`intentos_fallidos_password` — a
-        diferencia de `resetear_password()` (desbloquea) y `cambiar_password()` (resetea el
-        contador de intentos de cambio), este flujo de autoservicio deja el estado de bloqueo
-        intacto: una cuenta bloqueada sigue bloqueada tras recuperar la contraseña (nota de
-        diseño de `wireframes-identidad-autoservicio.md` §3.1).
+        Comportamiento idéntico a `resetear_password()`: quien canjeó el token demostró
+        controlar la cuenta, así que también la desbloquea y resetea los contadores. No toca
+        `deshabilitada` — recuperar la contraseña no reactiva una cuenta dada de baja.
+        Devuelve `True` si la cuenta estaba bloqueada antes de la recuperación.
         """
-        self.password_hash = password_hash_nuevo
+        return self.resetear_password(password_hash_nuevo)
 
     def cambiar_password(self, password_hash_nuevo: str) -> None:
         """Fija `password_hash_nuevo` y resetea `intentos_fallidos_password` a 0.
@@ -171,15 +172,12 @@ class Usuario:
     def registrar_fallo_cambio_password(self) -> bool:
         """Registra un intento fallido de cambio de la propia contraseña (INV-ID-10).
 
-        Incrementa `intentos_fallidos_password`; al 3er fallo consecutivo bloquea la cuenta.
-        Devuelve `True` si este fallo bloqueó la cuenta (el llamador decide si corresponde
-        emitir `CuentaBloqueada`).
+        Solo incrementa `intentos_fallidos_password`. Devuelve `True` si con este fallo se
+        alcanzó el umbral de bloqueo (3 consecutivos): el llamador resuelve entonces la política
+        con `bloquear_por_intentos_fallidos()`.
         """
         self.intentos_fallidos_password += 1
-        if self.intentos_fallidos_password >= _INTENTOS_MAXIMOS_CAMBIO_PASSWORD:
-            self.bloqueada = True
-            return True
-        return False
+        return self.intentos_fallidos_password >= _INTENTOS_MAXIMOS_CAMBIO_PASSWORD
 
     def intentos_restantes_cambio_password(self) -> int:
         """Cantidad de fallos que quedan antes del bloqueo automático (INV-ID-10)."""

@@ -24,17 +24,23 @@ import {
   type ActividadVisibleResponse,
   type EstadoVisible,
 } from "@/lib/actividad-evaluativa-api"
+import { cerroAntesDeLoPrevisto } from "@/lib/cierre-actividad"
 import { listarMisMaterias, type MateriaEstudianteResponse } from "@/lib/identidad-estudiante-api"
 
 const ETIQUETA_ESTADO: Record<EstadoVisible, string> = {
   pendiente: "Pendiente de responder",
   todavia_no_abrio: "Todavía no abrió",
+  cerrada: "Cerrada",
   finalizada: "Finalizada — ver revisión",
 }
 
-const VARIANTE_ESTADO: Record<EstadoVisible, "visible-pendiente" | "visible-todavia-no-abrio" | "visible-finalizada"> = {
+const VARIANTE_ESTADO: Record<
+  EstadoVisible,
+  "visible-pendiente" | "visible-todavia-no-abrio" | "visible-cerrada" | "visible-finalizada"
+> = {
   pendiente: "visible-pendiente",
   todavia_no_abrio: "visible-todavia-no-abrio",
+  cerrada: "visible-cerrada",
   finalizada: "visible-finalizada",
 }
 
@@ -135,7 +141,21 @@ export function MisActividades() {
   function irA(actividad: ActividadVisibleResponse) {
     if (actividad.estado === "todavia_no_abrio") {
       navigate(`/mis-actividades/${actividad.id}/fuera-de-periodo`, {
-        state: { titulo: tituloDeActividad(actividad), fechaApertura: actividad.fechaApertura },
+        state: {
+          titulo: tituloDeActividad(actividad),
+          estado: "todavia_no_abrio",
+          fechaApertura: actividad.fechaApertura,
+        },
+      })
+      return
+    }
+    if (actividad.estado === "cerrada") {
+      navigate(`/mis-actividades/${actividad.id}/fuera-de-periodo`, {
+        state: {
+          titulo: tituloDeActividad(actividad),
+          estado: "cerrada",
+          fechaCierre: actividad.fechaCierre,
+        },
       })
       return
     }
@@ -220,8 +240,10 @@ export function MisActividades() {
                 >
                   <TableCell className="font-medium">{tituloDeActividad(actividad)}</TableCell>
                   <TableCell className="text-xs text-muted-foreground">
-                    Abre {formatearFecha(actividad.fechaApertura)} · Cierra{" "}
-                    {formatearFecha(actividad.fechaCierre)}
+                    Abre {formatearFecha(actividad.fechaApertura)} ·{" "}
+                    {actividad.estado === "cerrada" && cerroAntesDeLoPrevisto(actividad.fechaCierre)
+                      ? "Cerrada antes de lo previsto"
+                      : `Cierra ${formatearFecha(actividad.fechaCierre)}`}
                   </TableCell>
                   <TableCell>
                     <Badge variant={VARIANTE_ESTADO[actividad.estado]}>

@@ -222,6 +222,7 @@
   .badge.finalizada { background: #eaf2f8; color: var(--primary-dark); }
   .badge.suspendida { background: var(--warning-bg); color: #7a5210; }
   .badge.cerrada { background: var(--destructive-bg); color: #7f1d1d; }
+  .badge.cerrada-est { background: var(--muted); color: var(--foreground); border: 1px solid var(--border); }
 
   .detail-row {
     display: flex;
@@ -318,7 +319,9 @@
   <span class="sep"></span>
   <button data-target="est-materias">7. Estudiante — Materias</button>
   <button data-target="est-actividades">8. Actividades</button>
-  <button data-target="est-fuera-periodo">9. Fuera de período</button>
+  <button data-target="est-fuera-periodo">9. Fuera de período — aún no abrió</button>
+  <button data-target="est-fuera-periodo-cerrada">9b. Fuera de período — cerrada (US-ADJ-61)</button>
+  <button data-target="est-fuera-periodo-neutro">9c. Fuera de período — sin contexto (US-ADJ-61)</button>
   <button data-target="est-rendir">10. Rendir evaluación</button>
   <button data-target="est-suspendida">11. Evaluación suspendida</button>
   <button data-target="est-revision">12. Revisión al finalizar</button>
@@ -594,6 +597,13 @@
           <span class="badge fuera-periodo">Todavía no abrió</span>
         </div>
       </div>
+      <div class="card" onclick="go('est-fuera-periodo-cerrada')">
+        <div class="card-title">Parcial de prueba</div>
+        <div class="card-meta">Cerró el 20/09 23:59</div>
+        <div class="card-foot">
+          <span class="badge cerrada-est">Cerrada</span>
+        </div>
+      </div>
       <div class="card" onclick="go('est-revision')">
         <div class="card-title">Autoevaluación Unidad 1</div>
         <div class="card-meta">Finalizada el 09/08</div>
@@ -620,10 +630,41 @@
       <h2 style="margin:0 0 8px; font-size:18px;">Todavía no está disponible</h2>
       <p style="font-size:13px; color:var(--muted-foreground); margin-bottom:0;">Esta actividad abre el <strong>05/10/2026 a las 00:00</strong>. Volvé a entrar a partir de ese momento.</p>
     </div>
+  </div>
+</section>
 
-    <p style="font-size:12px; color:var(--muted-foreground); text-align:center; margin-top:16px;">
-      El mismo mensaje aparece si volvés a entrar <strong>después</strong> del cierre y nunca iniciaste la evaluación — en ese caso indica que el período ya terminó.
-    </p>
+<!-- 7b. ESTUDIANTE — FUERA DE PERÍODO, ACTIVIDAD CERRADA (US-ADJ-61) -->
+<section class="screen" id="est-fuera-periodo-cerrada">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; Actividades &nbsp;›&nbsp; <span class="current">Parcial de prueba</span></div>
+    <h1 class="page-title">Parcial de prueba</h1>
+
+    <div class="result-card">
+      <div class="center-icon" style="color: var(--muted-foreground);">🔒</div>
+      <h2 style="margin:0 0 8px; font-size:18px;">Esta actividad ya cerró</h2>
+      <p style="font-size:13px; color:var(--muted-foreground); margin-bottom:0;">Cerró el <strong>20/09/2026 a las 23:59</strong>. Ya no se puede rendir.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7c. ESTUDIANTE — FUERA DE PERÍODO, SIN CONTEXTO (US-ADJ-61) -->
+<section class="screen" id="est-fuera-periodo-neutro">
+  <div class="app-header">
+    <div class="brand-mini"><svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión"><circle cx="22" cy="22" r="22" fill="#1d75b5"/><path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>Cognión</div>
+    <div class="who"><span class="avatar">MG</span>María González · Estudiante</div>
+  </div>
+  <div class="app-body narrow">
+    <div class="breadcrumb">Mis materias &nbsp;›&nbsp; Ingeniería de Software &nbsp;›&nbsp; <span class="current">Actividad</span></div>
+
+    <div class="result-card">
+      <div class="center-icon" style="color: var(--muted-foreground);">ℹ️</div>
+      <h2 style="margin:0 0 8px; font-size:18px;">Esta actividad no está disponible en este momento</h2>
+      <p style="font-size:13px; color:var(--muted-foreground); margin-bottom:0;">Se llega a esta pantalla al abrir el link de la actividad directamente.</p>
+    </div>
   </div>
 </section>
 

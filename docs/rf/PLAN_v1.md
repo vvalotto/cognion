@@ -37,6 +37,15 @@
 > pantalla que necesita) — gap detectado por pregunta directa de Víctor, documentado en
 > `docs/aprendizajes/HITO-9-PORTAL-DE-ENTRADA-SIN-DUENO-DE-PRODUCTO.md`. No reescribe
 > historia — los Incrementos 5 a 7 no se ejecutaron todavía.
+> Revisión 2026-09-30 (cierre de `BL-011`, Incremento 6 + 6-ADJ): se reemplaza la Iteración 1
+> del Incremento 7 (`RF-18`, KPIs históricos) por una **iteración de UAT manual completa de
+> cierre de alcance v1** — decisión de Víctor. `RF-18` queda diferido, sin incremento
+> asignado (`docs/rf/RF_v1.md`, revisión correspondiente). La UAT es manual, la ejecuta
+> Víctor, y produce cuatro artefactos: Plan de pruebas UAT, Registro de Ejecuciones, Registro
+> de hallazgos, Plan de corrección — detalle en `docs/plans/inc7/inc7-candidatas.md` y en
+> `docs/plans/PROCEDIMIENTO-UAT.md` §11. La Iteración 2 (`RF-07`, spike + implementación de
+> importación desde PDF) no cambia. No reescribe historia — el Incremento 7 no se ejecutó
+> todavía.
 
 ---
 

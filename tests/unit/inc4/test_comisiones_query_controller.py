@@ -41,9 +41,6 @@ class _ComisionQueryPortFake(ComisionQueryPort):
     async def tiene_comisiones_asignadas(self, docente_id: UUID) -> bool:
         return False
 
-    async def tiene_comisiones_creadas(self, administrador_id: UUID) -> bool:
-        return False
-
     async def docente_pertenece_a_comision(self, docente_id: UUID, comision_id: UUID) -> bool:
         for comisiones in self.comisiones_por_materia.values():
             for comision in comisiones:

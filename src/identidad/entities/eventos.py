@@ -118,10 +118,11 @@ class PasswordReseteada:
 
 @dataclass(frozen=True)
 class CuentaDesbloqueada:
-    """Una cuenta bloqueada volvió a estar activa tras un reseteo de contraseña.
+    """Una cuenta bloqueada volvió a estar activa tras un reseteo o una recuperación de contraseña.
 
-    Se emite junto con `PasswordReseteada` solo si la cuenta estaba `bloqueada = true`
-    (`US-2.2.4`) — no existe un comando `DesbloquearCuenta` separado.
+    Se emite junto con `PasswordReseteada` (`US-2.2.4`) o `PasswordRecuperada`
+    (`US-ADJ-62`) solo si la cuenta estaba `bloqueada = true` — no existe un comando
+    `DesbloquearCuenta` separado.
     """
 
     usuario_id: UUID

@@ -10,6 +10,8 @@ import { useAuthBrand } from "@/layouts/AuthLayout"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { LoginError } from "@/pages/identidad/LoginError"
 import { LoginCuentaBloqueadaError } from "@/pages/identidad/LoginCuentaBloqueadaError"
+import { LoginCuentaBloqueadaTemporalError } from "@/pages/identidad/LoginCuentaBloqueadaTemporalError"
+import { LoginCuentaDeshabilitadaError } from "@/pages/identidad/LoginCuentaDeshabilitadaError"
 import { setSession, type Rol } from "@/lib/session"
 
 interface LoginResponse {
@@ -18,13 +20,33 @@ interface LoginResponse {
   expira_en: string
 }
 
+/** El `403` de cuenta deshabilitada trae `detail.codigo`; el de bloqueada, texto plano (`US-ADJ-59`). */
+function esCuentaDeshabilitada(detail: unknown): boolean {
+  return (
+    typeof detail === "object" &&
+    detail !== null &&
+    "codigo" in detail &&
+    (detail as { codigo: unknown }).codigo === "cuenta_deshabilitada"
+  )
+}
+
+/** El `403` de bloqueo temporal trae `reintentar_en_segundos` (`US-ADJ-60`); `null` si no aplica. */
+function segundosDeBloqueoTemporal(detail: unknown): number | null {
+  if (typeof detail !== "object" || detail === null) return null
+  const { codigo, reintentar_en_segundos } = detail as Record<string, unknown>
+  if (codigo !== "cuenta_bloqueada_temporal") return null
+  return typeof reintentar_en_segundos === "number" ? reintentar_en_segundos : 1
+}
+
 /** Pantalla de login (§2.1/§2.2 `wireframes-identidad.md`) — consume `POST /identidad/login`. */
 export function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
-  const [bloqueada, setBloqueada] = useState(false)
+  const [bloqueo, setBloqueo] = useState<"bloqueada" | "deshabilitada" | null>(null)
+  const [segundosTemporal, setSegundosTemporal] = useState<number | null>(null)
+  const bloqueada = bloqueo !== null
   const { setOcultarMarca } = useAuthBrand()
 
   useEffect(() => {
@@ -48,6 +70,7 @@ export function Login() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(false)
+    setSegundosTemporal(null)
 
     try {
       const response = await apiFetch<LoginResponse>("/identidad/login", {
@@ -60,7 +83,13 @@ export function Login() {
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
       if (err instanceof ApiError && err.status === 403) {
-        setBloqueada(true)
+        const segundos = segundosDeBloqueoTemporal(err.detail)
+        if (segundos !== null) {
+          setPassword("")
+          setSegundosTemporal(segundos)
+          return
+        }
+        setBloqueo(esCuentaDeshabilitada(err.detail) ? "deshabilitada" : "bloqueada")
         return
       }
       if (err instanceof ApiError) {
@@ -86,7 +115,10 @@ export function Login() {
         </>
       )}
 
-      {bloqueada ? <LoginCuentaBloqueadaError /> : error && <LoginError />}
+      {bloqueo === "deshabilitada" && <LoginCuentaDeshabilitadaError />}
+      {bloqueo === "bloqueada" && <LoginCuentaBloqueadaError />}
+      {segundosTemporal !== null && <LoginCuentaBloqueadaTemporalError segundos={segundosTemporal} />}
+      {bloqueo === null && error && <LoginError />}
 
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <fieldset className="flex flex-col gap-3" disabled={bloqueada}>

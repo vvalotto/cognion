@@ -110,7 +110,7 @@ entre BCs e iteraciones, sin redefinir tokens nuevos.
 | Elemento | Detalle |
 |---|---|
 | Layout | Propio de esta pantalla — tarjeta centrada sin el bloque de marca (`Cognión`/subtítulo) del resto de `AuthLayout`, ícono de la app (40px) centrado sobre el título "Ingresar" — no reutiliza el encabezado de `wireframes-identidad.md` §2.2 |
-| Alerta | Destructiva, con ícono 🔒: "Cuenta bloqueada" — "Superaste el máximo de intentos permitidos. Contactá a un Administrador para restablecer tu contraseña." — sin link de recuperación self-service (no existe en v1) |
+| Alerta | Destructiva, con ícono 🔒: "Cuenta bloqueada" — "Superaste el máximo de intentos permitidos. Podés **recuperar tu contraseña por email** o pedirle a un Administrador que la restablezca." — "recuperar tu contraseña por email" es un link a `/recuperar-password` (`wireframes-identidad-autoservicio.md` §4); recuperarla desbloquea la cuenta (`US-ADJ-62`). *Enmendado por `US-ADJ-62`: antes decía "Contactá a un Administrador para restablecer tu contraseña", sin link, porque la recuperación self-service no desbloqueaba.* |
 | Formulario | Campos deshabilitados tras el bloqueo, botón "Ingresar" a todo el ancho, deshabilitado |
 
 > Corrección 2026-08-23 (UAT/UX en vivo): la primera versión de esta fila decía que la
@@ -118,6 +118,71 @@ entre BCs e iteraciones, sin redefinir tokens nuevos.
 > Login — la implementación siguió ese texto en vez del prototipo HTML (`#login-bloqueada`),
 > que ya mostraba el layout propio descripto arriba. Corregido para que la spec escrita deje
 > de contradecir al prototipo, que es la fuente de verdad.
+
+### 2.9 Login — cuenta deshabilitada (`#login-deshabilitada`) — `US-ADJ-59`
+
+**Evento:** intento de `IniciarSesion` sobre una cuenta con `deshabilitada = true` (INV-ID-18).
+El backend responde `403` con `detail.codigo = "cuenta_deshabilitada"`; el frontend lo distingue
+del `403` de cuenta bloqueada (que sigue siendo texto plano).
+
+| Elemento | Detalle |
+|---|---|
+| Layout | Idéntico a `#login-bloqueada` (§2.8): tarjeta centrada sin el bloque de marca, ícono de la app (40px) sobre el título "Ingresar" |
+| Alerta | Destructiva, con ícono 🚫: "Cuenta deshabilitada" — "Tu cuenta fue dada de baja y no puede iniciar sesión. Contactá a un Administrador." — **sin** link de recuperación de contraseña: recuperarla no reactiva una cuenta deshabilitada (solo un Administrador la reactiva) |
+| Formulario | Campos deshabilitados, botón "Ingresar" a todo el ancho, deshabilitado — igual que §2.8 |
+| Diferencia con §2.8 | Cambian el ícono (🚫 en vez de 🔒), el título y el texto; no hay cuenta "pendiente de desbloqueo", la acción es siempre hablar con un Administrador |
+
+Fuente de verdad visual: prototipo `identidad-cuentas-administracion.html`, pantalla
+"8. Login — cuenta deshabilitada".
+
+### 2.10 Eliminar / deshabilitar cuenta (`EliminarCuenta`) — `US-ADJ-60`
+
+> **Aclaración de origen:** esta pantalla se construyó en la prueba de estabilización
+> (2026-09-09/10, `EliminarCuenta.tsx`) sin artefacto UX aprobado. Esta sección la documenta por
+> primera vez y define la variante de Administrador de `US-ADJ-60`. Alcanza a las tres variantes de
+> rol; solo la de Administrador cambia respecto de lo ya implementado.
+
+**Evento:** el Administrador pulsa el ícono de eliminar de una fila de Cuentas (`DELETE /usuarios/{id}`).
+El backend borra físicamente la cuenta si no tiene datos asociados y la deshabilita si los tiene —
+**salvo un Administrador, que nunca se borra: siempre se deshabilita** (INV-ID-19).
+
+| Elemento | Docente / Estudiante (ya implementado) | **Administrador (nuevo, `US-ADJ-60`)** |
+|---|---|---|
+| Título y subtítulo | "Eliminar cuenta" | **"Deshabilitar cuenta"** — "Cuenta de Administrador" |
+| Breadcrumb | Administración › Cuentas › Eliminar | Administración › Cuentas › **Deshabilitar** |
+| Cuenta | Nombre y email de la cuenta | Igual, rotulado "Cuenta a deshabilitar" |
+| Aviso (ámbar, informativo) | "Si tiene datos asociados … se deshabilita en vez de borrarse … Si no tiene datos asociados, se borra en forma permanente y no se puede deshacer." | **"Un Administrador nunca se borra"** — "La cuenta se deshabilita: deja de poder iniciar sesión, pero no se pierde nada y se puede reactivar desde el listado. No se puede deshabilitar al único Administrador operativo." |
+| Acciones | "Sí, eliminar" (destructivo) · "Cancelar" | **"Sí, deshabilitar"** (destructivo) · "Cancelar" |
+
+**Estado de error — único Administrador operativo (`409`):** al confirmar, si la cuenta es el único
+Administrador operativo, la pantalla **no navega**: muestra arriba una alerta destructiva con ícono ⛔,
+"No se puede deshabilitar esta cuenta" — "Es el único Administrador operativo. El sistema necesita al
+menos uno activo: habilitá primero a otro Administrador y volvé a intentar." Los botones quedan
+habilitados (el Administrador puede reintentar tras habilitar a otro, o cancelar). Hoy `handleEliminar`
+no captura errores: este estado es nuevo.
+
+Fuente de verdad visual: prototipo `identidad-cuentas-administracion.html`, pantallas "9. Deshabilitar
+Administrador" y "10. Error — único Administrador".
+
+### 2.11 Login — cuenta bloqueada temporalmente (`#login-bloqueada-temporal`) — `US-ADJ-60`
+
+**Evento:** intento de `IniciarSesion` sobre la cuenta del **último Administrador operativo**
+bloqueada de forma temporal por 3 intentos fallidos (INV-ID-21). El backend responde `403` con
+`detail.codigo = "cuenta_bloqueada_temporal"` y `reintentar_en_segundos`.
+
+| Elemento | Detalle |
+|---|---|
+| Layout | **El del login normal** (con marca, "Iniciar sesión" y su subtítulo), **no** el de §2.8/§2.9: a diferencia de esas dos, acá el usuario puede volver a intentar |
+| Alerta | Destructiva, con ícono ⏳: "Cuenta bloqueada temporalmente" — "Superaste el máximo de intentos. Podés volver a intentar en unos {N} minutos." (`N` = `reintentar_en_segundos` redondeado hacia arriba a minutos; mínimo 1) |
+| Formulario | **Habilitado.** Un intento antes de que venza vuelve a mostrar la alerta con el tiempo restante; no consume intentos ni extiende el bloqueo |
+| Diferencia con §2.8 | El bloqueo permanente (§2.8) deshabilita el formulario y manda a un Administrador; este se levanta solo y no necesita a nadie |
+
+> **Decisión de diseño a confirmar:** formulario habilitado en vez de deshabilitado como en §2.8/§2.9,
+> porque el bloqueo es transitorio y deshabilitarlo obligaría a recargar la página para reintentar.
+> Alternativa: deshabilitarlo igual y pedir recargar.
+
+Fuente de verdad visual: prototipo `identidad-cuentas-administracion.html`, pantalla "11. Login —
+bloqueada temporalmente".
 
 ---
 

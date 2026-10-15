@@ -56,6 +56,10 @@ docs/architecture/
   03-bounded-contexts.md             ← creado (catálogo de los 5 BC, Iteración 0 Incremento 1)
   1X-bc-<nombre>.md                  ← pendiente, uno por BC modelado
   20-context-map-integrations.md     ← creado — v0, solo relaciones ya decididas por ADR
+  24-modelo-datos-postgresql.md      ← creado — principios de persistencia e integración cross-BC
+  24a-modelo-datos-identidad.md            ← creado
+  24b-modelo-datos-banco-preguntas.md      ← creado
+  24c-modelo-datos-actividad-evaluativa.md ← creado
   30-runtime-interactions.md         ← pendiente
   40-cross-cutting-concerns.md       ← pendiente
   60-deployment-view.md              ← pendiente

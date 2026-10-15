@@ -750,8 +750,12 @@ compartida (confirmado en el Paso 3, ver
 `SELECT`/`psql` directo, nunca confiando en un `200` sin volver a leer la base (aprendizaje
 del Paso 5, ver más abajo).
 
-Pasos 1 a 9 cerrados: (1) `/` sin sesión no redirigía a `/login` — bug real, corregido en
-`Inicio.tsx`. (2) Cuenta del Administrador bloqueada por reintentos — desbloqueada
+Pasos 1 a 9 cerrados: (1) `/` sin sesión no redirigía a `/login` — bug real, con fix escrito
+en `Inicio.tsx` el mismo día (commit local), pero el PR ([#292](https://github.com/vvalotto/cognion/pull/292))
+quedó abierto sin mergear 22 días — detectado recién en el análisis de higiene de
+repositorio del 2026-09-30 (`develop` tuvo el bug activo todo ese tiempo pese a esta nota).
+Mergeado ese día, ver "Higiene de repositorio" más abajo. (2) Cuenta del Administrador
+bloqueada por reintentos — desbloqueada
 directamente en la base, mismo criterio de excepción que `ADR-016` (única cuenta existente).
 (3) Administrador no podía crear Materia (solo Docente) — `POST /materias` pasa a
 `require_docente_o_administrador`; `RequireRole` gana soporte de array de roles. (4) Orden de
@@ -913,7 +917,9 @@ ranking/tema/comisión/detalle-por-evaluación. 1197/1197 tests backend, 497/497
 DesignReviewer 0 CRITICAL. **Hallazgo detectado y no resuelto en esta UAT** (deuda de
 `frontend/`, reportada aparte, no bloqueante): `HomeDocente.tsx` sigue con cards directas a
 "Desempeño por alumno"/"por tema" sin pasar por la landing "Reportes" ni incluir los otros 2
-informes nuevos.
+informes nuevos. **Resuelto después** (PR #374, "unificar Reportes en Home del Docente": una
+sola card "Reportes" hacia `/analytics`) — la UAT del Incremento 7 lo confirmó con la home
+real del Docente.
 
 **Iteración 5 — Revisión documental de cierre, en curso** (`US-ADJ-52`, Issue #372, tipo
 Documentación — sin código de producción). Alcance: numeración definitiva de RF-24
@@ -1109,10 +1115,102 @@ misma baseline, sin tag propio) ejecutados el mismo día. Milestones GitHub
 [Incremento 6](https://github.com/vvalotto/cognion/milestone/8) e
 [Incremento 6-ADJ](https://github.com/vvalotto/cognion/milestone/14) cerrados.
 
-**Próximo paso:** evaluar si corresponde abrir el Incremento 7 (Cierre de Alcance v1,
-`RF-07` — importación desde PDF, mecanismo de parseo automático vs. asistido pendiente de
-decisión) o retomar otro backlog sin incremento asignado. Ítem abierto aparte, no bloqueante:
-checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4).
+Incremento 7 — Cierre de alcance v1, en planificación desde 2026-09-30
+(`docs/plans/inc7/inc7-candidatas.md`). Último incremento de `PLAN_v1.md` — sin BC nuevo, sin
+Iteración 0 de Modelado. **Decisión de Víctor:** la Iteración 1 original (`RF-18`, KPIs
+históricos) se reemplaza por una **iteración de UAT manual completa de cierre de alcance
+v1** — recorrido exploratorio de Víctor sobre todo el sistema (los 7 incrementos acumulados),
+sin código de producción, que produce 4 artefactos en `quality/reports/uat/inc7/`:
+`plan-de-pruebas.md`, `registro-ejecuciones.md`, `registro-hallazgos.md`,
+`plan-de-correccion.md` (detalle completo, incluida la separación de responsabilidades entre
+Víctor y la sesión, en `docs/plans/PROCEDIMIENTO-UAT.md` §11). El `plan-de-correccion.md` es
+un documento de **priorización, no de ejecución** — no implementa nada por sí mismo, solo
+propone cómo resolver cada hallazgo (track informal / US-ADJ / incremento nuevo). `RF-18`
+queda diferido sin incremento asignado (`docs/rf/RF_v1.md` revisión 2026-09-30,
+`docs/traceability/matrix.md`) — sigue en alcance v1, solo sin incremento todavía. La
+Iteración 2 (`RF-07`, importación desde PDF) no cambia — spike de decisión (parseo automático
+vs. asistido) pendiente, con Víctor presente, antes de especificarla.
+
+**Iteración 1 (UAT manual) cerrada 2026-10-02** (PR #472, `quality/reports/uat/inc7/`): 30
+pasos sobre los 4 roles, RBAC y sesión en vivo con iPhone/iPad, 11 hallazgos (2 🔴: una cuenta
+deshabilitada puede seguir iniciando sesión, y el sistema puede quedar sin Administrador
+operativo; sin pérdida de datos) y `plan-de-correccion.md` aprobado por Víctor. Decisión: se
+inserta el **Incremento 7-ADJ** (`US-ADJ-59` a `62`) **antes** de RF-07.
+
+**Incremento 7-ADJ abierto 2026-10-02** (Milestone
+[#15](https://github.com/vvalotto/cognion/milestone/15),
+`docs/plans/inc7-adj/inc7-adj-candidatas.md`): orden `US-ADJ-59` (cuenta deshabilitada no
+inicia sesión) → `60` (siempre ≥ 1 Administrador operativo) → `62` (recuperar contraseña
+desbloquea) → `61` (estado "cerrada" visible al Estudiante), más el spike de #1 y los arreglos
+informales #7 y #9. Cierre previsto como `BL-012`.
+
+**Specs e Issues del 7-ADJ creados 2026-10-02** (`US-ADJ-59` a `62`, Issues #474 a #477, con
+decisiones por defecto a confirmar por Víctor; la Parte B de frontend de cada una está
+bloqueada por el gate UX).
+
+**Incremento 7-ADJ ejecutado y `BL-012` registrada 2026-10-15** (`.cm/baselines/BL-012-incremento-7-adj-ciclo-de-vida-de-la-cuenta.md`).
+Las 4 US formales cerradas, cada una en Parte A (backend) y, donde hubo UI, Parte B (frontend, tras el gate UX): `US-ADJ-59`
+(PR #479, una cuenta deshabilitada no inicia sesión), `US-ADJ-60` (PR #480, siempre ≥ 1 Administrador operativo; el bloqueo del
+último es temporal, 15 min; migración `c4d1f9a27b60`), `US-ADJ-62` (PR #481/#482, recuperar la contraseña desbloquea; revierte una
+decisión de `US-ADJ-39`) y `US-ADJ-61` (PR #483/#484, badge "Cerrada" para el Estudiante). Arreglos informales de `frontend/`: #3/#8
+(PR #472), #7/#9 (PR #485) y H-1/H-2 de la UAT de cierre (PR #486). **Spike del hallazgo #1: no reproducible** (13 envíos, dev y
+build). **UAT de cierre en navegador real** (2026-10-05, `quality/reports/uat/inc7-adj/`, PR #494): Bloques 0 a 6 sin hallazgos 🔴;
+observaciones O-1 (el 3.er intento fallido no avisa del bloqueo — es el contrato de la spec) y O-2 (dato sucio de la siembra) sin
+cambio de código. **Métricas al cerrar:** 1883 tests backend (cobertura 96.94 %), 827 frontend (93.56 % statements / 86.14 %
+branches), `ruff`/`mypy`/`tsc` 0 errores, `pylint` 9.59, `designreviewer` 0 CRITICAL (334 advertencias), `architectanalyst` 7
+CRITICAL (mismo "Zone of Pain" aceptado). Sin cambio de estado de ningún RF (ajustes sobre RF ya Validado). **Pendientes que
+arrastra:** hallazgo #6 (demora en el iPhone) **desestimado por Víctor el 2026-10-15** (el DoD original lo incluía); el
+checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4). **Merge `develop → main` y tag `v0.8.1`
+pendientes de confirmación explícita de Víctor.** Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
+automático y asistido necesita decisión suya antes de especificar.
+
+**Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
+branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
+en 7 puntos, ejecutándose de a uno:
+1. ✅ **PR [#292](https://github.com/vvalotto/cognion/pull/292)** (bug real: `/` sin sesión
+   no redirigía a `/login`, escrito el 2026-09-08 pero nunca mergeado) — actualizado contra
+   `develop` (162 commits de atraso), 802/802 tests frontend + `tsc -b`/`oxlint` limpios,
+   mergeado.
+2. ✅ **PR [#291](https://github.com/vvalotto/cognion/pull/291)** (tooling de siembra E2E con
+   datos reales, `seed_datos_reales.py` + 113 preguntas de 2 materias) — cerrado sin mergear:
+   quedó superado de hecho por el tooling real usado después (`cargar_preguntas.py`/
+   `cargar_estudiantes.py`, 71 preguntas de Ingeniería de Software, bitácoras), nunca
+   reconciliado con este PR. Si se decide versionar ese tooling más adelante, es un PR nuevo
+   desde el estado actual de `tests/uat/datos-reales/`.
+3. ✅ Corregida la nota del Paso 1 de la prueba de estabilización del Administrador (arriba en
+   este archivo), que afirmaba el fix de `Inicio.tsx` ya cerrado cuando en realidad su PR
+   llevaba 22 días sin mergear.
+4. ✅ Agregada `tests/uat/datos-reales/` a `.gitignore` (antes quedaba fuera de git solo por
+   disciplina manual — ya hubo un incidente real de `git add` arrastrándolo).
+5. ✅ Borradas las branches locales (y remotas donde aplicaba) ya integradas por otro commit:
+   `docs/us-adj-21-cerrada`,
+   `feature/editar-cuenta-administrador`, `feature/editar-materia`, `fix/admin-crea-materias`
+   (ancestros confirmados de `develop`), `feature/home-docente-reportes` + su worktree
+   (`.claude/worktrees/gracious-williamson-a7dd0f`, superado por PR #374),
+   `fix/claude-md-estado-inc3-adj` (superado por PR #226), `local-vitest-bump` (`vitest` ya
+   en `^4.1.11` vía otro bump), `claude/gracious-williamson-a7dd0f` (sin diff contra
+   `develop`).
+6. ✅ Cola de Dependabot resuelta — 13 PRs abiertos, procesados de a uno (cada bump
+   verificado con CI real, no aprobado a ciegas): **mergeados** #464 (`pyjwt`), #457
+   (`undici`), #456 (`ip-address`), #317 (`js-yaml`), #316 (`baseline-browser-mapping`), #301
+   (`hono`), #217 (`qs`), #216 (`fast-uri`), #296 (`react-router` 7→8, salto de versión
+   **mayor** — verificado aparte con `tsc -b` + suite completa local antes de mergear, sin
+   breaking changes para este proyecto), #297 (`@testing-library/react`), #295
+   (`lucide-react`). **Cerrados sin mergear**: #294 (`react`/`@types/react`) — bump real que
+   no incluía `react-dom`, versiones incompatibles, CI lo confirmó rompiendo las 105 suites de
+   test (mismo tipo de hallazgo que el Paso 1: no aprobar Dependabot a ciegas); #293
+   (`@testing-library/jest-dom`, patch trivial) — conflicto mecánico de `package-lock.json`
+   contra `develop` tras los otros merges, no valía la pena resolver a mano, Dependabot lo
+   regenera solo en su próximo escaneo.
+7. ✅ Rescatado el contenido de `docs/modelo-datos-postgresql` (commit del 20-sep, nunca
+   mergeada) y actualizado antes de incorporarlo:
+   `docs/architecture/24{,a,b,c}-modelo-datos-*.md` — agrega los streams
+   `ActividadEvaluativaEnVivo`/`ParticipacionEnVivo` y las tablas
+   `ranking_por_sesion`/`distribucion_por_pregunta` (Incremento 6, no existían el 20-sep).
+   Analytics y Notificaciones confirmado sin tablas propias (`src/*/frameworks/db/models.py`)
+   — el índice ya lo documentaba bien. Branch local borrada, contenido absorbido en commits
+   propios. **Cierra completo el plan de higiene de repositorio de 7 puntos** — falta armar
+   el PR final con todo lo acumulado en la branch `docs/higiene-repositorio-claude-md`.
 
 ---
 
@@ -1288,6 +1386,10 @@ el merge es a la rama default.
   no por esa razón. Probado y descartado (válido igual, independiente de la causa real):
   `analysis_depth=2` no lo resuelve — los críticos suben de 5 a 15. Ninguna retro futura debe
   volver a proponer "recalibrar" sin revisar antes esta nota ni el Issue upstream.
+- **`architectanalyst` siempre con `--config pyproject.toml`** (detectado en `BL-012`): sin ese flag no lee
+  `[tool.architectanalyst]` y busca `src/coverage.json` (el default) en vez de `../coverage.json` — el
+  `CoverageAnalyzer` avisa "no se encontró coverage.json" aunque el archivo exista en la raíz. Con el flag
+  reporta el % real. Mismo criterio que `designreviewer`.
 - **Orden obligatorio al cerrar baseline: generar `coverage.json` antes de correr
   `architectanalyst`** (`US-ADJ-15`): `CoverageAnalyzer` busca el reporte relativo al `PATH`
   posicional del CLI (`src/` en este proyecto), no a la raíz del repo — con

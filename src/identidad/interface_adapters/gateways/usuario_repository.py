@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
@@ -80,9 +80,23 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         usuario_model.password_hash = usuario.password_hash
         usuario_model.bloqueada = usuario.bloqueada
         usuario_model.deshabilitada = usuario.deshabilitada
+        usuario_model.bloqueada_hasta = usuario.bloqueada_hasta
         usuario_model.intentos_fallidos_login = usuario.intentos_fallidos_login
         usuario_model.intentos_fallidos_password = usuario.intentos_fallidos_password
         await self._session.commit()
+
+    async def contar_administradores_operativos(self, excluyendo: UUID | None = None) -> int:
+        """Cuenta los Administradores ni deshabilitados ni bloqueados."""
+        consulta = (
+            select(func.count())
+            .select_from(UsuarioModel)
+            .join(AdministradorModel, AdministradorModel.id == UsuarioModel.id)
+            .where(UsuarioModel.deshabilitada.is_(False), UsuarioModel.bloqueada.is_(False))
+        )
+        if excluyendo is not None:
+            consulta = consulta.where(UsuarioModel.id != excluyendo)
+        resultado = await self._session.execute(consulta)
+        return int(resultado.scalar_one())
 
     async def eliminar(self, usuario_id: UUID) -> None:
         """Borra físicamente un usuario sin datos asociados, junto con su fila de perfil."""
@@ -137,6 +151,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
             intentos_fallidos_password=usuario_model.intentos_fallidos_password,
             creado_en=usuario_model.creado_en,
             deshabilitada=usuario_model.deshabilitada,
+            bloqueada_hasta=usuario_model.bloqueada_hasta,
         )
 
     async def _resolver_perfil(self, usuario_id: UUID) -> Perfil | None:

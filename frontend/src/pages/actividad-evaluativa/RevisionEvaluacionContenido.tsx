@@ -31,7 +31,7 @@ function FilaRevision({ fila, etiquetaRespuestaPropia }: FilaRevisionProps) {
     <Card className="p-4">
       <div className="flex items-start justify-between gap-3">
         <p className="font-medium">
-          {fila.orden}. {fila.texto}
+          {fila.orden + 1}. {fila.texto}
         </p>
         <Badge variant={fila.esCorrecta ? "revision-correcta" : "revision-incorrecta"}>
           {fila.esCorrecta ? "Correcta" : "Incorrecta"}

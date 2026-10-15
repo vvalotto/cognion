@@ -27,5 +27,7 @@ class RecuperacionPasswordController:
 
     async def confirmar(self, token: str, password_nueva: str) -> Usuario:
         """Delega el canje del token por una contraseña nueva en el caso de uso correspondiente."""
-        usuario, _evento = await self._confirmar_nueva_password.execute(token, password_nueva)
+        usuario, _evento, _desbloqueo = await self._confirmar_nueva_password.execute(
+            token, password_nueva
+        )
         return usuario

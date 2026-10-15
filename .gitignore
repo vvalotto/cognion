@@ -46,3 +46,7 @@ quality/reports/architectanalyst/history.db
 
 # uv
 .uv-cache/
+
+# Prueba manual E2E con datos reales (docentes/estudiantes/material de cátedra) — nunca
+# versionada, el contenido puede incluir datos personales reales
+tests/uat/datos-reales/
