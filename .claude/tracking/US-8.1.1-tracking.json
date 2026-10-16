@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "us_id": "US-8.1.1",
+    "us_title": "CORS configurable por entorno",
+    "us_points": 2,
+    "producto": "backend",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-16T13:50:56.653636+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 1373,
+    "effective_seconds": 1373,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-10-16T13:51:13.100085+00:00",
+      "completed_at": "2026-10-16T13:51:30.916084+00:00",
+      "elapsed_seconds": 17,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "BDD omitida",
+      "started_at": "2026-10-16T13:51:31.051913+00:00",
+      "completed_at": "2026-10-16T13:51:31.181285+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-10-16T13:51:31.312819+00:00",
+      "completed_at": "2026-10-16T13:52:00.917136+00:00",
+      "elapsed_seconds": 29,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-16T13:52:01.053533+00:00",
+      "completed_at": "2026-10-16T13:52:19.279565+00:00",
+      "elapsed_seconds": 18,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests unitarios",
+      "started_at": "2026-10-16T13:52:19.593270+00:00",
+      "completed_at": "2026-10-16T13:52:49.059869+00:00",
+      "elapsed_seconds": 29,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Integración (cubierta en unit)",
+      "started_at": "2026-10-16T13:52:49.190875+00:00",
+      "completed_at": "2026-10-16T13:52:49.326663+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "BDD omitida",
+      "started_at": "2026-10-16T13:52:49.464356+00:00",
+      "completed_at": "2026-10-16T13:52:49.610255+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality",
+      "started_at": "2026-10-16T13:52:49.747572+00:00",
+      "completed_at": "2026-10-16T13:55:12.090964+00:00",
+      "elapsed_seconds": 142,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-10-16T13:55:12.248013+00:00",
+      "completed_at": "2026-10-16T14:13:50.361408+00:00",
+      "elapsed_seconds": 1118,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte final",
+      "started_at": "2026-10-16T14:13:50.488778+00:00",
+      "completed_at": "2026-10-16T14:13:50.623220+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 10,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

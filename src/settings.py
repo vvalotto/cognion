@@ -1,5 +1,6 @@
 """Configuración de la aplicación cargada desde variables de entorno."""
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,6 +22,23 @@ class Settings(BaseSettings):
     verificador_vencimientos_umbral_inactividad_minutos: int = 15
     administrador_bloqueo_temporal_minutos: int = 15
     frontend_url: str = "http://localhost:5173"
+    cors_allowed_origins: str = "http://localhost:5173"
+
+    @field_validator("cors_allowed_origins")
+    @classmethod
+    def _rechazar_origen_comodin(cls, valor: str) -> str:
+        """Rechaza `*`: es incompatible con `allow_credentials=True` en CORS."""
+        if "*" in [origen.strip() for origen in valor.split(",")]:
+            raise ValueError(
+                "CORS_ALLOWED_ORIGINS no admite '*' porque la API usa credenciales; "
+                "listar los orígenes explícitos separados por coma"
+            )
+        return valor
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Orígenes CORS permitidos, separados por coma, sin espacios ni vacíos."""
+        return [o.strip() for o in self.cors_allowed_origins.split(",") if o.strip()]
 
 
 settings = Settings()
