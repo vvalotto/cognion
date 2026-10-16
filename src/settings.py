@@ -2,14 +2,25 @@
 
 from typing import Literal
 from urllib.parse import urlparse
+from uuid import UUID
 
-from pydantic import field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _SECRET_KEY_EJEMPLO = "cambiar-por-un-secreto-seguro"
 _SECRET_KEY_LARGO_MINIMO = 32
 _HOSTS_LOCALES = frozenset({"localhost", "127.0.0.1", "::1"})
 _ENTORNOS_ESTRICTOS = frozenset({"staging", "produccion"})
+
+
+class CuentaSmtpMateria(BaseModel):
+    """Cuenta SMTP institucional de una materia (`ADR-023`, `US-8.1.7`)."""
+
+    host: str
+    port: int = 25
+    user: str = ""
+    password: str = ""
+    remitente: str
 
 
 def _es_local(url_o_host: str) -> bool:
@@ -33,6 +44,7 @@ class Settings(BaseSettings):
     smtp_user: str = ""
     smtp_password: str = ""
     smtp_from: str = "no-responder@cognion.local"
+    smtp_cuentas_por_materia: dict[UUID, CuentaSmtpMateria] = {}
     verificador_vencimientos_cadencia_segundos: int = 120
     verificador_vencimientos_umbral_inactividad_minutos: int = 15
     administrador_bloqueo_temporal_minutos: int = 15
@@ -73,6 +85,12 @@ class Settings(BaseSettings):
             errores.append("SMTP_HOST no puede ser localhost")
         if self.smtp_from.endswith("@cognion.local"):
             errores.append("SMTP_FROM no puede usar el dominio de ejemplo @cognion.local")
+        for materia_id, cuenta in self.smtp_cuentas_por_materia.items():
+            if _es_local(cuenta.host) or cuenta.remitente.endswith("@cognion.local"):
+                errores.append(
+                    f"SMTP_CUENTAS_POR_MATERIA[{materia_id}] no puede usar host local "
+                    "ni el dominio de ejemplo @cognion.local"
+                )
         if _es_local(self.frontend_url):
             errores.append("FRONTEND_URL no puede apuntar a localhost")
         if any(_es_local(origen) for origen in self.cors_origins_list):

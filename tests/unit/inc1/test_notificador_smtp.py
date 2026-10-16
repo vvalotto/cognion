@@ -9,7 +9,7 @@ class TestSmtpNotificador:
         smtp_mock.__enter__.return_value = smtp_mock
 
         with patch(
-            "src.identidad.frameworks.smtp.notificador_smtp.smtplib.SMTP",
+            "src.shared.frameworks.smtp.smtplib.SMTP",
             return_value=smtp_mock,
         ) as smtp_class:
             notificador = SmtpNotificador()
@@ -26,7 +26,7 @@ class TestSmtpNotificador:
         smtp_mock.__enter__.return_value = smtp_mock
 
         with patch(
-            "src.identidad.frameworks.smtp.notificador_smtp.smtplib.SMTP",
+            "src.shared.frameworks.smtp.smtplib.SMTP",
             return_value=smtp_mock,
         ):
             notificador = SmtpNotificador()

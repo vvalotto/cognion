@@ -16,7 +16,7 @@ class TestSmtpCanalEnvio:
         smtp_mock.__enter__.return_value = smtp_mock
 
         with patch(
-            "src.notificaciones.frameworks.adapters.smtp_canal_envio.smtplib.SMTP",
+            "src.shared.frameworks.smtp.smtplib.SMTP",
             return_value=smtp_mock,
         ) as smtp_class:
             canal = SmtpCanalEnvio()
@@ -34,7 +34,7 @@ class TestSmtpCanalEnvio:
         smtp_mock.__enter__.return_value = smtp_mock
 
         with patch(
-            "src.notificaciones.frameworks.adapters.smtp_canal_envio.smtplib.SMTP",
+            "src.shared.frameworks.smtp.smtplib.SMTP",
             return_value=smtp_mock,
         ):
             canal = SmtpCanalEnvio()
@@ -49,7 +49,7 @@ class TestSmtpCanalEnvio:
         smtp_mock.__enter__.return_value = smtp_mock
 
         with patch(
-            "src.notificaciones.frameworks.adapters.smtp_canal_envio.smtplib.SMTP",
+            "src.shared.frameworks.smtp.smtplib.SMTP",
             return_value=smtp_mock,
         ):
             canal = SmtpCanalEnvio()

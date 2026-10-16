@@ -30,3 +30,14 @@ materia (recuperación de contraseña) usan la cuenta global.
   almacén de secretos.
 - ⚠️ Las credenciales reales de cada cuenta institucional las debe proveer Víctor; quedan fuera
   del repo.
+
+## Implementación (`US-8.1.7`, 2026-10-16)
+
+- Una única variable `SMTP_CUENTAS_POR_MATERIA` (JSON `{"<materia_id>": {host, port, user, password, remitente}}`)
+  en lugar de una variable de entorno por materia: se carga como un solo secret, las claves se validan como UUID y
+  el modelo rechaza campos inválidos. Sigue siendo entorno/secret: nunca dominio ni base de datos.
+- Se clava por `materia_id` y no por nombre: es estable ante un renombre y no exige una consulta extra al enviar.
+- `src/shared/frameworks/smtp.py` resuelve la cuenta (la de la materia, o la global si no tiene o no hay materia) y
+  reemplaza el código `smtplib` duplicado de Notificaciones e Identidad.
+- Apertura, cierre e invitación envían con la materia; la recuperación de contraseña usa la cuenta global.
+
