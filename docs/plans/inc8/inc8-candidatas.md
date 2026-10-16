@@ -1,7 +1,7 @@
 # Incremento 8 — Despliegue y operación
 
 **Estado:** en planificación (2026-10-16). Plan propuesto, pendiente de aprobación de Víctor.
-**Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestones)
+**Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestone/16)
 **Política:** sin BC nuevo ni RF funcional nuevo — no abre con Iteración 0 de Modelado. Abre
 con una iteración de **spikes de decisión** (infraestructura, backup, SMTP, dominio), porque
 sin ellas el resto no se puede especificar.
