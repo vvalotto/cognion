@@ -4,6 +4,9 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm ci --ignore-scripts
 COPY frontend/ .
+# URL base de la API embebida en el build (vacío = mismo origen, US-8.1.2)
+ARG VITE_API_BASE_URL=""
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # Stage 2: Runtime

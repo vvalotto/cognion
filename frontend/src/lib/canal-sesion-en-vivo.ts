@@ -1,7 +1,7 @@
 import { router } from "@/router"
+import { WS_BASE_URL } from "@/lib/config"
 import { clearSession, getSession } from "@/lib/session"
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000"
 const BACKOFF_INICIAL_MS = 1000
 const BACKOFF_TOPE_MS = 10000
 const CODIGO_CIERRE_TOKEN_INVALIDO = 1008
@@ -76,10 +76,6 @@ export type EstadoCanal = "conectado" | "reconectando" | "desconectado"
 
 export type WebSocketFactory = (url: string) => WebSocket
 
-function urlBase(): string {
-  return BASE_URL.replace(/^http/, "ws")
-}
-
 /**
  * Envuelve el `WebSocket` nativo hacia `/sesiones-en-vivo/{id}/canal`: solo recibe mensajes del
  * servidor (los comandos van por HTTP, `ADR-005`), se reconecta con backoff exponencial y avisa
@@ -113,7 +109,7 @@ export class CanalSesionEnVivo {
 
   conectar(): void {
     const token = getSession()?.token ?? ""
-    const url = `${urlBase()}/sesiones-en-vivo/${this.sesionId}/canal?token=${encodeURIComponent(token)}`
+    const url = `${WS_BASE_URL}/sesiones-en-vivo/${this.sesionId}/canal?token=${encodeURIComponent(token)}`
     const socket = this.crearWebSocket(url)
     this.socket = socket
 

@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "us_id": "US-8.1.2",
+    "us_title": "URL base de API y WebSocket en build",
+    "us_points": 2,
+    "producto": "frontend",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-16T14:16:08.349415+00:00",
+    "completed_at": "2026-10-16T14:25:57.635303+00:00",
+    "total_elapsed_seconds": 589,
+    "effective_seconds": 589,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-10-16T14:16:08.524402+00:00",
+      "completed_at": "2026-10-16T14:16:08.653801+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "BDD omitida",
+      "started_at": "2026-10-16T14:16:08.780505+00:00",
+      "completed_at": "2026-10-16T14:16:08.909789+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-10-16T14:16:09.039335+00:00",
+      "completed_at": "2026-10-16T14:16:09.178255+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-16T14:16:09.307191+00:00",
+      "completed_at": "2026-10-16T14:22:44.930129+00:00",
+      "elapsed_seconds": 395,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests",
+      "started_at": "2026-10-16T14:22:45.070612+00:00",
+      "completed_at": "2026-10-16T14:22:45.210448+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "n/a",
+      "started_at": "2026-10-16T14:22:45.354538+00:00",
+      "completed_at": "2026-10-16T14:22:45.514135+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "n/a",
+      "started_at": "2026-10-16T14:22:45.668213+00:00",
+      "completed_at": "2026-10-16T14:22:45.833640+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality",
+      "started_at": "2026-10-16T14:22:45.989378+00:00",
+      "completed_at": "2026-10-16T14:25:56.697115+00:00",
+      "elapsed_seconds": 190,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Docs",
+      "started_at": "2026-10-16T14:25:56.886594+00:00",
+      "completed_at": "2026-10-16T14:25:57.073147+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte",
+      "started_at": "2026-10-16T14:25:57.265492+00:00",
+      "completed_at": "2026-10-16T14:25:57.448700+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 10,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
