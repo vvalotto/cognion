@@ -32,11 +32,11 @@ def test_fly_toml_declara_el_release_command() -> None:
 
 
 def test_fly_toml_expone_el_servicio_con_healthcheck() -> None:
-    """El servicio HTTP escucha en 8000, fuerza HTTPS y usa `/health`."""
+    """El servicio HTTP escucha en 8000, fuerza HTTPS y usa `/api/health` (US-8.1.6)."""
     servicio = tomllib.loads((_RAIZ / "fly.toml").read_text(encoding="utf-8"))["http_service"]
     assert servicio["internal_port"] == 8000
     assert servicio["force_https"] is True
-    assert servicio["checks"][0]["path"] == "/health"
+    assert servicio["checks"][0]["path"] == "/api/health"
 
 
 def test_la_app_no_ejecuta_alembic_al_arrancar() -> None:

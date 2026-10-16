@@ -1,0 +1,721 @@
+{
+  "summary": {
+    "total_files": 2,
+    "checks_executed": 9,
+    "elapsed_seconds": 10.57,
+    "timestamp": "2026-10-16T11:48:38.970422",
+    "total_issues": 33,
+    "errors": 4,
+    "warnings": 3,
+    "infos": 26
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (101 > 100 characters)",
+      "file": "src/servidor.py",
+      "line": 4
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 83.4 (grade A)",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 0.00/10 (< 8.0). Run 'pylint servidor.py' for details.",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/servidor.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 31
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 32
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 38
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 39
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 45
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 47
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 48
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 49
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 55
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 56
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 69
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 78
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 85
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 86
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 87
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": 93
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 39.0 (grade A)",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint test_us_8_1_6_servidor.py' for details.",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/servidor.py",
+        "line": 4
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 0.00/10 (< 8.0). Run 'pylint servidor.py' for details.",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint test_us_8_1_6_servidor.py' for details.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 83.4 (grade A)",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 31
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 32
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 38
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 39
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 45
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 47
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 48
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 49
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 55
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 56
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 69
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 78
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 85
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 86
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 87
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 93
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 39.0 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "inc8/test_us_8_1_6_servidor.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 31
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 32
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 38
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 39
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 45
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 47
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 48
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 49
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 55
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 56
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 69
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 78
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 85
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 86
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 87
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": 93
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 39.0 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 7.37/10 (< 8.0). Run 'pylint test_us_8_1_6_servidor.py' for details.",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_1_6_servidor.py",
+        "line": null
+      }
+    ],
+    "src/servidor.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/servidor.py",
+        "line": 4
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 83.4 (grade A)",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 0.00/10 (< 8.0). Run 'pylint servidor.py' for details.",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/servidor.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/servidor.py",
+        "line": null
+      }
+    ]
+  }
+}

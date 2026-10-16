@@ -13,7 +13,7 @@ app = "cognion"
 
   [[http_service.checks]]
     method = "GET"
-    path = "/health"
+    path = "/api/health"
     interval = "30s"
     timeout = "5s"
     grace_period = "10s"
