@@ -243,3 +243,11 @@ class MateriaNoAutorizada(Exception):
         """Guarda el id en conflicto y arma el mensaje de la excepción."""
         self.materia_id = materia_id
         super().__init__(f"No tenés ninguna comisión asignada en la materia '{materia_id}'.")
+
+
+class AdministradorYaExiste(Exception):
+    """Ya hay un Administrador operativo: el bootstrap del primero no corresponde (`US-8.1.5`)."""
+
+    def __init__(self) -> None:
+        """Arma el mensaje de la excepción."""
+        super().__init__("Ya existe un Administrador operativo; no se crea otro.")

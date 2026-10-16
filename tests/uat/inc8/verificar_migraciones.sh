@@ -36,4 +36,18 @@ if DATABASE_URL="postgresql+asyncpg://${USUARIO}:${CLAVE}@${HOST}:5999/${BASE}" 
 else
   ok "3. base inaccesible → exit != 0 (el deploy se aborta)"
 fi
-echo "Migraciones verificadas."
+
+# 4. Bootstrap del primer Administrador sobre la base ya migrada (US-8.1.5).
+BOOT=(.venv/bin/python -m src.identidad.frameworks.cli.bootstrap_administrador)
+CLAVE_ADMIN="Boot#Strap-2026"
+contar_admins() { PGPASSWORD="$CLAVE" psql -h "$HOST" -p "$PUERTO" -U "$USUARIO" -d "$BASE" -Atc "SELECT count(*) FROM administrador" 2>/dev/null; }
+if DATABASE_URL="$URL" ADMIN_NOMBRE="X" ADMIN_EMAIL="x@ejemplo.edu.ar" ADMIN_PASSWORD="corta" "${BOOT[@]}" </dev/null >/dev/null 2>&1; then
+  fallo "4a. contraseña débil (sin Administradores todavía) debería terminar con exit != 0"
+else
+  ok "4a. contraseña débil (sin Administradores todavía) rechazada (exit != 0)"
+fi
+DATABASE_URL="$URL" ADMIN_NOMBRE="Admin Uno" ADMIN_EMAIL="uno@ejemplo.edu.ar" ADMIN_PASSWORD="$CLAVE_ADMIN" "${BOOT[@]}" >/dev/null 2>&1 \
+  && [ "$(contar_admins)" = "1" ] && ok "4b. bootstrap crea el primer Administrador" || fallo "4b. bootstrap"
+DATABASE_URL="$URL" ADMIN_NOMBRE="Admin Dos" ADMIN_EMAIL="dos@ejemplo.edu.ar" ADMIN_PASSWORD="$CLAVE_ADMIN" "${BOOT[@]}" >/dev/null 2>&1 \
+  && [ "$(contar_admins)" = "1" ] && ok "4c. segunda ejecución con otro email no duplica (exit 0)" || fallo "4c. idempotencia"
+echo "Migraciones y bootstrap verificados."

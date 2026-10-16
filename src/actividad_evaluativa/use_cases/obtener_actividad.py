@@ -22,9 +22,7 @@ class ObtenerActividadUseCase:
         self._actividad_query = actividad_query
         self._comision_consulta = comision_consulta
 
-    async def execute(
-        self, actividad_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadResumen:
+    async def execute(self, actividad_id: UUID, docente_id: UUID | None = None) -> ActividadResumen:
         """Devuelve el resumen de `actividad_id`.
 
         Levanta `ActividadNoExiste` si no está, `MateriaNoAutorizada` (403) si `docente_id` no
