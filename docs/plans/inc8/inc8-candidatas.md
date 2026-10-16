@@ -1,6 +1,6 @@
 # Incremento 8 — Despliegue y operación
 
-**Estado:** en planificación (2026-10-16). Plan propuesto, pendiente de aprobación de Víctor.
+**Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev).
 **Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestone/16)
 **Política:** sin BC nuevo ni RF funcional nuevo — no abre con Iteración 0 de Modelado. Abre
 con una iteración de **spikes de decisión** (infraestructura, backup, SMTP, dominio), porque
@@ -57,6 +57,7 @@ Iteración 1 en detalle.
 | US-8.1.4 | Migraciones Alembic como paso explícito de release (no al arrancar la app) |
 | US-8.1.5 | Bootstrap del primer Administrador (comando idempotente, sin contraseña en el repo) |
 | US-8.1.6 | Servir el frontend compilado desde el mismo origen (o proxy) y verificarlo en la imagen |
+| US-8.1.7 | Cuenta SMTP resuelta por materia con fallback global (`ADR-023`) |
 
 ## Iteración 2 — Despliegue automático
 
