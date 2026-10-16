@@ -268,3 +268,14 @@ preguntas del docente migrado.
   docente presente — no se posponen indefinidamente ni se inventan.
 - Los **ítems abiertos del ARQ** (infraestructura de producción, backup) se resuelven antes del
   Incremento 3, porque ya hay datos reales de estudiantes en juego a partir de ahí.
+
+---
+
+## Revisión 2026-10-16 — Incremento 8: Despliegue y operación
+
+Se agrega el **Incremento 8 — Despliegue y operación** (`docs/plans/inc8/inc8-candidatas.md`).
+Motivo: ningún incremento 0–7 definió el empaquetado, instalación, configuración y operación en un
+entorno de uso final (CD sin deploy real, CORS/URLs fijos a localhost, sin bootstrap de
+Administrador, sin backup ni runbook). Cubre además el RNF de Administrabilidad (backup mensual,
+retención 12 meses), la decisión de infraestructura de producción y el checkpoint de staging con
+WSS real. Orden relativo respecto de RF-07 (Incremento 7, Iteración 2): a decidir con Víctor.
