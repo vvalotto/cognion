@@ -15,6 +15,9 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN pip install uv && uv sync --frozen --no-dev
 COPY src/ ./src/
+# Migraciones: se aplican como paso de release (fly.toml `release_command`), nunca al arrancar la app (US-8.1.4)
+COPY alembic.ini ./
+COPY migrations/ ./migrations/
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 ENV PYTHONPATH=/app/src
 EXPOSE 8000

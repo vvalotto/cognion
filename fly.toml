@@ -1,0 +1,19 @@
+# Configuración mínima de Fly.io (US-8.1.4, ADR-021). Región, tamaño de VM y Postgres se completan
+# en US-8.2.1 / US-8.2.2 junto con el CD y el entorno de staging.
+app = "cognion"
+
+[deploy]
+  # Corre ANTES de reemplazar la versión en producción: si falla, el deploy se aborta y la versión
+  # anterior sigue sirviendo. La app nunca migra al arrancar.
+  release_command = "uv run alembic upgrade head"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
