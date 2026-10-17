@@ -34,3 +34,9 @@ meses. Las credenciales (cuenta de servicio, `DATABASE_URL`) viven en GitHub/Fly
 - ⚠️ Drive no tiene lifecycle nativo: la retención es lógica, implementada en el script.
 - ⚠️ Un backup no probado no vale: `US-8.3.2` exige un ensayo de restauración real.
 - ⚠️ Los dumps contienen datos de estudiantes: la carpeta debe tener acceso restringido.
+
+## Nota 2026-10-17
+
+El workflow en GitHub Actions hacia Drive queda en standby con la nube (`US-8.3.1`). Mientras tanto la misma
+técnica (`pg_dump` con verificación y rotación) se aplica en local con `US-8.5.4`, hacia una carpeta del equipo.
+

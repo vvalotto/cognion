@@ -1169,7 +1169,8 @@ automático y asistido necesita decisión suya antes de especificar.
 [Incremento 8](https://github.com/vvalotto/cognion/milestone/16)). Sin BC nuevo ni RF funcional
 nuevo: lo que faltaba para instalar y operar el producto en un entorno real (ver el plan para el
 origen). Cinco iteraciones: 0 decisiones, 1 artefacto desplegable, 2 despliegue automático, 3
-operación, 4 entrega e instalación. Cierre previsto como `BL-013`.
+operación, 4 entrega e instalación, más la 5 (despliegue local y prueba con alumnos, agregada
+2026-10-17). Cierre previsto como `BL-013`.
 **Iteración 0 — Decisiones, cerrada 2026-10-16** (PR [#533](https://github.com/vvalotto/cognion/pull/533)):
 producción en Fly.io, uso inicial una comisión piloto (`ADR-021`); backup mensual con `pg_dump` a
 Google Drive institucional, retención de 12 meses aplicada por el script (`ADR-022`); cuenta SMTP
@@ -1185,7 +1186,8 @@ staging/producción (el error nunca imprime el secreto, `hide_input_in_errors`);
 (`ADR-016` actualizado); `src/servidor.py` sirve el frontend y monta la API bajo `/api` (la API
 comparte rutas con el SPA, así que no puede ir en la raíz); `SMTP_CUENTAS_POR_MATERIA` y módulo
 compartido `src/shared/frameworks/smtp.py` (reemplaza el SMTP duplicado de Notificaciones e
-Identidad). Las siete US viven en una única branch con un solo PR al cierre, decisión de Víctor.
+Identidad). Las siete US viven en una única branch con un solo PR al cierre, decisión de Víctor
+(PR [#535](https://github.com/vvalotto/cognion/pull/535), mergeado 2026-10-17, Issues cerrados).
 `tests/uat/inc8/verificar_migraciones.sh` verifica migraciones y bootstrap contra una base
 descartable propia. **No verificado todavía:** `docker build` ni un `fly deploy` real (sin Docker
 local) — lo cubren las Iteraciones 2 y 4. Las credenciales SMTP institucionales las provee Víctor.
@@ -1193,6 +1195,22 @@ local) — lo cubren las Iteraciones 2 y 4. Las credenciales SMTP institucionale
 contra una base descartable migrada, 97.01 % de cobertura), `ruff`/`mypy` 0 errores,
 `designreviewer` 0 CRITICAL (343 advertencias, eran 334 en `BL-012`), evidencia por US en
 `quality/reports/inc8/`.
+
+**Standby de nube y Iteración 5 — despliegue local (2026-10-17).** Al querer crear la base en Fly.io se
+verificó contra la documentación oficial que el `fly postgres` del `ADR-021` está **deprecado**: lo
+administrado hoy es *Managed Postgres*, desde unos 38 USD/mes más disco, lo que anula la ventaja de costo
+que justificaba Fly.io para el piloto. Se relevaron alternativas (Neon, Supabase, Cloud SQL, Cloud Run, VM
+gratuita de GCP; detalle y fuentes en la revisión del `ADR-021`) y **Víctor decidió esperar a saber si se
+puede usar el convenio de la Universidad con Google** antes de elegir nube. Quedan en **standby** las
+Iteraciones 2 y 3 que dependen de la nube (`US-8.2.1` a `8.2.4` y `8.3.1`, Issues #520–#524 con label
+`blocked`); `ADR-021` y `ADR-024` pasan a *En revisión* y `ADR-022` anota la variante local. Mientras tanto
+se ejecuta la **Iteración 5 — Despliegue local y prueba con alumnos** (`US-8.5.1` a `8.5.7`, Issues
+#536–#542, specs en `docs/specs/inc8/`): `ENTORNO=local`, canal de email por consola, comando único para
+levantar y detener, backup y restauración local probada, verificación de la imagen Docker en CI (sin
+Docker local: falta de espacio en la máquina de Víctor; primera verificación real del `Dockerfile`), guía y guion, y una prueba con alumnos en la red local del aula. Riesgos anotados: la red
+del aula puede aislar clientes entre sí, la máquina no debe dormirse durante una sesión en vivo, y los datos
+de los alumnos quedan en el equipo de Víctor (definir con la facultad si la prueba usa cuentas reales).
+Todo lo construido sirve en cualquier nube y ensaya la instalación limpia de `US-8.4.3`.
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
@@ -1496,7 +1514,9 @@ Decidir el track **antes de codear**:
   `FactorDificultad`/`FactorImportancia` en `{1.0, 1.5, 2.0}` por nivel BAJO/MEDIO/ALTO,
   ranking = suma simple sin bonus por racha.
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
-- **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción
+- **Infraestructura definitiva** (ARQ_v1.md) — **en standby desde 2026-10-17**: depende de si se puede usar
+  el convenio de la Universidad con Google (ver bloque del Incremento 8 y `ADR-021`, en revisión). Texto
+  anterior: Fly.io confirmado para testing; producción
   pendiente de decisión institucional (nube vs. servidor FIUNER) y del mecanismo de backup
   asociado (`RNF_v1.md` Escenario 2 — mensual, retención 12 meses). Cambio de estrategia
   2026-08-24 (`docs/rf/PLAN_v1.md` revisión 2026-08-24): los Incrementos 3 a 7 corren con datos

@@ -1,6 +1,6 @@
 # ADR-024 — Dominio, TLS y política de acceso: subdominio de fly.dev
 
-**Estado:** Aceptado
+**Estado:** En revisión (2026-10-17) — depende de `ADR-021`
 **Fecha:** 2026-10-16
 **Origen:** `US-8.0.4` (Issue #513), Incremento 8. Depende de `ADR-021`.
 
@@ -29,3 +29,10 @@ contenido mixto: HTTP→HTTPS y WS→WSS. `allow_origins` se configura por entor
 - ⚠️ La URL no es institucional; migrar a dominio UNER/propio es un cambio de configuración, no
   de código.
 - ⚠️ La entregabilidad de email no depende del dominio de la app (ver `ADR-023`).
+
+## Revisión 2026-10-17
+
+Queda en revisión junto con `ADR-021`: el subdominio de `fly.dev` solo aplica si finalmente se usa Fly.io. En el
+despliegue local (`US-8.5.x`) el acceso es por IP o nombre `.local` de la red del aula, sin TLS, con el frontend y
+la API servidos desde el mismo origen (`US-8.1.6`).
+
