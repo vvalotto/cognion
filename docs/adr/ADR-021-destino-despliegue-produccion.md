@@ -1,6 +1,6 @@
 # ADR-021 — Destino de despliegue de producción: Fly.io
 
-**Estado:** Aceptado
+**Estado:** En revisión (2026-10-17) — standby hasta saber si se puede usar el convenio de la Universidad con Google
 **Fecha:** 2026-10-16
 **Origen:** `US-8.0.1` (Issue #510), Incremento 8 — Despliegue y operación.
 
@@ -35,3 +35,18 @@ código de la aplicación.
 - ⚠️ La residencia del dato queda fuera de la institución; **revisar** si FIUNER lo exige al
   pasar de piloto a cursada completa.
 - ⚠️ Costo recurrente de Fly.io (app + Postgres) a presupuestar.
+
+## Revisión 2026-10-17
+
+- **Standby:** se pospone la elección de nube hasta saber si la Universidad ofrece un convenio con Google Cloud
+  (créditos o exigencias de residencia de datos). Hasta entonces el sistema se usa en red local (`US-8.5.x`).
+- **Supuesto incorrecto:** este ADR y `ARQ_v1.md` hablan de "Postgres administrado sin overhead" en Fly.io. Hoy el
+  `fly postgres` está deprecado (sin mantenimiento ni soporte) y lo administrado es *Managed Postgres*, desde
+  unos 38 USD/mes más disco. Con esto la ventaja de costo de Fly.io para el piloto desaparece.
+- **Alternativas relevadas** (precios y límites de las páginas oficiales al 2026-10-17): Neon (plan gratis con 1 GB
+  y 100 horas de cómputo; Launch por uso; región São Paulo), Supabase (descartada: el plan gratis se pausa y no
+  tiene backups), Cloud SQL (sin capa gratuita; las instancias compartidas más chicas quedan fuera del SLA),
+  Cloud Run (el canal WebSocket en memoria y el verificador de vencimientos obligan a una sola instancia y CPU
+  siempre asignada) y una VM e2-micro gratuita (solo regiones de EE.UU., 1 GB de RAM).
+- Se mantiene Postgres como motor (`ADR-004`): el código usa JSONB, UUID nativo y `ON CONFLICT`.
+

@@ -1,6 +1,7 @@
 # Incremento 8 — Despliegue y operación
 
-**Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev). Iteración 1 (artefacto desplegable) implementada 2026-10-16: `US-8.1.1` a `US-8.1.7`, PR abierto al cierre de la iteración.
+**Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev). Iteración 1 (artefacto desplegable) cerrada 2026-10-16: `US-8.1.1` a `US-8.1.7` (PR #535).
+**Standby de nube desde 2026-10-17:** las Iteraciones 2 y 3 (CD, staging, rollback, backup en la nube) esperan la decisión sobre el convenio de la Universidad con Google. Mientras tanto se ejecuta la **Iteración 5 — Despliegue local y prueba con alumnos** (ver más abajo).
 **Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestone/16)
 **Política:** sin BC nuevo ni RF funcional nuevo — no abre con Iteración 0 de Modelado. Abre
 con una iteración de **spikes de decisión** (infraestructura, backup, SMTP, dominio), porque
@@ -59,7 +60,9 @@ Iteración 1 en detalle.
 | US-8.1.6 | Servir el frontend compilado desde el mismo origen (o proxy) y verificarlo en la imagen |
 | US-8.1.7 | Cuenta SMTP resuelta por materia con fallback global (`ADR-023`) |
 
-## Iteración 2 — Despliegue automático
+## Iteración 2 — Despliegue automático (EN STANDBY)
+
+> Bloqueada por la decisión de nube (`ADR-021` en revisión). Issues #520–#523 con label `blocked`.
 
 | US | Título |
 |---|---|
@@ -68,7 +71,9 @@ Iteración 1 en detalle.
 | US-8.2.3 | Rollback: volver a la imagen/versión anterior y a su esquema |
 | US-8.2.4 | Checkpoint de staging del RNF de rendimiento (≤100 ms, WSS real) — `PROCEDIMIENTO-UAT.md` §4 |
 
-## Iteración 3 — Operación
+## Iteración 3 — Operación (parcialmente en standby)
+
+> `US-8.3.1` (#524, backup automático en la nube) bloqueada; `US-8.3.2` a `US-8.3.4` no dependen de la nube. La variante local del backup se resuelve en `US-8.5.4`.
 
 | US | Título |
 |---|---|
@@ -84,6 +89,35 @@ Iteración 1 en detalle.
 | US-8.4.1 | Guía de instalación en el entorno final (reemplaza el alcance "solo desarrollo" del checklist) |
 | US-8.4.2 | Runbook operativo: arranque, parada, rotación de secretos, restauración, incidentes |
 | US-8.4.3 | Ensayo de instalación limpia desde cero + UAT de despliegue; cierre como `BL-013` |
+
+
+## Iteración 5 — Despliegue local y prueba con alumnos (se ejecuta antes que la 2 y la 3)
+
+Origen: mientras se decide la nube (convenio de la Universidad con Google), se quiere usar el sistema en
+la máquina de Víctor, con alumnos conectándose por la **red local del aula**. Todo lo que se construye acá
+sirve igual en cualquier nube (configuración, migraciones, bootstrap, arranque, backup, guía) y además
+ensaya la instalación limpia de la `US-8.4.3`.
+
+| US | Título | Issue |
+|---|---|---|
+| US-8.5.1 | Entorno local: `ENTORNO=local` con secreto fuerte para uso en red | #536 |
+| US-8.5.2 | Canal de email por consola para uso sin SMTP | #537 |
+| US-8.5.3 | Comando único para levantar y detener el despliegue local | #538 |
+| US-8.5.4 | Backup y restauración local probada | #539 |
+| US-8.5.5 | Docker Compose local (app + Postgres) y verificación de la imagen (opcional, no bloquea) | #540 |
+| US-8.5.6 | Guía de despliegue local y guion de la prueba con alumnos | #541 |
+| US-8.5.7 | Ensayo y prueba en red local con alumnos (UAT) | #542 |
+
+Orden: 8.5.1 → 8.5.2 → 8.5.3 → 8.5.4 → 8.5.6 → 8.5.7; la 8.5.5 va en paralelo y requiere instalar Docker.
+
+**Definition of Done de la iteración:** (1) un comando levanta el sistema desde cero en la máquina de Víctor y
+queda accesible por IP desde otros dispositivos de la red; (2) existe un backup que se probó restaurar;
+(3) ensayo previo con dispositivos reales sin hallazgos 🔴; (4) prueba con alumnos ejecutada y sus hallazgos
+registrados en `quality/reports/uat/inc8-local/`.
+
+**Riesgos conocidos:** la red del aula puede aislar clientes entre sí (hay que probar antes con hotspot o
+router propio); si la máquina se duerme se cortan las sesiones en vivo; los datos de estudiantes quedan en el
+equipo de Víctor (definir con la facultad si la prueba usa cuentas reales o de prueba).
 
 ## Definition of Done del incremento
 
