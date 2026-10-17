@@ -104,11 +104,11 @@ ensaya la instalación limpia de la `US-8.4.3`.
 | US-8.5.2 | Canal de email por consola para uso sin SMTP | #537 |
 | US-8.5.3 | Comando único para levantar y detener el despliegue local | #538 |
 | US-8.5.4 | Backup y restauración local probada | #539 |
-| US-8.5.5 | Docker Compose local (app + Postgres) y verificación de la imagen (opcional, no bloquea) | #540 |
+| US-8.5.5 | Verificación de la imagen Docker en CI (sin Docker local; no bloquea) | #540 |
 | US-8.5.6 | Guía de despliegue local y guion de la prueba con alumnos | #541 |
 | US-8.5.7 | Ensayo y prueba en red local con alumnos (UAT) | #542 |
 
-Orden: 8.5.1 → 8.5.2 → 8.5.3 → 8.5.4 → 8.5.6 → 8.5.7; la 8.5.5 va en paralelo y requiere instalar Docker.
+Orden: 8.5.1 → 8.5.2 → 8.5.3 → 8.5.4 → 8.5.6 → 8.5.7; la 8.5.5 depende de la 8.5.1 y la 8.5.2 y puede ir en paralelo. No se instala Docker Desktop por falta de espacio en la máquina de Víctor (2026-10-17): la imagen se verifica en GitHub Actions.
 
 **Definition of Done de la iteración:** (1) un comando levanta el sistema desde cero en la máquina de Víctor y
 queda accesible por IP desde otros dispositivos de la red; (2) existe un backup que se probó restaurar;

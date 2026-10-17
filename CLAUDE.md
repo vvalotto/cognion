@@ -1206,8 +1206,8 @@ Iteraciones 2 y 3 que dependen de la nube (`US-8.2.1` a `8.2.4` y `8.3.1`, Issue
 `blocked`); `ADR-021` y `ADR-024` pasan a *En revisión* y `ADR-022` anota la variante local. Mientras tanto
 se ejecuta la **Iteración 5 — Despliegue local y prueba con alumnos** (`US-8.5.1` a `8.5.7`, Issues
 #536–#542, specs en `docs/specs/inc8/`): `ENTORNO=local`, canal de email por consola, comando único para
-levantar y detener, backup y restauración local probada, Docker Compose opcional (primera verificación real
-del `Dockerfile`), guía y guion, y una prueba con alumnos en la red local del aula. Riesgos anotados: la red
+levantar y detener, backup y restauración local probada, verificación de la imagen Docker en CI (sin
+Docker local: falta de espacio en la máquina de Víctor; primera verificación real del `Dockerfile`), guía y guion, y una prueba con alumnos en la red local del aula. Riesgos anotados: la red
 del aula puede aislar clientes entre sí, la máquina no debe dormirse durante una sesión en vivo, y los datos
 de los alumnos quedan en el equipo de Víctor (definir con la facultad si la prueba usa cuentas reales).
 Todo lo construido sirve en cualquier nube y ensaya la instalación limpia de `US-8.4.3`.
