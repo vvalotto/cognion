@@ -49,3 +49,15 @@ superficie de ataque nueva en el API — no hay endpoint público que exponer.
 - ✅ Reutiliza el use case existente — sin lógica de negocio duplicada.
 - ⚠️ Requiere acceso a shell/entorno de despliegue para ejecutarlo — aceptable para un equipo
   unipersonal, sería fricción en un equipo con despliegues delegados a terceros.
+
+## Actualización 2026-10-16 (`US-8.1.5`, Incremento 8)
+
+La decisión se mantiene (comando operativo, sin endpoint público), con tres ajustes para el despliegue real:
+
+- **Ubicación:** la lógica pasa a `src/identidad/frameworks/cli/bootstrap_administrador.py` (ejecutable con
+  `python -m`), porque `scripts/` no entra en la imagen Docker. `scripts/seed_admin.py` queda como envoltorio.
+- **Contraseña:** `ADMIN_PASSWORD` por entorno o, si falta, se pide por terminal sin eco (`getpass`). Nunca por
+  argumento de línea de comandos ni se imprime.
+- **Idempotencia:** el comando no hace nada si ya existe **un Administrador operativo** (no solo si el email
+  coincide), vía `BootstrapAdministradorUseCase`.
+

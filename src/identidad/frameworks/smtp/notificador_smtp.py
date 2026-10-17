@@ -2,36 +2,22 @@
 
 from __future__ import annotations
 
-import asyncio
-import smtplib
-from email.message import EmailMessage
+from uuid import UUID
 
 from src.identidad.entities.ports.notificador_port import NotificadorPort
-from src.settings import settings
+from src.shared.frameworks.smtp import enviar_email
 
 
 class SmtpNotificador(NotificadorPort):
-    """Envía emails de invitación vía SMTP usando la configuración de `settings`."""
+    """Envía emails de invitación vía SMTP, desde la cuenta de la materia o la global."""
 
-    async def enviar_invitacion(self, email_destinatario: str, token: str) -> None:
+    async def enviar_invitacion(
+        self, email_destinatario: str, token: str, materia_id: UUID | None = None
+    ) -> None:
         """Arma y envía el email con el link de invitación al destinatario indicado."""
-        await asyncio.to_thread(self._enviar_sync, email_destinatario, token)
-
-    @staticmethod
-    def _enviar_sync(email_destinatario: str, token: str) -> None:
-        """Arma y envía el mensaje SMTP de forma bloqueante (corre en un thread aparte)."""
-        mensaje = EmailMessage()
-        mensaje["Subject"] = "Invitación a Cognión"
-        mensaje["From"] = settings.smtp_from
-        mensaje["To"] = email_destinatario
-        mensaje.set_content(
+        cuerpo = (
             "Fuiste invitado a registrarte en Cognión.\n"
             f"Token de invitación: {token}\n"
             "Válido por 7 días desde su generación."
         )
-
-        with smtplib.SMTP(settings.smtp_host, settings.smtp_port) as servidor:
-            if settings.smtp_user:
-                servidor.starttls()
-                servidor.login(settings.smtp_user, settings.smtp_password)
-            servidor.send_message(mensaje)
+        await enviar_email(materia_id, email_destinatario, "Invitación a Cognión", cuerpo)

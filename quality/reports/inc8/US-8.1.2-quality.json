@@ -1,0 +1,9 @@
+{
+  "us_id": "US-8.1.2",
+  "veredicto": "APROBADO",
+  "oxlint": "0 errores (warnings preexistentes)",
+  "tsc_b": "0 errores",
+  "tests_frontend": {"nuevos": 8, "suite_completa": "835 passed / 109 archivos"},
+  "cobertura_global": {"statements": 93.56, "branches": 86.14},
+  "nota": "Frontend puro: CodeGuard/pylint/radon no aplican."
+}

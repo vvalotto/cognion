@@ -1164,6 +1164,36 @@ checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4
 `v0.8.1` ejecutados el 2026-10-15** a confirmación explícita de Víctor; Milestone #15 cerrado. Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
 automático y asistido necesita decisión suya antes de especificar.
 
+**Incremento 8 — Despliegue y operación, en curso desde 2026-10-16**
+(`docs/plans/inc8/inc8-candidatas.md`, Milestone GitHub
+[Incremento 8](https://github.com/vvalotto/cognion/milestone/16)). Sin BC nuevo ni RF funcional
+nuevo: lo que faltaba para instalar y operar el producto en un entorno real (ver el plan para el
+origen). Cinco iteraciones: 0 decisiones, 1 artefacto desplegable, 2 despliegue automático, 3
+operación, 4 entrega e instalación. Cierre previsto como `BL-013`.
+**Iteración 0 — Decisiones, cerrada 2026-10-16** (PR [#533](https://github.com/vvalotto/cognion/pull/533)):
+producción en Fly.io, uso inicial una comisión piloto (`ADR-021`); backup mensual con `pg_dump` a
+Google Drive institucional, retención de 12 meses aplicada por el script (`ADR-022`); cuenta SMTP
+por materia con respaldo global (`ADR-023`); dominio, subdominio de `fly.dev` con TLS automático
+(`ADR-024`). Cierra los ítems abiertos de infraestructura de producción, backup y SMTP real.
+**Iteración 1 — Artefacto desplegable, implementada 2026-10-16** (backend + frontend, sin RF;
+`US-8.1.1` a `US-8.1.7`, specs en `docs/specs/inc8/`, reportes en `docs/reports/inc8/`):
+CORS configurable por entorno (`CORS_ALLOWED_ORIGINS`, rechaza `*`); URL base de API y WebSocket
+resuelta en build (`frontend/src/lib/config.ts`); `ENTORNO` + validación fail-fast de settings en
+staging/producción (el error nunca imprime el secreto, `hide_input_in_errors`); migraciones como
+`release_command` de `fly.toml` y la imagen ahora incluye `alembic.ini`/`migrations/`; comando
+`python -m src.identidad.frameworks.cli.bootstrap_administrador` para el primer Administrador
+(`ADR-016` actualizado); `src/servidor.py` sirve el frontend y monta la API bajo `/api` (la API
+comparte rutas con el SPA, así que no puede ir en la raíz); `SMTP_CUENTAS_POR_MATERIA` y módulo
+compartido `src/shared/frameworks/smtp.py` (reemplaza el SMTP duplicado de Notificaciones e
+Identidad). Las siete US viven en una única branch con un solo PR al cierre, decisión de Víctor.
+`tests/uat/inc8/verificar_migraciones.sh` verifica migraciones y bootstrap contra una base
+descartable propia. **No verificado todavía:** `docker build` ni un `fly deploy` real (sin Docker
+local) — lo cubren las Iteraciones 2 y 4. Las credenciales SMTP institucionales las provee Víctor.
+**Verificación de cierre de la Iteración 1:** 1938/1938 tests (unit + integración + BDD, corridos
+contra una base descartable migrada, 97.01 % de cobertura), `ruff`/`mypy` 0 errores,
+`designreviewer` 0 CRITICAL (343 advertencias, eran 334 en `BL-012`), evidencia por US en
+`quality/reports/inc8/`.
+
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
 en 7 puntos, ejecutándose de a uno:

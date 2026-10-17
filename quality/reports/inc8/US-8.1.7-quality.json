@@ -1,0 +1,17 @@
+{
+  "us_id": "US-8.1.7",
+  "veredicto": "APROBADO",
+  "pylint": {"score": 9.9, "umbral": 8.0, "nota": "único mensaje R0903 too-few-public-methods en adapters de puerto de 1 método, norma del proyecto"},
+  "ruff": "0 errores (src y tests/unit/inc8)",
+  "mypy": "0 errores sobre 308 archivos",
+  "complejidad_ciclomatica": {"promedio": 3.8, "umbral": 10},
+  "mantenibilidad": {"src/shared/frameworks/smtp.py": 78.05, "src/settings.py": 50.17, "umbral": 20},
+  "cobertura": {"src/settings.py": 100.0, "umbral": 95.0, "nota": "frameworks/ excluido de la cobertura del proyecto; smtp.py se prueba con 5 tests directos"},
+  "tests": {"nuevos": 10, "suite_unit_completa": "936 passed", "regresion_integracion_bdd": "43 passed contra base descartable (invitaciones, recuperación, notificaciones y BDD de invitación) con SMTP stub real"},
+  "codeguard": {
+    "analysis_type": "full",
+    "checks_executed": 9,
+    "reporte": "quality/reports/inc8/US-8.1.7-codeguard.json",
+    "nota": "10 errores, todos de tooling (vulture/codespell no instalados, timeout de mypy software_limpio#70). Sin hallazgos de código."
+  }
+}

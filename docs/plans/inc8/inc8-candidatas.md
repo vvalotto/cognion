@@ -1,6 +1,6 @@
 # Incremento 8 — Despliegue y operación
 
-**Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev).
+**Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev). Iteración 1 (artefacto desplegable) implementada 2026-10-16: `US-8.1.1` a `US-8.1.7`, PR abierto al cierre de la iteración.
 **Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestone/16)
 **Política:** sin BC nuevo ni RF funcional nuevo — no abre con Iteración 0 de Modelado. Abre
 con una iteración de **spikes de decisión** (infraestructura, backup, SMTP, dominio), porque
