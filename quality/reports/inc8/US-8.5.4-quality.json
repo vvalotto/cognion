@@ -1,0 +1,10 @@
+{
+  "us": "US-8.5.4",
+  "veredicto": "APROBADO",
+  "tipo": "tooling operativo (shell), sin código Python de producción",
+  "verificacion": {"script": "tests/uat/inc8/verificar_respaldo_local.sh", "checks": "10/10 OK (preparación + escenarios 1 a 5, más 1b permisos, 4b sha256 alterado, 5b exit 3 ante diferencia y 5c reemplazo confirmado)", "aislamiento": "base descartable propia y carpeta temporal de respaldos; sin bases temporales ni archivos huérfanos; ~/CognionRespaldos no se tocó"},
+  "tests_unit_inc8": "68/68 sin regresión",
+  "shellcheck": "no instalado; solo bash -n (sintaxis OK)",
+  "portabilidad": "se evitó 'head -n -N' (no existe en BSD/macOS) y /tmp fijo; se usa awk y mktemp",
+  "no_automatizable": "envío a Drive o a la nube: fuera de alcance (US-8.3.1)"
+}
