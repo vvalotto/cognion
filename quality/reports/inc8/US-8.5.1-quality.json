@@ -1,0 +1,12 @@
+{
+  "us": "US-8.5.1",
+  "veredicto": "APROBADO",
+  "tests": {"unit_inc8": "60/60", "nuevos": 5},
+  "cobertura_settings": "100%",
+  "pylint": "10.00/10",
+  "ruff": "0 errores",
+  "mypy": "0 errores (src/settings.py)",
+  "radon": {"cc_maximo": 14, "funcion": "Settings._validar_entorno_estricto", "nota": "CC 14 preexistente en HEAD; el refactor no la sube", "mi": 50.02},
+  "designreviewer": "0 blocking issues",
+  "codeguard": {"analysis_type": "full", "checks_executed": 9, "reporte": "quality/reports/inc8/US-8.5.1-codeguard.json", "nota": "3 errores de tooling (vulture y codespell no instalados, mypy timeout 10s conocido, software_limpio#70); 1 warning de complejidad preexistente"}
+}

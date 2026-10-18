@@ -1207,10 +1207,25 @@ Iteraciones 2 y 3 que dependen de la nube (`US-8.2.1` a `8.2.4` y `8.3.1`, Issue
 se ejecuta la **Iteración 5 — Despliegue local y prueba con alumnos** (`US-8.5.1` a `8.5.7`, Issues
 #536–#542, specs en `docs/specs/inc8/`): `ENTORNO=local`, canal de email por consola, comando único para
 levantar y detener, backup y restauración local probada, verificación de la imagen Docker en CI (sin
-Docker local: falta de espacio en la máquina de Víctor; primera verificación real del `Dockerfile`), guía y guion, y una prueba con alumnos en la red local del aula. Riesgos anotados: la red
+Docker local: falta de espacio en la máquina de Víctor; primera verificación real del `Dockerfile`), guía y guion, y una prueba con alumnos en la red local del aula (**alcance reducido el 2026-10-18**: ver el cierre de la Iteración 5 abajo). Riesgos anotados: la red
 del aula puede aislar clientes entre sí, la máquina no debe dormirse durante una sesión en vivo, y los datos
 de los alumnos quedan en el equipo de Víctor (definir con la facultad si la prueba usa cuentas reales).
 Todo lo construido sirve en cualquier nube y ensaya la instalación limpia de `US-8.4.3`.
+**Iteración 5 — despliegue local, cerrada 2026-10-18** (PR [#544](https://github.com/vvalotto/cognion/pull/544),
+una sola branch apilada, PR único al cierre por CI lento, decisión de Víctor). **US-8.5.1** (`ENTORNO=local`
+valida solo el secreto, ≥32 caracteres y distinto del ejemplo, nunca impreso), **US-8.5.2** (`EMAIL_MODO=consola`:
+el email con los links de token queda en el log INFO y no se abre SMTP; se rechaza en staging/producción),
+**US-8.5.3** (`scripts/local/levantar.sh`/`detener.sh`: base propia `cognion_local` —nunca la de desarrollo—,
+`.env.local` fuera de git, frontend, migraciones, Administrador por terminal, URLs para los alumnos, `caffeinate`,
+log en `logs/local/`) y **US-8.5.4** (`respaldar.sh`/`restaurar.sh`: `pg_dump -Fc` con sha256 y rotación a
+`~/CognionRespaldos/`, restauración por ensayo en base temporal o `--sobre-local` con confirmación). Specs en
+`docs/specs/inc8/`, reportes en `docs/reports/inc8/`, verificación en `tests/uat/inc8/verificar_levantar_local.sh`
+(12/12) y `verificar_respaldo_local.sh` (10/10) contra bases descartables. **Prueba manual 2026-10-18:** primera
+corrida real sobre `cognion_local` y acceso desde un celular en la misma wifi, ambos OK. **Decisión de Víctor
+2026-10-18: `US-8.5.5` (imagen Docker en CI), `US-8.5.6` y `US-8.5.7` (prueba con alumnos) se desestiman — no
+corresponden ahora** (Issues #540–#542 cerrados como no planificados). La guía de instalación se escribió igual,
+sin el plan de la clase: `docs/plans/DESPLIEGUE-LOCAL.md`. Sin probar todavía: la red del aula (puede aislar
+clientes), la Mac con la tapa cerrada y la carga con muchos alumnos a la vez.
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan

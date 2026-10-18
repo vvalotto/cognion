@@ -34,7 +34,8 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", hide_input_in_errors=True)
 
-    entorno: Literal["desarrollo", "staging", "produccion"] = "desarrollo"
+    entorno: Literal["desarrollo", "local", "staging", "produccion"] = "desarrollo"
+    email_modo: Literal["smtp", "consola"] = "smtp"
     database_url: str
     secret_key: str
     algorithm: str = "HS256"
@@ -66,9 +67,11 @@ class Settings(BaseSettings):
     def _validar_entorno_estricto(self) -> "Settings":
         """En staging/producción rechaza valores de desarrollo y lista todas las violaciones.
 
+        En `local` valida solo el secreto (`US-8.5.1`): se permite localhost/IP.
+
         Nunca incluye el valor del secreto en el mensaje (`US-8.1.3`).
         """
-        if self.entorno not in _ENTORNOS_ESTRICTOS:
+        if self.entorno not in _ENTORNOS_ESTRICTOS | {"local"}:
             return self
         errores: list[str] = []
         if (
@@ -79,6 +82,9 @@ class Settings(BaseSettings):
                 f"SECRET_KEY debe tener al menos {_SECRET_KEY_LARGO_MINIMO} caracteres "
                 "y no ser el valor de ejemplo"
             )
+        if self.entorno == "local":
+            return self._o_fallar(errores)
+        errores.extend(self._errores_email_modo())
         if _es_local(self.database_url):
             errores.append("DATABASE_URL no puede apuntar a localhost")
         if _es_local(self.smtp_host):
@@ -95,6 +101,19 @@ class Settings(BaseSettings):
             errores.append("FRONTEND_URL no puede apuntar a localhost")
         if any(_es_local(origen) for origen in self.cors_origins_list):
             errores.append("CORS_ALLOWED_ORIGINS no puede incluir orígenes localhost")
+        return self._o_fallar(errores)
+
+    def _errores_email_modo(self) -> list[str]:
+        """`EMAIL_MODO=consola` deja tokens en el log: no va en servidores expuestos."""
+        if self.email_modo == "consola":
+            return [
+                "EMAIL_MODO no puede ser 'consola': el cuerpo de los emails (con tokens) "
+                "quedaría en los logs"
+            ]
+        return []
+
+    def _o_fallar(self, errores: list[str]) -> "Settings":
+        """Lanza `ValueError` con todas las violaciones, o devuelve `self` si no hay ninguna."""
         if errores:
             raise ValueError(
                 f"Configuración inválida para ENTORNO={self.entorno}: " + "; ".join(errores)

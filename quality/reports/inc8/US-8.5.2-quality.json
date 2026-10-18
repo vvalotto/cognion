@@ -1,0 +1,13 @@
+{
+  "us": "US-8.5.2",
+  "veredicto": "APROBADO",
+  "tests": {"unit_inc8": "68/68", "nuevos": 8},
+  "cobertura": {"settings.py": "100%", "smtp.py": "fuera de la medición (omit src/*/frameworks/* en pyproject); ramas smtp y consola ejercitadas por tests"},
+  "pylint": "10.00/10",
+  "ruff": "0 errores",
+  "black": "limpio",
+  "mypy": "0 errores (src/ completo)",
+  "radon": {"cc_maximo": 14, "funcion": "Settings._validar_entorno_estricto", "nota": "preexistente; el chequeo de EMAIL_MODO va en helper _errores_email_modo para no subirla", "mi_min": 48.15},
+  "designreviewer": "0 blocking",
+  "codeguard": {"analysis_type": "full", "checks_executed": 9, "reporte": "quality/reports/inc8/US-8.5.2-codeguard.json", "nota": "errores solo de tooling (vulture/codespell no instalados, mypy timeout 10s, software_limpio#70); 1 warning de complejidad preexistente"}
+}
