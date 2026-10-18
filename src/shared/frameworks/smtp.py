@@ -7,12 +7,15 @@ desde qué cuenta sale cada mensaje y donde vive el código SMTP bloqueante (`AD
 from __future__ import annotations
 
 import asyncio
+import logging
 import smtplib
 from dataclasses import dataclass
 from email.message import EmailMessage
 from uuid import UUID
 
 from src.settings import settings
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -70,7 +73,16 @@ def _enviar_sync(cuenta: CuentaSmtp, destinatario: str, asunto: str, cuerpo: str
 async def enviar_email(
     materia_id: UUID | None, destinatario: str, asunto: str, cuerpo: str
 ) -> None:
-    """Envía un email desde la cuenta de `materia_id` (o la global) sin bloquear el event loop."""
+    """Envía un email desde la cuenta de `materia_id` (o la global) sin bloquear el event loop.
+
+    Con `EMAIL_MODO=consola` (`US-8.5.2`) no abre ninguna conexión: deja el mensaje completo en el
+    log para poder usar links con token sin un servidor de correo.
+    """
+    if settings.email_modo == "consola":
+        logger.info(
+            "Email (modo consola)\nPara: %s\nAsunto: %s\n\n%s", destinatario, asunto, cuerpo
+        )
+        return
     await asyncio.to_thread(
         _enviar_sync, resolver_cuenta_smtp(materia_id), destinatario, asunto, cuerpo
     )
