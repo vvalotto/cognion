@@ -1,6 +1,6 @@
 # US-8.5.5: Verificación de la imagen Docker en CI
 
-**Estado**: `Especificada` — **no bloquea la prueba con alumnos**
+**Estado**: `Desestimada` (decisión de Víctor, 2026-10-18; no se implementa en este incremento)
 **Iteracion / Sprint**: `INC-8.5`
 **Tipo**: `infra CI` (GitHub Actions, sin código de producción)
 **Bounded Context**: transversal (`.github/workflows/ci.yml`, `Dockerfile`)

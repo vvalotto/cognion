@@ -1,6 +1,6 @@
 # US-8.5.6: Guía de despliegue local y guion de la prueba con alumnos
 
-**Estado**: `Especificada`
+**Estado**: `Desestimada` (decisión de Víctor, 2026-10-18; no se implementa en este incremento)
 **Iteracion / Sprint**: `INC-8.5`
 **Tipo**: `documentación` (sin código de producción)
 **Bounded Context**: transversal

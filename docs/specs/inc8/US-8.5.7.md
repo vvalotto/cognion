@@ -1,6 +1,6 @@
 # US-8.5.7: Ensayo y prueba en red local con alumnos (UAT)
 
-**Estado**: `Especificada`
+**Estado**: `Desestimada` (decisión de Víctor, 2026-10-18; no se implementa en este incremento)
 **Iteracion / Sprint**: `INC-8.5`
 **Tipo**: `UAT / verificación` (sin código de producción)
 **Bounded Context**: transversal

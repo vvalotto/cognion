@@ -100,15 +100,17 @@ ensaya la instalación limpia de la `US-8.4.3`.
 
 | US | Título | Issue |
 |---|---|---|
-| US-8.5.1 | Entorno local: `ENTORNO=local` con secreto fuerte para uso en red | #536 |
-| US-8.5.2 | Canal de email por consola para uso sin SMTP | #537 |
-| US-8.5.3 | Comando único para levantar y detener el despliegue local | #538 |
-| US-8.5.4 | Backup y restauración local probada | #539 |
-| US-8.5.5 | Verificación de la imagen Docker en CI (sin Docker local; no bloquea) | #540 |
-| US-8.5.6 | Guía de despliegue local y guion de la prueba con alumnos | #541 |
-| US-8.5.7 | Ensayo y prueba en red local con alumnos (UAT) | #542 |
+| US-8.5.1 | Entorno local: `ENTORNO=local` con secreto fuerte para uso en red | #536 ✅ |
+| US-8.5.2 | Canal de email por consola para uso sin SMTP | #537 ✅ |
+| US-8.5.3 | Comando único para levantar y detener el despliegue local | #538 ✅ |
+| US-8.5.4 | Backup y restauración local probada | #539 ✅ |
+| US-8.5.5 | Verificación de la imagen Docker en CI (sin Docker local; no bloquea) | #540 ⛔ desestimada |
+| US-8.5.6 | Guía de despliegue local y guion de la prueba con alumnos | #541 ⛔ desestimada (la guía se hizo aparte) |
+| US-8.5.7 | Ensayo y prueba en red local con alumnos (UAT) | #542 ⛔ desestimada |
 
-Orden: 8.5.1 → 8.5.2 → 8.5.3 → 8.5.4 → 8.5.6 → 8.5.7; la 8.5.5 depende de la 8.5.1 y la 8.5.2 y puede ir en paralelo. No se instala Docker Desktop por falta de espacio en la máquina de Víctor (2026-10-17): la imagen se verifica en GitHub Actions.
+**Estado 2026-10-18:** `US-8.5.1` a `8.5.4` implementadas (PR #544); `US-8.5.5`, `8.5.6` y `8.5.7` **desestimadas por Víctor** (no corresponden ahora). La guía de instalación se escribió igual en `docs/plans/DESPLIEGUE-LOCAL.md`, sin el plan de la clase de prueba con alumnos.
+
+Orden original: 8.5.1 → 8.5.2 → 8.5.3 → 8.5.4 → 8.5.6 → 8.5.7; la 8.5.5 depende de la 8.5.1 y la 8.5.2 y puede ir en paralelo. No se instala Docker Desktop por falta de espacio en la máquina de Víctor (2026-10-17): la imagen se verifica en GitHub Actions.
 
 **Definition of Done de la iteración:** (1) un comando levanta el sistema desde cero en la máquina de Víctor y
 queda accesible por IP desde otros dispositivos de la red; (2) existe un backup que se probó restaurar;
