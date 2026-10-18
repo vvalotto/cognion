@@ -1,0 +1,215 @@
+{
+  "summary": {
+    "total_files": 1,
+    "checks_executed": 9,
+    "elapsed_seconds": 19.83,
+    "timestamp": "2026-10-18T18:38:37.117935",
+    "total_issues": 9,
+    "errors": 3,
+    "warnings": 1,
+    "infos": 5
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B105]: Possible hardcoded password: 'cambiar-por-un-secreto-seguro'",
+      "file": "src/settings.py",
+      "line": 10
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "warning",
+      "message": "Complexity: Settings._validar_entorno_estricto has cyclomatic complexity 14 (grade C). Consider refactoring into smaller functions.",
+      "file": "src/settings.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 50.0 (grade A)",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.26/10 (>= 8.0)",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/settings.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/settings.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "Complexity",
+        "severity": "warning",
+        "message": "Complexity: Settings._validar_entorno_estricto has cyclomatic complexity 14 (grade C). Consider refactoring into smaller functions.",
+        "file": "src/settings.py",
+        "line": 66
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B105]: Possible hardcoded password: 'cambiar-por-un-secreto-seguro'",
+        "file": "src/settings.py",
+        "line": 10
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 50.0 (grade A)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.26/10 (>= 8.0)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/settings.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "src/settings.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B105]: Possible hardcoded password: 'cambiar-por-un-secreto-seguro'",
+        "file": "src/settings.py",
+        "line": 10
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "warning",
+        "message": "Complexity: Settings._validar_entorno_estricto has cyclomatic complexity 14 (grade C). Consider refactoring into smaller functions.",
+        "file": "src/settings.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 50.0 (grade A)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.26/10 (>= 8.0)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/settings.py",
+        "line": null
+      }
+    ]
+  }
+}
