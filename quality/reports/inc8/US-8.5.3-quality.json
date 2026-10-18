@@ -1,0 +1,15 @@
+{
+  "us": "US-8.5.3",
+  "veredicto": "APROBADO",
+  "tipo": "tooling operativo (shell), sin código Python de producción",
+  "verificacion": {"script": "tests/uat/inc8/verificar_levantar_local.sh", "checks": "12/12 OK (escenarios 1 a 5 de la spec, el 5 por la IP local desde esta máquina)", "aislamiento": "base y puerto descartables; huella de la base de desarrollo idéntica antes/después; sin bases ni procesos huérfanos"},
+  "tests_unit_inc8": "68/68 sin regresión",
+  "designreviewer": "0 blocking (src sin cambios)",
+  "shellcheck": "no instalado; solo bash -n (sintaxis OK)",
+  "hallazgos_durante_la_verificacion": [
+    "ruta absoluta en COGNION_LOCAL_ENV rompía el source",
+    "el guard de la base de desarrollo comparaba contra la URL de .env.local y rechazaba la propia base en la 2.ª ejecución",
+    "detener.sh no esperaba al cierre y la 2.ª ejecución encontraba el puerto ocupado"
+  ],
+  "no_automatizable": "acceso desde otro dispositivo de la red: paso manual de la guía (US-8.5.6)"
+}
