@@ -1,7 +1,7 @@
 # Incremento 8 — Despliegue y operación
 
 **Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev). Iteración 1 (artefacto desplegable) cerrada 2026-10-16: `US-8.1.1` a `US-8.1.7` (PR #535).
-**Standby de nube desde 2026-10-17:** las Iteraciones 2 y 3 (CD, staging, rollback, backup en la nube) esperan la decisión sobre el convenio de la Universidad con Google. Mientras tanto se ejecuta la **Iteración 5 — Despliegue local y prueba con alumnos** (ver más abajo).
+**Standby de nube desde 2026-10-17:** las Iteraciones 2 y 3 (CD, staging, rollback, backup en la nube) esperan la decisión sobre el convenio de la Universidad con Google. Mientras tanto se ejecutó la **Iteración 5 — Despliegue local** (cerrada 2026-10-18) y se propone la **Iteración 6 — Despliegue de prueba en GCP con VM gratuita** (ver más abajo).
 **Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestone/16)
 **Política:** sin BC nuevo ni RF funcional nuevo — no abre con Iteración 0 de Modelado. Abre
 con una iteración de **spikes de decisión** (infraestructura, backup, SMTP, dominio), porque
@@ -35,6 +35,8 @@ reales de estudiantes, RF-07 puede ir en paralelo o después.
 | 2 | Despliegue automático | CD completo, staging, rollback, checkpoint RNF con WSS real | Formal / infraestructura |
 | 3 | Operación | Backup y restore, observabilidad, `downgrade` de migraciones | Formal / infraestructura |
 | 4 | Entrega e instalación | Guía de instalación, runbook, ensayo de instalación limpia, cierre | Documentación + UAT |
+| 5 | Despliegue local | `ENTORNO=local`, email por consola, scripts de arranque y respaldo (cerrada 2026-10-18) | Formal (tooling) |
+| 6 | Despliegue de prueba en GCP | VM gratuita `e2-micro` con aplicación y PostgreSQL juntos, para una prueba de uso (propuesta 2026-10-19) | Spike + formal (tooling e infraestructura) + UAT |
 
 ## Iteración 0 — Decisiones
 
@@ -134,3 +136,111 @@ equipo de Víctor (definir con la facultad si la prueba usa cuentas reales o de 
 
 RF-07 (Iteración 2 del Incremento 7), RF-18 (KPIs históricos), multi-inscripción de
 estudiantes, issues de deuda técnica #496–#498 y #500–#502 (se priorizan aparte).
+
+## Iteración 6 — Despliegue de prueba en GCP con VM gratuita (propuesta 2026-10-19)
+
+**Estado:** propuesta, pendiente de aprobación de Víctor. Sin Issues ni specs todavía. Reemplaza en la práctica a las
+Iteraciones 2 y 3 mientras dure el standby de Fly.io, que no se tocan.
+
+### Origen
+
+El 2026-10-19 Víctor pidió analizar GCP **con su cuenta personal** (`vvalotto@gmail.com`) y eligió la **opción A**: una VM
+`e2-micro` de la capa gratuita con la aplicación y PostgreSQL juntos, para una **prueba de uso**. Esta iteración adecua el
+despliegue a esa decisión y la valida con mediciones.
+
+Análisis previo (precios y límites de las páginas oficiales al 2026-10-19):
+- Capa gratuita: 1 VM `e2-micro` no preemptible por mes solo en `us-west1`, `us-central1` o `us-east1`; 30 GB de disco
+  estándar; 1 GB de salida de red por mes; Cloud Storage 5 GB en regiones de EE.UU.
+- Prueba gratuita de 300 USD por 90 días con tarjeta. Si no se pasa a cuenta paga, al vencer se apagan los recursos y tras
+  30 días de gracia se borran. Para conservar la capa gratuita hay que pasar a cuenta paga.
+- Opción B descartada por ahora: Cloud Run con CPU siempre asignada y una sola instancia, más Cloud SQL. Unos 45–50 USD por
+  mes de Cloud Run (estimación) más 8 a 26 USD de Cloud SQL, sin SLA en las instancias compartidas.
+
+### Restricciones del sistema que condicionan el diseño
+
+- **Una sola instancia y un solo proceso:** el canal WebSocket vive en memoria y el `VerificadorDeVencimientos` corre como
+  tarea de fondo en el `lifespan`. No se escala horizontalmente.
+- **El artefacto ya existe:** la imagen sirve interfaz y API desde un mismo origen (`US-8.1.6`) y se configura solo por
+  variables de entorno (`US-8.1.1` a `8.1.7`). Las migraciones son un paso explícito (`US-8.1.4`).
+- **Reutilizable de la Iteración 5:** `ENTORNO=local`, `EMAIL_MODO`, `respaldar.sh` y `restaurar.sh`.
+
+### Riesgos que la iteración debe medir (no suponer)
+
+1. **CPU compartida:** una `e2-micro` sostiene solo una fracción de vCPU. El hash bcrypt de 30 a 60 logins simultáneos al
+   empezar una clase puede saturarla.
+2. **1 GB de RAM** para la aplicación, PostgreSQL y el proxy; hace falta swap y ajustar PostgreSQL.
+3. **Región solo en EE.UU.:** la latencia desde Argentina no está medida. El RNF de 100 ms es del servidor (p95 de 43,81 ms
+   en la Mac de Víctor), no de la red.
+4. **Datos de alumnos en una cuenta personal de Gmail:** decisión institucional, no técnica.
+5. **Un solo punto de falla:** sin SLA; PostgreSQL lo operamos nosotros.
+
+### US
+
+Orden: decisiones → artefacto y VM → operación → ensayo y cierre. Si resulta demasiado para una sola iteración se parte
+en 6a (decisiones, artefacto y VM) y 6b (operación, ensayo y cierre), como se hizo en el Incremento 4-ADJ.
+
+**Decisiones (spikes, con Víctor presente).** Gate: las cuatro registradas en `ADR-025` antes de especificar el resto.
+`ADR-021` y `ADR-024` quedan anotados con su relación al nuevo ADR. Si llega antes la respuesta de la Universidad sobre el
+convenio con Google, se reevalúa en este punto.
+
+| US | Título |
+|---|---|
+| US-8.6.1 | Spike: dominio y HTTPS sin dominio propio (subdominio gratuito de DuckDNS, `sslip.io`, túnel de Cloudflare o dominio propio) |
+| US-8.6.2 | Spike: modo de email y `ENTORNO` para una prueba expuesta a internet (`EMAIL_MODO=consola` deja tokens en el log y se rechaza en staging/producción: SMTP real con `ENTORNO=staging`, o `ENTORNO=local` aceptando el riesgo en una prueba acotada) |
+| US-8.6.3 | Spike: contenedores o procesos nativos en 1 GB de RAM (Docker agrega consumo fijo; nativo lo ahorra pero pierde la paridad con la imagen) |
+| US-8.6.4 | Spike: alcance de datos y cuenta de la prueba (¿cuentas reales o de prueba?, ¿qué se avisa a los alumnos?, ¿cuenta personal o institucional?, ¿cuándo pasar a cuenta paga?) |
+
+**Artefacto y VM.**
+
+| US | Título |
+|---|---|
+| US-8.6.5 | Composición de servicios para la VM: aplicación, PostgreSQL y proxy HTTPS; límites de memoria, ajuste de PostgreSQL, rotación de logs, reinicio automático |
+| US-8.6.6 | Aprovisionamiento reproducible con `gcloud`: `e2-micro` en `us-central1`, disco, IP estática, firewall solo en 80/443 (sin PostgreSQL expuesto), swap, alerta de presupuesto |
+| US-8.6.7 | Publicar la imagen en un registro desde CI al crear una etiqueta `v*.*.*`, reemplazando el `build` solitario de `cd.yml` (los pasos de Fly.io quedan comentados) |
+| US-8.6.8 | Despliegue y rollback en la VM: bajar la imagen, aplicar migraciones, reiniciar, verificar `/api/health`, volver a la versión anterior si falla |
+| US-8.6.9 | Bootstrap del primer Administrador y carga de secretos en la VM (archivo con permisos 600) |
+
+**Operación.**
+
+| US | Título |
+|---|---|
+| US-8.6.10 | Backup automático a Cloud Storage (dentro de los 5 GB gratuitos) reutilizando `respaldar.sh`, con retención de 12 meses (`ADR-022`) y respaldo antes y después de cada clase |
+| US-8.6.11 | Restauración ensayada desde un respaldo real en la VM, documentada |
+| US-8.6.12 | Observabilidad mínima: verificación externa de disponibilidad, alerta de disco/memoria y de presupuesto, logs consultables |
+| US-8.6.13 | Runbook operativo de la VM: arranque, parada, actualización, rotación de secretos, restauración e incidentes |
+
+**Ensayo y cierre.**
+
+| US | Título |
+|---|---|
+| US-8.6.14 | Ensayo de instalación limpia desde cero siguiendo solo el runbook |
+| US-8.6.15 | Mediciones en la VM con criterios de go/no-go (ver abajo) |
+| US-8.6.16 | Prueba de uso con alumnos según lo decidido en `US-8.6.4`, y registro de hallazgos |
+| US-8.6.17 | Cierre de la iteración: `DesignReviewer`, actualización de `CLAUDE.md` y de este plan; el cierre de baseline del Incremento 8 sigue siendo `BL-013` |
+
+### Criterios de go/no-go de `US-8.6.15` (propuestos, a confirmar con Víctor)
+
+| Medición | Criterio |
+|---|---|
+| 60 logins simultáneos en un minuto | 0 errores y p95 < 3 s |
+| Sesión en vivo con 60 participantes | p95 de `CerrarPreguntaActual` < 100 ms en el servidor (RNF) |
+| Memoria | < 80 % de 1 GB sostenida; sin cierres por falta de memoria |
+| Reinicio de la VM | el sistema vuelve solo en menos de 3 minutos |
+| Latencia desde Argentina | se mide y se registra (informativo) |
+| Respaldo y restauración | restauración completa exitosa en la VM |
+
+Si algún criterio falla: se registra el resultado y se decide entre una VM paga más grande o la opción B (Cloud Run + Cloud
+SQL) en un ADR nuevo. La imagen es la misma, así que el código no cambia.
+
+### Relación con el resto del Incremento 8
+
+- `US-8.2.1` a `8.2.4` y `8.3.1` (Fly.io, Issues #520–#524) **siguen en standby**. Si se adopta GCP de forma definitiva, se
+  reemplazan o se marcan como desestimadas en el cierre.
+- `US-8.4.1` a `8.4.3` (guía, runbook, ensayo de instalación limpia) se **solapan** con `US-8.6.13` a `8.6.15`; al cierre se
+  decide cuáles se dan por cubiertas.
+- Pendiente fuera de este plan: la respuesta de la Universidad sobre el convenio con Google.
+
+### Ítems abiertos
+
+- Confirmar los criterios de go/no-go.
+- Tarifa de salida de red por encima del 1 GB gratuito: verificar antes de la prueba con alumnos.
