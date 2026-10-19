@@ -139,7 +139,7 @@ estudiantes, issues de deuda técnica #496–#498 y #500–#502 (se priorizan ap
 
 ## Iteración 6 — Despliegue de prueba en GCP con VM gratuita (propuesta 2026-10-19)
 
-**Estado:** propuesta con 8 US, pendiente de aprobación de Víctor. Sin Issues ni specs todavía. Reemplaza en la práctica a las
+**Estado:** propuesta con 8 US, pendiente de aprobación de Víctor. Issues #545–#552 y specs en `docs/specs/inc8/US-8.6.1.md` a `US-8.6.8.md` creados el 2026-10-19; `US-8.6.2` a `8.6.8` con label `blocked` hasta cerrar `US-8.6.1`. Reemplaza en la práctica a las
 Iteraciones 2 y 3 mientras dure el standby de Fly.io, que no se tocan.
 
 ### Origen
@@ -183,14 +183,14 @@ de cerrar la iteración, no una historia). Versión inicial con 17 US reducida a
 
 | US | Título | Contenido |
 |---|---|---|
-| US-8.6.1 | Spike: decisiones del despliegue de prueba (produce `ADR-025`) | **Gate** de toda la iteración. Cuatro decisiones: (1) dominio y HTTPS sin dominio propio (subdominio gratuito de DuckDNS, `sslip.io`, túnel de Cloudflare o dominio propio); (2) modo de email y `ENTORNO` para una prueba expuesta a internet (`EMAIL_MODO=consola` deja tokens en el log y se rechaza en staging/producción: SMTP real con `ENTORNO=staging`, o `ENTORNO=local` aceptando el riesgo en una prueba acotada); (3) contenedores o procesos nativos en 1 GB de RAM (Docker agrega consumo fijo; nativo lo ahorra pero pierde la paridad con la imagen); (4) alcance de datos y cuenta de la prueba (¿cuentas reales o de prueba?, ¿qué se avisa a los alumnos?, ¿cuenta personal o institucional?, ¿cuándo pasar a cuenta paga?). `ADR-021` y `ADR-024` quedan anotados con su relación al nuevo ADR. Si llega antes la respuesta de la Universidad sobre el convenio con Google, se reevalúa acá |
-| US-8.6.2 | Composición de servicios y configuración de la VM | Aplicación, PostgreSQL y proxy HTTPS; límites de memoria, ajuste de PostgreSQL, rotación de logs, reinicio automático; carga de secretos (archivo con permisos 600) y bootstrap del primer Administrador |
-| US-8.6.3 | Aprovisionamiento reproducible de la VM con `gcloud` | `e2-micro` en `us-central1`, disco, IP estática, firewall solo en 80/443 (sin PostgreSQL expuesto), swap, alerta de presupuesto |
-| US-8.6.4 | Publicar la imagen y desplegar con rollback | Publicar la imagen en un registro desde CI al crear una etiqueta `v*.*.*` (reemplaza el `build` solitario de `cd.yml`; los pasos de Fly.io quedan comentados); en la VM, bajar la imagen, aplicar migraciones, reiniciar, verificar `/api/health` y volver a la versión anterior si falla |
-| US-8.6.5 | Backup a Cloud Storage con restauración ensayada | Reutiliza `respaldar.sh`; destino dentro de los 5 GB gratuitos; retención de 12 meses (`ADR-022`); respaldo antes y después de cada clase; restauración completa desde un respaldo real en la VM, documentada |
-| US-8.6.6 | Runbook operativo y ensayo de instalación limpia | Arranque, parada, actualización, rotación de secretos, restauración e incidentes; se valida instalando desde cero siguiendo solo el runbook |
-| US-8.6.7 | Mediciones en la VM con criterios de go/no-go | Ver criterios abajo |
-| US-8.6.8 | Prueba de uso y cierre de la iteración | Prueba con alumnos según lo decidido en `US-8.6.1`, registro de hallazgos, `DesignReviewer`, actualización de `CLAUDE.md` y de este plan. El cierre de baseline del Incremento 8 sigue siendo `BL-013` |
+| US-8.6.1 (#545) | Spike: decisiones del despliegue de prueba (produce `ADR-025`) | **Gate** de toda la iteración. Cuatro decisiones: (1) dominio y HTTPS sin dominio propio (subdominio gratuito de DuckDNS, `sslip.io`, túnel de Cloudflare o dominio propio); (2) modo de email y `ENTORNO` para una prueba expuesta a internet (`EMAIL_MODO=consola` deja tokens en el log y se rechaza en staging/producción: SMTP real con `ENTORNO=staging`, o `ENTORNO=local` aceptando el riesgo en una prueba acotada); (3) contenedores o procesos nativos en 1 GB de RAM (Docker agrega consumo fijo; nativo lo ahorra pero pierde la paridad con la imagen); (4) alcance de datos y cuenta de la prueba (¿cuentas reales o de prueba?, ¿qué se avisa a los alumnos?, ¿cuenta personal o institucional?, ¿cuándo pasar a cuenta paga?). `ADR-021` y `ADR-024` quedan anotados con su relación al nuevo ADR. Si llega antes la respuesta de la Universidad sobre el convenio con Google, se reevalúa acá |
+| US-8.6.2 (#546) | Composición de servicios y configuración de la VM | Aplicación, PostgreSQL y proxy HTTPS; límites de memoria, ajuste de PostgreSQL, rotación de logs, reinicio automático; carga de secretos (archivo con permisos 600) y bootstrap del primer Administrador |
+| US-8.6.3 (#547) | Aprovisionamiento reproducible de la VM con `gcloud` | `e2-micro` en `us-central1`, disco, IP estática, firewall solo en 80/443 (sin PostgreSQL expuesto), swap, alerta de presupuesto |
+| US-8.6.4 (#548) | Publicar la imagen y desplegar con rollback | Publicar la imagen en un registro desde CI al crear una etiqueta `v*.*.*` (reemplaza el `build` solitario de `cd.yml`; los pasos de Fly.io quedan comentados); en la VM, bajar la imagen, aplicar migraciones, reiniciar, verificar `/api/health` y volver a la versión anterior si falla |
+| US-8.6.5 (#549) | Backup a Cloud Storage con restauración ensayada | Reutiliza `respaldar.sh`; destino dentro de los 5 GB gratuitos; retención de 12 meses (`ADR-022`); respaldo antes y después de cada clase; restauración completa desde un respaldo real en la VM, documentada |
+| US-8.6.6 (#550) | Runbook operativo y ensayo de instalación limpia | Arranque, parada, actualización, rotación de secretos, restauración e incidentes; se valida instalando desde cero siguiendo solo el runbook |
+| US-8.6.7 (#551) | Mediciones en la VM con criterios de go/no-go | Ver criterios abajo |
+| US-8.6.8 (#552) | Prueba de uso y cierre de la iteración | Prueba con alumnos según lo decidido en `US-8.6.1`, registro de hallazgos, `DesignReviewer`, actualización de `CLAUDE.md` y de este plan. El cierre de baseline del Incremento 8 sigue siendo `BL-013` |
 
 ### Criterios de go/no-go de `US-8.6.7` (propuestos, a confirmar con Víctor)
 
