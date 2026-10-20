@@ -50,3 +50,6 @@ código de la aplicación.
   siempre asignada) y una VM e2-micro gratuita (solo regiones de EE.UU., 1 GB de RAM).
 - Se mantiene Postgres como motor (`ADR-004`): el código usa JSONB, UUID nativo y `ON CONFLICT`.
 
+## Nota 2026-10-20
+
+Se planificó una prueba de uso en una VM gratuita de GCP con cuenta personal; ver `ADR-025`. Este ADR sigue **en revisión** y no queda reemplazado: la elección definitiva de nube para producción continúa abierta.

@@ -1,6 +1,6 @@
 # ADR-025 — Despliegue de prueba en GCP: VM gratuita con la aplicación y PostgreSQL juntos
 
-**Estado:** Propuesto (borrador de `US-8.6.1`, Issue #545) — se completa decisión por decisión y pasa a Aceptado al cerrar el spike
+**Estado:** Aceptado (2026-10-20) — las cuatro decisiones de `US-8.6.1` (Issue #545) están tomadas; los criterios de go/no-go siguen pendientes de confirmación (ver abajo)
 **Fecha:** 2026-10-20
 **Origen:** `US-8.6.1`, Iteración 6 del Incremento 8. Relacionado con `ADR-021` y `ADR-024` (Fly.io, en revisión), `ADR-022` (backup) y `ADR-023` (SMTP).
 
@@ -87,10 +87,65 @@ rollback son por versión de imagen y las migraciones corren dentro del contened
   descartable. Docker no está instalado en la máquina de Víctor; la prueba corre en CI o en la propia VM.
 - El registro de imágenes (`US-8.6.4`) debe respetar los límites gratuitos (Artifact Registry: 0,5 GB).
 
-## Decisión 4 — Alcance de datos y cuenta de la prueba
+## Decisión 4 — Alcance de datos y cuenta de la prueba: cuentas de prueba, cuenta personal (2026-10-20)
 
-*Pendiente.*
+**Opciones consideradas (alcance):**
+- **Alumnos reales voluntarios** en la cuenta personal de Víctor: descartada para esta primera prueba. Pondría nombres y emails
+  reales en una cuenta personal de Gmail sin acuerdo con la facultad; es una decisión institucional, no técnica
+  (`ADR-021` ya pedía revisar la residencia del dato).
+- **Esperar** a una cuenta institucional o a la respuesta de la Universidad: descartada, frena la prueba sin fecha.
+- **Prueba cerrada con cuentas de prueba** (Víctor, colegas o alumnos con nombres y emails ficticios): elegida.
+
+**Decisión:** la primera prueba usa **solo cuentas de prueba, con datos ficticios**, en la **cuenta personal** de Google Cloud
+de Víctor (`vvalotto@gmail.com`).
+
+**Justificación:** mide la carga técnica sin tocar datos personales y sin depender de la facultad. Mantiene la regla vigente
+desde el 2026-08-24 de no usar datos reales de estudiantes hasta una decisión institucional.
+
+**Consecuencias asumidas:**
+- Como no hay datos personales, no hace falta aviso de privacidad ni consentimiento. Si más adelante se quieren alumnos
+  reales, cambia el alcance y se decide con la institución, no el código.
+- Mide la carga técnica (logins, sesión en vivo, memoria, latencia), no cómo se comportan los alumnos reales.
+- La cuenta puede migrarse a una institucional más adelante: la imagen y los scripts son los mismos, solo cambia el proyecto.
+- **Vencimiento:** con los 300 USD de crédito por 90 días no se paga nada. Si no se pasa a cuenta paga antes del día 90, los
+  recursos se apagan y a los 30 días de gracia se borran. **Recordatorio al día 75** (2027-01-03 si se aprovisiona el
+  2026-10-20): si la prueba salió bien se pasa a cuenta paga, y se sigue en la capa gratuita mientras se use solo una
+  `e2-micro`; si no, se hace un respaldo y se deja apagar.
+- **Costos accidentales:** las alertas de presupuesto avisan pero no cortan el gasto. Una IP estática reservada sin asignar
+  cuesta; el script de aprovisionamiento (`US-8.6.3`) debe dejarla siempre asignada a la VM.
+- **Tarifa de salida de red:** sigue sin confirmarse para este caso. El único dato hallado es 0,12 USD/GiB para el primer TiB
+  de Norteamérica a Europa (anuncio de VPC, 2024); se toma como orden de magnitud. Con 1 GiB mensual gratuito y una prueba
+  chica no debería ser relevante, pero se verifica en la página oficial de tarifas antes de que haya tráfico real.
+
+## Criterios de go/no-go de `US-8.6.7` (propuestos, pendientes de confirmación de Víctor)
+
+| Medición | Criterio |
+|---|---|
+| 60 logins simultáneos en un minuto | 0 errores y p95 < 3 s |
+| Sesión en vivo con 60 participantes | p95 de `CerrarPreguntaActual` < 100 ms en el servidor (RNF) |
+| Memoria durante ambas cargas | < 80 % de 1 GB sostenida; sin cierres por falta de memoria |
+| Reinicio de la VM | el sistema vuelve solo en menos de 3 minutos |
+| Latencia desde Argentina | se mide y se registra (informativo) |
+| Respaldo y restauración | restauración completa exitosa |
+
+Si algún criterio falla se registra y se decide entre una VM paga más grande o la opción B (Cloud Run + Cloud SQL) en un ADR
+nuevo; la imagen es la misma.
 
 ## Impacto en Configuración
 
-*Se completa al cerrar las cuatro decisiones.*
+- `deploy/gcp/` (nuevo, `US-8.6.2`): composición de servicios con aplicación, PostgreSQL y proxy HTTPS (decisión 3); variables
+  `ENTORNO=local`, `EMAIL_MODO=consola`, `FRONTEND_URL` y `CORS_ALLOWED_ORIGINS` con la URL de DuckDNS (decisiones 1 y 2).
+- `.env.example`: plantilla para la VM, sin valores reales.
+- `.github/workflows/cd.yml` (`US-8.6.4`): publicar la imagen al crear una etiqueta `v*.*.*`; los pasos de Fly.io quedan
+  comentados.
+- `Dockerfile` (`US-8.6.2`): revisar el comando de arranque (`uv run`) tras la prueba de arranque de la imagen.
+- `docs/adr/ADR-021` y `ADR-024`: anotados con su relación a este ADR (siguen en revisión).
+- `CLAUDE.md` e `inc8-candidatas.md`: reflejar las decisiones al cerrar la iteración.
+
+## Consecuencias
+
+- ✅ Costo cero, sin depender de la facultad ni de una cuenta SMTP, y con una URL estable con HTTPS.
+- ✅ La imagen y los scripts siguen siendo portables a otra nube o a una cuenta institucional.
+- ⚠️ Sin recuperación de contraseña por cuenta propia ni avisos por email: Víctor hace de mesa de ayuda.
+- ⚠️ Dependencia de un servicio gratuito de terceros (DuckDNS) y de una cuenta personal sujeta al vencimiento de los 90 días.
+- ⚠️ 1 GB de RAM con contenedores es un margen a medir, no a suponer (`US-8.6.7`).
