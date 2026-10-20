@@ -36,9 +36,31 @@ aceptable en una prueba acotada.
   poco probable que moleste. Si se migra a un dominio propio, el cambio es de configuración, no de código.
 - La URL de la prueba alimenta `FRONTEND_URL` y `CORS_ALLOWED_ORIGINS` (mismo origen, `US-8.1.6`).
 
-## Decisión 2 — Modo de email y `ENTORNO`
+## Decisión 2 — Modo de email y `ENTORNO`: emails en el log, `ENTORNO=local` (2026-10-20)
 
-*Pendiente.*
+**Opciones consideradas:**
+- **Emails reales con SMTP y `ENTORNO=staging`**: descartada para esta primera prueba. Exige una cuenta SMTP y verificar que
+  la VM pueda enviar: según el conocimiento general (no verificado en esta sesión) GCP bloquea por defecto el puerto 25
+  saliente, el código solo implementa STARTTLS en el puerto 587 con usuario y clave (no SSL directo en el 465), y no se sabe
+  si el servidor institucional de `ADR-023` acepta conexiones desde una IP de Google.
+- **Emails en el log con `EMAIL_MODO=consola` y `ENTORNO=local`**: elegida.
+
+**Decisión:** la VM corre con `ENTORNO=local` y `EMAIL_MODO=consola`. Ningún email sale; su contenido (con los links de token)
+queda en el log INFO de la aplicación.
+
+**Justificación:** no depende de una cuenta SMTP ni del bloqueo de puertos, y la configuración ya está probada en la máquina
+de Víctor (`US-8.5.1`/`8.5.2`). La primera prueba se hace con cuentas de prueba o un grupo chico.
+
+**Consecuencias asumidas:**
+- Los alumnos **no pueden recuperar su contraseña por su cuenta**: Víctor lee el link en el log por SSH y se lo pasa.
+- **No llegan los avisos de actividad** nueva o cerrada (RF-14); solo quedan en el log.
+- Las **invitaciones** siguen funcionando: la pantalla muestra el link y, con HTTPS (decisión 1), el botón "Copiar link" anda.
+- Los **tokens quedan en el log**: solo los lee quien entra a la VM. Por eso esta configuración no se usa con una cuenta
+  abierta a terceros ni se comparte el log.
+- `ENTORNO=local` valida solo el secreto (≥32 caracteres, distinto del ejemplo), no las URLs ni CORS. La base de datos puede
+  estar en `localhost`, lo que deja abierta la decisión 3 (PostgreSQL nativo o en contenedor).
+- Pasar a emails reales (`ENTORNO=staging` + SMTP) queda como mejora para una segunda prueba; es cambio de configuración, no
+  de código, salvo que el servidor institucional exija SSL directo.
 
 ## Decisión 3 — Contenedores o procesos nativos en 1 GB de RAM
 
