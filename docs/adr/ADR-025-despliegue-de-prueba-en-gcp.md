@@ -62,9 +62,30 @@ de Víctor (`US-8.5.1`/`8.5.2`). La primera prueba se hace con cuentas de prueba
 - Pasar a emails reales (`ENTORNO=staging` + SMTP) queda como mejora para una segunda prueba; es cambio de configuración, no
   de código, salvo que el servidor institucional exija SSL directo.
 
-## Decisión 3 — Contenedores o procesos nativos en 1 GB de RAM
+## Decisión 3 — Contenedores o procesos nativos en 1 GB de RAM: contenedores (2026-10-20)
 
-*Pendiente.*
+**Opciones consideradas:**
+- **Procesos nativos** (PostgreSQL de apt, `uv sync`, Caddy como servicio): descartada. Ahorra memoria, pero pierde la paridad
+  con la imagen que ya construye CI, obliga a compilar el frontend afuera y copiarlo, y convierte el rollback en un proceso a
+  medida. Cambiaría el diseño de `US-8.6.2` y `US-8.6.4`.
+- **Contenedores** (imagen de CI + PostgreSQL + Caddy): elegida.
+
+**Decisión:** la aplicación, PostgreSQL y el proxy HTTPS corren como contenedores en la VM, con la imagen que publica CI.
+
+**Justificación:** todo el plan de la iteración (`US-8.6.2` a `8.6.6`) está pensado alrededor de la imagen; el despliegue y el
+rollback son por versión de imagen y las migraciones corren dentro del contenedor.
+
+**Consecuencias asumidas:**
+- Docker suma un consumo fijo de memoria. Estimación de orden de magnitud, **no medida**: sistema ~200 MB, PostgreSQL ~150 MB,
+  aplicación ~150 MB, Caddy ~30 MB y Docker ~100–150 MB, o sea ~680 MB de 1 GB (~66 %). `US-8.6.7` lo mide contra el
+  criterio de menos del 80 %. **Plan de respaldo:** si no entra, pasar a procesos nativos en un ADR nuevo.
+- **Riesgo conocido:** la imagen nunca se ejecutó en un entorno real (solo se construye en CI; su verificación, `US-8.5.5`,
+  fue desestimada). El `Dockerfile` arranca con `uv run uvicorn …` y `uv run` puede intentar sincronizar dependencias,
+  incluidas las de desarrollo, al arrancar (hipótesis sin verificar). Si ocurre, el contenedor tardaría o fallaría sin red y
+  se corrige cambiando el comando de arranque.
+- **Condición:** `US-8.6.2` incluye, antes de aprovisionar la VM, una prueba de arranque de la imagen contra una base
+  descartable. Docker no está instalado en la máquina de Víctor; la prueba corre en CI o en la propia VM.
+- El registro de imágenes (`US-8.6.4`) debe respetar los límites gratuitos (Artifact Registry: 0,5 GB).
 
 ## Decisión 4 — Alcance de datos y cuenta de la prueba
 
