@@ -1,6 +1,6 @@
 # ADR-025 — Despliegue de prueba en GCP: VM gratuita con la aplicación y PostgreSQL juntos
 
-**Estado:** Aceptado (2026-10-20) — las cuatro decisiones de `US-8.6.1` (Issue #545) están tomadas; los criterios de go/no-go siguen pendientes de confirmación (ver abajo)
+**Estado:** Aceptado (2026-10-20) — las cuatro decisiones de `US-8.6.1` (Issue #545) están tomadas y los criterios de go/no-go confirmados por Víctor; queda abierta solo la verificación de la tarifa de salida de red
 **Fecha:** 2026-10-20
 **Origen:** `US-8.6.1`, Iteración 6 del Incremento 8. Relacionado con `ADR-021` y `ADR-024` (Fly.io, en revisión), `ADR-022` (backup) y `ADR-023` (SMTP).
 
@@ -117,7 +117,7 @@ desde el 2026-08-24 de no usar datos reales de estudiantes hasta una decisión i
   de Norteamérica a Europa (anuncio de VPC, 2024); se toma como orden de magnitud. Con 1 GiB mensual gratuito y una prueba
   chica no debería ser relevante, pero se verifica en la página oficial de tarifas antes de que haya tráfico real.
 
-## Criterios de go/no-go de `US-8.6.7` (propuestos, pendientes de confirmación de Víctor)
+## Criterios de go/no-go de `US-8.6.7` (confirmados por Víctor el 2026-10-20, sin cambios)
 
 | Medición | Criterio |
 |---|---|
