@@ -36,3 +36,6 @@ Queda en revisión junto con `ADR-021`: el subdominio de `fly.dev` solo aplica s
 despliegue local (`US-8.5.x`) el acceso es por IP o nombre `.local` de la red del aula, sin TLS, con el frontend y
 la API servidos desde el mismo origen (`US-8.1.6`).
 
+## Nota 2026-10-20
+
+Se planificó una prueba de uso en una VM gratuita de GCP con cuenta personal; ver `ADR-025`. Este ADR sigue **en revisión** y no queda reemplazado: la elección definitiva de nube para producción continúa abierta.
