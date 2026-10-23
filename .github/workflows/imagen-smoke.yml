@@ -38,6 +38,8 @@ jobs:
         run: deploy/gcp/cognion.sh iniciar
 
       - name: Verificar la composición
+        env:
+          VERIFICAR_REINICIO_DOCKER: "1"
         run: tests/uat/inc8/verificar_composicion_gcp.sh
 
       - name: Logs ante un fallo

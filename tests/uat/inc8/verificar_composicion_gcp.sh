@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verifica la composición de deploy/gcp/ YA LEVANTADA (US-8.6.2): la corre CI con dominio `localhost` y, más adelante,
-# se puede repetir en la VM. Requiere docker y que `deploy/gcp/cognion.sh iniciar` haya terminado.
+# se puede repetir en la VM (ahí el reinicio se prueba reiniciando la máquina). Requiere docker y que `deploy/gcp/cognion.sh iniciar` haya terminado.
 # Uso: tests/uat/inc8/verificar_composicion_gcp.sh
 set -uo pipefail
 cd "$(dirname "$0")/../../../deploy/gcp"
@@ -11,9 +11,13 @@ fallo() { echo "FAIL $1"; FALLOS=$((FALLOS + 1)); }
 FALLOS=0
 contenedor() { docker compose ps -q "$1"; }
 
-# 1. La aplicación responde por HTTPS a través del proxy
-RESPUESTA="$(curl -fsS -k --max-time 10 "https://${DOMINIO}/api/health" 2>/dev/null || true)"
-[[ "$RESPUESTA" == *'"ok"'* ]] && ok "1. /api/health responde por HTTPS" || fallo "1. /api/health ($RESPUESTA)"
+# 1. La aplicación responde por HTTPS a través del proxy (el proxy recién arrancó: se admite una espera corta)
+RESPUESTA=""; ERROR_CURL=""
+for _ in $(seq 1 20); do
+  ERROR_CURL="$(curl -fsS -k --max-time 10 -o /tmp/salud.json "https://${DOMINIO}/api/health" 2>&1)" && { RESPUESTA="$(cat /tmp/salud.json)"; break; }
+  sleep 2
+done
+[[ "$RESPUESTA" == *'"ok"'* ]] && ok "1. /api/health responde por HTTPS" || fallo "1. /api/health (${ERROR_CURL})"
 
 # 2. Las migraciones están aplicadas
 VERSIONES="$(docker compose exec -T db psql -U cognion -d cognion -Atc 'SELECT count(*) FROM alembic_version' 2>/dev/null || true)"
@@ -34,14 +38,34 @@ for srv in db app caddy; do
     && ok "4. $srv: límite $((MEM / 1048576)) MB y reinicio $POL" || fallo "4. $srv: memoria=$MEM reinicio=$POL"
 done
 
-# 5. Un contenedor caído se levanta solo
-docker kill "$(contenedor app)" >/dev/null
-RECUPERADA=0
-for _ in $(seq 1 40); do
-  if curl -fsS -k --max-time 5 "https://${DOMINIO}/api/health" >/dev/null 2>&1; then RECUPERADA=1; break; fi
-  sleep 3
-done
-[ "$RECUPERADA" = "1" ] && ok "5. la aplicación volvió sola tras caer (reinicio automático)" || fallo "5. la aplicación no volvió"
+# Espera a que la aplicación vuelva a responder por HTTPS (hasta ~2 min)
+esperar_aplicacion() {
+  for _ in $(seq 1 40); do
+    curl -fsS -k --max-time 5 "https://${DOMINIO}/api/health" >/dev/null 2>&1 && return 0
+    sleep 3
+  done
+  return 1
+}
+
+# 5a. Una caída real de la aplicación se recupera sola. `docker kill` NO sirve para probarlo: Docker lo trata como una
+# detención manual y no aplica la política de reinicio. Se simula una caída haciendo salir al proceso principal.
+docker compose exec -T app python -c "import os, signal; os.kill(1, signal.SIGTERM)" >/dev/null 2>&1
+if esperar_aplicacion; then
+  REINICIOS="$(docker inspect -f '{{.RestartCount}}' "$(contenedor app)")"
+  [ "$REINICIOS" -ge 1 ] 2>/dev/null && ok "5a. la aplicación volvió sola tras caer (reinicios: $REINICIOS)" || fallo "5a. volvió pero RestartCount=$REINICIOS"
+else
+  fallo "5a. la aplicación no volvió tras caer"
+fi
+
+# 5b. Equivale a reiniciar la máquina: se reinicia el demonio de Docker y los servicios deben volver solos.
+# En CI se activa con VERIFICAR_REINICIO_DOCKER=1 (el runner permite sudo); en la VM se prueba reiniciándola de verdad.
+if [ "${VERIFICAR_REINICIO_DOCKER:-0}" = "1" ]; then
+  sudo systemctl restart docker
+  sleep 5
+  if esperar_aplicacion; then ok "5b. los servicios volvieron solos tras reiniciar Docker"; else fallo "5b. los servicios no volvieron tras reiniciar Docker"; fi
+else
+  echo "SKIP 5b. reinicio de Docker (definir VERIFICAR_REINICIO_DOCKER=1; en la VM se prueba reiniciándola)"
+fi
 
 # 6. Los secretos no aparecen en los logs
 SECRETO="$(grep -E '^SECRET_KEY=' .env | cut -d= -f2-)"
