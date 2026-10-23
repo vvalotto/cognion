@@ -1,7 +1,7 @@
 """Composición de la VM de la prueba en GCP: validación estática (US-8.6.2, ADR-025).
 
 La verificación de runtime (arranque real, memoria, reinicio) corre en CI y en la VM con
-`tests/uat/inc8/verificar_composicion_gcp.sh`; acá se comprueba que la configuración declara lo que debe.
+`tests/uat/inc8/verificar_composicion_gcp.sh`; acá solo se comprueba lo declarado.
 """
 
 import os
@@ -14,13 +14,15 @@ from pathlib import Path
 import pytest
 import yaml
 
+from src.settings import Settings
+
 RAIZ = Path(__file__).resolve().parents[3]
 GCP = RAIZ / "deploy" / "gcp"
 SERVICIOS = ("db", "app", "caddy")
 
 
-@pytest.fixture(scope="module")
-def compose() -> dict:
+@pytest.fixture(name="compose", scope="module")
+def _compose() -> dict:
     """Composición ya parseada."""
     return yaml.safe_load((GCP / "docker-compose.yml").read_text())
 
@@ -182,8 +184,6 @@ def test_preparar_env_rechaza_dominios_invalidos(tmp_path: Path, dominio: str) -
 
 def test_la_configuracion_generada_arranca_con_settings(tmp_path: Path) -> None:
     """El `.env` generado cumple las validaciones de `ENTORNO=local` (secreto fuerte)."""
-    from src.settings import Settings
-
     _preparar(tmp_path, "cognion.duckdns.org")
     variables = _variables((tmp_path / "gcp" / ".env").read_text())
     cfg = Settings(

@@ -1,0 +1,27 @@
+{
+  "us": "US-8.6.2",
+  "veredicto": "APROBADO",
+  "tipo": "tooling operativo / infraestructura (sin código Python de producción)",
+  "verificacion_runtime": {
+    "workflow": ".github/workflows/imagen-smoke.yml",
+    "script": "tests/uat/inc8/verificar_composicion_gcp.sh",
+    "ultima_corrida": "run 39946600794, success",
+    "checks": "12/12 OK: health por HTTPS, migraciones, sin puertos publicados (db, app, 5432), límites de memoria y reinicio en los 3 servicios, caída real recuperada (RestartCount=1), reinicio de Docker, secretos fuera de logs, bootstrap del Administrador y login",
+    "memoria_en_reposo_MiB": {"caddy": 16.7, "app": 77.8, "db": 20.0, "total": 114.5}
+  },
+  "tests_unit_inc8": "91/91 (23 nuevos)",
+  "pylint_test": "10.00/10",
+  "ruff": "0 errores",
+  "black": "limpio",
+  "mypy": "0 errores (src/ completo, sin cambios en src/)",
+  "designreviewer": "0 blocking",
+  "codeguard": {"analysis_type": "full", "checks_executed": 9, "reporte": "quality/reports/inc8/US-8.6.2-codeguard.json", "nota": "errores solo de tooling: vulture y codespell no instalados, pylint y mypy con timeout de 10 s dentro de CodeGuard (software_limpio#70); pylint standalone 10.00"},
+  "no_instalados": "shellcheck y hadolint: solo bash -n sobre los scripts",
+  "hallazgos_durante_la_verificacion": [
+    "docker kill no activa la política de reinicio (Docker lo trata como detención manual): la caída se simula matando el proceso desde el host",
+    "mandarle SIGTERM al PID 1 desde dentro del contenedor no lo mata (el núcleo lo ignora): RestartCount quedaba en 0",
+    "el primer request tras arrancar Caddy puede fallar: la verificación reintenta hasta 40 s",
+    "la hipótesis del uv run no se confirmó como bloqueo: con uvicorn y alembic directos del entorno virtual, la imagen arranca y migra"
+  ],
+  "sin_probar_hasta_la_vm": ["reinicio real de la máquina", "memoria total con sistema operativo y Docker en 1 GB", "puerto de PostgreSQL visto desde internet", "certificado real de DuckDNS"]
+}

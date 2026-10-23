@@ -1,0 +1,1264 @@
+{
+  "summary": {
+    "total_files": 1,
+    "checks_executed": 9,
+    "elapsed_seconds": 24.11,
+    "timestamp": "2026-10-23T08:36:18.228791",
+    "total_issues": 59,
+    "errors": 3,
+    "warnings": 0,
+    "infos": 56
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 11
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 32
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 39
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 40
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 47
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 48
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 53
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 54
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 55
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 60
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 61
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 62
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 68
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 69
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 71
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 76
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 77
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 83
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 84
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 96
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 97
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 98
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 99
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 105
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 106
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 107
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 108
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 115
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 116
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 117
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 124
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 125
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 131
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 141
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 141
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 154
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 155
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 157
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 158
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 159
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 160
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 161
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 162
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 163
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 172
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 173
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 180
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 181
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 182
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 197
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": 198
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 36.8 (grade A)",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      }
+    ],
+    "warnings": [],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 11
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 32
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 39
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 40
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 47
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 48
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 53
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 54
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 55
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 60
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 61
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 62
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 68
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 69
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 71
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 76
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 77
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 83
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 84
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 96
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 97
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 98
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 99
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 105
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 106
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 107
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 108
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 115
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 116
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 117
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 124
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 125
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 131
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 154
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 155
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 157
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 158
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 159
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 160
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 161
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 162
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 163
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 172
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 173
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 180
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 181
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 182
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 197
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 198
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 36.8 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "inc8/test_us_8_6_2_composicion_gcp.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 11
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 32
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 39
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 40
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 47
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 48
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 53
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 54
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 55
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 60
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 61
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 62
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 68
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 69
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 71
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 76
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 77
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 83
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 84
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 96
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 97
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 98
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 99
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 105
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 106
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 107
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 108
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 115
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 116
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 117
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 124
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 125
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 131
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 154
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 155
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 157
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 158
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 159
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 160
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 161
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 162
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 163
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 172
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 173
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 180
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 181
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 182
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 197
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": 198
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 36.8 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_6_2_composicion_gcp.py",
+        "line": null
+      }
+    ]
+  }
+}
