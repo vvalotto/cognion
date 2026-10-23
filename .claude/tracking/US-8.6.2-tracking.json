@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "us_id": "US-8.6.2",
+    "us_title": "Composición de servicios y configuración de la VM",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-23T11:12:06.614396+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 460,
+    "effective_seconds": 460,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-10-23T11:12:07.097086+00:00",
+      "completed_at": "2026-10-23T11:13:11.960762+00:00",
+      "elapsed_seconds": 64,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de Implementación",
+      "started_at": "2026-10-23T11:13:12.790221+00:00",
+      "completed_at": "2026-10-23T11:18:52.864945+00:00",
+      "elapsed_seconds": 340,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-23T11:18:53.250106+00:00",
+      "completed_at": "2026-10-23T11:19:46.997740+00:00",
+      "elapsed_seconds": 53,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-10-23T11:19:47.234155+00:00",
+      "completed_at": null,
+      "elapsed_seconds": 0,
+      "status": "in_progress",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 4,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

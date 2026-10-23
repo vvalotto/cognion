@@ -1,0 +1,54 @@
+name: Imagen y composición (smoke)
+
+# Verifica que la imagen arranca de verdad y que deploy/gcp/ levanta completo (US-8.6.2, ADR-025).
+# Solo corre si cambia algo que puede romperlo, para no alargar el CI de los demás PRs.
+on:
+  # `push` (y no `pull_request`) para verificar la rama antes de abrir el PR; el resultado queda asociado al commit
+  # y se ve igual en el PR. Se excluyen develop y main porque ahí el cambio ya pasó por esta verificación.
+  push:
+    branches-ignore: [main, develop]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - deploy/**
+      - pyproject.toml
+      - uv.lock
+      - src/servidor.py
+      - tests/uat/inc8/verificar_composicion_gcp.sh
+      - .github/workflows/imagen-smoke.yml
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Imagen y composición
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Construir la imagen
+        run: docker build -t cognion:ci .
+
+      - name: Preparar la configuración (dominio localhost, certificado interno)
+        run: |
+          deploy/gcp/preparar-env.sh localhost
+          sed -i 's|^COGNION_IMAGE=.*|COGNION_IMAGE=cognion:ci|' deploy/gcp/.env
+
+      - name: Levantar la composición completa
+        run: deploy/gcp/cognion.sh iniciar
+
+      - name: Verificar la composición
+        run: tests/uat/inc8/verificar_composicion_gcp.sh
+
+      - name: Logs ante un fallo
+        if: failure()
+        run: |
+          cd deploy/gcp
+          docker compose ps -a
+          docker compose logs --no-color --tail=200
+
+      - name: Limpiar
+        if: always()
+        run: |
+          cd deploy/gcp
+          docker compose down -v
