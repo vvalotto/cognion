@@ -58,6 +58,7 @@ duplicarla en detalle. Orden general de precedencia (ya declarado en `CLAUDE.md`
 | Marco metodológico IEDD | `docs/iedd/` | `CLAUDE.md` | Vigente y estable — no cambia por incremento. |
 | Procedimiento de UAT | `docs/plans/PROCEDIMIENTO-UAT.md` | `CLAUDE.md` | Gate obligatorio antes de merge a main — ver tabla de quality gates. |
 | Checklist de instalación/entorno | `docs/plans/CHECKLIST-INSTALACION.md` | `docs/plans/WORKFLOW-DESARROLLO.md` | Pasos de setup del entorno local — se referencia, no se duplica. |
+| Guía de despliegue local (instalar y operar en una máquina propia) | `docs/plans/DESPLIEGUE-LOCAL.md` | `docs/plans/CHECKLIST-INSTALACION.md`, `scripts/local/` | Cada paso lleva marca probado/sin probar; el checklist cubre solo el entorno de desarrollo. |
 
 ---
 
