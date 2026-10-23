@@ -46,7 +46,7 @@ backup (`US-8.6.5`) ni mediciones con criterios de go/no-go (`US-8.6.7`; acá so
 | `REGION` / `ZONA` | `us-central1` / `us-central1-a` | La capa gratuita solo cubre `us-west1`, `us-central1` y `us-east1`. Si la zona no tiene capacidad, se prueba `-b` o `-c` |
 | `CUENTA_FACTURACION` | `019D68-E7FC7F-247D34` | "Mi cuenta de facturación", abierta, en USD |
 | `VM` / `IP` / `REGLA` | `cognion-vm` / `cognion-ip` / `cognion-web` | |
-| `DOMINIO` | `<elegido por Víctor>.duckdns.org` | Sin esquema ni barras |
+| `DOMINIO` | `cognion-fiuner.duckdns.org` | Creado por Víctor el 2026-10-23 en DuckDNS (cuenta de GitHub). Sin esquema ni barras |
 
 ---
 
@@ -57,7 +57,7 @@ Los comandos de `gcloud` se verifican con `--help` antes de ejecutarlos si algú
 
 ### Paso 0 — Prerrequisitos (sin probar)
 - `gcloud` con sesión vigente: `gcloud auth list` muestra `vvalotto@gmail.com` activa. *(Verificado el 2026-10-23.)*
-- Subdominio de DuckDNS elegido y creado por Víctor (todavía sin IP: se completa en el paso 10).
+- Subdominio de DuckDNS creado por Víctor: `cognion-fiuner.duckdns.org` *(hecho el 2026-10-23)*. DuckDNS le asignó por defecto la IP pública de la casa de Víctor; se cambia por la de la VM en el paso 9. **El token de DuckDNS es una credencial: no se comparte ni se guarda en el repositorio** (este plan no lo necesita).
 - **Éxito:** los dos puntos anteriores cumplidos y `DOMINIO` definido.
 
 ### Paso 1 — Configuración de `gcloud` aparte, para no tocar la tuya (sin probar)
@@ -167,7 +167,7 @@ La VM no puede compilar el frontend con 1 GB, y todavía no hay registro. Para e
 
 ### Paso 9 — DuckDNS apunta a la IP (hace Víctor) (sin probar)
 Caddy pide el certificado al arrancar, así que el nombre tiene que resolver a la VM **antes** del paso 10.
-- Víctor asigna la IP reservada (`gcloud compute addresses describe cognion-ip --region=us-central1 --format="value(address)"`) al subdominio en el sitio de DuckDNS.
+- Víctor reemplaza la IP del subdominio por la IP reservada (`gcloud compute addresses describe cognion-ip --region=us-central1 --format="value(address)"`): en el sitio de DuckDNS, escribe la IP en el campo *current ip* y aprieta *update ip*.
 - **Éxito:** `dig +short <DOMINIO>` (o `nslookup`) devuelve esa IP.
 
 ### Paso 10 — Configuración y arranque (sin probar)
