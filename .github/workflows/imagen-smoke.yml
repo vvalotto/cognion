@@ -29,6 +29,17 @@ jobs:
       - name: Construir la imagen
         run: docker build -t cognion:ci .
 
+      # La imagen queda disponible como artefacto un día: es la forma de llevarla a una VM sin registro (US-8.6.3).
+      - name: Exportar la imagen
+        run: docker save cognion:ci | gzip > cognion-imagen.tar.gz
+
+      - name: Publicar la imagen como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: cognion-imagen
+          path: cognion-imagen.tar.gz
+          retention-days: 1
+
       - name: Preparar la configuración (dominio localhost, certificado interno)
         run: |
           deploy/gcp/preparar-env.sh localhost
