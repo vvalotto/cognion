@@ -48,8 +48,10 @@ esperar_aplicacion() {
 }
 
 # 5a. Una caída real de la aplicación se recupera sola. `docker kill` NO sirve para probarlo: Docker lo trata como una
-# detención manual y no aplica la política de reinicio. Se simula una caída haciendo salir al proceso principal.
-docker compose exec -T app python -c "import os, signal; os.kill(1, signal.SIGTERM)" >/dev/null 2>&1
+# detención manual y no aplica la política de reinicio. Tampoco alcanza con mandarle una señal al PID 1 desde dentro del
+# contenedor (el núcleo la ignora). Se mata el proceso principal desde el host, como lo haría un fallo real.
+PID_APP="$(docker inspect -f '{{.State.Pid}}' "$(contenedor app)")"
+sudo kill -9 "$PID_APP"
 if esperar_aplicacion; then
   REINICIOS="$(docker inspect -f '{{.RestartCount}}' "$(contenedor app)")"
   [ "$REINICIOS" -ge 1 ] 2>/dev/null && ok "5a. la aplicación volvió sola tras caer (reinicios: $REINICIOS)" || fallo "5a. volvió pero RestartCount=$REINICIOS"
