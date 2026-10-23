@@ -151,8 +151,10 @@ despliegue a esa decisión y la valida con mediciones.
 Análisis previo (precios y límites de las páginas oficiales al 2026-10-19):
 - Capa gratuita: 1 VM `e2-micro` no preemptible por mes solo en `us-west1`, `us-central1` o `us-east1`; 30 GB de disco
   estándar; 1 GB de salida de red por mes; Cloud Storage 5 GB en regiones de EE.UU.
-- Prueba gratuita de 300 USD por 90 días con tarjeta. Si no se pasa a cuenta paga, al vencer se apagan los recursos y tras
-  30 días de gracia se borran. Para conservar la capa gratuita hay que pasar a cuenta paga.
+- **Facturación (revisada el 2026-10-23, ver `ADR-025`):** la cuenta de facturación de Víctor es **paga y sin créditos**: el `Free Trial`
+  de 300 USD venció el 15 de octubre de 2021 sin usarse y no hay otro. La VM `e2-micro` sigue siendo gratuita por la capa permanente,
+  pero todo lo que la supere se cobra desde el primer día; hay un presupuesto de alerta existente (monto 0 USD) y la consola ofrece
+  límites de inversión que pausan servicios, a evaluar.
 - Opción B descartada por ahora: Cloud Run con CPU siempre asignada y una sola instancia, más Cloud SQL. Unos 45–50 USD por
   mes de Cloud Run (estimación) más 8 a 26 USD de Cloud SQL, sin SLA en las instancias compartidas.
 
@@ -177,7 +179,8 @@ Análisis previo (precios y límites de las páginas oficiales al 2026-10-19):
 ### US
 
 Ocho US, en este orden. La primera es un spike con Víctor presente; el resto se especifica y se implementa después de su
-gate. Se agruparon las piezas que solo se pueden probar juntas (respaldo con restauración, despliegue con rollback, runbook
+gate. **Replanificada el 2026-10-23:** antes de automatizar nada se escribe un plan de instalación y se ejecuta a mano (`US-8.6.3`),
+porque los scripts (`US-8.6.4`) deben nacer de comandos que ya funcionaron; el runbook (`US-8.6.6`) parte de ese plan. Se agruparon las piezas que solo se pueden probar juntas (respaldo con restauración, despliegue con rollback, runbook
 con su ensayo) y se quitaron como US la observabilidad (basta la alerta de presupuesto y leer el log) y el cierre (es parte
 de cerrar la iteración, no una historia). Versión inicial con 17 US reducida a 8 por pedido de Víctor el 2026-10-19.
 
@@ -185,10 +188,10 @@ de cerrar la iteración, no una historia). Versión inicial con 17 US reducida a
 |---|---|---|
 | US-8.6.1 (#545) | Spike: decisiones del despliegue de prueba (produce `ADR-025`) | **Gate** de toda la iteración. Cuatro decisiones: (1) dominio y HTTPS sin dominio propio (subdominio gratuito de DuckDNS, `sslip.io`, túnel de Cloudflare o dominio propio); (2) modo de email y `ENTORNO` para una prueba expuesta a internet (`EMAIL_MODO=consola` deja tokens en el log y se rechaza en staging/producción: SMTP real con `ENTORNO=staging`, o `ENTORNO=local` aceptando el riesgo en una prueba acotada); (3) contenedores o procesos nativos en 1 GB de RAM (Docker agrega consumo fijo; nativo lo ahorra pero pierde la paridad con la imagen); (4) alcance de datos y cuenta de la prueba (¿cuentas reales o de prueba?, ¿qué se avisa a los alumnos?, ¿cuenta personal o institucional?, ¿cuándo pasar a cuenta paga?). `ADR-021` y `ADR-024` quedan anotados con su relación al nuevo ADR. Si llega antes la respuesta de la Universidad sobre el convenio con Google, se reevalúa acá |
 | US-8.6.2 (#546) | Composición de servicios y configuración de la VM | Aplicación, PostgreSQL y proxy HTTPS; límites de memoria, ajuste de PostgreSQL, rotación de logs, reinicio automático; carga de secretos (archivo con permisos 600) y bootstrap del primer Administrador |
-| US-8.6.3 (#547) | Aprovisionamiento reproducible de la VM con `gcloud` | `e2-micro` en `us-central1`, disco, IP estática, firewall solo en 80/443 (sin PostgreSQL expuesto), swap, alerta de presupuesto |
-| US-8.6.4 (#548) | Publicar la imagen y desplegar con rollback | Publicar la imagen en un registro desde CI al crear una etiqueta `v*.*.*` (reemplaza el `build` solitario de `cd.yml`; los pasos de Fly.io quedan comentados); en la VM, bajar la imagen, aplicar migraciones, reiniciar, verificar `/api/health` y volver a la versión anterior si falla |
+| US-8.6.3 (#547) | Plan de instalación y prueba manual del despliegue en GCP | Se escribe `docs/plans/DESPLIEGUE-GCP.md` (pasos con comandos, resultado esperado, puertas de confirmación antes de crear recursos o generar costo, quién hace cada cosa, control de costos y desmontaje) y se revisa con Víctor; después se **ejecuta a mano**, paso a paso, con bitácora y mediciones tempranas. Incluye: proyecto nuevo `cognion-prueba`, presupuesto propio y evaluación de los límites de inversión, VM `e2-micro`, imagen con Cloud Build, Docker en la VM, DuckDNS con HTTPS real. Verifica lo que `US-8.6.2` dejó pendiente (memoria total, certificado real, puerto de PostgreSQL desde internet) |
+| US-8.6.4 (#548) | Scripts de aprovisionamiento, publicación y despliegue con rollback | Codifican lo que funcionó en la prueba manual: creación y destrucción de la VM con `gcloud` (firewall solo 80/443, IP siempre asignada, swap, presupuesto), publicación de la imagen desde CI o Cloud Build según lo aprendido, y despliegue en la VM con migraciones, `/api/health` y vuelta a la versión anterior si falla |
 | US-8.6.5 (#549) | Backup a Cloud Storage con restauración ensayada | Reutiliza `respaldar.sh`; destino dentro de los 5 GB gratuitos; retención de 12 meses (`ADR-022`); respaldo antes y después de cada clase; restauración completa desde un respaldo real en la VM, documentada |
-| US-8.6.6 (#550) | Runbook operativo y ensayo de instalación limpia | Arranque, parada, actualización, rotación de secretos, restauración e incidentes; se valida instalando desde cero siguiendo solo el runbook |
+| US-8.6.6 (#550) | Runbook operativo y ensayo de instalación limpia | Parte del plan de `US-8.6.3`: arranque, parada, actualización, rotación de secretos, restauración e incidentes; se valida reconstruyendo desde cero con los scripts de `US-8.6.4` y siguiendo solo el runbook |
 | US-8.6.7 (#551) | Mediciones en la VM con criterios de go/no-go | Ver criterios abajo |
 | US-8.6.8 (#552) | Prueba de uso y cierre de la iteración | Prueba con alumnos según lo decidido en `US-8.6.1`, registro de hallazgos, `DesignReviewer`, actualización de `CLAUDE.md` y de este plan. El cierre de baseline del Incremento 8 sigue siendo `BL-013` |
 

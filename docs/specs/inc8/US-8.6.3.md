@@ -1,9 +1,9 @@
-# US-8.6.3: Aprovisionamiento reproducible de la VM con gcloud
+# US-8.6.3: Plan de instalación y prueba manual del despliegue en GCP
 
 **Estado**: `Especificada`
 **Iteracion / Sprint**: `INC-8.6`
-**Tipo**: `tooling operativo / infraestructura`
-**Bounded Context**: transversal (`deploy/gcp/`)
+**Tipo**: `plan + prueba manual (spike de despliegue)`
+**Bounded Context**: transversal (`docs/plans/`, `quality/reports/uat/inc8-gcp/`)
 **Issue**: #547
 
 ---
@@ -11,38 +11,54 @@
 ## Descripcion (lenguaje de negocio)
 
 Como **responsable de la prueba de uso**,
-quiero **crear y destruir la VM de la prueba con un script y no con clics en una consola**,
-para **poder repetirlo desde cero y no quedar atado a una configuración que nadie recuerda**.
+quiero **un plan de instalación escrito y revisado, y haberlo ejecutado a mano una vez con evidencia**,
+para **descubrir los problemas del despliegue en GCP antes de automatizarlo y no escribir scripts de más**.
 
 ---
 
 ## Contexto
 
-La capa gratuita incluye una `e2-micro` no preemptible por mes solo en `us-west1`, `us-central1` o `us-east1`, 30 GB de
-disco estándar y 1 GB de salida de red. La cuenta es personal (`vvalotto@gmail.com`). Depende de las decisiones de `US-8.6.1` (`ADR-025`); si alguna cambia el diseño, se actualiza esta spec antes de implementar.
+`US-8.6.2` dejó la composición de servicios verificada en CI, pero nunca se vio funcionar en una VM real. Quedan sin comprobar la
+memoria total con el sistema operativo y Docker en 1 GB, el certificado real de DuckDNS, el puerto de PostgreSQL visto desde internet
+y cómo llega la imagen a la VM (CI la construye pero no la publica; la VM no puede compilarla con 1 GB). La cuenta de facturación es
+**paga y sin créditos** (`ADR-025`, revisión 2026-10-23), así que un descuido cuesta dinero real. Esta US **reemplaza** a la antigua
+`US-8.6.3` (script de aprovisionamiento), que pasa a `US-8.6.4` y se escribe con lo aprendido acá.
 
 ## Especificacion del comportamiento
 
-- Script de creación con `gcloud`: proyecto, `e2-micro` en `us-central1`, disco estándar de 30 GB o menos, IP estática,
-  swap configurado, sistema base y herramientas necesarias según `ADR-025`.
-- **Firewall:** solo 80 y 443 (y el acceso de administración que se decida); nada más. Sin PostgreSQL expuesto.
-- **Presupuesto:** alerta de presupuesto con umbral bajo configurado desde el primer día.
-- Script de destrucción que borra la VM, la IP y las reglas creadas, sin tocar lo que no creó.
-- Idempotencia razonable: ejecutarlo dos veces no duplica recursos ni falla sin explicación.
-- Prerrequisitos documentados: `gcloud` instalado, facturación habilitada, cómo pasar de la prueba gratuita a cuenta paga
-  sin perder la capa gratuita.
+1. **Plan escrito:** `docs/plans/DESPLIEGUE-GCP.md`, con la convención de `DESPLIEGUE-LOCAL.md` (cada paso marcado probado / sin probar):
+   - Prerrequisitos: `gcloud` con sesión vigente, cuenta de facturación, subdominio de DuckDNS.
+   - Pasos numerados con comandos reales, **resultado esperado y criterio de éxito** por paso.
+   - **Puerta de confirmación** antes de cada acción que cree recursos o genere costo; nada se ejecuta sin el visto bueno de Víctor.
+   - Quién hace cada cosa (lo que ejecuta Claude, lo que hace Víctor, lo que se comprueba desde el celular).
+   - Control de costos (límite de tiempo, qué mirar en Facturación) y **desmontaje** borrando el proyecto entero.
+   - Lo que **no** cubre (alta disponibilidad, datos reales, acceso institucional).
+2. **Revisión con Víctor** del plan antes de ejecutarlo; los cambios que pida se incorporan.
+3. **Ejecución manual** del plan, con bitácora en `quality/reports/uat/inc8-gcp/bitacora-despliegue.md` (comando, resultado, hora, costo
+   observado). Cubre: proyecto nuevo `cognion-prueba` vinculado a la cuenta de facturación; presupuesto propio y bajo; **evaluación
+   de los límites de inversión** (alcance, qué pausan, si afectan a otros proyectos) antes de depender de ellos; VM `e2-micro` en
+   `us-central1` con IP estática y firewall solo en 80/443; imagen construida con Cloud Build y publicada en un registro (se verifica
+   que entre en los límites gratuitos de Artifact Registry; si no, se elige otro); Docker en la VM; `deploy/gcp/` con el `.env` real;
+   DuckDNS apuntando a la IP; HTTPS real comprobado desde el celular.
+4. **Mediciones tempranas** (informativas, la medición formal con criterios es `US-8.6.7`): memoria en reposo con sistema operativo y
+   Docker, un login real, tiempos de arranque y el costo observado tras al menos un día.
+5. **Corrección del `ADR-025`** por la facturación (primer commit de esta US).
+6. **Qué se aprende:** la bitácora cierra con una lista de ajustes a `deploy/gcp/` y de lo que `US-8.6.4` debe automatizar.
 
 ## Escenarios
 
-1. Sobre un proyecto limpio, el script deja una VM accesible por SSH con IP estática y swap activo.
-2. Un escaneo de puertos desde fuera muestra solo 80/443.
-3. La alerta de presupuesto existe y tiene destinatario.
-4. El script de destrucción deja el proyecto sin recursos facturables creados por esta iteración.
-5. Si falta `gcloud` o la facturación, el script lo dice y sale con código distinto de cero, sin traza.
+1. El plan de instalación existe, fue revisado por Víctor y cada paso tiene resultado esperado y criterio de éxito.
+2. Ninguna acción que crea recursos o genera costo se ejecuta sin confirmación explícita previa.
+3. Siguiendo el plan se llega de un proyecto vacío a la aplicación respondiendo por HTTPS real con un login exitoso desde el celular.
+4. Desde internet el puerto de PostgreSQL no responde.
+5. La bitácora registra la memoria en reposo con sistema operativo y Docker, y el costo observado.
+6. Los límites de inversión quedan evaluados y la decisión de usarlos o no, registrada.
+7. Al terminar queda decidido si el entorno se conserva para `US-8.6.7` o se desmonta.
 
 ## Fuera de alcance
 
-Instalar la aplicación (`US-8.6.2`); la elección de la región fuera de EE.UU. (la capa gratuita no la admite).
+Scripts de aprovisionamiento y despliegue (`US-8.6.4`); backup (`US-8.6.5`); runbook definitivo (`US-8.6.6`); mediciones con criterios de
+go/no-go (`US-8.6.7`); prueba con usuarios (`US-8.6.8`).
 
 ## Fuente de verdad UX
 
