@@ -170,3 +170,11 @@ Medido dentro del contenedor de la aplicación con el mismo `bcrypt` de producci
 - Costo real (informe de Facturación al día siguiente, SKU `External IP Charge`; los informes tardan hasta 24 h).
 - Botón "Copiar link": falta que Víctor confirme que lo usó.
 - Medición formal bajo carga (`US-8.6.7`).
+
+## Decisión — la VM se conserva encendida · 2026-10-24 11:01
+- **Decidido por Víctor:** el entorno **no se desmonta**; queda encendido para las mediciones formales de `US-8.6.7` y para el resto de la iteración.
+- Estado al decidir (aprox. 5 h después de crear la VM, que se creó el 2026-10-24 a las 05:52): VM `RUNNING`, IP `IN_USE`, `/api/health` responde 200 por HTTPS en 0,58 s, los tres contenedores sanos, memoria usada 579 MiB y disponible 390, disco 4,8 GB de 30.
+- Exposición: 213 requests de IPs ajenas (escáneres) y **0 intentos de login ajenos**.
+- **Costo:** los informes de Facturación tardan hasta 24 h. **Pendiente para el 2026-10-25 desde las 06:00:** revisar el informe agrupado por SKU del proyecto `cognion-prueba-2410`, buscando `External IP Charge`, disco y salida de red, y registrar el gasto real. El presupuesto de 5 USD avisa si algo se pasa.
+- `US-8.6.3` no se cierra hasta registrar ese costo (escenario 5 de su spec).
+- Recordar: mientras la VM esté encendida y el proyecto exista, el costo de la IPv4 (≈3,65 USD/mes si no la cubre la capa gratuita) corre. El desmontaje sigue siendo `gcloud projects delete cognion-prueba-2410`.
