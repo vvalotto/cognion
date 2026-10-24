@@ -1,6 +1,6 @@
 # Despliegue en GCP — plan de instalación y prueba manual
 
-> Estado documental: **borrador para revisión de Víctor** — ningún paso se probó todavía
+> Estado documental: **plan aprobado por Víctor el 2026-10-24**; ejecución manual en curso, cada paso marca su estado
 > Alcance: instalar y probar Cognión en una VM `e2-micro` de GCP con la cuenta personal `vvalotto@gmail.com`
 > Origen: `US-8.6.3` (Incremento 8, Iteración 6) · decisiones en `docs/adr/ADR-025-despliegue-de-prueba-en-gcp.md`
 > Composición de servicios: `deploy/gcp/` (`US-8.6.2`) · Última actualización: 2026-10-23
@@ -53,20 +53,21 @@ backup (`US-8.6.5`) ni mediciones con criterios de go/no-go (`US-8.6.7`; acá so
 ## 5. Pasos
 
 Cada paso indica el comando, el **resultado esperado**, el **criterio de éxito** y el estado (`sin probar` hasta ejecutarlo).
-Los comandos de `gcloud` se verifican con `--help` antes de ejecutarlos si algún nombre de opción no coincide con la versión instalada (550.0.0).
+Los comandos de `gcloud` llevan el prefijo `CLOUDSDK_ACTIVE_CONFIG_NAME=cognion` (se omite en los bloques por brevedad desde el paso 2) y se verifican con `--help` antes de ejecutarlos si algún nombre de opción no coincide con la versión instalada (550.0.0).
 
 ### Paso 0 — Prerrequisitos (sin probar)
 - `gcloud` con sesión vigente: `gcloud auth list` muestra `vvalotto@gmail.com` activa. *(Verificado el 2026-10-23.)*
 - Subdominio de DuckDNS creado por Víctor: `cognion-fiuner.duckdns.org` *(hecho el 2026-10-23)*. DuckDNS le asignó por defecto la IP pública de la casa de Víctor; se cambia por la de la VM en el paso 9. **El token de DuckDNS es una credencial: no se comparte ni se guarda en el repositorio** (este plan no lo necesita).
 - **Éxito:** los dos puntos anteriores cumplidos y `DOMINIO` definido.
 
-### Paso 1 — Configuración de `gcloud` aparte, para no tocar la tuya (sin probar)
-Una configuración con nombre evita cambiar el proyecto por defecto (`app-termostato-2025`).
+### Paso 1 — Configuración de `gcloud` aparte, para no tocar la tuya (**probado** el 2026-10-24)
+Una configuración con nombre evita cambiar el proyecto por defecto (`app-termostato-2025`). Se crea **sin activarla** y se usa con una variable de entorno por comando, de modo que la configuración activa de tu terminal no cambia:
 ```bash
-gcloud config configurations create cognion
-gcloud config set account vvalotto@gmail.com
+gcloud config configurations create cognion --no-activate
+CLOUDSDK_ACTIVE_CONFIG_NAME=cognion gcloud config set account vvalotto@gmail.com
 ```
-- **Éxito:** `gcloud config configurations list` muestra `cognion` activa y `default` intacta. Para volver: `gcloud config configurations activate default`.
+Todos los comandos `gcloud` siguientes llevan el prefijo `CLOUDSDK_ACTIVE_CONFIG_NAME=cognion`.
+- **Éxito:** `gcloud config configurations list` muestra `cognion` (inactiva, con la cuenta) y `default` sigue activa e intacta.
 
 ### Paso 2 🔒 — Crear el proyecto y vincular la facturación (sin probar)
 ```bash
