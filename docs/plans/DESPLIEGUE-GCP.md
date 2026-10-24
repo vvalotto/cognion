@@ -69,7 +69,7 @@ CLOUDSDK_ACTIVE_CONFIG_NAME=cognion gcloud config set account vvalotto@gmail.com
 Todos los comandos `gcloud` siguientes llevan el prefijo `CLOUDSDK_ACTIVE_CONFIG_NAME=cognion`.
 - **Éxito:** `gcloud config configurations list` muestra `cognion` (inactiva, con la cuenta) y `default` sigue activa e intacta.
 
-### Paso 2 🔒 — Crear el proyecto y vincular la facturación (sin probar)
+### Paso 2 🔒 — Crear el proyecto y vincular la facturación (**probado** el 2026-10-24)
 ```bash
 gcloud projects create cognion-prueba-<sufijo> --name="Cognion prueba"
 gcloud config set project cognion-prueba-<sufijo>

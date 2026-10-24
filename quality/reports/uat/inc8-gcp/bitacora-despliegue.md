@@ -18,3 +18,10 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Resultado: la configuración `cognion` existe con la cuenta, **inactiva**; `default` sigue activa con `app-termostato-2025`. Se usa con la variable de entorno por comando, sin cambiar la configuración activa de la terminal.
 - Desvío respecto del plan original: se evitó `config set project` y la activación para no tocar la configuración global.
 - Resultado: **OK**. Costo: 0.
+
+## Paso 2 🔒 — Proyecto y facturación · 2026-10-24 09:44 · confirmado por Víctor
+- Comandos: `gcloud projects create cognion-prueba-2410 --name="Cognion prueba"`, `gcloud config set project cognion-prueba-2410` (solo en la configuración `cognion`), `gcloud billing projects link cognion-prueba-2410 --billing-account=019D68-E7FC7F-247D34`.
+- Resultado: proyecto `ACTIVE`, número `888211184158`, `billingEnabled: true` con "Mi cuenta de facturación". Se habilitó automáticamente `cloudapis.googleapis.com` (sin costo).
+- Aviso de `gcloud`: el proyecto activo no coincide con el *quota project* del archivo de credenciales de aplicación (ADC). No afecta a `gcloud`; **no se cambió** porque podría afectar a otras aplicaciones de Víctor que usen esas credenciales.
+- `default` sigue con `app-termostato-2025`.
+- Costo observado: 0 (proyecto sin recursos).
