@@ -37,3 +37,9 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Resultado: presupuesto `cognion-prueba` (id `4451187e-9499-4b6f-b063-e405b3d82131`), 5 USD mensuales, acotado al proyecto `888211184158`, con alertas al 50 % y 100 % sobre el gasto actual. El presupuesto existente "ALERTA PRINCIPAL" no se tocó.
 - Las opciones de `gcloud billing budgets create` del plan coincidieron con la versión instalada (550.0.0): sin ajustes.
 - Costo observado: 0 (los presupuestos solo avisan).
+
+## Paso 4 🔒 — Compute Engine y revisión de la red · 2026-10-24 09:50 · confirmado por Víctor
+- Comandos: `gcloud services enable compute.googleapis.com`, `gcloud compute networks list`, `gcloud compute firewall-rules list`, `gcloud compute instances list`, `gcloud compute addresses list`.
+- Resultado: API habilitada. Existe la red `default` (modo automático). Reglas por defecto: `default-allow-icmp` (0.0.0.0/0), `default-allow-internal` (10.128.0.0/9), `default-allow-rdp` (0.0.0.0/0, tcp:3389) y `default-allow-ssh` (0.0.0.0/0, tcp:22). Sin VMs ni IPs.
+- **Hallazgo de seguridad:** `default-allow-rdp` deja el 3389 abierto a internet y una VM Linux no lo usa. Se incorpora al paso 5 eliminarla.
+- Costo observado: 0 (habilitar la API no cuesta).

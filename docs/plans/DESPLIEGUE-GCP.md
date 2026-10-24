@@ -92,7 +92,7 @@ gcloud billing budgets create --billing-account=019D68-E7FC7F-247D34 \
 2. **Límites de inversión (*spend caps*) — evaluados y descartados (2026-10-24):** no frenan una VM ni su disco (solo pausan el uso nuevo de un servicio elegible, por proyecto); ver la bitácora y el `ADR-025`. Texto original de la evaluación: la consola de Facturación → Budgets & caps muestra una función que **pausa servicios** al superar un tope. **Antes de depender de ella** se lee la documentación oficial para entender: qué servicios pausa, si aplica a un proyecto o a toda la cuenta de facturación, y si afectaría a `app-termostato-2025`. El resultado (usarla o no, y por qué) se anota en la bitácora.
 - **Éxito:** el presupuesto existe y alcanza a este proyecto; la decisión sobre los límites queda registrada.
 
-### Paso 4 🔒 — Habilitar Compute Engine y revisar la red (sin probar)
+### Paso 4 🔒 — Habilitar Compute Engine y revisar la red (**probado** el 2026-10-24)
 ```bash
 gcloud services enable compute.googleapis.com
 gcloud compute networks list
@@ -119,6 +119,7 @@ gcloud compute instances create cognion-vm --zone=us-central1-a --machine-type=e
   - Una IP reservada **sin asignar** se cobra. Esta queda asignada; si la VM se borra, la IP se libera también (paso de desmontaje).
   - **La IPv4 pública en uso se cobra** (≈0,005 USD/hora, unos 3,65 USD por mes según el precio vigente que encontré). Las fuentes no coinciden en si la capa gratuita lo cubre; **se verifica en el primer día** en Facturación → Informes, agrupando por SKU, buscando "External IP Charge". Si se cobra, el costo mensual real de la prueba es esa cifra, y no cero.
   - La capa gratuita cubre una `e2-micro` en `us-central1` con 30 GB de disco estándar y 1 GB de salida de red por mes; el exceso de salida se cobra (tarifa sin confirmar).
+- **RDP:** la red `default` trae `default-allow-rdp` (puerto 3389 abierto a todo internet). Una VM Linux no lo usa, así que **se elimina** en este paso (superficie de ataque innecesaria): `gcloud compute firewall-rules delete default-allow-rdp`. Se conservan `default-allow-ssh`, `default-allow-icmp` y `default-allow-internal`.
 - **SSH:** la regla por defecto permite SSH desde cualquier origen, con autenticación por clave (la que genera `gcloud compute ssh`). Para la prueba se deja así; si se prefiere, se restringe a la IP de Víctor.
 
 ### Paso 6 — Preparar la VM: acceso, swap y Docker (sin probar)
