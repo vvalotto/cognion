@@ -221,3 +221,13 @@ SQL) en un ADR nuevo. La imagen es la misma, así que el código no cambia.
 
 - Confirmar los criterios de go/no-go.
 - Tarifa de salida de red por encima del 1 GB gratuito: verificar antes de la prueba con alumnos.
+
+## Iteración 7 — Versión de producción local (`v0.9.0`)
+
+**Decisión de Víctor, 2026-10-24:** la Iteración 6 queda en pausa (el costo de la nube lo desaconseja por ahora). La primera versión de producción corre **en su Mac, sin nube**, con `scripts/local/`; después se usará temporalmente su GCP con los scripts de `US-8.6.4`. Número `v0.9.0` (no `v1.0.0`: faltan RF-07, RF-18 y la prueba en la red del aula). Cierre como `BL-013`. Las preguntas no se versionan: Víctor genera los archivos JSON.
+
+| US | Título | Alcance |
+|---|---|---|
+| US-8.7.1 (#564) | Carga de datos iniciales (materias y preguntas) desde archivos JSON o Markdown | Comando idempotente que usa los casos de uso del Banco de Preguntas; lee también los 17 cuestionarios `.md` de Gestión de Proyectos (340 preguntas); formato en la spec |
+
+**Gates antes de etiquetar:** instalación limpia en la Mac (base vacía, `levantar.sh`, carga, login), un ciclo de `respaldar.sh`/`restaurar.sh` con esos datos, `DESPLIEGUE-LOCAL.md` y `CHANGELOG` al día, y el procedimiento completo de cierre de baseline.

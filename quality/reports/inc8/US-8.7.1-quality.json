@@ -1,0 +1,29 @@
+{
+  "us": "US-8.7.1",
+  "veredicto": "APROBADO",
+  "tipo": "comando operativo sobre el BC Banco de Preguntas (use_cases, interface_adapters, frameworks/cli)",
+  "tests": {
+    "suite_completa": "2088 pasaron, 0 fallos (unit + integration + step_defs, contra base descartable cognion_test_us871)",
+    "propios": "41 unitarios (caso de uso 8, importadores 20, comando 13), 5 de integración con PostgreSQL real, 14 casos BDD (11 escenarios con ejemplos)"
+  },
+  "cobertura": {
+    "total": "97.22 %",
+    "use_cases/cargar_datos_iniciales.py": "100 %",
+    "json_importador.py": "100 %",
+    "markdown_importador.py": "98,1 % (línea 42, enunciado vacío)",
+    "frameworks/cli": "cableado real cubierto por los tests de integración vía _main"
+  },
+  "pylint": "9,96/10 en los archivos nuevos (R0903 en el caso de uso: norma del repo)",
+  "complejidad": "máx 9 (leer_json, _pregunta); MI mínimo 40,76 (A)",
+  "ruff_black_isort": "limpio",
+  "mypy": "0 errores (src/ completo, 314 archivos)",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "advertencias": 0,
+    "errores": "solo ruido de herramienta: 'Could not extract pylint score' en __init__.py vacíos y vulture/codespell no instalados (preexistente)",
+    "primera_corrida": "complejidad 12 en ejecutar y 2 líneas largas; resuelto partiendo ejecutar en _archivos_a_procesar y _procesar"
+  },
+  "designreviewer": "0 blocking; 358 advertencias en todo src/ (LongMethod/FanOut propias de esta US, WARNING)",
+  "verificacion_con_datos_reales": "pendiente de Fase 8: --simular sobre los 17 cuestionarios reales (340 preguntas)",
+  "base_descartable": "cognion_test_us871 (se elimina al cerrar); ni cognion ni cognion_local se tocaron"
+}

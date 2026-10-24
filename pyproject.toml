@@ -107,6 +107,17 @@ markers = [
     "edge-case: escenario BDD de caso límite (colecciones vacías, etc.)",
     "integration: escenario BDD que verifica integración real entre componentes",
     "US-5.1.1: escenarios BDD de la US-5.1.1",
+    "US-8.7.1: escenarios BDD de la US-8.7.1",
+    "carga: escenario BDD de carga de datos iniciales",
+    "idempotencia: escenario BDD de repetición sin duplicados",
+    "validacion: escenario BDD de rechazo por datos inválidos",
+    "invariante: escenario BDD que verifica una invariante de dominio",
+    "carpeta: escenario BDD que procesa una carpeta de archivos",
+    "aislamiento: escenario BDD de aislamiento entre archivos",
+    "simular: escenario BDD del modo --simular",
+    "materia-existente: escenario BDD sobre una materia ya creada",
+    "errores-entrada: escenario BDD de entrada inválida",
+    "markdown: escenario BDD de cuestionarios en formato Markdown",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

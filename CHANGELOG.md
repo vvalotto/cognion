@@ -9,6 +9,9 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+### Added
+- Comando `cargar_datos_iniciales` (`US-8.7.1`): carga materias y preguntas desde archivos JSON o cuestionarios Markdown, de forma idempotente y con validación previa por archivo. Guía en `docs/plans/DESPLIEGUE-LOCAL.md` §4b.
+
 ## [0.8.1] - 2026-10-15
 
 ### Added

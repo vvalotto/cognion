@@ -75,6 +75,36 @@ terminal (no la ingreso yo). Conviene que la corrida sea en una terminal tuya, n
 
 ---
 
+## 4b. Cargar tus materias y preguntas (estado: probado sobre una base descartable con los 17 cuestionarios reales; sin probar sobre `cognion_local`)
+
+Después de `levantar.sh` la base solo tiene el Administrador. Las materias y preguntas se cargan con un comando
+(`US-8.7.1`) desde archivos que **no se versionan**: guardalos en una carpeta tuya, por ejemplo `~/CognionDatos/`
+(la carpeta debe tener solo los archivos a cargar: el comando procesa **todos** los `*.json` y los
+`* - Cuestionario.md` que encuentre y marca como error los que no tienen el formato).
+
+```bash
+set -a; . ./.env.local; set +a        # usa la base cognion_local
+.venv/bin/python -m src.banco_preguntas.frameworks.cli.cargar_datos_iniciales ~/CognionDatos --materia "Gestión de Proyectos" --simular
+.venv/bin/python -m src.banco_preguntas.frameworks.cli.cargar_datos_iniciales ~/CognionDatos --materia "Gestión de Proyectos"
+```
+
+Primero con `--simular` (valida todo y no escribe); después sin él. Es **idempotente**: volver a correrlo omite las
+preguntas cuyo texto ya está activo en el banco. Un archivo con una pregunta inválida no carga nada de ese archivo
+y el resto sigue; la salida es distinta de cero si alguno falló. Se puede hacer con la aplicación levantada o detenida.
+
+**Formatos aceptados**
+- **Markdown** (cuestionarios de opción múltiple, un archivo por tema, `<Tema> - Cuestionario.md`): `--materia` es
+  obligatorio. La unidad temática sale de la línea `**Unidad temática:**`, el tema del nombre del archivo, la
+  dificultad de `*(Nivel: Fácil|Medio|Difícil)*` (bajo, medio, alto) y la importancia se deriva de la dificultad
+  (se puede ajustar después desde la pantalla).
+- **JSON** (opción múltiple y verdadero/falso, una materia por archivo; la materia va adentro): ejemplo en
+  `docs/plans/ejemplos/datos-iniciales.ejemplo.json`.
+
+Si la materia ya existe (por ejemplo, creada desde la pantalla) se reutiliza. No carga estudiantes, comisiones ni
+docentes: eso se hace desde la aplicación.
+
+---
+
 ## 5. Parar y retomar (estado: probado)
 
 ```bash
