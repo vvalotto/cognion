@@ -99,7 +99,7 @@ d) Un acontecimiento o condición incierta que…
   invariantes del dominio.
 - **Idempotente:** una pregunta cuyo `texto` ya existe y está activa en el banco de esa materia se omite. Volver a ejecutar el
   comando no duplica nada.
-- **Todo o nada por archivo:** se valida el archivo completo antes de escribir. Un error en cualquier pregunta (formato, opciones
+- **Todo o nada por archivo:** se valida el archivo completo antes de escribir (si la base falla durante la escritura, volver a ejecutar es seguro: el comando es idempotente). Un error en cualquier pregunta (formato, opciones
   sin exactamente una correcta, tipo desconocido) aborta ese archivo sin cargar nada de él y se informa la posición y el motivo.
 - Un error en un archivo no impide procesar los demás; el código de salida es distinto de cero si algún archivo falló.
 - Al terminar imprime un resumen por materia: preguntas cargadas, omitidas por duplicadas y con error.
