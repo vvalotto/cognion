@@ -55,3 +55,15 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
   - Inventario del proyecto: 1 VM, 1 IP, 1 disco.
 - Avisos de `gcloud` (sin acción): disco menor a 200 GB puede tener E/S baja (esperado en la capa gratuita); el disco de 30 GB es mayor que la imagen de 10 GB y Debian 12 amplía la partición solo.
 - Costo observado: aún sin datos de Facturación (los informes tardan hasta 24 h). Pendiente: verificar al día siguiente el SKU `External IP Charge`.
+
+## Paso 6 — Acceso, swap y Docker · 2026-10-24 09:59 · confirmado por Víctor (incluida la clave SSH)
+- **Acceso:** `gcloud compute ssh cognion-vm --zone=us-central1-a --quiet`. La primera conexión actualizó los metadatos SSH del proyecto y creó en la Mac `~/.ssh/google_compute_engine` (sin passphrase) y su `.pub`. Tardó en propagar la clave (unos segundos).
+- **Sistema:** Debian GNU/Linux 12 (bookworm), x86_64, 2 vCPU visibles, disco de 30 GB con 2,1 GB usados.
+- **Memoria base (Debian + agentes de Google, sin swap ni Docker):** total 969 MiB, usada 350, libre 440, disponible 619.
+- **Swap:** `fallocate -l 1G /swapfile`, `chmod 600`, `mkswap`, `swapon`, entrada en `/etc/fstab`. Resultado: 1 GiB activo y persistente. En PATH de un SSH no interactivo `swapon` no está sin `sudo` (está en `/usr/sbin`).
+- **Docker:** repositorio oficial de paquetes (clave en `/etc/apt/keyrings/docker.asc`, huella `9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`, que coincide con la clave oficial de Docker). Versiones: Docker 29.9.2, Compose v5.6.1; `docker` activo y habilitado al arrancar. El usuario quedó en el grupo `docker` (efectivo en la sesión siguiente).
+- Los avisos de `debconf` por falta de terminal son inocuos.
+- **Medición temprana #1 (sistema + Docker en reposo, antes de Cognión):** total 969 MiB, usada **419**, libre 82, buff/cache 610, **disponible 550**, swap usado 8 MiB; carga 0,41. Procesos de mayor tamaño: `dockerd` 85 MB, `containerd` 42 MB, `google_osconfig` 40 MB, `unattended-upgr` 20 MB, `google_guest_agent` 18 MB. Docker sumó unos 65 MiB usados.
+- **Proyección:** con los ~115 MiB medidos en CI para los tres contenedores, la memoria usada quedaría cerca de 535 MiB de 969 (≈55 %), por debajo del 70 % de la regla de parada. Es una proyección: se confirma con el paso 13.
+- **Idea para más margen (no aplicada):** el agente `google_osconfig` ocupa unos 40 MB y no se necesita.
+- Costo observado: 0 (instalar paquetes y crear swap no se factura).

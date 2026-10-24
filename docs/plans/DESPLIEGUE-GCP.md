@@ -122,7 +122,7 @@ gcloud compute instances create cognion-vm --zone=us-central1-a --machine-type=e
 - **RDP:** la red `default` trae `default-allow-rdp` (puerto 3389 abierto a todo internet). Una VM Linux no lo usa, así que **se elimina** en este paso (superficie de ataque innecesaria): `gcloud compute firewall-rules delete default-allow-rdp`. Se conservan `default-allow-ssh`, `default-allow-icmp` y `default-allow-internal`.
 - **SSH:** la regla por defecto permite SSH desde cualquier origen, con autenticación por clave (la que genera `gcloud compute ssh`). Para la prueba se deja así; si se prefiere, se restringe a la IP de Víctor.
 
-### Paso 6 — Preparar la VM: acceso, swap y Docker (sin probar)
+### Paso 6 — Preparar la VM: acceso, swap y Docker (**probado** el 2026-10-24)
 Primero el acceso:
 ```bash
 gcloud compute ssh cognion-vm --zone=us-central1-a
