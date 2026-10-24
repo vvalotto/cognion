@@ -24,7 +24,7 @@
     "Un error de YAML en cd.yml (': ' en un valor sin comillas) atrapado por la validación local antes de subirlo"
   ],
   "sin_probar_hasta_us_8_6_6": "creación desde cero en un proyecto limpio (ensayo de instalación limpia)",
-  "pendiente_de_limpieza_manual": "borrar las versiones de prueba del paquete en GHCR (aún listadas el 2026-10-24 11:56)",
+  "pendiente_de_limpieza_manual": "la versión de prueba del paquete en GHCR (id 1439899604, v0.0.1-prueba.1) no se puede borrar mientras sea la última con etiqueta (GitHub lo impide); borrarla con gh api -X DELETE /user/packages/container/cognion/versions/1439899604 tras publicar el primer release real vX.Y.Z",
   "codeguard": {
     "modo": "--analysis-type full",
     "archivos": "7 de tests/helpers",

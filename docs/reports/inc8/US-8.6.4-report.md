@@ -22,5 +22,5 @@
 145/145 tests en `tests/unit/inc8` (54 de esta US, con `gcloud` y `docker` simulados). ruff, black, isort limpios; pylint 10,00/10; CodeGuard completo sin advertencias reales (tras partir los tests en archivos con simuladores compartidos); mypy y DesignReviewer sin bloqueos. Verificación real en la VM: despliegue sano (corte ~10 s), rollback automático (~63 s) y manual (~6 s), publicación en GHCR y descarga anónima. Evidencia: `quality/reports/inc8/US-8.6.4-quality.json`, `quality/reports/uat/inc8-gcp/verificacion-us-8.6.4.md`.
 
 ## Pendiente
-- Borrar a mano las versiones de prueba del paquete en GHCR.
+- Borrar la versión de prueba del paquete en GHCR (`gh api -X DELETE /user/packages/container/cognion/versions/1439899604`) después del primer release real: GitHub no deja borrar la última versión con etiqueta.
 - Sin probar hasta `US-8.6.6`: creación desde un proyecto limpio.
