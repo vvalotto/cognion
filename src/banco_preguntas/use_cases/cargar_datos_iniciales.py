@@ -82,7 +82,7 @@ def _sin_repetidas(
 class CargarDatosInicialesUseCase:
     """Crea la materia si falta y carga sus preguntas, omitiendo las ya existentes."""
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         materia_repositorio: MateriaRepositoryPort,
         banco_repositorio: BancoRepositoryPort,

@@ -60,7 +60,8 @@ SALIDA_ERROR = 1
 def _parsear(argumentos: Sequence[str]) -> argparse.Namespace:
     """Interpreta los argumentos de la línea de comandos."""
     parser = argparse.ArgumentParser(
-        prog="cargar_datos_iniciales", description=__doc__.split("\n")[0]
+        prog="cargar_datos_iniciales",
+        description="Carga materias y preguntas desde JSON o Markdown.",
     )
     parser.add_argument("ruta", type=Path, help="archivo .json/.md o carpeta")
     parser.add_argument("--materia", help="materia destino (obligatoria para archivos .md)")
