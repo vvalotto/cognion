@@ -67,3 +67,9 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - **Proyección:** con los ~115 MiB medidos en CI para los tres contenedores, la memoria usada quedaría cerca de 535 MiB de 969 (≈55 %), por debajo del 70 % de la regla de parada. Es una proyección: se confirma con el paso 13.
 - **Idea para más margen (no aplicada):** el agente `google_osconfig` ocupa unos 40 MB y no se necesita.
 - Costo observado: 0 (instalar paquetes y crear swap no se factura).
+
+## Paso 7 — Configuración y verificación a la VM · 2026-10-24 10:00
+- Comandos: `tar czf /tmp/cognion-deploy.tgz deploy/gcp tests/uat/inc8/verificar_composicion_gcp.sh` (5.971 bytes, sin ningún `.env` real, solo `.env.example`), `gcloud compute scp ... cognion-vm:~`, y en la VM `mkdir -p ~/cognion && tar xzf ...`.
+- Resultado: `~/cognion/deploy/gcp/` con `docker-compose.yml`, `Caddyfile`, `.env.example`, `cognion.sh`, `preparar-env.sh`, y `~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh`, los tres scripts con permiso de ejecución. `docker compose config` lee la composición y solo avisa de las variables sin definir (esperado antes del `.env`).
+- **Desvío:** el `tar` de macOS agregó archivos basura `._*` (metadatos AppleDouble) y avisos `LIBARCHIVE.xattr`. Se borraron en la VM. Corrección en el plan: usar `COPYFILE_DISABLE=1 tar ...`.
+- Costo: 0.

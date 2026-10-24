@@ -148,13 +148,13 @@ sudo usermod -aG docker "$USER"
 - **Éxito:** `docker --version` y `docker compose version` responden (tras volver a entrar a la sesión); `free -m` muestra el swap activo.
 - **Medición temprana #1:** memoria libre con el sistema operativo y Docker en reposo, **antes** de levantar Cognión. Se anota en la bitácora.
 
-### Paso 7 — Llevar la configuración y la verificación a la VM (sin probar)
+### Paso 7 — Llevar la configuración y la verificación a la VM (**probado** el 2026-10-24)
 Desde la Mac, conservando la estructura de carpetas que espera el script de verificación:
 ```bash
-tar czf /tmp/cognion-deploy.tgz deploy/gcp tests/uat/inc8/verificar_composicion_gcp.sh
+COPYFILE_DISABLE=1 tar czf /tmp/cognion-deploy.tgz deploy/gcp tests/uat/inc8/verificar_composicion_gcp.sh
 gcloud compute scp /tmp/cognion-deploy.tgz cognion-vm:~ --zone=us-central1-a
 ```
-En la VM: `mkdir -p ~/cognion && tar xzf ~/cognion-deploy.tgz -C ~/cognion`.
+`COPYFILE_DISABLE=1` evita que `tar` de macOS agregue archivos basura `._*`. En la VM: `mkdir -p ~/cognion && tar xzf ~/cognion-deploy.tgz -C ~/cognion`.
 - **Éxito:** existen `~/cognion/deploy/gcp/docker-compose.yml` y `~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh`.
 
 ### Paso 8 — Llevar la imagen a la VM (sin probar)
