@@ -115,3 +115,10 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - **Memoria de los contenedores tras reiniciar y asentarse:** `app` 70,8 MiB, `db` 18,0 MiB, `caddy` 15,0 MiB (**104 MiB**). El pico de 156 MiB medido justo después del primer arranque era de arranque.
 - **Memoria del sistema 30 s después del reinicio:** usada 544 MiB, disponible 425, swap 3 MiB.
 - Costo observado: 0 adicional.
+
+## Paso 11 (complemento) — ¿Se usó "Copiar link"? · 2026-10-24 10:30
+- El servidor **no puede ver** el uso del botón: copiar al portapapeles ocurre en el navegador y no genera ninguna request.
+- **Evidencia indirecta en el log de la aplicación**, desde la IP de Víctor y en este orden: `POST /api/comisiones/{id}/invitaciones` → **201** (se generó el link; hay 1 invitación en la base), `GET /registro?token=…` → 200 y `GET /api/identidad/invitaciones/{token}` → 200 (se abrió ese link y la pantalla pública de vista previa de la invitación respondió por HTTPS).
+- Conclusión: el flujo de invitación funciona de punta a punta por HTTPS real; que el link haya llegado por el botón "Copiar link" **no está confirmado** por el servidor. Falta que Víctor lo confirme (si el botón mostró el aviso de copiado).
+- **Hallazgo de seguridad menor:** el token de invitación viaja en la URL (`/registro?token=…`) y por eso queda en los logs de acceso de la aplicación y de Caddy. Es un token de prueba (vence a los 7 días), pero en una instalación con datos reales convendría revisar si los logs deben enmascarar los parámetros de consulta.
+- Datos creados en la prueba: 1 materia, 1 comisión, 1 invitación, 1 Administrador.
