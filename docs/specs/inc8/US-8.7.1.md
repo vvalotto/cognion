@@ -4,7 +4,7 @@
 **Iteracion / Sprint**: `INC-8.7`
 **Tipo**: `tooling operativo` (comando de línea de comandos en `src/banco_preguntas/frameworks/cli/`)
 **Bounded Context**: Banco de Preguntas
-**Issue**: (a crear)
+**Issue**: #564
 
 ---
 
