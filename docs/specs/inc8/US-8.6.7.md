@@ -35,6 +35,11 @@ Mediciones repetibles, con scripts versionados en `tests/uat/inc8/`, ejecutadas 
 | Latencia desde Argentina | se mide y se registra (informativo) |
 | Respaldo y restauración | restauración completa exitosa (`US-8.6.5`) |
 
+**Nota 2026-10-24 (hallazgo de `US-8.6.3`, paso 13):** el criterio "60 logins simultáneos en un minuto, p95 < 3 s" es ambiguo. Medido en la VM, una verificación
+de contraseña cuesta 325 ms y, con el código actual, **bloquea el event loop** (`US-ADJ-63`, Issue #562): una **ráfaga** de 60 logins llega a ~19,5 s
+hasta el último, mientras que 60 **repartidos en un minuto** (1 por segundo) dan ~1 s. Hay que fijar antes de medir cuál de las dos es el criterio, y
+medir **antes y después** de `US-ADJ-63`.
+
 Resultado: `quality/reports/uat/inc8-gcp/mediciones.md` con datos crudos, veredicto por criterio y una conclusión
 **go / no-go**. Si algún criterio falla se registra y se propone el siguiente paso (VM paga más grande u opción B: Cloud
 Run + Cloud SQL), decidido en un ADR nuevo. La imagen es la misma, así que el código no cambia.
