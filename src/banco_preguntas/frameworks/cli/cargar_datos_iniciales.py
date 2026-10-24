@@ -2,7 +2,9 @@
 
 Uso:
 
-    python -m src.banco_preguntas.frameworks.cli.cargar_datos_iniciales <ruta> [--materia NOMBRE] [--simular]
+    python -m src.banco_preguntas.frameworks.cli.cargar_datos_iniciales <ruta> [opciones]
+
+Opciones: `--materia NOMBRE` y `--simular` (valida sin escribir).
 
 `<ruta>` es un archivo `.json` o `.md`, o una carpeta con `*.json` y `* - Cuestionario.md`.
 `--materia` es obligatorio para los `.md`, que no traen la materia. Es idempotente: omite las
@@ -87,6 +89,45 @@ def _leer(archivo: Path, materia: str | None) -> ArchivoDeDatos:
     raise ArchivoInvalido("formato no soportado (usá .json, o .md con --materia)")
 
 
+def _archivos_a_procesar(
+    opciones: argparse.Namespace, imprimir: Callable[[str], None]
+) -> list[Path]:
+    """Valida la entrada y devuelve los archivos a procesar; lista vacía si hay que abortar."""
+    if not opciones.ruta.exists():
+        imprimir(f"No existe la ruta: {opciones.ruta}")
+        return []
+    archivos = _descubrir(opciones.ruta)
+    if not archivos:
+        imprimir(f"No hay archivos .json ni '{SUFIJO_CUESTIONARIO}' en {opciones.ruta}")
+    elif any(a.suffix == ".md" for a in archivos) and not opciones.materia:
+        imprimir("Los cuestionarios .md no traen la materia: indicala con --materia.")
+        return []
+    return archivos
+
+
+async def _procesar(
+    archivo: Path,
+    opciones: argparse.Namespace,
+    caso_de_uso: CargarDatosInicialesUseCase,
+    imprimir: Callable[[str], None],
+) -> bool:
+    """Carga un archivo e imprime su resumen; devuelve `False` si el archivo era inválido."""
+    prefijo = "[simulación] " if opciones.simular else ""
+    try:
+        datos = _leer(archivo, opciones.materia)
+        resultado = await caso_de_uso.execute(datos, simular=opciones.simular)
+    except ArchivoInvalido as error:
+        imprimir(f"{prefijo}{archivo.name}: ERROR — {error}. No se cargó nada de este archivo.")
+        return False
+    nueva = " (nueva)" if resultado.materia_creada else ""
+    imprimir(
+        f"{prefijo}{archivo.name}: materia '{resultado.materia}'{nueva} — "
+        f"{resultado.cargadas} cargadas, {resultado.omitidas} omitidas por repetidas, "
+        "0 con error."
+    )
+    return True
+
+
 async def ejecutar(
     argumentos: Sequence[str],
     caso_de_uso: CargarDatosInicialesUseCase,
@@ -94,35 +135,18 @@ async def ejecutar(
 ) -> int:
     """Procesa los archivos indicados y devuelve el código de salida del proceso."""
     opciones = _parsear(argumentos)
-    if not opciones.ruta.exists():
-        imprimir(f"No existe la ruta: {opciones.ruta}")
-        return SALIDA_ERROR
-    archivos = _descubrir(opciones.ruta)
+    archivos = _archivos_a_procesar(opciones, imprimir)
     if not archivos:
-        imprimir(f"No hay archivos .json ni '{SUFIJO_CUESTIONARIO}' en {opciones.ruta}")
-        return SALIDA_ERROR
-    if any(a.suffix == ".md" for a in archivos) and not opciones.materia:
-        imprimir("Los cuestionarios .md no traen la materia: indicala con --materia.")
         return SALIDA_ERROR
 
-    prefijo = "[simulación] " if opciones.simular else ""
     fallidos = 0
     for archivo in archivos:
         try:
-            datos = _leer(archivo, opciones.materia)
-            resultado = await caso_de_uso.execute(datos, simular=opciones.simular)
-        except ArchivoInvalido as error:
-            fallidos += 1
-            imprimir(f"{prefijo}{archivo.name}: ERROR — {error}. No se cargó nada de este archivo.")
-            continue
+            if not await _procesar(archivo, opciones, caso_de_uso, imprimir):
+                fallidos += 1
         except (SQLAlchemyError, OSError) as error:
             imprimir(f"No se pudo acceder a la base de datos: {type(error).__name__}.")
             return SALIDA_ERROR
-        imprimir(
-            f"{prefijo}{archivo.name}: materia '{resultado.materia}'"
-            f"{' (nueva)' if resultado.materia_creada else ''} — "
-            f"{resultado.cargadas} cargadas, {resultado.omitidas} omitidas por repetidas, 0 con error."
-        )
     imprimir(f"Archivos: {len(archivos) - fallidos} bien, {fallidos} con error.")
     return SALIDA_ERROR if fallidos else SALIDA_OK
 
