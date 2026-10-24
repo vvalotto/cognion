@@ -167,7 +167,7 @@ La VM no puede compilar el frontend con 1 GB, y todavía no hay registro. Para e
 - **Medición temprana #2:** tamaño comprimido del archivo y de la imagen. Alimenta la elección del registro de `US-8.6.4` (límite gratuito de Artifact Registry: 0,5 GB).
 - **Éxito:** la imagen está cargada y su tamaño anotado.
 
-### Paso 9 — DuckDNS apunta a la IP (hace Víctor) (sin probar)
+### Paso 9 — DuckDNS apunta a la IP (hace Víctor) (**probado** el 2026-10-24)
 Caddy pide el certificado al arrancar, así que el nombre tiene que resolver a la VM **antes** del paso 10.
 - Víctor reemplaza la IP del subdominio por la IP reservada (`gcloud compute addresses describe cognion-ip --region=us-central1 --format="value(address)"`): en el sitio de DuckDNS, escribe la IP en el campo *current ip* y aprieta *update ip*.
 - **Éxito:** `dig +short <DOMINIO>` (o `nslookup`) devuelve esa IP.

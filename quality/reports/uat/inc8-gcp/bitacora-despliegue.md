@@ -81,3 +81,8 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - **Para `US-8.6.4` (registro):** 100 MB comprimidos entran en los 0,5 GB gratuitos de Artifact Registry, pero con varias versiones acumuladas se acercarían al límite; GHCR (sin ese tope) queda como alternativa. Decisión pendiente.
 - Se borraron el archivo en la VM y la copia local.
 - Costo: 0 (la entrada de datos a GCP no se factura).
+
+## Paso 9 — DuckDNS apunta a la VM (lo hizo Víctor) · 2026-10-24 10:08
+- Víctor reemplazó la IP de `cognion-fiuner` por `34.30.252.89` con *update ip*.
+- Verificación: `dig +short cognion-fiuner.duckdns.org` desde la Mac y contra `8.8.8.8` y `1.1.1.1` devuelven `34.30.252.89`. Los puertos 80 y 443 de la VM están cerrados, como corresponde antes de arrancar los servicios.
+- Resultado: **OK**. Costo: 0.
