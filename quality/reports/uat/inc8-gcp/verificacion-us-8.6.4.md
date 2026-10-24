@@ -38,4 +38,25 @@ Disponibilidad medida desde la Mac con una consulta a `/api/health` por HTTPS ca
   `COGNION_IMAGE_ANTERIOR` del `.env` (permisos 600). La VM quedó con `cognion:ci`, sana.
 
 ## Verificación 3 — publicación real en CI con una etiqueta temporal
-*(pendiente de autorización de Víctor)*
+Autorizada por Víctor. Etiqueta temporal `v0.0.1-prueba.1` sobre el commit `8b46b99` (ya con los pasos de publicación en `cd.yml`).
+
+- **CI (`CD`, corrida 40103840039): en verde.** Construyó la imagen, inició sesión en GHCR con `GITHUB_TOKEN` y publicó
+  `ghcr.io/vvalotto/cognion:v0.0.1-prueba.1` y `ghcr.io/vvalotto/cognion:sha-8b46b995…`. Sin etiqueta `latest`.
+- En paralelo corrió `Imagen y composición (smoke)` sobre la rama (corrida 40103789064): **en verde**, es decir que los cambios a `cognion.sh`
+  no rompieron `iniciar` ni ninguna de las 12 verificaciones de composición.
+- **Visibilidad:** el paquete se crea **privado**; Víctor lo hizo público a mano (Package settings, Danger Zone, Change visibility). No hay API
+  para hacerlo. Es un paso manual **de una sola vez**: las etiquetas siguientes publican en el mismo paquete, que queda público.
+- **Verificación sin credenciales desde internet** (Mac): token anónimo del registro, `tags/list` muestra `v0.0.1-prueba.1` y `sha-8b46b995…`, y el
+  manifiesto responde HTTP 200 con 11 capas y **102,5 MB** comprimidos (coincide con los 100,7 MB del artefacto de CI).
+- **Verificación en la VM, sin ninguna credencial de registro** (no existe `~/.docker/config.json`): `docker pull ghcr.io/vvalotto/cognion:v0.0.1-prueba.1`
+  terminó en **8 s**. Etiquetas OCI presentes: `org.opencontainers.image.source = https://github.com/vvalotto/cognion` y
+  `org.opencontainers.image.revision = 8b46b995…`. La imagen contiene `uvicorn` y `alembic` en `/app/.venv/bin/`.
+- **Limpieza:** la etiqueta temporal se borró de git (local y remota); las etiquetas del repositorio quedan solo las de baseline
+  (`v0.7.0` a `v0.8.1`). La imagen publicada **sigue disponible** sin la etiqueta de git.
+- **Pendiente de limpieza manual (Víctor):** borrar las versiones de prueba del paquete en GitHub (Packages, `cognion`, Package versions); conviene
+  borrar solo las versiones y conservar el paquete para que siga siendo público.
+
+## Conclusión de las tres verificaciones
+Los escenarios 4, 5, 6 y 7 de la spec quedaron verificados contra recursos reales; 1, 2 y 3 se verificaron con simulaciones y con la idempotencia contra
+el proyecto real. **El escenario 1 con un proyecto limpio no se puede verificar sin crear otro proyecto: se hace en `US-8.6.6` (ensayo de
+instalación limpia).**
