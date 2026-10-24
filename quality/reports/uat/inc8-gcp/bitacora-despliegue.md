@@ -73,3 +73,11 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Resultado: `~/cognion/deploy/gcp/` con `docker-compose.yml`, `Caddyfile`, `.env.example`, `cognion.sh`, `preparar-env.sh`, y `~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh`, los tres scripts con permiso de ejecución. `docker compose config` lee la composición y solo avisa de las variables sin definir (esperado antes del `.env`).
 - **Desvío:** el `tar` de macOS agregó archivos basura `._*` (metadatos AppleDouble) y avisos `LIBARCHIVE.xattr`. Se borraron en la VM. Corrección en el plan: usar `COPYFILE_DISABLE=1 tar ...`.
 - Costo: 0.
+
+## Paso 8 — Imagen a la VM · 2026-10-24 10:05 · descarga autorizada por Víctor
+- Comandos: `gh run download 39976321310 -n cognion-imagen -D /tmp/cognion-imagen` (artefacto de nuestro CI, vigente hasta 2026-10-24T15:13Z), `gzip -t`, `gcloud compute scp ... cognion-vm:~`, y en la VM `gunzip -c ~/cognion-imagen.tar.gz | docker load`.
+- Integridad: `gzip -t` OK; el `sha256` (`fbcf22d1…c26942`) coincide entre la Mac y la VM.
+- **Medición temprana #2 (tamaño de la imagen):** archivo comprimido **100,7 MB**; imagen cargada `cognion:ci` de **569 MB** descomprimida. La subida a la VM tardó **26 s**. Disco de la VM tras cargar: 4,3 GB usados de 30.
+- **Para `US-8.6.4` (registro):** 100 MB comprimidos entran en los 0,5 GB gratuitos de Artifact Registry, pero con varias versiones acumuladas se acercarían al límite; GHCR (sin ese tope) queda como alternativa. Decisión pendiente.
+- Se borraron el archivo en la VM y la copia local.
+- Costo: 0 (la entrada de datos a GCP no se factura).

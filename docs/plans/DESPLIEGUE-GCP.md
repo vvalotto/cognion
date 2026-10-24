@@ -157,7 +157,7 @@ gcloud compute scp /tmp/cognion-deploy.tgz cognion-vm:~ --zone=us-central1-a
 `COPYFILE_DISABLE=1` evita que `tar` de macOS agregue archivos basura `._*`. En la VM: `mkdir -p ~/cognion && tar xzf ~/cognion-deploy.tgz -C ~/cognion`.
 - **Éxito:** existen `~/cognion/deploy/gcp/docker-compose.yml` y `~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh`.
 
-### Paso 8 — Llevar la imagen a la VM (sin probar)
+### Paso 8 — Llevar la imagen a la VM (**probado** el 2026-10-24)
 La VM no puede compilar el frontend con 1 GB, y todavía no hay registro. Para esta prueba la imagen viaja como **artefacto de CI** (vence a las 24 h):
 1. El workflow `imagen-smoke.yml` exporta la imagen como artefacto (cambio incluido en esta US). Se toma el de la última corrida de la rama.
 2. `gh run download <id> -n cognion-imagen -D /tmp/cognion-imagen` (en la Mac).
