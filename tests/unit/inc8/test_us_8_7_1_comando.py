@@ -57,8 +57,8 @@ async def test_carpeta_con_un_archivo_invalido(tmp_path: Path) -> None:
     _json(tmp_path, "b.json", "Mala", [{**PREGUNTA, "dificultad": "x"}])
     codigo, salida = await _correr(entorno, tmp_path)
     assert codigo == 1
-    assert any("a.json" in l and "1 cargadas" in l for linea in salida)
-    assert any("b.json: ERROR" in l and "No se cargó nada" in l for linea in salida)
+    assert any("a.json" in linea and "1 cargadas" in linea for linea in salida)
+    assert any("b.json: ERROR" in linea and "No se cargó nada" in linea for linea in salida)
     assert {m.nombre for m in entorno.materias.materias.values()} == {"Buena"}
 
 
