@@ -79,7 +79,7 @@ gcloud billing projects link cognion-prueba-<sufijo> --billing-account=019D68-E7
 - **Éxito:** `gcloud billing projects describe cognion-prueba-<sufijo>` muestra `billingEnabled: true`.
 - **Costo:** ninguno por sí mismo.
 
-### Paso 3 🔒 — Presupuesto propio y límite de inversión (sin probar)
+### Paso 3 🔒 — Presupuesto propio y límite de inversión (**probado** el 2026-10-24)
 1. Habilitar la API de presupuestos y crear un presupuesto acotado para este proyecto. El monto de aviso lo propone Claude (referencia: 5 USD) y lo confirma Víctor:
 ```bash
 gcloud services enable billingbudgets.googleapis.com

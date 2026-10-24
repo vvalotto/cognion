@@ -31,3 +31,9 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Hallazgos: se aplican a **un proyecto y un servicio elegible**; **pausan el uso nuevo**, pero **no los recursos persistentes** (VM, disco), que siguen acumulando cargos; usan costos brutos estimados; disponibles de forma general solo para algunos servicios.
 - **Decisión: no depender de ellos.** No protegen una VM. La protección es presupuesto con alertas, revisión de costos al día siguiente y borrar el proyecto.
 - Costo: 0.
+
+## Paso 3 🔒 (parte de acción) — Presupuesto propio · 2026-10-24 09:46 · confirmado por Víctor
+- Comandos: `gcloud services enable billingbudgets.googleapis.com` y `gcloud billing budgets create --billing-account=019D68-E7FC7F-247D34 --display-name="cognion-prueba" --budget-amount=5USD --filter-projects="projects/888211184158" --threshold-rule=percent=0.5 --threshold-rule=percent=1.0`.
+- Resultado: presupuesto `cognion-prueba` (id `4451187e-9499-4b6f-b063-e405b3d82131`), 5 USD mensuales, acotado al proyecto `888211184158`, con alertas al 50 % y 100 % sobre el gasto actual. El presupuesto existente "ALERTA PRINCIPAL" no se tocó.
+- Las opciones de `gcloud billing budgets create` del plan coincidieron con la versión instalada (550.0.0): sin ajustes.
+- Costo observado: 0 (los presupuestos solo avisan).
