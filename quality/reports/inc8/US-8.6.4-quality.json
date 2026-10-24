@@ -2,7 +2,7 @@
   "us": "US-8.6.4",
   "veredicto": "APROBADO",
   "tipo": "tooling operativo / infraestructura (sin código Python de producción; src/ no se modificó)",
-  "tests_unit_inc8": "143/143 (52 nuevos: 36 de aprovisionamiento y destrucción con gcloud simulado, 16 de despliegue y rollback con docker simulado)",
+  "tests_unit_inc8": "145/145 (54 de US-8.6.4: aprovisionamiento y destrucción con gcloud simulado, despliegue y rollback con docker simulado, y publicación/CI)",
   "verificacion_real": {
     "documento": "quality/reports/uat/inc8-gcp/verificacion-us-8.6.4.md",
     "idempotencia_contra_el_proyecto_real": "Nada que crear (tras corregir un defecto hallado en la primera corrida)",
@@ -24,5 +24,12 @@
     "Un error de YAML en cd.yml (': ' en un valor sin comillas) atrapado por la validación local antes de subirlo"
   ],
   "sin_probar_hasta_us_8_6_6": "creación desde cero en un proyecto limpio (ensayo de instalación limpia)",
-  "pendiente_de_limpieza_manual": "borrar las versiones de prueba del paquete en GHCR (aún listadas el 2026-10-24 11:56)"
+  "pendiente_de_limpieza_manual": "borrar las versiones de prueba del paquete en GHCR (aún listadas el 2026-10-24 11:56)",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "archivos": "7 de tests/helpers",
+    "advertencias_iniciales": "E501 (16 líneas), complejidad 11 en un test y en _compute, MI 16,8 < 20, E203",
+    "resolucion": "tests partidos en 3 archivos con simuladores compartidos (_comun/_gcloud/_docker/_simuladores), _compute dividido, líneas acortadas; E203 evitado sin slice",
+    "resultado_final": "0 advertencias reales; solo 'vulture/codespell no instalados' (herramientas ausentes del entorno, preexistente)"
+  }
 }

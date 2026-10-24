@@ -1,51 +1,16 @@
-"""Despliegue y rollback de `cognion.sh` (US-8.6.4), con `docker` simulado.
+"""Despliegue y rollback de `cognion.sh` (US-8.6.4), con `docker` simulado (`_docker_falso.py`).
 
-`docker` es un ejecutable falso que registra cada llamada y la imagen que usaría `compose` (la de la
-variable `COGNION_IMAGE` o la del `.env`, igual que hace Compose). Un archivo de estado decide
-qué falla.
+El ejecutable falso registra cada llamada y la imagen que usaría `compose`. Un archivo de estado
+decide qué falla: la descarga, la migración o la salud de una imagen.
 """
-
-# pylint: disable=line-too-long  # contiene el código de ejecutables simulados como texto
 
 import json
 import shutil
 import stat
 import subprocess
-import sys
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parents[3]
-GCP = RAIZ / "deploy" / "gcp"
-BASICOS = (
-    "bash sh env dirname sed grep cut head tail tr seq sleep cat mktemp chmod mv rm awk wc id touch tee date "
-    "basename sort uniq mkdir ls"
-).split()
-
-DOCKER_FALSO = r"""#!{python}
-import json, os, sys
-a = sys.argv[1:]
-estado = json.load(open(os.environ["FAKE_ESTADO"]))
-def log(texto): open(os.environ["FAKE_LOG"], "a").write(texto + "\n")
-def imagen_efectiva():
-    if os.environ.get("COGNION_IMAGE"): return os.environ["COGNION_IMAGE"]
-    for linea in open(".env"):
-        if linea.startswith("COGNION_IMAGE="): return linea.strip().split("=", 1)[1]
-if a[:2] == ["image", "inspect"]:
-    sys.exit(0 if a[2] in estado.get("imagenes_locales", []) else 1)
-if a[0] == "pull":
-    log("PULL " + a[1]); sys.exit(1 if estado.get("pull_falla") else 0)
-if a[0] == "compose":
-    sub = a[1:]
-    if "run" in sub and "alembic" in sub:
-        log("MIGRAR imagen=" + str(imagen_efectiva())); sys.exit(1 if estado.get("migracion_falla") else 0)
-    if "up" in sub and "app" in sub:
-        img = imagen_efectiva(); log("UP_APP imagen=" + str(img))
-        sys.exit(1 if img in estado.get("no_saludables", []) else 0)
-    if "up" in sub and "db" in sub:
-        log("UP_DB"); sys.exit(0)
-    log("COMPOSE " + " ".join(sub)); sys.exit(0)
-log("DOCKER " + " ".join(a)); sys.exit(0)
-"""
+from tests.unit.inc8._simuladores import GCP, instalar_basicos, instalar_simulador
 
 
 def _preparar(tmp_path: Path, env_extra: str = "", con_docker: bool = True, **estado) -> Path:
@@ -59,15 +24,9 @@ def _preparar(tmp_path: Path, env_extra: str = "", con_docker: bool = True, **es
     )
     env.chmod(0o600)
     bin_ = tmp_path / "bin"
-    bin_.mkdir()
-    for programa in BASICOS:
-        real = shutil.which(programa)
-        if real:
-            (bin_ / programa).symlink_to(real)
+    instalar_basicos(bin_)
     if con_docker:
-        docker = bin_ / "docker"
-        docker.write_text(DOCKER_FALSO.replace("{python}", sys.executable))
-        docker.chmod(docker.stat().st_mode | stat.S_IXUSR)
+        instalar_simulador(bin_, "docker", "_docker_falso.py")
     (tmp_path / "estado.json").write_text(json.dumps(estado))
     return carpeta
 
@@ -102,7 +61,7 @@ def _env(carpeta: Path) -> dict[str, str]:
 
 
 def test_despliegue_exitoso_en_el_orden_correcto(tmp_path: Path) -> None:
-    """Baja, migra con la imagen NUEVA, reemplaza la aplicación y guarda la anterior para el rollback."""
+    """Baja, migra con la imagen NUEVA, reemplaza la aplicación y guarda la anterior (rollback)."""
     carpeta = _preparar(tmp_path)
     r = _correr(tmp_path, carpeta, "desplegar", "ghcr.io/vvalotto/cognion:v0.8.2")
     assert r.returncode == 0, r.stderr
@@ -182,7 +141,7 @@ def test_si_la_version_nueva_no_responde_vuelve_sola_a_la_anterior(tmp_path: Pat
     assert ups == ["UP_APP imagen=cognion:rota", "UP_APP imagen=cognion:vieja"]
     env = _env(carpeta)
     assert env["COGNION_IMAGE"] == "cognion:vieja"
-    assert env["COGNION_IMAGE_ANTERIOR"] == "cognion:vieja0"  # no queda apuntando a la versión rota
+    assert env["COGNION_IMAGE_ANTERIOR"] == "cognion:vieja0"  # no apunta a la rota
 
 
 def test_si_tampoco_responde_la_anterior_lo_dice(tmp_path: Path) -> None:
@@ -268,7 +227,7 @@ def test_sin_docker_falla_sin_traza(tmp_path: Path) -> None:
 
 
 def test_el_resto_de_los_subcomandos_no_cambia() -> None:
-    """`iniciar` sigue levantando base, migrando y levantando la aplicación y el proxy (lo verifica CI de punta a punta)."""
+    """Los subcomandos de US-8.6.2 siguen presentes (CI verifica `iniciar` de punta a punta)."""
     texto = (GCP / "cognion.sh").read_text()
     for subcomando in ("iniciar)", "migrar)", "administrador)", "estado)", "logs)", "detener)"):
         assert subcomando in texto
