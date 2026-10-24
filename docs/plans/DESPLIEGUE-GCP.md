@@ -182,7 +182,7 @@ sed -i 's|^COGNION_IMAGE=.*|COGNION_IMAGE=cognion:ci|' .env
 - **Resultado esperado:** la base arriba, las migraciones aplicadas como paso explícito, y la aplicación y Caddy arriba.
 - **Éxito:** `./cognion.sh estado` muestra los tres servicios arriba y la salud respondiendo.
 
-### Paso 11 — Primer Administrador y verificación de HTTPS real (sin probar)
+### Paso 11 — Primer Administrador y verificación de HTTPS real (**probado** el 2026-10-24)
 ```bash
 ./cognion.sh administrador      # nombre, email y contraseña por terminal, sin eco (la escribe Víctor)
 curl -fsS https://<DOMINIO>/api/health
@@ -190,15 +190,16 @@ curl -fsS https://<DOMINIO>/api/health
 - **Éxito:** el certificado es válido (sin `-k`), `/api/health` responde por HTTPS y el login del Administrador funciona **desde el celular** de Víctor.
 - Se confirma además que `Copiar link` de invitación funciona (necesita contexto seguro, `ADR-025`).
 
-### Paso 12 — Verificación de la composición y reinicio real (sin probar)
+### Paso 12 — Verificación de la composición y reinicio real (**probado** el 2026-10-24)
 En la VM:
 ```bash
-VERIFICAR_REINICIO_DOCKER=1 ~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh
+VERIFICAR_REINICIO_DOCKER=1 VERIFICAR_OMITIR_ADMIN=1 ~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh
 ```
 Después, un **reinicio real de la máquina** (esto cubre el escenario 2 de `US-8.6.2`):
 ```bash
 sudo reboot
 ```
+- `VERIFICAR_OMITIR_ADMIN=1` es obligatorio en una VM expuesta: sin él el script crea un Administrador con una contraseña escrita en el repositorio. El alta real se hace a mano en el paso 11.
 - **Éxito:** el script termina con "Composición verificada"; tras el reinicio los servicios vuelven solos y `/api/health` responde sin intervención.
 - Desde la Mac: `nc -vz <IP> 5432` **no** debe conectar (PostgreSQL no se ve desde internet).
 

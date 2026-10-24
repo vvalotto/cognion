@@ -99,3 +99,19 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
   - Comparación con la proyección: se había proyectado ~535 MiB usados (55 %); la medición real es **~105 MiB mayor**. Sigue por debajo del 70 % de la regla de parada, pero con poco margen y con swap ya en uso **antes** de cualquier carga.
   - Interpretación: parte del swap puede venir del arranque (descarga y descompresión de imágenes). Hay que remedir tras unos minutos de reposo y bajo carga (paso 13).
 - Costo observado: 0 en recursos nuevos (las imágenes de Docker Hub no se facturan).
+
+## Paso 11 — Primer Administrador y HTTPS real · 2026-10-24 10:25 · lo hizo Víctor
+- Víctor creó el Administrador con `./cognion.sh administrador` en la VM, con datos ficticios y una contraseña aleatoria generada y copiada al portapapeles sin mostrarla en el chat. Probó desde el celular: **el login funciona** y el certificado es válido (sin aviso de "No seguro").
+- Confirmado en el log de la aplicación: `POST /api/identidad/login` → 200 desde la IP de Víctor, y `GET /api/materias` → 200 después del login. Dos `401` previos corresponden a intentos de Víctor.
+- **Sin confirmar:** el botón "Copiar link" de invitación (requiere contexto seguro) no se probó explícitamente. Queda pendiente.
+- **Hallazgo de exposición:** en la primera hora tras emitirse el certificado llegaron **114 requests de ~10 IPs ajenas** (escáneres automáticos) buscando archivos de configuración (`/settings.py`, `/config.yml`, `/info.php`, `/application.properties`, `/robots.txt`). Todos terminaron en **404** (la aplicación solo sirve la interfaz) y hubo **0 intentos de login desde IPs ajenas**. Los escáneres se enteran por los registros públicos de certificados. Es el comportamiento esperable de cualquier servicio con IP pública y HTTPS.
+
+## Paso 12 — Verificación de la composición y reinicio real · 2026-10-24 10:25
+- Comando en la VM: `VERIFICAR_REINICIO_DOCKER=1 VERIFICAR_OMITIR_ADMIN=1 ~/cognion/tests/uat/inc8/verificar_composicion_gcp.sh`.
+- **Resultado: 11 verificaciones OK y 1 omitida a propósito** (7, alta del Administrador): 1 health por HTTPS; 2 migraciones; 3 sin puertos publicados (db, app y 5432); 4 límites de memoria y reinicio en los 3 servicios; 5a caída real recuperada (`RestartCount` = 1); 5b servicios de vuelta tras reiniciar Docker; 6 secretos fuera de los logs.
+- **Desvío y corrección:** el script crea en el chequeo 7 un Administrador con una contraseña escrita en el repositorio; en una instancia expuesta sería una cuenta con clave conocida. Se agregó `VERIFICAR_OMITIR_ADMIN=1` (en CI sigue corriendo el chequeo).
+- **Puertos vistos desde internet (desde la Mac):** abiertos 80, 443 y 22; cerrados o filtrados 5432, 8000, 3389, 25, 3306 y 6379. SSH por contraseña rechazado (`Permission denied (publickey)`).
+- **Reinicio real de la máquina (`sudo reboot`): los servicios volvieron solos.** `/api/health` respondió por HTTPS a los **71 s** del reinicio (criterio de `US-8.6.7`: menos de 3 minutos). Los tres contenedores quedaron sanos, el swap persistió (entrada en `/etc/fstab`) y el certificado siguió válido.
+- **Memoria de los contenedores tras reiniciar y asentarse:** `app` 70,8 MiB, `db` 18,0 MiB, `caddy` 15,0 MiB (**104 MiB**). El pico de 156 MiB medido justo después del primer arranque era de arranque.
+- **Memoria del sistema 30 s después del reinicio:** usada 544 MiB, disponible 425, swap 3 MiB.
+- Costo observado: 0 adicional.

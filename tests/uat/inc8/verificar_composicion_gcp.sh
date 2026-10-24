@@ -79,14 +79,20 @@ else
   fallo "6. un secreto aparece en los logs"
 fi
 
-# 7. El primer Administrador se crea con el comando existente y puede iniciar sesión
-ADMIN_EMAIL="verificacion@ejemplo.edu.ar"; ADMIN_PASSWORD="Verif#Prueba-2026"
-if ADMIN_NOMBRE="Admin Verificacion" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ./cognion.sh administrador >/dev/null 2>&1; then
-  CODIGO="$(curl -s -k -o /dev/null -w '%{http_code}' -X POST "https://${DOMINIO}/api/identidad/login" \
-    -H 'Content-Type: application/json' -d "{\"email\":\"${ADMIN_EMAIL}\",\"password\":\"${ADMIN_PASSWORD}\"}")"
-  [ "$CODIGO" = "200" ] && ok "7. bootstrap del Administrador y login (HTTP 200)" || fallo "7. login del Administrador ($CODIGO)"
+# 7. El primer Administrador se crea con el comando existente y puede iniciar sesión.
+# VERIFICAR_OMITIR_ADMIN=1 lo omite: crea un Administrador con una contraseña escrita en este repositorio, que en una
+# instancia expuesta a internet sería una cuenta con clave conocida. En una VM real el alta se hace a mano (paso 11 del plan).
+if [ "${VERIFICAR_OMITIR_ADMIN:-0}" = "1" ]; then
+  echo "SKIP 7. alta del Administrador de verificación (VERIFICAR_OMITIR_ADMIN=1; en la VM se verifica a mano)"
 else
-  fallo "7. cognion.sh administrador"
+  ADMIN_EMAIL="verificacion@ejemplo.edu.ar"; ADMIN_PASSWORD="Verif#Prueba-2026"
+  if ADMIN_NOMBRE="Admin Verificacion" ADMIN_EMAIL="$ADMIN_EMAIL" ADMIN_PASSWORD="$ADMIN_PASSWORD" ./cognion.sh administrador >/dev/null 2>&1; then
+    CODIGO="$(curl -s -k -o /dev/null -w '%{http_code}' -X POST "https://${DOMINIO}/api/identidad/login" \
+      -H 'Content-Type: application/json' -d "{\"email\":\"${ADMIN_EMAIL}\",\"password\":\"${ADMIN_PASSWORD}\"}")"
+    [ "$CODIGO" = "200" ] && ok "7. bootstrap del Administrador y login (HTTP 200)" || fallo "7. login del Administrador ($CODIGO)"
+  else
+    fallo "7. cognion.sh administrador"
+  fi
 fi
 
 # 8. Informativo: memoria en reposo por contenedor
