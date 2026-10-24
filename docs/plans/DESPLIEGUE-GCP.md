@@ -1,6 +1,6 @@
 # Despliegue en GCP — plan de instalación y prueba manual
 
-> Estado documental: **plan aprobado por Víctor el 2026-10-24**; ejecución manual en curso, cada paso marca su estado
+> Estado documental: **plan aprobado y ejecutado el 2026-10-24** (pasos 0 a 13 probados); resultados y desvíos en `quality/reports/uat/inc8-gcp/bitacora-despliegue.md`
 > Alcance: instalar y probar Cognión en una VM `e2-micro` de GCP con la cuenta personal `vvalotto@gmail.com`
 > Origen: `US-8.6.3` (Incremento 8, Iteración 6) · decisiones en `docs/adr/ADR-025-despliegue-de-prueba-en-gcp.md`
 > Composición de servicios: `deploy/gcp/` (`US-8.6.2`) · Última actualización: 2026-10-23
@@ -203,7 +203,7 @@ sudo reboot
 - **Éxito:** el script termina con "Composición verificada"; tras el reinicio los servicios vuelven solos y `/api/health` responde sin intervención.
 - Desde la Mac: `nc -vz <IP> 5432` **no** debe conectar (PostgreSQL no se ve desde internet).
 
-### Paso 13 — Mediciones tempranas (informativas) (sin probar)
+### Paso 13 — Mediciones tempranas (informativas) (**probado** el 2026-10-24)
 - Memoria con todo corriendo: `free -m` y `docker stats --no-stream` en reposo.
 - Un login real con tiempo medido desde la Mac: `curl -s -o /dev/null -w '%{time_total}\n' ...` (da una idea de la latencia desde Argentina a `us-central1`).
 - Uso de CPU y de swap durante un login.

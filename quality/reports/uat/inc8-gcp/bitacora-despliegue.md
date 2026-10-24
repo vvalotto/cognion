@@ -122,3 +122,51 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Conclusión: el flujo de invitación funciona de punta a punta por HTTPS real; que el link haya llegado por el botón "Copiar link" **no está confirmado** por el servidor. Falta que Víctor lo confirme (si el botón mostró el aviso de copiado).
 - **Hallazgo de seguridad menor:** el token de invitación viaja en la URL (`/registro?token=…`) y por eso queda en los logs de acceso de la aplicación y de Caddy. Es un token de prueba (vence a los 7 días), pero en una instalación con datos reales convendría revisar si los logs deben enmascarar los parámetros de consulta.
 - Datos creados en la prueba: 1 materia, 1 comisión, 1 invitación, 1 Administrador.
+
+## Paso 13 — Mediciones tempranas (informativas) · 2026-10-24 10:34
+La medición formal con criterios es `US-8.6.7`; acá son números de orientación, sin crear cuentas ni tocar datos.
+
+### Costo de verificar una contraseña (bcrypt) en la VM
+Medido dentro del contenedor de la aplicación con el mismo `bcrypt` de producción (costo/rondas = 12, el valor por defecto):
+- `checkpw` en serie (10 corridas): mediana **325 ms** (mín 322, máx 332).
+- 24 verificaciones en serie: 7,79 s → **3,1 por segundo**.
+- 24 verificaciones con 2 hilos: 4,29 s → **5,6 por segundo**, aceleración **×1,82** (los 2 vCPU rinden como dos núcleos).
+- `vmstat` durante ~20 s a CPU casi al 100 %: **sin tiempo robado por el hipervisor** (`st` = 0). No se observó *throttling* en esa ventana; una ráfaga más larga podría comportarse distinto.
+
+### Hallazgo de código (no corregido): el login bloquea el event loop
+- `IniciarSesionUseCase.execute()` es `async`, pero llama a `self._hasher.verificar(...)` de forma **síncrona** (`bcrypt.checkpw`, sin `asyncio.to_thread`). Con un solo proceso de `uvicorn`, **mientras verifica una contraseña (≈325 ms) toda la aplicación espera**, incluidos los WebSockets de una sesión en vivo. Lo mismo ocurre con `hash()` en altas y con `verificar()` en `cambiar_password`.
+- Consecuencia: una ráfaga de N logins simultáneos se **serializa**: 60 ≈ **19,5 s** hasta el último (p95 ≈ 18,5 s). Con las verificaciones en hilos la capacidad sube a 5,6/s: 60 ≈ 10,7 s. Si llegan repartidos en un minuto (1 por segundo) el event loop queda ocupado ~33 % y la latencia ronda 1 s.
+- **Implicancia para `US-8.6.7`:** el criterio "60 logins simultáneos en un minuto, p95 < 3 s" es ambiguo (¿ráfaga o repartidos?) y, tal como está el código, una ráfaga real **no lo cumpliría**. Hay que aclarar el criterio y, si hace falta, abrir una US-ADJ (track formal, toca `src/`) para sacar bcrypt del event loop y/o revisar el costo (ADR-014). No se implementó nada.
+
+### Latencia desde Argentina a `us-central1`
+- `ping`: **177,7 ms** de ida y vuelta de promedio (mín 175,5, máx 183,7), 0 % de pérdida.
+- `GET /api/health` con conexión nueva ×10: TCP 186 ms, TLS (acumulado) ~384 ms, primer byte **566 ms**, total medio **567 ms** (mediana 561, mín 551, máx 607).
+- `POST /api/identidad/login` con un email inexistente ×10 (DB + red, sin bcrypt): 401 ×10, total medio **620 ms** (mediana 618).
+- Estimación de un login real con la VM libre: ≈ 620 + 325 ≈ **950 ms**, sin contar la carga de la interfaz.
+- Una vez abierta la conexión WebSocket, cada mensaje paga ~90 ms de ida; el RNF de 100 ms es **del servidor**, no de la red.
+
+### Memoria y CPU
+- Contenedores en reposo tras reiniciar: 104 MiB (`app` 70,8, `db` 18,0, `caddy` 15,0).
+- Sistema tras la prueba de CPU: usada 594 MiB, disponible 375 MiB; swap usado 11 MiB.
+- Sigue por debajo del 70 % de la regla de parada con la VM en reposo; **el valor bajo carga real se mide en `US-8.6.7`**.
+
+## Cierre del paso a paso — qué debe automatizar `US-8.6.4` y qué ajustar
+**Automatizar (comandos que funcionaron):**
+- Proyecto, vínculo de facturación y presupuesto (`gcloud projects create`, `gcloud billing projects link`, `gcloud billing budgets create`). Las opciones del plan coincidieron con `gcloud` 550.0.0.
+- Red: eliminar `default-allow-rdp`; crear `cognion-web` (80/443 hacia la etiqueta); IP estática `IN_USE`; VM `e2-micro` en `us-central1-a`, Debian 12, 30 GB estándar.
+- En la VM: swap de 1 GiB con entrada en `/etc/fstab`; Docker desde el repositorio oficial (verificar la huella de la clave `9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`); usuario en el grupo `docker`.
+- Copia de `deploy/gcp/` con `COPYFILE_DISABLE=1 tar`; carga de la imagen y `./cognion.sh iniciar`.
+- Verificación: `VERIFICAR_REINICIO_DOCKER=1 VERIFICAR_OMITIR_ADMIN=1 verificar_composicion_gcp.sh`.
+
+**Decisiones y ajustes abiertos:**
+- **Registro de la imagen:** el artefacto de CI funcionó (100,7 MB comprimida, 569 MB cargada, subida en 26 s) pero vence a las 24 h y exige descargarlo y subirlo a mano. Elegir entre Artifact Registry (0,5 GB gratuitos: entran pocas versiones) y GHCR.
+- **Paso manual de DuckDNS:** apuntar el subdominio a la IP no se puede automatizar sin el token (credencial); queda manual o se evalúa el token en un secreto.
+- **Margen de memoria:** el agente `google_osconfig` ocupa ~40 MB y no se necesita.
+- **Logs:** los tokens de invitación quedan en la URL y por tanto en los logs de acceso.
+- **Aviso de `gcloud`:** el proyecto activo no coincide con el *quota project* de las credenciales de aplicación; no se tocó.
+- **bcrypt bloqueante:** ver arriba; es una US-ADJ potencial, no de esta iteración de despliegue.
+
+**Pendiente de verificar:**
+- Costo real (informe de Facturación al día siguiente, SKU `External IP Charge`; los informes tardan hasta 24 h).
+- Botón "Copiar link": falta que Víctor confirme que lo usó.
+- Medición formal bajo carga (`US-8.6.7`).
