@@ -172,7 +172,7 @@ Caddy pide el certificado al arrancar, así que el nombre tiene que resolver a l
 - Víctor reemplaza la IP del subdominio por la IP reservada (`gcloud compute addresses describe cognion-ip --region=us-central1 --format="value(address)"`): en el sitio de DuckDNS, escribe la IP en el campo *current ip* y aprieta *update ip*.
 - **Éxito:** `dig +short <DOMINIO>` (o `nslookup`) devuelve esa IP.
 
-### Paso 10 — Configuración y arranque (sin probar)
+### Paso 10 — Configuración y arranque (**probado** el 2026-10-24)
 En la VM, desde `~/cognion/deploy/gcp`:
 ```bash
 ./preparar-env.sh <DOMINIO>

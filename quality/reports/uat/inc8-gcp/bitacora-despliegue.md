@@ -86,3 +86,16 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Víctor reemplazó la IP de `cognion-fiuner` por `34.30.252.89` con *update ip*.
 - Verificación: `dig +short cognion-fiuner.duckdns.org` desde la Mac y contra `8.8.8.8` y `1.1.1.1` devuelven `34.30.252.89`. Los puertos 80 y 443 de la VM están cerrados, como corresponde antes de arrancar los servicios.
 - Resultado: **OK**. Costo: 0.
+
+## Paso 10 — Configuración y arranque · 2026-10-24 10:11
+- Comandos (en la VM, `~/cognion/deploy/gcp`): `./preparar-env.sh cognion-fiuner.duckdns.org`; `sed -i 's|^COGNION_IMAGE=.*|COGNION_IMAGE=cognion:ci|' .env`; `./cognion.sh iniciar`.
+- `.env`: permisos 600, secretos aleatorios generados en la VM y no mostrados; `ENTORNO=local`, `EMAIL_MODO=consola`.
+- **Arranque:** 73 s en total, incluida la descarga de `postgres:16` y `caddy:2` desde Docker Hub. Orden correcto: base sana → migraciones como paso explícito → aplicación sana → Caddy.
+- **HTTPS real:** `curl https://cognion-fiuner.duckdns.org/api/health` desde la Mac, **sin `-k`**: `{"status":"ok"}`, HTTP 200, `ssl_verify=0`. Certificado emitido por **Let's Encrypt (CN=YE2)** para el dominio, **válido del 2026-10-24 al 2027-01-22**. `http://` redirige con 308 a `https://`. Caddy creó la cuenta ACME sin email y obtuvo el certificado al primer intento (sin reintentos ni límites).
+- Servicios: `app` y `db` `healthy`, `caddy` `Up`.
+- **Memoria con Cognión corriendo (justo después de arrancar, en reposo):**
+  - Contenedores: `app` 95,9 MiB, `db` 44,2 MiB, `caddy` 16,4 MiB (**156 MiB en total**; en CI se habían medido 115). CPU en reposo: 2,1 % la aplicación.
+  - Sistema: total 969 MiB, **usada 640 (66 %)**, buff/cache 411, **disponible 329**, swap usado **53 MiB**.
+  - Comparación con la proyección: se había proyectado ~535 MiB usados (55 %); la medición real es **~105 MiB mayor**. Sigue por debajo del 70 % de la regla de parada, pero con poco margen y con swap ya en uso **antes** de cualquier carga.
+  - Interpretación: parte del swap puede venir del arranque (descarga y descompresión de imágenes). Hay que remedir tras unos minutos de reposo y bajo carga (paso 13).
+- Costo observado: 0 en recursos nuevos (las imágenes de Docker Hub no se facturan).
