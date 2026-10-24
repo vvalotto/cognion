@@ -178,3 +178,7 @@ Medido dentro del contenedor de la aplicación con el mismo `bcrypt` de producci
 - **Costo:** los informes de Facturación tardan hasta 24 h. **Pendiente para el 2026-10-25 desde las 06:00:** revisar el informe agrupado por SKU del proyecto `cognion-prueba-2410`, buscando `External IP Charge`, disco y salida de red, y registrar el gasto real. El presupuesto de 5 USD avisa si algo se pasa.
 - `US-8.6.3` no se cierra hasta registrar ese costo (escenario 5 de su spec).
 - Recordar: mientras la VM esté encendida y el proyecto exista, el costo de la IPv4 (≈3,65 USD/mes si no la cubre la capa gratuita) corre. El desmontaje sigue siendo `gcloud projects delete cognion-prueba-2410`.
+
+## Paso 11 (cierre) — "Copiar link" confirmado · 2026-10-24 11:03
+- **Confirmado por Víctor:** usó el botón "Copiar link" de invitación en `https://cognion-fiuner.duckdns.org` y **funcionó**. Cierra el único punto que había quedado sin confirmar del paso 11: con HTTPS real, `navigator.clipboard` anda (en HTTP sobre una IP no lo habría hecho; `ADR-025`, decisión 1).
+- Resultado del paso 11: **OK completo** (Administrador creado, login desde el celular, vista previa de invitación y copia del link).
