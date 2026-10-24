@@ -25,3 +25,9 @@ Convención: cada paso lleva el **comando real**, la **hora**, el **resultado**,
 - Aviso de `gcloud`: el proyecto activo no coincide con el *quota project* del archivo de credenciales de aplicación (ADC). No afecta a `gcloud`; **no se cambió** porque podría afectar a otras aplicaciones de Víctor que usen esas credenciales.
 - `default` sigue con `app-termostato-2025`.
 - Costo observado: 0 (proyecto sin recursos).
+
+## Paso 3 (parte de lectura) — Evaluación de los límites de inversión · 2026-10-24 09:44
+- Fuente: documentación oficial de Cloud Billing ("Manage spend cap budgets", notas de versión de octubre de 2026).
+- Hallazgos: se aplican a **un proyecto y un servicio elegible**; **pausan el uso nuevo**, pero **no los recursos persistentes** (VM, disco), que siguen acumulando cargos; usan costos brutos estimados; disponibles de forma general solo para algunos servicios.
+- **Decisión: no depender de ellos.** No protegen una VM. La protección es presupuesto con alertas, revisión de costos al día siguiente y borrar el proyecto.
+- Costo: 0.

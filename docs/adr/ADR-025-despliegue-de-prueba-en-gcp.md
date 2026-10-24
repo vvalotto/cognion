@@ -145,10 +145,13 @@ Al revisar Facturación en la consola (solo lectura, con Víctor presente) se en
   - Presupuesto existente "ALERTA PRINCIPAL": mensual, con alertas al 50 %, 90 % y 100 %. Su monto es **0 USD**, de modo que cualquier gasto
     dispara las alertas (este mes ya hay 0,14 USD de otro proyecto). Sirve como red de seguridad; para Cognión se crea además un
     presupuesto propio y acotado.
-  - **Límites de inversión (*spend caps*):** la consola ofrece una función que **pausa los servicios** si se supera un tope (hoy
-    "No aplicable"). Esto corrige una afirmación previa de este ADR ("las alertas no cortan el gasto"), que valía para los presupuestos
-    clásicos. Todavía no se leyó cómo funciona en detalle (alcance, qué servicios pausa, si afecta a otros proyectos de la cuenta): se
-    evalúa en `US-8.6.3` antes de depender de ello.
+  - **Límites de inversión (*spend caps*) — evaluados el 2026-10-24 con la documentación oficial y descartados como protección para este caso.**
+    Un límite de inversión se aplica a **un solo proyecto y a un solo servicio elegible** (no a la cuenta de facturación) y **pausa el uso
+    nuevo** de ese servicio al superar el tope, calculado sobre costos brutos estimados. **No detiene los recursos persistentes**: según la
+    documentación, las máquinas virtuales y los discos siguen activos y siguen acumulando cargos. Como el gasto de esta prueba viene de una VM,
+    su disco y su IP, un límite de inversión **no los frenaría**. Además la función está disponible de forma general solo para un conjunto
+    acotado de servicios. La protección real es: presupuesto con alertas, revisión de costos al día siguiente, y **borrar el proyecto**, que sí
+    corta todo.
 - **Decisiones que se mantienen:** las cuatro decisiones no cambian. Cambia el marco de costo: la prueba **no es gratuita por
   construcción** sino por mantenerse dentro de la capa gratuita, y se controla con presupuestos y, si corresponde, un límite de inversión.
 - **Proyecto aparte:** Cognión va en un proyecto nuevo (`cognion-prueba`), no en `app-termostato-2025` (otra aplicación), para poder

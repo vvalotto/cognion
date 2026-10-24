@@ -89,7 +89,7 @@ gcloud billing budgets create --billing-account=019D68-E7FC7F-247D34 \
   --threshold-rule=percent=0.5 --threshold-rule=percent=1.0
 ```
    El número del proyecto sale de `gcloud projects describe cognion-prueba-<sufijo> --format="value(projectNumber)"`.
-2. **Evaluar los límites de inversión** (*spend caps*): la consola de Facturación → Budgets & caps muestra una función que **pausa servicios** al superar un tope. **Antes de depender de ella** se lee la documentación oficial para entender: qué servicios pausa, si aplica a un proyecto o a toda la cuenta de facturación, y si afectaría a `app-termostato-2025`. El resultado (usarla o no, y por qué) se anota en la bitácora.
+2. **Límites de inversión (*spend caps*) — evaluados y descartados (2026-10-24):** no frenan una VM ni su disco (solo pausan el uso nuevo de un servicio elegible, por proyecto); ver la bitácora y el `ADR-025`. Texto original de la evaluación: la consola de Facturación → Budgets & caps muestra una función que **pausa servicios** al superar un tope. **Antes de depender de ella** se lee la documentación oficial para entender: qué servicios pausa, si aplica a un proyecto o a toda la cuenta de facturación, y si afectaría a `app-termostato-2025`. El resultado (usarla o no, y por qué) se anota en la bitácora.
 - **Éxito:** el presupuesto existe y alcanza a este proyecto; la decisión sobre los límites queda registrada.
 
 ### Paso 4 🔒 — Habilitar Compute Engine y revisar la red (sin probar)
