@@ -258,3 +258,23 @@ Para volver a la configuración normal: `gcloud config configurations activate d
 - La tarifa de salida de red por encima de 1 GB mensual (sin confirmar).
 
 Al ejecutar cada paso, su marca pasa de *sin probar* a *probado* y se actualizan los comandos que hayan necesitado ajustes.
+
+---
+
+## 11. Automatización de este plan (US-8.6.4)
+
+Lo que los pasos 2 a 8 hacían a mano ahora lo hacen scripts de `deploy/gcp/`. Los scripts piden confirmación antes de crear algo (`--si` la omite) y se pueden ejecutar de nuevo sin duplicar recursos.
+
+| Script | Qué hace |
+|---|---|
+| `aprovisionar.sh` | Proyecto, facturación, presupuesto, APIs, IP estática, regla de firewall solo 80/443 (cierra el RDP que Google crea al habilitar Compute), VM `e2-micro` y preparación de la VM. Muestra el plan y pide confirmación. Variables: `PROYECTO`, `CUENTA_FACTURACION`, `REGION`, `ZONA`, `VM`, `PRESUPUESTO_USD` |
+| `destruir.sh` | Borra lo que creó `aprovisionar.sh`, sin tocar nada más |
+| `desplegar.sh <imagen>` | Desde la Mac, lleva la versión a la VM |
+| `cognion.sh desplegar <imagen>` | En la VM: baja la imagen (si falla, no toca nada), toma un respaldo si existe `respaldar.sh`, migra con la imagen nueva mientras la vieja sigue sirviendo (si falla, aborta), reemplaza la aplicación y espera `/api/health`. Si no responde, **vuelve sola a la anterior** |
+| `cognion.sh rollback` | Vuelve a la imagen anterior; es reversible (intercambia actual y anterior) |
+
+**Límites del rollback:** es solo de imagen. Las migraciones aplicadas no se deshacen (no hay `downgrade` confiable, `US-8.3.4`); una migración incompatible hacia atrás exige restaurar el respaldo.
+
+**Publicación:** `cd.yml` publica la imagen en GHCR (`ghcr.io/vvalotto/cognion`) solo al crear una etiqueta `vX.Y.Z`. El paquete es público (la VM baja sin credenciales); la visibilidad se cambia una vez desde la interfaz de GitHub. Ejemplo: `deploy/gcp/desplegar.sh ghcr.io/vvalotto/cognion:v0.8.2`.
+
+**Verificación:** `.github/workflows/imagen-smoke.yml` construye la imagen y prueba la composición en ramas de trabajo. Evidencia real contra la VM en `quality/reports/uat/inc8-gcp/verificacion-us-8.6.4.md`. Sin probar hasta `US-8.6.6`: la creación desde un proyecto limpio.

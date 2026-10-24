@@ -1,6 +1,6 @@
 # US-8.6.4: Scripts de aprovisionamiento, publicación y despliegue con rollback
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `INC-8.6`
 **Tipo**: `tooling operativo / infraestructura`
 **Bounded Context**: transversal (`deploy/gcp/`, `.github/workflows/`)
