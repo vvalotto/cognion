@@ -47,7 +47,16 @@ faltan_apis() {
   for api in compute.googleapis.com billingbudgets.googleapis.com; do grep -qx "$api" <<<"$habilitadas" || return 0; done
   return 1
 }
-existe_presupuesto() { gcloud billing budgets list --billing-account="$CUENTA_FACTURACION" --format='value(displayName)' 2>/dev/null | grep -qx "$PRESUPUESTO_NOMBRE"; }
+# La API de presupuestos exige un proyecto de cuota: se indica siempre el del despliegue para no depender de la
+# configuración activa de gcloud (que puede apuntar a un proyecto ya borrado). Si la consulta FALLA no se supone que el
+# presupuesto no existe (eso crearía un duplicado): se aborta con el motivo.
+existe_presupuesto() {
+  local salida
+  salida="$(gcloud billing budgets list --billing-account="$CUENTA_FACTURACION" --billing-project="$PROYECTO" \
+    --format='value(displayName)' 2>&1)" \
+    || abortar "No pude consultar los presupuestos de la cuenta $CUENTA_FACTURACION." "$(printf '%s' "$salida" | head -n 1)"
+  grep -qx "$PRESUPUESTO_NOMBRE" <<<"$salida"
+}
 existe_rdp() { gcloud compute firewall-rules describe default-allow-rdp --project="$PROYECTO" >/dev/null 2>&1; }
 existe_ip() { gcloud compute addresses describe "$IP_NOMBRE" --region="$REGION" --project="$PROYECTO" >/dev/null 2>&1; }
 existe_regla() { gcloud compute firewall-rules describe "$REGLA" --project="$PROYECTO" >/dev/null 2>&1; }
@@ -58,7 +67,10 @@ PLAN=()
 existe_proyecto || { HACER_PROYECTO=1; PLAN+=("crear el proyecto $PROYECTO"); }
 if [ $HACER_PROYECTO -eq 1 ] || ! facturacion_ok; then HACER_FACTURACION=1; PLAN+=("vincular la facturación $CUENTA_FACTURACION"); fi
 if [ $HACER_PROYECTO -eq 1 ] || faltan_apis; then HACER_APIS=1; PLAN+=("habilitar Compute Engine y la API de presupuestos"); fi
-existe_presupuesto || { HACER_PRESUPUESTO=1; PLAN+=("crear el presupuesto $PRESUPUESTO_NOMBRE de $PRESUPUESTO_USD USD (alertas al 50 % y 100 %)"); }
+# Con el proyecto o la API de presupuestos por crear no se puede consultar todavía: se decide al ejecutar.
+if [ $HACER_APIS -eq 1 ] || ! existe_presupuesto; then
+  HACER_PRESUPUESTO=1; PLAN+=("crear el presupuesto $PRESUPUESTO_NOMBRE de $PRESUPUESTO_USD USD (alertas al 50 % y 100 %)")
+fi
 # En un proyecto nuevo la regla default-allow-rdp no existe todavía: la crea Google al habilitar Compute Engine, así que se
 # decide si cerrarla DESPUÉS de habilitar las APIs (si no, la primera corrida la dejaría abierta a internet).
 if [ $HACER_PROYECTO -eq 1 ] || existe_rdp; then HACER_RDP=1; PLAN+=("eliminar la regla default-allow-rdp si existe (RDP abierto a internet)"); fi
@@ -84,11 +96,11 @@ fi
 [ $HACER_PROYECTO -eq 1 ] && { echo "• Creando el proyecto"; gcloud projects create "$PROYECTO" --name="Cognion prueba"; }
 [ $HACER_FACTURACION -eq 1 ] && { echo "• Vinculando la facturación"; gcloud billing projects link "$PROYECTO" --billing-account="$CUENTA_FACTURACION"; }
 [ $HACER_APIS -eq 1 ] && { echo "• Habilitando las APIs"; gcloud services enable compute.googleapis.com billingbudgets.googleapis.com --project="$PROYECTO"; }
-if [ $HACER_PRESUPUESTO -eq 1 ]; then
+if [ $HACER_PRESUPUESTO -eq 1 ] && ! existe_presupuesto; then
   echo "• Creando el presupuesto"
   NUMERO="$(gcloud projects describe "$PROYECTO" --format='value(projectNumber)')"
-  gcloud billing budgets create --billing-account="$CUENTA_FACTURACION" --display-name="$PRESUPUESTO_NOMBRE" \
-    --budget-amount="${PRESUPUESTO_USD}USD" --filter-projects="projects/$NUMERO" \
+  gcloud billing budgets create --billing-account="$CUENTA_FACTURACION" --billing-project="$PROYECTO" \
+    --display-name="$PRESUPUESTO_NOMBRE" --budget-amount="${PRESUPUESTO_USD}USD" --filter-projects="projects/$NUMERO" \
     --threshold-rule=percent=0.5 --threshold-rule=percent=1.0
 fi
 if [ $HACER_RDP -eq 1 ] && existe_rdp; then echo "• Cerrando RDP"; gcloud compute firewall-rules delete default-allow-rdp --project="$PROYECTO" --quiet; fi

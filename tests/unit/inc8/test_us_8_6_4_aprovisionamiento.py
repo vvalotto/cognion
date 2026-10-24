@@ -49,9 +49,15 @@ if a[:2] == ["services", "enable"]:
     e["apis"] = ["compute.googleapis.com", "billingbudgets.googleapis.com"]
     if e.get("rdp_al_habilitar_compute") and "default-allow-rdp" not in e["reglas"]: e["reglas"].append("default-allow-rdp")
     guardar(); sys.exit(0)
-if a[:3] == ["billing", "budgets", "list"]: print("\n".join(e["presupuestos"])); sys.exit(0)
-if a[:3] == ["billing", "budgets", "create"]:
-    e["presupuestos"].append([x.split("=", 1)[1] for x in a if x.startswith("--display-name=")][0]); guardar(); sys.exit(0)
+if a[:2] == ["billing", "budgets"]:
+    # Como la API real: exige un proyecto de cuota que exista y tenga la API habilitada.
+    cuota = [x.split("=", 1)[1] for x in a if x.startswith("--billing-project=")]
+    if (not cuota or not e["proyecto"] or "billingbudgets.googleapis.com" not in e["apis"]
+            or os.environ.get("FAKE_PRESUPUESTOS_FALLA")):
+        sys.stderr.write("ERROR: la API de presupuestos requiere un proyecto de cuota\n"); sys.exit(1)
+    if a[2] == "list": print("\n".join(e["presupuestos"])); sys.exit(0)
+    if a[2] == "create":
+        e["presupuestos"].append([x.split("=", 1)[1] for x in a if x.startswith("--display-name=")][0]); guardar(); sys.exit(0)
 if a[0] == "compute" and a[1] in ("firewall-rules", "addresses", "instances"):
     clave = {"firewall-rules": "reglas", "addresses": "ips", "instances": "vms"}[a[1]]
     if a[2] == "describe":
@@ -321,6 +327,23 @@ def test_solo_crea_lo_que_falta(tmp_path: Path) -> None:
     assert r.returncode == 0
     mutaciones = _mutan(_llamadas(tmp_path))
     assert len(mutaciones) == 1 and "firewall-rules create cognion-web" in mutaciones[0]
+
+
+def test_si_no_puede_consultar_los_presupuestos_no_crea_un_duplicado(tmp_path: Path) -> None:
+    """Regresión: un error de la consulta no se interpreta como 'no existe' (eso duplicaba el presupuesto)."""
+    _completo(tmp_path)
+    r = _correr(tmp_path, "aprovisionar.sh", "--si", extra={"FAKE_PRESUPUESTOS_FALLA": "1"})
+    assert r.returncode != 0
+    assert "No pude consultar los presupuestos" in r.stderr
+    assert not any("budgets create" in x for x in _llamadas(tmp_path))
+
+
+def test_los_comandos_de_presupuestos_indican_el_proyecto_de_cuota(tmp_path: Path) -> None:
+    """No dependen de la configuración activa de gcloud: llevan `--billing-project` del despliegue."""
+    _estado(tmp_path)
+    _correr(tmp_path, "aprovisionar.sh", "--si")
+    presupuestos = [x for x in _llamadas(tmp_path) if "billing budgets" in x]
+    assert presupuestos and all("--billing-project=cognion-prueba-2410" in x for x in presupuestos)
 
 
 def test_sin_confirmacion_no_crea_nada(tmp_path: Path) -> None:
