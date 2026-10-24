@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-10-24T14:05:20.880230+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 107,
-    "effective_seconds": 107,
+    "total_elapsed_seconds": 423,
+    "effective_seconds": 423,
     "paused_seconds": 0
   },
   "phases": [
@@ -29,6 +29,28 @@
       "phase_number": 2,
       "phase_name": "Plan de Implementación",
       "started_at": "2026-10-24T14:07:08.536738+00:00",
+      "completed_at": "2026-10-24T14:08:55.292038+00:00",
+      "elapsed_seconds": 106,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-24T14:08:55.547176+00:00",
+      "completed_at": "2026-10-24T14:12:24.426714+00:00",
+      "elapsed_seconds": 208,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-10-24T14:12:24.717715+00:00",
       "completed_at": null,
       "elapsed_seconds": 0,
       "status": "in_progress",
@@ -41,7 +63,7 @@
   "summary": {
     "total_tasks": 0,
     "completed_tasks": 0,
-    "total_phases": 2,
+    "total_phases": 4,
     "estimated_total_minutes": 0,
     "actual_total_minutes": 0,
     "variance_minutes": 0,
