@@ -228,6 +228,6 @@ SQL) en un ADR nuevo. La imagen es la misma, así que el código no cambia.
 
 | US | Título | Alcance |
 |---|---|---|
-| US-8.7.1 (#564) | Carga de datos iniciales (materias y preguntas) desde archivos JSON | Comando idempotente que usa los casos de uso del Banco de Preguntas; formato en la spec |
+| US-8.7.1 (#564) | Carga de datos iniciales (materias y preguntas) desde archivos JSON o Markdown | Comando idempotente que usa los casos de uso del Banco de Preguntas; lee también los 17 cuestionarios `.md` de Gestión de Proyectos (340 preguntas); formato en la spec |
 
 **Gates antes de etiquetar:** instalación limpia en la Mac (base vacía, `levantar.sh`, carga, login), un ciclo de `respaldar.sh`/`restaurar.sh` con esos datos, `DESPLIEGUE-LOCAL.md` y `CHANGELOG` al día, y el procedimiento completo de cierre de baseline.
