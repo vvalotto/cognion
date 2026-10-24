@@ -1,0 +1,3724 @@
+{
+  "summary": {
+    "total_files": 2,
+    "checks_executed": 9,
+    "elapsed_seconds": 53.09,
+    "timestamp": "2026-10-24T12:01:29.546303",
+    "total_issues": 176,
+    "errors": 6,
+    "warnings": 18,
+    "infos": 152
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 13
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 141
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 141
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 176
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 177
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 178
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 186
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 187
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 188
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 195
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 196
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 203
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 204
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 211
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 223
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 224
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 225
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 233
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 234
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 235
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 256
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 264
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 265
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 266
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 278
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 287
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 289
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 291
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 293
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 303
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 306
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 312
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 315
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 316
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 317
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 327
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 329
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 336
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 337
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 338
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 346
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 353
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 354
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 355
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 362
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 363
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 364
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 371
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 381
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 384
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 389
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 390
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 391
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 392
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 399
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 400
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 401
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 402
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 404
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 405
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 406
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 413
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 414
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 421
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 422
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 423
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 430
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 459
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 459
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 466
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 467
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 474
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 479
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 479
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 486
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 490
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 490
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 493
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 494
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 495
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 495
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 498
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 505
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 507
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 508
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 519
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 520
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 520
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 522
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 528
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 529
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 530
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 531
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 532
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 539
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 547
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 549
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 550
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 551
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 552
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 553
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (110 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 23
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (108 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 45
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (124 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 50
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (102 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 57
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (127 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 60
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (105 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 73
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (112 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 243
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (126 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 284
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (101 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 299
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (110 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 333
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (102 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 342
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (104 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 536
+    },
+    {
+      "check": "Complexity",
+      "severity": "warning",
+      "message": "Complexity: test_la_publicacion_en_ci_ocurre_solo_con_etiquetas has cyclomatic complexity 11 (grade C). Consider refactoring into smaller functions.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": 535
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "warning",
+      "message": "Low maintainability: MI=16.8 (grade B, threshold=20). Consider reducing complexity or splitting the file.",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 13
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B607]: Starting a process with a partial executable path",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 82
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 82
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 108
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 113
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 114
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 115
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 117
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 118
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 125
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 132
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 133
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 142
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 143
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 153
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 154
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 156
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 157
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 164
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 165
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 166
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 168
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 179
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 180
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 182
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 184
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 185
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 192
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 193
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 206
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 208
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 218
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 219
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 226
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 227
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 237
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 238
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 240
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 244
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 251
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 252
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 253
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 260
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 267
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 274
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (110 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 20
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (107 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 40
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (105 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 105
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (124 > 100 characters)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": 271
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 37.1 (grade A)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (110 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 23
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (108 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 45
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (124 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 50
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (102 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 57
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (127 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 60
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 73
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (112 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 243
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (126 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 284
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 299
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (110 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 333
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (102 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 342
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (104 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 536
+      },
+      {
+        "check": "Complexity",
+        "severity": "warning",
+        "message": "Complexity: test_la_publicacion_en_ci_ocurre_solo_con_etiquetas has cyclomatic complexity 11 (grade C). Consider refactoring into smaller functions.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 535
+      },
+      {
+        "check": "Maintainability",
+        "severity": "warning",
+        "message": "Low maintainability: MI=16.8 (grade B, threshold=20). Consider reducing complexity or splitting the file.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (110 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 20
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (107 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 40
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 105
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (124 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 271
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 13
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 176
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 177
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 178
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 186
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 187
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 188
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 195
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 196
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 203
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 204
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 211
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 223
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 224
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 225
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 233
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 234
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 235
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 256
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 264
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 265
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 266
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 278
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 287
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 289
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 291
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 293
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 303
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 306
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 312
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 315
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 316
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 317
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 327
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 329
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 336
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 337
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 338
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 346
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 353
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 354
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 355
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 362
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 363
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 364
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 371
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 381
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 384
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 389
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 390
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 391
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 392
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 399
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 400
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 401
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 402
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 404
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 405
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 406
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 413
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 414
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 421
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 422
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 423
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 430
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 459
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 459
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 466
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 467
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 474
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 479
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 479
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 486
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 490
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 490
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 493
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 494
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 495
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 495
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 498
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 505
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 507
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 508
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 519
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 520
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 520
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 522
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 528
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 529
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 530
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 531
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 532
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 539
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 547
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 549
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 550
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 551
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 552
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 553
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 13
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 82
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 82
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 108
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 113
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 114
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 115
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 117
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 118
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 125
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 132
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 133
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 142
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 143
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 153
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 154
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 156
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 157
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 164
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 165
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 166
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 168
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 179
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 180
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 182
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 184
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 185
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 192
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 193
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 206
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 208
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 218
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 219
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 226
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 227
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 237
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 238
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 240
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 244
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 251
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 252
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 253
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 260
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 267
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 274
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 37.1 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "inc8/test_us_8_6_4_aprovisionamiento.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 13
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 141
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 176
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 177
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 178
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 186
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 187
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 188
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 195
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 196
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 203
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 204
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 211
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 223
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 224
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 225
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 233
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 234
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 235
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 256
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 264
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 265
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 266
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 278
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 287
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 289
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 291
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 293
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 303
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 306
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 312
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 315
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 316
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 317
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 327
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 329
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 336
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 337
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 338
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 346
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 353
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 354
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 355
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 362
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 363
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 364
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 371
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 381
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 384
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 389
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 390
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 391
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 392
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 399
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 400
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 401
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 402
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 404
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 405
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 406
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 413
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 414
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 421
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 422
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 423
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 430
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 459
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 459
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 466
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 467
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 474
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 479
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 479
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 486
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 490
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 490
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 493
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 494
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 495
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 495
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 498
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 505
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 507
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 508
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 519
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 520
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 520
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 522
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 528
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 529
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 530
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 531
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 532
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 539
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 547
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 549
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 550
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 551
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 552
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 553
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (110 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 23
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (108 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 45
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (124 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 50
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (102 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 57
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (127 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 60
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 73
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (112 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 243
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (126 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 284
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 299
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (110 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 333
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (102 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 342
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (104 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 536
+      },
+      {
+        "check": "Complexity",
+        "severity": "warning",
+        "message": "Complexity: test_la_publicacion_en_ci_ocurre_solo_con_etiquetas has cyclomatic complexity 11 (grade C). Consider refactoring into smaller functions.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": 535
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "warning",
+        "message": "Low maintainability: MI=16.8 (grade B, threshold=20). Consider reducing complexity or splitting the file.",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_6_4_aprovisionamiento.py",
+        "line": null
+      }
+    ],
+    "inc8/test_us_8_6_4_despliegue.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B404]: Consider possible security implications associated with the subprocess module.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 13
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B607]: Starting a process with a partial executable path",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 82
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B603]: subprocess call - check for execution of untrusted input.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 82
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 108
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 113
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 114
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 115
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 117
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 118
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 125
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 132
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 133
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 142
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 143
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 153
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 154
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 156
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 157
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 164
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 165
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 166
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 168
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 179
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 180
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 182
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 184
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 185
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 192
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 193
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 206
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 208
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 218
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 219
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 226
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 227
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 237
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 238
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 240
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 244
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 251
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 252
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 253
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 260
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 267
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 274
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (110 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 20
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (107 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 40
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 105
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (124 > 100 characters)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": 271
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 37.1 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_6_4_despliegue.py",
+        "line": null
+      }
+    ]
+  }
+}

@@ -20,6 +20,9 @@ COPY alembic.ini ./
 COPY migrations/ ./migrations/
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 ENV PYTHONPATH=/app/src
+# El entorno virtual ya quedó armado por `uv sync`: se usa directo (`uvicorn`, `alembic`, `python`). `uv run` al arrancar
+# podría intentar sincronizar dependencias (incluidas las de desarrollo) y necesitar red (US-8.6.2, ADR-025).
+ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
-# `--proxy-headers`: detrás del proxy de Fly las redirecciones deben conservar https (US-8.1.6)
-CMD ["uv", "run", "uvicorn", "src.servidor:servidor", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]
+# `--proxy-headers`: detrás de un proxy (Fly, Caddy) las redirecciones deben conservar https (US-8.1.6)
+CMD ["uvicorn", "src.servidor:servidor", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]

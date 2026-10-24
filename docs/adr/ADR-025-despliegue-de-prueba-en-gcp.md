@@ -1,6 +1,6 @@
 # ADR-025 — Despliegue de prueba en GCP: VM gratuita con la aplicación y PostgreSQL juntos
 
-**Estado:** Aceptado (2026-10-20) — las cuatro decisiones de `US-8.6.1` (Issue #545) están tomadas y los criterios de go/no-go confirmados por Víctor; queda abierta solo la verificación de la tarifa de salida de red
+**Estado:** Aceptado (2026-10-20; revisado el 2026-10-23, ver la Revisión sobre facturación) — las cuatro decisiones de `US-8.6.1` (Issue #545) están tomadas y los criterios de go/no-go confirmados por Víctor; queda abierta solo la verificación de la tarifa de salida de red
 **Fecha:** 2026-10-20
 **Origen:** `US-8.6.1`, Iteración 6 del Incremento 8. Relacionado con `ADR-021` y `ADR-024` (Fly.io, en revisión), `ADR-022` (backup) y `ADR-023` (SMTP).
 
@@ -107,12 +107,8 @@ desde el 2026-08-24 de no usar datos reales de estudiantes hasta una decisión i
   reales, cambia el alcance y se decide con la institución, no el código.
 - Mide la carga técnica (logins, sesión en vivo, memoria, latencia), no cómo se comportan los alumnos reales.
 - La cuenta puede migrarse a una institucional más adelante: la imagen y los scripts son los mismos, solo cambia el proyecto.
-- **Vencimiento:** con los 300 USD de crédito por 90 días no se paga nada. Si no se pasa a cuenta paga antes del día 90, los
-  recursos se apagan y a los 30 días de gracia se borran. **Recordatorio al día 75** (2027-01-03 si se aprovisiona el
-  2026-10-20): si la prueba salió bien se pasa a cuenta paga, y se sigue en la capa gratuita mientras se use solo una
-  `e2-micro`; si no, se hace un respaldo y se deja apagar.
-- **Costos accidentales:** las alertas de presupuesto avisan pero no cortan el gasto. Una IP estática reservada sin asignar
-  cuesta; el script de aprovisionamiento (`US-8.6.3`) debe dejarla siempre asignada a la VM.
+- **Vencimiento:** *reemplazado: ver la Revisión 2026-10-23; no existe crédito de prueba vigente.*
+- **Costos accidentales:** *reemplazado: ver la Revisión 2026-10-23.*
 - **Tarifa de salida de red:** sigue sin confirmarse para este caso. El único dato hallado es 0,12 USD/GiB para el primer TiB
   de Norteamérica a Europa (anuncio de VPC, 2024); se toma como orden de magnitud. Con 1 GiB mensual gratuito y una prueba
   chica no debería ser relevante, pero se verifica en la página oficial de tarifas antes de que haya tráfico real.
@@ -130,6 +126,36 @@ desde el 2026-08-24 de no usar datos reales de estudiantes hasta una decisión i
 
 Si algún criterio falla se registra y se decide entre una VM paga más grande o la opción B (Cloud Run + Cloud SQL) en un ADR
 nuevo; la imagen es la misma.
+
+## Revisión 2026-10-23 — la cuenta de facturación ya es paga y sin crédito
+
+Al revisar Facturación en la consola (solo lectura, con Víctor presente) se encontró que el supuesto de la decisión 4 era incorrecto:
+
+- **No hay crédito de prueba.** El `Free Trial` de 300 USD figura **Vencido**: empezó el 16 de julio de 2021 y terminó el 15 de octubre de
+  2021, con los 300 USD **sin usar**. Es una prueba de una sola vez; no hay otra. La cuenta "Mi cuenta de facturación" está abierta y
+  vinculada al proyecto `app-termostato-2025`, es decir que es una **cuenta paga sin créditos**.
+- **Consecuencias para este ADR:**
+  - No hay vencimiento a los 90 días ni recuerdo del día 75: **se elimina**. Los recursos no se apagan ni se borran por vencimiento.
+  - **Todo lo que supere la capa gratuita se cobra desde el primer día.** La VM `e2-micro` en `us-central1` con 30 GB de disco estándar
+    sigue siendo gratuita por la capa permanente, que no depende de la prueba. La documentación de Google fija el límite en **una
+    `e2-micro` por mes, medido en horas de uso sumadas entre todas tus instancias `e2-micro`**; en `app-termostato-2025` Compute Engine no
+    está habilitado, así que no hay otra VM que consuma esas horas.
+  - Un descuido de configuración (VM más grande, disco extra, IP estática sin asignar, tráfico de salida) **cuesta dinero real**.
+- **Protecciones disponibles (vistas en la consola):**
+  - Presupuesto existente "ALERTA PRINCIPAL": mensual, con alertas al 50 %, 90 % y 100 %. Su monto es **0 USD**, de modo que cualquier gasto
+    dispara las alertas (este mes ya hay 0,14 USD de otro proyecto). Sirve como red de seguridad; para Cognión se crea además un
+    presupuesto propio y acotado.
+  - **Límites de inversión (*spend caps*) — evaluados el 2026-10-24 con la documentación oficial y descartados como protección para este caso.**
+    Un límite de inversión se aplica a **un solo proyecto y a un solo servicio elegible** (no a la cuenta de facturación) y **pausa el uso
+    nuevo** de ese servicio al superar el tope, calculado sobre costos brutos estimados. **No detiene los recursos persistentes**: según la
+    documentación, las máquinas virtuales y los discos siguen activos y siguen acumulando cargos. Como el gasto de esta prueba viene de una VM,
+    su disco y su IP, un límite de inversión **no los frenaría**. Además la función está disponible de forma general solo para un conjunto
+    acotado de servicios. La protección real es: presupuesto con alertas, revisión de costos al día siguiente, y **borrar el proyecto**, que sí
+    corta todo.
+- **Decisiones que se mantienen:** las cuatro decisiones no cambian. Cambia el marco de costo: la prueba **no es gratuita por
+  construcción** sino por mantenerse dentro de la capa gratuita, y se controla con presupuestos y, si corresponde, un límite de inversión.
+- **Proyecto aparte:** Cognión va en un proyecto nuevo (`cognion-prueba`), no en `app-termostato-2025` (otra aplicación), para poder
+  borrarlo entero al final y no mezclar costos.
 
 ## Impacto en Configuración
 

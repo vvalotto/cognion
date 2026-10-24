@@ -1,0 +1,35 @@
+{
+  "us": "US-8.6.4",
+  "veredicto": "APROBADO",
+  "tipo": "tooling operativo / infraestructura (sin código Python de producción; src/ no se modificó)",
+  "tests_unit_inc8": "145/145 (54 de US-8.6.4: aprovisionamiento y destrucción con gcloud simulado, despliegue y rollback con docker simulado, y publicación/CI)",
+  "verificacion_real": {
+    "documento": "quality/reports/uat/inc8-gcp/verificacion-us-8.6.4.md",
+    "idempotencia_contra_el_proyecto_real": "Nada que crear (tras corregir un defecto hallado en la primera corrida)",
+    "despliegue_sano_en_la_vm": "OK, corte medido ~10 s",
+    "rollback_automatico_en_la_vm": "OK, volvió solo a la versión sana, corte medido ~63 s",
+    "rollback_manual": "OK, corte medido ~6 s",
+    "publicacion_en_ghcr": "OK con etiqueta temporal (run 40103840039); descarga sin credenciales verificada desde internet y desde la VM en 8 s",
+    "composicion_en_ci": "Imagen y composición (smoke) en verde sobre la rama (run 40103789064)"
+  },
+  "pylint_tests": "10.00/10",
+  "ruff": "0 errores",
+  "black_isort": "limpio",
+  "mypy": "0 errores (src/ completo)",
+  "designreviewer": "0 blocking",
+  "no_instalados": "shellcheck y hadolint: solo bash -n sobre los scripts y validación de YAML",
+  "defectos_encontrados_y_corregidos": [
+    "En un proyecto nuevo, default-allow-rdp (3389 abierto a internet) lo crea Google al habilitar Compute Engine; se cerraba antes de existir y la primera corrida lo dejaba abierto (test de regresión)",
+    "La API de presupuestos exige un proyecto de cuota; el script dependía de la configuración activa de gcloud y ocultaba el error, lo que habría creado un presupuesto duplicado. Ahora usa --billing-project y falla cerrado (tests de regresión)",
+    "Un error de YAML en cd.yml (': ' en un valor sin comillas) atrapado por la validación local antes de subirlo"
+  ],
+  "sin_probar_hasta_us_8_6_6": "creación desde cero en un proyecto limpio (ensayo de instalación limpia)",
+  "pendiente_de_limpieza_manual": "la versión de prueba del paquete en GHCR (id 1439899604, v0.0.1-prueba.1) no se puede borrar mientras sea la última con etiqueta (GitHub lo impide); borrarla con gh api -X DELETE /user/packages/container/cognion/versions/1439899604 tras publicar el primer release real vX.Y.Z",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "archivos": "7 de tests/helpers",
+    "advertencias_iniciales": "E501 (16 líneas), complejidad 11 en un test y en _compute, MI 16,8 < 20, E203",
+    "resolucion": "tests partidos en 3 archivos con simuladores compartidos (_comun/_gcloud/_docker/_simuladores), _compute dividido, líneas acortadas; E203 evitado sin slice",
+    "resultado_final": "0 advertencias reales; solo 'vulture/codespell no instalados' (herramientas ausentes del entorno, preexistente)"
+  }
+}
