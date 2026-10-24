@@ -103,7 +103,7 @@ gcloud compute firewall-rules list
 - **Éxito:** la red y las reglas están a la vista.
 - **Costo:** habilitar la API no cuesta.
 
-### Paso 5 🔒 — IP estática, regla de firewall y VM (sin probar)
+### Paso 5 🔒 — IP estática, regla de firewall y VM (**probado** el 2026-10-24)
 ```bash
 gcloud compute addresses create cognion-ip --region=us-central1
 gcloud compute firewall-rules create cognion-web --network=default --direction=INGRESS \
