@@ -9,8 +9,8 @@
   "timeline": {
     "started_at": "2026-10-24T14:05:20.880230+00:00",
     "completed_at": null,
-    "total_elapsed_seconds": 3380,
-    "effective_seconds": 3380,
+    "total_elapsed_seconds": 4383,
+    "effective_seconds": 4383,
     "paused_seconds": 0
   },
   "phases": [
@@ -73,9 +73,20 @@
       "phase_number": 8,
       "phase_name": "Documentación",
       "started_at": "2026-10-24T15:01:41.677819+00:00",
-      "completed_at": null,
+      "completed_at": "2026-10-24T15:17:47.944106+00:00",
+      "elapsed_seconds": 966,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte final",
+      "started_at": "2026-10-24T15:18:23.504211+00:00",
+      "completed_at": "2026-10-24T15:18:24.405308+00:00",
       "elapsed_seconds": 0,
-      "status": "in_progress",
+      "status": "completed",
       "tasks": [],
       "auto_approved": true,
       "user_approval_time_seconds": 0
@@ -85,7 +96,7 @@
   "summary": {
     "total_tasks": 0,
     "completed_tasks": 0,
-    "total_phases": 6,
+    "total_phases": 7,
     "estimated_total_minutes": 0,
     "actual_total_minutes": 0,
     "variance_minutes": 0,
