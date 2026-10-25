@@ -1,6 +1,6 @@
 # Guion de UAT — versión local `v0.9.0`
 
-**Incremento:** 8, Iteración 7 · **Baseline prevista:** `BL-013` · **Procedimiento:** `docs/plans/PROCEDIMIENTO-UAT.md` §11
+**Incremento:** 8, Iteración 7 · **Issue:** [#567](https://github.com/vvalotto/cognion/issues/567) (`US-8.7.2`) · **Baseline prevista:** `BL-013` · **Procedimiento:** `docs/plans/PROCEDIMIENTO-UAT.md` §11
 **Ejecuta:** Víctor, en su Mac (y un iPhone o iPad para la sesión en vivo) · **Escribe el registro:** la sesión de Claude Code, narrado en vivo
 **Código bajo prueba:** `develop` en `d43007b` (lo mismo que se etiquetará como `v0.9.0` si la UAT sale bien)
 
@@ -37,7 +37,7 @@ export COGNION_LOCAL_BASE=cognion_uat COGNION_LOCAL_ENV=.env.uat COGNION_LOCAL_L
 - No hace falta correr `pytest` y no hay que hacerlo con `DATABASE_URL` apuntando a `cognion_uat`.
 
 **Antes de empezar**
-1. `git checkout develop && git pull --ff-only` y confirmar `git log --oneline -1` = `d43007b` o posterior.
+1. Trabajar desde la branch `docs/uat-version-local-v0-9-0` (el código es el de `develop` en `d43007b`; la branch solo suma este guion). Confirmar con `git log --oneline -3`. El guion y la bitácora se commitean y suben **después** de la UAT.
 2. Armar la carpeta de datos con **solo** los cuestionarios (nada más):
    ```bash
    mkdir -p ~/CognionDatos && cp tests/uat/datos-reales/*" - Cuestionario.md" ~/CognionDatos/ && ls ~/CognionDatos | wc -l   # 17
