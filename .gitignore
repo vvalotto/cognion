@@ -53,3 +53,6 @@ tests/uat/datos-reales/
 
 # Despliegue local (US-8.5.3): secretos y logs de la prueba en red
 .env.local
+
+# UAT de la versión local (guion en quality/reports/uat/inc8): secretos de la base de prueba
+.env.uat
