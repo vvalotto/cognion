@@ -109,7 +109,7 @@ async def _crear(
     repositorio: UsuarioRepositoryPort,
     hasher: PasswordHasherPort,
 ) -> int:
-    """Da de alta al Administrador y traduce cada resultado del caso de uso a un código de salida."""
+    """Da de alta al Administrador y traduce cada resultado del caso de uso a un código."""
     caso_de_uso = BootstrapAdministradorUseCase(repositorio, hasher)
     try:
         usuario = await caso_de_uso.execute(env["ADMIN_NOMBRE"], env["ADMIN_EMAIL"], password)
