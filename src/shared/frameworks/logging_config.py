@@ -1,9 +1,9 @@
 """Configuración de logging de la aplicación y enmascarado de tokens (`US-ADJ-64`).
 
-`uvicorn` configura solo sus propios loggers: los de la aplicación (`src.*`) quedan sin handler y sus
-`INFO` se descartan, así que el modo consola de emails (`US-8.5.2`) no mostraba nada. Además, el log de
-acceso de `uvicorn` escribe la URL completa de cada pedido, con el JWT del canal WebSocket
-(`?token=<JWT>`), el token de la invitación y el de recuperación de contraseña.
+`uvicorn` configura solo sus propios loggers: los de la aplicación (`src.*`) quedan sin handler y
+sus `INFO` se descartan, así que el modo consola de emails (`US-8.5.2`) no mostraba nada. Además,
+el log de acceso de `uvicorn` escribe la URL completa de cada pedido, con el JWT del canal
+WebSocket (`?token=<JWT>`), el token de la invitación y el de recuperación de contraseña.
 """
 
 from __future__ import annotations
@@ -34,7 +34,11 @@ def _sanear(valor: Any) -> Any:
     return enmascarar_tokens(valor) if isinstance(valor, str) else valor
 
 
-class FiltroTokens(logging.Filter):
+class _HandlerCognion(logging.StreamHandler):  # type: ignore[type-arg]  # pylint: disable=too-few-public-methods
+    """Handler propio: permite reconocer el que ya instaló `configurar_logging` (idempotencia)."""
+
+
+class FiltroTokens(logging.Filter):  # pylint: disable=too-few-public-methods
     """Enmascara tokens en el mensaje y en los argumentos de cada registro; nunca descarta uno."""
 
     def filter(self, record: logging.LogRecord) -> bool:
@@ -56,10 +60,9 @@ def configurar_logging(nivel: str = "INFO") -> None:
     """
     logger = logging.getLogger("src")
     logger.setLevel(nivel)
-    if not any(getattr(h, "_cognion", False) for h in logger.handlers):
-        handler = logging.StreamHandler(sys.stderr)
+    if not any(isinstance(h, _HandlerCognion) for h in logger.handlers):
+        handler = _HandlerCognion(sys.stderr)
         handler.setFormatter(logging.Formatter(_FORMATO))
-        handler._cognion = True  # type: ignore[attr-defined]  # marca propia para la idempotencia
         logger.addHandler(handler)
     for nombre in _LOGGERS_DE_UVICORN:
         destino = logging.getLogger(nombre)

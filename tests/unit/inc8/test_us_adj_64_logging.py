@@ -11,6 +11,7 @@ from pydantic import ValidationError
 from src.settings import Settings
 from src.shared.frameworks.logging_config import (
     FiltroTokens,
+    _HandlerCognion,
     configurar_logging,
     enmascarar_tokens,
 )
@@ -116,7 +117,7 @@ def logging_limpio() -> Iterator[None]:
     }
     for n in nombres:
         logger = logging.getLogger(n)
-        logger.handlers = [h for h in logger.handlers if not getattr(h, "_cognion", False)]
+        logger.handlers = [h for h in logger.handlers if not isinstance(h, _HandlerCognion)]
         logger.filters = [f for f in logger.filters if not isinstance(f, FiltroTokens)]
     yield
     for n, (nivel, handlers, filtros) in antes.items():
@@ -133,7 +134,7 @@ def test_configura_el_nivel_y_un_unico_handler_aunque_se_llame_dos_veces() -> No
     configurar_logging("WARNING")
     src = logging.getLogger("src")
     assert src.level == logging.WARNING
-    assert len([h for h in src.handlers if getattr(h, "_cognion", False)]) == 1
+    assert len([h for h in src.handlers if isinstance(h, _HandlerCognion)]) == 1
     for nombre in ("uvicorn.access", "uvicorn.error"):
         assert (
             len([f for f in logging.getLogger(nombre).filters if isinstance(f, FiltroTokens)]) == 1
