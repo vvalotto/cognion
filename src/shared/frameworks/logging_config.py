@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 import re
 import sys
-from typing import Any
+from typing import Any, TextIO
 
 # `token=<valor>` en una query string (el JWT del WebSocket, la invitación de `/registro?token=`).
 _TOKEN_EN_QUERY = re.compile(r"(token=)[^&\s\"']+", re.IGNORECASE)
@@ -34,7 +34,7 @@ def _sanear(valor: Any) -> Any:
     return enmascarar_tokens(valor) if isinstance(valor, str) else valor
 
 
-class _HandlerCognion(logging.StreamHandler):  # type: ignore[type-arg]  # pylint: disable=too-few-public-methods
+class _HandlerCognion(logging.StreamHandler[TextIO]):  # pylint: disable=too-few-public-methods
     """Handler propio: permite reconocer el que ya instaló `configurar_logging` (idempotencia)."""
 
 

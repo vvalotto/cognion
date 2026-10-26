@@ -1,0 +1,28 @@
+{
+  "us": "US-ADJ-64",
+  "veredicto": "APROBADO",
+  "tipo": "fix de infraestructura transversal (src/shared/frameworks/logging_config.py, src/settings.py, src/app.py)",
+  "tests": {
+    "suite_completa": "2130 pasaron, 0 fallos (unit + integration + step_defs contra la base descartable cognion_test_adj64)",
+    "propios": "24 unitarios, 8 de integración con un uvicorn real como subproceso, 10 casos BDD (7 escenarios + 3 de la tabla de LOG_LEVEL)",
+    "verificacion_de_que_detectan_el_error": "sin la llamada a configurar_logging fallan 7 de los 8 tests de integración (el 8.º es el de regresión del health check)"
+  },
+  "cobertura": {
+    "total": "97,09 %",
+    "logging_config.py": "fuera de la medición: el proyecto omite src/*/frameworks/* (pyproject [tool.coverage.run]); cubierto por 24 unitarios y 18 de integración/BDD",
+    "settings.py": "100 %",
+    "app.py": "93 % (líneas 60 a 64 del verificador periódico, preexistentes)"
+  },
+  "pylint": "10,00/10 en logging_config.py",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "ruff_black_isort": "limpio",
+  "complejidad": "máx 6 en el módulo nuevo; MI 86,08 (A). settings.py: CC 14 en _validar_entorno_estricto, preexistente",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "archivos_propios": "sin advertencias reales; la corrida inicial marcó una línea larga (E501) y acceso a un atributo privado, resueltos",
+    "ruido_de_herramienta": "timeouts de pylint y mypy de 10 s (el hook los corta con la máquina cargada), vulture y codespell no instalados, y la complejidad preexistente de settings.py"
+  },
+  "designreviewer": "0 blocking; 360 advertencias en todo src/",
+  "hallazgo_nuevo": "el email de invitación trae el token suelto ('Token de invitación: …'), no un link de registro; la spec decía link. Registrado en el reporte; no se cambió el email (fuera de alcance)",
+  "base_descartable": "cognion_test_adj64 (se elimina al cerrar la iteración); cognion, cognion_local y cognion_uat no se tocaron"
+}
