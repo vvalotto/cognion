@@ -11,6 +11,7 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ### Fixed
 - Logging local (`US-ADJ-64`): `EMAIL_MODO=consola` vuelve a dejar los emails en la salida del servidor (la aplicación ahora configura su logging) y los tokens de las URLs de acceso se registran como `***`. Nueva variable `LOG_LEVEL`.
+- Primer Administrador (`US-ADJ-65`): `bootstrap_administrador` pide la contraseña dos veces cuando se escribe por terminal (hasta 3 intentos) y no la pide si ya hay un Administrador operativo.
 - Fechas de actividades (hallazgo #7 de la UAT de `v0.9.0`): `NuevaActividad` y `ExtenderPlazo` envían la hora con zona; antes una actividad abría y cerraba 3 horas antes en Argentina.
 
 ### Added

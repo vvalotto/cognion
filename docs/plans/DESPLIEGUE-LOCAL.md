@@ -61,7 +61,8 @@ Qué hace, en orden:
 3. Compila el frontend si falta o está viejo.
 4. Aplica las migraciones.
 5. Si no hay un Administrador operativo, **te pide por terminal** nombre, email y contraseña
-   (12 o más caracteres, con mayúscula, número y símbolo).
+   (12 o más caracteres, con mayúscula, número y símbolo). **La contraseña se escribe dos veces** (no se ve al
+   teclearla): si no coinciden te avisa y vuelve a pedirla, hasta 3 intentos; al tercero no crea nada.
 6. Detecta la IP y el nombre `<equipo>.local` e **imprime las URLs que deben usar los alumnos**.
 7. Arranca el servidor en `0.0.0.0:8000` bajo `caffeinate -dims` y deja el log en
    `logs/local/uvicorn-<fecha>.log`.

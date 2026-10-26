@@ -1,6 +1,6 @@
 # US-ADJ-65: El comando que crea el Administrador pide la contraseña dos veces
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 8 — Despliegue y operación`, Iteración 8 (ajustes de la UAT de `v0.9.0`)
 **Tipo**: `mejora de usabilidad` backend (comando operativo)
 **Agregado principal afectado**: ninguno
