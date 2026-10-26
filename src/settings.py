@@ -36,6 +36,7 @@ class Settings(BaseSettings):
 
     entorno: Literal["desarrollo", "local", "staging", "produccion"] = "desarrollo"
     email_modo: Literal["smtp", "consola"] = "smtp"
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     database_url: str
     secret_key: str
     algorithm: str = "HS256"

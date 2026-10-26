@@ -41,6 +41,9 @@ from src.identidad.frameworks.api.registro_router import router as registro_rout
 from src.identidad.frameworks.api.usuarios_router import router as usuarios_router
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.logging_config import configurar_logging
+
+configurar_logging(settings.log_level)
 
 logger = logging.getLogger(__name__)
 
