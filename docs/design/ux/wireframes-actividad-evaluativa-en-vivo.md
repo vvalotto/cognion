@@ -88,7 +88,7 @@ se da en el momento, en la clase de una Comisión concreta — no existe la opci
 | Elemento | Detalle |
 |---|---|
 | Contexto | Breadcrumb "Actividad evaluativa › {Materia} › {Comisión, ej. Lunes 18-20hs} › Nueva sesión en vivo" |
-| Campos | Unidad temática (opcional), Tema (opcional), Cantidad de preguntas, Tiempo límite por pregunta en segundos — **sin valor por defecto** (spike RF-10, confirmado con Víctor). **Sin selector de Comisión** — ya es el contexto de la pantalla, no un campo del formulario |
+| Campos | Unidad temática (opcional), Tema (opcional) — selects dependientes con "Todas"/"Todos" = sin restricción, regla en `wireframes-banco-preguntas.md` §2.3.1 —, Cantidad de preguntas, Tiempo límite por pregunta en segundos — **sin valor por defecto** (spike RF-10, confirmado con Víctor). **Sin selector de Comisión** — ya es el contexto de la pantalla, no un campo del formulario |
 | Validación de cliente | Cantidad de preguntas ≥ 1; tiempo límite > 0 (INV-AEV-02, espejo del lado servidor) |
 | Hint | Aclara que el puntaje combina velocidad, dificultad e importancia (spike RF-10) — se ve en el ranking tras cada pregunta |
 | Comisión / Materia | Ambas implícitas por el contexto de navegación — `comision_id` viene de la ruta, `materia_id` se resuelve internamente a partir de esa Comisión (`ComisionConsultaPort` nuevo, ver modelo §14) |

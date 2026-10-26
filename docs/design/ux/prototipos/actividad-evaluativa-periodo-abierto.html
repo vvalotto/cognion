@@ -444,6 +444,10 @@
     <p class="page-subtitle">Materia: Ingeniería de Software</p>
 
     <div class="form-card">
+      <div class="field">
+        <label for="na-titulo">Título</label>
+        <input type="text" id="na-titulo" placeholder="Ej: Parcial 1 — Unidades 1 a 3" />
+      </div>
       <div class="field-row">
         <div class="field">
           <label>Apertura (fecha y hora)</label>
@@ -466,7 +470,24 @@
           <div class="hint">Por defecto 1 — cuántas veces puede responder la misma pregunta</div>
         </div>
       </div>
-      <div class="hint" style="margin-bottom:16px;">Cada estudiante recibe un set aleatorio distinto, tomado del banco de preguntas de la materia.</div>
+      <div class="field-row">
+        <div class="field">
+          <label for="na-unidad">Unidad temática</label>
+          <select id="na-unidad"><option>Todas</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option><option>Unidad 3 — Arquitectura</option></select>
+        </div>
+        <div class="field">
+          <label for="na-tema">Tema</label>
+          <select id="na-tema"><option value="">Todos</option></select>
+        </div>
+      </div>
+      <div class="hint" id="na-hint-restriccion" style="margin-bottom:12px;">Sin restricción: las preguntas pueden salir de cualquier unidad temática y tema del banco. El Tema ofrece solo los de la unidad elegida.</div>
+      <div class="field">
+        <label>Comisiones</label>
+        <label style="font-weight:400;"><input type="checkbox"> Lunes 18-20hs</label>
+        <label style="font-weight:400;"><input type="checkbox"> Miércoles 10-12hs</label>
+        <div class="hint">Sin ninguna marcada, la actividad es para todas las comisiones de la materia.</div>
+      </div>
+      <div class="hint" style="margin-bottom:16px;">Cada estudiante recibe un set aleatorio distinto, tomado del banco de preguntas de la materia. Las fechas se escriben en tu hora local.</div>
       <div class="form-actions">
         <button class="btn" onclick="go('doc-detalle-actividad')">Crear actividad</button>
         <button class="btn outline" onclick="go('doc-actividades')">Cancelar</button>
@@ -791,5 +812,43 @@
   });
 </script>
 
+<script>
+/* Regla Unidad → Tema — wireframes-banco-preguntas.md §2.3.1 (Iteración 8, hallazgo #6 de la UAT de v0.9.0) */
+const TEMAS_POR_UNIDAD = {
+  "Unidad 1 — Fundamentos": ["Calidad", "Principios"],
+  "Unidad 2 — Diseño": ["Clean Architecture", "DDD"],
+  "Unidad 3 — Arquitectura": ["Clean Architecture", "Testing"]
+};
+function temasDe(unidad) {
+  if (unidad && TEMAS_POR_UNIDAD[unidad]) return TEMAS_POR_UNIDAD[unidad];
+  if (unidad) return [];
+  return [...new Set(Object.values(TEMAS_POR_UNIDAD).flat())].sort();
+}
+/* Selects dependientes con "Todos" (filtros, Nueva actividad, Nueva sesión en vivo). */
+function enlazarSelects(idUnidad, idTema, todos) {
+  const u = document.getElementById(idUnidad), t = document.getElementById(idTema);
+  function rearmar() {
+    const previo = t.value;
+    const unidad = u.value && u.value !== todos[0] ? u.value : "";
+    const temas = temasDe(unidad);
+    t.innerHTML = '<option value="">' + todos[1] + '</option>' + temas.map(x => '<option>' + x + '</option>').join('');
+    if (temas.includes(previo)) t.value = previo;   /* si el tema ya no pertenece a la unidad, vuelve a "Todos" */
+    t.dispatchEvent(new Event('change'));
+  }
+  u.addEventListener('change', rearmar);
+  rearmar();
+}
+enlazarSelects('na-unidad', 'na-tema', ['Todas', 'Todos']);
+(function () {
+  const u = document.getElementById('na-unidad'), t = document.getElementById('na-tema'), h = document.getElementById('na-hint-restriccion');
+  function texto() {
+    const restringe = (u.value && u.value !== 'Todas') || t.value;
+    h.textContent = restringe
+      ? 'Las preguntas de esta actividad salen solo de la combinación elegida de unidad temática y tema.'
+      : 'Sin restricción: las preguntas pueden salir de cualquier unidad temática y tema del banco. El Tema ofrece solo los de la unidad elegida.';
+  }
+  u.addEventListener('change', texto); t.addEventListener('change', texto);
+})();
+</script>
 </body>
 </html>
