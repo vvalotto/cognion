@@ -123,6 +123,8 @@ markers = [
     "tokens: escenario BDD de enmascarado de tokens en el log",
     "regresion: escenario BDD de no regresión",
     "configuracion: escenario BDD de configuración",
+    "US-ADJ-65: escenarios BDD de la US-ADJ-65",
+    "confirmacion: escenario BDD de la confirmación de contraseña",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
