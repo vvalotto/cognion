@@ -231,3 +231,20 @@ SQL) en un ADR nuevo. La imagen es la misma, así que el código no cambia.
 | US-8.7.1 (#564) | Carga de datos iniciales (materias y preguntas) desde archivos JSON o Markdown | Comando idempotente que usa los casos de uso del Banco de Preguntas; lee también los 17 cuestionarios `.md` de Gestión de Proyectos (340 preguntas); formato en la spec |
 
 **Gates antes de etiquetar:** instalación limpia en la Mac (base vacía, `levantar.sh`, carga, login), un ciclo de `respaldar.sh`/`restaurar.sh` con esos datos, `DESPLIEGUE-LOCAL.md` y `CHANGELOG` al día, y el procedimiento completo de cierre de baseline.
+
+## Iteración 8 — Ajustes de la UAT de `v0.9.0`
+
+**Origen:** UAT `US-8.7.2` (2026-10-25, `quality/reports/uat/inc8/`): 10 hallazgos y un plan de corrección **aprobado por Víctor**. **Decisiones de Víctor, 2026-10-26:** todo se resuelve **antes de etiquetar `v0.9.0`** (los 🔴 y los 🟡/⚪); el bootstrap que pide la contraseña dos veces se hace ahora (`US-ADJ-65`); en el hallazgo #6, los formularios de cargar y editar pregunta cambian igual que los filtros; los pasos van en el orden de abajo. Pocas US formales; lo que solo toca `frontend/`, scripts o documentación va por el track informal (sin spec ni `/implement-us`).
+
+| Paso | Qué | Hallazgos | Track |
+|---|---|---|---|
+| 1 | **Fechas con zona horaria** en `NuevaActividad` y `ExtenderPlazo`: enviar la fecha con su zona; verificar con la hora real que un parcial de 14:00 a 16:00 queda de 14:00 a 16:00 | #7 🔴 | Informal (`frontend/`) |
+| 2 | **`US-ADJ-64`** (#570): `configurar_logging()` al arrancar; los emails de consola salen en el log; `token=` enmascarado en el log de acceso | #2 🔴, #9 🟡 | Formal (`src/`) |
+| 3 | **`US-ADJ-65`** (#571): `bootstrap_administrador` pide la contraseña dos veces (hasta 3 intentos) | #3 🟡 | Formal (`src/`) |
+| 4 | **Prueba del iPhone con Norton Mobile Security pausado** (la hace Víctor). Si anda: línea en la guía, #8 pasa a 🟡 de entorno. Si no: `US-ADJ-66` (el servidor acepta la forma absoluta del pedido WebSocket) | #8 🔴→🟡 | Condicional |
+| 5 | **Repetir los pasos afectados de la UAT**: C4, C7, D1 (emails y fechas), D5 con el iPhone si cambió algo | #2, #7, #8 | UAT |
+| 6 | **Lote UX informal** — antes, actualizar los wireframes (gate UX) y que Víctor los apruebe: Unidad temática → Tema dependientes con "Todos" en los filtros del banco, en "Nueva actividad" y en cargar/editar pregunta; "repetir email" en el autoregistro; título de la pestaña "Cognión" | #6, #5, #1 | Informal (`frontend/`) |
+| 7 | **Lote documentación y scripts**: advertencia del link de invitación en `DESPLIEGUE-LOCAL.md`, prefijo del respaldo con el nombre de la base, fila de `DESPLIEGUE-GCP.md` en los índices | #4, #10 | Informal |
+
+**Gates antes de etiquetar `v0.9.0`:** los pasos 1 a 7 hechos o reclasificados con decisión de Víctor, la UAT repetida en lo afectado, `CHANGELOG` y `DESPLIEGUE-LOCAL.md` al día, y el procedimiento completo de cierre de `BL-013`.
+
