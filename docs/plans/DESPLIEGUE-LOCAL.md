@@ -132,16 +132,28 @@ scripts/local/restaurar.sh <archivo.dump> --sobre-local   # reemplaza cognion_lo
 
 ---
 
-## 7. Emails: modo consola (estado: probado)
+## 7. Emails: modo consola (estado: probado con un `uvicorn` real el 2026-10-26, `US-ADJ-64`)
 
-No hay servidor de correo. El contenido de cada email (invitaciones, recuperación de contraseña, notificaciones)
-se escribe en el log:
+No hay servidor de correo. El contenido de cada email (invitaciones, recuperación de contraseña, notificaciones de
+actividad) se escribe en el log del servidor:
 
 ```bash
 grep -A8 "Email (modo consola)" logs/local/uvicorn-$(date +%F).log
 ```
 
-Quien necesite recuperar la contraseña obtiene el link desde ahí. El log contiene tokens: no lo compartas.
+- **Recuperar contraseña:** el email trae el link `/recuperar-password/<token>`; copialo y abrilo en el navegador.
+- **Invitación por email:** el cuerpo trae el **token suelto** ("Token de invitación: …"), no un link. Para registrar al
+  estudiante usá `<dirección de la aplicación>/registro?token=<token>`, o generá el link desde la pantalla de la Comisión
+  (botón "Generar link de invitación", que ya lo muestra completo).
+- **Aviso de apertura/cierre de actividad:** un email por estudiante de la Comisión.
+
+**Antes de `US-ADJ-64` esto no funcionaba** con `levantar.sh`: la aplicación no configuraba el logging y `uvicorn` descartaba
+los mensajes de la aplicación (hallazgo #2 de la UAT de `v0.9.0`).
+
+**Los tokens de las URLs no quedan completos en el log de acceso:** el JWT del canal en vivo, el token de una invitación
+(`/registro?token=…`) y el del link de recuperación se registran como `***`. El cuerpo de los emails de consola **sí** los
+trae completos: es lo que permite recuperar una cuenta sin correo. Por eso el log sigue siendo sensible: no lo compartas.
+`LOG_LEVEL` (`DEBUG`, `INFO`, `WARNING`, `ERROR`; por defecto `INFO`) ajusta el detalle de los mensajes de la aplicación.
 
 ---
 
