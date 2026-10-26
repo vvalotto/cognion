@@ -15,7 +15,7 @@ Feature: Logging local — emails de consola visibles y tokens enmascarados (US-
   Scenario: Invitación por email en modo consola
     Given un servidor real con EMAIL_MODO=consola y una comisión con docente
     When el docente genera una invitación indicando un email destinatario
-    Then la salida del servidor contiene el link de registro de esa invitación
+    Then la salida del servidor contiene el token de esa invitación en el cuerpo del email
 
   @consola
   Scenario: Aviso de apertura de actividad
