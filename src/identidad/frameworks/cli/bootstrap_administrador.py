@@ -100,6 +100,16 @@ async def ejecutar(
         print("Definí ADMIN_PASSWORD o ejecutá el comando desde una terminal interactiva.")
         return SALIDA_SIN_PASSWORD
 
+    return await _crear(env, password, repositorio, hasher)
+
+
+async def _crear(
+    env: Mapping[str, str],
+    password: str,
+    repositorio: UsuarioRepositoryPort,
+    hasher: PasswordHasherPort,
+) -> int:
+    """Da de alta al Administrador y traduce cada resultado del caso de uso a un código de salida."""
     caso_de_uso = BootstrapAdministradorUseCase(repositorio, hasher)
     try:
         usuario = await caso_de_uso.execute(env["ADMIN_NOMBRE"], env["ADMIN_EMAIL"], password)
