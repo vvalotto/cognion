@@ -118,6 +118,11 @@ markers = [
     "materia-existente: escenario BDD sobre una materia ya creada",
     "errores-entrada: escenario BDD de entrada inválida",
     "markdown: escenario BDD de cuestionarios en formato Markdown",
+    "US-ADJ-64: escenarios BDD de la US-ADJ-64",
+    "consola: escenario BDD del modo consola de emails",
+    "tokens: escenario BDD de enmascarado de tokens en el log",
+    "regresion: escenario BDD de no regresión",
+    "configuracion: escenario BDD de configuración",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
