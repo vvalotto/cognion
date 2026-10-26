@@ -195,6 +195,32 @@ describe("Banco", () => {
     expect(ultimaLlamada).toContain("unidad=Unidad")
   })
 
+  it("[Iteración 8] el Tema ofrece solo los de la unidad elegida, con 'Todos', y vuelve a 'Todos' al cambiar de unidad", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockImplementation(() => Promise.resolve(jsonResponse(200, paginado(preguntasResponse))))
+
+    renderBanco()
+    await screen.findByText(/¿Qué principio de Clean Architecture/)
+    const unidad = screen.getByLabelText("Unidad temática") as HTMLSelectElement
+    const tema = screen.getByLabelText("Tema") as HTMLSelectElement
+    const opciones = (select: HTMLSelectElement) => [...select.options].map((o) => o.text)
+
+    // Con la unidad en "Todas", el Tema ofrece todos los temas del banco.
+    expect(opciones(unidad)).toEqual(["Todas", "Unidad 2", "Unidad 3"])
+    expect(opciones(tema)).toEqual(["Todos", "Arquitectura", "DDD"])
+
+    // Con una unidad elegida, solo los temas de esa unidad.
+    fireEvent.change(unidad, { target: { value: "Unidad 2" } })
+    expect(opciones(tema)).toEqual(["Todos", "DDD"])
+
+    // Un tema que la nueva unidad no ofrece vuelve a "Todos".
+    fireEvent.change(tema, { target: { value: "DDD" } })
+    fireEvent.change(unidad, { target: { value: "Unidad 3" } })
+    expect(opciones(tema)).toEqual(["Todos", "Arquitectura"])
+    expect(tema.value).toBe("")
+  })
+
   it("'Limpiar filtros' vuelve a mostrar todas las preguntas activas", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))

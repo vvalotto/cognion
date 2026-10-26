@@ -18,7 +18,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  derivarSugerencias,
   filtrarBanco,
   listarMaterias,
   type Dificultad,
@@ -27,6 +26,7 @@ import {
   type MateriaListItemResponse,
   type PreguntaResponse,
 } from "@/lib/banco-preguntas-api"
+import { temasDeUnidad, temaTrasCambiarUnidad, unidadesDe } from "@/lib/unidad-tema"
 
 const TAMANIO_PAGINA = 20
 
@@ -59,8 +59,7 @@ export function Banco() {
   const [tema, setTema] = useState("")
   const [dificultad, setDificultad] = useState<Dificultad | "">("")
   const [importancia, setImportancia] = useState<Importancia | "">("")
-  const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
-  const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
+  const [preguntasBanco, setPreguntasBanco] = useState<PreguntaResponse[]>([])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -74,11 +73,7 @@ export function Banco() {
     if (!materia) return undefined
     const controller = new AbortController()
     filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
-      .then((resultado) => {
-        const { unidades, temas } = derivarSugerencias(resultado.preguntas)
-        setSugerenciasUnidad(unidades)
-        setSugerenciasTema(temas)
-      })
+      .then((resultado) => setPreguntasBanco(resultado.preguntas))
       .catch(() => {})
     return () => controller.abort()
   }, [materia])
@@ -100,6 +95,10 @@ export function Banco() {
       .catch(() => {})
     return () => controller.abort()
   }, [materia, unidad, tema, dificultad, importancia, pagina])
+
+  // Regla Unidad → Tema (`wireframes-banco-preguntas.md` §2.3.1): el Tema ofrece los de la unidad elegida.
+  const unidades = unidadesDe(preguntasBanco)
+  const temas = temasDeUnidad(preguntasBanco, unidad)
 
   function limpiarFiltros() {
     setUnidad("")
@@ -150,12 +149,13 @@ export function Banco() {
             value={unidad}
             onChange={(e) => {
               setUnidad(e.target.value)
+              setTema(temaTrasCambiarUnidad(preguntasBanco, e.target.value, tema))
               setPagina(1)
             }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
           >
-            <option value="">Todos</option>
-            {sugerenciasUnidad.map((valor) => (
+            <option value="">Todas</option>
+            {unidades.map((valor) => (
               <option key={valor} value={valor}>
                 {valor}
               </option>
@@ -169,22 +169,22 @@ export function Banco() {
           >
             Tema
           </label>
-          <input
+          <select
             id="filtro-tema"
-            type="text"
-            list="filtro-tema-sugerencias"
             value={tema}
             onChange={(e) => {
               setTema(e.target.value)
               setPagina(1)
             }}
             className="mt-1 block rounded-md border border-border px-2 py-1 text-sm"
-          />
-          <datalist id="filtro-tema-sugerencias">
-            {sugerenciasTema.map((valor) => (
-              <option key={valor} value={valor} />
+          >
+            <option value="">Todos</option>
+            {temas.map((valor) => (
+              <option key={valor} value={valor}>
+                {valor}
+              </option>
             ))}
-          </datalist>
+          </select>
         </div>
         <div>
           <label

@@ -316,6 +316,32 @@ describe("NuevaActividad", () => {
     expect(await screen.findByText(/3 disponibles/)).toBeInTheDocument()
   })
 
+  it("[Iteración 8] el Tema ofrece solo los de la unidad elegida y vuelve a 'Todos' al cambiar de unidad", async () => {
+    mockListarMaterias()
+    mockListarComisiones()
+    mockFiltrarBanco([
+      pregunta("p1", "Cohesión", "Principios de Diseño"),
+      pregunta("p2", "Acoplamiento", "Principios de Diseño"),
+      pregunta("p3", "Casos de uso", "Arquitectura"),
+    ])
+    const user = userEvent.setup()
+
+    renderNuevaActividad()
+    await screen.findByRole("option", { name: "Cohesión" })
+    const tema = screen.getByLabelText("Tema") as HTMLSelectElement
+    const opciones = () => [...tema.options].map((o) => o.text)
+
+    expect(opciones()).toEqual(["Todos", "Acoplamiento", "Casos de uso", "Cohesión"])
+
+    await user.selectOptions(screen.getByLabelText("Unidad temática"), "Arquitectura")
+    expect(opciones()).toEqual(["Todos", "Casos de uso"])
+
+    await user.selectOptions(screen.getByLabelText("Unidad temática"), "Principios de Diseño")
+    await user.selectOptions(tema, "Cohesión")
+    await user.selectOptions(screen.getByLabelText("Unidad temática"), "Arquitectura")
+    expect(tema.value).toBe("")
+  })
+
   it("elegir un tema restringe la cantidad disponible y lo manda en el body", async () => {
     mockListarMaterias()
     mockListarComisiones()

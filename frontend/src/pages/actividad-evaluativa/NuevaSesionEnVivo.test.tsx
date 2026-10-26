@@ -74,6 +74,38 @@ describe("NuevaSesionEnVivo", () => {
     expect(screen.queryByLabelText(/Comisión/)).not.toBeInTheDocument()
   })
 
+  it("[Iteración 8] el Tema ofrece solo los de la unidad elegida y vuelve a 'Todos' al cambiar de unidad", async () => {
+    const pregunta = (id: string, unidad: string, tema: string) => ({
+      id, texto: id, tipo: "opcion_multiple", opciones: [], unidad_tematica: unidad, tema,
+      dificultad: "medio", importancia: "medio", activa: true,
+    })
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, comision))
+      .mockResolvedValueOnce(jsonResponse(200, materias))
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          preguntas: [pregunta("p1", "U1", "Calidad"), pregunta("p2", "U1", "Principios"), pregunta("p3", "U2", "DDD")],
+          total: 3,
+        }),
+      )
+    const user = userEvent.setup()
+
+    renderFormulario()
+    await screen.findByRole("option", { name: "Calidad" })
+    const tema = screen.getByLabelText("Tema (opcional)") as HTMLSelectElement
+    const opciones = () => [...tema.options].map((o) => o.text)
+
+    expect(opciones()).toEqual(["Todos", "Calidad", "DDD", "Principios"])
+
+    await user.selectOptions(screen.getByLabelText("Unidad temática (opcional)"), "U2")
+    expect(opciones()).toEqual(["Todos", "DDD"])
+
+    await user.selectOptions(screen.getByLabelText("Unidad temática (opcional)"), "U1")
+    await user.selectOptions(tema, "Calidad")
+    await user.selectOptions(screen.getByLabelText("Unidad temática (opcional)"), "U2")
+    expect(tema.value).toBe("")
+  })
+
   it("crea la sesión y navega a la sala de espera", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
