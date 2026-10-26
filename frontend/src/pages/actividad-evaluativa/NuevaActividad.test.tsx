@@ -108,6 +108,39 @@ describe("NuevaActividad", () => {
     cleanup()
   })
 
+  it("envía las fechas con zona: la hora escrita es la hora local, no UTC (hallazgo #7 de la UAT)", async () => {
+    mockListarMaterias()
+    mockListarComisiones()
+    mockFiltrarBanco()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, {
+        id: "act-1",
+        materia_id: MATERIA_ID,
+        fecha_apertura: "2026-09-20T12:00:00Z",
+        fecha_cierre: "2026-09-27T23:59:00Z",
+        cantidad_preguntas: 10,
+        cantidad_intentos_permitidos: 1,
+        cerrada_manualmente: false,
+        titulo: "",
+      }),
+    )
+
+    renderNuevaActividad()
+    expect(await screen.findByLabelText("Apertura (fecha y hora)")).toBeInTheDocument()
+    await completarFormulario({ preguntas: "10", intentos: "1" })
+    expect(await screen.findByText("Actividades listado")).toBeInTheDocument()
+
+    const llamada = vi.mocked(fetch).mock.calls.find(([, init]) => init?.method === "POST")
+    const cuerpo = JSON.parse(String(llamada?.[1]?.body)) as {
+      fecha_apertura: string
+      fecha_cierre: string
+    }
+    expect(cuerpo.fecha_apertura.endsWith("Z")).toBe(true)
+    expect(cuerpo.fecha_cierre.endsWith("Z")).toBe(true)
+    expect(new Date(cuerpo.fecha_apertura).getTime()).toBe(new Date(2026, 8, 20, 9, 0).getTime())
+    expect(new Date(cuerpo.fecha_cierre).getTime()).toBe(new Date(2026, 8, 27, 23, 59).getTime())
+  })
+
   it("creación exitosa crea la actividad y vuelve al listado", async () => {
     mockListarMaterias()
     mockListarComisiones()

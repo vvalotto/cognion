@@ -17,6 +17,7 @@ import {
   type PreguntaResponse,
 } from "@/lib/banco-preguntas-api"
 import { ApiError } from "@/lib/api-client"
+import { aIsoConZona } from "@/lib/fechas"
 import {
   listarComisionesPorMateria,
   type ComisionResumenResponse,
@@ -118,8 +119,8 @@ export function NuevaActividad() {
         {
           materiaId,
           titulo: titulo.trim(),
-          fechaApertura,
-          fechaCierre,
+          fechaApertura: aIsoConZona(fechaApertura),
+          fechaCierre: aIsoConZona(fechaCierre),
           cantidadPreguntas,
           cantidadIntentosPermitidos: cantidadIntentos,
           comisionesIds: [...comisionesSeleccionadas],
