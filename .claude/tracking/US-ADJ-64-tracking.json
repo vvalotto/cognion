@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "us_id": "US-ADJ-64",
+    "us_title": "Logging local — los emails de consola se ven y los tokens no quedan completos en el log",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-26T13:03:32.845982+00:00",
+    "completed_at": "2026-10-26T14:43:07.163420+00:00",
+    "total_elapsed_seconds": 5974,
+    "effective_seconds": 5974,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-10-26T13:03:32.955456+00:00",
+      "completed_at": "2026-10-26T13:03:56.824979+00:00",
+      "elapsed_seconds": 23,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Escenarios BDD",
+      "started_at": "2026-10-26T13:03:56.929406+00:00",
+      "completed_at": "2026-10-26T13:03:57.041388+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-10-26T13:04:25.465070+00:00",
+      "completed_at": "2026-10-26T13:05:11.163711+00:00",
+      "elapsed_seconds": 45,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-26T13:05:11.477478+00:00",
+      "completed_at": "2026-10-26T13:05:46.800632+00:00",
+      "elapsed_seconds": 35,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task_001",
+          "task_name": "Configuración LOG_LEVEL",
+          "task_type": "infra",
+          "estimated_minutes": 5.0,
+          "started_at": "2026-10-26T13:05:11.638928+00:00",
+          "completed_at": "2026-10-26T13:05:28.516108+00:00",
+          "elapsed_seconds": 16,
+          "actual_minutes": 0.27,
+          "variance_minutes": -4.73,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task_002",
+          "task_name": "Módulo logging_config",
+          "task_type": "infra",
+          "estimated_minutes": 15.0,
+          "started_at": "2026-10-26T13:05:28.647238+00:00",
+          "completed_at": "2026-10-26T13:05:36.917777+00:00",
+          "elapsed_seconds": 8,
+          "actual_minutes": 0.13,
+          "variance_minutes": -14.87,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-10-26T13:06:04.318970+00:00",
+      "completed_at": "2026-10-26T13:06:37.912421+00:00",
+      "elapsed_seconds": 33,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-10-26T13:06:54.340181+00:00",
+      "completed_at": "2026-10-26T13:11:26.117355+00:00",
+      "elapsed_seconds": 271,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-10-26T13:11:28.609771+00:00",
+      "completed_at": "2026-10-26T13:12:29.495689+00:00",
+      "elapsed_seconds": 60,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-10-26T13:12:41.480302+00:00",
+      "completed_at": "2026-10-26T13:34:32.613859+00:00",
+      "elapsed_seconds": 1311,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-10-26T13:34:42.760319+00:00",
+      "completed_at": "2026-10-26T14:43:04.952774+00:00",
+      "elapsed_seconds": 4102,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte final",
+      "started_at": "2026-10-26T14:43:06.791212+00:00",
+      "completed_at": "2026-10-26T14:43:07.032220+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "total_phases": 10,
+    "estimated_total_minutes": 20.0,
+    "actual_total_minutes": 0.4,
+    "variance_minutes": -19.6,
+    "variance_percent": -98.0
+  }
+}
