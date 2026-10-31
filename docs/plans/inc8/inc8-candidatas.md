@@ -1,6 +1,6 @@
 # Incremento 8 — Despliegue y operación
 
-**Estado:** en curso desde 2026-10-16. Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev). Iteración 1 (artefacto desplegable) cerrada 2026-10-16: `US-8.1.1` a `US-8.1.7` (PR #535).
+**Estado: cerrado el 2026-10-31 como `BL-013` (`v0.9.0`, versión local).** El despliegue en la nube quedó diferido y sus 17 Issues están en el Milestone "Incremento 8 — Despliegue en la nube (diferido)" (`.cm/baselines/BL-013-incremento-8-despliegue-y-operacion.md`). Texto histórico a continuación — **en curso desde 2026-10-16.** Iteración 0 (spikes) resuelta: `ADR-021` (Fly.io), `ADR-022` (backup pg_dump → Drive), `ADR-023` (SMTP por materia), `ADR-024` (dominio fly.dev). Iteración 1 (artefacto desplegable) cerrada 2026-10-16: `US-8.1.1` a `US-8.1.7` (PR #535).
 **Standby de nube desde 2026-10-17:** las Iteraciones 2 y 3 (CD, staging, rollback, backup en la nube) esperan la decisión sobre el convenio de la Universidad con Google. Mientras tanto se ejecutó la **Iteración 5 — Despliegue local** (cerrada 2026-10-18) y se propone la **Iteración 6 — Despliegue de prueba en GCP con VM gratuita** (ver más abajo).
 **Milestone:** [Incremento 8 — Despliegue y operación](https://github.com/vvalotto/cognion/milestone/16)
 **Política:** sin BC nuevo ni RF funcional nuevo — no abre con Iteración 0 de Modelado. Abre

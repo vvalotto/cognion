@@ -404,7 +404,8 @@ test_rechazo_fuera_del_período_vigente` falla de forma determinística en este 
 ventana de tiempo demasiado ajustada (~1s) entre la creación de la actividad y el
 `IniciarEvaluacion` vía HTTP en el propio setup del test — confirmado que no es una regresión de
 ninguna US de esta iteración (falla igual en `develop` limpio antes de estos cambios). Reportado
-como chip aparte (`task_471c8a04`), no bloquea el avance.
+como chip aparte (`task_471c8a04`), no bloquea el avance. **Corregido el 2026-10-31 (`BL-013`):** el test creaba
+al estudiante dentro de la ventana de 1 segundo; ahora lo crea antes y la ventana es de unos 4 segundos.
 
 **Sesión de métricas de proceso y fix de CodeGuard (2026-08-28), posterior al cierre de la
 Iteración 3:** análisis estadístico del tiempo de `/implement-us` sobre las 47 US
@@ -1164,9 +1165,10 @@ checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4
 `v0.8.1` ejecutados el 2026-10-15** a confirmación explícita de Víctor; Milestone #15 cerrado. Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
 automático y asistido necesita decisión suya antes de especificar.
 
-**Incremento 8 — Despliegue y operación, en curso desde 2026-10-16**
+**Incremento 8 — Despliegue y operación, cerrado 2026-10-31 (`BL-013`, `v0.9.0`)**
 (`docs/plans/inc8/inc8-candidatas.md`, Milestone GitHub
-[Incremento 8](https://github.com/vvalotto/cognion/milestone/16)). Sin BC nuevo ni RF funcional
+[Incremento 8](https://github.com/vvalotto/cognion/milestone/16), cerrado; lo diferido está en
+[Incremento 8 — Despliegue en la nube (diferido)](https://github.com/vvalotto/cognion/milestone/17)). Sin BC nuevo ni RF funcional
 nuevo: lo que faltaba para instalar y operar el producto en un entorno real (ver el plan para el
 origen). Cinco iteraciones: 0 decisiones, 1 artefacto desplegable, 2 despliegue automático, 3
 operación, 4 entrega e instalación, más la 5 (despliegue local y prueba con alumnos, agregada
@@ -1226,6 +1228,42 @@ corrida real sobre `cognion_local` y acceso desde un celular en la misma wifi, a
 corresponden ahora** (Issues #540–#542 cerrados como no planificados). La guía de instalación se escribió igual,
 sin el plan de la clase: `docs/plans/DESPLIEGUE-LOCAL.md`. Sin probar todavía: la red del aula (puede aislar
 clientes), la Mac con la tapa cerrada y la carga con muchos alumnos a la vez.
+
+**Iteración 6 — despliegue de prueba en GCP, en pausa desde 2026-10-24** (`ADR-025`, Issues #545 a #552,
+specs en `docs/specs/inc8/`). Con la cuenta personal de Víctor se decidió una VM `e2-micro` gratuita con la
+aplicación y PostgreSQL en contenedores, HTTPS con DuckDNS. Hecho: `US-8.6.1` (spike, `ADR-025`), `US-8.6.2`
+(composición en `deploy/gcp/`, verificada en CI), `US-8.6.3` (plan `docs/plans/DESPLIEGUE-GCP.md` **ejecutado a
+mano**, con bitácora y mediciones en `quality/reports/uat/inc8-gcp/`) y `US-8.6.4` (`aprovisionar.sh`,
+`destruir.sh`, `desplegar.sh`, `cognion.sh desplegar|rollback`, publicación de la imagen en GHCR por etiqueta
+`vX.Y.Z`; verificado contra la VM real: despliegue ~10 s, rollback automático ~63 s). PR #563. La VM y la IP se
+destruyeron el 2026-10-24 (costo). Diferidas: `US-8.6.3` (falta el costo real de la IP), `8.6.5` a `8.6.8` y
+`US-ADJ-63` (el hash bcrypt bloquea el event loop). Hallazgo útil: el `ENTORNO=local` y los scripts de
+`deploy/gcp/` dejan reproducible el despliegue cuando se retome.
+
+**Iteración 7 — versión local `v0.9.0`, cerrada 2026-10-31.** Decisión de Víctor (2026-10-24): la primera
+versión de producción corre en su Mac, sin nube, y después se usará temporalmente su GCP. `US-8.7.1`
+(Issue #564, PR #565): comando `cargar_datos_iniciales` que carga materias y preguntas desde JSON o
+cuestionarios Markdown, idempotente y con validación previa; las 340 preguntas de Gestión de Proyectos se
+verificaron una a una contra los archivos de origen (los archivos no se versionan). `US-8.7.2` (Issue #567,
+PR #568): **UAT de la versión local** sobre una instalación limpia (`cognion_uat`), en la Mac y con iPad e
+iPhone (`quality/reports/uat/inc8/`): 10 hallazgos, ninguno bloqueante tras las correcciones.
+
+**Iteración 8 — ajustes de la UAT, cerrada 2026-10-31** (PR #572 plan, PR #578 implementación, 26 commits).
+`US-ADJ-64` (Issue #570): `src/` nunca configuraba el logging, así que `EMAIL_MODO=consola` no escribía nada y
+el log de acceso guardaba los JWT completos; ahora `configurar_logging()` y un filtro que enmascara `token=` y
+`/recuperar-password/<token>`; los tests usan un `uvicorn` real (`caplog` había dejado pasar el error).
+`US-ADJ-65` (Issue #571): `bootstrap_administrador` pide la contraseña dos veces (probado con una terminal real,
+`pty.fork()`). Informales: fechas con zona horaria (la hora local se guardaba como UTC: una actividad abría y
+cerraba 3 h antes), Unidad → Tema dependientes con "Todos" (`wireframes-banco-preguntas.md` §2.3.1), "Repetir
+email" en los registros, favicon y título "Cognion", respaldo nombrado por base y advertencias de la guía. **El
+retraso del iPhone en la sesión en vivo era la VPN de Norton Mobile Security del propio celular, no el
+servidor** (con la VPN desactivada: 0 rechazos del canal en tiempo real).
+
+**`BL-013` — Incremento 8, Despliegue y operación, cerrada 2026-10-31**
+(`.cm/baselines/BL-013-incremento-8-despliegue-y-operacion.md`): primera versión instalable y operable en una
+máquina propia sin nube. Sin RF propio, no mueve la matriz de trazabilidad. Merge `develop → main` y tag
+`v0.9.0` (MINOR, decisión de Víctor) ejecutados el mismo día; el tag publica la imagen en GHCR. 17 Issues
+quedaron diferidos al Milestone nuevo (nube, backup, runbook, mediciones, `US-ADJ-63`).
 
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
