@@ -1,6 +1,6 @@
 # US-ADJ-64: Logging local — los emails de consola se ven y los tokens no quedan completos en el log
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 8 — Despliegue y operación`, Iteración 8 (ajustes de la UAT de `v0.9.0`)
 **Tipo**: `fix` backend (configuración de logging, infraestructura transversal)
 **Agregado principal afectado**: ninguno
@@ -64,10 +64,10 @@ El contenido del email de consola **conserva el link completo**: es el objetivo 
 ## Escenarios (BDD)
 
 1. **Recuperar contraseña en modo consola.** Servidor real (proceso `uvicorn src.servidor:servidor` contra una base descartable, con `EMAIL_MODO=consola`); un `POST /identidad/recuperar-password/solicitar` con el email de una cuenta existente → la salida del proceso contiene `Email (modo consola)`, el destinatario y el link `/recuperar-password/<token>`.
-2. **Invitación por email en modo consola.** Generar una invitación indicando `email_destinatario` → su link aparece en la salida.
+2. **Invitación por email en modo consola.** Generar una invitación indicando `email_destinatario` → su token aparece en la salida (el email trae el token suelto, no un link: se verificó al implementar).
 3. **Aviso de actividad.** Crear una actividad con comisiones → el aviso de apertura aparece en la salida (RF-14).
 4. **El JWT no queda en el log.** Abrir un WebSocket con token → la línea de acceso contiene `token=***` y no el JWT.
-5. **La invitación no queda en el log.** `GET /registro?token=<token>` → la línea de acceso contiene `token=***`.
+5. **La invitación y el link de recuperación no quedan en el log.** `GET /registro?token=<token>` → la línea de acceso contiene `token=***`; `GET /recuperar-password/<token>` → `/recuperar-password/***` (ampliación decidida en la Fase 2).
 6. **Lo demás no cambia.** Un `GET /api/health` se registra con el mismo formato de siempre.
 7. **`LOG_LEVEL` inválido.** `LOG_LEVEL=ruidoso` → el arranque falla con un mensaje que lista los valores válidos.
 8. **Sin fugas por otras rutas.** Con un error de autenticación del WebSocket (token inválido) tampoco aparece el valor del token en la línea de rechazo.

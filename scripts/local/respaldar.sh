@@ -19,7 +19,9 @@ case "$CONSERVAR" in ''|*[!0-9]*|0) abortar "COGNION_RESPALDOS_N debe ser un ent
 
 umask 077
 mkdir -p "$DESTINO"
-ARCHIVO="$DESTINO/cognion_local-$(date +%Y%m%d-%H%M%S).dump"
+# El nombre lleva el de la base respaldada (con la base por defecto, `cognion_local-<fecha>.dump`): así los
+# respaldos de dos bases en la misma Mac no se mezclan ni se rotan entre sí (hallazgo #10 de la UAT de v0.9.0).
+ARCHIVO="$DESTINO/${BASE}-$(date +%Y%m%d-%H%M%S).dump"
 
 if ! PGPASSWORD="$CLAVE" pg_dump -Fc -h "$HOST" -p "$PUERTO_PG" -U "$USUARIO" -f "$ARCHIVO" "$BASE" 2>"$ARCHIVO.err"; then
   cat "$ARCHIVO.err" >&2; rm -f "$ARCHIVO" "$ARCHIVO.err"
@@ -35,8 +37,8 @@ fi
 ( cd "$DESTINO" && shasum -a 256 "$(basename "$ARCHIVO")" > "$(basename "$ARCHIVO").sha256" )
 
 # Rotación: se ordena por nombre (lleva la fecha y hora) y se conservan los últimos N.
-SOBRAN="$(ls -1 "$DESTINO"/cognion_local-*.dump | sort | awk -v n="$CONSERVAR" '{a[NR]=$0} END{for(i=1;i<=NR-n;i++) print a[i]}')"
+SOBRAN="$(ls -1 "$DESTINO"/"${BASE}"-*.dump | sort | awk -v n="$CONSERVAR" '{a[NR]=$0} END{for(i=1;i<=NR-n;i++) print a[i]}')"
 for viejo in $SOBRAN; do rm -f "$viejo" "$viejo.sha256"; done
 
 echo "Respaldo listo: $ARCHIVO ($(du -h "$ARCHIVO" | cut -f1))"
-echo "Conservados: $(ls -1 "$DESTINO"/cognion_local-*.dump | wc -l | tr -d ' ') (máximo $CONSERVAR)"
+echo "Conservados: $(ls -1 "$DESTINO"/"${BASE}"-*.dump | wc -l | tr -d ' ') (máximo $CONSERVAR)"

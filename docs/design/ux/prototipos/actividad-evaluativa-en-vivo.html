@@ -418,12 +418,12 @@
     <p class="page-subtitle">Para la comisión Lunes 18-20hs — todos sus estudiantes reciben el mismo set de preguntas, en el mismo momento.</p>
     <div class="form-card">
       <div class="field">
-        <label>Unidad temática (opcional)</label>
-        <input type="text" placeholder="Ej. Arquitectura de software" />
+        <label for="ns-unidad">Unidad temática (opcional)</label>
+        <select id="ns-unidad"><option>Todas</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option><option>Unidad 3 — Arquitectura</option></select>
       </div>
       <div class="field">
-        <label>Tema (opcional)</label>
-        <input type="text" placeholder="Ej. Bounded Contexts" />
+        <label for="ns-tema">Tema (opcional)</label>
+        <select id="ns-tema"><option value="">Todos</option></select>
       </div>
       <div class="field-row">
         <div class="field">
@@ -901,5 +901,33 @@
   }
 </script>
 
+<script>
+/* Regla Unidad → Tema — wireframes-banco-preguntas.md §2.3.1 (Iteración 8, hallazgo #6 de la UAT de v0.9.0) */
+const TEMAS_POR_UNIDAD = {
+  "Unidad 1 — Fundamentos": ["Calidad", "Principios"],
+  "Unidad 2 — Diseño": ["Clean Architecture", "DDD"],
+  "Unidad 3 — Arquitectura": ["Clean Architecture", "Testing"]
+};
+function temasDe(unidad) {
+  if (unidad && TEMAS_POR_UNIDAD[unidad]) return TEMAS_POR_UNIDAD[unidad];
+  if (unidad) return [];
+  return [...new Set(Object.values(TEMAS_POR_UNIDAD).flat())].sort();
+}
+/* Selects dependientes con "Todos" (filtros, Nueva actividad, Nueva sesión en vivo). */
+function enlazarSelects(idUnidad, idTema, todos) {
+  const u = document.getElementById(idUnidad), t = document.getElementById(idTema);
+  function rearmar() {
+    const previo = t.value;
+    const unidad = u.value && u.value !== todos[0] ? u.value : "";
+    const temas = temasDe(unidad);
+    t.innerHTML = '<option value="">' + todos[1] + '</option>' + temas.map(x => '<option>' + x + '</option>').join('');
+    if (temas.includes(previo)) t.value = previo;   /* si el tema ya no pertenece a la unidad, vuelve a "Todos" */
+    t.dispatchEvent(new Event('change'));
+  }
+  u.addEventListener('change', rearmar);
+  rearmar();
+}
+enlazarSelects('ns-unidad', 'ns-tema', ['Todas', 'Todos']);
+</script>
 </body>
 </html>

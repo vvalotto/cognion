@@ -62,6 +62,35 @@ describe("ExtenderPlazo", () => {
     cleanup()
   })
 
+  it("envía el nuevo cierre con zona: la hora escrita es la hora local, no UTC (hallazgo #7 de la UAT)", async () => {
+    mockObtenerActividad()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        id: ACTIVIDAD_ID,
+        materia_id: "materia-1",
+        fecha_apertura: "2026-09-20T09:00:00Z",
+        fecha_cierre: "2026-09-29T23:59:00Z",
+        cantidad_preguntas: 10,
+        cantidad_intentos_permitidos: 1,
+        cerrada_manualmente: false,
+        titulo: "Parcial 1",
+      }),
+    )
+
+    renderExtenderPlazo()
+    const user = userEvent.setup()
+    await user.type(await screen.findByLabelText("Nuevo cierre"), "2026-09-29T23:59")
+    await user.click(screen.getByRole("button", { name: "Guardar nuevo cierre" }))
+    expect(await screen.findByText("Detalle actividad")).toBeInTheDocument()
+
+    const llamada = vi.mocked(fetch).mock.calls.find(([, init]) => init?.method === "PATCH")
+    const cuerpo = JSON.parse(String(llamada?.[1]?.body)) as { nueva_fecha_cierre: string }
+    expect(cuerpo.nueva_fecha_cierre.endsWith("Z")).toBe(true)
+    expect(new Date(cuerpo.nueva_fecha_cierre).getTime()).toBe(
+      new Date(2026, 8, 29, 23, 59).getTime(),
+    )
+  })
+
   it("extensión exitosa actualiza el cierre y vuelve al detalle", async () => {
     mockObtenerActividad()
     vi.mocked(fetch).mockResolvedValueOnce(

@@ -61,3 +61,11 @@ La decisión se mantiene (comando operativo, sin endpoint público), con tres aj
 - **Idempotencia:** el comando no hace nada si ya existe **un Administrador operativo** (no solo si el email
   coincide), vía `BootstrapAdministradorUseCase`.
 
+## Actualización 2026-10-26 (`US-ADJ-65`, Incremento 8)
+
+- **Contraseña confirmada:** cuando se pide por terminal, el comando la pide **dos veces** y las compara; si no coinciden
+  avisa y vuelve a pedirlas, hasta 3 intentos, y al tercero termina con código `1` sin crear nada. Motivo: como no se ve
+  al escribirla, un error de tipeo dejaba un Administrador inaccesible (hallazgo #3 de la UAT de `v0.9.0`).
+- **Consulta previa:** si ya hay un Administrador operativo, el comando lo informa y termina con `0` **antes** de pedir la
+  contraseña. `ADMIN_PASSWORD` por entorno y el caso "sin terminal" no cambian.
+

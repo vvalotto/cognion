@@ -12,6 +12,7 @@ import {
   type ActividadResumenResponse,
 } from "@/lib/actividad-evaluativa-api"
 import { ApiError } from "@/lib/api-client"
+import { aIsoConZona } from "@/lib/fechas"
 
 function tituloDeActividad(actividad: ActividadResumenResponse): string {
   return actividad.titulo || `Actividad del ${new Date(actividad.fechaApertura).toLocaleString()}`
@@ -56,7 +57,7 @@ export function ExtenderPlazo() {
     try {
       await modificarPeriodoDisponibilidad(
         actividadId,
-        nuevaFechaCierre,
+        aIsoConZona(nuevaFechaCierre),
         controladorSubmitRef.current?.signal,
       )
     } catch (err) {

@@ -152,7 +152,8 @@ mismo criterio de simplicidad que `wireframes-identidad.md` §2.4.
 | Elemento | Detalle |
 |---|---|
 | Contexto | Tag "Perfil: Docente" (informativo, no editable — mismo patrón que `wireframes-identidad.md` §2.6) |
-| Campos | Nombre completo, Email, Contraseña (con toggle + indicador, §2), Confirmar contraseña |
+| Campos | Nombre completo, Email, **Repetir email**, Contraseña (con toggle + indicador, §2), Confirmar contraseña |
+| Validación de cliente | **Repetir email** debe coincidir con Email (se compara sin espacios en los bordes y sin distinguir mayúsculas); si no coincide: "Los emails no coinciden." antes de enviar. Motivo: no hay verificación por correo (INV-ID-16) y un error de tipeo deja una cuenta con un email equivocado y sin forma de recuperarla (hallazgo #5 de la UAT de `v0.9.0`) |
 | Copy de ayuda | "Tu cuenta queda activa de inmediato" — sin mención a aprobación ni verificación de email (INV-ID-16) |
 | Acción primaria | "Crear cuenta" |
 | Link secundario | "‹ Elegir otro perfil" |
@@ -165,7 +166,8 @@ mismo criterio de simplicidad que `wireframes-identidad.md` §2.4.
 |---|---|
 | Contexto | Tag "Perfil: Estudiante" |
 | Selectores | Materia → Comisión, en cascada (elegir materia acota las comisiones visibles) — mismo patrón de selector ya usado en `US-2.1.11`/`US-4.1.3` |
-| Campos | Nombre completo, Email, Contraseña (con toggle + indicador), Confirmar contraseña |
+| Campos | Nombre completo, Email, **Repetir email**, Contraseña (con toggle + indicador), Confirmar contraseña |
+| Validación de cliente | Igual que §5.2: **Repetir email** debe coincidir con Email; "Los emails no coinciden." antes de enviar |
 | Orden de campos | Materia/Comisión **antes** que los datos personales — refuerza que la elección de comisión es la decisión principal de esta pantalla, mismo criterio que el `comision-tag` de `wireframes-identidad.md` §2.3 (contexto visible antes que el formulario) |
 | Acción primaria | "Crear cuenta" |
 | Link secundario | "‹ Elegir otro perfil" |

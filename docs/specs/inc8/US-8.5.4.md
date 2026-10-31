@@ -47,3 +47,7 @@ Subida a Drive o a la nube (`US-8.3.1`); respaldo continuo o PITR.
 ## Fuente de verdad UX
 
 No aplica.
+
+## Actualización 2026-10-31 (hallazgo #10 de la UAT de `v0.9.0`)
+
+El archivo se nombra `<base>-<fecha>.dump` (con la base por defecto, `cognion_local-<fecha>.dump`, igual que antes) y la rotación cuenta solo los de esa base. Verificado en `tests/uat/inc8/verificar_respaldo_local.sh` (pasos 3b y 3c).

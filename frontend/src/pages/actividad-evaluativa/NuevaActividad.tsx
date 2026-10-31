@@ -10,13 +10,14 @@ import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { crearActividad } from "@/lib/actividad-evaluativa-api"
 import {
-  derivarSugerencias,
   filtrarBanco,
   listarMaterias,
   type MateriaListItemResponse,
   type PreguntaResponse,
 } from "@/lib/banco-preguntas-api"
 import { ApiError } from "@/lib/api-client"
+import { temasDeUnidad, temaTrasCambiarUnidad, unidadesDe } from "@/lib/unidad-tema"
+import { aIsoConZona } from "@/lib/fechas"
 import {
   listarComisionesPorMateria,
   type ComisionResumenResponse,
@@ -69,7 +70,9 @@ export function NuevaActividad() {
     return () => controller.abort()
   }, [materia])
 
-  const { unidades, temas } = derivarSugerencias(preguntas)
+  // Regla Unidad → Tema (`wireframes-banco-preguntas.md` §2.3.1)
+  const unidades = unidadesDe(preguntas)
+  const temas = temasDeUnidad(preguntas, unidadTematica)
   const cantidadDisponible = preguntas.filter(
     (p) =>
       (!unidadTematica || p.unidadTematica === unidadTematica) && (!tema || p.tema === tema),
@@ -118,8 +121,8 @@ export function NuevaActividad() {
         {
           materiaId,
           titulo: titulo.trim(),
-          fechaApertura,
-          fechaCierre,
+          fechaApertura: aIsoConZona(fechaApertura),
+          fechaCierre: aIsoConZona(fechaCierre),
           cantidadPreguntas,
           cantidadIntentosPermitidos: cantidadIntentos,
           comisionesIds: [...comisionesSeleccionadas],
@@ -244,7 +247,10 @@ export function NuevaActividad() {
                 <Select
                   id="na-unidad"
                   value={unidadTematica}
-                  onChange={(event) => setUnidadTematica(event.target.value)}
+                  onChange={(event) => {
+                    setUnidadTematica(event.target.value)
+                    setTema(temaTrasCambiarUnidad(preguntas, event.target.value, tema))
+                  }}
                 >
                   <option value="">Todas</option>
                   {unidades.map((valor) => (

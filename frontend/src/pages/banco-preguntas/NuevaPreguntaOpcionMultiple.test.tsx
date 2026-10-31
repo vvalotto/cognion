@@ -95,7 +95,7 @@ describe("NuevaPreguntaOpcionMultiple", () => {
     expect(body.opciones.filter((o: { es_correcta: boolean }) => o.es_correcta)).toHaveLength(1)
   })
 
-  it("sugiere unidades y temas ya usados en el banco (US-ADJ-02)", async () => {
+  it("sugiere unidades del banco y, por unidad, sus temas (US-ADJ-02, regla Unidad → Tema)", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(jsonResponse(200, paginado([preguntaCreadaResponse])))
@@ -111,9 +111,22 @@ describe("NuevaPreguntaOpcionMultiple", () => {
           ?.getAttribute("value"),
       ).toBe("Unidad 1")
     })
-    expect(
-      document.getElementById("om-tema-sugerencias")?.querySelector("option")?.getAttribute("value"),
-    ).toBe("Clean Architecture")
+    // Regla Unidad → Tema (§2.3.1): sin unidad escrita el Tema no sugiere nada…
+    const opcionesTema = () =>
+      [...(document.getElementById("om-tema-sugerencias")?.querySelectorAll("option") ?? [])].map(
+        (o) => o.getAttribute("value"),
+      )
+    expect(opcionesTema()).toEqual([])
+
+    // …con la unidad del banco sugiere solo los temas de esa unidad…
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText("Unidad temática"), "Unidad 1")
+    expect(opcionesTema()).toEqual(["Clean Architecture"])
+
+    // …y con una unidad nueva no sugiere ninguno.
+    await user.clear(screen.getByLabelText("Unidad temática"))
+    await user.type(screen.getByLabelText("Unidad temática"), "Unidad nueva")
+    expect(opcionesTema()).toEqual([])
   })
 
   it("sin ninguna opción marcada como correcta bloquea el envío y no llama al backend", async () => {

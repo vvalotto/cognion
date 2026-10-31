@@ -81,7 +81,7 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
     expect(body.respuesta_correcta).toBe(true)
   })
 
-  it("sugiere unidades y temas ya usados en el banco (US-ADJ-02)", async () => {
+  it("sugiere unidades del banco y, por unidad, sus temas (US-ADJ-02, regla Unidad → Tema)", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
       .mockResolvedValueOnce(
@@ -104,9 +104,22 @@ describe("NuevaPreguntaVerdaderoFalso", () => {
           ?.getAttribute("value"),
       ).toBe("Unidad 2")
     })
-    expect(
-      document.getElementById("vf-tema-sugerencias")?.querySelector("option")?.getAttribute("value"),
-    ).toBe("DDD")
+    // Regla Unidad → Tema (§2.3.1): sin unidad escrita el Tema no sugiere nada…
+    const opcionesTema = () =>
+      [...(document.getElementById("vf-tema-sugerencias")?.querySelectorAll("option") ?? [])].map(
+        (o) => o.getAttribute("value"),
+      )
+    expect(opcionesTema()).toEqual([])
+
+    // …con la unidad del banco sugiere solo los temas de esa unidad…
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText("Unidad temática"), "Unidad 2")
+    expect(opcionesTema()).toEqual(["DDD"])
+
+    // …y con una unidad nueva no sugiere ninguno.
+    await user.clear(screen.getByLabelText("Unidad temática"))
+    await user.type(screen.getByLabelText("Unidad temática"), "Unidad nueva")
+    expect(opcionesTema()).toEqual([])
   })
 
   it("guardar sin elegir Verdadero/Falso bloquea el envío y no llama al backend", async () => {

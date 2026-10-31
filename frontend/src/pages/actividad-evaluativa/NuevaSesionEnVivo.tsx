@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { ApiError } from "@/lib/api-client"
+import { temasDeUnidad, temaTrasCambiarUnidad, unidadesDe } from "@/lib/unidad-tema"
 import {
-  derivarSugerencias,
   filtrarBanco,
   listarMaterias,
   type MateriaListItemResponse,
@@ -61,7 +61,9 @@ export function NuevaSesionEnVivo() {
     return () => controller.abort()
   }, [materia])
 
-  const { unidades, temas } = derivarSugerencias(preguntas)
+  // Regla Unidad → Tema (`wireframes-banco-preguntas.md` §2.3.1)
+  const unidades = unidadesDe(preguntas)
+  const temas = temasDeUnidad(preguntas, unidadTematica)
 
   useEffect(() => {
     // Crea un controller nuevo en cada montaje real — en StrictMode (dev), el doble montaje
@@ -151,9 +153,12 @@ export function NuevaSesionEnVivo() {
                 <Select
                   id="ns-unidad"
                   value={unidadTematica}
-                  onChange={(event) => setUnidadTematica(event.target.value)}
+                  onChange={(event) => {
+                    setUnidadTematica(event.target.value)
+                    setTema(temaTrasCambiarUnidad(preguntas, event.target.value, tema))
+                  }}
                 >
-                  <option value="">Cualquiera</option>
+                  <option value="">Todas</option>
                   {unidades.map((valor) => (
                     <option key={valor} value={valor}>
                       {valor}
@@ -164,7 +169,7 @@ export function NuevaSesionEnVivo() {
               <div className="flex flex-1 flex-col gap-1.5">
                 <Label htmlFor="ns-tema">Tema (opcional)</Label>
                 <Select id="ns-tema" value={tema} onChange={(event) => setTema(event.target.value)}>
-                  <option value="">Cualquiera</option>
+                  <option value="">Todos</option>
                   {temas.map((valor) => (
                     <option key={valor} value={valor}>
                       {valor}

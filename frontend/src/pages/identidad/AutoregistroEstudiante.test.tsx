@@ -109,6 +109,7 @@ describe("AutoregistroEstudiante", () => {
 
     await user.type(screen.getByLabelText("Nombre completo"), "Vale")
     await user.type(screen.getByLabelText("Email"), "vale@fiuner.edu.ar")
+    await user.type(screen.getByLabelText("Repetir email"), "vale@fiuner.edu.ar")
     await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Password#123x")
     await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
@@ -126,11 +127,28 @@ describe("AutoregistroEstudiante", () => {
 
     await user.type(screen.getByLabelText("Nombre completo"), "Vale")
     await user.type(screen.getByLabelText("Email"), "ya-existe@fiuner.edu.ar")
+    await user.type(screen.getByLabelText("Repetir email"), "ya-existe@fiuner.edu.ar")
     await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
     await user.type(screen.getByLabelText("Confirmar contraseña"), "Password#123x")
     await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
 
     expect(await screen.findByRole("alert")).toHaveTextContent("El email ya está registrado.")
+  })
+
+  it("emails que no coinciden muestran error de cliente sin llamar al backend de autoregistro (hallazgo #5 de la UAT)", async () => {
+    renderPantalla()
+    const user = await elegirMateriaYComision()
+    const llamadasPrevias = vi.mocked(fetch).mock.calls.length
+
+    await user.type(screen.getByLabelText("Nombre completo"), "Vale")
+    await user.type(screen.getByLabelText("Email"), "est2.uat@test.com")
+    await user.type(screen.getByLabelText("Repetir email"), "est2.uar@test.com")
+    await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
+    await user.type(screen.getByLabelText("Confirmar contraseña"), "Password#123x")
+    await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Los emails no coinciden.")
+    await waitFor(() => expect(vi.mocked(fetch).mock.calls.length).toBe(llamadasPrevias))
   })
 
   it("contraseñas que no coinciden muestran error de cliente sin llamar al backend de autoregistro", async () => {
@@ -140,6 +158,7 @@ describe("AutoregistroEstudiante", () => {
 
     await user.type(screen.getByLabelText("Nombre completo"), "Vale")
     await user.type(screen.getByLabelText("Email"), "vale@fiuner.edu.ar")
+    await user.type(screen.getByLabelText("Repetir email"), "vale@fiuner.edu.ar")
     await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
     await user.type(screen.getByLabelText("Confirmar contraseña"), "otra-password")
     await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
