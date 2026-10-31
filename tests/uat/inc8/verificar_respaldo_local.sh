@@ -42,7 +42,7 @@ ORIGINAL="$(conteo)"
 
 # 1. Respaldo no vacío, legible y con sha256.
 scripts/local/respaldar.sh >"$TMP/r1.txt" 2>&1 || { cat "$TMP/r1.txt"; fallo "1. respaldar.sh"; }
-DUMP="$(ls -1 "$COGNION_RESPALDOS"/cognion_local-*.dump | head -n 1)"
+DUMP="$(ls -1 "$COGNION_RESPALDOS"/"${BASE}"-*.dump | head -n 1)"
 [ -s "$DUMP" ] && pg_restore --list "$DUMP" >/dev/null && ( cd "$COGNION_RESPALDOS" && shasum -a 256 -c "$(basename "$DUMP").sha256" >/dev/null ) \
   && ok "1. respaldo no vacío, legible por pg_restore --list y con sha256 válido" || fallo "1. contenido del respaldo"
 [ "$(stat -f %Lp "$COGNION_RESPALDOS")" = "700" ] && ok "1b. carpeta de respaldos con permisos 700" || fallo "1b. permisos"
@@ -57,7 +57,16 @@ sleep 1.1; scripts/local/respaldar.sh >/dev/null 2>&1
 sleep 1.1; COGNION_RESPALDOS_N=2 scripts/local/respaldar.sh >/dev/null 2>&1
 [ "$(ls -1 "$COGNION_RESPALDOS"/*.dump | wc -l | tr -d ' ')" = "2" ] && [ "$(ls -1 "$COGNION_RESPALDOS"/*.sha256 | wc -l | tr -d ' ')" = "2" ] \
   && [ ! -e "$DUMP" ] && ok "3. rotación: se conservan los 2 más recientes (con sus sha256)" || fallo "3. rotación"
-DUMP="$(ls -1 "$COGNION_RESPALDOS"/cognion_local-*.dump | tail -n 1)"
+DUMP="$(ls -1 "$COGNION_RESPALDOS"/"${BASE}"-*.dump | tail -n 1)"
+
+# 3b. El nombre lleva el de la base y la rotación no toca los respaldos de otra base (hallazgo #10 de la UAT).
+case "$(basename "$DUMP")" in "${BASE}"-*.dump) ok "3b. el respaldo se llama como la base respaldada ($(basename "$DUMP" | cut -c1-30)…)" ;; *) fallo "3b. nombre del respaldo" ;; esac
+touch "$COGNION_RESPALDOS/otra_base-20200101-000000.dump" "$COGNION_RESPALDOS/otra_base-20200101-000000.dump.sha256"
+sleep 1.1; COGNION_RESPALDOS_N=1 scripts/local/respaldar.sh >/dev/null 2>&1
+[ -e "$COGNION_RESPALDOS/otra_base-20200101-000000.dump" ] && [ "$(ls -1 "$COGNION_RESPALDOS"/"${BASE}"-*.dump | wc -l | tr -d ' ')" = "1" ] \
+  && ok "3c. con N=1 rota solo los respaldos de esta base: el de otra base queda intacto" || fallo "3c. rotación mezclada"
+rm -f "$COGNION_RESPALDOS"/otra_base-*
+DUMP="$(ls -1 "$COGNION_RESPALDOS"/"${BASE}"-*.dump | tail -n 1)"
 
 # 4. Archivo corrupto: falla con mensaje claro y no toca nada.
 head -c 300 "$DUMP" > "$TMP/truncado.dump"

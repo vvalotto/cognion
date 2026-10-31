@@ -125,6 +125,9 @@ scripts/local/restaurar.sh <archivo.dump>       # ENSAYO: restaura en una base t
 scripts/local/restaurar.sh <archivo.dump> --sobre-local   # reemplaza cognion_local (pide escribir RESTAURAR)
 ```
 
+- El archivo lleva el nombre de la base respaldada (`<base>-<fecha>.dump`, con la base por defecto `cognion_local-<fecha>.dump`):
+  si usás dos bases en la misma Mac (por ejemplo una de prueba con `COGNION_LOCAL_BASE`), sus respaldos no se mezclan y la
+  rotación de cada una no toca los de la otra. Los respaldos anteriores a `v0.9.0` se llaman siempre `cognion_local-…`.
 - Los respaldos van a `~/CognionRespaldos/` (cambiable con `COGNION_RESPALDOS`), con `sha256`; se conservan los
   últimos 30 (`COGNION_RESPALDOS_N`).
 - Reemplazar la base exige **detener el servidor** antes.
@@ -167,6 +170,15 @@ trae completos: es lo que permite recuperar una cuenta sin correo. Por eso el lo
 - **Firewall de macOS:** la primera vez puede preguntar si Python acepta conexiones entrantes; hay que permitirlo
   (Ajustes del Sistema → Red → Firewall).
 - **La IP cambia:** usar el nombre `http://<equipo>.local:8000/` que imprime el script, o reservar la IP en el router.
+- **Links de invitación:** el link que genera la pantalla de la Comisión usa **la dirección con la que abriste la
+  aplicación**. Si la abrís por `http://127.0.0.1:8000/`, el link dice `127.0.0.1` y **no funciona en el celular de un
+  alumno**. Antes de generar links, entrá por la IP o por el nombre `<equipo>.local` que imprime el script.
+- **VPN o antivirus en el celular:** una VPN de dispositivo o un filtro de seguridad (por ejemplo **Norton Mobile
+  Security** en un iPhone) puede impedir que el celular abra el canal en tiempo real de la sesión en vivo: las opciones
+  de cada pregunta tardan varios segundos en aparecer, y en el log se ven rechazos `403` a `WebSocket ws%3A//…`. Se
+  comprobó el 2026-10-31: con la VPN de Norton desactivada la respuesta es inmediata (1 a 5 s entre opciones y
+  respuesta, 0 rechazos). Si un alumno ve ese retraso, pedile que desactive la VPN o el filtro para esta red
+  (en Norton, desde su propia app: desde Ajustes → VPN se reconecta sola).
 - **Suspensión:** `caffeinate -dims` evita que se duerma mientras el servidor corre. Con la tapa cerrada o con batería
   baja la Mac puede dormirse igual: dejala enchufada y con la tapa abierta durante la clase.
 
@@ -182,6 +194,8 @@ trae completos: es lo que permite recuperar una cuenta sin correo. Por eso el lo
 | ¿Quién escucha el puerto? | `lsof -nP -iTCP:8000 -sTCP:LISTEN` |
 | ¿Postgres vive? | `pg_isready` |
 | Puerto ocupado al arrancar | `scripts/local/detener.sh` o cambiar el puerto con `COGNION_LOCAL_PUERTO` |
+| Un celular ve las opciones de la sesión en vivo con segundos de retraso | Mirar el log: rechazos `403` a `WebSocket` de la IP de ese celular indican una VPN o un filtro de seguridad en el celular (sección 8) |
+| ¿Salieron los emails (recuperar contraseña, invitaciones, avisos)? | `grep -A8 "Email (modo consola)" logs/local/uvicorn-$(date +%F).log` (sección 7) |
 
 ---
 
