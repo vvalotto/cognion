@@ -64,7 +64,9 @@ async def _escenario(opciones: list[str] | None = None, iniciada: bool = True):
             VerificarAutorizacionComisionService(comision_consulta),
         ).execute(sesion.id)
         canal.publicados.clear()
-    use_case = MostrarOpcionesEnVivoUseCase(event_store, pregunta_consulta, canal, comision_consulta)
+    use_case = MostrarOpcionesEnVivoUseCase(
+        event_store, pregunta_consulta, canal, comision_consulta
+    )
     return use_case, event_store, canal, sesion, pregunta_consulta
 
 

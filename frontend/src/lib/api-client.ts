@@ -1,7 +1,6 @@
 import { router } from "@/router"
+import { API_BASE_URL } from "@/lib/config"
 import { clearSession, getSession } from "@/lib/session"
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000"
 
 export class ApiError extends Error {
   status: number
@@ -43,7 +42,7 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
     headers.set("Authorization", `Bearer ${session.token}`)
   }
 
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers,
     body: options.body !== undefined ? JSON.stringify(options.body) : undefined,

@@ -38,11 +38,13 @@ function renderRegistro(token = "token-vigente") {
 async function completarFormulario(
   email: string,
   password = "password123x",
-  confirmar = password
+  confirmar = password,
+  repetirEmail = email
 ) {
   const user = userEvent.setup()
   await user.type(await screen.findByLabelText("Nombre completo"), "Nico")
   await user.type(screen.getByLabelText("Email"), email)
+  await user.type(screen.getByLabelText("Repetir email"), repetirEmail)
   await user.type(screen.getByLabelText("Contraseña"), password)
   await user.type(screen.getByLabelText("Confirmar contraseña"), confirmar)
   await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
@@ -131,6 +133,16 @@ describe("Registro", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Ese email ya está registrado.")
     expect(screen.getByLabelText("Email")).toHaveValue("ya-existe@fiuner.edu.ar")
+  })
+
+  it("emails que no coinciden muestran error de cliente sin llamar al backend (hallazgo #5 de la UAT)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
+
+    renderRegistro()
+    await completarFormulario("est2.uat@test.com", "password123x", "password123x", "est2.uar@test.com")
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Los emails no coinciden.")
+    expect(fetch).toHaveBeenCalledTimes(1)
   })
 
   it("contraseñas que no coinciden muestran error de cliente sin llamar al backend", async () => {

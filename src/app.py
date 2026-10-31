@@ -41,6 +41,9 @@ from src.identidad.frameworks.api.registro_router import router as registro_rout
 from src.identidad.frameworks.api.usuarios_router import router as usuarios_router
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.logging_config import configurar_logging
+
+configurar_logging(settings.log_level)
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +78,7 @@ app = FastAPI(title="Cognion", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

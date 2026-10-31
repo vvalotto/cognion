@@ -507,12 +507,12 @@
 
     <div class="filter-bar">
       <div class="field">
-        <label>Unidad temática</label>
-        <select><option>Todas</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option><option>Unidad 3 — Arquitectura</option></select>
+        <label for="f-unidad">Unidad temática</label>
+        <select id="f-unidad"><option>Todas</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option><option>Unidad 3 — Arquitectura</option></select>
       </div>
       <div class="field">
-        <label>Tema</label>
-        <select><option>Todos</option><option>Clean Architecture</option><option>DDD</option><option>Testing</option></select>
+        <label for="f-tema">Tema</label>
+        <select id="f-tema"><option value="">Todos</option></select>
       </div>
       <div class="field">
         <label>Dificultad</label>
@@ -522,7 +522,7 @@
         <label>Importancia</label>
         <select><option>Todas</option><option>Alto</option><option>Medio</option><option>Bajo</option></select>
       </div>
-      <button class="btn outline sm">Limpiar filtros</button>
+      <button class="btn outline sm" onclick="document.getElementById('f-unidad').value='Todas';document.getElementById('f-unidad').dispatchEvent(new Event('change'))">Limpiar filtros</button>
     </div>
 
     <div class="table-wrap">
@@ -645,11 +645,11 @@
       <div class="field-row">
         <div class="field">
           <label for="om-unidad">Unidad temática</label>
-          <select id="om-unidad"><option>Unidad 3 — Arquitectura</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option></select>
+          <input type="text" id="om-unidad" list="om-unidades" placeholder="Elegí o escribí una unidad" value="" /><datalist id="om-unidades"><option value="Unidad 1 — Fundamentos"><option value="Unidad 2 — Diseño"><option value="Unidad 3 — Arquitectura"></datalist>
         </div>
         <div class="field">
           <label for="om-tema">Tema</label>
-          <input type="text" id="om-tema" placeholder="ej. Clean Architecture" />
+          <input type="text" id="om-tema" list="om-temas" placeholder="ej. Clean Architecture" /><datalist id="om-temas"></datalist>
         </div>
       </div>
       <div class="field-row">
@@ -698,11 +698,11 @@
       <div class="field-row">
         <div class="field">
           <label for="vf-unidad">Unidad temática</label>
-          <select id="vf-unidad"><option>Unidad 2 — Diseño</option><option>Unidad 1 — Fundamentos</option><option>Unidad 3 — Arquitectura</option></select>
+          <input type="text" id="vf-unidad" list="vf-unidades" placeholder="Elegí o escribí una unidad" value="" /><datalist id="vf-unidades"><option value="Unidad 1 — Fundamentos"><option value="Unidad 2 — Diseño"><option value="Unidad 3 — Arquitectura"></datalist>
         </div>
         <div class="field">
           <label for="vf-tema">Tema</label>
-          <input type="text" id="vf-tema" placeholder="ej. DDD" />
+          <input type="text" id="vf-tema" list="vf-temas" placeholder="ej. DDD" /><datalist id="vf-temas"></datalist>
         </div>
       </div>
       <div class="field-row">
@@ -766,11 +766,11 @@
       <div class="field-row">
         <div class="field">
           <label for="ep-unidad">Unidad temática</label>
-          <select id="ep-unidad"><option selected>Unidad 3 — Arquitectura</option><option>Unidad 1 — Fundamentos</option><option>Unidad 2 — Diseño</option></select>
+          <input type="text" id="ep-unidad" list="ep-unidades" placeholder="Elegí o escribí una unidad" value="Unidad 3 — Arquitectura" /><datalist id="ep-unidades"><option value="Unidad 1 — Fundamentos"><option value="Unidad 2 — Diseño"><option value="Unidad 3 — Arquitectura"></datalist>
         </div>
         <div class="field">
           <label for="ep-tema">Tema</label>
-          <input type="text" id="ep-tema" value="Clean Architecture" />
+          <input type="text" id="ep-tema" list="ep-temas" value="Clean Architecture" /><datalist id="ep-temas"></datalist>
         </div>
       </div>
       <div class="field-row">
@@ -837,5 +837,40 @@
   });
 </script>
 
+<script>
+/* Regla Unidad → Tema — wireframes-banco-preguntas.md §2.3.1 (Iteración 8, hallazgo #6 de la UAT de v0.9.0) */
+const TEMAS_POR_UNIDAD = {
+  "Unidad 1 — Fundamentos": ["Calidad", "Principios"],
+  "Unidad 2 — Diseño": ["Clean Architecture", "DDD"],
+  "Unidad 3 — Arquitectura": ["Clean Architecture", "Testing"]
+};
+function temasDe(unidad) {
+  if (unidad && TEMAS_POR_UNIDAD[unidad]) return TEMAS_POR_UNIDAD[unidad];
+  if (unidad) return [];
+  return [...new Set(Object.values(TEMAS_POR_UNIDAD).flat())].sort();
+}
+/* Selects dependientes con "Todos" (filtros, Nueva actividad, Nueva sesión en vivo). */
+function enlazarSelects(idUnidad, idTema, todos) {
+  const u = document.getElementById(idUnidad), t = document.getElementById(idTema);
+  function rearmar() {
+    const previo = t.value;
+    const unidad = u.value && u.value !== todos[0] ? u.value : "";
+    const temas = temasDe(unidad);
+    t.innerHTML = '<option value="">' + todos[1] + '</option>' + temas.map(x => '<option>' + x + '</option>').join('');
+    if (temas.includes(previo)) t.value = previo;   /* si el tema ya no pertenece a la unidad, vuelve a "Todos" */
+    t.dispatchEvent(new Event('change'));
+  }
+  u.addEventListener('change', rearmar);
+  rearmar();
+}
+function enlazarCombobox(idUnidad, idTema, idLista) {
+  const u = document.getElementById(idUnidad), lista = document.getElementById(idLista);
+  function rearmar() { lista.innerHTML = temasDe(u.value.trim() || "__ninguna__").map(x => '<option value="' + x + '">').join(''); }
+  u.addEventListener('input', rearmar);
+  rearmar();
+}
+enlazarSelects('f-unidad', 'f-tema', ['Todas', 'Todos']);
+['om', 'vf', 'ep'].forEach(p => enlazarCombobox(p + '-unidad', p + '-tema', p + '-temas'));
+</script>
 </body>
 </html>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError, apiFetch } from "@/lib/api-client"
+import { emailsCoinciden } from "@/lib/emails"
 
 interface RegistroResponse {
   id: string
@@ -28,6 +29,7 @@ export function Registro() {
 
   const [nombre, setNombre] = useState("")
   const [email, setEmail] = useState("")
+  const [repetirEmail, setRepetirEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmarPassword, setConfirmarPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -83,6 +85,11 @@ export function Registro() {
       setError("La contraseña debe tener al menos 12 caracteres.")
       return
     }
+    if (!emailsCoinciden(email, repetirEmail)) {
+      setError("Los emails no coinciden.")
+      return
+    }
+
     if (password !== confirmarPassword) {
       setError("Las contraseñas no coinciden.")
       return
@@ -152,6 +159,16 @@ export function Registro() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="registro-repetir-email">Repetir email</Label>
+            <Input
+              id="registro-repetir-email"
+              type="email"
+              required
+              value={repetirEmail}
+              onChange={(event) => setRepetirEmail(event.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1.5">

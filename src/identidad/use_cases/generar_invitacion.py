@@ -59,7 +59,9 @@ class GenerarInvitacionUseCase:
         invitacion = Invitacion.crear(comision_id, docente_id)
         await self._invitacion_repositorio.guardar(invitacion)
         if email_destinatario is not None:
-            await self._notificador.enviar_invitacion(email_destinatario, invitacion.token)
+            await self._notificador.enviar_invitacion(
+                email_destinatario, invitacion.token, comision.materia_id
+            )
 
         evento = InvitacionGenerada(
             invitacion_id=invitacion.id,

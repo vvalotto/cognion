@@ -1,7 +1,7 @@
 """Tests unitarios de `NotificarAperturaUseCase` (US-5.1.2)."""
 
 from datetime import UTC, datetime, timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from src.notificaciones.entities.ports.canal_envio_port import CanalEnvioPort
 from src.notificaciones.entities.ports.comision_consulta_port import (
@@ -31,12 +31,20 @@ class FakeCanalEnvioPort(CanalEnvioPort):
 
     def __init__(self) -> None:
         self.enviados: list[tuple[str, str, str]] = []
+        self.materias: list[UUID | None] = []
         self.falla_para: set[str] = set()
 
-    async def enviar(self, destinatario_email: str, asunto: str, cuerpo: str) -> None:
+    async def enviar(
+        self,
+        destinatario_email: str,
+        asunto: str,
+        cuerpo: str,
+        materia_id: UUID | None = None,
+    ) -> None:
         if destinatario_email in self.falla_para:
             raise ConnectionError("SMTP no disponible")
         self.enviados.append((destinatario_email, asunto, cuerpo))
+        self.materias.append(materia_id)
 
 
 def _fechas() -> tuple[datetime, datetime]:
@@ -76,6 +84,7 @@ class TestNotificarAperturaUseCase:
         )
 
         assert len(canal_envio.enviados) == 3
+        assert canal_envio.materias == [materia_id] * 3
         emails_enviados = {email for email, _asunto, _cuerpo in canal_envio.enviados}
         assert emails_enviados == {"ana@example.com", "bruno@example.com", "caro@example.com"}
         _email, asunto, cuerpo = canal_envio.enviados[0]

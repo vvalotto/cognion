@@ -15,7 +15,9 @@ import {
   type Dificultad,
   type Importancia,
   type MateriaListItemResponse,
+  type PreguntaResponse,
 } from "@/lib/banco-preguntas-api"
+import { sugerenciasDeTema } from "@/lib/unidad-tema"
 
 const NIVELES: Array<Dificultad | Importancia> = ["alto", "medio", "bajo"]
 const ETIQUETA_NIVEL: Record<Dificultad | Importancia, string> = {
@@ -38,7 +40,7 @@ export function NuevaPreguntaVerdaderoFalso() {
   const [importancia, setImportancia] = useState<Importancia>("medio")
   const [error, setError] = useState<string | null>(null)
   const [sugerenciasUnidad, setSugerenciasUnidad] = useState<string[]>([])
-  const [sugerenciasTema, setSugerenciasTema] = useState<string[]>([])
+  const [preguntasBanco, setPreguntasBanco] = useState<PreguntaResponse[]>([])
 
   const controladorSubmitRef = useRef<AbortController | null>(null)
   if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
@@ -56,9 +58,9 @@ export function NuevaPreguntaVerdaderoFalso() {
     const controller = new AbortController()
     filtrarBanco(materia.bancoId, {}, undefined, controller.signal)
       .then((resultado) => {
-        const { unidades, temas } = derivarSugerencias(resultado.preguntas)
+        const { unidades } = derivarSugerencias(resultado.preguntas)
         setSugerenciasUnidad(unidades)
-        setSugerenciasTema(temas)
+        setPreguntasBanco(resultado.preguntas)
       })
       .catch(() => {})
     return () => controller.abort()
@@ -73,6 +75,8 @@ export function NuevaPreguntaVerdaderoFalso() {
     controladorSubmitRef.current = controller
     return () => controller.abort()
   }, [])
+
+  const sugerenciasTema = sugerenciasDeTema(preguntasBanco, unidadTematica)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

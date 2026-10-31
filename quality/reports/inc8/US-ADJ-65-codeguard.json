@@ -1,0 +1,214 @@
+{
+  "summary": {
+    "total_files": 1,
+    "checks_executed": 9,
+    "elapsed_seconds": 23.85,
+    "timestamp": "2026-10-26T15:25:04.880895",
+    "total_issues": 9,
+    "errors": 3,
+    "warnings": 0,
+    "infos": 6
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 64.8 (grade A)",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      }
+    ],
+    "warnings": [],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 64.8 (grade A)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "cli/bootstrap_administrador.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 64.8 (grade A)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/cli/bootstrap_administrador.py",
+        "line": null
+      }
+    ]
+  }
+}

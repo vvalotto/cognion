@@ -404,7 +404,8 @@ test_rechazo_fuera_del_período_vigente` falla de forma determinística en este 
 ventana de tiempo demasiado ajustada (~1s) entre la creación de la actividad y el
 `IniciarEvaluacion` vía HTTP en el propio setup del test — confirmado que no es una regresión de
 ninguna US de esta iteración (falla igual en `develop` limpio antes de estos cambios). Reportado
-como chip aparte (`task_471c8a04`), no bloquea el avance.
+como chip aparte (`task_471c8a04`), no bloquea el avance. **Corregido el 2026-10-31 (`BL-013`):** el test creaba
+al estudiante dentro de la ventana de 1 segundo; ahora lo crea antes y la ventana es de unos 4 segundos.
 
 **Sesión de métricas de proceso y fix de CodeGuard (2026-08-28), posterior al cierre de la
 Iteración 3:** análisis estadístico del tiempo de `/implement-us` sobre las 47 US
@@ -1164,6 +1165,106 @@ checkpoint de staging del RNF en Fly.io con WSS real (`PROCEDIMIENTO-UAT.md` §4
 `v0.8.1` ejecutados el 2026-10-15** a confirmación explícita de Víctor; Milestone #15 cerrado. Después: Iteración 2 del Incremento 7 (RF-07) — el spike entre parseo
 automático y asistido necesita decisión suya antes de especificar.
 
+**Incremento 8 — Despliegue y operación, cerrado 2026-10-31 (`BL-013`, `v0.9.0`)**
+(`docs/plans/inc8/inc8-candidatas.md`, Milestone GitHub
+[Incremento 8](https://github.com/vvalotto/cognion/milestone/16), cerrado; lo diferido está en
+[Incremento 8 — Despliegue en la nube (diferido)](https://github.com/vvalotto/cognion/milestone/17)). Sin BC nuevo ni RF funcional
+nuevo: lo que faltaba para instalar y operar el producto en un entorno real (ver el plan para el
+origen). Cinco iteraciones: 0 decisiones, 1 artefacto desplegable, 2 despliegue automático, 3
+operación, 4 entrega e instalación, más la 5 (despliegue local y prueba con alumnos, agregada
+2026-10-17). Cierre previsto como `BL-013`.
+**Iteración 0 — Decisiones, cerrada 2026-10-16** (PR [#533](https://github.com/vvalotto/cognion/pull/533)):
+producción en Fly.io, uso inicial una comisión piloto (`ADR-021`); backup mensual con `pg_dump` a
+Google Drive institucional, retención de 12 meses aplicada por el script (`ADR-022`); cuenta SMTP
+por materia con respaldo global (`ADR-023`); dominio, subdominio de `fly.dev` con TLS automático
+(`ADR-024`). Cierra los ítems abiertos de infraestructura de producción, backup y SMTP real.
+**Iteración 1 — Artefacto desplegable, implementada 2026-10-16** (backend + frontend, sin RF;
+`US-8.1.1` a `US-8.1.7`, specs en `docs/specs/inc8/`, reportes en `docs/reports/inc8/`):
+CORS configurable por entorno (`CORS_ALLOWED_ORIGINS`, rechaza `*`); URL base de API y WebSocket
+resuelta en build (`frontend/src/lib/config.ts`); `ENTORNO` + validación fail-fast de settings en
+staging/producción (el error nunca imprime el secreto, `hide_input_in_errors`); migraciones como
+`release_command` de `fly.toml` y la imagen ahora incluye `alembic.ini`/`migrations/`; comando
+`python -m src.identidad.frameworks.cli.bootstrap_administrador` para el primer Administrador
+(`ADR-016` actualizado); `src/servidor.py` sirve el frontend y monta la API bajo `/api` (la API
+comparte rutas con el SPA, así que no puede ir en la raíz); `SMTP_CUENTAS_POR_MATERIA` y módulo
+compartido `src/shared/frameworks/smtp.py` (reemplaza el SMTP duplicado de Notificaciones e
+Identidad). Las siete US viven en una única branch con un solo PR al cierre, decisión de Víctor
+(PR [#535](https://github.com/vvalotto/cognion/pull/535), mergeado 2026-10-17, Issues cerrados).
+`tests/uat/inc8/verificar_migraciones.sh` verifica migraciones y bootstrap contra una base
+descartable propia. **No verificado todavía:** `docker build` ni un `fly deploy` real (sin Docker
+local) — lo cubren las Iteraciones 2 y 4. Las credenciales SMTP institucionales las provee Víctor.
+**Verificación de cierre de la Iteración 1:** 1938/1938 tests (unit + integración + BDD, corridos
+contra una base descartable migrada, 97.01 % de cobertura), `ruff`/`mypy` 0 errores,
+`designreviewer` 0 CRITICAL (343 advertencias, eran 334 en `BL-012`), evidencia por US en
+`quality/reports/inc8/`.
+
+**Standby de nube y Iteración 5 — despliegue local (2026-10-17).** Al querer crear la base en Fly.io se
+verificó contra la documentación oficial que el `fly postgres` del `ADR-021` está **deprecado**: lo
+administrado hoy es *Managed Postgres*, desde unos 38 USD/mes más disco, lo que anula la ventaja de costo
+que justificaba Fly.io para el piloto. Se relevaron alternativas (Neon, Supabase, Cloud SQL, Cloud Run, VM
+gratuita de GCP; detalle y fuentes en la revisión del `ADR-021`) y **Víctor decidió esperar a saber si se
+puede usar el convenio de la Universidad con Google** antes de elegir nube. Quedan en **standby** las
+Iteraciones 2 y 3 que dependen de la nube (`US-8.2.1` a `8.2.4` y `8.3.1`, Issues #520–#524 con label
+`blocked`); `ADR-021` y `ADR-024` pasan a *En revisión* y `ADR-022` anota la variante local. Mientras tanto
+se ejecuta la **Iteración 5 — Despliegue local y prueba con alumnos** (`US-8.5.1` a `8.5.7`, Issues
+#536–#542, specs en `docs/specs/inc8/`): `ENTORNO=local`, canal de email por consola, comando único para
+levantar y detener, backup y restauración local probada, verificación de la imagen Docker en CI (sin
+Docker local: falta de espacio en la máquina de Víctor; primera verificación real del `Dockerfile`), guía y guion, y una prueba con alumnos en la red local del aula (**alcance reducido el 2026-10-18**: ver el cierre de la Iteración 5 abajo). Riesgos anotados: la red
+del aula puede aislar clientes entre sí, la máquina no debe dormirse durante una sesión en vivo, y los datos
+de los alumnos quedan en el equipo de Víctor (definir con la facultad si la prueba usa cuentas reales).
+Todo lo construido sirve en cualquier nube y ensaya la instalación limpia de `US-8.4.3`.
+**Iteración 5 — despliegue local, cerrada 2026-10-18** (PR [#544](https://github.com/vvalotto/cognion/pull/544),
+una sola branch apilada, PR único al cierre por CI lento, decisión de Víctor). **US-8.5.1** (`ENTORNO=local`
+valida solo el secreto, ≥32 caracteres y distinto del ejemplo, nunca impreso), **US-8.5.2** (`EMAIL_MODO=consola`:
+el email con los links de token queda en el log INFO y no se abre SMTP; se rechaza en staging/producción),
+**US-8.5.3** (`scripts/local/levantar.sh`/`detener.sh`: base propia `cognion_local` —nunca la de desarrollo—,
+`.env.local` fuera de git, frontend, migraciones, Administrador por terminal, URLs para los alumnos, `caffeinate`,
+log en `logs/local/`) y **US-8.5.4** (`respaldar.sh`/`restaurar.sh`: `pg_dump -Fc` con sha256 y rotación a
+`~/CognionRespaldos/`, restauración por ensayo en base temporal o `--sobre-local` con confirmación). Specs en
+`docs/specs/inc8/`, reportes en `docs/reports/inc8/`, verificación en `tests/uat/inc8/verificar_levantar_local.sh`
+(12/12) y `verificar_respaldo_local.sh` (10/10) contra bases descartables. **Prueba manual 2026-10-18:** primera
+corrida real sobre `cognion_local` y acceso desde un celular en la misma wifi, ambos OK. **Decisión de Víctor
+2026-10-18: `US-8.5.5` (imagen Docker en CI), `US-8.5.6` y `US-8.5.7` (prueba con alumnos) se desestiman — no
+corresponden ahora** (Issues #540–#542 cerrados como no planificados). La guía de instalación se escribió igual,
+sin el plan de la clase: `docs/plans/DESPLIEGUE-LOCAL.md`. Sin probar todavía: la red del aula (puede aislar
+clientes), la Mac con la tapa cerrada y la carga con muchos alumnos a la vez.
+
+**Iteración 6 — despliegue de prueba en GCP, en pausa desde 2026-10-24** (`ADR-025`, Issues #545 a #552,
+specs en `docs/specs/inc8/`). Con la cuenta personal de Víctor se decidió una VM `e2-micro` gratuita con la
+aplicación y PostgreSQL en contenedores, HTTPS con DuckDNS. Hecho: `US-8.6.1` (spike, `ADR-025`), `US-8.6.2`
+(composición en `deploy/gcp/`, verificada en CI), `US-8.6.3` (plan `docs/plans/DESPLIEGUE-GCP.md` **ejecutado a
+mano**, con bitácora y mediciones en `quality/reports/uat/inc8-gcp/`) y `US-8.6.4` (`aprovisionar.sh`,
+`destruir.sh`, `desplegar.sh`, `cognion.sh desplegar|rollback`, publicación de la imagen en GHCR por etiqueta
+`vX.Y.Z`; verificado contra la VM real: despliegue ~10 s, rollback automático ~63 s). PR #563. La VM y la IP se
+destruyeron el 2026-10-24 (costo). Diferidas: `US-8.6.3` (falta el costo real de la IP), `8.6.5` a `8.6.8` y
+`US-ADJ-63` (el hash bcrypt bloquea el event loop). Hallazgo útil: el `ENTORNO=local` y los scripts de
+`deploy/gcp/` dejan reproducible el despliegue cuando se retome.
+
+**Iteración 7 — versión local `v0.9.0`, cerrada 2026-10-31.** Decisión de Víctor (2026-10-24): la primera
+versión de producción corre en su Mac, sin nube, y después se usará temporalmente su GCP. `US-8.7.1`
+(Issue #564, PR #565): comando `cargar_datos_iniciales` que carga materias y preguntas desde JSON o
+cuestionarios Markdown, idempotente y con validación previa; las 340 preguntas de Gestión de Proyectos se
+verificaron una a una contra los archivos de origen (los archivos no se versionan). `US-8.7.2` (Issue #567,
+PR #568): **UAT de la versión local** sobre una instalación limpia (`cognion_uat`), en la Mac y con iPad e
+iPhone (`quality/reports/uat/inc8/`): 10 hallazgos, ninguno bloqueante tras las correcciones.
+
+**Iteración 8 — ajustes de la UAT, cerrada 2026-10-31** (PR #572 plan, PR #578 implementación, 26 commits).
+`US-ADJ-64` (Issue #570): `src/` nunca configuraba el logging, así que `EMAIL_MODO=consola` no escribía nada y
+el log de acceso guardaba los JWT completos; ahora `configurar_logging()` y un filtro que enmascara `token=` y
+`/recuperar-password/<token>`; los tests usan un `uvicorn` real (`caplog` había dejado pasar el error).
+`US-ADJ-65` (Issue #571): `bootstrap_administrador` pide la contraseña dos veces (probado con una terminal real,
+`pty.fork()`). Informales: fechas con zona horaria (la hora local se guardaba como UTC: una actividad abría y
+cerraba 3 h antes), Unidad → Tema dependientes con "Todos" (`wireframes-banco-preguntas.md` §2.3.1), "Repetir
+email" en los registros, favicon y título "Cognion", respaldo nombrado por base y advertencias de la guía. **El
+retraso del iPhone en la sesión en vivo era la VPN de Norton Mobile Security del propio celular, no el
+servidor** (con la VPN desactivada: 0 rechazos del canal en tiempo real).
+
+**`BL-013` — Incremento 8, Despliegue y operación, cerrada 2026-10-31**
+(`.cm/baselines/BL-013-incremento-8-despliegue-y-operacion.md`): primera versión instalable y operable en una
+máquina propia sin nube. Sin RF propio, no mueve la matriz de trazabilidad. Merge `develop → main` y tag
+`v0.9.0` (MINOR, decisión de Víctor) ejecutados el mismo día; el tag publica la imagen en GHCR. 17 Issues
+quedaron diferidos al Milestone nuevo (nube, backup, runbook, mediciones, `US-ADJ-63`).
+
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
 en 7 puntos, ejecutándose de a uno:
@@ -1466,7 +1567,9 @@ Decidir el track **antes de codear**:
   `FactorDificultad`/`FactorImportancia` en `{1.0, 1.5, 2.0}` por nivel BAJO/MEDIO/ALTO,
   ranking = suma simple sin bonus por racha.
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
-- **Infraestructura definitiva** (ARQ_v1.md): Fly.io confirmado para testing; producción
+- **Infraestructura definitiva** (ARQ_v1.md) — **en standby desde 2026-10-17**: depende de si se puede usar
+  el convenio de la Universidad con Google (ver bloque del Incremento 8 y `ADR-021`, en revisión). Texto
+  anterior: Fly.io confirmado para testing; producción
   pendiente de decisión institucional (nube vs. servidor FIUNER) y del mecanismo de backup
   asociado (`RNF_v1.md` Escenario 2 — mensual, retención 12 meses). Cambio de estrategia
   2026-08-24 (`docs/rf/PLAN_v1.md` revisión 2026-08-24): los Incrementos 3 a 7 corren con datos

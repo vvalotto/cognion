@@ -1,0 +1,18 @@
+{
+  "us_id": "US-8.1.6",
+  "veredicto": "APROBADO",
+  "pylint": {"score": 10.0, "umbral": 8.0},
+  "ruff": "0 errores",
+  "mypy": "0 errores sobre 307 archivos",
+  "complejidad_ciclomatica": {"promedio": 3.7, "umbral": 10},
+  "mantenibilidad": {"src/servidor.py": 83.38, "umbral": 20},
+  "cobertura": {"src/servidor.py": 100.0, "umbral": 95.0},
+  "tests": {"nuevos": 10, "suite_unit_completa": "926 passed"},
+  "verificacion_real": "build del frontend con VITE_API_BASE_URL=/api + uvicorn src.servidor:servidor sobre base descartable: raíz y SPA 200, asset 200 / inexistente 404, /api/health ok, /api/materias 401, login real con token; sin bases ni errores residuales",
+  "codeguard": {
+    "analysis_type": "full",
+    "checks_executed": 9,
+    "reporte": "quality/reports/inc8/US-8.1.6-codeguard.json",
+    "nota": "4 errores, todos de tooling (vulture/codespell no instalados, timeout de mypy software_limpio#70). Sin hallazgos de código."
+  }
+}

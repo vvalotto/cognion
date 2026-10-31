@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError } from "@/lib/api-client"
+import { emailsCoinciden } from "@/lib/emails"
 import { autoregistrarDocente } from "@/lib/identidad-autoregistro-api"
 
 /**
@@ -19,6 +20,7 @@ export function AutoregistroDocente() {
 
   const [nombre, setNombre] = useState("")
   const [email, setEmail] = useState("")
+  const [repetirEmail, setRepetirEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmarPassword, setConfirmarPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -39,6 +41,11 @@ export function AutoregistroDocente() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+
+    if (!emailsCoinciden(email, repetirEmail)) {
+      setError("Los emails no coinciden.")
+      return
+    }
 
     if (password !== confirmarPassword) {
       setError("Las contraseñas no coinciden.")
@@ -94,6 +101,16 @@ export function AutoregistroDocente() {
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="autoregistro-docente-repetir-email">Repetir email</Label>
+          <Input
+            id="autoregistro-docente-repetir-email"
+            type="email"
+            required
+            value={repetirEmail}
+            onChange={(event) => setRepetirEmail(event.target.value)}
           />
         </div>
         <div className="flex flex-col gap-1.5">

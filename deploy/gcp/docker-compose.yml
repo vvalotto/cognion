@@ -1,0 +1,86 @@
+# Composición de la VM de la prueba de uso en GCP (US-8.6.2, ADR-025).
+# Tres servicios: PostgreSQL, la aplicación (imagen de CI) y Caddy (HTTPS automático).
+# Solo Caddy publica puertos (80/443); la base y la aplicación quedan en la red interna.
+# Los límites de memoria son techos para una VM de 1 GB; se reajustan con las mediciones de US-8.6.7.
+name: cognion
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    mem_limit: 300m
+    environment:
+      POSTGRES_USER: cognion
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: cognion
+    # Ajuste para 1 GB. Con NullPool (ADR-018) cada operación abre una conexión: con 60 alumnos a la vez puede
+    # haber ~60 simultáneas, por eso max_connections=100. Valor inicial a medir en US-8.6.7, no probado.
+    command:
+      - postgres
+      - -c
+      - shared_buffers=64MB
+      - -c
+      - effective_cache_size=256MB
+      - -c
+      - work_mem=2MB
+      - -c
+      - maintenance_work_mem=32MB
+      - -c
+      - max_connections=100
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cognion -d cognion"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *logging
+
+  app:
+    image: ${COGNION_IMAGE}
+    restart: unless-stopped
+    mem_limit: 300m
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging: *logging
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    mem_limit: 64m
+    environment:
+      COGNION_DOMINIO: ${COGNION_DOMINIO}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    logging: *logging
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:

@@ -1,0 +1,1336 @@
+{
+  "summary": {
+    "total_files": 5,
+    "checks_executed": 9,
+    "elapsed_seconds": 27.68,
+    "timestamp": "2026-10-16T11:56:31.457519",
+    "total_issues": 62,
+    "errors": 10,
+    "warnings": 4,
+    "infos": 48
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 78.0 (grade A)",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/shared/frameworks/smtp.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B105]: Possible hardcoded password: 'cambiar-por-un-secreto-seguro'",
+      "file": "src/settings.py",
+      "line": 10
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "warning",
+      "message": "Complexity: Settings._validar_entorno_estricto has cyclomatic complexity 14 (grade C). Consider refactoring into smaller functions.",
+      "file": "src/settings.py",
+      "line": 66
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 50.2 (grade A)",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.15/10 (>= 8.0)",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/settings.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (101 > 100 characters)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": 3
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (101 > 100 characters)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": 4
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "warning",
+      "message": "⚠ Pylint score: 5.71/10 (< 8.0). Run 'pylint smtp_canal_envio.py' for details.",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.75/10 (>= 8.0)",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B106]: Possible hardcoded password: 'clave-secreta-de-prueba'",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 22
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 52
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 53
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 60
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 61
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 72
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 73
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 81
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B106]: Possible hardcoded password: 't'",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 91
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 92
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 93
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B106]: Possible hardcoded password: 't'",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 99
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 126
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 127
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B106]: Possible hardcoded password: 'no-filtrar-esto'",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 109
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B106]: Possible hardcoded password: 'no-filtrar-esto'",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 110
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": 146
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 48.5 (grade A)",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.23/10 (>= 8.0)",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "Complexity",
+        "severity": "warning",
+        "message": "Complexity: Settings._validar_entorno_estricto has cyclomatic complexity 14 (grade C). Consider refactoring into smaller functions.",
+        "file": "src/settings.py",
+        "line": 66
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 3
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 4
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 5.71/10 (< 8.0). Run 'pylint smtp_canal_envio.py' for details.",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 78.0 (grade A)",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B105]: Possible hardcoded password: 'cambiar-por-un-secreto-seguro'",
+        "file": "src/settings.py",
+        "line": 10
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 50.2 (grade A)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.15/10 (>= 8.0)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.75/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 'clave-secreta-de-prueba'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 22
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 52
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 53
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 60
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 61
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 72
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 73
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 81
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 't'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 91
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 92
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 93
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 't'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 99
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 126
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 127
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 'no-filtrar-esto'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 109
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 'no-filtrar-esto'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 110
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 146
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 48.5 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.23/10 (>= 8.0)",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "adapters/smtp_canal_envio.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 3
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (101 > 100 characters)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": 4
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "warning",
+        "message": "⚠ Pylint score: 5.71/10 (< 8.0). Run 'pylint smtp_canal_envio.py' for details.",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/notificaciones/frameworks/adapters/smtp_canal_envio.py",
+        "line": null
+      }
+    ],
+    "frameworks/smtp.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 78.0 (grade A)",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 10.00/10 (>= 8.0)",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/shared/frameworks/smtp.py",
+        "line": null
+      }
+    ],
+    "inc8/test_us_8_1_7_smtp_por_materia.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 'clave-secreta-de-prueba'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 22
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 52
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 53
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 60
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 61
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 72
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 73
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 81
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 't'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 91
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 92
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 93
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 't'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 99
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 126
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 127
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 'no-filtrar-esto'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 109
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B106]: Possible hardcoded password: 'no-filtrar-esto'",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 110
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B101]: Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": 146
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 48.5 (grade A)",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.23/10 (>= 8.0)",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "tests/unit/inc8/test_us_8_1_7_smtp_por_materia.py",
+        "line": null
+      }
+    ],
+    "smtp/notificador_smtp.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.75/10 (>= 8.0)",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/identidad/frameworks/smtp/notificador_smtp.py",
+        "line": null
+      }
+    ],
+    "src/settings.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "Security [B105]: Possible hardcoded password: 'cambiar-por-un-secreto-seguro'",
+        "file": "src/settings.py",
+        "line": 10
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "warning",
+        "message": "Complexity: Settings._validar_entorno_estricto has cyclomatic complexity 14 (grade C). Consider refactoring into smaller functions.",
+        "file": "src/settings.py",
+        "line": 66
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 50.2 (grade A)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.15/10 (>= 8.0)",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/settings.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/settings.py",
+        "line": null
+      }
+    ]
+  }
+}

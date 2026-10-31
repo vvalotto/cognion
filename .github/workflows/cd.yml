@@ -8,8 +8,14 @@ on:
 
 jobs:
   build-and-deploy:
-    name: Build, deploy y healthcheck
+    name: Build, publicación y healthcheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Solo se usa al publicar la imagen en GHCR con una etiqueta (US-8.6.4)
+      packages: write
+    env:
+      IMAGEN: ghcr.io/${{ github.repository }}
     steps:
       - uses: actions/checkout@v7
 
@@ -20,8 +26,27 @@ jobs:
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
+      # En main solo se construye (verifica que la imagen compila). Con una etiqueta vX.Y.Z se publica en GHCR
+      # (US-8.6.4, ADR-025). La etiqueta `org.opencontainers.image.source` liga el paquete a este repositorio.
       - name: Build Docker image
-        run: docker build -t cognion:${{ github.sha }} .
+        run: |
+          docker build \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            -t cognion:${{ github.sha }} .
+
+      - name: Iniciar sesión en GHCR (solo etiquetas)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publicar la imagen en GHCR (solo etiquetas)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker tag cognion:${{ github.sha }} "$IMAGEN:${{ github.ref_name }}"
+          docker tag cognion:${{ github.sha }} "$IMAGEN:sha-${{ github.sha }}"
+          docker push "$IMAGEN:${{ github.ref_name }}"
+          docker push "$IMAGEN:sha-${{ github.sha }}"
+          echo "Imagen publicada: $IMAGEN:${{ github.ref_name }}" | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Migraciones de base de datos — alembic upgrade head corre ANTES del deploy,
       # no dentro del build de la imagen (ver PLAN-CM.md §11).
@@ -44,4 +69,4 @@ jobs:
       #     curl --fail https://<app>.fly.dev/health
 
       - name: Confirmar build exitoso
-        run: echo "Imagen cognion:${{ github.sha }} construida. Deploy pendiente de configuración de infraestructura."
+        run: echo "Imagen cognion:${{ github.sha }} construida. El despliegue en la VM es manual con deploy/gcp/desplegar.sh."

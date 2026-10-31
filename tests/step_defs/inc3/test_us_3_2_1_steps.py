@@ -243,12 +243,16 @@ def evaluacion_en_estado_finalizada(context):
 @given("una Evaluacion EnCurso cuya actividad ya pasó su fecha_cierre")
 def evaluacion_en_curso_actividad_por_cerrar(context):
     materia_id, pregunta_id, docente_headers_ = run_async(_crear_materia_con_opcion_multiple())
-    apertura = datetime.now(UTC) - timedelta(milliseconds=500)
-    cierre = apertura + timedelta(seconds=1.5)
-    actividad_id = run_async(_crear_actividad(materia_id, apertura, cierre, 1, docente_headers_))
+    # El estudiante se crea ANTES de abrir la ventana: hashear su contraseña es lento y, con una ventana de
+    # ~1 s entre crear la actividad e iniciar la evaluación, el test fallaba según la velocidad de la máquina.
     _estudiante_id, headers = run_async(crear_estudiante())
+    apertura = datetime.now(UTC) - timedelta(seconds=1)
+    cierre = apertura + timedelta(seconds=5)  # ventana de ~4 s para crear la actividad e iniciar
+    actividad_id = run_async(_crear_actividad(materia_id, apertura, cierre, 1, docente_headers_))
     evaluacion = run_async(_iniciar_evaluacion(actividad_id, headers))
-    time.sleep(2)  # deja pasar fecha_cierre antes de intentar RegistrarRespuesta
+    restante = (cierre - datetime.now(UTC)).total_seconds()
+    # deja pasar fecha_cierre antes de intentar RegistrarRespuesta
+    time.sleep(max(restante, 0) + 0.5)
     context["evaluacion"] = evaluacion
     context["pregunta_id"] = pregunta_id
     context["estudiante_headers"] = headers

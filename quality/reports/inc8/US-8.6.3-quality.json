@@ -1,0 +1,8 @@
+{
+  "us": "US-8.6.3",
+  "veredicto": "APROBADO (parte documental y de CI; la ejecución manual se registra en la bitácora)",
+  "tipo": "plan + prueba manual; sin código de producción",
+  "ci": {"workflow": ".github/workflows/imagen-smoke.yml", "run": "39976321310", "resultado": "success", "artefacto": "cognion-imagen, 100 MB comprimida, retención 1 día"},
+  "revision_del_plan": "aprobado por Víctor el 2026-10-24 con los valores propuestos: aviso de presupuesto de 5 USD y SSH abierto con clave",
+  "pendiente": "ejecución manual de los pasos 1 a 13, con bitácora en quality/reports/uat/inc8-gcp/bitacora-despliegue.md"
+}

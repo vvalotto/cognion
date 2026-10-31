@@ -1,0 +1,17 @@
+{
+  "us_id": "US-8.1.3",
+  "veredicto": "APROBADO",
+  "pylint": {"score": 10.0, "umbral": 8.0},
+  "ruff": "0 errores",
+  "mypy": "0 errores sobre 303 archivos",
+  "complejidad_ciclomatica": {"promedio": 5.2, "umbral": 10},
+  "mantenibilidad": {"src/settings.py": 53.96, "umbral": 20},
+  "cobertura": {"src/settings.py": 100.0, "umbral": 95.0},
+  "tests": {"nuevos": 14, "suite_unit_completa": "901 passed"},
+  "codeguard": {
+    "analysis_type": "full",
+    "checks_executed": 9,
+    "reporte": "quality/reports/inc8/US-8.1.3-codeguard.json",
+    "nota": "4 errores, todos de tooling (vulture/codespell no instalados, timeout de mypy software_limpio#70). Sin hallazgos de código."
+  }
+}

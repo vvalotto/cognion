@@ -50,6 +50,8 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 | Workflow de desarrollo | `docs/plans/WORKFLOW-DESARROLLO.md` | Procedimiento vigente para US, incrementos, Iteración 0 — Modelado. |
 | Procedimiento de UAT | `docs/plans/PROCEDIMIENTO-UAT.md` | Gate obligatorio antes de merge a main. |
 | Checklist de instalación/entorno | `docs/plans/CHECKLIST-INSTALACION.md` | Pasos de setup del entorno local. |
+| Guía de despliegue local | `docs/plans/DESPLIEGUE-LOCAL.md` | Instalar, arrancar, respaldar y diagnosticar Cognión en una máquina propia expuesta a la red local. |
+| Despliegue de prueba en GCP | `docs/plans/DESPLIEGUE-GCP.md` | Plan de instalación y prueba manual en una VM; los scripts vigentes están en `deploy/gcp/`. Nube en pausa. |
 | Plan de incrementos | `docs/rf/PLAN_v1.md` | Los 7 incrementos y su orden por riesgo. |
 | Modelo de dominio por BC | `docs/design/domain/BC-<bc>-modelo.md` (+ `-diagramas.html`/`-event-storming.html` opcionales) | Event storming aprobado — se crea en la Iteración 0 de cada incremento que introduce/extiende un BC. |
 | Diseño UX aprobado | `docs/design/ux/` | Gate obligatorio antes de código en `frontend/`. |

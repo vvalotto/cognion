@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "us_id": "US-8.6.3",
+    "us_title": "Plan de instalación y prueba manual del despliegue en GCP",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-23T15:10:18.669228+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 77500,
+    "effective_seconds": 77500,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-10-23T15:10:20.166934+00:00",
+      "completed_at": "2026-10-23T15:11:31.756261+00:00",
+      "elapsed_seconds": 71,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de Implementación",
+      "started_at": "2026-10-23T15:11:32.002124+00:00",
+      "completed_at": "2026-10-23T15:11:32.166086+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-23T15:11:32.359618+00:00",
+      "completed_at": "2026-10-24T12:41:57.938500+00:00",
+      "elapsed_seconds": 77425,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-10-24T12:41:58.180169+00:00",
+      "completed_at": "2026-10-24T12:41:58.475530+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación (revisión del plan)",
+      "started_at": "2026-10-24T12:41:58.706353+00:00",
+      "completed_at": "2026-10-24T12:41:58.946932+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 5,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

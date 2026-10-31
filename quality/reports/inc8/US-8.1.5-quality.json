@@ -1,0 +1,18 @@
+{
+  "us_id": "US-8.1.5",
+  "veredicto": "APROBADO",
+  "pylint": {"score": 9.96, "umbral": 8.0, "nota": "único mensaje R0903 too-few-public-methods, idéntico al de CrearUsuarioUseCase (norma del proyecto)"},
+  "ruff": "0 errores",
+  "mypy": "0 errores sobre 306 archivos",
+  "complejidad_ciclomatica": {"promedio": 2.7, "umbral": 10},
+  "mantenibilidad": {"use_case": 92.29, "cli": 71.36, "umbral": 20},
+  "cobertura": {"use_case": 100.0, "umbral": 95.0, "nota": "frameworks/ excluido de la cobertura del proyecto; el comando se prueba con 6 escenarios sobre ejecutar()"},
+  "tests": {"nuevos": 10, "suite_unit_completa": "916 passed"},
+  "verificacion_real": "tests/uat/inc8/verificar_migraciones.sh: 6/6 OK (migraciones + contraseña débil rechazada + alta + no duplica)",
+  "codeguard": {
+    "analysis_type": "full",
+    "checks_executed": 9,
+    "reporte": "quality/reports/inc8/US-8.1.5-codeguard.json",
+    "nota": "9 errores, todos de tooling (vulture/codespell no instalados, timeout de mypy software_limpio#70). Sin hallazgos de código."
+  }
+}

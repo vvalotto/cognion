@@ -5,6 +5,9 @@
 > cerrado 2026-07-31). Incremento 2 completo y validado (`BL-003`) — actualizado 2026-09-16
 > durante la revisión documental transversal del Incremento 5-ADJ (ver §5, nota que quedaba
 > "pendiente de formalizar" y ya estaba resuelta).**
+> **Actualizado 2026-10-26 (Iteración 8 del Incremento 8, hallazgo #6 de la UAT de `v0.9.0`):
+> Unidad temática y Tema pasan a ser dependientes — regla común en §2.3.1, que reutilizan
+> "Nueva actividad", "Nueva sesión en vivo" y los formularios de carga y edición.**
 > Usado como input de las specs US-IEDD de la Iteración 1 (`docs/specs/inc2/US-2.1.x`).
 >
 > Fuente: `docs/rf/RF_v1.md` (RF-04, RF-05, RF-06), `docs/design/domain/BC-banco-preguntas-modelo.md`
@@ -58,12 +61,38 @@ automático — sin pantalla propia para crear el banco, no hay decisión que to
 | Elemento | Detalle |
 |---|---|
 | Contexto | Breadcrumb con la materia seleccionada; contador de preguntas activas |
-| Filtros | Unidad temática, tema, dificultad, importancia — todos combinables, todos opcionales (`Todas`/`Todos` por defecto) |
+| Filtros | Unidad temática, tema, dificultad, importancia — todos combinables, todos opcionales (`Todas`/`Todos` por defecto). **Unidad temática y Tema son selects dependientes** (§2.3.1) |
 | Tabla | Columnas: texto de la pregunta (truncado), tipo (tag), unidad/tema, dificultad (tag por color), importancia (tag por color), acciones |
 | Acciones por fila | "Editar" (`#editar-pregunta`), "Eliminar" (`#eliminar-pregunta`) |
 | Acción primaria | "+ Nueva pregunta" → `#nueva-pregunta-tipo` |
 | Solo preguntas activas | Preguntas dadas de baja (INV-BP-04) no aparecen en esta tabla |
 | Paginación (`US-ADJ-03`) | Debajo de la tabla: números de página + "Anterior"/"Siguiente", mismo lenguaje visual que el resto de los controles (bordes/radios de `US-ADJ-01`). Tamaño de página fijo (20), ordenado por fecha de creación. Cambiar cualquier filtro vuelve a la página 1. Si el banco tiene 20 preguntas o menos, los controles no se muestran (o se muestran deshabilitados). |
+
+#### 2.3.1 Regla común Unidad temática → Tema
+
+Hallazgo #6 de la UAT de `v0.9.0`: con un banco real (340 preguntas, 10 unidades, 17 temas) el Tema
+ofrecía **todos** los temas del banco aunque se hubiera elegido una unidad. El prototipo aprobado
+mostraba el Tema como select con "Todos"; la `US-ADJ-02` lo había cambiado a un cuadro de texto con
+sugerencias independientes. Esta regla lo vuelve a un select y lo hace depender de la unidad.
+
+Las opciones salen de las **preguntas activas del banco** (no de un catálogo).
+
+| Situación | Unidad temática | Tema |
+|---|---|---|
+| Unidad en "Todas" | Lista de todas las unidades del banco | "Todos" + **todos** los temas del banco, sin repetir y ordenados |
+| Unidad elegida | La elegida | "Todos" + **solo los temas de esa unidad** |
+| Se cambia la unidad y el tema elegido no pertenece a la nueva | — | El Tema **vuelve a "Todos"** (no queda un valor que ya no se ofrece) |
+| Se elige un tema con la unidad en "Todas" | Sigue en "Todas" | El tema elegido filtra; no fuerza ninguna unidad |
+| "Limpiar filtros" | Vuelve a "Todas" | Vuelve a "Todos" |
+
+**Dónde aplica**
+
+| Pantalla | Control | Particularidad |
+|---|---|---|
+| Banco — filtros (§2.3) | Dos selects con "Todas"/"Todos" | Cambiar cualquiera vuelve a la página 1 |
+| Nueva actividad (`wireframes-actividad-evaluativa.md` §2.2) | Dos selects opcionales con "Todas"/"Todos" = sin restricción | Debajo se muestra cuántas preguntas activas cumplen la combinación |
+| Nueva sesión en vivo (`wireframes-actividad-evaluativa-en-vivo.md` §2.1) | Dos selects opcionales | Igual que Nueva actividad |
+| Nueva pregunta y Editar pregunta (§2.5, §2.6, §2.7) | **Combobox** (se escribe o se elige) | No hay "Todos": son campos obligatorios y debe poder crearse una unidad o un tema nuevo. Las sugerencias del Tema son **solo las de la unidad escrita o elegida**; si la unidad es nueva, el Tema no tiene sugerencias |
 
 ### 2.4 Nueva pregunta — elegir tipo (`#nueva-pregunta-tipo`)
 
@@ -81,7 +110,7 @@ diferenciados (§4 de `BC-banco-preguntas-modelo.md`), sin formulario único.
 
 | Elemento | Detalle |
 |---|---|
-| Campos | Texto (textarea), lista de opciones (texto + radio "es correcta"), botón "+ Agregar opción", unidad temática (select), tema (texto libre), dificultad (select Alto/Medio/Bajo), importancia (select Alto/Medio/Bajo) |
+| Campos | Texto (textarea), lista de opciones (texto + radio "es correcta"), botón "+ Agregar opción", unidad temática y tema (combobox dependientes, §2.3.1), dificultad (select Alto/Medio/Bajo), importancia (select Alto/Medio/Bajo) |
 | Validación de opciones | Mínimo 2 opciones, exactamente una marcada como correcta (INV-BP-02, INV-BP-03) — validación de cliente antes de enviar, la regla de negocio la aplica el backend |
 | Cada opción | Puede quitarse individualmente (✕), salvo que baje de 2 |
 | Acción primaria | "Guardar pregunta" — vuelve al banco filtrado |
@@ -103,7 +132,7 @@ diferenciados (§4 de `BC-banco-preguntas-modelo.md`), sin formulario único.
 
 | Elemento | Detalle |
 |---|---|
-| Formulario | Mismo formulario que la carga (2.5 u 2.6), según el tipo concreto de la pregunta editada, prellenado con sus valores actuales |
+| Formulario | Mismo formulario que la carga (2.5 u 2.6), según el tipo concreto de la pregunta editada, prellenado con sus valores actuales; Unidad temática y Tema como combobox dependientes (§2.3.1) |
 | Sin | Selector de tipo — el tipo no se puede cambiar una vez creada la pregunta (mismo criterio que 2.4) |
 | Acción primaria | "Guardar cambios" |
 

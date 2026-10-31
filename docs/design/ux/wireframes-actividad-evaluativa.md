@@ -61,13 +61,14 @@ Iteración 1; a nivel UX es el mismo punto de entrada).
 ### 2.2 Nueva actividad (`#doc-nueva-actividad`)
 
 **Actor:** Docente.
-**Comando:** `CrearActividadPeriodoAbierto(materia_id, fecha_apertura, fecha_cierre, cantidad_preguntas, cantidad_intentos_permitidos)`.
+**Comando:** `CrearActividadPeriodoAbierto(materia_id, titulo, fecha_apertura, fecha_cierre, cantidad_preguntas, cantidad_intentos_permitidos, comisiones_ids?, unidad_tematica?, tema?)`.
 
 | Elemento | Detalle |
 |---|---|
-| Campos | Apertura (fecha/hora), Cierre (fecha/hora), Cantidad de preguntas, Intentos permitidos por pregunta (default 1) |
+| Campos | Título, Apertura (fecha/hora), Cierre (fecha/hora), Cantidad de preguntas, Intentos permitidos por pregunta (default 1), Comisiones (casillas, opcional: sin selección = todas las de la materia), Unidad temática y Tema (opcionales, selects dependientes con "Todas"/"Todos" = sin restricción, regla en `wireframes-banco-preguntas.md` §2.3.1) |
+| Fechas | Se escriben en la **hora local del navegador** y se envían con su zona horaria: una actividad de 14:00 a 16:00 queda de 14:00 a 16:00 para quien la creó (hallazgo #7 de la UAT de `v0.9.0`) |
 | Validación de cliente | `fecha_apertura` < `fecha_cierre` (INV-AE-02, espejo del lado servidor); intentos ≥ 1 (INV-AE-03) |
-| Hint | Aclara que `cantidad_preguntas` no puede superar las preguntas activas del banco de la materia (INV-AE-01) — el número exacto disponible se muestra como referencia, la validación dura la hace el backend |
+| Hint | Aclara que `cantidad_preguntas` no puede superar las preguntas activas del banco de la materia (INV-AE-01) — el número exacto disponible se muestra como referencia y, con Unidad temática o Tema elegidos, cuenta solo las que cumplen esa combinación; la validación dura la hace el backend |
 | Hint | Aclara el sampleo aleatorio: cada estudiante recibe un set distinto (RF-12) |
 | Materia | Implícita por el contexto de navegación (mismo patrón que "Nueva pregunta" en Banco de Preguntas) — no es un campo editable en este formulario |
 | Acciones | "Crear actividad" / "Cancelar" |

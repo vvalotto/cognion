@@ -88,6 +88,28 @@ describe("EditarPregunta", () => {
     expect(screen.queryByText(/Elegir tipo/)).not.toBeInTheDocument()
   })
 
+  it("[Iteración 8] las sugerencias de Tema son solo las de la unidad de la pregunta y siguen a la unidad escrita", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(200, materiaResponse))
+      .mockResolvedValueOnce(jsonResponse(200, paginado(preguntasResponse)))
+
+    renderEdicion("p1")
+    await screen.findByDisplayValue(preguntaOpcionMultiple.texto)
+    const opcionesTema = () =>
+      [...(document.getElementById("editar-tema-sugerencias")?.querySelectorAll("option") ?? [])].map(
+        (o) => o.getAttribute("value"),
+      )
+
+    // La pregunta es de "Unidad 3": solo se sugieren los temas de esa unidad (no "DDD", de "Unidad 2").
+    await waitFor(() => expect(opcionesTema()).toEqual(["Arquitectura"]))
+
+    // Al escribir otra unidad del banco, las sugerencias pasan a ser las suyas.
+    const user = userEvent.setup()
+    await user.clear(screen.getByLabelText("Unidad temática"))
+    await user.type(screen.getByLabelText("Unidad temática"), "Unidad 2")
+    expect(opcionesTema()).toEqual(["DDD"])
+  })
+
   it("edición exitosa de Opción Múltiple persiste los cambios y vuelve al banco", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, materiaResponse))

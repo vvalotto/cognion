@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "us_id": "US-8.1.3",
+    "us_title": "Validación fail-fast de settings de producción",
+    "us_points": 2,
+    "producto": "backend",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-16T14:27:08.487017+00:00",
+    "completed_at": "2026-10-16T14:29:59.143497+00:00",
+    "total_elapsed_seconds": 170,
+    "effective_seconds": 170,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-10-16T14:27:26.977754+00:00",
+      "completed_at": "2026-10-16T14:27:27.106239+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "BDD-omitida",
+      "started_at": "2026-10-16T14:27:27.233692+00:00",
+      "completed_at": "2026-10-16T14:27:27.362543+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-10-16T14:27:27.491187+00:00",
+      "completed_at": "2026-10-16T14:27:27.619586+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementacion",
+      "started_at": "2026-10-16T14:27:27.756838+00:00",
+      "completed_at": "2026-10-16T14:28:20.475010+00:00",
+      "elapsed_seconds": 52,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests",
+      "started_at": "2026-10-16T14:28:20.606683+00:00",
+      "completed_at": "2026-10-16T14:28:20.764962+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "na",
+      "started_at": "2026-10-16T14:28:20.899141+00:00",
+      "completed_at": "2026-10-16T14:28:21.029045+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "na",
+      "started_at": "2026-10-16T14:28:21.160346+00:00",
+      "completed_at": "2026-10-16T14:28:21.294364+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality",
+      "started_at": "2026-10-16T14:28:21.428906+00:00",
+      "completed_at": "2026-10-16T14:29:58.435664+00:00",
+      "elapsed_seconds": 97,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Docs",
+      "started_at": "2026-10-16T14:29:58.576925+00:00",
+      "completed_at": "2026-10-16T14:29:58.727045+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte",
+      "started_at": "2026-10-16T14:29:58.864600+00:00",
+      "completed_at": "2026-10-16T14:29:59.007732+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 10,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

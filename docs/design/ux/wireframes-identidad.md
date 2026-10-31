@@ -62,7 +62,8 @@ dedicado a identidad visual sin impacto funcional.
 | Elemento | Detalle |
 |---|---|
 | Contexto visible | Tag con la comisión a la que se va a unir (`comisión.materia` + identificador), tomada del `token` de la URL — refuerza que la asignación es automática (RF-01, INV-ID-05) |
-| Campos | Nombre completo, Email, Contraseña, Confirmar contraseña |
+| Campos | Nombre completo, Email, **Repetir email**, Contraseña, Confirmar contraseña |
+| Validación de email | **Repetir email** debe coincidir con Email (sin espacios en los bordes y sin distinguir mayúsculas); "Los emails no coinciden." antes de enviar — mismo criterio que el autoregistro (`wireframes-identidad-autoservicio.md` §5.2, hallazgo #5 de la UAT de `v0.9.0`) |
 | Validación de contraseña | Mínimo 8 caracteres (INV-ID-11); confirmar contraseña debe coincidir — validación de cliente antes de enviar, la regla de negocio la aplica el backend |
 | Acción primaria | "Crear cuenta" |
 | Link secundario | "¿Ya tenés cuenta? Iniciar sesión" — cubre el caso de que alguien reabra un link de invitación después de haberse registrado |

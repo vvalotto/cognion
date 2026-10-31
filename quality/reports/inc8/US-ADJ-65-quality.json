@@ -1,0 +1,26 @@
+{
+  "us": "US-ADJ-65",
+  "veredicto": "APROBADO",
+  "tipo": "mejora de usabilidad de un comando operativo (src/identidad/frameworks/cli/bootstrap_administrador.py)",
+  "tests": {
+    "suite_completa": "2151 pasaron, 0 fallos (unit + integration + step_defs contra la base descartable cognion_test_adj65)",
+    "propios": "10 unitarios nuevos (+10 de US-8.1.5 sin cambios), 4 de integración bajo una terminal real (pty.fork), 7 casos BDD",
+    "verificacion_de_que_detectan_el_error": "con el comando anterior (una sola contraseña) fallan los 4 tests de terminal real"
+  },
+  "cobertura": {
+    "total": "97,22 %",
+    "bootstrap_administrador.py": "fuera de la medición: el proyecto omite src/*/frameworks/*; cubierto por 20 unitarios, 4 de terminal real y 7 BDD"
+  },
+  "pylint": "10,00/10",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "ruff_black_isort": "limpio",
+  "complejidad": "ejecutar 8 (B) tras extraer _crear; la primera versión daba 11 (C) y 8 returns, resuelto; MI 65,75 (A)",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "advertencias_reales": 0,
+    "ruido_de_herramienta": "timeout de mypy de 10 s en el hook (mypy directo: 0 errores) y vulture/codespell no instalados"
+  },
+  "designreviewer": "0 blocking; 362 advertencias en todo src/",
+  "base_descartable": "cognion_test_adj65 (se elimina al cerrar la iteración); cognion, cognion_local y cognion_uat no se tocaron",
+  "hallazgo_al_probar": "el helper de la terminal simulada confundía dos pedidos iguales seguidos (adelantaba la escritura y el eco mostraba la contraseña); corregido para esperar cada texto después de lo ya leído"
+}

@@ -1,0 +1,16 @@
+{
+  "us_id": "US-8.1.4",
+  "veredicto": "APROBADO",
+  "pylint": {"score": 10.0, "umbral": 8.0},
+  "ruff": "0 errores",
+  "mypy": "0 errores sobre 303 archivos",
+  "tests": {"nuevos": 5, "suite_unit_completa": "906 passed"},
+  "verificacion_real": "tests/uat/inc8/verificar_migraciones.sh: 3/3 OK contra base descartable (vacía→head c4d1f9a27b60, idempotencia, base inaccesible → exit != 0)",
+  "codeguard": {
+    "analysis_type": "full",
+    "checks_executed": 9,
+    "reporte": "quality/reports/inc8/US-8.1.4-codeguard.json",
+    "nota": "2 errores, ambos de tooling (vulture/codespell no instalados, timeout de mypy software_limpio#70). Sin hallazgos de código."
+  },
+  "nota": "No se modificó código de src/; cobertura y complejidad no aplican."
+}

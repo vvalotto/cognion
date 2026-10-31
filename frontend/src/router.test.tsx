@@ -767,6 +767,7 @@ describe("router (integración)", () => {
       await screen.findByRole("heading", { name: "Creá tu cuenta de Docente" })
       await user.type(screen.getByLabelText("Nombre completo"), "Nico")
       await user.type(screen.getByLabelText("Email"), "nico@fiuner.edu.ar")
+      await user.type(screen.getByLabelText("Repetir email"), "nico@fiuner.edu.ar")
       await user.type(screen.getByLabelText("Contraseña"), "Password#123x")
       await user.type(screen.getByLabelText("Confirmar contraseña"), "Password#123x")
       await user.click(screen.getByRole("button", { name: "Crear cuenta" }))

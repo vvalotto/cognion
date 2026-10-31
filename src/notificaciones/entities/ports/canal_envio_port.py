@@ -7,14 +7,24 @@ medios en el futuro sin tocar el Use Case que lo invoca (`BC-notificaciones-mode
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from uuid import UUID
 
 
 class CanalEnvioPort(ABC):
     """Envía un mensaje de notificación por el canal concreto que implemente el adapter."""
 
     @abstractmethod
-    async def enviar(self, destinatario_email: str, asunto: str, cuerpo: str) -> None:
+    async def enviar(
+        self,
+        destinatario_email: str,
+        asunto: str,
+        cuerpo: str,
+        materia_id: UUID | None = None,
+    ) -> None:
         """Envía el mensaje al destinatario indicado.
+
+        `materia_id` identifica la materia a la que pertenece el mensaje, para que el adapter use
+        la cuenta de envío de esa materia (`ADR-023`); `None` usa la cuenta global.
 
         No captura ni convierte excepciones — el manejo de fallos de envío ("loguear y
         continuar", `BC-notificaciones-modelo.md` §6 decisión 4) es responsabilidad del Use

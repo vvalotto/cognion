@@ -203,9 +203,13 @@ class FakeInvitacionRepository(InvitacionRepositoryPort):
 class FakeNotificador(NotificadorPort):
     def __init__(self) -> None:
         self.enviados: list[tuple[str, str]] = []
+        self.materias: list[UUID | None] = []
 
-    async def enviar_invitacion(self, email_destinatario: str, token: str) -> None:
+    async def enviar_invitacion(
+        self, email_destinatario: str, token: str, materia_id: UUID | None = None
+    ) -> None:
         self.enviados.append((email_destinatario, token))
+        self.materias.append(materia_id)
 
 
 class FakeJWTIssuer(JWTIssuerPort):

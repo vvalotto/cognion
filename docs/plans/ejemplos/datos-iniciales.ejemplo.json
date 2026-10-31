@@ -1,0 +1,27 @@
+{
+  "materia": "Materia de ejemplo",
+  "preguntas": [
+    {
+      "tipo": "opcion_multiple",
+      "texto": "¿Cuál de estos es un sistema de control de versiones?",
+      "unidad_tematica": "Gestión de la configuración",
+      "tema": "Herramientas",
+      "dificultad": "bajo",
+      "importancia": "medio",
+      "opciones": [
+        {"texto": "Git", "es_correcta": true},
+        {"texto": "PostgreSQL", "es_correcta": false},
+        {"texto": "Docker", "es_correcta": false}
+      ]
+    },
+    {
+      "tipo": "verdadero_falso",
+      "texto": "Un commit atómico agrupa cambios no relacionados entre sí.",
+      "unidad_tematica": "Gestión de la configuración",
+      "tema": "Buenas prácticas",
+      "dificultad": "bajo",
+      "importancia": "medio",
+      "respuesta_correcta": false
+    }
+  ]
+}

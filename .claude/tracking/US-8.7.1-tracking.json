@@ -1,0 +1,167 @@
+{
+  "metadata": {
+    "us_id": "US-8.7.1",
+    "us_title": "Carga de datos iniciales (materias y preguntas) desde archivos JSON o Markdown",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-10-24T19:00:28.742363+00:00",
+    "completed_at": "2026-10-24T20:28:55.173068+00:00",
+    "total_elapsed_seconds": 5306,
+    "effective_seconds": 5306,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de Contexto",
+      "started_at": "2026-10-24T19:00:28.860090+00:00",
+      "completed_at": "2026-10-24T19:01:04.019683+00:00",
+      "elapsed_seconds": 35,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 1,
+      "phase_name": "Escenarios BDD",
+      "started_at": "2026-10-24T19:01:04.132479+00:00",
+      "completed_at": "2026-10-24T19:01:04.262574+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Generación del Plan de Implementación",
+      "started_at": "2026-10-24T19:02:30.722509+00:00",
+      "completed_at": "2026-10-24T19:03:24.107353+00:00",
+      "elapsed_seconds": 53,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-10-24T19:03:24.228545+00:00",
+      "completed_at": "2026-10-24T19:05:28.121789+00:00",
+      "elapsed_seconds": 123,
+      "status": "completed",
+      "tasks": [
+        {
+          "task_id": "task_001",
+          "task_name": "Caso de uso",
+          "task_type": "dominio",
+          "estimated_minutes": 10.0,
+          "started_at": "2026-10-24T19:04:39.084565+00:00",
+          "completed_at": "2026-10-24T19:04:39.236254+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -10.0,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task_002",
+          "task_name": "Importadores JSON y Markdown",
+          "task_type": "infra",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-10-24T19:04:39.371323+00:00",
+          "completed_at": "2026-10-24T19:05:04.065677+00:00",
+          "elapsed_seconds": 24,
+          "actual_minutes": 0.4,
+          "variance_minutes": -19.6,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "task_003",
+          "task_name": "Comando CLI",
+          "task_type": "infra",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-10-24T19:05:04.282522+00:00",
+          "completed_at": "2026-10-24T19:05:27.998714+00:00",
+          "elapsed_seconds": 23,
+          "actual_minutes": 0.38,
+          "variance_minutes": -19.62,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests Unitarios",
+      "started_at": "2026-10-24T19:05:41.939102+00:00",
+      "completed_at": "2026-10-24T19:06:58.680508+00:00",
+      "elapsed_seconds": 76,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Tests de Integración",
+      "started_at": "2026-10-24T19:07:47.936850+00:00",
+      "completed_at": "2026-10-24T19:09:41.054972+00:00",
+      "elapsed_seconds": 113,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 6,
+      "phase_name": "Validación BDD",
+      "started_at": "2026-10-24T19:10:34.648649+00:00",
+      "completed_at": "2026-10-24T19:11:16.908002+00:00",
+      "elapsed_seconds": 42,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality Gates",
+      "started_at": "2026-10-24T19:11:31.946342+00:00",
+      "completed_at": "2026-10-24T19:31:36.976649+00:00",
+      "elapsed_seconds": 1205,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte final",
+      "started_at": "2026-10-24T20:28:54.866092+00:00",
+      "completed_at": "2026-10-24T20:28:55.066685+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 3,
+    "completed_tasks": 3,
+    "total_phases": 9,
+    "estimated_total_minutes": 50.0,
+    "actual_total_minutes": 0.78,
+    "variance_minutes": -49.22,
+    "variance_percent": -98.43
+  }
+}

@@ -33,10 +33,12 @@ async function completarFormulario(
   email: string,
   password = "Password#123x",
   confirmar = password,
+  repetirEmail = email,
 ) {
   const user = userEvent.setup()
   await user.type(screen.getByLabelText("Nombre completo"), "Nico")
   await user.type(screen.getByLabelText("Email"), email)
+  await user.type(screen.getByLabelText("Repetir email"), repetirEmail)
   await user.type(screen.getByLabelText("Contraseña"), password)
   await user.type(screen.getByLabelText("Confirmar contraseña"), confirmar)
   await user.click(screen.getByRole("button", { name: "Crear cuenta" }))
@@ -96,6 +98,22 @@ describe("AutoregistroDocente", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "La contraseña debe tener al menos 12 caracteres.",
     )
+  })
+
+  it("emails que no coinciden muestran error de cliente sin llamar al backend (hallazgo #5 de la UAT)", async () => {
+    renderPantalla()
+    await completarFormulario("est2.uat@test.com", "Password#123x", "Password#123x", "est2.uar@test.com")
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Los emails no coinciden.")
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it("el repetido ignora mayúsculas y espacios en los bordes y deja registrar", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(201, { id: "u1", email: "nico@fiuner.edu.ar" }))
+    renderPantalla()
+    await completarFormulario("nico@fiuner.edu.ar", "Password#123x", "Password#123x", " Nico@Fiuner.edu.ar ")
+
+    expect(await screen.findByText("Autoregistro exito")).toBeInTheDocument()
   })
 
   it("contraseñas que no coinciden muestran error de cliente sin llamar al backend", async () => {
