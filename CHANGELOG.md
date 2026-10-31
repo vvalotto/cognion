@@ -9,13 +9,45 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
-### Fixed
-- Logging local (`US-ADJ-64`): `EMAIL_MODO=consola` vuelve a dejar los emails en la salida del servidor (la aplicación ahora configura su logging) y los tokens de las URLs de acceso se registran como `***`. Nueva variable `LOG_LEVEL`.
-- Primer Administrador (`US-ADJ-65`): `bootstrap_administrador` pide la contraseña dos veces cuando se escribe por terminal (hasta 3 intentos) y no la pide si ya hay un Administrador operativo.
-- Fechas de actividades (hallazgo #7 de la UAT de `v0.9.0`): `NuevaActividad` y `ExtenderPlazo` envían la hora con zona; antes una actividad abría y cerraba 3 horas antes en Argentina.
+## [0.9.0] - 2026-10-31
+
+Primera versión instalable y operable por un docente en su propia máquina, **sin nube** (cierre de
+baseline `BL-013`, Incremento 8 — Despliegue y operación). El despliegue en la nube (Fly.io o GCP)
+quedó diferido; sus Issues están en el Milestone "Incremento 8 — Despliegue en la nube (diferido)".
 
 ### Added
-- Comando `cargar_datos_iniciales` (`US-8.7.1`): carga materias y preguntas desde archivos JSON o cuestionarios Markdown, de forma idempotente y con validación previa por archivo. Guía en `docs/plans/DESPLIEGUE-LOCAL.md` §4b.
+- **Despliegue local** (Iteración 5, `US-8.5.1` a `8.5.4`): `scripts/local/levantar.sh` y `detener.sh`
+  (base propia `cognion_local`, `.env.local` fuera de git, Administrador por terminal, URLs para los
+  alumnos), `respaldar.sh` y `restaurar.sh` (`pg_dump` con `sha256`, rotación, ensayo de restauración
+  en una base temporal), `ENTORNO=local` y `EMAIL_MODO=consola`. Guía en `docs/plans/DESPLIEGUE-LOCAL.md`.
+- **Artefacto desplegable** (Iteración 1, `US-8.1.1` a `8.1.7`): CORS configurable por entorno, URL base
+  de la API y del WebSocket resuelta en el build, `ENTORNO` con validación que falla al arrancar,
+  migraciones como `release_command`, comando `bootstrap_administrador`, `src/servidor.py` (sirve el
+  frontend y monta la API bajo `/api`) y cuentas SMTP por materia.
+- **Carga de datos iniciales** (`US-8.7.1`): comando `cargar_datos_iniciales`, que carga materias y
+  preguntas desde archivos JSON o cuestionarios Markdown, de forma idempotente y con validación previa
+  por archivo.
+- **Scripts de despliegue en GCP** (Iteración 6, `US-8.6.2` y `8.6.4`, plan ejecutado a mano en
+  `US-8.6.3`): `deploy/gcp/` con composición de servicios, `aprovisionar.sh`, `destruir.sh`,
+  `desplegar.sh` y `cognion.sh desplegar|rollback`; la imagen se publica en GHCR al crear una etiqueta
+  `vX.Y.Z`. Verificados contra una VM real, que se destruyó después.
+- **Decisiones**: `ADR-021` a `ADR-025` (destino de producción, backup, SMTP por materia, dominio y
+  despliegue de prueba en GCP). `ADR-021` y `ADR-024` quedan en revisión.
+- Variable `LOG_LEVEL`, campo "Repetir email" en los tres registros, favicon y título de la pestaña.
+
+### Changed
+- Unidad temática → Tema dependientes, con "Todas/Todos", en los filtros del banco, "Nueva actividad",
+  "Nueva sesión en vivo" y, como sugerencias, en cargar y editar pregunta (`wireframes-banco-preguntas.md`
+  §2.3.1). El Tema de los filtros pasa de cuadro de texto a select.
+- `respaldar.sh` nombra el archivo con el de la base (`<base>-<fecha>.dump`).
+
+### Fixed
+- Logging local (`US-ADJ-64`): `EMAIL_MODO=consola` vuelve a dejar los emails en la salida del servidor
+  (la aplicación ahora configura su logging) y los tokens de las URLs de acceso se registran como `***`.
+- Primer Administrador (`US-ADJ-65`): `bootstrap_administrador` pide la contraseña dos veces cuando se
+  escribe por terminal (hasta 3 intentos) y no la pide si ya hay un Administrador operativo.
+- Fechas de actividades (hallazgo #7 de la UAT de `v0.9.0`): `NuevaActividad` y `ExtenderPlazo` envían la
+  hora con zona; antes una actividad abría y cerraba 3 horas antes en Argentina.
 
 ## [0.8.1] - 2026-10-15
 
