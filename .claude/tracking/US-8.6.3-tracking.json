@@ -4,11 +4,12 @@
     "us_title": "Plan de instalación y prueba manual del despliegue en GCP",
     "us_points": 5,
     "producto": "cognion",
-    "tracking_version": "1.0"
+    "tracking_version": "1.0",
+    "nota_depuracion": "Cierre manual 2026-11-04: el tracker quedó abierto tras pausar la Iteración 6 (GCP); completed_at ajustado al fin de la última fase. La Fase 3 (77425 s) abarca una noche de inactividad y sobrestima el tiempo activo real."
   },
   "timeline": {
     "started_at": "2026-10-23T15:10:18.669228+00:00",
-    "completed_at": null,
+    "completed_at": "2026-10-24T12:41:58.946932+00:00",
     "total_elapsed_seconds": 77500,
     "effective_seconds": 77500,
     "paused_seconds": 0
@@ -76,7 +77,7 @@
     "completed_tasks": 0,
     "total_phases": 5,
     "estimated_total_minutes": 0,
-    "actual_total_minutes": 0,
+    "actual_total_minutes": 1292,
     "variance_minutes": 0,
     "variance_percent": 0.0
   }
