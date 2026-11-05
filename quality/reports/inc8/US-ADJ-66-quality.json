@@ -1,0 +1,26 @@
+{
+  "us": "US-ADJ-66",
+  "veredicto": "APROBADO",
+  "tipo": "mejora de seguridad de infraestructura compartida (src/shared/frameworks/smtp.py); sin cambios en dominio ni casos de uso",
+  "tests": {
+    "suite_completa": "2169 pasaron, 0 fallos (unit + integration + step_defs, base descartable cognion_adj66_descartable)",
+    "propios": "8 unitarios, 3 de integración (SmtpCanalEnvio y SmtpNotificador reales), 7 escenarios BDD; servidor SMTP de prueba con TLS y certificados generados con cryptography, sin internet",
+    "verificacion_de_que_detectan_el_error": "con el código anterior (starttls() sin contexto) fallan 4 de los 8 unitarios"
+  },
+  "cobertura": {
+    "total": "97.22 %",
+    "smtp.py": "fuera de la medición: el proyecto omite src/*/frameworks/*; cubierto por 8 unitarios, 3 de integración y 7 BDD"
+  },
+  "pylint": "10,00/10",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "ruff_black_isort": "limpio",
+  "complejidad": "máx A (3); MI 76,42 (A)",
+  "bandit": "sin problemas (corrida directa)",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "advertencias_reales": 0,
+    "ruido_de_herramienta": "timeouts de 10 s en bandit y mypy (corridos directo: limpios); vulture y codespell no instalados"
+  },
+  "base_descartable": "cognion_adj66_descartable, eliminada al terminar; cognion, cognion_local y cognion_uat no se tocaron",
+  "hallazgo_de_fase_0": "certifi era solo transitiva de httpx (desarrollo) y la imagen se construye sin dependencias de desarrollo: se declaró dependencia directa en pyproject.toml"
+}

@@ -12,7 +12,7 @@
 Una VM `e2-micro` de la capa gratuita corre tres contenedores (aplicación, PostgreSQL y Caddy) con HTTPS real sobre un subdominio de DuckDNS.
 Se instala **a mano, una vez**, con bitácora. Lo que funcione se convierte después en scripts (`US-8.6.4`) y en el runbook (`US-8.6.6`).
 
-**No cubre:** alta disponibilidad, datos reales de alumnos (solo cuentas de prueba, `ADR-025`), emails reales (`EMAIL_MODO=consola`), acceso institucional,
+**No cubre:** alta disponibilidad, datos reales de alumnos (solo cuentas de prueba, `ADR-025`), emails reales por defecto (`EMAIL_MODO=consola`; se activan con el Paso 11b), acceso institucional,
 backup (`US-8.6.5`) ni mediciones con criterios de go/no-go (`US-8.6.7`; acá solo se toman mediciones tempranas, informativas).
 
 ---
@@ -189,6 +189,18 @@ curl -fsS https://<DOMINIO>/api/health
 ```
 - **Éxito:** el certificado es válido (sin `-k`), `/api/health` responde por HTTPS y el login del Administrador funciona **desde el celular** de Víctor.
 - Se confirma además que `Copiar link` de invitación funciona (necesita contexto seguro, `ADR-025`).
+
+### Paso 11b — Emails reales con Gmail (opcional, **preparado** el 2026-11-05, sin probar en la VM)
+Por defecto los emails quedan en el log (`EMAIL_MODO=consola`). Para enviarlos de verdad con una cuenta de Gmail (`ADR-023`):
+```bash
+./cognion.sh email                          # comprueba que el 587 salga, pide usuario y contraseña de aplicación sin eco, reinicia la app
+./cognion.sh email probar <tu_correo>       # envía un email de prueba con el código de la imagen desplegada
+./cognion.sh email consola                  # revierte: vuelve a dejar los emails en el log
+```
+- **Antes:** generar la contraseña de aplicación (verificación en 2 pasos + `https://myaccount.google.com/apppasswords`) y probarla desde la Mac con `scripts/probar_smtp.py`.
+- **Éxito:** `email probar` informa "Enviado" y el mensaje llega a la bandeja. Si el paso del puerto falla, GCP bloquea la salida: el código solo habla STARTTLS en el 587 (el 25 está bloqueado por GCP, no verificado).
+- La contraseña vive solo en el `.env` de la VM (permisos 600); `desplegar.sh` no lo sobrescribe y nunca va al repo.
+- **Certificado:** el STARTTLS valida la cadena y el nombre del servidor con el bundle de `certifi` (`US-ADJ-66`, Issue #586). Si el envío falla con "No se pudo verificar el certificado", el servidor de correo no presenta un certificado de una autoridad pública para ese nombre.
 
 ### Paso 12 — Verificación de la composición y reinicio real (**probado** el 2026-10-24)
 En la VM:

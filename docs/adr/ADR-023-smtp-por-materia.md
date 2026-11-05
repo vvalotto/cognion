@@ -41,3 +41,12 @@ materia (recuperación de contraseña) usan la cuenta global.
   reemplaza el código `smtplib` duplicado de Notificaciones e Identidad.
 - Apertura, cierre e invitación envían con la materia; la recuperación de contraseña usa la cuenta global.
 
+## Validación del certificado (`US-ADJ-66`, 2026-11-05)
+
+- El STARTTLS valida la cadena de certificados y el nombre del servidor (`host` de la cuenta de la materia o de la global) con un
+  contexto TLS armado sobre el bundle de `certifi`, declarado como dependencia directa porque la imagen se construye sin
+  dependencias de desarrollo. Si no se puede verificar, el envío falla **antes** de transmitir usuario, contraseña o mensaje, y el
+  log registra host y motivo, nunca secretos.
+- No hay variable para desactivar la validación. Un servidor con certificado propio (no emitido por una autoridad pública) exigiría
+  incorporar esa autoridad al almacén, decisión que se tomaría en otra US.
+- Solo aplica a cuentas con usuario (las únicas que usan STARTTLS); el servidor local de pruebas sin autenticación no cambia.

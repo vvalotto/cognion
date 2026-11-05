@@ -9,9 +9,12 @@ from __future__ import annotations
 import asyncio
 import logging
 import smtplib
+import ssl
 from dataclasses import dataclass
 from email.message import EmailMessage
 from uuid import UUID
+
+import certifi
 
 from src.settings import settings
 
@@ -65,9 +68,34 @@ def _enviar_sync(cuenta: CuentaSmtp, destinatario: str, asunto: str, cuerpo: str
 
     with smtplib.SMTP(cuenta.host, cuenta.port) as servidor:
         if cuenta.user:
-            servidor.starttls()
+            _iniciar_tls(servidor, cuenta.host)
             servidor.login(cuenta.user, cuenta.password)
         servidor.send_message(mensaje)
+
+
+def _contexto_tls() -> ssl.SSLContext:
+    """Contexto TLS que verifica la cadena de certificados y el nombre del servidor (`US-ADJ-66`).
+
+    Usa el bundle de `certifi` y no el almacén del sistema, para que Mac, imagen Docker y CI den el
+    mismo resultado. Es la costura de prueba: los tests le inyectan una autoridad propia.
+    """
+    return ssl.create_default_context(cafile=certifi.where())
+
+
+def _iniciar_tls(servidor: smtplib.SMTP, host: str) -> None:
+    """Negocia STARTTLS validando el certificado; si no es verificable, registra y re-lanza.
+
+    Falla antes de enviar usuario, contraseña o mensaje. El log lleva host y motivo, nunca secretos.
+    """
+    try:
+        servidor.starttls(context=_contexto_tls())
+    except ssl.SSLCertVerificationError as error:
+        logger.error(
+            "No se pudo verificar el certificado del servidor SMTP %s: %s",
+            host,
+            error.verify_message,
+        )
+        raise
 
 
 async def enviar_email(
