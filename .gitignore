@@ -56,3 +56,6 @@ tests/uat/datos-reales/
 
 # UAT de la versión local (guion en quality/reports/uat/inc8): secretos de la base de prueba
 .env.uat
+
+# Credenciales SMTP reales para scripts/probar_smtp.py (la plantilla .env.smtp.example sí se versiona)
+.env.smtp
