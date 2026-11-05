@@ -9,6 +9,26 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-11-05
+
+Mantenimiento (cierre de baseline `BL-014`): seguridad de dependencias y correo real para el despliegue en GCP.
+Sin funcionalidad nueva ni migraciones; es la versión que se despliega en la VM de GCP.
+
+### Security
+- **El envío de email valida el certificado del servidor SMTP** (`US-ADJ-66`): el STARTTLS verifica la cadena y el nombre con el
+  bundle de `certifi` y falla antes de enviar usuario, contraseña o mensaje. `certifi` pasa a dependencia directa.
+- **Dependencias**: se resuelven 48 de las 51 alertas de Dependabot (1 crítica, 14 altas) en `uv.lock` (`certifi`, `black`,
+  `filelock`, `virtualenv`, `pylint`) y en el frontend (`vite`, `vitest`, `shadcn`, override de `minimatch`). Quedan 3 bajas de
+  `deepmerge`, sin versión corregida.
+
+### Added
+- **Correo real para GCP**: `scripts/probar_smtp.py` y `.env.smtp.example` (prueba de envío con Gmail y contraseña de aplicación),
+  `deploy/gcp/cognion.sh email|email probar|email consola` y el Paso 11b de `docs/plans/DESPLIEGUE-GCP.md`.
+
+### Changed
+- Herramientas de desarrollo: `@testing-library/user-event`, `@playwright/test`, `oxlint` 1.90 y `actions/upload-artifact` v7.
+  `oxlint` suma 51 advertencias de reglas de React (no son errores).
+
 ## [0.9.0] - 2026-10-31
 
 Primera versión instalable y operable por un docente en su propia máquina, **sin nube** (cierre de
