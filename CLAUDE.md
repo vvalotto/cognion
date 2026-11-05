@@ -1265,6 +1265,16 @@ máquina propia sin nube. Sin RF propio, no mueve la matriz de trazabilidad. Mer
 `v0.9.0` (MINOR, decisión de Víctor) ejecutados el mismo día; el tag publica la imagen en GHCR. 17 Issues
 quedaron diferidos al Milestone nuevo (nube, backup, runbook, mediciones, `US-ADJ-63`).
 
+**`BL-014` — Mantenimiento: seguridad, dependencias y correo real para GCP, cerrada 2026-11-05**
+(`.cm/baselines/BL-014-mantenimiento-seguridad-y-correo-gcp.md`), tag `v0.9.1` (PATCH). Se abre al decidir instalar Cognión en la
+cuenta de GCP de Víctor empezando por el envío de mails: `desplegar.sh <versión>` baja `ghcr.io/vvalotto/cognion:vX.Y.Z`, que solo
+publica el CD al subir un tag, y `v0.9.0` era anterior a lo que se quería desplegar. 48 de 51 alertas de Dependabot resueltas
+(quedan 3 bajas de `deepmerge`, sin parche); `US-ADJ-66` (Issue #586, PR #587): el STARTTLS valida el certificado del servidor SMTP
+con `certifi` (dependencia directa); correo con **Gmail y contraseña de aplicación** (`scripts/probar_smtp.py`, `.env.smtp` ignorado por
+git, `cognion.sh email` en la VM, Paso 11b de `DESPLIEGUE-GCP.md`, probado desde la Mac, sin probar en la VM). 2169 tests,
+`designreviewer` 0 CRITICAL, `architectanalyst` 8 críticos (mismo "Zone of Pain" aceptado). Sin RF ni matriz. **Próximo:** crear la VM
+de GCP con `v0.9.1` y activar el correo; Iteración 2 del Incremento 7 (RF-07); o RF-18.
+
 **Higiene de repositorio — análisis 2026-09-30, ejecución en curso.** Relevamiento de
 branches locales, worktrees, PRs abandonados y cola de Dependabot, a pedido de Víctor. Plan
 en 7 puntos, ejecutándose de a uno:

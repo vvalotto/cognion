@@ -5,6 +5,10 @@
 #   cognion.sh migrar          aplica las migraciones (paso explícito; la aplicación nunca migra al arrancar, US-8.1.4)
 #   cognion.sh administrador   crea el primer Administrador (nombre y email por ADMIN_NOMBRE/ADMIN_EMAIL o se piden;
 #                              la contraseña se pide por terminal sin eco, o ADMIN_PASSWORD en una corrida no interactiva)
+#   cognion.sh email           activa el envío real de emails por SMTP (pide usuario y contraseña de aplicación por
+#                              terminal sin eco, comprueba que el puerto 587 salga desde la VM y reinicia la aplicación)
+#   cognion.sh email probar <destino>  envía un email de prueba con el código de la imagen desplegada
+#   cognion.sh email consola   vuelve a dejar los emails en el log (sin SMTP)
 #   cognion.sh estado          muestra los servicios, las versiones y consulta /api/health
 #   cognion.sh desplegar <imagen>  baja la imagen, respalda si puede, migra con la imagen nueva (la vieja sigue sirviendo),
 #                              la reemplaza y espera la salud; si no responde vuelve sola a la anterior (US-8.6.4)
@@ -51,6 +55,47 @@ case "${1:-}" in
     export ADMIN_NOMBRE ADMIN_EMAIL
     correr -e ADMIN_NOMBRE -e ADMIN_EMAIL ${ADMIN_PASSWORD:+-e ADMIN_PASSWORD} app \
       python -m src.identidad.frameworks.cli.bootstrap_administrador
+    ;;
+  email)
+    case "${2:-}" in
+      consola)
+        escribir_env EMAIL_MODO consola
+        levantar_app
+        echo "Emails en modo consola: quedan en el log (cognion.sh logs app)."
+        ;;
+      probar)
+        [ -n "${3:-}" ] || abortar "Falta el destinatario." "Uso: cognion.sh email probar <destino>"
+        [ "$(leer_env EMAIL_MODO)" = "smtp" ] || abortar "EMAIL_MODO no es smtp." "Ejecutá primero: cognion.sh email"
+        correr -e DESTINO="$3" app python -c "
+import asyncio, os
+from src.shared.frameworks.smtp import enviar_email
+asyncio.run(enviar_email(None, os.environ['DESTINO'], 'Cognión — prueba de envío', 'Email de prueba desde la VM.'))
+print('Enviado a', os.environ['DESTINO'])
+" || abortar "El envío falló." "Revisá usuario/contraseña de aplicación con: cognion.sh email"
+        ;;
+      "")
+        HOST_SMTP="${SMTP_HOST:-smtp.gmail.com}"; PUERTO_SMTP="${SMTP_PORT:-587}"
+        echo "Comprobando que ${HOST_SMTP}:${PUERTO_SMTP} salga desde esta VM..."
+        if ! timeout 10 bash -c "exec 3<>/dev/tcp/${HOST_SMTP}/${PUERTO_SMTP}" 2>/dev/null; then
+          abortar "No se puede salir a ${HOST_SMTP}:${PUERTO_SMTP}." "Revisá el firewall de GCP o probá otro puerto de envío (el 25 está bloqueado por GCP)."
+        fi
+        echo "ok"
+        read -r -p "Cuenta de Gmail (usuario y remitente): " USUARIO_SMTP
+        read -r -s -p "Contraseña de aplicación (16 letras, no se muestra): " PASSWORD_SMTP; echo
+        PASSWORD_SMTP="${PASSWORD_SMTP// /}"
+        [ -n "$USUARIO_SMTP" ] && [ -n "$PASSWORD_SMTP" ] || abortar "Usuario o contraseña vacíos."
+        escribir_env SMTP_HOST "$HOST_SMTP"
+        escribir_env SMTP_PORT "$PUERTO_SMTP"
+        escribir_env SMTP_USER "$USUARIO_SMTP"
+        escribir_env SMTP_PASSWORD "$PASSWORD_SMTP"
+        escribir_env SMTP_FROM "$USUARIO_SMTP"
+        escribir_env EMAIL_MODO smtp
+        unset PASSWORD_SMTP
+        levantar_app
+        echo "Emails por SMTP activados. Probá: cognion.sh email probar <tu_correo>"
+        ;;
+      *) abortar "Subcomando desconocido: ${2}" "Usos: email | email probar <destino> | email consola" ;;
+    esac
     ;;
   estado)
     compose ps
