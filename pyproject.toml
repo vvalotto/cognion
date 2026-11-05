@@ -14,6 +14,7 @@ dependencies = [
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
     "websockets>=13.0",
+    "certifi>=2024.0.0",
 ]
 
 [dependency-groups]
@@ -125,6 +126,11 @@ markers = [
     "configuracion: escenario BDD de configuración",
     "US-ADJ-65: escenarios BDD de la US-ADJ-65",
     "confirmacion: escenario BDD de la confirmación de contraseña",
+    "US-ADJ-66: escenarios BDD de la US-ADJ-66",
+    "certificado: escenario BDD de la validación del certificado del servidor SMTP",
+    "cuenta-por-materia: escenario BDD de cuentas SMTP por materia",
+    "sin-regresion: escenario BDD que verifica que lo existente no cambia",
+    "observabilidad: escenario BDD de registro de errores en el log",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

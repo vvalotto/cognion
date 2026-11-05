@@ -200,7 +200,7 @@ Por defecto los emails quedan en el log (`EMAIL_MODO=consola`). Para enviarlos d
 - **Antes:** generar la contraseña de aplicación (verificación en 2 pasos + `https://myaccount.google.com/apppasswords`) y probarla desde la Mac con `scripts/probar_smtp.py`.
 - **Éxito:** `email probar` informa "Enviado" y el mensaje llega a la bandeja. Si el paso del puerto falla, GCP bloquea la salida: el código solo habla STARTTLS en el 587 (el 25 está bloqueado por GCP, no verificado).
 - La contraseña vive solo en el `.env` de la VM (permisos 600); `desplegar.sh` no lo sobrescribe y nunca va al repo.
-- **Límite conocido:** el STARTTLS no valida el certificado del servidor (`smtplib.starttls()` sin contexto). Ajuste de seguridad pendiente antes de producción: `US-ADJ-66` (Issue #586, `docs/specs/ajustes/US-ADJ-66.md`).
+- **Certificado:** el STARTTLS valida la cadena y el nombre del servidor con el bundle de `certifi` (`US-ADJ-66`, Issue #586). Si el envío falla con "No se pudo verificar el certificado", el servidor de correo no presenta un certificado de una autoridad pública para ese nombre.
 
 ### Paso 12 — Verificación de la composición y reinicio real (**probado** el 2026-10-24)
 En la VM:

@@ -1,6 +1,6 @@
 # US-ADJ-66: El envío de email valida el certificado del servidor SMTP
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 8 — Despliegue en la nube (diferido)`
 **Tipo**: `mejora de seguridad` backend (infraestructura compartida)
 **Agregado principal afectado**: ninguno
