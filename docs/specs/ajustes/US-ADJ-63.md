@@ -1,13 +1,13 @@
 # US-ADJ-63: El hash de contraseñas no bloquea el event loop
 
 **Estado**: `Especificada`
-**Iteracion / Sprint**: `Incremento 8 — Despliegue y operación` (hallazgo de la Iteración 6, `US-8.6.3`)
+**Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 1 (hallazgo de la Iteración 6 del Incremento 8, `US-8.6.3`)
 **Tipo**: `fix de rendimiento` backend (refactor del puerto y del adaptador de hashing)
 **Agregado principal afectado**: ninguno (puerto de infraestructura de Identidad)
 **Bounded Context**: Identidad
 **Origen**: prueba manual de despliegue en GCP, paso 13 (`quality/reports/uat/inc8-gcp/bitacora-despliegue.md`).
 **Issue**: [#562](https://github.com/vvalotto/cognion/issues/562)
-**Interactúa con**: `US-8.6.7` (criterio de 60 logins), `ADR-014` (bcrypt), `ADR-009`/`ADR-018` (un solo proceso, `NullPool`).
+**Interactúa con**: `US-8.6.7` (criterio de 60 logins), `US-9.0.3` (#597, medición de memoria con una clase completa: va después de esta US), `ADR-014` (bcrypt), `ADR-009`/`ADR-018` (un solo proceso, `NullPool`).
 
 ---
 
