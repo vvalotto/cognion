@@ -1,3 +1,8 @@
+---
+name: implement-us
+description: Implementa una Historia de Usuario (US-IEDD) de punta a punta leyendo su spec en docs/specs/incN/US-N.M.K.md. Orquesta las fases 0 a 9 (contexto, escenarios BDD, plan, implementación, tests unitarios y de integración, validación BDD, quality gates, documentación y reporte final) con el perfil clean-architecture-bc. Usar con /implement-us US-N.M.K.
+---
+
 # Skill: implement-us
 
 **Nombre del comando:** `/implement-us`
