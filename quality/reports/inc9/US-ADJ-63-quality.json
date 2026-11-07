@@ -1,0 +1,27 @@
+{
+  "us": "US-ADJ-63",
+  "veredicto": "APROBADO",
+  "tipo": "fix de rendimiento, puerto y adaptador de hashing de Identidad (src/identidad); sin cambios de comportamiento funcional ni de frontend",
+  "archivos_src_modificados": 10,
+  "tests": {
+    "propios": "13 unitarios (hasher real, sin base), 2 de integración con un uvicorn real (/health durante 3 logins) y 6 escenarios BDD",
+    "regresion": "1359 tests pasan contra una base descartable: toda la suite unitaria (tests/unit) y la integración y BDD de Identidad (inc1, inc2, inc7-adj) más los de la iteración (inc9); la suite completa se corre una sola vez al cerrar la Iteración 1",
+    "verificacion_de_que_detectan_el_error": "con el adaptador de nuevo bloqueante fallan los 2 unitarios de tiempo (event loop 1,5 s sin responder); con el login llamando la forma síncrona falla la guarda y /health tarda 1,163 s durante los logins (umbral 0,35 s)"
+  },
+  "pylint": "10,00/10 en el puerto y el adaptador; los casos de uso conservan avisos previos (R0903 un método público por clase, R0801 líneas parecidas); conjunto de 10 archivos 9,57/10",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "ruff_black_isort": "limpio",
+  "complejidad": "CC promedio A (2,05); MI mínimo A (100,00)",
+  "bandit": "sin problemas",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "advertencias_reales": 0,
+    "ruido_de_herramienta": "timeouts de pylint (10 s y 5 s) en dos archivos, vulture y codespell no instalados"
+  },
+  "cobertura": "los archivos de src/identidad/frameworks/* quedan fuera de la medición de coverage del proyecto; el adaptador está cubierto por 13 unitarios, 2 de integración y 6 BDD",
+  "base_descartable": "cognion_dg_descartable (se elimina al cerrar la iteración); cognion, cognion_local y cognion_uat no se tocaron",
+  "hallazgos_al_probar": [
+    "La primera versión de la prueba de tiempo no detectaba el bloqueo: el último latido nunca se registraba si el bloqueo duraba hasta el final. Se agregó un latido final y se verificó en sentido inverso.",
+    "bcrypt costo 12 tarda 414 ms en esta Mac de 8 núcleos, más que en lo previsto (250 a 325 ms)."
+  ]
+}

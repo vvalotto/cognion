@@ -49,7 +49,7 @@ class ConfirmarNuevaPasswordUseCase:
 
         Usuario.validar_password_nueva(password_nueva)
 
-        password_hash = self._hasher.hash(password_nueva)
+        password_hash = await self._hasher.hash_async(password_nueva)
         estaba_bloqueada = usuario.recuperar_password(password_hash)
         await self._usuario_repositorio.actualizar(usuario)
 

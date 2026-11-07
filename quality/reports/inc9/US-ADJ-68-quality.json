@@ -1,0 +1,23 @@
+{
+  "us": "US-ADJ-68",
+  "veredicto": "APROBADO",
+  "tipo": "mejora de seguridad de logging transversal (src/shared/frameworks/logging_config.py); sin cambios en dominio, casos de uso, API ni frontend",
+  "tests": {
+    "propios": "13 unitarios (sin base), 5 de integración con un uvicorn real y 6 escenarios BDD (5 con uvicorn real, 1 de borde)",
+    "regresion": "37 unitarios de logging (US-ADJ-64 + US-ADJ-68) y 29 de integración/BDD de logging (US-ADJ-64 + US-ADJ-68) pasan contra una base descartable; la suite completa se corre una sola vez al cerrar la Iteración 1",
+    "verificacion_de_que_detectan_el_error": "con el filtro anterior fallan 9 de los 13 unitarios (los 4 que pasan son los que no deben cambiar) y 3 de los 5 de integración (los otros 2 verifican lo que no cambia)"
+  },
+  "pylint": "10,00/10",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "ruff_black_isort": "limpio",
+  "complejidad": "CC promedio A (3,5); MI 85,85 (A)",
+  "bandit": "sin problemas",
+  "codeguard": {
+    "modo": "--analysis-type full",
+    "advertencias_reales": 0,
+    "ruido_de_herramienta": "mypy con timeout de 10 s (corrido directo: 0 errores), vulture y codespell no instalados. Dos líneas de comentario de más de 100 caracteres detectadas por PEP8 y corregidas."
+  },
+  "cobertura": "logging_config.py: fuera de la medición de coverage del proyecto (src/*/frameworks/* se omite); cubierto por 13 unitarios, 5 de integración y 6 BDD",
+  "base_descartable": "cognion_dg_descartable (se elimina al cerrar la iteración); cognion, cognion_local y cognion_uat no se tocaron",
+  "hallazgo_al_probar": "ServidorReal.salida es un método, no una propiedad: los steps BDD usaban `salida` sin paréntesis y fallaban con TypeError; corregido."
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verifica las migraciones Alembic contra una base DESCARTABLE propia (US-8.1.4).
-# Crea la base, comprueba vacía→head, idempotencia y falla con base inaccesible; la borra al terminar.
+# Crea la base, comprueba vacía→head, idempotencia, falla con base inaccesible, bootstrap y downgrade base; la borra al terminar.
 # Nunca toca la base de desarrollo. Uso: tests/uat/inc8/verificar_migraciones.sh
 set -euo pipefail
 cd "$(dirname "$0")/../../.."
@@ -50,4 +50,11 @@ DATABASE_URL="$URL" ADMIN_NOMBRE="Admin Uno" ADMIN_EMAIL="uno@ejemplo.edu.ar" AD
   && [ "$(contar_admins)" = "1" ] && ok "4b. bootstrap crea el primer Administrador" || fallo "4b. bootstrap"
 DATABASE_URL="$URL" ADMIN_NOMBRE="Admin Dos" ADMIN_EMAIL="dos@ejemplo.edu.ar" ADMIN_PASSWORD="$CLAVE_ADMIN" "${BOOT[@]}" >/dev/null 2>&1 \
   && [ "$(contar_admins)" = "1" ] && ok "4c. segunda ejecución con otro email no duplica (exit 0)" || fallo "4c. idempotencia"
-echo "Migraciones y bootstrap verificados."
+# 5. Deshacer todas las migraciones, con datos cargados, y volver a migrar (US-8.3.4).
+tablas_de_la_app() { PGPASSWORD="$CLAVE" psql -h "$HOST" -p "$PUERTO" -U "$USUARIO" -d "$BASE" -Atc "SELECT count(*) FROM pg_tables WHERE schemaname='public' AND tablename<>'alembic_version'" 2>/dev/null; }
+DATABASE_URL="$URL" "${ALEMBIC[@]}" downgrade base >/dev/null 2>&1 && ok "5a. downgrade base (con datos cargados) termina con exit 0" || fallo "5a. downgrade base"
+[ "$(tablas_de_la_app)" = "0" ] && ok "5b. no quedan tablas de la aplicación" || fallo "5b. quedaron tablas tras el downgrade"
+DATABASE_URL="$URL" "${ALEMBIC[@]}" upgrade head >/dev/null 2>&1 || fallo "5c. upgrade head tras el downgrade"
+ACTUAL="$(DATABASE_URL="$URL" "${ALEMBIC[@]}" current 2>/dev/null | awk '{print $1}')"
+[ "$ACTUAL" = "$HEAD" ] && ok "5c. upgrade head otra vez → $HEAD" || fallo "5c. current=$ACTUAL, esperado $HEAD"
+echo "Migraciones, downgrade y bootstrap verificados."

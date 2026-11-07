@@ -131,6 +131,17 @@ markers = [
     "cuenta-por-materia: escenario BDD de cuentas SMTP por materia",
     "sin-regresion: escenario BDD que verifica que lo existente no cambia",
     "observabilidad: escenario BDD de registro de errores en el log",
+    "US-ADJ-63: escenarios BDD de la US-ADJ-63",
+    "US-ADJ-68: escenarios BDD de la US-ADJ-68",
+    "rendimiento: escenario BDD de rendimiento (el event loop no se bloquea)",
+    "compatibilidad: escenario BDD de compatibilidad con lo ya guardado",
+    "funcional: escenario BDD que verifica que el comportamiento funcional no cambia",
+    "guarda: escenario BDD que actúa como guarda contra regresiones de diseño",
+    "token-en-ruta: escenario BDD del enmascarado de un token en la ruta del log",
+    "borde: escenario BDD de caso borde",
+    "US-8.3.4: escenarios BDD de la US-8.3.4",
+    "downgrade: escenario BDD que deshace migraciones de la base",
+    "paso-a-paso: escenario BDD que deshace una migración por vez",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
