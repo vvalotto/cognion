@@ -212,7 +212,10 @@ export function RendirEvaluacion() {
         </div>
       )}
 
-      <Card className="mt-4 p-5">
+      {/* `key` por pregunta: al cambiar de pregunta React recrea todo el bloque en vez de parchear
+          textos sueltos; así una traducción automática del navegador (que reemplaza los nodos de
+          texto) no deja opciones de la pregunta anterior. */}
+      <Card key={preguntaActual.preguntaId} className="mt-4 p-5">
         <p className="font-medium">{preguntaActual.enunciado}</p>
 
         <div className="mt-3 flex flex-col gap-2">
@@ -233,7 +236,7 @@ export function RendirEvaluacion() {
                   disabled={preguntaAgotada}
                   onChange={() => setSeleccion({ tipo: "opcion", indice })}
                 />
-                {texto}
+                <span>{texto}</span>
               </label>
             ))
           ) : (

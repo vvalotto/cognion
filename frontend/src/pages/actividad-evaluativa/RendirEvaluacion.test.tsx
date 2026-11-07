@@ -79,6 +79,46 @@ describe("RendirEvaluacion", () => {
     expect(screen.getByText("Pregunta 1 de 2")).toBeInTheDocument()
   })
 
+  it("cada pregunta muestra sus propias opciones, también tras reconectar a mitad del cuestionario", async () => {
+    const distintas = [
+      {
+        pregunta_id: "p1",
+        orden: 0,
+        enunciado: "¿Qué es un riesgo?",
+        opciones: ["Evento incierto", "Una tarea", "Un entregable", "Un hito"],
+      },
+      {
+        pregunta_id: "p2",
+        orden: 1,
+        enunciado: "¿Para qué sirve la matriz RACI?",
+        opciones: ["Asignar responsabilidades", "Estimar costos", "Medir calidad", "Cerrar el proyecto"],
+      },
+    ]
+    // Reconexión: la primera pregunta ya está respondida, se retoma en la segunda.
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(
+        200,
+        evaluacionBody({
+          preguntas_asignadas: distintas,
+          preguntas_respondidas: ["p1"],
+          respuestas_confirmadas: [{ pregunta_id: "p1", contenido: { opcion_indice: 0 } }],
+        }),
+      ),
+    )
+    renderRendirEvaluacion()
+
+    expect(await screen.findByText("¿Para qué sirve la matriz RACI?")).toBeInTheDocument()
+    expect(screen.getByText("Asignar responsabilidades")).toBeInTheDocument()
+    expect(screen.getByText("Cerrar el proyecto")).toBeInTheDocument()
+    expect(screen.queryByText("Evento incierto")).not.toBeInTheDocument()
+
+    // Al volver a la primera pregunta, cambian el enunciado Y las opciones.
+    await userEvent.click(screen.getByRole("button", { name: "1" }))
+    expect(await screen.findByText("¿Qué es un riesgo?")).toBeInTheDocument()
+    expect(screen.getByText("Evento incierto")).toBeInTheDocument()
+    expect(screen.queryByText("Asignar responsabilidades")).not.toBeInTheDocument()
+  })
+
   it("confirmar una respuesta la persiste y avanza a la siguiente pregunta", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(200, evaluacionBody()))
     renderRendirEvaluacion()
