@@ -1,6 +1,6 @@
 # US-ADJ-68: El log de acceso no muestra el token de las invitaciones
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 1
 **Tipo**: `mejora de seguridad` backend (logging transversal)
 **Agregado principal afectado**: ninguno

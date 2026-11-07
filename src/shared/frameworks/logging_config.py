@@ -3,7 +3,8 @@
 `uvicorn` configura solo sus propios loggers: los de la aplicación (`src.*`) quedan sin handler y
 sus `INFO` se descartan, así que el modo consola de emails (`US-8.5.2`) no mostraba nada. Además,
 el log de acceso de `uvicorn` escribe la URL completa de cada pedido, con el JWT del canal
-WebSocket (`?token=<JWT>`), el token de la invitación y el de recuperación de contraseña.
+WebSocket (`?token=<JWT>`), el token de la invitación (en la query de `/registro` y en la ruta de
+`/identidad/invitaciones/<token>`, `US-ADJ-68`) y el de recuperación de contraseña.
 """
 
 from __future__ import annotations
@@ -20,13 +21,19 @@ _TOKEN_EN_RUTA = re.compile(
     r"(/recuperar-password/)(?!(?:solicitar|confirmar)\b)[A-Za-z0-9_\-]{20,}"
 )
 
+# `/invitaciones/<token>` en la ruta de la API (`GET /identidad/invitaciones/{token}`, `US-ADJ-68`).
+# El token de una invitación sin usar es una credencial vigente; no toca `.../<id>/invitaciones`.
+_TOKEN_EN_RUTA_INVITACION = re.compile(r"(/invitaciones/)[A-Za-z0-9_\-]{20,}")
+
 _LOGGERS_DE_UVICORN = ("uvicorn.access", "uvicorn.error")
 _FORMATO = "%(levelname)s:     %(message)s"
 
 
 def enmascarar_tokens(texto: str) -> str:
     """Reemplaza el valor de un token de acceso por `***` y deja el resto del texto igual."""
-    return _TOKEN_EN_RUTA.sub(r"\1***", _TOKEN_EN_QUERY.sub(r"\1***", texto))
+    texto = _TOKEN_EN_QUERY.sub(r"\1***", texto)
+    texto = _TOKEN_EN_RUTA.sub(r"\1***", texto)
+    return _TOKEN_EN_RUTA_INVITACION.sub(r"\1***", texto)
 
 
 def _sanear(valor: Any) -> Any:
