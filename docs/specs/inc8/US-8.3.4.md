@@ -1,6 +1,6 @@
 # US-8.3.4: `alembic downgrade base` funciona
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 1 (nació en el Incremento 8, Iteración 3, y se movió porque no depende de la nube)
 **Tipo**: `corrección` backend (migración de base de datos)
 **Agregado principal afectado**: ninguno
@@ -40,12 +40,12 @@ a medias.
 
 **Causa:** la migración `dd44a181d7fc_estudiante_comision_id` crea la clave foránea sin nombre
 (`op.create_foreign_key(None, "estudiante", "comision", ...)`) y su `downgrade` hace `op.drop_constraint(None, ...)`. Es la
-**única** migración de las 19 con este patrón (verificado con `grep`). PostgreSQL nombra esa restricción
+**única** migración de las 18 con este patrón (verificado con `grep`). PostgreSQL nombra esa restricción
 `estudiante_comision_id_fkey` (verificado en una base migrada).
 
 ## Especificacion del comportamiento
 
-- `alembic downgrade base` ejecuta las 19 migraciones hacia atrás sin error y deja la base **sin tablas de la aplicación**
+- `alembic downgrade base` ejecuta las 18 migraciones hacia atrás sin error y deja la base **sin tablas de la aplicación**
   (solo `alembic_version`, vacía).
 - Después, `alembic upgrade head` vuelve a construir todo y deja la base en el mismo `head`.
 - El `upgrade` de `dd44a181d7fc` **no cambia**: las bases ya migradas (la local, la de la VM de GCP) no se tocan.
@@ -74,3 +74,21 @@ Rehacer el `downgrade` de migraciones que ya funcionan; convenciones de nombres 
   `pytest`, porque los tests de integración vacían la base de `DATABASE_URL`.
 - **Comprobar que detecta el error:** correr el script con el `downgrade` anterior y ver que falla.
 - Probar también el escenario 4: migrar con la revisión actual, aplicar el cambio y hacer `downgrade`.
+
+---
+
+## Decisiones tomadas al implementar (Incremento 9, 2026-11-07)
+
+- **Son 18 migraciones, no 19:** el conteo inicial con `ls | wc -l` incluía la carpeta `__pycache__`.
+- **Arreglo:** una sola línea en el `downgrade` de `dd44a181d7fc` (`estudiante_comision_id_fkey`). El `upgrade` no se tocó.
+- **Guarda que no estaba en la spec:** `tests/unit/inc9/test_us_8_3_4_migraciones_con_nombre.py` falla si el `downgrade` de
+  alguna migración llama `drop_constraint(None, ...)`. Alembic autogenera `None` por defecto, así que el error se repetiría
+  con la próxima migración que tenga una clave foránea.
+- **Verificación con `alembic` real:** los 5 escenarios BDD crean su propia base descartable (`cognion_mig_<id>`), la
+  migran y la deshacen, y la borran al terminar. Se saltean con aviso si ningún rol puede crear bases (el rol de
+  `DATABASE_URL` en tu Mac no tiene `CREATEDB`; en el CI es superusuario). Además, `tests/uat/inc8/verificar_migraciones.sh`
+  suma los pasos 5a a 5c (`downgrade base` con datos cargados, sin tablas restantes, `upgrade head` de nuevo).
+- **Escenario reforzado:** migrar–deshacer–migrar pasaba igual con el `downgrade` roto (un `downgrade` fallido se revierte y
+  la base no cambia), así que ahora exige que todas las operaciones terminen sin error.
+- **Verificado al revés:** con el `downgrade` anterior fallan la guarda, los escenarios 1, 2 y 5 y el paso 5a del script.
+

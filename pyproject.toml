@@ -139,6 +139,9 @@ markers = [
     "guarda: escenario BDD que actúa como guarda contra regresiones de diseño",
     "token-en-ruta: escenario BDD del enmascarado de un token en la ruta del log",
     "borde: escenario BDD de caso borde",
+    "US-8.3.4: escenarios BDD de la US-8.3.4",
+    "downgrade: escenario BDD que deshace migraciones de la base",
+    "paso-a-paso: escenario BDD que deshace una migración por vez",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

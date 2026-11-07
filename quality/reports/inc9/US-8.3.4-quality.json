@@ -1,0 +1,22 @@
+{
+  "us": "US-8.3.4",
+  "veredicto": "APROBADO",
+  "tipo": "corrección del downgrade de una migración (migrations/versions/dd44a181d7fc_estudiante_comision_id.py); sin cambios en src/, frontend ni API",
+  "tests": {
+    "propios": "2 unitarios (guarda de las 18 migraciones, sin base), 5 escenarios BDD con alembic real sobre una base descartable propia, y 3 pasos nuevos (5a a 5c) del script de UAT verificar_migraciones.sh",
+    "regresion": "los 48 tests de la iteración 1 que corren con base (inc9) pasan; el script de UAT mantiene en verde sus pasos 1 a 4; la suite completa se corre una sola vez al cerrar la Iteración 1",
+    "verificacion_de_que_detectan_el_error": "con el downgrade anterior (drop_constraint(None, ...)) fallan la guarda unitaria, los escenarios BDD 1, 2 y 5 y el paso 5a del script de UAT; con el arreglo pasan",
+    "saltea": "los escenarios BDD se saltean con aviso si ningún rol puede crear bases de datos (rol de DATABASE_URL sin CREATEDB y sin PGADMIN_USER); en el CI el rol es superusuario"
+  },
+  "pylint": "no aplica a migraciones: el proyecto lo mide sobre src/; los avisos del archivo son el estilo autogenerado por Alembic, iguales en las 18 migraciones",
+  "ruff": "migración: 5 avisos de estilo ya presentes antes del cambio (no se verifican migraciones en el CI); tests nuevos limpios",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "black_isort": "limpios",
+  "bandit": "tests: B404/B603 de severidad baja por usar subprocess con argumentos fijos (alembic y psql); la migración no tiene hallazgos",
+  "codeguard": {"modo": "--analysis-type full", "resultado": "sin hallazgos (CodeGuard no analiza archivos de migraciones)"},
+  "base_descartable": "cada escenario crea y borra su propia base cognion_mig_<id>; se comprobó que no quedan huérfanas. cognion_dg_descartable (de otras US de la iteración) se elimina al cerrar la iteración; cognion, cognion_local y cognion_uat no se tocaron",
+  "hallazgos_al_probar": [
+    "Son 18 migraciones, no 19: el conteo previo con ls | wc -l incluía la carpeta __pycache__. Corregido en la spec, el plan, el contexto y la guarda.",
+    "El escenario migrar-deshacer-migrar pasaba igual con el downgrade roto, porque un downgrade fallido se revierte y la base no cambia; se reforzó exigiendo que todas las operaciones terminen sin error."
+  ]
+}
