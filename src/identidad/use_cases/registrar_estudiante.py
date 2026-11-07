@@ -44,7 +44,7 @@ class RegistrarEstudianteUseCase:
             raise EmailYaRegistrado(email)
 
         Usuario.validar_password_nueva(password)
-        password_hash = self._hasher.hash(password)
+        password_hash = await self._hasher.hash_async(password)
         usuario = Usuario.crear_estudiante(nombre, email, password_hash, invitacion.comision_id)
         await self._usuario_repositorio.guardar(usuario)
 

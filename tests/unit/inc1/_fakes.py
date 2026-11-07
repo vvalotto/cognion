@@ -185,6 +185,12 @@ class FakePasswordHasher(PasswordHasherPort):
     def verificar(self, password: str, password_hash: str) -> bool:
         return password_hash == f"hashed:{password}"
 
+    async def hash_async(self, password: str) -> str:
+        return self.hash(password)
+
+    async def verificar_async(self, password: str, password_hash: str) -> bool:
+        return self.verificar(password, password_hash)
+
 
 class FakeInvitacionRepository(InvitacionRepositoryPort):
     def __init__(self) -> None:

@@ -65,7 +65,7 @@ class IniciarSesionUseCase:
         ahora = datetime.now(UTC)
         await rechazar_si_bloqueada(self._usuario_repositorio, usuario, ahora)
 
-        if not self._hasher.verificar(password, usuario.password_hash):
+        if not await self._hasher.verificar_async(password, usuario.password_hash):
             usuario.intentos_fallidos_login += 1
             exc = CredencialesInvalidas()
             if usuario.intentos_fallidos_login >= _INTENTOS_MAXIMOS:
