@@ -23,6 +23,7 @@
 | 1 | Correcciones con impacto en el uso real | Enmascarar tokens en el log, bcrypt asíncrono, `downgrade base` | Formal (`/implement-us`), backend |
 | 2 | Link de invitación grupal | Invitación reutilizable con vencimiento corto, revocable | Formal, backend + gate UX + frontend |
 | 3 | Guardas de arquitectura y observabilidad | `import-linter` en el CI, logs estructurados y `readiness`, bug upstream | Formal / tooling |
+| 4 | Migración de adaptadores que leen tablas de otro BC | Tres adaptadores dejan de leer modelos ORM ajenos (`ADR-026`) | Formal (`/implement-us`), backend |
 
 ## Iteración 0 — Decisiones y spikes
 
@@ -49,7 +50,7 @@ Orden por riesgo:
 
 ## Iteración 2 — Link de invitación grupal
 
-- [#590](https://github.com/vvalotto/cognion/issues/590) `US-ADJ-67` — invitación **grupal** (reutilizable hasta su vencimiento, duración elegible, revocable, con conteo de registros) conviviendo o reemplazando a la individual, según lo que decida #593. Toca `src/` (Identidad: agregado Invitación, casos de uso, endpoints, migración) y `frontend/` (`ComisionDetalleDocente.tsx`, `InvitacionPreview.tsx`, `Registro.tsx`).
+- [#590](https://github.com/vvalotto/cognion/issues/590) `US-ADJ-67` — invitación **grupal** (reutilizable hasta su vencimiento, duración elegible, revocable, con conteo de registros) que **reemplaza** a la individual en la UI. Decisiones de #593 (2026-11-08): duraciones 15 min / 1 h / 1 día (por defecto 1 h), sin cupo y un solo link grupal vigente por comisión (generar uno nuevo revoca el anterior). Verificar en la spec si el flujo también da de alta Docentes. Además entra el aviso "te queda 1 intento" del login (#502, decidido: opción 3), que necesita su propia US. Toca `src/` (Identidad: agregado Invitación, casos de uso, endpoints, migración) y `frontend/` (`ComisionDetalleDocente.tsx`, `InvitacionPreview.tsx`, `Registro.tsx`).
 - **Gate UX:** actualizar `wireframes-identidad*.md` y el prototipo, y que Víctor los apruebe **antes** de escribir el frontend.
 - **Documentación:** nota o ADR que matice `ADR-012` (hoy un solo uso y 7 días) y ampliación de `BC-identidad-modelo.md` (`INV-ID-13`).
 - Es la única funcionalidad nueva: por eso el cierre es `v0.10.0` (MINOR).
@@ -58,12 +59,22 @@ Orden por riesgo:
 
 - [#497](https://github.com/vvalotto/cognion/issues/497) — `import-linter` en el CI con tres contratos: capas dentro de cada BC, aislamiento entre BC (solo desde `frameworks/adapters/`) y `shared` sin importar de ningún BC. Hoy se cumple solo por revisión humana.
 - [#526](https://github.com/vvalotto/cognion/issues/526) `US-8.3.3` — observabilidad mínima: logs estructurados y `healthcheck` de `readiness`.
-- [#498](https://github.com/vvalotto/cognion/issues/498) — implementar lo que decida el ADR, si hiciera falta.
+- [#498](https://github.com/vvalotto/cognion/issues/498) — el ADR está escrito (`ADR-026`, 2026-11-08): Analytics es la única excepción a leer datos de otro BC; los tres casos restantes se migran en la Iteración 4. El contrato de `import-linter` (#497) debe codificar esa excepción.
 - [#496](https://github.com/vvalotto/cognion/issues/496) — corregir `DependencyGraphBuilder` en `software_limpio` (otro repositorio, mismo autor; acotado en tiempo) para reactivar `LayerViolationsAnalyzer` y quitar los falsos "Zone of Pain".
+
+## Iteración 4 — Migración de adaptadores que leen tablas de otro BC
+
+Según `ADR-026`. Depende de #497 (el contrato de `import-linter` impide que vuelva a aparecer). Una US por adaptador; cada una empieza con un test de caracterización y no puede cambiar el comportamiento.
+
+1. [#600](https://github.com/vvalotto/cognion/issues/600) `US-9.4.1` — `banco_preguntas` deja de leer modelos de `identidad` (consulta de comisiones).
+2. [#601](https://github.com/vvalotto/cognion/issues/601) `US-9.4.2` — `actividad_evaluativa` deja de leer modelos de `identidad` (consulta de estudiantes).
+3. [#602](https://github.com/vvalotto/cognion/issues/602) `US-9.4.3` — `identidad` deja de leer modelos de `actividad_evaluativa` (consulta de evaluaciones); crea un puerto de consulta en el proveedor. Probablemente la más grande.
+
+El orden es provisional y se confirma al escribir cada spec.
 
 ## Fuera de alcance
 
-- **Nube:** #520 a #525, #528, #529 y #549 a #552 siguen en el Milestone "Incremento 8 — Despliegue en la nube (diferido)". Dependen de elegir la nube y de reescribir los que asumen Fly.io (#520 a #523).
+- **Nube:** #520 a #525, #528 y #549 a #552 siguen en el Milestone "Incremento 8 — Despliegue en la nube (diferido)". Dependen de elegir la nube y de reescribir los que asumen Fly.io (#520 a #523).
 - **#532 (`RF-07`):** funcionalidad nueva (importar preguntas desde PDF); su spike de mecanismo sigue pendiente.
 - **#500:** revisar si `actividad_evaluativa` (184 clases) debe dividirse. Revisión de diseño sin urgencia; se retoma después de #496 para medir con datos confiables.
 
@@ -73,6 +84,7 @@ Orden por riesgo:
 Iter 0 (decisiones) ──► Iter 2 (link grupal)
                    └──► Iter 3 (#498 ADR → implementar)
 #594 (token en log) ──► Iter 2     (el token pasa a ser reutilizable)
+#496 ──► #497 ──► Iter 4 (migración de adaptadores, ADR-026)
 #562 (bcrypt async) ──► #597       (la medición de memoria queda distorsionada si bcrypt bloquea)
 #596 (¿JWT vencido?) ──► posible Issue nuevo en Iter 1 o 2
 ```
