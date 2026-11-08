@@ -205,6 +205,33 @@ class FakeInvitacionRepository(InvitacionRepositoryPort):
     async def actualizar(self, invitacion: Invitacion) -> None:
         self.invitaciones[invitacion.id] = invitacion
 
+    async def obtener_por_id(self, invitacion_id: UUID) -> Invitacion | None:
+        return self.invitaciones.get(invitacion_id)
+
+    async def obtener_grupal_vigente(self, comision_id: UUID, ahora: datetime) -> Invitacion | None:
+        return next(
+            (
+                i
+                for i in self.invitaciones.values()
+                if i.comision_id == comision_id and i.grupal and i.es_vigente(ahora)
+            ),
+            None,
+        )
+
+    async def obtener_ultima_grupal(self, comision_id: UUID) -> Invitacion | None:
+        grupales = [
+            i for i in self.invitaciones.values() if i.comision_id == comision_id and i.grupal
+        ]
+        return max(grupales, key=lambda i: i.generada_en, default=None)
+
+    async def reemplazar(self, anterior: Invitacion | None, nueva: Invitacion) -> None:
+        if anterior is not None:
+            self.invitaciones[anterior.id] = anterior
+        self.invitaciones[nueva.id] = nueva
+
+    async def incrementar_usos(self, invitacion_id: UUID) -> None:
+        self.invitaciones[invitacion_id].usos += 1
+
 
 class FakeNotificador(NotificadorPort):
     def __init__(self) -> None:

@@ -38,12 +38,20 @@ function segundosDeBloqueoTemporal(detail: unknown): number | null {
   return typeof reintentar_en_segundos === "number" ? reintentar_en_segundos : 1
 }
 
+/** El `401` del 2.º fallo trae `detail.intentos_restantes = 1` (`US-ADJ-69`); `null` si no hay aviso. */
+function intentosRestantesDe(detail: unknown): number | null {
+  if (typeof detail !== "object" || detail === null) return null
+  const { intentos_restantes } = detail as Record<string, unknown>
+  return typeof intentos_restantes === "number" ? intentos_restantes : null
+}
+
 /** Pantalla de login (§2.1/§2.2 `wireframes-identidad.md`) — consume `POST /identidad/login`. */
 export function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
+  const [intentosRestantes, setIntentosRestantes] = useState<number | null>(null)
   const [bloqueo, setBloqueo] = useState<"bloqueada" | "deshabilitada" | null>(null)
   const [segundosTemporal, setSegundosTemporal] = useState<number | null>(null)
   const bloqueada = bloqueo !== null
@@ -70,6 +78,7 @@ export function Login() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(false)
+    setIntentosRestantes(null)
     setSegundosTemporal(null)
 
     try {
@@ -94,6 +103,7 @@ export function Login() {
       }
       if (err instanceof ApiError) {
         setPassword("")
+        setIntentosRestantes(intentosRestantesDe(err.detail))
         setError(true)
         return
       }
@@ -118,7 +128,7 @@ export function Login() {
       {bloqueo === "deshabilitada" && <LoginCuentaDeshabilitadaError />}
       {bloqueo === "bloqueada" && <LoginCuentaBloqueadaError />}
       {segundosTemporal !== null && <LoginCuentaBloqueadaTemporalError segundos={segundosTemporal} />}
-      {bloqueo === null && error && <LoginError />}
+      {bloqueo === null && error && <LoginError intentosRestantes={intentosRestantes} />}
 
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <fieldset className="flex flex-col gap-3" disabled={bloqueada}>

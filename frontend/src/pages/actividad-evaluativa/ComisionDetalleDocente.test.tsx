@@ -76,78 +76,163 @@ describe("ComisionDetalleDocente", () => {
     cleanup()
   })
 
-  it("genera el link de invitación y lo muestra con botón Copiar", async () => {
+  /** Las tres cargas iniciales (comisión, estudiantes, sesiones) y la última invitación grupal. */
+  function cargasIniciales(ultima: unknown = null) {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(200, comision))
       .mockResolvedValueOnce(jsonResponse(200, []))
       .mockResolvedValueOnce(jsonResponse(200, []))
-      .mockResolvedValueOnce(
-        jsonResponse(201, {
-          id: "i1",
-          comision_id: "c1",
-          docente_id: "d1",
-          expira_en: "2026-09-14T00:00:00Z",
-          token: "tok-123",
-        }),
-      )
+      .mockResolvedValueOnce(jsonResponse(200, ultima))
+  }
+
+  const enUnaHora = () => new Date(Date.now() + 60 * 60 * 1000).toISOString()
+  const ayer = () => new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+  function ultimaInvitacion(parcial: Record<string, unknown> = {}) {
+    return {
+      id: "i1",
+      estado: "vigente",
+      token: "tok-123",
+      generada_en: new Date().toISOString(),
+      expira_en: enUnaHora(),
+      usos: 0,
+      ...parcial,
+    }
+  }
+
+  it("genera el link grupal con la duración por defecto y lo muestra con botón Copiar", async () => {
+    cargasIniciales(null)
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, {
+        id: "i1",
+        comision_id: "c1",
+        expira_en: enUnaHora(),
+        token: "tok-123",
+      }),
+    )
 
     renderDetalle()
     await screen.findByRole("heading", { name: "Lunes 18-20hs" })
 
+    expect(screen.getByLabelText("Duración del link")).toHaveValue("60")
     const user = userEvent.setup()
-    await user.click(screen.getByRole("button", { name: "Generar link de invitación" }))
+    await user.click(screen.getByRole("button", { name: "Generar link grupal" }))
 
     expect(await screen.findByText(/tok-123/)).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Generar un link nuevo" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Copiar" })).toBeInTheDocument()
+    expect(screen.getByText(/Todavía nadie se registró con este link/)).toBeInTheDocument()
+    expect(screen.getByText("Si generás un link nuevo, el anterior se desactiva.")).toBeInTheDocument()
 
-    const [, init] = vi.mocked(fetch).mock.calls[3]
-    expect(JSON.parse(init?.body as string)).toEqual({ docente_id: "d1" })
+    const [url, init] = vi.mocked(fetch).mock.calls[4]
+    expect(String(url)).toContain("/comisiones/c1/invitaciones-grupales")
+    expect(JSON.parse(init?.body as string)).toEqual({ duracion_minutos: 60 })
   })
 
-  it("copia el link generado al portapapeles", async () => {
-    vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, comision))
-      .mockResolvedValueOnce(jsonResponse(200, []))
-      .mockResolvedValueOnce(jsonResponse(200, []))
-      .mockResolvedValueOnce(
-        jsonResponse(201, {
-          id: "i1",
-          comision_id: "c1",
-          docente_id: "d1",
-          expira_en: "2026-09-14T00:00:00Z",
-          token: "tok-123",
-        }),
-      )
+  it("ofrece las tres duraciones y envía la elegida", async () => {
+    cargasIniciales(null)
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(201, { id: "i1", comision_id: "c1", expira_en: enUnaHora(), token: "tok-9" }),
+    )
 
     renderDetalle()
     await screen.findByRole("heading", { name: "Lunes 18-20hs" })
 
+    const selector = screen.getByLabelText("Duración del link")
+    expect(Array.from((selector as HTMLSelectElement).options).map((o) => o.text)).toEqual([
+      "15 minutos",
+      "1 hora",
+      "1 día",
+    ])
+    const user = userEvent.setup()
+    await user.selectOptions(selector, "1440")
+    await user.click(screen.getByRole("button", { name: "Generar link grupal" }))
+    await screen.findByText(/tok-9/)
+
+    const [, init] = vi.mocked(fetch).mock.calls[4]
+    expect(JSON.parse(init?.body as string)).toEqual({ duracion_minutos: 1440 })
+  })
+
+  it("copia el link generado al portapapeles", async () => {
+    cargasIniciales(ultimaInvitacion())
+
+    renderDetalle()
+    await screen.findByText(/tok-123/)
+
     const user = userEvent.setup()
     const clipboardWriteText = stubClipboard()
-    await user.click(screen.getByRole("button", { name: "Generar link de invitación" }))
-    await screen.findByText(/tok-123/)
     await user.click(screen.getByRole("button", { name: "Copiar" }))
 
     expect(await screen.findByText("Copiado ✓")).toBeInTheDocument()
     expect(clipboardWriteText).toHaveBeenCalledWith(expect.stringContaining("token=tok-123"))
   })
 
-  it("muestra un mensaje de error si el docente no está asignado (422)", async () => {
-    vi.mocked(fetch)
-      .mockResolvedValueOnce(jsonResponse(200, comision))
-      .mockResolvedValueOnce(jsonResponse(200, []))
-      .mockResolvedValueOnce(jsonResponse(200, []))
-      .mockResolvedValueOnce(errorResponse(422, "El docente no está asignado a esta comisión"))
+  it("al volver a la pantalla muestra el link vigente con su vencimiento y los registrados", async () => {
+    cargasIniciales(ultimaInvitacion({ usos: 12 }))
+
+    renderDetalle()
+
+    expect(await screen.findByText(/tok-123/)).toBeInTheDocument()
+    expect(screen.getByText("Vigente")).toBeInTheDocument()
+    expect(screen.getByText(/12 estudiantes se registraron con este link/)).toBeInTheDocument()
+    expect(screen.getByText(/Vence en/)).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Desactivar link" })).toBeInTheDocument()
+  })
+
+  it("desactivar el link avisa y ya no muestra el link ni el botón Copiar", async () => {
+    cargasIniciales(ultimaInvitacion({ usos: 2 }))
+    vi.mocked(fetch).mockResolvedValueOnce(new Response(null, { status: 204 }))
+
+    renderDetalle()
+    await screen.findByText(/tok-123/)
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole("button", { name: "Desactivar link" }))
+
+    expect(await screen.findByText("Desactivado")).toBeInTheDocument()
+    expect(screen.queryByText(/tok-123/)).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Copiar" })).not.toBeInTheDocument()
+    expect(screen.getByText(/2 estudiantes se registraron con este link/)).toBeInTheDocument()
+
+    const [url, init] = vi.mocked(fetch).mock.calls[4]
+    expect(String(url)).toContain("/comisiones/c1/invitaciones-grupales/i1/revocar")
+    expect(init?.method).toBe("POST")
+  })
+
+  it("un link que ya venció se muestra como vencido, sin link ni botón Copiar", async () => {
+    cargasIniciales(ultimaInvitacion({ estado: "vencida", token: null, expira_en: ayer(), usos: 1 }))
+
+    renderDetalle()
+
+    expect(await screen.findByText("Venció")).toBeInTheDocument()
+    expect(screen.getByText(/1 estudiante se registró con este link/)).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Copiar" })).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Generar un link nuevo" })).toBeInTheDocument()
+  })
+
+  it("si el servidor todavía lo da por vigente pero ya pasó el vencimiento, lo muestra vencido", async () => {
+    cargasIniciales(ultimaInvitacion({ expira_en: ayer() }))
+
+    renderDetalle()
+
+    expect(await screen.findByText("Venció")).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Copiar" })).not.toBeInTheDocument()
+  })
+
+  it("muestra un mensaje de error si el docente no está asignado (403)", async () => {
+    cargasIniciales(null)
+    vi.mocked(fetch).mockResolvedValueOnce(
+      errorResponse(403, "No estás asignado a esta comisión"),
+    )
 
     renderDetalle()
     await screen.findByRole("heading", { name: "Lunes 18-20hs" })
 
     const user = userEvent.setup()
-    await user.click(screen.getByRole("button", { name: "Generar link de invitación" }))
+    await user.click(screen.getByRole("button", { name: "Generar link grupal" }))
 
     expect(
-      await screen.findByText(/No estás asignado a esta comisión/),
+      await screen.findByText(/No estás asignado a esta comisión, no podés generar/),
     ).toBeInTheDocument()
   })
 

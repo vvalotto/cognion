@@ -484,15 +484,57 @@
     <div class="breadcrumb">Actividades &nbsp;›&nbsp; Comisiones &nbsp;›&nbsp; <span class="current">Lunes y Miércoles 18–20hs</span></div>
     <button class="btn outline sm" style="margin-bottom:16px;" onclick="go('home-docente')">‹ Volver</button>
     <h1 class="page-title">Ingeniería de Software — Lunes y Miércoles 18–20hs</h1>
-    <p class="page-subtitle">Generá el link para que un estudiante se registre y quede asignado automáticamente a esta Comisión (RF-01).</p>
+    <p class="page-subtitle">Generá un link para que toda la clase se registre y quede asignada automáticamente a esta Comisión (RF-01). Compartilo por pantalla o por chat; vale hasta que venza o lo desactives.</p>
 
-    <button class="btn" id="btn-generar-inv" onclick="generarInvitacion()">Generar link de invitación</button>
-
-    <div class="link-box" id="link-box" style="display:none;">
-      <code id="link-texto">https://cognion.fiuner.edu.ar/registro?token=a1b2c3d4-...</code>
-      <button class="btn sm">Copiar</button>
+    <!-- Inc.9 It.2 · US-ADJ-67: link de invitación grupal. Reemplaza al link individual en la UI (decisión 2026-11-08). -->
+    <div class="proto-states" style="margin-bottom:12px; font-size:12px; color:var(--muted-foreground);">
+      Estados del prototipo:
+      <button class="btn outline sm" onclick="setEstadoInv('vacio')">Sin link</button>
+      <button class="btn outline sm" onclick="setEstadoInv('vigente')">Vigente</button>
+      <button class="btn outline sm" onclick="setEstadoInv('vencido')">Venció</button>
+      <button class="btn outline sm" onclick="setEstadoInv('revocado')">Desactivado</button>
     </div>
-    <p class="field hint" id="link-hint" style="display:none;">Válido por 7 días desde ahora. Cada link es de un solo uso.</p>
+
+    <div class="field" style="max-width:260px;">
+      <label for="inv-duracion">Duración del link</label>
+      <select id="inv-duracion">
+        <option>15 minutos</option>
+        <option selected>1 hora</option>
+        <option>1 día</option>
+      </select>
+    </div>
+    <button class="btn" id="btn-generar-inv" onclick="generarInvitacion()">Generar link grupal</button>
+    <p class="field hint" id="inv-hint-reemplazo" style="display:none;">Si generás un link nuevo, el anterior se desactiva.</p>
+
+    <!-- Estado: vigente -->
+    <div id="inv-vigente" style="display:none; margin-top:16px;">
+      <div class="link-box">
+        <code>https://cognion.fiuner.edu.ar/registro?token=a1b2c3d4-...</code>
+        <button class="btn sm">Copiar</button>
+      </div>
+      <p style="margin-top:10px; font-size:13px;">
+        <span class="badge ok">Vigente</span>
+        &nbsp;Vence en <strong>59 min</strong> (a las 19:42) · <strong>12</strong> estudiantes se registraron con este link
+      </p>
+      <button class="btn outline sm" style="margin-top:8px;" onclick="setEstadoInv('revocado')">Desactivar link</button>
+    </div>
+
+    <!-- Estado: venció -->
+    <div id="inv-vencido" style="display:none; margin-top:16px;">
+      <div class="info-box">
+        <span class="badge neutro">Venció</span>
+        &nbsp;El link venció a las 19:42. Se registraron <strong>12</strong> estudiantes con este link.
+        Generá uno nuevo si falta alguien.
+      </div>
+    </div>
+
+    <!-- Estado: desactivado -->
+    <div id="inv-revocado" style="display:none; margin-top:16px;">
+      <div class="info-box">
+        <span class="badge warn">Desactivado</span>
+        &nbsp;Desactivaste el link. Quien lo abra verá que ya no es válido. Se registraron <strong>12</strong> estudiantes antes de desactivarlo.
+      </div>
+    </div>
 
     <p class="page-subtitle" style="margin-top:28px; margin-bottom:10px;">Estudiantes inscriptos (24)</p>
     <table class="data-table">
@@ -518,11 +560,16 @@
   document.querySelectorAll('.proto-nav button').forEach(function (btn) {
     btn.addEventListener('click', function () { go(btn.dataset.target); });
   });
-  function generarInvitacion() {
-    document.getElementById('link-box').style.display = 'flex';
-    document.getElementById('link-hint').style.display = 'block';
-    document.getElementById('btn-generar-inv').textContent = 'Generar un link nuevo';
+  // US-ADJ-67: estados del link grupal (sin link / vigente / venció / desactivado).
+  function setEstadoInv(estado) {
+    ['vigente', 'vencido', 'revocado'].forEach(function (e) {
+      document.getElementById('inv-' + e).style.display = (e === estado) ? 'block' : 'none';
+    });
+    var hayLink = estado !== 'vacio';
+    document.getElementById('inv-hint-reemplazo').style.display = hayLink ? 'block' : 'none';
+    document.getElementById('btn-generar-inv').textContent = hayLink ? 'Generar un link nuevo' : 'Generar link grupal';
   }
+  function generarInvitacion() { setEstadoInv('vigente'); }
 </script>
 
 </body>

@@ -37,7 +37,7 @@ function renderRegistro(token = "token-vigente") {
 
 async function completarFormulario(
   email: string,
-  password = "password123x",
+  password = "Password#123x",
   confirmar = password,
   repetirEmail = email
 ) {
@@ -139,17 +139,60 @@ describe("Registro", () => {
     vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
 
     renderRegistro()
-    await completarFormulario("est2.uat@test.com", "password123x", "password123x", "est2.uar@test.com")
+    await completarFormulario("est2.uat@test.com", "Password#123x", "Password#123x", "est2.uar@test.com")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Los emails no coinciden.")
     expect(fetch).toHaveBeenCalledTimes(1)
+  })
+
+  it("con la contraseña incompleta no se puede enviar y se explica por qué (spike #595)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
+    renderRegistro()
+    const user = userEvent.setup()
+    await user.type(await screen.findByLabelText("Contraseña"), "contraseña-larga-sin-mayuscula")
+
+    expect(screen.getByRole("button", { name: "Crear cuenta" })).toBeDisabled()
+    expect(
+      screen.getByText("Completá los requisitos de la contraseña para continuar."),
+    ).toBeInTheDocument()
+    expect(fetch).toHaveBeenCalledTimes(1) // solo el preview de la invitación: nada se envió al registro
+  })
+
+  it("una contraseña rechazada por el servidor (password_invalida) se muestra en el formulario, no como link inválido (US-ADJ-67)", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(previewVigente())
+      .mockResolvedValueOnce(
+        jsonResponse(422, {
+          detail: { codigo: "password_invalida", mensaje: "La contraseña debe incluir un símbolo." },
+        })
+      )
+
+    renderRegistro()
+    await completarFormulario("nico@fiuner.edu.ar")
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("La contraseña debe incluir un símbolo.")
+    expect(screen.queryByText("Registro error")).not.toBeInTheDocument()
+    expect(screen.getByLabelText("Nombre completo")).toHaveValue("Nico")
+  })
+
+  it("un 422 de la invitación (invitacion_revocada) lleva a la pantalla de link no válido", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(previewVigente())
+      .mockResolvedValueOnce(
+        jsonResponse(422, { detail: { codigo: "invitacion_revocada", mensaje: "desactivada" } })
+      )
+
+    renderRegistro()
+    await completarFormulario("nico@fiuner.edu.ar")
+
+    expect(await screen.findByText("Registro error")).toBeInTheDocument()
   })
 
   it("contraseñas que no coinciden muestran error de cliente sin llamar al backend", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
 
     renderRegistro()
-    await completarFormulario("nico@fiuner.edu.ar", "password123x", "otra-password")
+    await completarFormulario("nico@fiuner.edu.ar", "Password#123x", "otra-password")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Las contraseñas no coinciden.")
     expect(fetch).toHaveBeenCalledTimes(1)

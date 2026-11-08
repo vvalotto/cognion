@@ -54,6 +54,24 @@ dedicado a identidad visual sin impacto funcional.
 | Mensaje | "Email o contraseña incorrectos" — genérico, no distingue si el email existe o no (no filtrar existencia de cuentas) |
 | Campos | Se mantienen con el valor ingresado (excepto que la contraseña se re-solicita vacía en la implementación real; el prototipo la muestra con placeholder por claridad visual) |
 
+> **Enmienda 2026-11-08 (Inc.9 It.2, `US-ADJ-69`):** el mensaje del 1.º fallo sigue siendo genérico. A partir del 2.º fallo ver §2.2b, que **sí** revela que la cuenta existe (trade-off aceptado, ver abajo).
+
+### 2.2b Login — te queda 1 intento (`#login-aviso`) — `US-ADJ-69`
+
+**Origen:** observación O-1 de la UAT del 7-ADJ (#502). Decisión de Víctor del 2026-11-08 (#593): avisar antes del bloqueo.
+**Evento:** `CredencialesInvalidas` con el 2.º fallo consecutivo (el 3.º bloquea la cuenta, INV-ID-10).
+
+| Elemento | Detalle |
+|---|---|
+| Cuándo aparece | Solo tras el **2.º** fallo consecutivo de una cuenta existente. El 1.º fallo muestra el mensaje genérico de §2.2 |
+| Mensaje | "Email o contraseña incorrectos" + "Te queda 1 intento antes del bloqueo de la cuenta." |
+| Ayuda | Link "recuperala por email" hacia `/recuperar-password`, que además desbloquea la cuenta (`US-ADJ-62`) |
+| Mismo patrón que | `CambiarPassword` ("Intentos restantes antes del bloqueo: N."), `US-2.2.8` |
+| Campos | Igual que §2.2 |
+| Sin | Contador en el 1.º fallo ni "te quedan 2 intentos": solo el último intento, para no dar más información de la necesaria |
+
+**Trade-off de seguridad (aceptado por Víctor el 2026-11-08):** hasta ahora un email inexistente y una contraseña incorrecta respondían igual, así que no se podía saber si una cuenta existe. Este aviso aparece **solo en cuentas que existen**, así que permite distinguirlas. El bloqueo del 4.º intento ya filtraba la existencia de la cuenta. A esta escala (uso interno, 30 a 60 alumnos por comisión) se acepta. Queda fuera de alcance simular el aviso para emails inexistentes.
+
 ### 2.3 Registro — link válido (`#registro`)
 
 **Actor:** Estudiante.
@@ -64,7 +82,9 @@ dedicado a identidad visual sin impacto funcional.
 | Contexto visible | Tag con la comisión a la que se va a unir (`comisión.materia` + identificador), tomada del `token` de la URL — refuerza que la asignación es automática (RF-01, INV-ID-05) |
 | Campos | Nombre completo, Email, **Repetir email**, Contraseña, Confirmar contraseña |
 | Validación de email | **Repetir email** debe coincidir con Email (sin espacios en los bordes y sin distinguir mayúsculas); "Los emails no coinciden." antes de enviar — mismo criterio que el autoregistro (`wireframes-identidad-autoservicio.md` §5.2, hallazgo #5 de la UAT de `v0.9.0`) |
-| Validación de contraseña | Mínimo 8 caracteres (INV-ID-11); confirmar contraseña debe coincidir — validación de cliente antes de enviar, la regla de negocio la aplica el backend |
+| Validación de contraseña | **Enmienda 2026-11-08:** la política vigente es INV-ID-11 ampliada (`US-ADJ-36`): 12 caracteres, una mayúscula, un número y un símbolo, no "mínimo 8" como decía este documento. El checklist en vivo ya existe en la aplicación. Confirmar contraseña debe coincidir — validación de cliente antes de enviar; la regla de negocio la aplica el backend |
+| Envío | **Enmienda 2026-11-08 (#605 Parte A, spike #595):** "Crear cuenta" queda deshabilitado mientras falte una regla del checklist, con la leyenda "Completá los requisitos de la contraseña para continuar." (ver `#registro-requisitos` en el prototipo) |
+| Errores del servidor | **Enmienda 2026-11-08 (#605 Parte A):** el recuadro de error sigue arriba del formulario, pero al aparecer la pantalla se **desplaza hasta él y le da el foco** (en un celular el botón está debajo del pliegue y el error quedaba fuera de la vista). Si el `422` trae el detalle como lista (validación del formulario del servidor), se muestra un mensaje legible en español en vez de "Error inesperado." |
 | Acción primaria | "Crear cuenta" |
 | Link secundario | "¿Ya tenés cuenta? Iniciar sesión" — cubre el caso de que alguien reabra un link de invitación después de haberse registrado |
 
@@ -74,13 +94,20 @@ dedicado a identidad visual sin impacto funcional.
 
 | Elemento | Detalle |
 |---|---|
-| Mensaje | "Este link ya no es válido" + explicación de que no hay recuperación automática (`ADR-012`, INV-ID-03) |
+| Mensaje | Según el motivo (ver tabla de abajo) + "pedile a tu docente un link nuevo" |
 | Acción | Indica que el docente debe generar un nuevo link — sin mecanismo de reenvío/extensión en la UI |
 | Sin | Formulario de registro — no se muestran campos, para no sugerir que se puede completar el registro de todos modos |
 
-No se distingue en la UI entre "vencido", "inválido" e "ya usado" — mismo mensaje y mismo
-tratamiento para los tres casos (decisión de simplicidad; el backend sí distingue las tres
-excepciones para logging/debug, pero no hay requerimiento de mostrarlas por separado al usuario).
+**Enmienda 2026-11-08 (Inc.9 It.2, `US-ADJ-67`):** con el link grupal el motivo importa, porque cambia lo que el estudiante debe hacer. La pantalla distingue cuatro motivos (el prototipo los alterna con botones; la aplicación muestra el que informa el servidor):
+
+| Motivo | Título | Orientación |
+|---|---|---|
+| Venció | "Este link venció" | El docente lo generó con una duración limitada y ya terminó; pedile uno nuevo |
+| Desactivado | "Este link fue desactivado" | El docente lo desactivó; pedile uno nuevo |
+| Ya usado (invitación individual anterior) | "Este link ya fue utilizado" | Si ya te registraste, iniciá sesión; si no, pedile uno nuevo |
+| No es correcto | "Este link no es correcto" | Revisá que copiaste el link completo o pedile uno nuevo |
+
+Reemplaza la decisión anterior de mostrar el mismo mensaje para los tres casos. Los links individuales ya emitidos siguen valiendo hasta que venzan, por eso "ya usado" se mantiene.
 
 ### 2.5 Registro — éxito (`#registro-exito`)
 

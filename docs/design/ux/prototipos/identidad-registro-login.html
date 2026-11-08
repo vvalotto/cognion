@@ -366,8 +366,10 @@
   <strong>US-1.0.2 — Prototipo:</strong>
   <button data-target="login" class="active">1. Login</button>
   <button data-target="login-error">1b. Login — error</button>
+  <button data-target="login-aviso">1c. Login — te queda 1 intento (US-ADJ-69)</button>
   <button data-target="registro">2. Registro (link válido)</button>
-  <button data-target="registro-error">2b. Registro — link vencido/inválido</button>
+  <button data-target="registro-requisitos">2a. Registro — contraseña incompleta (#605)</button>
+  <button data-target="registro-error">2b. Registro — link no válido (US-ADJ-67)</button>
   <button data-target="registro-exito">2c. Registro — éxito</button>
   <button data-target="alta-docente">3. Admin — alta de Docente</button>
   <button data-target="alta-docente-exito">3b. Admin — Docente creado</button>
@@ -443,6 +445,48 @@
   </div>
 </section>
 
+<!-- 1c. LOGIN - aviso "te queda 1 intento" (US-ADJ-69, Inc.9 It.2): aparece tras el 2.º fallo y antes del bloqueo.
+     Mismo patrón de texto que CambiarPassword ("Intentos restantes antes del bloqueo"). Trade-off aceptado por Víctor
+     (2026-11-08): el aviso solo aparece en cuentas que existen, así que revela que el email está registrado. -->
+<section class="screen" id="login-aviso">
+  <div class="center-wrap">
+    <div class="card">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognión">
+            <circle cx="22" cy="22" r="22" fill="#1d75b5"/>
+            <path d="M8 19c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M8 26c3-3 6-3 9 0s6 3 9 0 6-3 9 0" stroke="#53aa74" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="name">Cognión</div>
+        <div class="sub">Evaluación universitaria</div>
+      </div>
+      <h1 class="title">Iniciar sesión</h1>
+      <p class="subtitle">Ingresá con tu email y contraseña</p>
+
+      <div class="alert destructive" role="alert">
+        <span class="icon">⚠</span>
+        <div class="body">
+          <strong>Email o contraseña incorrectos</strong>
+          Te queda 1 intento antes del bloqueo de la cuenta.
+          Si no recordás tu contraseña, <a href="#" onclick="return false;">recuperala por email</a>.
+        </div>
+      </div>
+
+      <div class="field error">
+        <label for="li3-email">Email</label>
+        <input type="email" id="li3-email" value="estudiante@fiuner.edu.ar" />
+      </div>
+      <div class="field error">
+        <label for="li3-pass">Contraseña</label>
+        <input type="password" id="li3-pass" value="xxxxxxxx" />
+      </div>
+      <button class="btn" onclick="go('login')">Ingresar</button>
+    </div>
+  </div>
+</section>
+
 <!-- 2. REGISTRO - link válido -->
 <section class="screen" id="registro">
   <div class="center-wrap">
@@ -481,7 +525,9 @@
       </div>
       <div class="field">
         <label for="re-pass">Contraseña</label>
-        <input type="password" id="re-pass" placeholder="Mínimo 8 caracteres" />
+        <input type="password" id="re-pass" placeholder="Mínimo 12 caracteres" />
+        <!-- Checklist en vivo (US-ADJ-36, INV-ID-11 ampliada): ya existe en la aplicación; el prototipo se alinea. -->
+        <div class="hint" style="margin-top:6px;">Requisitos: 12 caracteres · una mayúscula · un número · un símbolo</div>
       </div>
       <div class="field">
         <label for="re-pass2">Confirmar contraseña</label>
@@ -490,6 +536,42 @@
       <button class="btn" onclick="go('registro-exito')">Crear cuenta</button>
 
       <div class="footer-link">¿Ya tenés cuenta? <a href="#" onclick="go('login'); return false;">Iniciar sesión</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2a. REGISTRO - contraseña incompleta (hallazgo del spike #595, Inc.9 It.2, #605 Parte A):
+     1) "Crear cuenta" queda deshabilitado mientras falte una regla del checklist, con la regla que falta a la vista;
+     2) si el servidor igual rechaza (422), el error aparece en el recuadro de arriba y la pantalla se desplaza hasta él
+        y le da el foco (en un celular el botón está debajo del pliegue y el error quedaba fuera de la vista);
+     3) un 422 cuyo detalle viene como lista se traduce a un mensaje legible, no a "Error inesperado.". -->
+<section class="screen" id="registro-requisitos">
+  <div class="center-wrap">
+    <div class="card">
+      <h1 class="title">Crear tu cuenta</h1>
+      <p class="subtitle">Completá tus datos para unirte a la comisión</p>
+
+      <div class="comision-tag">
+        <span class="dot"></span>
+        Te vas a unir a <strong>&nbsp;Ingeniería de Software — Comisión A</strong>
+      </div>
+
+      <div class="field">
+        <label for="rq-pass">Contraseña</label>
+        <input type="password" id="rq-pass" value="estudiante2026" />
+        <div class="hint" style="margin-top:8px; line-height:1.7;">
+          <span style="color:#14532d;">✓ Mínimo 12 caracteres</span><br>
+          <span style="color:#14532d;">✓ Un número</span><br>
+          <span style="color:#b91c1c;">✗ Una mayúscula</span><br>
+          <span style="color:#b91c1c;">✗ Un símbolo</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="rq-pass2">Confirmar contraseña</label>
+        <input type="password" id="rq-pass2" value="estudiante2026" />
+      </div>
+      <button class="btn" disabled style="opacity:0.5; cursor:not-allowed;">Crear cuenta</button>
+      <div class="hint" style="margin-top:8px;">Completá los requisitos de la contraseña para continuar.</div>
     </div>
   </div>
 </section>
@@ -509,15 +591,24 @@
         <div class="name">Cognión</div>
         <div class="sub">Evaluación universitaria</div>
       </div>
+      <!-- US-ADJ-67 (Inc.9 It.2): el mensaje distingue por qué no sirve el link, para que el estudiante sepa qué hacer.
+           Los botones de abajo son solo del prototipo: en la aplicación hay un único estado según la respuesta del servidor. -->
+      <div class="proto-states" style="font-size:12px; margin-bottom:8px;">
+        Estados del prototipo:
+        <button class="btn outline sm" onclick="setErrorLink('vencida')">Venció</button>
+        <button class="btn outline sm" onclick="setErrorLink('revocada')">Desactivado</button>
+        <button class="btn outline sm" onclick="setErrorLink('usada')">Ya usado (individual)</button>
+        <button class="btn outline sm" onclick="setErrorLink('invalida')">No es correcto</button>
+      </div>
       <div class="center-icon">⏱</div>
-      <h1 class="title">Este link ya no es válido</h1>
-      <p class="subtitle">El link de invitación venció o no es correcto. No se puede recuperar automáticamente.</p>
+      <h1 class="title" id="el-titulo">Este link venció</h1>
+      <p class="subtitle" id="el-subtitulo">El docente lo generó con una duración limitada y ya terminó.</p>
 
       <div class="alert destructive">
         <span class="icon">⚠</span>
         <div class="body">
-          <strong>Invitación vencida o inválida</strong>
-          Pedile a tu docente que te genere un nuevo link de invitación para la comisión.
+          <strong id="el-alerta-titulo">Invitación vencida</strong>
+          <span id="el-alerta-texto">Pedile a tu docente que te genere un link nuevo para la comisión.</span>
         </div>
       </div>
 
@@ -656,6 +747,25 @@
   document.querySelectorAll('.proto-nav button').forEach(function (btn) {
     btn.addEventListener('click', function () { go(btn.dataset.target); });
   });
+
+  // US-ADJ-67: textos de la pantalla "link no válido" según el motivo.
+  var ERRORES_LINK = {
+    vencida:  ['Este link venció', 'El docente lo generó con una duración limitada y ya terminó.',
+               'Invitación vencida', 'Pedile a tu docente que te genere un link nuevo para la comisión.'],
+    revocada: ['Este link fue desactivado', 'Tu docente lo desactivó y ya no se puede usar.',
+               'Invitación desactivada', 'Pedile a tu docente que te genere un link nuevo para la comisión.'],
+    usada:    ['Este link ya fue utilizado', 'Es una invitación individual que ya se usó para registrar una cuenta.',
+               'Invitación ya utilizada', 'Si ya te registraste, iniciá sesión. Si no, pedile un link nuevo a tu docente.'],
+    invalida: ['Este link no es correcto', 'No encontramos una invitación con este link.',
+               'Invitación no válida', 'Revisá que hayas copiado el link completo o pedile uno nuevo a tu docente.']
+  };
+  function setErrorLink(motivo) {
+    var t = ERRORES_LINK[motivo];
+    document.getElementById('el-titulo').textContent = t[0];
+    document.getElementById('el-subtitulo').textContent = t[1];
+    document.getElementById('el-alerta-titulo').textContent = t[2];
+    document.getElementById('el-alerta-texto').textContent = t[3];
+  }
 </script>
 
 </body>

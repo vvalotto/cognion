@@ -106,6 +106,11 @@ class InvitacionModel(Base):
     generada_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     expira_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     usada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    grupal: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
+    )
+    usos: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    revocada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class TokenRecuperacionPasswordModel(Base):

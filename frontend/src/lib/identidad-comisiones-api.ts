@@ -204,3 +204,95 @@ export async function generarInvitacion(
     token: response.token,
   }
 }
+
+/** Duraciones elegibles de un link grupal, en minutos (`US-ADJ-67`); la de 1 hora es la de por defecto. */
+export const DURACIONES_INVITACION_GRUPAL = [
+  { minutos: 15, etiqueta: "15 minutos" },
+  { minutos: 60, etiqueta: "1 hora" },
+  { minutos: 1440, etiqueta: "1 día" },
+] as const
+
+export const DURACION_INVITACION_GRUPAL_POR_DEFECTO = 60
+
+export type EstadoInvitacionGrupal = "vigente" | "vencida" | "revocada"
+
+export interface InvitacionGrupalEstado {
+  id: string
+  estado: EstadoInvitacionGrupal
+  /** Solo viaja mientras el link está vigente. */
+  token: string | null
+  generadaEn: string
+  expiraEn: string
+  usos: number
+}
+
+interface InvitacionGrupalEstadoApiResponse {
+  id: string
+  estado: EstadoInvitacionGrupal
+  token: string | null
+  generada_en: string
+  expira_en: string
+  usos: number
+}
+
+interface InvitacionGrupalApiResponse {
+  id: string
+  comision_id: string
+  expira_en: string
+  token: string
+}
+
+function mapearEstadoInvitacionGrupal(r: InvitacionGrupalEstadoApiResponse): InvitacionGrupalEstado {
+  return {
+    id: r.id,
+    estado: r.estado,
+    token: r.token,
+    generadaEn: r.generada_en,
+    expiraEn: r.expira_en,
+    usos: r.usos,
+  }
+}
+
+/** Genera el link grupal de la comisión y desactiva el vigente anterior (`US-ADJ-67`). */
+export async function generarInvitacionGrupal(
+  comisionId: string,
+  duracionMinutos: number,
+  signal?: AbortSignal,
+): Promise<InvitacionGrupalEstado> {
+  const response = await apiFetch<InvitacionGrupalApiResponse>(
+    `/comisiones/${comisionId}/invitaciones-grupales`,
+    { method: "POST", body: { duracion_minutos: duracionMinutos }, signal },
+  )
+  return {
+    id: response.id,
+    estado: "vigente",
+    token: response.token,
+    generadaEn: new Date().toISOString(),
+    expiraEn: response.expira_en,
+    usos: 0,
+  }
+}
+
+/** Último link grupal de la comisión, o `null` si nunca generó uno (`US-ADJ-67`). */
+export async function obtenerUltimaInvitacionGrupal(
+  comisionId: string,
+  signal?: AbortSignal,
+): Promise<InvitacionGrupalEstado | null> {
+  const response = await apiFetch<InvitacionGrupalEstadoApiResponse | null>(
+    `/comisiones/${comisionId}/invitaciones-grupales/ultima`,
+    { signal },
+  )
+  return response === null ? null : mapearEstadoInvitacionGrupal(response)
+}
+
+/** Desactiva el link grupal; quienes ya se registraron no se ven afectados (`US-ADJ-67`). */
+export async function desactivarInvitacionGrupal(
+  comisionId: string,
+  invitacionId: string,
+  signal?: AbortSignal,
+): Promise<void> {
+  await apiFetch<void>(
+    `/comisiones/${comisionId}/invitaciones-grupales/${invitacionId}/revocar`,
+    { method: "POST", signal },
+  )
+}

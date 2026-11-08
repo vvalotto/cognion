@@ -151,6 +151,32 @@ class InvitacionResponse(BaseModel):
     token: str
 
 
+class GenerarInvitacionGrupalRequest(BaseModel):
+    """Body de la generación de un link grupal; el dominio valida la duración (`US-ADJ-67`)."""
+
+    duracion_minutos: int = 60
+
+
+class InvitacionGrupalResponse(BaseModel):
+    """Link grupal recién generado (`US-ADJ-67`)."""
+
+    id: UUID
+    comision_id: UUID
+    expira_en: datetime
+    token: str
+
+
+class InvitacionGrupalEstadoResponse(BaseModel):
+    """Estado del último link grupal; el `token` solo viaja si está vigente (`US-ADJ-67`)."""
+
+    id: UUID
+    estado: str
+    token: str | None
+    generada_en: datetime
+    expira_en: datetime
+    usos: int
+
+
 class InvitacionPreviewResponse(BaseModel):
     """Vista previa de una invitación vigente, sin datos sensibles (`US-ADJ-08`)."""
 

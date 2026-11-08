@@ -4,6 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 vi.mock("@/router", () => ({
   router: { navigate: vi.fn() },
 }))
+vi.mock("@/lib/sesion-en-vivo-api", () => ({
+  obtenerEstadoSesion: vi.fn().mockResolvedValue({}),
+}))
 
 import { RESINCRONIZAR_CADA_MS, useCanalSesionEnVivo } from "@/lib/use-canal-sesion-en-vivo"
 import { setSession } from "@/lib/session"

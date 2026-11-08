@@ -35,6 +35,9 @@ from src.identidad.interface_adapters.controllers.estudiante_controller import (
 from src.identidad.interface_adapters.controllers.invitaciones_controller import (
     InvitacionesController,
 )
+from src.identidad.interface_adapters.controllers.invitaciones_grupales_controller import (
+    InvitacionesGrupalesController,
+)
 from src.identidad.interface_adapters.controllers.perfil_controller import PerfilController
 from src.identidad.interface_adapters.controllers.recuperacion_password_controller import (
     RecuperacionPasswordController,
@@ -71,6 +74,7 @@ from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.eliminar_comision import EliminarComisionUseCase
 from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
+from src.identidad.use_cases.generar_invitacion_grupal import GenerarInvitacionGrupalUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
 from src.identidad.use_cases.listar_materias_del_estudiante import (
@@ -78,8 +82,12 @@ from src.identidad.use_cases.listar_materias_del_estudiante import (
 )
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
+from src.identidad.use_cases.obtener_ultima_invitacion_grupal import (
+    ObtenerUltimaInvitacionGrupalUseCase,
+)
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
+from src.identidad.use_cases.revocar_invitacion_grupal import RevocarInvitacionGrupalUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
     SolicitarRecuperacionPasswordUseCase,
 )
@@ -143,6 +151,17 @@ def get_invitaciones_controller(session: SessionDep) -> InvitacionesController:
     return InvitacionesController(
         GenerarInvitacionUseCase(comision_repo, invitacion_repo, notificador),
         ObtenerInvitacionUseCase(invitacion_repo, comision_repo, materia_port),
+    )
+
+
+def get_invitaciones_grupales_controller(session: SessionDep) -> InvitacionesGrupalesController:
+    """Arma el `InvitacionesGrupalesController` con sus dependencias concretas (`US-ADJ-67`)."""
+    comision_repo = SQLAlchemyComisionRepository(session)
+    invitacion_repo = SQLAlchemyInvitacionRepository(session)
+    return InvitacionesGrupalesController(
+        GenerarInvitacionGrupalUseCase(comision_repo, invitacion_repo),
+        RevocarInvitacionGrupalUseCase(comision_repo, invitacion_repo),
+        ObtenerUltimaInvitacionGrupalUseCase(comision_repo, invitacion_repo),
     )
 
 

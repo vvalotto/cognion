@@ -73,3 +73,8 @@ nombre corto "recuperación" es ambiguo entre ambos conceptos, de ahí esta nota
 alcanza al caso de RF-24, que sí resuelve un mecanismo de reset self-service (con su propio
 token de un solo uso, expiración de 1 hora — ver `INV-ID-12`/`INV-ID-13`) precisamente para no
 depender del administrador.
+
+## Nota de alcance (agregada 2026-11-08, `US-ADJ-67`)
+
+El **un solo uso y los 7 días** de esta decisión rigen para la invitación **individual**, que se conserva en el backend. Para repartir un link a toda la clase se agregó la invitación **grupal** (varios usos, 15 minutos, 1 hora o 1 día, desactivable) — ver `ADR-027`. La interfaz del Docente solo ofrece la grupal; las individuales ya emitidas siguen valiendo hasta que venzan. "Sin recuperación automática" no cambia: un link vencido o desactivado no se extiende, se genera otro.
+

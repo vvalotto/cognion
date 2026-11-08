@@ -87,17 +87,29 @@ describe("AutoregistroDocente", () => {
     expect(screen.getByLabelText("Email")).toHaveValue("ya-existe@fiuner.edu.ar")
   })
 
-  it("contraseña insegura (422) muestra el error del backend en el propio formulario", async () => {
+  it("si el servidor igual rechaza la contraseña (422), el error del backend queda en el formulario y recibe el foco", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(422, { detail: "La contraseña debe tener al menos 12 caracteres." }),
     )
 
     renderPantalla()
-    await completarFormulario("nico@fiuner.edu.ar", "cortita1234", "cortita1234")
+    await completarFormulario("nico@fiuner.edu.ar", "Password#123x", "Password#123x")
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "La contraseña debe tener al menos 12 caracteres.",
-    )
+    const alerta = await screen.findByRole("alert")
+    expect(alerta).toHaveTextContent("La contraseña debe tener al menos 12 caracteres.")
+    expect(alerta).toHaveFocus()
+  })
+
+  it("con la contraseña incompleta no se puede enviar y se explica por qué (spike #595)", async () => {
+    renderPantalla()
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText("Contraseña"), "cortita1234")
+
+    expect(screen.getByRole("button", { name: "Crear cuenta" })).toBeDisabled()
+    expect(
+      screen.getByText("Completá los requisitos de la contraseña para continuar."),
+    ).toBeInTheDocument()
+    expect(fetch).not.toHaveBeenCalled()
   })
 
   it("emails que no coinciden muestran error de cliente sin llamar al backend (hallazgo #5 de la UAT)", async () => {

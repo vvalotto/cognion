@@ -33,7 +33,8 @@ class RegistrarEstudianteUseCase:
         """Crea el Usuario con perfil Estudiante y consume la invitación en la misma operación.
 
         Lanza `InvitacionInvalida` si el token no corresponde a ninguna invitación,
-        `InvitacionVencida` o `InvitacionYaUsada` si ya no está vigente (INV-ID-01, INV-ID-03),
+        `InvitacionVencida`, `InvitacionRevocada` o `InvitacionYaUsada` si ya no está vigente
+        (INV-ID-01, INV-ID-03; el link grupal admite varios usos, `US-ADJ-67`),
         `EmailYaRegistrado` si el email ya está en uso (INV-ID-04), o `PasswordDemasiadoCorta`/
         `PasswordSinComplejidadSuficiente` si `password` no cumple INV-ID-11 (`US-ADJ-36`).
         Ninguna invitación se marca como usada si el registro se rechaza.
@@ -49,7 +50,11 @@ class RegistrarEstudianteUseCase:
         await self._usuario_repositorio.guardar(usuario)
 
         invitacion.aceptar(datetime.now(UTC))
-        await self._invitacion_repositorio.actualizar(invitacion)
+        if invitacion.grupal:
+            # Varios registros llegan a la vez: el contador se suma en la base, no se reescribe.
+            await self._invitacion_repositorio.incrementar_usos(invitacion.id)
+        else:
+            await self._invitacion_repositorio.actualizar(invitacion)
 
         evento_invitacion = InvitacionAceptada(
             invitacion_id=invitacion.id, comision_id=invitacion.comision_id, usuario_id=usuario.id

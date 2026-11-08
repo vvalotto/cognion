@@ -21,6 +21,7 @@ from src.identidad.frameworks.db.models import (
     EstudianteModel,
     UsuarioModel,
 )
+from src.identidad.interface_adapters.gateways.email_unico import email_unico
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 _MODEL_POR_PERFIL: dict[TipoPerfil, type[AdministradorModel | DocenteModel | EstudianteModel]] = {
@@ -62,13 +63,14 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
                 creado_en=usuario.creado_en,
             )
         )
-        # Flush intermedio: no hay `relationship()` declarada entre UsuarioModel y los
-        # modelos de perfil, así que SQLAlchemy no infiere el orden de inserción a partir
-        # de la FK — sin este flush, ambos inserts pueden viajar en el mismo batch y violar
-        # la constraint si el perfil se ejecuta antes que el usuario.
-        await self._session.flush()
-        self._session.add(self._perfil_model(usuario))
-        await self._session.commit()
+        async with email_unico(self._session, usuario.email):
+            # Flush intermedio: no hay `relationship()` declarada entre UsuarioModel y los
+            # modelos de perfil, así que SQLAlchemy no infiere el orden de inserción a partir
+            # de la FK — sin este flush, ambos inserts pueden viajar en el mismo batch y violar
+            # la constraint si el perfil se ejecuta antes que el usuario.
+            await self._session.flush()
+            self._session.add(self._perfil_model(usuario))
+            await self._session.commit()
 
     async def actualizar(self, usuario: Usuario) -> None:
         """Guarda `nombre`, `email`, `password_hash`, `bloqueada`, `deshabilitada` y contadores."""

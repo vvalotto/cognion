@@ -71,7 +71,9 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
 |---|---|---|---|---|
 | `CrearUsuario(nombre, email, password, perfil)` | Administrador | `Usuario` + perfil (`Docente`/`Administrador`/`Estudiante`) — crea ambos, misma transacción | `UsuarioCreado` | `EmailYaRegistrado` |
 | `GenerarInvitacion(comision_id, docente_id)` | Docente | `Invitación` (crea) — valida contra `Comisión.docentes_asignados` | `InvitacionGenerada` | `DocenteNoAsignadoAComision` (INV-ID-08) |
-| `RegistrarEstudiante(token, nombre, email, password)` | Estudiante | `Invitación` (consulta) → `Usuario` + `Estudiante` (crea ambos, misma transacción) | `InvitacionAceptada`, `UsuarioRegistrado` | `InvitacionVencida`, `InvitacionInvalida`, `InvitacionYaUsada`, `EmailYaRegistrado` |
+| `GenerarInvitacionGrupal(comision_id, duracion)` | Docente | `Invitación` (crea; revoca la grupal vigente) | `InvitacionGrupalGenerada` | `ComisionNoAutorizada`, `DuracionInvitacionInvalida` (INV-ID-22) |
+| `RevocarInvitacionGrupal(comision_id, invitacion_id)` | Docente | `Invitación` (revoca; idempotente) | `InvitacionGrupalRevocada` | `ComisionNoAutorizada`, `InvitacionInvalida` |
+| `RegistrarEstudiante(token, nombre, email, password)` | Estudiante | `Invitación` (consulta) → `Usuario` + `Estudiante` (crea ambos, misma transacción) | `InvitacionAceptada`, `UsuarioRegistrado` | `InvitacionVencida`, `InvitacionRevocada`, `InvitacionInvalida`, `InvitacionYaUsada`, `EmailYaRegistrado` |
 | `IniciarSesion(email, password)` | Docente, Administrador, Estudiante | `Usuario` (consulta, incluye `perfil`) | `SesionIniciada` (JWT con claim `rol` derivado del tipo de `perfil`) | `CredencialesInvalidas`, `CuentaDeshabilitadaError` (cuenta dada de baja, INV-ID-18 — `US-ADJ-59`; se chequea antes que el bloqueo y que la contraseña), `CuentaBloqueadaError` (cuenta ya bloqueada, INV-ID-10 — `US-2.2.1`), `CuentaBloqueadaTemporalmenteError` (último Administrador operativo bloqueado, INV-ID-21 — `US-ADJ-60`; se levanta solo al vencer) |
 
 **Diferidos — modelados, sin US en el Incremento 1** (RF-19 elicitado 2026-07-17, ver
@@ -94,6 +96,11 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
   el bloqueo es **temporal** (`bloqueada_hasta = ahora + 15 min`, configurable) y vence solo — el
   sistema nunca queda sin quien lo opere. La política vive en `Usuario.bloquear_por_intentos_fallidos`;
   el vencimiento es perezoso (se evalúa al iniciar sesión o cambiar la contraseña, sin proceso de fondo).
+  **Enmienda (`US-ADJ-69`):** el **2.º fallo consecutivo de `IniciarSesion`** de una cuenta existente avisa
+  `intentos_restantes = 1` (el próximo intento bloquea); el 1.º y el 3.º responden como siempre y nunca se informa
+  "quedan 2". Un email inexistente no lleva el aviso, por lo que éste permite distinguir las cuentas reales:
+  trade-off aceptado el 2026-11-08 (uso interno, 30 a 60 estudiantes por comisión; el bloqueo del 4.º intento ya
+  filtraba la existencia de la cuenta). `CambiarPassword` ya informaba `intentos_restantes` (`US-2.2.8`).
 - **INV-ID-11:** toda contraseña nueva (`CrearUsuario`, `RegistrarEstudiante`,
   `CambiarPassword`, `ResetearPassword`) tiene un mínimo de 8 caracteres — regla transversal,
   no exclusiva de RF-19 (extiende RF-01 y la alta directa de usuario, ver revisión
@@ -121,14 +128,22 @@ persistente de `Usuario`.
 | `token` | string único | enviado por email (`ADR-012`) |
 | `generada_en` | datetime | |
 | `expira_en` | datetime | `generada_en + 7 días`, fijo al generar (`ADR-012`) |
-| `usada_en` | datetime \| null | se completa al aceptar |
+| `usada_en` | datetime \| null | se completa al aceptar una invitación **individual** |
+| `grupal` | bool | `true` en el link para toda la clase (`US-ADJ-67`, `ADR-027`); `false` en las individuales y en las anteriores a la migración |
+| `usos` | int | registros hechos con la invitación; en la grupal lo suma la base de datos en una sola sentencia (registros simultáneos) |
+| `revocada_en` | datetime \| null | cuándo el Docente la desactivó o la reemplazó con un link nuevo |
 
 **Invariantes:**
-- **INV-ID-01:** una invitación con `usada_en` no null no puede volver a aceptarse (uso único).
+- **INV-ID-01:** una invitación **individual** con `usada_en` no null no puede volver a aceptarse (uso único). La **grupal** no se marca como usada: admite varios usos (`ADR-027`).
 - **INV-ID-02:** `expira_en = generada_en + 7 días`, calculado una sola vez al generar — no se
   recalcula ni se extiende (`ADR-012`, sin mecanismo de reenvío/extensión en v1).
-- **INV-ID-03:** una invitación es válida para aceptar solo si `ahora < expira_en` y
-  `usada_en is null`. Fuera de esa ventana: rechazo sin recuperación automática (`ADR-012`).
+- **INV-ID-03:** una invitación es válida para aceptar solo si `ahora < expira_en`, `usada_en is null` y
+  `revocada_en is null`. Fuera de esa ventana: rechazo sin recuperación automática (`ADR-012`); el
+  rechazo distingue `InvitacionVencida`, `InvitacionRevocada` e `InvitacionYaUsada` (`ADR-027`).
+- **INV-ID-22:** `expira_en` de una invitación **grupal** es `generada_en + 15 min, 1 h o 1 día` (por defecto
+  1 h), fijo al generar; no se extiende. Otra duración se rechaza (`DuracionInvitacionInvalida`).
+- **INV-ID-23:** hay a lo sumo **un link grupal vigente por comisión**: generar uno nuevo revoca el anterior
+  en la misma operación. Solo un Docente asignado a la comisión genera, consulta o desactiva (`US-ADJ-57`).
 
 ### `Usuario` (Aggregate Root)
 

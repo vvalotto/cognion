@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError } from "@/lib/api-client"
 import { emailsCoinciden } from "@/lib/emails"
+import { cumpleReglasPassword } from "@/lib/password-reglas"
+import { useErrorEnfocado } from "@/lib/use-error-enfocado"
 import { autoregistrarDocente } from "@/lib/identidad-autoregistro-api"
 
 /**
@@ -23,7 +25,8 @@ export function AutoregistroDocente() {
   const [repetirEmail, setRepetirEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmarPassword, setConfirmarPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
+  const { error, setError, alertaRef } = useErrorEnfocado()
+  const passwordValida = cumpleReglasPassword(password)
 
   const controladorSubmitRef = useRef<AbortController | null>(null)
   if (!controladorSubmitRef.current) controladorSubmitRef.current = new AbortController()
@@ -76,6 +79,8 @@ export function AutoregistroDocente() {
       {error && (
         <div
           role="alert"
+          ref={alertaRef}
+          tabIndex={-1}
           className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           <p className="font-medium">{error}</p>
@@ -134,7 +139,14 @@ export function AutoregistroDocente() {
             onChange={(event) => setConfirmarPassword(event.target.value)}
           />
         </div>
-        <Button type="submit">Crear cuenta</Button>
+        <Button type="submit" disabled={!passwordValida}>
+          Crear cuenta
+        </Button>
+        {password.length > 0 && !passwordValida && (
+          <p className="-mt-3 text-xs text-muted-foreground">
+            Completá los requisitos de la contraseña para continuar.
+          </p>
+        )}
       </form>
 
       <p className="mt-4 text-center text-sm text-muted-foreground">

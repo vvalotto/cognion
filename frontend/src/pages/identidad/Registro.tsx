@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { emailsCoinciden } from "@/lib/emails"
+import { esErrorDePassword, motivoDeInvitacion } from "@/lib/invitacion-motivos"
+import { cumpleReglasPassword } from "@/lib/password-reglas"
+import { useErrorEnfocado } from "@/lib/use-error-enfocado"
 
 interface RegistroResponse {
   id: string
@@ -32,7 +35,8 @@ export function Registro() {
   const [repetirEmail, setRepetirEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmarPassword, setConfirmarPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
+  const { error, setError, alertaRef } = useErrorEnfocado()
+  const passwordValida = cumpleReglasPassword(password)
   const [preview, setPreview] = useState<InvitacionPreviewResponse | null>(null)
   const [cargandoPreview, setCargandoPreview] = useState(true)
 
@@ -66,7 +70,7 @@ export function Registro() {
       } catch (err) {
         if (controller.signal.aborted) return
         if (err instanceof ApiError && (err.status === 404 || err.status === 422)) {
-          void navigate("/registro/error")
+          void navigate(`/registro/error?motivo=${motivoDeInvitacion(err.detail)}`)
           return
         }
         throw err
@@ -104,8 +108,14 @@ export function Registro() {
       void navigate("/registro/exito", { state: { materia: response.materia } })
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
+      // Un 422 puede ser de la invitación o de la contraseña: el código del servidor los distingue
+      // (`US-ADJ-67`); una contraseña rechazada se muestra en el formulario, no como link inválido.
       if (err instanceof ApiError && err.status === 422) {
-        void navigate("/registro/error")
+        if (esErrorDePassword(err.detail)) {
+          setError(err.message)
+          return
+        }
+        void navigate(`/registro/error?motivo=${motivoDeInvitacion(err.detail)}`)
         return
       }
       if (err instanceof ApiError && err.status === 409) {
@@ -131,6 +141,8 @@ export function Registro() {
       {error && (
         <div
           role="alert"
+          ref={alertaRef}
+          tabIndex={-1}
           className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           <p className="font-medium">{error}</p>
@@ -192,7 +204,14 @@ export function Registro() {
               onChange={(event) => setConfirmarPassword(event.target.value)}
             />
           </div>
-          <Button type="submit">Crear cuenta</Button>
+          <Button type="submit" disabled={!passwordValida}>
+            Crear cuenta
+          </Button>
+          {password.length > 0 && !passwordValida && (
+          <p className="-mt-3 text-xs text-muted-foreground">
+            Completá los requisitos de la contraseña para continuar.
+          </p>
+        )}
         </form>
       )}
 
