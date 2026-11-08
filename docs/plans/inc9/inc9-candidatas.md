@@ -58,14 +58,14 @@ Orden por riesgo:
 
 ## Iteración 3 — Guardas de arquitectura y observabilidad
 
-- [#497](https://github.com/vvalotto/cognion/issues/497) — `import-linter` en el CI con tres contratos: capas dentro de cada BC, aislamiento entre BC (solo desde `frameworks/adapters/`) y `shared` sin importar de ningún BC. Hoy se cumple solo por revisión humana.
+- [#497](https://github.com/vvalotto/cognion/issues/497) — **hecho (2026-11-08)**: `import-linter` en el CI con cuatro contratos (capas, aislamiento entre BC, `shared` y `ADR-026`); descubrió que 9 gateways SQL importan los modelos ORM de `frameworks`, declarados como excepción. Los tres originales: capas dentro de cada BC, aislamiento entre BC (solo desde `frameworks/adapters/`) y `shared` sin importar de ningún BC. Hoy se cumple solo por revisión humana.
 - [#526](https://github.com/vvalotto/cognion/issues/526) `US-8.3.3` — observabilidad mínima: logs estructurados y `healthcheck` de `readiness`.
 - [#498](https://github.com/vvalotto/cognion/issues/498) — el ADR está escrito (`ADR-026`, 2026-11-08): Analytics es la única excepción a leer datos de otro BC; los tres casos restantes se migran en la Iteración 4. El contrato de `import-linter` (#497) debe codificar esa excepción.
 - [#496](https://github.com/vvalotto/cognion/issues/496) — corregir `DependencyGraphBuilder` en `software_limpio` (otro repositorio, mismo autor; acotado en tiempo) para reactivar `LayerViolationsAnalyzer` y quitar los falsos "Zone of Pain".
 
 ## Iteración 4 — Migración de adaptadores que leen tablas de otro BC
 
-Según `ADR-026`. Depende de #497 (el contrato de `import-linter` impide que vuelva a aparecer). Una US por adaptador; cada una empieza con un test de caracterización y no puede cambiar el comportamiento.
+Según `ADR-026`. Depende de #497, **ya hecho** (el contrato de `import-linter` impide que vuelva a aparecer; cada migración borra su línea de `ignore_imports` en `pyproject.toml`). Una US por adaptador; cada una empieza con un test de caracterización y no puede cambiar el comportamiento.
 
 1. [#600](https://github.com/vvalotto/cognion/issues/600) `US-9.4.1` — `banco_preguntas` deja de leer modelos de `identidad` (consulta de comisiones).
 2. [#601](https://github.com/vvalotto/cognion/issues/601) `US-9.4.2` — `actividad_evaluativa` deja de leer modelos de `identidad` (consulta de estudiantes).
@@ -85,7 +85,7 @@ El orden es provisional y se confirma al escribir cada spec.
 Iter 0 (decisiones) ──► Iter 2 (link grupal)
                    └──► Iter 3 (#498 ADR → implementar)
 #594 (token en log) ──► Iter 2     (el token pasa a ser reutilizable)
-#496 ──► #497 ──► Iter 4 (migración de adaptadores, ADR-026)
+#497 ──► Iter 4 (migración de adaptadores, ADR-026)   (#497 no depende de #496: el Issue lo dice)
 #562 (bcrypt async) ──► #597       (la medición de memoria queda distorsionada si bcrypt bloquea)
 #596 (¿JWT vencido?) ──► posible Issue nuevo en Iter 1 o 2
 ```
