@@ -30,6 +30,9 @@ jobs:
       - name: mypy
         run: uv run mypy src/
 
+      - name: import-linter (capas y aislamiento entre BC)
+        run: uv run lint-imports
+
   lint-frontend:
     name: Lint frontend
     runs-on: ubuntu-latest

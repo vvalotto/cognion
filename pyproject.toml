@@ -33,6 +33,7 @@ dev = [
     "quality-agents",
     "vulture>=2.16",
     "codespell>=2.4.3",
+    "import-linter>=2.0",
 ]
 
 [tool.uv.sources]
@@ -203,3 +204,90 @@ entities = []
 use_cases = ["entities"]
 interface_adapters = ["use_cases", "entities"]
 frameworks = ["interface_adapters", "use_cases", "entities"]
+
+# Guarda de arquitectura (Issue #497, `ADR-006`, `ADR-026`): hace cumplir en el CI lo que hasta ahora solo
+# sostenía la revisión humana, porque `LayerViolationsAnalyzer` no es confiable (`software_limpio#77`).
+# Se corre con `uv run lint-imports`.
+[tool.importlinter]
+root_package = "src"
+include_external_packages = false
+
+[[tool.importlinter.contracts]]
+name = "Capas dentro de cada BC: entities <- use_cases <- interface_adapters <- frameworks"
+type = "layers"
+containers = [
+    "src.identidad",
+    "src.actividad_evaluativa",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
+    "src.shared",
+]
+layers = [
+    "(frameworks)",
+    "(interface_adapters)",
+    "(use_cases)",
+    "(entities)",
+]
+# Excepción documentada (decisión de Víctor, 2026-11-08): los repositorios SQLAlchemy viven en
+# `interface_adapters/gateways/` pero sus modelos ORM viven en `frameworks/db/models.py`. Es la
+# convención del proyecto desde el Incremento 1 (9 archivos: identidad y banco_preguntas); la regla
+# escrita se corrigió en `CLAUDE.md`. Cualquier otro import hacia una capa externa sigue prohibido.
+ignore_imports = [
+    "src.*.interface_adapters.gateways.** -> src.*.frameworks.db.models",
+]
+
+[[tool.importlinter.contracts]]
+name = "Aislamiento entre BC: solo frameworks/adapters puede importar de otro BC (ADR-006)"
+type = "independence"
+modules = [
+    "src.identidad",
+    "src.actividad_evaluativa",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
+]
+ignore_imports = [
+    "src.*.frameworks.adapters.** -> src.**",
+]
+
+[[tool.importlinter.contracts]]
+name = "shared no importa de ningún BC"
+type = "forbidden"
+source_modules = ["src.shared"]
+forbidden_modules = [
+    "src.identidad",
+    "src.actividad_evaluativa",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
+]
+
+# `ADR-026`: solo los adaptadores de lectura de Analytics pueden leer los modelos ORM de otro BC. Tres
+# adaptadores lo hacen hoy sin ser de Analytics y se migran en la Iteración 4 del Incremento 9 (#600,
+# #601 y #602): hasta entonces figuran como excepciones puntuales; al migrar cada uno se borra su línea.
+[[tool.importlinter.contracts]]
+name = "ADR-026: ningún BC salvo Analytics lee los modelos ORM de otro BC"
+type = "forbidden"
+source_modules = [
+    "src.identidad",
+    "src.actividad_evaluativa",
+    "src.banco_preguntas",
+    "src.notificaciones",
+]
+forbidden_modules = [
+    "src.identidad.frameworks.db.models",
+    "src.actividad_evaluativa.frameworks.db.models",
+    "src.banco_preguntas.frameworks.db.models",
+]
+allow_indirect_imports = true
+ignore_imports = [
+    # Cada BC puede importar sus propios modelos.
+    "src.identidad.** -> src.identidad.frameworks.db.models",
+    "src.actividad_evaluativa.** -> src.actividad_evaluativa.frameworks.db.models",
+    "src.banco_preguntas.** -> src.banco_preguntas.frameworks.db.models",
+    # Pendientes de migrar (ADR-026, Iteración 4):
+    "src.banco_preguntas.frameworks.adapters.comision_consulta_port_in_process -> src.identidad.frameworks.db.models",  # #600
+    "src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process -> src.identidad.frameworks.db.models",  # #601
+    "src.identidad.frameworks.adapters.evaluacion_consulta_port_in_process -> src.actividad_evaluativa.frameworks.db.models",  # #602
+]
