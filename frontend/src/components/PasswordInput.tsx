@@ -2,6 +2,7 @@ import { Eye, EyeOff } from "lucide-react"
 import { useState, type ComponentProps } from "react"
 
 import { Input } from "@/components/ui/input"
+import { evaluarReglasPassword } from "@/lib/password-reglas"
 import { cn } from "@/lib/utils"
 
 type Fortaleza = "debil" | "media" | "fuerte"
@@ -20,21 +21,6 @@ const COLOR_BARRA_FORTALEZA: Record<Fortaleza, string> = {
   debil: "bg-red-600",
   media: "bg-amber-600",
   fuerte: "bg-emerald-700",
-}
-
-interface Regla {
-  cumple: boolean
-  etiqueta: string
-}
-
-/** Evalúa las 4 reglas de INV-ID-11 ampliada (`US-ADJ-36`) sobre una contraseña en claro. */
-function evaluarReglas(password: string): Regla[] {
-  return [
-    { cumple: password.length >= 12, etiqueta: "Mínimo 12 caracteres" },
-    { cumple: /[A-Z]/.test(password), etiqueta: "Una mayúscula" },
-    { cumple: /[0-9]/.test(password), etiqueta: "Un número" },
-    { cumple: /[^A-Za-z0-9]/.test(password), etiqueta: "Un símbolo" },
-  ]
 }
 
 function calcularFortaleza(reglasCumplidas: number): Fortaleza {
@@ -56,7 +42,7 @@ function PasswordInput({
   const Icon = visible ? EyeOff : Eye
   const label = visible ? "Ocultar contraseña" : "Mostrar contraseña"
   const valorActual = typeof props.value === "string" ? props.value : ""
-  const reglas = mostrarFortaleza ? evaluarReglas(valorActual) : []
+  const reglas = mostrarFortaleza ? evaluarReglasPassword(valorActual) : []
   const fortaleza = calcularFortaleza(reglas.filter((r) => r.cumple).length)
 
   return (

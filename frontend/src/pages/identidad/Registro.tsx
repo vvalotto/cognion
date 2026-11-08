@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { emailsCoinciden } from "@/lib/emails"
+import { cumpleReglasPassword } from "@/lib/password-reglas"
+import { useErrorEnfocado } from "@/lib/use-error-enfocado"
 
 interface RegistroResponse {
   id: string
@@ -32,7 +34,8 @@ export function Registro() {
   const [repetirEmail, setRepetirEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmarPassword, setConfirmarPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
+  const { error, setError, alertaRef } = useErrorEnfocado()
+  const passwordValida = cumpleReglasPassword(password)
   const [preview, setPreview] = useState<InvitacionPreviewResponse | null>(null)
   const [cargandoPreview, setCargandoPreview] = useState(true)
 
@@ -104,6 +107,10 @@ export function Registro() {
       void navigate("/registro/exito", { state: { materia: response.materia } })
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
+      // El servidor responde 422 tanto por una invitación inválida, vencida o usada como por una contraseña
+      // que no cumple la política. Como el botón ya exige las 4 reglas, un 422 acá es de la invitación; si el
+      // cliente y el servidor llegaran a discrepar, la pantalla de error confundiría la causa (`US-ADJ-67`
+      // hará que el servidor distinga los motivos).
       if (err instanceof ApiError && err.status === 422) {
         void navigate("/registro/error")
         return
@@ -131,6 +138,8 @@ export function Registro() {
       {error && (
         <div
           role="alert"
+          ref={alertaRef}
+          tabIndex={-1}
           className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           <p className="font-medium">{error}</p>
@@ -192,7 +201,14 @@ export function Registro() {
               onChange={(event) => setConfirmarPassword(event.target.value)}
             />
           </div>
-          <Button type="submit">Crear cuenta</Button>
+          <Button type="submit" disabled={!passwordValida}>
+            Crear cuenta
+          </Button>
+          {password.length > 0 && !passwordValida && (
+          <p className="-mt-3 text-xs text-muted-foreground">
+            Completá los requisitos de la contraseña para continuar.
+          </p>
+        )}
         </form>
       )}
 

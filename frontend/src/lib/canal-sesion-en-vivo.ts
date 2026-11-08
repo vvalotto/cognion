@@ -1,6 +1,8 @@
 import { router } from "@/router"
+import { ApiError } from "@/lib/api-client"
 import { WS_BASE_URL } from "@/lib/config"
 import { clearSession, getSession } from "@/lib/session"
+import { obtenerEstadoSesion } from "@/lib/sesion-en-vivo-api"
 
 const BACKOFF_INICIAL_MS = 1000
 const BACKOFF_TOPE_MS = 10000
@@ -76,6 +78,9 @@ export type EstadoCanal = "conectado" | "reconectando" | "desconectado"
 
 export type WebSocketFactory = (url: string) => WebSocket
 
+/** Consulta HTTP autenticada que confirma si la sesión (el JWT) sigue vigente. */
+export type VerificarSesion = () => Promise<unknown>
+
 /**
  * Envuelve el `WebSocket` nativo hacia `/sesiones-en-vivo/{id}/canal`: solo recibe mensajes del
  * servidor (los comandos van por HTTP, `ADR-005`), se reconecta con backoff exponencial y avisa
@@ -87,7 +92,9 @@ export class CanalSesionEnVivo {
   private readonly onReconectado: () => void
   private readonly onCambioEstado: (estado: EstadoCanal) => void
   private readonly crearWebSocket: WebSocketFactory
+  private readonly verificarSesion: VerificarSesion
   private socket: WebSocket | null = null
+  private sesionVerificada = false
   private cerradoPorLlamador = false
   private reconectando = false
   private backoffMs = BACKOFF_INICIAL_MS
@@ -99,12 +106,14 @@ export class CanalSesionEnVivo {
     onReconectado: () => void,
     onCambioEstado: (estado: EstadoCanal) => void,
     crearWebSocket: WebSocketFactory = (url) => new WebSocket(url),
+    verificarSesion: VerificarSesion = () => obtenerEstadoSesion(sesionId),
   ) {
     this.sesionId = sesionId
     this.onMensaje = onMensaje
     this.onReconectado = onReconectado
     this.onCambioEstado = onCambioEstado
     this.crearWebSocket = crearWebSocket
+    this.verificarSesion = verificarSesion
   }
 
   conectar(): void {
@@ -112,8 +121,11 @@ export class CanalSesionEnVivo {
     const url = `${WS_BASE_URL}/sesiones-en-vivo/${this.sesionId}/canal?token=${encodeURIComponent(token)}`
     const socket = this.crearWebSocket(url)
     this.socket = socket
+    let seAbrio = false
 
     socket.onopen = () => {
+      seAbrio = true
+      this.sesionVerificada = false
       this.onCambioEstado("conectado")
       if (this.reconectando) {
         this.reconectando = false
@@ -139,12 +151,34 @@ export class CanalSesionEnVivo {
         return
       }
 
+      // Un rechazo del handshake (JWT ausente, inválido o vencido) llega al navegador como 1006, nunca
+      // como 1008, y es indistinguible de un corte de red: se confirma por HTTP si la sesión sigue viva.
+      if (!seAbrio) void this.confirmarSesionVigente()
+
       this.reconectando = true
       this.onCambioEstado("reconectando")
       this.timeoutReconexion = setTimeout(() => {
         this.conectar()
       }, this.backoffMs)
       this.backoffMs = Math.min(this.backoffMs * 2, BACKOFF_TOPE_MS)
+    }
+  }
+
+  /**
+   * Si la consulta HTTP responde 401, `apiFetch` ya limpió la sesión y navegó a `/login`: solo falta dejar
+   * de reconectar con un token que no sirve. Se consulta una vez por tanda de reintentos fallidos.
+   */
+  private async confirmarSesionVigente(): Promise<void> {
+    if (this.sesionVerificada) return
+    this.sesionVerificada = true
+    try {
+      await this.verificarSesion()
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        this.cerrar()
+      } else if (!(error instanceof ApiError)) {
+        this.sesionVerificada = false // sin red: no se pudo comprobar, se reintenta en la próxima caída
+      }
     }
   }
 

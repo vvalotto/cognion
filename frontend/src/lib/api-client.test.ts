@@ -114,4 +114,23 @@ describe("apiFetch", () => {
     expect(error).toBeInstanceOf(ApiError)
     expect((error as ApiError).message).toBe("Error inesperado.")
   })
+
+  it("traduce un 422 con detalle en lista (validación del formulario) a un mensaje legible", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ detail: [{ type: "string_too_short", loc: ["body", "password"], msg: "String should have at least 8 characters" }] }),
+        { status: 422 }
+      )
+    )
+
+    const error = await apiFetch("/identidad/registro", { method: "POST", body: {} }).catch(
+      (e: unknown) => e
+    )
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect((error as ApiError).status).toBe(422)
+    expect((error as ApiError).message).toBe(
+      "Revisá los datos ingresados: hay campos incompletos o con un formato inválido."
+    )
+  })
 })

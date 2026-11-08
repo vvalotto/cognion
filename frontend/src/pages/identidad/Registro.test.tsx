@@ -37,7 +37,7 @@ function renderRegistro(token = "token-vigente") {
 
 async function completarFormulario(
   email: string,
-  password = "password123x",
+  password = "Password#123x",
   confirmar = password,
   repetirEmail = email
 ) {
@@ -139,17 +139,30 @@ describe("Registro", () => {
     vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
 
     renderRegistro()
-    await completarFormulario("est2.uat@test.com", "password123x", "password123x", "est2.uar@test.com")
+    await completarFormulario("est2.uat@test.com", "Password#123x", "Password#123x", "est2.uar@test.com")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Los emails no coinciden.")
     expect(fetch).toHaveBeenCalledTimes(1)
+  })
+
+  it("con la contraseña incompleta no se puede enviar y se explica por qué (spike #595)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
+    renderRegistro()
+    const user = userEvent.setup()
+    await user.type(await screen.findByLabelText("Contraseña"), "contraseña-larga-sin-mayuscula")
+
+    expect(screen.getByRole("button", { name: "Crear cuenta" })).toBeDisabled()
+    expect(
+      screen.getByText("Completá los requisitos de la contraseña para continuar."),
+    ).toBeInTheDocument()
+    expect(fetch).toHaveBeenCalledTimes(1) // solo el preview de la invitación: nada se envió al registro
   })
 
   it("contraseñas que no coinciden muestran error de cliente sin llamar al backend", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(previewVigente())
 
     renderRegistro()
-    await completarFormulario("nico@fiuner.edu.ar", "password123x", "otra-password")
+    await completarFormulario("nico@fiuner.edu.ar", "Password#123x", "otra-password")
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Las contraseñas no coinciden.")
     expect(fetch).toHaveBeenCalledTimes(1)

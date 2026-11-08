@@ -78,6 +78,14 @@ async function extractError(response: Response): Promise<ExtractedError> {
     if (body && typeof body === "object" && "detail" in body) {
       const detail = (body as { detail: unknown }).detail
       if (typeof detail === "string") return { message: detail }
+      // La validación del formulario del servidor (Pydantic) devuelve el detalle como lista de objetos en inglés:
+      // no se muestra tal cual, pero tampoco como "Error inesperado." (spike #595).
+      if (Array.isArray(detail)) {
+        return {
+          message: "Revisá los datos ingresados: hay campos incompletos o con un formato inválido.",
+          detail,
+        }
+      }
       if (detail && typeof detail === "object" && "mensaje" in detail) {
         const mensaje = (detail as { mensaje: unknown }).mensaje
         if (typeof mensaje === "string") return { message: mensaje, detail }
