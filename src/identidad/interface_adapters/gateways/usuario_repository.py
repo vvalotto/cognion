@@ -5,10 +5,8 @@ from __future__ import annotations
 from uuid import UUID
 
 from sqlalchemy import func, select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.identidad.entities.errors import EmailYaRegistrado
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
 from src.identidad.entities.usuario import (
     Administrador,
@@ -23,6 +21,7 @@ from src.identidad.frameworks.db.models import (
     EstudianteModel,
     UsuarioModel,
 )
+from src.identidad.interface_adapters.gateways.email_unico import email_unico
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 _MODEL_POR_PERFIL: dict[TipoPerfil, type[AdministradorModel | DocenteModel | EstudianteModel]] = {
@@ -64,7 +63,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
                 creado_en=usuario.creado_en,
             )
         )
-        try:
+        async with email_unico(self._session, usuario.email):
             # Flush intermedio: no hay `relationship()` declarada entre UsuarioModel y los
             # modelos de perfil, así que SQLAlchemy no infiere el orden de inserción a partir
             # de la FK — sin este flush, ambos inserts pueden viajar en el mismo batch y violar
@@ -72,13 +71,6 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
             await self._session.flush()
             self._session.add(self._perfil_model(usuario))
             await self._session.commit()
-        except IntegrityError as exc:
-            await self._session.rollback()
-            # Dos registros del mismo email a la vez pasan juntos el chequeo previo `existe_email`
-            # y los frena la restricción única: es el mismo "email ya registrado", no un error 500.
-            if "usuario_email_key" in str(exc):
-                raise EmailYaRegistrado(usuario.email) from exc
-            raise
 
     async def actualizar(self, usuario: Usuario) -> None:
         """Guarda `nombre`, `email`, `password_hash`, `bloqueada`, `deshabilitada` y contadores."""
