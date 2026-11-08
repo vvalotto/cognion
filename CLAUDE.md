@@ -76,11 +76,13 @@ Monolito modular con **Clean Architecture** interna. Bounded Contexts: Actividad
 src/<bc>/
 ├── entities/           → reglas de negocio puras — sin dependencias externas
 ├── use_cases/          → orquestación — solo importa entities/
-├── interface_adapters/ → controllers, presenters, gateways — solo importa use_cases/
+├── interface_adapters/ → controllers, presenters, gateways — solo importa use_cases/ (excepción: los gateways SQL importan los modelos ORM de `frameworks/db/models.py`)
 └── frameworks/         → FastAPI, SQLAlchemy, WebSockets — implementa puertos
 ```
 
 **Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: solo por puertos definidos en `entities/ports/` — nunca imports directos entre BCs. `shared/` es la única excepción transversal: puede tener las 4 capas (`entities/`, `use_cases/`, `interface_adapters/`, `frameworks/`) cuando el contenido es genuinamente transversal — sin lógica de negocio de un BC específico — no solo `entities/` (`ADR-017` para `shared/frameworks/db.py`, `ADR-019` para JWT/RBAC en `shared/entities/`+`frameworks/security/`+`interface_adapters/security/`). Cada BC sigue armando su propio composition root en `frameworks/dependencies.py`, importando de `shared` — nunca de otro BC.
+
+**Estas reglas las hace cumplir `import-linter` en el CI** (`uv run lint-imports`, contratos en `[tool.importlinter]` de `pyproject.toml`): capas dentro de cada BC, solo `frameworks/adapters/` importa de otro BC, `shared` no importa de ningún BC, y solo Analytics lee los modelos ORM de otro BC (`ADR-026`; las tres excepciones pendientes, #600 a #602, figuran como `ignore_imports` y se borran al migrarlas). La excepción de los gateways SQL está declarada ahí mismo (9 archivos de `identidad` y `banco_preguntas`).
 
 ---
 
@@ -151,7 +153,7 @@ el merge es a la rama default.
 | Commit backend | mypy (`src/` completo) | Pre-commit automático | Sí |
 | Commit backend | CodeGuard | Pre-commit automático | No — solo advierte |
 | Push backend | DesignReviewer | Pre-push automático | Sí, si CRITICAL |
-| Push/PR a develop | lint + tests + DesignReviewer | GitHub Actions CI | Sí |
+| Push/PR a develop | lint + import-linter + tests + DesignReviewer | GitHub Actions CI | Sí |
 | Merge/tag a main | build Docker + deploy + healthcheck | GitHub Actions CD | Sí |
 | Cierre de Incremento | DesignReviewer manual + verificación UX | Manual | 0 CRITICAL requerido |
 | UAT | Tests funcionales (Capa 1 + Capa 2) | Manual | Debe aprobar antes de merge a main |
@@ -179,7 +181,7 @@ el merge es a la rama default.
   `coverage.json` en la raíz, pero solo si ese archivo ya existe. Generarlo primero con
   `pytest --cov=src --cov-report=json` desde la raíz; si no, `CoverageAnalyzer` reporta warning
   de archivo no encontrado en vez del porcentaje real de cobertura.
-- **`LayerViolationsAnalyzer` no es confiable** (mismo bug upstream #77, `US-ADJ-19`): nunca detecta violaciones, así que la regla de imports entre capas se sostiene por revisión de código, no por ese chequeo. Detalle en `docs/specs/ajustes/US-ADJ-19.md`.
+- **`LayerViolationsAnalyzer` no es confiable** (mismo bug upstream #77, `US-ADJ-19`): nunca detecta violaciones. La regla de imports entre capas y entre BC la hace cumplir **`import-linter`** (`uv run lint-imports`, Issue #497), que falla en el CI y tiene probada una violación sembrada por contrato (`tests/unit/inc9/test_guarda_arquitectura.py`). Detalle de la herramienta anterior en `docs/specs/ajustes/US-ADJ-19.md`.
 
 ---
 
