@@ -75,6 +75,27 @@ class InvitacionYaUsada(Exception):
         super().__init__(f"La invitación con token '{token}' ya fue utilizada.")
 
 
+class InvitacionRevocada(Exception):
+    """Se intentó aceptar un link grupal que el Docente desactivó o reemplazó (`US-ADJ-67`)."""
+
+    def __init__(self, token: str) -> None:
+        """Guarda el token en conflicto y arma el mensaje de la excepción."""
+        self.token = token
+        super().__init__(f"La invitación con token '{token}' fue desactivada.")
+
+
+class DuracionInvitacionInvalida(Exception):
+    """La duración pedida para un link grupal no es una de las elegibles (`US-ADJ-67`)."""
+
+    def __init__(self, minutos: int, permitidas: tuple[int, ...]) -> None:
+        """Guarda la duración rechazada y arma el mensaje con las permitidas."""
+        self.minutos = minutos
+        opciones = ", ".join(str(m) for m in permitidas)
+        super().__init__(
+            f"La duración de {minutos} minutos no es válida; elegí una de: {opciones}."
+        )
+
+
 class MateriaNoExiste(Exception):
     """Se referenció una materia que no existe en BC Banco de Preguntas."""
 

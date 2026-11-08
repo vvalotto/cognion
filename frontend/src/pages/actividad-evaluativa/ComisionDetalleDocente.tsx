@@ -7,18 +7,22 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ApiError } from "@/lib/api-client"
 import {
-  generarInvitacion,
+  desactivarInvitacionGrupal,
+  DURACION_INVITACION_GRUPAL_POR_DEFECTO,
+  DURACIONES_INVITACION_GRUPAL,
+  generarInvitacionGrupal,
   listarEstudiantesDeComision,
   obtenerComision,
+  obtenerUltimaInvitacionGrupal,
   type ComisionDetalleResponse,
   type EstudianteResumenResponse,
+  type InvitacionGrupalEstado,
 } from "@/lib/identidad-comisiones-api"
 import {
   listarSesionesEnVivo,
   type EstadoSesionEnVivo,
   type SesionEnVivoResumenResponse,
 } from "@/lib/sesion-en-vivo-api"
-import { obtenerUsuarioId } from "@/lib/session"
 
 const ETIQUETA_ESTADO_SESION: Record<EstadoSesionEnVivo, string> = {
   en_espera: "En espera",
@@ -34,11 +38,31 @@ const VARIANTE_ESTADO_SESION: Record<EstadoSesionEnVivo, "estado-en-espera" | "e
   cancelada: "estado-cerrada",
 }
 
+const REFRESCO_REGISTRADOS_MS = 15_000
+
+/** "59 min", "2 h 5 min" o "1 día" según lo que falta hasta `expiraEn`. */
+function formatearRestante(milisegundos: number): string {
+  const minutos = Math.max(0, Math.ceil(milisegundos / 60_000))
+  if (minutos < 60) return `${minutos} min`
+  if (minutos < 1440) {
+    const resto = minutos % 60
+    return resto === 0 ? `${Math.floor(minutos / 60)} h` : `${Math.floor(minutos / 60)} h ${resto} min`
+  }
+  return minutos < 2880 ? "1 día" : `${Math.floor(minutos / 1440)} días`
+}
+
+function textoRegistrados(usos: number): string {
+  if (usos === 0) return "Todavía nadie se registró con este link"
+  return usos === 1
+    ? "1 estudiante se registró con este link"
+    : `${usos} estudiantes se registraron con este link`
+}
+
 /**
- * Detalle de Comisión — vista Docente, generar invitación (§3.4 `wireframes-portal-entrada.md`,
- * `US-ADJ-26`). Consume `GET /comisiones/{id}` (`US-ADJ-25`) y
- * `POST /comisiones/{id}/invitaciones` sin `email_destinatario` — el backend solo devuelve el
- * `token`, sin enviar email.
+ * Detalle de Comisión — vista Docente, link de invitación grupal (§3.4 `wireframes-portal-entrada.md`,
+ * `US-ADJ-26` y `US-ADJ-67`). Consume `GET /comisiones/{id}` (`US-ADJ-25`) y los endpoints de
+ * `/comisiones/{id}/invitaciones-grupales`: un solo link vigente por comisión, con duración elegible,
+ * contador de registrados y botón para desactivarlo.
  */
 export function ComisionDetalleDocente() {
   const { comisionId } = useParams<{ comisionId: string }>()
@@ -49,7 +73,9 @@ export function ComisionDetalleDocente() {
   const [sesionesActivas, setSesionesActivas] = useState<SesionEnVivoResumenResponse[] | null>(
     null,
   )
-  const [link, setLink] = useState<string | null>(null)
+  const [invitacion, setInvitacion] = useState<InvitacionGrupalEstado | null>(null)
+  const [duracion, setDuracion] = useState(DURACION_INVITACION_GRUPAL_POR_DEFECTO)
+  const [ahora, setAhora] = useState(() => Date.now())
   const [generando, setGenerando] = useState(false)
   const [copiado, setCopiado] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -71,27 +97,41 @@ export function ComisionDetalleDocente() {
     listarSesionesEnVivo(comisionId, controller.signal)
       .then((sesiones) => setSesionesActivas(sesiones.filter((s) => s.estado !== "finalizada")))
       .catch(() => {})
+    obtenerUltimaInvitacionGrupal(comisionId, controller.signal)
+      .then(setInvitacion)
+      .catch(() => {})
 
     return () => controller.abort()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comisionId])
 
+  // Con un link vigente: el reloj avanza y se refresca el contador de registrados mientras la clase se anota.
+  const vigente = invitacion?.estado === "vigente"
+  useEffect(() => {
+    if (!comisionId || !vigente) return
+    const reloj = setInterval(() => setAhora(Date.now()), 1000 * 15)
+    const refresco = setInterval(() => {
+      obtenerUltimaInvitacionGrupal(comisionId).then(setInvitacion).catch(() => {})
+    }, REFRESCO_REGISTRADOS_MS)
+    return () => {
+      clearInterval(reloj)
+      clearInterval(refresco)
+    }
+  }, [comisionId, vigente])
+
   async function handleGenerar() {
-    const docenteId = obtenerUsuarioId()
-    if (!comisionId || !docenteId) return
+    if (!comisionId) return
     setError(null)
     setGenerando(true)
     setCopiado(false)
     try {
-      const invitacion = await generarInvitacion(
-        comisionId,
-        docenteId,
-        controladorSubmitRef.current?.signal,
+      setInvitacion(
+        await generarInvitacionGrupal(comisionId, duracion, controladorSubmitRef.current?.signal),
       )
-      setLink(`${window.location.origin}/registro?token=${invitacion.token}`)
+      setAhora(Date.now())
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
-      if (err instanceof ApiError && err.status === 422) {
+      if (err instanceof ApiError && err.status === 403) {
         setError("No estás asignado a esta comisión, no podés generar su link de invitación.")
         return
       }
@@ -100,6 +140,30 @@ export function ComisionDetalleDocente() {
       setGenerando(false)
     }
   }
+
+  async function handleDesactivar() {
+    if (!comisionId || !invitacion) return
+    setError(null)
+    try {
+      await desactivarInvitacionGrupal(
+        comisionId,
+        invitacion.id,
+        controladorSubmitRef.current?.signal,
+      )
+      setInvitacion({ ...invitacion, estado: "revocada", token: null })
+    } catch (err) {
+      if (controladorSubmitRef.current?.signal.aborted) return
+      throw err
+    }
+  }
+
+  const link =
+    invitacion?.estado === "vigente" && invitacion.token
+      ? `${window.location.origin}/registro?token=${invitacion.token}`
+      : null
+  const venceEn = invitacion ? new Date(invitacion.expiraEn).getTime() - ahora : 0
+  // El servidor decide el estado, pero si el link venció mientras la pantalla estaba abierta se muestra ya vencido.
+  const estadoVisible = invitacion?.estado === "vigente" && venceEn <= 0 ? "vencida" : invitacion?.estado
 
   async function handleCopiar() {
     if (!link) return
@@ -169,7 +233,10 @@ export function ComisionDetalleDocente() {
       )}
 
       <Card className="mt-4 p-4">
-        <h2 className="text-sm font-semibold">Invitación</h2>
+        <h2 className="text-sm font-semibold">Link de invitación para la clase</h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Compartilo por pantalla o por chat: vale para toda la clase hasta que venza o lo desactives.
+        </p>
 
         {error && (
           <div
@@ -180,25 +247,75 @@ export function ComisionDetalleDocente() {
           </div>
         )}
 
-        {link && (
-          <div className="mt-2 rounded-lg border border-border bg-muted px-3 py-2">
-            <p className="break-all font-mono text-sm">{link}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Válido por 7 días desde su generación, un solo uso.
+        <div className="mt-3 flex flex-wrap items-end gap-2">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="duracion-invitacion" className="text-sm font-medium">
+              Duración del link
+            </label>
+            <select
+              id="duracion-invitacion"
+              className="h-9 rounded-lg border border-border bg-background px-2 text-sm"
+              value={duracion}
+              onChange={(event) => setDuracion(Number(event.target.value))}
+            >
+              {DURACIONES_INVITACION_GRUPAL.map((d) => (
+                <option key={d.minutos} value={d.minutos}>
+                  {d.etiqueta}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Button type="button" disabled={generando} onClick={() => void handleGenerar()}>
+            {generando ? "Generando…" : invitacion ? "Generar un link nuevo" : "Generar link grupal"}
+          </Button>
+        </div>
+        {estadoVisible === "vigente" && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            Si generás un link nuevo, el anterior se desactiva.
+          </p>
+        )}
+
+        {invitacion && estadoVisible === "vigente" && link && (
+          <div className="mt-3">
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-muted px-3 py-2">
+              <p className="min-w-0 flex-1 break-all font-mono text-sm">{link}</p>
+              <Button type="button" variant="outline" onClick={() => void handleCopiar()}>
+                {copiado ? "Copiado ✓" : "Copiar"}
+              </Button>
+            </div>
+            <p className="mt-2 text-sm">
+              <Badge variant="estado-en-curso">Vigente</Badge>{" "}
+              Vence en <strong>{formatearRestante(venceEn)}</strong> (a las{" "}
+              {new Date(invitacion.expiraEn).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              ) · {textoRegistrados(invitacion.usos)}
             </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-2"
+              onClick={() => void handleDesactivar()}
+            >
+              Desactivar link
+            </Button>
           </div>
         )}
 
-        <div className="mt-3 flex items-center gap-2">
-          <Button type="button" disabled={generando} onClick={() => void handleGenerar()}>
-            {generando ? "Generando…" : link ? "Generar un link nuevo" : "Generar link de invitación"}
-          </Button>
-          {link && (
-            <Button type="button" variant="outline" onClick={() => void handleCopiar()}>
-              {copiado ? "Copiado ✓" : "Copiar"}
-            </Button>
-          )}
-        </div>
+        {invitacion && estadoVisible === "vencida" && (
+          <div className="mt-3 rounded-lg border border-border bg-muted px-3 py-2 text-sm">
+            <Badge variant="estado-cerrada">Venció</Badge> El link venció. {textoRegistrados(invitacion.usos)}.
+            Generá uno nuevo si falta alguien.
+          </div>
+        )}
+
+        {invitacion && estadoVisible === "revocada" && (
+          <div className="mt-3 rounded-lg border border-border bg-muted px-3 py-2 text-sm">
+            <Badge variant="estado-en-espera">Desactivado</Badge> Desactivaste el link: quien lo abra
+            verá que ya no es válido. {textoRegistrados(invitacion.usos)}.
+          </div>
+        )}
       </Card>
 
       <Card className="mt-4 overflow-x-auto">

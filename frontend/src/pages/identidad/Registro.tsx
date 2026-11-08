@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError, apiFetch } from "@/lib/api-client"
 import { emailsCoinciden } from "@/lib/emails"
+import { esErrorDePassword, motivoDeInvitacion } from "@/lib/invitacion-motivos"
 import { cumpleReglasPassword } from "@/lib/password-reglas"
 import { useErrorEnfocado } from "@/lib/use-error-enfocado"
 
@@ -69,7 +70,7 @@ export function Registro() {
       } catch (err) {
         if (controller.signal.aborted) return
         if (err instanceof ApiError && (err.status === 404 || err.status === 422)) {
-          void navigate("/registro/error")
+          void navigate(`/registro/error?motivo=${motivoDeInvitacion(err.detail)}`)
           return
         }
         throw err
@@ -107,12 +108,14 @@ export function Registro() {
       void navigate("/registro/exito", { state: { materia: response.materia } })
     } catch (err) {
       if (controladorSubmitRef.current?.signal.aborted) return
-      // El servidor responde 422 tanto por una invitación inválida, vencida o usada como por una contraseña
-      // que no cumple la política. Como el botón ya exige las 4 reglas, un 422 acá es de la invitación; si el
-      // cliente y el servidor llegaran a discrepar, la pantalla de error confundiría la causa (`US-ADJ-67`
-      // hará que el servidor distinga los motivos).
+      // Un 422 puede ser de la invitación o de la contraseña: el código del servidor los distingue
+      // (`US-ADJ-67`); una contraseña rechazada se muestra en el formulario, no como link inválido.
       if (err instanceof ApiError && err.status === 422) {
-        void navigate("/registro/error")
+        if (esErrorDePassword(err.detail)) {
+          setError(err.message)
+          return
+        }
+        void navigate(`/registro/error?motivo=${motivoDeInvitacion(err.detail)}`)
         return
       }
       if (err instanceof ApiError && err.status === 409) {

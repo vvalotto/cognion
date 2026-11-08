@@ -1,6 +1,6 @@
 # US-ADJ-67: El Docente genera un link de invitación grupal con vencimiento corto
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 2
 **Tipo**: `ajuste de producto` backend + frontend (reemplaza el link individual en la UI; matiza `ADR-012`)
 **Agregado principal afectado**: `Invitacion`

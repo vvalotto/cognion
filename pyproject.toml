@@ -147,6 +147,16 @@ markers = [
     "contador: escenario BDD del contador de intentos fallidos",
     "seguridad: escenario BDD de un comportamiento que no debe filtrar información",
     "ultimo-administrador: escenario BDD del último Administrador operativo",
+    "US-ADJ-67: escenarios BDD de la US-ADJ-67",
+    "grupal: escenario BDD del link de invitación grupal",
+    "duracion: escenario BDD de las duraciones elegibles del link",
+    "autorizacion: escenario BDD de permisos del Docente sobre su comisión",
+    "concurrencia: escenario BDD de registros simultáneos",
+    "vencimiento: escenario BDD del vencimiento de un link",
+    "desactivar: escenario BDD de la desactivación de un link",
+    "un-solo-vigente: escenario BDD de un único link grupal vigente por comisión",
+    "consulta: escenario BDD de la consulta del último link grupal",
+    "registro: escenario BDD del registro de un estudiante con una invitación",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

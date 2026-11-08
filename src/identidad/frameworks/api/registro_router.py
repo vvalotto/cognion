@@ -7,12 +7,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.identidad.entities.errors import (
     EmailYaRegistrado,
     InvitacionInvalida,
+    InvitacionRevocada,
     InvitacionVencida,
     InvitacionYaUsada,
     PasswordDemasiadoCorta,
     PasswordSinComplejidadSuficiente,
 )
 from src.identidad.entities.usuario import Estudiante
+from src.identidad.frameworks.api.errores_invitacion import error_http_de_invitacion
 from src.identidad.frameworks.api.schemas import (
     InvitacionPreviewResponse,
     RegistrarEstudianteRequest,
@@ -37,18 +39,15 @@ async def obtener_invitacion(
 ) -> InvitacionPreviewResponse:
     """Vista previa de una invitación por token, sin consumirla; endpoint público, sin JWT.
 
-    Responde 404 si el token no corresponde a ninguna invitación, o 422 si ya venció o ya
-    fue usada — a diferencia de `POST /registro`, aquí sí se distingue el motivo porque es
-    una consulta anónima por token, sin riesgo de enumerar invitaciones ajenas (`US-ADJ-08`).
+    Responde 404 si el token no corresponde a ninguna invitación, o 422 si ya venció, la
+    desactivaron o ya fue usada; `detail.codigo` informa el motivo (`invitacion_invalida`,
+    `invitacion_vencida`, `invitacion_revocada` o `invitacion_usada`, `US-ADJ-67`) porque es una
+    consulta anónima por token, sin riesgo de enumerar invitaciones ajenas (`US-ADJ-08`).
     """
     try:
         preview = await controller.obtener_invitacion(token)
-    except InvitacionInvalida as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (InvitacionVencida, InvitacionYaUsada) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    except (InvitacionInvalida, InvitacionVencida, InvitacionRevocada, InvitacionYaUsada) as exc:
+        raise error_http_de_invitacion(exc, status_invalida=status.HTTP_404_NOT_FOUND) from exc
 
     return InvitacionPreviewResponse(materia=preview.materia, horario=preview.horario)
 
@@ -60,9 +59,10 @@ async def registrar_estudiante(
 ) -> RegistroResponse:
     """Registra un Estudiante vía invitación; endpoint público, sin JWT (aún no autenticado).
 
-    Responde 409 si el email ya está registrado, 422 si la invitación no es válida
-    (inexistente, vencida o ya usada — mismo status y mensaje para los tres casos, `US-1.1.3`)
-    o si `password` no cumple INV-ID-11 (`US-ADJ-36`).
+    Responde 409 si el email ya está registrado, 422 si la invitación no es válida (inexistente,
+    vencida, desactivada o ya usada) o si `password` no cumple INV-ID-11 (`US-ADJ-36`). El
+    `detail.codigo` distingue el motivo, y `password_invalida` no se confunde con un link inválido
+    (`US-ADJ-67`).
     """
     try:
         usuario, materia, _evento_invitacion, _evento_usuario = (
@@ -75,12 +75,13 @@ async def registrar_estudiante(
     except (
         InvitacionInvalida,
         InvitacionVencida,
+        InvitacionRevocada,
         InvitacionYaUsada,
         PasswordDemasiadoCorta,
         PasswordSinComplejidadSuficiente,
     ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
+        raise error_http_de_invitacion(
+            exc, status_invalida=status.HTTP_422_UNPROCESSABLE_CONTENT
         ) from exc
 
     # RegistrarEstudianteUseCase siempre crea un Usuario con perfil Estudiante — el isinstance
