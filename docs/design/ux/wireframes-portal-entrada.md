@@ -156,9 +156,11 @@ acepta rol `administrador`), `GET /comisiones/{id}/estudiantes` (ampliado a `adm
 | Elemento | Detalle |
 |---|---|
 | Contexto | Breadcrumb "Actividades › Comisiones › {horario}" + botón "‹ Volver" |
-| Acción principal | "Generar link de invitación" — al confirmar, muestra el link generado en un recuadro con botón "Copiar" |
-| Link generado | Válido 7 días desde la generación, un solo uso por invitación (`ADR-012`) — texto de ayuda debajo del link |
-| Generar de nuevo | El botón cambia a "Generar un link nuevo" tras la primera generación — cada click genera una invitación distinta, no reutiliza la anterior |
+| Acción principal | **Enmienda 2026-11-08 (Inc.9 It.2, `US-ADJ-67`, #590):** selector "Duración del link" (15 minutos / **1 hora** por defecto / 1 día) y botón "Generar link grupal". Al confirmar, muestra el link en un recuadro con botón "Copiar" |
+| Link generado | **Grupal:** lo puede usar toda la clase hasta que venza o el Docente lo desactive. Sin cupo máximo de registros. Reemplaza al link individual (un solo uso, 7 días, `ADR-012`) en la UI; las invitaciones individuales ya emitidas siguen valiendo hasta que venzan |
+| Estado del link | Debajo del recuadro: badge "Vigente", cuándo vence ("Vence en 59 min (a las 19:42)") y cuántos estudiantes se registraron con ese link. Botón "Desactivar link" |
+| Link vencido o desactivado | El recuadro del link desaparece y se muestra un aviso con el badge "Venció" o "Desactivado" y el total de registrados; ya no hay botón "Copiar" |
+| Generar de nuevo | El botón cambia a "Generar un link nuevo". Hay **un solo link grupal vigente por comisión**: al generar uno nuevo, el anterior se desactiva (leyenda visible: "Si generás un link nuevo, el anterior se desactiva.") |
 | Estudiantes inscriptos | Misma tabla que la vista Administrador — visibilidad de solo lectura |
 | Cómo se llega | Desde "Actividades" en el `.app-nav`, o desde una lista de Comisiones del Docente a confirmar en la implementación (`US-ADJ-26`) — no es una ruta nueva del menú principal, es un nivel más profundo dentro de Actividades |
 
@@ -169,8 +171,8 @@ acepta rol `administrador`), `GET /comisiones/{id}/estudiantes` (ampliado a `adm
 - **Multi-inscripción de un Estudiante a más de una Comisión** — el dominio actual liga
   `Estudiante.comision_id` a una sola Comisión (limitación ya documentada en
   `docs/plans/inc4/inc4-candidatas.md`, Iteración 1). Este incremento no la resuelve.
-- **Revocar o editar una invitación ya generada** — RF-01 no lo contempla; queda para cuando
-  surja una necesidad concreta.
+- **Editar una invitación ya generada** — RF-01 no lo contempla. (**Revocar** sí entra desde
+  2026-11-08, `US-ADJ-67`: botón "Desactivar link", ver §3.4; antes estaba fuera de alcance.)
 - **Notificación automática al Estudiante con el link** — eso es RF-14 (Incremento 5,
   Notificaciones), no este incremento. Hoy el Docente comparte el link manualmente (copiar y
   pegar).
