@@ -94,6 +94,11 @@ Orden narrativo, no técnico. 🟧 evento de dominio · 🟦 comando · 🟨 agg
   el bloqueo es **temporal** (`bloqueada_hasta = ahora + 15 min`, configurable) y vence solo — el
   sistema nunca queda sin quien lo opere. La política vive en `Usuario.bloquear_por_intentos_fallidos`;
   el vencimiento es perezoso (se evalúa al iniciar sesión o cambiar la contraseña, sin proceso de fondo).
+  **Enmienda (`US-ADJ-69`):** el **2.º fallo consecutivo de `IniciarSesion`** de una cuenta existente avisa
+  `intentos_restantes = 1` (el próximo intento bloquea); el 1.º y el 3.º responden como siempre y nunca se informa
+  "quedan 2". Un email inexistente no lleva el aviso, por lo que éste permite distinguir las cuentas reales:
+  trade-off aceptado el 2026-11-08 (uso interno, 30 a 60 estudiantes por comisión; el bloqueo del 4.º intento ya
+  filtraba la existencia de la cuenta). `CambiarPassword` ya informaba `intentos_restantes` (`US-2.2.8`).
 - **INV-ID-11:** toda contraseña nueva (`CrearUsuario`, `RegistrarEstudiante`,
   `CambiarPassword`, `ResetearPassword`) tiene un mínimo de 8 caracteres — regla transversal,
   no exclusiva de RF-19 (extiende RF-01 y la alta directa de usuario, ver revisión

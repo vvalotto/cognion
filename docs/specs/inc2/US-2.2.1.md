@@ -148,4 +148,8 @@ bloqueada se especifica en `US-2.2.9`
 
 ---
 
+> **Enmienda 2026-11-08 (`US-ADJ-69`, Issue #604):** el contrato "el 3.er fallo responde `401` genérico y el siguiente `403`"
+> se mantiene. Cambia solo el 2.º fallo: la respuesta `401` lleva `detail.intentos_restantes = 1` para avisar del
+> bloqueo inminente. Ver `docs/specs/ajustes/US-ADJ-69.md`.
+
 *Basado en template IEDD v2.0 — adaptado a capas `entities/use_cases/interface_adapters/frameworks` (`CLAUDE.md`).*

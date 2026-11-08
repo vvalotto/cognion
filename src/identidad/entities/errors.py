@@ -90,11 +90,18 @@ class CredencialesInvalidas(Exception):
     El mensaje no distingue entre ambos casos para no filtrar si una cuenta existe
     (`US-1.1.4`). Cuando el fallo es el 3er intento consecutivo, `evento_cuenta_bloqueada`
     lleva el evento `CuentaBloqueada` emitido junto con el rechazo (`US-2.2.1`).
+
+    `intentos_restantes` vale 1 solo en el 2.º fallo consecutivo de una cuenta existente, para
+    avisar que el próximo intento la bloquea (`US-ADJ-69`); en cualquier otro caso es `None`.
+    Es una excepción consciente a "no filtrar si la cuenta existe": un email inexistente nunca
+    lo lleva, así que el aviso permite distinguir las cuentas reales (trade-off aceptado el
+    2026-11-08, uso interno de 30 a 60 estudiantes por comisión).
     """
 
     def __init__(self) -> None:
         """Arma el mensaje genérico de la excepción, sin datos del intento fallido."""
         self.evento_cuenta_bloqueada: CuentaBloqueada | None = None
+        self.intentos_restantes: int | None = None
         super().__init__("Email o contraseña inválidos.")
 
 

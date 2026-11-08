@@ -25,12 +25,16 @@ async def login(
 ) -> LoginResponse:
     """Autentica un Usuario y emite su JWT; responde 401 genérico ante credenciales inválidas.
 
-    El mensaje de error no distingue si el email existe o no (`US-1.1.4`). Responde 403 si la
+    El mensaje de error no distingue si el email existe o no (`US-1.1.4`), salvo en el 2.º fallo
+    consecutivo de una cuenta existente: ahí el `detail` es un objeto con `mensaje` e
+    `intentos_restantes = 1`, para avisar que el próximo intento la bloquea (`US-ADJ-69`).
+    Responde 403 si la
     cuenta está bloqueada por 3 intentos fallidos consecutivos (`US-2.2.1`), con el `detail` en
     texto plano. Responde 403 también si la cuenta está deshabilitada (`US-ADJ-59`), pero con un
     `detail` estructurado `{"codigo": "cuenta_deshabilitada", "mensaje": ...}` para que el
-    frontend distinga los dos casos sin interpretar el texto. Responde 403 `cuenta_bloqueada_temporal`
-    (con `reintentar_en_segundos`) si es el último Administrador operativo bloqueado (`US-ADJ-60`).
+    frontend distinga los dos casos sin interpretar el texto. Responde 403
+    `cuenta_bloqueada_temporal` (con `reintentar_en_segundos`) si es el último Administrador
+    operativo bloqueado (`US-ADJ-60`).
     """
     try:
         jwt_vo, _evento = await controller.iniciar_sesion(body.email, body.password)
@@ -44,7 +48,10 @@ async def login(
     except CuentaBloqueadaError as exc:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except CredencialesInvalidas as exc:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
+        detalle: str | dict[str, object] = str(exc)
+        if exc.intentos_restantes is not None:
+            detalle = {"mensaje": str(exc), "intentos_restantes": exc.intentos_restantes}
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detalle) from exc
 
     return LoginResponse(
         access_token=jwt_vo.token,

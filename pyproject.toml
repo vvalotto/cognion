@@ -142,6 +142,11 @@ markers = [
     "US-8.3.4: escenarios BDD de la US-8.3.4",
     "downgrade: escenario BDD que deshace migraciones de la base",
     "paso-a-paso: escenario BDD que deshace una migración por vez",
+    "US-ADJ-69: escenarios BDD de la US-ADJ-69",
+    "aviso: escenario BDD del aviso de intentos restantes del login",
+    "contador: escenario BDD del contador de intentos fallidos",
+    "seguridad: escenario BDD de un comportamiento que no debe filtrar información",
+    "ultimo-administrador: escenario BDD del último Administrador operativo",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

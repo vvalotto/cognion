@@ -1,6 +1,6 @@
 # US-ADJ-69: El login avisa "te queda 1 intento" tras el 2.º fallo
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 2
 **Tipo**: `ajuste de producto` backend + frontend (reescribe parte del contrato de `US-2.2.1` y `US-ADJ-60`)
 **Agregado principal afectado**: `Usuario` (contador `intentos_fallidos_login`, sin cambios de reglas)

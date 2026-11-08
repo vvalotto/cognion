@@ -51,8 +51,8 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   if (response.status === 401 && options.handleUnauthorized !== false) {
     clearSession()
     void router.navigate("/login")
-    const { message } = await extractError(response)
-    throw new ApiError(401, message)
+    const { message, detail } = await extractError(response)
+    throw new ApiError(401, message, detail)
   }
 
   if (!response.ok) {

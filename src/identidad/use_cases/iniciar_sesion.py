@@ -49,7 +49,9 @@ class IniciarSesionUseCase:
 
         Lanza `CredencialesInvalidas` tanto si el email no existe como si la contraseña no
         verifica contra el hash guardado — el mismo error en ambos casos, para no filtrar si
-        una cuenta existe (`US-1.1.4`). Lanza `CuentaDeshabilitadaError` sin verificar la
+        una cuenta existe (`US-1.1.4`); solo el 2.º fallo consecutivo de una cuenta existente
+        lleva `intentos_restantes = 1` para avisar del bloqueo inminente (`US-ADJ-69`). Lanza
+        `CuentaDeshabilitadaError` sin verificar la
         contraseña ni tocar los contadores si la cuenta está dada de baja (INV-ID-18) — tiene
         prioridad sobre el bloqueo porque es la decisión manual del Administrador. Lanza
         `CuentaBloqueadaError` sin verificar la contraseña si la cuenta ya está bloqueada (no
@@ -76,6 +78,8 @@ class IniciarSesionUseCase:
                     usuario, es_ultimo, ahora, self._duracion_bloqueo_temporal
                 )
                 exc.evento_cuenta_bloqueada = CuentaBloqueada(usuario_id=usuario.id)
+            elif usuario.intentos_fallidos_login == _INTENTOS_MAXIMOS - 1:
+                exc.intentos_restantes = 1
             await self._usuario_repositorio.actualizar(usuario)
             raise exc
 
