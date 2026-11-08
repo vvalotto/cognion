@@ -1,6 +1,6 @@
 # US-8.3.3: Observabilidad mínima — logs estructurados y healthcheck de readiness
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 3 (nació en el Incremento 8, Iteración 3, y se movió porque no depende de la nube)
 **Tipo**: `mejora de operación` backend (infraestructura compartida)
 **Agregado principal afectado**: ninguno

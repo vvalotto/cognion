@@ -157,7 +157,7 @@ los mensajes de la aplicación (hallazgo #2 de la UAT de `v0.9.0`).
 **Los tokens de las URLs no quedan completos en el log de acceso:** el JWT del canal en vivo, el token de una invitación
 (`/registro?token=…`) y el del link de recuperación se registran como `***`. El cuerpo de los emails de consola **sí** los
 trae completos: es lo que permite recuperar una cuenta sin correo. Por eso el log sigue siendo sensible: no lo compartas.
-`LOG_LEVEL` (`DEBUG`, `INFO`, `WARNING`, `ERROR`; por defecto `INFO`) ajusta el detalle de los mensajes de la aplicación.
+`LOG_LEVEL` (`DEBUG`, `INFO`, `WARNING`, `ERROR`; por defecto `INFO`) ajusta el detalle de los mensajes de la aplicación. `LOG_FORMAT` (`texto`, por defecto, o `json`) elige si cada línea es texto legible o un objeto JSON (`ts`, `nivel`, `logger`, `mensaje`); en local conviene dejar `texto`. `GET /api/health` dice que el proceso está vivo y `GET /api/health/ready` además comprueba la base de datos (`503` si no responde).
 
 ---
 

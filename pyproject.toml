@@ -157,7 +157,12 @@ markers = [
     "desactivar: escenario BDD de la desactivación de un link",
     "un-solo-vigente: escenario BDD de un único link grupal vigente por comisión",
     "consulta: escenario BDD de la consulta del último link grupal",
-    "registro: escenario BDD del registro de un estudiante con una invitación",
+    "registro: escenario BDD del registro de un estudiante con una invitación",    "US-8.3.3: escenarios BDD de la US-8.3.3",
+    "salud: escenario BDD de los healthchecks de vida y de readiness",
+    "autenticacion: escenario BDD de endpoints que no piden credenciales",
+    "logs: escenario BDD del formato de los logs",
+    "json: escenario BDD del formato de log JSON",
+    "operacion: escenario BDD de los scripts de operación",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

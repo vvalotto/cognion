@@ -180,7 +180,7 @@ sed -i 's|^COGNION_IMAGE=.*|COGNION_IMAGE=cognion:ci|' .env
 ./cognion.sh iniciar
 ```
 - **Resultado esperado:** la base arriba, las migraciones aplicadas como paso explícito, y la aplicación y Caddy arriba.
-- **Éxito:** `./cognion.sh estado` muestra los tres servicios arriba y la salud respondiendo.
+- **Éxito:** `./cognion.sh estado` muestra los tres servicios arriba y los dos healthchecks: `/api/health` (el proceso está vivo) y `/api/health/ready` (además la base responde; `503` si no). Con `LOG_FORMAT=json` en `.env` el log sale como una línea JSON por registro (`US-8.3.3`).
 
 ### Paso 11 — Primer Administrador y verificación de HTTPS real (**probado** el 2026-10-24)
 ```bash

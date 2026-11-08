@@ -9,7 +9,7 @@
 #                              terminal sin eco, comprueba que el puerto 587 salga desde la VM y reinicia la aplicación)
 #   cognion.sh email probar <destino>  envía un email de prueba con el código de la imagen desplegada
 #   cognion.sh email consola   vuelve a dejar los emails en el log (sin SMTP)
-#   cognion.sh estado          muestra los servicios, las versiones y consulta /api/health
+#   cognion.sh estado          muestra los servicios, las versiones y consulta /api/health y /api/health/ready
 #   cognion.sh desplegar <imagen>  baja la imagen, respalda si puede, migra con la imagen nueva (la vieja sigue sirviendo),
 #                              la reemplaza y espera la salud; si no responde vuelve sola a la anterior (US-8.6.4)
 #   cognion.sh rollback        vuelve a la versión anterior (solo de imagen: las migraciones no se deshacen)
@@ -17,6 +17,8 @@
 #   cognion.sh detener         baja los servicios (los datos quedan en el volumen)
 set -euo pipefail
 cd "$(dirname "$0")"
+# shellcheck source=salud.sh
+source ./salud.sh
 
 abortar() { echo "ERROR: $1" >&2; [ -n "${2:-}" ] && echo "  → $2" >&2; exit 1; }
 command -v docker >/dev/null 2>&1 || abortar "Falta docker." "Instalá Docker Engine y el plugin compose."
@@ -101,7 +103,7 @@ print('Enviado a', os.environ['DESTINO'])
     compose ps
     echo "Versión actual:   $(leer_env COGNION_IMAGE)"
     echo "Versión anterior: $(leer_env COGNION_IMAGE_ANTERIOR)"
-    curl -fsS -k "https://$(dominio)/api/health" && echo
+    mostrar_salud "https://$(dominio)"
     ;;
   desplegar)
     imagen="${2:-}"

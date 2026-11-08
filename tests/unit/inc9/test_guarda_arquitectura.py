@@ -38,6 +38,7 @@ def _sembrar(ruta_relativa: str, codigo: str) -> Iterator[None]:
 
 
 def test_el_estado_actual_cumple_todos_los_contratos():
+    """El estado actual cumple todos los contratos."""
     resultado = _correr()
 
     assert resultado.returncode == 0, resultado.stdout[-1500:]
@@ -71,6 +72,7 @@ def test_el_estado_actual_cumple_todos_los_contratos():
     ids=["capas", "aislamiento-entre-bc", "shared", "adr-026-modelos-orm"],
 )
 def test_una_violacion_sembrada_rompe_su_contrato(modulo, import_prohibido, contrato):
+    """Una violacion sembrada rompe su contrato."""
     with _sembrar(modulo, import_prohibido):
         resultado = _correr()
 

@@ -18,6 +18,9 @@ def _preparar(tmp_path: Path, env_extra: str = "", con_docker: bool = True, **es
     carpeta = tmp_path / "gcp"
     carpeta.mkdir()
     shutil.copy(GCP / "cognion.sh", carpeta / "cognion.sh")
+    shutil.copy(
+        GCP / "salud.sh", carpeta / "salud.sh"
+    )  # cognion.sh lo carga con `source` (US-8.3.3)
     env = carpeta / ".env"
     env.write_text(
         "COGNION_DOMINIO=cognion-fiuner.duckdns.org\nCOGNION_IMAGE=cognion:vieja\n" + env_extra
