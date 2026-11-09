@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "us_id": "US-9.4.2",
+    "us_title": "Actividad Evaluativa deja de leer UsuarioModel de Identidad",
+    "us_points": 2,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-09T10:48:17.828854+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 239,
+    "effective_seconds": 239,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-11-09T10:48:18.341849+00:00",
+      "completed_at": "2026-11-09T10:48:18.780381+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-09T10:48:19.169834+00:00",
+      "completed_at": "2026-11-09T10:52:17.354050+00:00",
+      "elapsed_seconds": 238,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-09T10:52:17.592692+00:00",
+      "completed_at": null,
+      "elapsed_seconds": 0,
+      "status": "in_progress",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 3,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
