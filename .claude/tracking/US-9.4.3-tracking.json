@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "us_id": "US-9.4.3",
+    "us_title": "Identidad deja de leer EventoModel de Actividad Evaluativa",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-09T11:06:08.045056+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 155,
+    "effective_seconds": 155,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-11-09T11:06:08.453461+00:00",
+      "completed_at": "2026-11-09T11:06:08.794239+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-09T11:06:09.120468+00:00",
+      "completed_at": "2026-11-09T11:08:43.068220+00:00",
+      "elapsed_seconds": 153,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-09T11:08:43.411205+00:00",
+      "completed_at": null,
+      "elapsed_seconds": 0,
+      "status": "in_progress",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 3,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
