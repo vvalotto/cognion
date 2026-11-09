@@ -20,8 +20,19 @@ describe("router (integración)", () => {
   // terminó. Si `unstubAllGlobals()` corriera en cada `afterEach`, ese fetch tardío pegaría
   // contra la red real en vez del mock — restaurar el fetch real recién en `afterAll` evita
   // esa carrera sin importar el timing exacto de cada efecto.
+  // Las pantallas de sesión en vivo abren el canal con un `WebSocket` real de jsdom, que falla al no haber
+  // servidor y, sin haberse abierto, hace que `CanalSesionEnVivo` consulte la sesión por HTTP (#605): ese fetch
+  // de más se comería una de las respuestas encoladas con `mockResolvedValueOnce`. Se reemplaza por uno inerte.
+  class WebSocketInerte {
+    onopen: (() => void) | null = null
+    onmessage: (() => void) | null = null
+    onclose: (() => void) | null = null
+    close(): void {}
+  }
+
   beforeAll(() => {
     vi.stubGlobal("fetch", vi.fn())
+    vi.stubGlobal("WebSocket", WebSocketInerte)
   })
 
   afterAll(() => {

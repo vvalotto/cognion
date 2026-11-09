@@ -54,6 +54,26 @@ class InvitacionGenerada:
 
 
 @dataclass(frozen=True)
+class InvitacionGrupalGenerada:
+    """Un Docente generó un link de invitación grupal para su Comisión (`US-ADJ-67`)."""
+
+    invitacion_id: UUID
+    comision_id: UUID
+    docente_id: UUID
+    expira_en: datetime
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
+class InvitacionGrupalRevocada:
+    """Un link de invitación grupal dejó de servir porque el Docente lo desactivó o lo reemplazó."""
+
+    invitacion_id: UUID
+    comision_id: UUID
+    ocurrido_en: datetime = field(default_factory=_ahora)
+
+
+@dataclass(frozen=True)
 class InvitacionAceptada:
     """Un Estudiante aceptó una invitación y quedó asignado a la comisión."""
 

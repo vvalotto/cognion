@@ -114,4 +114,44 @@ describe("apiFetch", () => {
     expect(error).toBeInstanceOf(ApiError)
     expect((error as ApiError).message).toBe("Error inesperado.")
   })
+
+  it("traduce un 422 con detalle en lista (validación del formulario) a un mensaje legible", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ detail: [{ type: "string_too_short", loc: ["body", "password"], msg: "String should have at least 8 characters" }] }),
+        { status: 422 }
+      )
+    )
+
+    const error = await apiFetch("/identidad/registro", { method: "POST", body: {} }).catch(
+      (e: unknown) => e
+    )
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect((error as ApiError).status).toBe(422)
+    expect((error as ApiError).message).toBe(
+      "Revisá los datos ingresados: hay campos incompletos o con un formato inválido."
+    )
+  })
+
+  it("un 401 conserva el detalle estructurado de la respuesta (aviso de intentos del login, US-ADJ-69)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ detail: { mensaje: "Email o contraseña inválidos.", intentos_restantes: 1 } }),
+        { status: 401 }
+      )
+    )
+
+    const error = await apiFetch("/identidad/login", { method: "POST", body: {} }).catch(
+      (e: unknown) => e
+    )
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect((error as ApiError).status).toBe(401)
+    expect((error as ApiError).message).toBe("Email o contraseña inválidos.")
+    expect((error as ApiError).detail).toEqual({
+      mensaje: "Email o contraseña inválidos.",
+      intentos_restantes: 1,
+    })
+  })
 })

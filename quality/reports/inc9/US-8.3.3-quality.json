@@ -1,0 +1,22 @@
+{
+  "us": "US-8.3.3",
+  "veredicto": "APROBADO",
+  "tipo": "mejora de operación backend (infraestructura compartida) + scripts de despliegue: readiness y logs estructurados",
+  "tests": {
+    "propios": "22 unitarios (sin base), 9 de integración (la aplicación en proceso y un uvicorn real con base inexistente, con LOG_FORMAT texto, json y xml) y 10 escenarios BDD; 5 tests de la guarda de arquitectura de #497 en el mismo commit anterior",
+    "regresion": "228 unitarios de inc8 (incluidos los de cognion.sh, cuyo helper ahora copia también salud.sh), logging de US-ADJ-64 y US-ADJ-68, y el resto de la suite unitaria; la suite completa se corre una sola vez al cerrar la Iteración 3",
+    "verificacion_de_que_detectan_el_error": "con el código anterior la suite BDD ni siquiera importa (faltan salud.py y FormateadorJson); la prueba de integración con un uvicorn real destapó un defecto real: los mensajes de arranque de uvicorn.error usan el handler del logger padre `uvicorn`, no el propio, y quedaban en texto"
+  },
+  "pylint": "10,00/10 sobre salud.py, logging_config.py y settings.py",
+  "mypy": "0 errores (src/ completo, 324 archivos)",
+  "ruff_black_isort": "limpio (src y tests nuevos, con docstrings)",
+  "complejidad": "configurar_logging bajó de C (11) a funciones auxiliares de A/B; ninguna función nueva con complejidad C o mayor; MI A en todos los archivos",
+  "import_linter": "4 contratos cumplidos (salud.py importa de shared y src.settings, ningún BC)",
+  "codeguard": "36 resultados: 23 informativos, 2 advertencias (complejidad preexistente de Settings._validar_entorno_estricto; pylint 7,92 de app.py con la configuración por defecto de codeguard, sin el .pylintrc del proyecto) y 11 'errores' de herramienta (vulture y codespell no instalados, mypy con timeout de 10 s: software_limpio#70). Sin hallazgos de seguridad",
+  "cobertura": "los módulos de src/*/frameworks no se miden por configuración del proyecto; salud.py y logging_config.py se ejercitan con los 22 unitarios y los 19 tests de proceso real",
+  "hallazgos_de_la_implementacion": [
+    "uvicorn.error no tiene handler propio: usa el del logger uvicorn; cambiar solo los handlers de uvicorn.access y uvicorn.error dejaba en texto los mensajes de arranque",
+    "cognion.sh ahora carga salud.sh con source: los tests de despliegue que lo copian a una carpeta aislada tuvieron que copiar también ese archivo",
+    "configurar_logging superó la complejidad 10 al sumar el formato; se separó en tres funciones auxiliares"
+  ]
+}

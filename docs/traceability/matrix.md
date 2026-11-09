@@ -3,7 +3,10 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-10-15 — Cierre de `BL-012` (Incremento 7-ADJ — Ciclo de vida de la
+> Última actualización: 2026-11-09 — Cierre de `BL-015` (Incremento 9 — Correcciones y robustez, `v0.10.0`). **Sin cambio de estado de ningún RF ni RNF**: ajustes
+> y robustez sobre RF ya "Validado" (link de invitación grupal, aviso del último intento, bcrypt asíncrono, `import-linter`, readiness). Cerrada **sin UAT formal**,
+> por eso nada pasa a "Validado" con esta baseline. Evidencia: `.cm/baselines/BL-015-incremento-9-correcciones-y-robustez.md`.
+> Anterior — 2026-10-15 — Cierre de `BL-012` (Incremento 7-ADJ — Ciclo de vida de la
 > cuenta y ajustes de la UAT v1): `US-ADJ-59` (cuenta deshabilitada no inicia sesión), `US-ADJ-60`
 > (siempre ≥ 1 Administrador operativo, bloqueo temporal del último), `US-ADJ-61` (actividad
 > cerrada visible para el Estudiante) y `US-ADJ-62` (recuperar la contraseña desbloquea) cerradas,

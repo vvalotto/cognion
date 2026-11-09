@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from sqlalchemy import select
+from datetime import datetime
+from uuid import UUID
+
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.identidad.entities.invitacion import Invitacion
@@ -40,6 +43,58 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
         if modelo is None:
             raise ValueError(f"Invitación '{invitacion.id}' no existe para actualizar.")
         modelo.usada_en = invitacion.usada_en
+        modelo.revocada_en = invitacion.revocada_en
+        modelo.usos = invitacion.usos
+        await self._session.commit()
+
+    async def obtener_por_id(self, invitacion_id: UUID) -> Invitacion | None:
+        """Busca una invitación por id, o `None` si no existe."""
+        modelo = await self._session.get(InvitacionModel, invitacion_id)
+        return None if modelo is None else self._a_entidad(modelo)
+
+    async def obtener_grupal_vigente(self, comision_id: UUID, ahora: datetime) -> Invitacion | None:
+        """Busca el link grupal de la comisión que no está revocado ni vencido, o `None`."""
+        resultado = await self._session.execute(
+            select(InvitacionModel)
+            .where(
+                InvitacionModel.comision_id == comision_id,
+                InvitacionModel.grupal.is_(True),
+                InvitacionModel.revocada_en.is_(None),
+                InvitacionModel.expira_en > ahora,
+            )
+            .order_by(InvitacionModel.generada_en.desc())
+            .limit(1)
+        )
+        modelo = resultado.scalar_one_or_none()
+        return None if modelo is None else self._a_entidad(modelo)
+
+    async def obtener_ultima_grupal(self, comision_id: UUID) -> Invitacion | None:
+        """Busca el último link grupal generado para la comisión, o `None` si nunca hubo."""
+        resultado = await self._session.execute(
+            select(InvitacionModel)
+            .where(InvitacionModel.comision_id == comision_id, InvitacionModel.grupal.is_(True))
+            .order_by(InvitacionModel.generada_en.desc())
+            .limit(1)
+        )
+        modelo = resultado.scalar_one_or_none()
+        return None if modelo is None else self._a_entidad(modelo)
+
+    async def reemplazar(self, anterior: Invitacion | None, nueva: Invitacion) -> None:
+        """Revoca `anterior` y guarda `nueva` en una sola transacción."""
+        if anterior is not None:
+            modelo = await self._session.get(InvitacionModel, anterior.id)
+            if modelo is not None:
+                modelo.revocada_en = anterior.revocada_en
+        self._session.add(self._a_model(nueva))
+        await self._session.commit()
+
+    async def incrementar_usos(self, invitacion_id: UUID) -> None:
+        """Suma un uso con un `UPDATE usos = usos + 1`: seguro ante registros simultáneos."""
+        await self._session.execute(
+            update(InvitacionModel)
+            .where(InvitacionModel.id == invitacion_id)
+            .values(usos=InvitacionModel.usos + 1)
+        )
         await self._session.commit()
 
     @staticmethod
@@ -53,6 +108,9 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
             generada_en=invitacion.generada_en,
             expira_en=invitacion.expira_en,
             usada_en=invitacion.usada_en,
+            grupal=invitacion.grupal,
+            usos=invitacion.usos,
+            revocada_en=invitacion.revocada_en,
         )
 
     @staticmethod
@@ -66,4 +124,7 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
             generada_en=modelo.generada_en,
             expira_en=modelo.expira_en,
             usada_en=modelo.usada_en,
+            grupal=modelo.grupal,
+            usos=modelo.usos,
+            revocada_en=modelo.revocada_en,
         )

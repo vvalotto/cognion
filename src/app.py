@@ -6,8 +6,9 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from src.actividad_evaluativa.frameworks.api.actividades_router import router as actividades_router
 from src.actividad_evaluativa.frameworks.api.evaluaciones_router import (
@@ -29,6 +30,9 @@ from src.identidad.frameworks.api.autoregistro_router import router as autoregis
 from src.identidad.frameworks.api.comisiones_router import router as comisiones_router
 from src.identidad.frameworks.api.cuentas_router import router as cuentas_router
 from src.identidad.frameworks.api.estudiante_router import router as estudiante_router
+from src.identidad.frameworks.api.invitaciones_grupales_router import (
+    router as invitaciones_grupales_router,
+)
 from src.identidad.frameworks.api.invitaciones_router import router as invitaciones_router
 from src.identidad.frameworks.api.materias_comisiones_router import (
     router as identidad_materias_comisiones_router,
@@ -42,8 +46,9 @@ from src.identidad.frameworks.api.usuarios_router import router as usuarios_rout
 from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.logging_config import configurar_logging
+from src.shared.frameworks.salud import comprobar_base
 
-configurar_logging(settings.log_level)
+configurar_logging(settings.log_level, settings.log_format)
 
 logger = logging.getLogger(__name__)
 
@@ -91,6 +96,7 @@ app.include_router(comisiones_router)
 app.include_router(identidad_materias_comisiones_router)
 app.include_router(estudiante_router)
 app.include_router(invitaciones_router)
+app.include_router(invitaciones_grupales_router)
 app.include_router(registro_router)
 app.include_router(autoregistro_router)
 app.include_router(recuperacion_password_router)
@@ -109,3 +115,18 @@ app.include_router(analytics_router)
 async def health() -> dict[str, str]:
     """Reporta que el servicio está arriba."""
     return {"status": "ok"}
+
+
+@app.get("/health/ready", tags=["infra"])
+async def health_ready(base_disponible: bool = Depends(comprobar_base)) -> JSONResponse:
+    """Reporta si la aplicación puede atender pedidos: comprueba que la base de datos responde.
+
+    A diferencia de `/health` (el proceso está vivo), responde 503 si la base no está disponible.
+    El cuerpo no incluye el motivo; el error real queda en el log, sin credenciales (`US-8.3.3`).
+    """
+    if base_disponible:
+        return JSONResponse({"status": "ok", "base_de_datos": "ok"})
+    return JSONResponse(
+        {"status": "error", "base_de_datos": "no disponible"},
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+    )

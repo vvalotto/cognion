@@ -54,6 +54,9 @@ class _ComisionQueryPortFake(ComisionQueryPort):
             for comision in self.comisiones_por_materia.get(materia_id, [])
         )
 
+    async def existe_comision_en_materia(self, materia_id: UUID) -> bool:
+        return bool(self.comisiones_por_materia.get(materia_id))
+
 
 class TestListarComisionesPorMateria:
     @pytest.mark.asyncio

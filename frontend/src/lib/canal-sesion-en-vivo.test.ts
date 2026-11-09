@@ -1,10 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-const { navigateMock } = vi.hoisted(() => ({ navigateMock: vi.fn() }))
+const { navigateMock, obtenerEstadoSesionMock } = vi.hoisted(() => ({
+  navigateMock: vi.fn(),
+  obtenerEstadoSesionMock: vi.fn(),
+}))
 vi.mock("@/router", () => ({
   router: { navigate: navigateMock },
 }))
+// Los cierres sin apertura consultan el estado de la sesión por HTTP: acá nunca se sale a la red.
+vi.mock("@/lib/sesion-en-vivo-api", () => ({
+  obtenerEstadoSesion: obtenerEstadoSesionMock,
+}))
 
+import { ApiError } from "@/lib/api-client"
 import { CanalSesionEnVivo, type MensajeSesionEnVivo } from "@/lib/canal-sesion-en-vivo"
 import { getSession, setSession } from "@/lib/session"
 
@@ -48,6 +56,8 @@ describe("CanalSesionEnVivo", () => {
     localStorage.clear()
     WebSocketFalso.instancias = []
     navigateMock.mockClear()
+    obtenerEstadoSesionMock.mockReset()
+    obtenerEstadoSesionMock.mockResolvedValue({})
     setSession({ token: "jwt-de-prueba", rol: "docente" })
     vi.useFakeTimers()
   })
@@ -121,6 +131,60 @@ describe("CanalSesionEnVivo", () => {
       vi.advanceTimersByTime(1)
       expect(WebSocketFalso.instancias).toHaveLength(cantidadPrevia + 1)
     }
+  })
+
+  describe("rechazo del handshake (JWT vencido): el navegador lo informa como 1006, nunca como 1008", () => {
+    it("un cierre sin apertura previa consulta la sesión por HTTP; con 401 deja de reconectar", async () => {
+      obtenerEstadoSesionMock.mockRejectedValue(new ApiError(401, "Token expirado"))
+      const estados: string[] = []
+      const canal = new CanalSesionEnVivo("s1", vi.fn(), vi.fn(), (e) => estados.push(e), crearFactory())
+      canal.conectar()
+
+      WebSocketFalso.instancias[0].simularCierre(1006)
+      await vi.advanceTimersByTimeAsync(30000)
+
+      expect(obtenerEstadoSesionMock).toHaveBeenCalledWith("s1")
+      expect(WebSocketFalso.instancias).toHaveLength(1)
+      expect(estados.at(-1)).toBe("desconectado")
+    })
+
+    it("con la sesión vigente (la red falló) sigue reconectando y consulta una sola vez por tanda", async () => {
+      const canal = new CanalSesionEnVivo("s1", vi.fn(), vi.fn(), vi.fn(), crearFactory())
+      canal.conectar()
+
+      WebSocketFalso.instancias[0].simularCierre(1006)
+      await vi.advanceTimersByTimeAsync(1000)
+      WebSocketFalso.instancias[1].simularCierre(1006)
+      await vi.advanceTimersByTimeAsync(2000)
+
+      expect(WebSocketFalso.instancias).toHaveLength(3)
+      expect(obtenerEstadoSesionMock).toHaveBeenCalledTimes(1)
+    })
+
+    it("sin red para comprobarlo, vuelve a consultar en la próxima caída", async () => {
+      obtenerEstadoSesionMock.mockRejectedValue(new TypeError("Failed to fetch"))
+      const canal = new CanalSesionEnVivo("s1", vi.fn(), vi.fn(), vi.fn(), crearFactory())
+      canal.conectar()
+
+      WebSocketFalso.instancias[0].simularCierre(1006)
+      await vi.advanceTimersByTimeAsync(1000)
+      WebSocketFalso.instancias[1].simularCierre(1006)
+      await vi.advanceTimersByTimeAsync(0)
+
+      expect(obtenerEstadoSesionMock).toHaveBeenCalledTimes(2)
+    })
+
+    it("un corte con la conexión ya abierta no consulta nada: el JWT fue aceptado", async () => {
+      const canal = new CanalSesionEnVivo("s1", vi.fn(), vi.fn(), vi.fn(), crearFactory())
+      canal.conectar()
+      WebSocketFalso.instancias[0].simularApertura()
+
+      WebSocketFalso.instancias[0].simularCierre(1006)
+      await vi.advanceTimersByTimeAsync(1000)
+
+      expect(obtenerEstadoSesionMock).not.toHaveBeenCalled()
+      expect(WebSocketFalso.instancias).toHaveLength(2)
+    })
   })
 
   it("un cierre 1008 no reintenta, limpia la sesión y navega a /login", () => {

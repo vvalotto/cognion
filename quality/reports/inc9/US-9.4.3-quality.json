@@ -1,0 +1,18 @@
+{
+  "us": "US-9.4.3",
+  "veredicto": "APROBADO",
+  "tipo": "refactor sin cambio de comportamiento: Identidad deja de leer EventoModel de Actividad Evaluativa (ADR-026)",
+  "tests": {
+    "caracterizacion": "5 tests de integración del adaptador (sin evaluaciones, iniciada, otro estudiante, otro tipo de evento, otro agregado), commiteados y en verde antes de migrar y en verde después",
+    "gateway": "3 tests de integración de SQLAlchemyEstudianteEvaluacionesQueryRepository",
+    "regresion": "1209 unitarios y 150 de integración (inc1 e inc9) en verde, sobre un cluster descartable en el puerto 55432"
+  },
+  "lint_imports": "4 contratos kept, 0 broken; sin ninguna excepción de ADR-026 pendiente (#600, #601 y #602 borradas)",
+  "mypy": "0 errores (328 archivos de src/)",
+  "ruff_src": "limpio",
+  "black_isort": "limpios",
+  "designreviewer": "0 CRITICAL, medido antes de commitear",
+  "hallazgos_al_probar": [
+    "El PostgreSQL de Homebrew sigue sin arrancar (postmaster.pid viejo); los tests corrieron en un cluster descartable fuera del repo."
+  ]
+}

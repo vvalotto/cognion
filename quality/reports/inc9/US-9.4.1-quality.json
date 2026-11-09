@@ -1,0 +1,20 @@
+{
+  "us": "US-9.4.1",
+  "veredicto": "APROBADO",
+  "tipo": "refactor sin cambio de comportamiento: Banco de Preguntas deja de leer ComisionModel de Identidad (ADR-026)",
+  "tests": {
+    "caracterizacion": "5 tests de integración del adaptador (tests/integration/inc9/test_us_9_4_1_comision_consulta_integration.py), escritos y en verde antes de tocar src/ y en verde después",
+    "gateway": "3 tests nuevos de existe_comision_en_materia en tests/integration/inc4/test_comision_query_repository.py",
+    "regresion": "86 tests de integración (inc9 caracterización, inc4 repositorio, inc2) y 1209 unitarios en verde, sobre una base descartable (cluster propio en el puerto 55432)"
+  },
+  "lint_imports": "4 contratos kept, 0 broken, sin la línea # #600 de ignore_imports",
+  "mypy": "0 errores (324 archivos de src/)",
+  "ruff_src": "limpio; ruff format marca 4 archivos que ya estaban así antes del cambio",
+  "black": "limpio",
+  "radon": "complejidad media A (1.35); MI A en los 3 archivos tocados",
+  "pylint": "9.14/10 sobre los 3 archivos tocados",
+  "designreviewer": "0 CRITICAL",
+  "hallazgos_al_probar": [
+    "El PostgreSQL de Homebrew (postgresql@16) no arranca: postmaster.pid quedó viejo (el PID 912 hoy es otro proceso). No se tocó; los tests corrieron en un cluster descartable fuera del repo."
+  ]
+}

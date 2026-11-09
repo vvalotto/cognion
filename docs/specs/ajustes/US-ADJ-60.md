@@ -290,4 +290,8 @@ de PR en `US-2.1.2`/`2.1.5`/`2.1.6`/`2.2.2`).
 
 ---
 
+> **Enmienda 2026-11-08 (`US-ADJ-69`, Issue #604):** el bloqueo temporal del último Administrador operativo no cambia, y
+> el 3.er fallo sigue respondiendo `401` y el siguiente `403`. Cambia solo el 2.º fallo: la respuesta `401` lleva `detail.intentos_restantes = 1` para avisar del
+> bloqueo inminente. Ver `docs/specs/ajustes/US-ADJ-69.md`.
+
 *Basado en template IEDD v2.0 — adaptado a capas `entities/use_cases/interface_adapters/frameworks` (`CLAUDE.md`).*

@@ -1,0 +1,23 @@
+{
+  "us": "US-ADJ-67",
+  "veredicto": "APROBADO",
+  "tipo": "ajuste de producto backend + frontend (Identidad): link de invitación grupal con vencimiento corto",
+  "tests": {
+    "propios": "42 unitarios (sin base; 73 en tests/unit/inc9), 18 de integración por HTTP con base descartable (incluye 20 registros simultáneos, el mismo email en paralelo y las filas anteriores a la migración), 15 casos BDD (13 escenarios, 1 outline) y, en frontend, 9 de ComisionDetalleDocente, 7 de RegistroError, 2 de Registro y los de api-client",
+    "regresion": "233 tests existentes que tocan invitaciones, registro, login y bloqueo pasan contra una base descartable; 1215 unitarios + los de la US en una sola corrida; la suite completa se corre una sola vez al cerrar la Iteración 2",
+    "migracion": "verificar_migraciones.sh en verde (upgrade, idempotencia, downgrade base con datos, upgrade otra vez); el downgrade de f7a3c9d15e82 quita las tres columnas",
+    "verificacion_de_que_detectan_el_error": "con el código anterior fallan los 15 casos BDD; los unitarios y los de integración dependen de clases y endpoints nuevos y no importan"
+  },
+  "cobertura": "100 % en invitacion.py, errors.py, eventos.py, el puerto, los tres casos de uso nuevos, autorizacion_comision.py y registrar_estudiante.py",
+  "pylint": "9,93/10 sobre los 17 archivos tocados; solo quedan R0903 (casos de uso con un método público, igual que los existentes) y R0902 de Invitacion (10 atributos, como Usuario)",
+  "mypy": "0 errores (src/ completo, 322 archivos)",
+  "ruff_black_isort": "limpio (src y tests nuevos)",
+  "complejidad": "ninguna función con complejidad B o mayor; MI A en todos los archivos",
+  "frontend": "tsc -b sin errores; oxlint sin advertencias nuevas (queda la react(refs) preexistente de Registro.tsx)",
+  "codeguard": "126 resultados: 93 informativos, 1 advertencia (pylint 3,75 sobre errores_invitacion.py con la configuración por defecto de codeguard, sin el .pylintrc del proyecto; con el proyecto sale 10) y 32 'errores' que son de herramienta (vulture y codespell no instalados, mypy con timeout de 10 s: software_limpio#70). Sin hallazgos de seguridad",
+  "hallazgos_de_la_implementacion": [
+    "dos registros del mismo email a la vez terminaban en un 500 (violación de la restricción única): ahora el repositorio lo traduce a EmailYaRegistrado (409) y no cuenta como uso",
+    "el contador usos no puede vivir en el agregado: con registros simultáneos lo suma la base en una sola sentencia; el agregado solo lo fija para la individual",
+    "la autorización 'Docente asignado a la comisión' se repetía en tres casos de uso: se extrajo a autorizacion_comision.py"
+  ]
+}

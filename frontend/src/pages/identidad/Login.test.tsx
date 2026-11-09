@@ -96,6 +96,42 @@ describe("Login", () => {
     expect(getSession()).toBeNull()
   })
 
+  it("un 401 con intentos_restantes = 1 muestra el aviso y el link para recuperar la contraseña (US-ADJ-69)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse(401, {
+        detail: { mensaje: "Email o contraseña inválidos.", intentos_restantes: 1 },
+      })
+    )
+
+    renderLogin()
+    await completarFormulario("estudiante@fiuner.edu.ar", "contraseña-incorrecta")
+
+    const alerta = await screen.findByRole("alert")
+    expect(alerta).toHaveTextContent("Te queda 1 intento antes del bloqueo de la cuenta.")
+    expect(screen.getByRole("link", { name: "recuperala por email" })).toHaveAttribute(
+      "href",
+      "/recuperar-password"
+    )
+  })
+
+  it("el aviso desaparece al reintentar si el siguiente fallo ya no lo trae", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        jsonResponse(401, { detail: { mensaje: "x", intentos_restantes: 1 } })
+      )
+      .mockResolvedValueOnce(jsonResponse(401, { detail: "Email o contraseña inválidos." }))
+
+    renderLogin()
+    await completarFormulario("estudiante@fiuner.edu.ar", "mal")
+    expect(await screen.findByRole("alert")).toHaveTextContent("Te queda 1 intento")
+
+    const user = userEvent.setup()
+    await user.type(screen.getByLabelText("Contraseña"), "mal-otra-vez")
+    await user.click(screen.getByRole("button", { name: "Ingresar" }))
+
+    expect(await screen.findByRole("alert")).not.toHaveTextContent("Te queda 1 intento")
+  })
+
   it("email inexistente muestra la misma pantalla de error que credenciales inválidas", async () => {
     vi.mocked(fetch).mockResolvedValueOnce(
       jsonResponse(401, { detail: "Email o contraseña incorrectos." })

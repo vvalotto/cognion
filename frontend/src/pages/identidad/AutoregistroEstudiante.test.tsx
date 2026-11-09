@@ -117,6 +117,17 @@ describe("AutoregistroEstudiante", () => {
     expect(await screen.findByText("Autoregistro exito")).toBeInTheDocument()
   })
 
+  it("con la contraseña incompleta no se puede enviar y se explica por qué (spike #595)", async () => {
+    renderPantalla()
+    const user = await elegirMateriaYComision()
+    await user.type(screen.getByLabelText("Contraseña"), "cortita1234")
+
+    expect(screen.getByRole("button", { name: "Crear cuenta" })).toBeDisabled()
+    expect(
+      screen.getByText("Completá los requisitos de la contraseña para continuar."),
+    ).toBeInTheDocument()
+  })
+
   it("email ya registrado (409) muestra el error en el propio formulario, sin navegar", async () => {
     renderPantalla()
     const user = await elegirMateriaYComision()

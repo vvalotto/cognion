@@ -1,0 +1,17 @@
+{
+  "us": "US-ADJ-69",
+  "veredicto": "APROBADO",
+  "tipo": "ajuste de producto backend + frontend (Identidad): el login avisa 'te queda 1 intento' tras el 2.º fallo",
+  "tests": {
+    "propios": "7 unitarios (sin base), 4 de integración por HTTP con base descartable, 6 escenarios BDD y, en frontend, 3 de LoginError, 2 de Login y 1 de api-client",
+    "regresion": "235 tests de login, bloqueo y Administrador (unit inc1 e inc7-adj, integración de auth, BDD de US-2.2.1) pasan contra una base descartable; 113 de frontend en identidad y api-client; la suite completa se corre una sola vez al cerrar la Iteración 2",
+    "verificacion_de_que_detectan_el_error": "con el código anterior fallan los 7 unitarios, 2 de 4 de integración (los otros 2 verifican lo que no cambia) y 2 de 6 BDD (el 2.º fallo y el último Administrador); los de frontend de aviso fallan sin el cambio"
+  },
+  "pylint": "9,94/10 (línea base de los 3 archivos: 9,87; queda R0903 preexistente en el caso de uso)",
+  "mypy": "0 errores (src/ completo, 315 archivos)",
+  "ruff_black_isort": "limpio (src y tests nuevos)",
+  "complejidad": "CC promedio A (1,73), ninguna función sobre B; MI A en los tres archivos (63,9 a 84,3)",
+  "frontend": "tsc -b sin errores; oxlint sin advertencias nuevas (queda la react(refs) preexistente de Login.tsx)",
+  "codeguard": "27 resultados: 18 informativos, 1 advertencia (pylint 7,83 sobre auth_router.py con la configuración por defecto de codeguard, no la del proyecto) y 8 'errores' que son de herramienta (vulture y codespell no instalados, mypy con timeout de 10 s: software_limpio#70). Sin hallazgos de seguridad ni de complejidad",
+  "hallazgo_de_la_implementacion": "apiFetch descartaba el detalle estructurado del 401 (solo lo conservaba para otros status); se corrigió y se cubrió con un test, porque sin eso el frontend nunca habría visto el aviso"
+}

@@ -1,13 +1,13 @@
 # US-ADJ-63: El hash de contraseñas no bloquea el event loop
 
-**Estado**: `Especificada`
-**Iteracion / Sprint**: `Incremento 8 — Despliegue y operación` (hallazgo de la Iteración 6, `US-8.6.3`)
+**Estado**: `Implementada`
+**Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 1 (hallazgo de la Iteración 6 del Incremento 8, `US-8.6.3`)
 **Tipo**: `fix de rendimiento` backend (refactor del puerto y del adaptador de hashing)
 **Agregado principal afectado**: ninguno (puerto de infraestructura de Identidad)
 **Bounded Context**: Identidad
 **Origen**: prueba manual de despliegue en GCP, paso 13 (`quality/reports/uat/inc8-gcp/bitacora-despliegue.md`).
 **Issue**: [#562](https://github.com/vvalotto/cognion/issues/562)
-**Interactúa con**: `US-8.6.7` (criterio de 60 logins), `ADR-014` (bcrypt), `ADR-009`/`ADR-018` (un solo proceso, `NullPool`).
+**Interactúa con**: `US-8.6.7` (criterio de 60 logins), `US-9.0.3` (#597, medición de memoria con una clase completa: va después de esta US), `ADR-014` (bcrypt), `ADR-009`/`ADR-018` (un solo proceso, `NullPool`).
 
 ---
 
@@ -101,3 +101,18 @@ durante la ráfaga. Referencia previa: 19,5 s hasta el último con el código ac
 - **Track formal obligatorio** (`CLAUDE.md`, clasificación de hallazgos): toca `src/`. Se implementa con `/implement-us`.
 - Los CRITICAL de CBO suelen aparecer recién en el pre-push; esta US no agrega dependencias, así que no se espera.
 - Puntos de historia estimados: **3**.
+
+---
+
+## Decisiones tomadas al implementar (Incremento 9, 2026-11-07)
+
+- **Opción A2 en lugar de A.** Al relevar el código se vio que el puerto lo implementan solo `BcryptPasswordHasher` y
+  `FakePasswordHasher`, pero que **144 llamadas en 58 archivos de tests** usan `hash`/`verificar` de forma síncrona
+  para sembrar usuarios. En vez de volver `async` esos métodos, el puerto **agrega** `hash_async`/`verificar_async`
+  y conserva los síncronos. Los casos de uso pasan a las formas asíncronas; los tests no cambian. Una guarda
+  automática (AST) falla si un caso de uso vuelve a llamar la forma síncrona o no espera la asíncrona.
+- **Ejecutor propio** de `os.cpu_count()` hilos (`lru_cache`), no el por defecto de `asyncio`.
+- **Prueba de tiempo con margen:** umbral de 150 ms (la spec decía 120) contra los 250 a 325 ms de la versión que
+  bloquea, y hasta 3 intentos. Verificada en sentido inverso: con el adaptador bloqueando, el event loop queda 1,5 s
+  sin responder y los tests fallan; con `/health` real, tarda 1,16 s durante 3 logins contra decenas de ms.
+

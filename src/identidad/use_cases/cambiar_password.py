@@ -57,7 +57,7 @@ class CambiarPasswordUseCase:
         ahora = datetime.now(UTC)
         await rechazar_si_bloqueada(self._usuario_repositorio, usuario, ahora)
 
-        if not self._hasher.verificar(password_actual, usuario.password_hash):
+        if not await self._hasher.verificar_async(password_actual, usuario.password_hash):
             alcanzo_umbral = usuario.registrar_fallo_cambio_password()
             exc = PasswordActualIncorrecta()
             exc.intentos_restantes = usuario.intentos_restantes_cambio_password()
@@ -74,7 +74,7 @@ class CambiarPasswordUseCase:
 
         Usuario.validar_password_nueva(password_nueva)
 
-        password_hash = self._hasher.hash(password_nueva)
+        password_hash = await self._hasher.hash_async(password_nueva)
         usuario.cambiar_password(password_hash)
         await self._usuario_repositorio.actualizar(usuario)
 
