@@ -9,6 +9,28 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-11-09
+
+Cierre de baseline `BL-015` (Incremento 9 — Correcciones y robustez). **Sin UAT formal** (decisión del 2026-11-09; ver la baseline).
+Incluye la migración `f7a3c9d15e82_invitacion_grupal`.
+
+### Added
+- **Link de invitación grupal** (`US-ADJ-67`, `ADR-027`): el Docente genera un link reutilizable con vencimiento de 15 min, 1 h
+  (por defecto) o 1 día, lo revoca y ve cuántos estudiantes se registraron. Reemplaza a la invitación individual en la UI.
+- **Aviso del último intento** (`US-ADJ-69`): el login informa "te queda 1 intento" tras el segundo fallo.
+- **Observabilidad mínima** (`US-8.3.3`): `GET /health/ready` (comprueba la base) y logs estructurados con `LOG_FORMAT=json`.
+- **`import-linter` en el CI** (#497): hace cumplir las capas dentro de cada BC y el aislamiento entre BC.
+
+### Changed
+- El hash de contraseñas ya no bloquea el event loop (`US-ADJ-63`): `hash_async`/`verificar_async` con ejecutor propio.
+- Tres adaptadores in-process dejan de leer modelos ORM de otro BC (`US-9.4.1` a `US-9.4.3`, `ADR-026`).
+- El registro exige y enfoca la política de contraseña, y el canal en vivo detecta el JWT vencido (#605).
+
+### Fixed
+- El log de acceso enmascara el token de `/invitaciones/<token>` (`US-ADJ-68`).
+- `alembic downgrade base` funciona (`US-8.3.4`).
+- Rendir evaluación recrea la pregunta y declara `lang="es"` por la traducción automática del navegador (PR #591, sin confirmar).
+
 ## [0.9.1] - 2026-11-05
 
 Mantenimiento (cierre de baseline `BL-014`): seguridad de dependencias y correo real para el despliegue en GCP.

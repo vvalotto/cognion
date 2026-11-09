@@ -1,6 +1,6 @@
 # Incremento 9 — Correcciones y robustez
 
-**Estado: en planificación (2026-11-07).** Propuesta aprobada por Víctor el 2026-11-07.
+**Estado: cerrado (2026-11-09)** con `BL-015`, tag `v0.10.0`, **sin UAT formal** (decisión de Víctor). Quedan abiertos #597 y #496 (ver la baseline). Propuesta aprobada por Víctor el 2026-11-07.
 **Milestone:** [Incremento 9 — Correcciones y robustez](https://github.com/vvalotto/cognion/milestone/18)
 **Cierre previsto:** `BL-015`, tag `v0.10.0` (MINOR: incluye una funcionalidad nueva, el link de invitación grupal).
 **Política:** sin BC nuevo ni RF funcional nuevo. Abre con una iteración de **decisiones** (con Víctor presente), porque las Iteraciones 1 a 3 dependen de ellas. Las US que tocan `src/` van por el track formal (`/implement-us`); las de `frontend/` necesitan wireframes aprobados antes (gate UX).
