@@ -292,5 +292,4 @@ ignore_imports = [
     "src.actividad_evaluativa.** -> src.actividad_evaluativa.frameworks.db.models",
     "src.banco_preguntas.** -> src.banco_preguntas.frameworks.db.models",
     # Pendientes de migrar (ADR-026, Iteración 4):
-    "src.identidad.frameworks.adapters.evaluacion_consulta_port_in_process -> src.actividad_evaluativa.frameworks.db.models",  # #602
 ]

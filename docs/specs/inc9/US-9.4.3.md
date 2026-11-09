@@ -1,6 +1,6 @@
 # US-9.4.3: Identidad deja de leer el event store de Actividad Evaluativa
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 4
 **Tipo**: `refactor` backend (sin cambio de comportamiento)
 **Agregado principal afectado**: ninguno
@@ -67,3 +67,11 @@ semántica de `eliminar_cuenta`; migrar los adaptadores de Analytics (excepción
   pasa antes y después (escenarios 1 a 4). Los eventos se cargan con `SQLAlchemyEventStore`.
 - Test de integración del gateway nuevo en Actividad Evaluativa y fake nuevo solo si algún test unitario lo necesita.
 - El adaptador de Identidad puede importar el gateway de otro BC: `frameworks/adapters/` es la única capa autorizada (`ADR-006`).
+
+---
+
+## Decisiones tomadas al implementar (Incremento 9, 2026-11-09)
+
+- **Se implementó como estaba especificado:** puerto y gateway nuevos en Actividad Evaluativa, adaptador de Identidad delegando; sin desvíos.
+- **Gateway con DesignReviewer en 0 CRITICAL**, medido antes de commitear (lección de `US-9.4.2`).
+- **Mismo costo de consulta que antes:** sigue trayendo los payloads de `EvaluacionIniciada` y filtrando en memoria; optimizarlo queda fuera de alcance.
