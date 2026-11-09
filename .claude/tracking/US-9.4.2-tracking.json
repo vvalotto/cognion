@@ -8,9 +8,9 @@
   },
   "timeline": {
     "started_at": "2026-11-09T10:48:17.828854+00:00",
-    "completed_at": null,
-    "total_elapsed_seconds": 239,
-    "effective_seconds": 239,
+    "completed_at": "2026-11-09T11:03:02.378946+00:00",
+    "total_elapsed_seconds": 884,
+    "effective_seconds": 884,
     "paused_seconds": 0
   },
   "phases": [
@@ -40,9 +40,64 @@
       "phase_number": 3,
       "phase_name": "Implementación",
       "started_at": "2026-11-09T10:52:17.592692+00:00",
-      "completed_at": null,
+      "completed_at": "2026-11-09T10:53:11.868086+00:00",
+      "elapsed_seconds": 54,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests",
+      "started_at": "2026-11-09T10:53:12.059906+00:00",
+      "completed_at": "2026-11-09T11:00:37.869025+00:00",
+      "elapsed_seconds": 445,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 5,
+      "phase_name": "Integración",
+      "started_at": "2026-11-09T11:00:38.216313+00:00",
+      "completed_at": "2026-11-09T11:00:38.570608+00:00",
       "elapsed_seconds": 0,
-      "status": "in_progress",
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality gates",
+      "started_at": "2026-11-09T11:00:38.917933+00:00",
+      "completed_at": "2026-11-09T11:03:00.715453+00:00",
+      "elapsed_seconds": 141,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Docs",
+      "started_at": "2026-11-09T11:03:01.076835+00:00",
+      "completed_at": "2026-11-09T11:03:01.394651+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte",
+      "started_at": "2026-11-09T11:03:01.717196+00:00",
+      "completed_at": "2026-11-09T11:03:02.044914+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
       "tasks": [],
       "auto_approved": true,
       "user_approval_time_seconds": 0
@@ -52,7 +107,7 @@
   "summary": {
     "total_tasks": 0,
     "completed_tasks": 0,
-    "total_phases": 3,
+    "total_phases": 8,
     "estimated_total_minutes": 0,
     "actual_total_minutes": 0,
     "variance_minutes": 0,

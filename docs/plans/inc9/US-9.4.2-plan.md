@@ -10,7 +10,7 @@ antes:  adaptador (actividad_evaluativa) ──select UsuarioModel──► tabl
 después: adaptador ──► CuentaQueryPort.obtener_nombres ──► SQLAlchemyCuentaQueryRepository ──► tabla usuario
 ```
 
-- Se elige `CuentaQueryPort` y no `UsuarioRepositoryPort` (altas/persistencia) ni `ComisionQueryPort`: es una consulta de solo lectura sobre cuentas, y ese puerto ya separa command/query.
+- **Ajuste al implementar:** el plan ponía el método en `CuentaQueryPort`, pero subía el CBO de su gateway a 11/10 (CRITICAL). Se creó `NombreUsuarioQueryPort` con su gateway `SQLAlchemyNombreUsuarioQueryRepository` y `CuentaQueryPort` no se tocó.
 - Sin cambios en casos de uso (`_resolucion_nombres.py`), API ni frontend. Comportamiento: una consulta por lote, ids sin cuenta no aparecen, lista vacía devuelve `{}` sin consultar.
 
 ## Componentes a Implementar

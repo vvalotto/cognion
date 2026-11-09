@@ -2,21 +2,23 @@
 
 Mismo criterio de acoplamiento consciente (`ADR-006`) que `materia_consulta_port_in_process.py`:
 vive en `frameworks/`, nunca en `entities/` ni `use_cases/`, y es el único punto de Actividad
-Evaluativa que importa `src.identidad`.
+Evaluativa que importa `src.identidad`. No lee modelos ORM de Identidad (`US-9.4.2`, `ADR-026`):
+`obtener_nombres` delega en `NombreUsuarioQueryPort`.
 """
 
 from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
 from src.identidad.entities.usuario import Estudiante
-from src.identidad.frameworks.db.models import UsuarioModel
+from src.identidad.interface_adapters.gateways.nombre_usuario_query_repository import (
+    SQLAlchemyNombreUsuarioQueryRepository,
+)
 from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
@@ -27,9 +29,9 @@ class EstudianteConsultaPortInProcess(EstudianteConsultaPort):
     """Implementa `EstudianteConsultaPort` invocando el repositorio de `Usuario` in-process."""
 
     def __init__(self, session: AsyncSession) -> None:
-        """Recibe la sesión async compartida con el repositorio de `Usuario`."""
-        self._session = session
+        """Recibe la sesión async compartida con los repositorios de Identidad."""
         self._usuario_repositorio = SQLAlchemyUsuarioRepository(session)
+        self._nombres_query = SQLAlchemyNombreUsuarioQueryRepository(session)
 
     async def existe(self, estudiante_id: UUID) -> bool:
         """Indica si `estudiante_id` es un `Usuario` existente con rol Estudiante."""
@@ -47,9 +49,4 @@ class EstudianteConsultaPortInProcess(EstudianteConsultaPort):
 
     async def obtener_nombres(self, ids: list[UUID]) -> dict[UUID, str]:
         """Resuelve `nombre` para `ids` en una sola consulta por lote (`US-6.3.1`)."""
-        if not ids:
-            return {}
-        resultado = await self._session.execute(
-            select(UsuarioModel.id, UsuarioModel.nombre).where(UsuarioModel.id.in_(ids))
-        )
-        return {fila.id: fila.nombre for fila in resultado}
+        return await self._nombres_query.obtener_nombres(ids)
