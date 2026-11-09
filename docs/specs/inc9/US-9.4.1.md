@@ -1,6 +1,6 @@
 # US-9.4.1: Banco de Preguntas deja de leer el modelo ORM de comisiones de Identidad
 
-**Estado**: `Especificada`
+**Estado**: `Implementada`
 **Iteracion / Sprint**: `Incremento 9 — Correcciones y robustez`, Iteración 4
 **Tipo**: `refactor` backend (sin cambio de comportamiento)
 **Agregado principal afectado**: ninguno

@@ -244,3 +244,40 @@ class TestDocenteTieneComisionEnMateria:
         resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, uuid.uuid4())
 
         assert resultado is False
+
+
+class TestExisteComisionEnMateria:
+    """`US-9.4.1`: reemplaza la lectura directa de `ComisionModel` desde Banco de Preguntas."""
+
+    async def test_materia_sin_comisiones(self, session):
+        query_repo = SQLAlchemyComisionQueryRepository(session)
+
+        assert await query_repo.existe_comision_en_materia(uuid.uuid4()) is False
+
+    async def test_materia_con_comision_activa(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        admin = Usuario.crear("Vic", "vic.query9@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        await usuario_repo.guardar(admin)
+        materia_id = uuid.uuid4()
+        await SQLAlchemyComisionRepository(session).guardar(
+            Comision.crear(materia_id, "lu 10-12", admin.id)
+        )
+
+        assert await SQLAlchemyComisionQueryRepository(session).existe_comision_en_materia(
+            materia_id
+        )
+
+    async def test_materia_solo_con_comision_deshabilitada(self, session):
+        usuario_repo = SQLAlchemyUsuarioRepository(session)
+        admin = Usuario.crear("Vic", "vic.query10@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
+        await usuario_repo.guardar(admin)
+        materia_id = uuid.uuid4()
+        comision = Comision.crear(materia_id, "lu 10-12", admin.id)
+        comision_repo = SQLAlchemyComisionRepository(session)
+        await comision_repo.guardar(comision)
+        comision.deshabilitar()
+        await comision_repo.actualizar(comision)
+
+        assert await SQLAlchemyComisionQueryRepository(session).existe_comision_en_materia(
+            materia_id
+        )

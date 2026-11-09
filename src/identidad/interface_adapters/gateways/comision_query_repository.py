@@ -126,3 +126,9 @@ class SQLAlchemyComisionQueryRepository(ComisionQueryPort):
         )
         resultado = await self._session.execute(query)
         return resultado.first() is not None
+
+    async def existe_comision_en_materia(self, materia_id: UUID) -> bool:
+        """Indica si existe alguna comisión (activa o no) con esa materia."""
+        query = select(ComisionModel.id).where(ComisionModel.materia_id == materia_id).limit(1)
+        resultado = await self._session.execute(query)
+        return resultado.first() is not None

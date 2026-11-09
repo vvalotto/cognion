@@ -155,6 +155,9 @@ class FakeComisionQueryRepository(ComisionQueryPort):
             for comision in self.comisiones_por_materia.get(materia_id, [])
         )
 
+    async def existe_comision_en_materia(self, materia_id: UUID) -> bool:
+        return bool(self.comisiones_por_materia.get(materia_id))
+
 
 class FakeEvaluacionConsultaPort(EvaluacionConsultaPort):
     def __init__(self) -> None:

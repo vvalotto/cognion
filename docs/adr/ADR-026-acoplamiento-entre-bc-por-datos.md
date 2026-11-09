@@ -52,7 +52,7 @@ Los 6 imports de modelos ORM se reparten así:
 
 | Adaptador | Debe pasar a usar |
 |---|---|
-| `banco_preguntas/.../comision_consulta_port_in_process.py` | el gateway o caso de uso de consulta de comisiones de `identidad` |
+| `banco_preguntas/.../comision_consulta_port_in_process.py` | el gateway o caso de uso de consulta de comisiones de `identidad` — **migrado** (`US-9.4.1`, 2026-11-09) |
 | `actividad_evaluativa/.../estudiante_consulta_port_in_process.py` | el gateway o caso de uso de consulta de estudiantes de `identidad` |
 | `identidad/.../evaluacion_consulta_port_in_process.py` | un puerto de consulta que exponga `actividad_evaluativa` |
 
