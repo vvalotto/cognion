@@ -65,6 +65,8 @@ Orden por riesgo:
 
 ## Iteración 4 — Migración de adaptadores que leen tablas de otro BC
 
+**Estado: implementada (2026-11-09)** en `feature/inc-9-iter-4-adaptadores-sin-orm-ajeno`; las tres US están commiteadas y el PR único sale al cierre. Specs en `docs/specs/inc9/US-9.4.1.md` a `US-9.4.3.md`. Desvío registrado: en `US-9.4.2` el método se puso en un puerto propio y no en `CuentaQueryPort`, porque subía su CBO a 11.
+
 Según `ADR-026`. Depende de #497, **ya hecho** (el contrato de `import-linter` impide que vuelva a aparecer; cada migración borra su línea de `ignore_imports` en `pyproject.toml`). Una US por adaptador; cada una empieza con un test de caracterización y no puede cambiar el comportamiento.
 
 1. [#600](https://github.com/vvalotto/cognion/issues/600) `US-9.4.1` — `banco_preguntas` deja de leer modelos de `identidad` (consulta de comisiones).

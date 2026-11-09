@@ -87,3 +87,12 @@ class ComisionQueryPort(ABC):
         restricción de comisión), no una comisión puntual.
         """
         ...
+
+    @abstractmethod
+    async def existe_comision_en_materia(self, materia_id: UUID) -> bool:
+        """Indica si existe alguna comisión, activa o no, que referencie esa materia (`US-9.4.1`).
+
+        Consumida por Banco de Preguntas (vía su `ComisionConsultaPort`) para impedir eliminar una
+        materia con comisiones, sin leer la tabla `comision` de este BC (`ADR-026`).
+        """
+        ...

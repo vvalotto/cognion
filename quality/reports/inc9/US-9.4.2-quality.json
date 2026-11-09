@@ -1,0 +1,20 @@
+{
+  "us": "US-9.4.2",
+  "veredicto": "APROBADO",
+  "tipo": "refactor sin cambio de comportamiento: Actividad Evaluativa deja de leer UsuarioModel de Identidad (ADR-026)",
+  "tests": {
+    "caracterizacion": "5 tests de integración del adaptador (incluye contar sentencias SQL), commiteados y en verde antes de migrar y en verde después",
+    "gateway": "2 tests de integración de SQLAlchemyNombreUsuarioQueryRepository",
+    "regresion": "165 tests de integración (inc6 y la US) y 1209 unitarios en verde, sobre un cluster descartable en el puerto 55432"
+  },
+  "lint_imports": "4 contratos kept, 0 broken; ignored imports 17 (uno menos que antes)",
+  "mypy": "0 errores (326 archivos de src/)",
+  "ruff_src": "limpio",
+  "black": "limpio",
+  "radon": "complejidad media A; MI A en los archivos tocados",
+  "designreviewer": "0 CRITICAL tras separar el puerto (con el método en CuentaQueryPort daba CBO 11/10)",
+  "hallazgos_al_probar": [
+    "Poner obtener_nombres en SQLAlchemyCuentaQueryRepository subía su CBO a 11 (umbral 10): CRITICAL en DesignReviewer. Se separó por responsabilidad en un puerto y un gateway propios.",
+    "El PostgreSQL de Homebrew sigue sin arrancar (postmaster.pid viejo); los tests corrieron en un cluster descartable fuera del repo."
+  ]
+}
