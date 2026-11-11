@@ -105,8 +105,8 @@ link grupal amplía el registro por invitación sin agregar filas. Como no hubo 
 
 ## Pendiente que queda abierto
 
-- [#597](https://github.com/vvalotto/cognion/issues/597) `US-9.0.3`: spike de memoria y swap de la VM con una clase completa. Necesita
-  la VM de GCP, que hoy no existe, y medir después de `US-ADJ-63`.
+- [#597](https://github.com/vvalotto/cognion/issues/597) `US-9.0.3`: spike de memoria y swap de la VM con una clase completa. **Cerrado
+  como no planificado (2026-11-10)**: necesitaba la VM de GCP, que no existe.
 - [#496](https://github.com/vvalotto/cognion/issues/496): corregir `DependencyGraphBuilder` upstream (`software_limpio#77`) y reactivar
   `LayerViolationsAnalyzer`. Depende de un arreglo en otro repositorio; `import-linter` cubre la regla mientras tanto.
 - Nube (Iteraciones 2 y 3 del Incremento 8), `RF-07` (PDF) y `RF-18` (KPIs): sin cambios.
