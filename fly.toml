@@ -1,3 +1,5 @@
+# HISTÓRICO — Fly.io ya no se usa para desplegar Cognión (ADR-025: GCP; US-10.2.2: servidor Linux con Docker).
+# Se conserva porque tests del Incremento 8 (US-8.1.4, US-8.1.6) verifican su contenido. Guía vigente: docs/INSTALACION.md
 # Configuración mínima de Fly.io (US-8.1.4, ADR-021). Región, tamaño de VM y Postgres se completan
 # en US-8.2.1 / US-8.2.2 junto con el CD y el entorno de staging.
 app = "cognion"

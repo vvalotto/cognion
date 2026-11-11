@@ -47,6 +47,7 @@ from src.settings import settings
 from src.shared.frameworks.db import SessionLocal
 from src.shared.frameworks.logging_config import configurar_logging
 from src.shared.frameworks.salud import comprobar_base
+from src.shared.frameworks.version import obtener_version
 
 configurar_logging(settings.log_level, settings.log_format)
 
@@ -79,7 +80,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         await tarea
 
 
-app = FastAPI(title="Cognion", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="Cognion", version=obtener_version(), lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -113,8 +114,8 @@ app.include_router(analytics_router)
 
 @app.get("/health", tags=["infra"])
 async def health() -> dict[str, str]:
-    """Reporta que el servicio está arriba."""
-    return {"status": "ok"}
+    """Reporta que el servicio está arriba y qué versión corre (`US-10.2.1`)."""
+    return {"status": "ok", "version": obtener_version()}
 
 
 @app.get("/health/ready", tags=["infra"])

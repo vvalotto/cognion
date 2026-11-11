@@ -42,7 +42,9 @@ def test_asset_existente_se_sirve_e_inexistente_es_404(frontend: Path) -> None:
 def test_la_api_vive_bajo_api_y_no_la_pisa_el_spa(frontend: Path) -> None:
     """Escenario 3: `/api/materias` es la API (401 sin token), `/materias` es el SPA."""
     cliente = TestClient(crear_servidor(frontend))
-    assert cliente.get("/api/health").json() == {"status": "ok"}
+    cuerpo = cliente.get("/api/health").json()
+    assert cuerpo["status"] == "ok"
+    assert cuerpo["version"]
     api = cliente.get("/api/materias")
     assert api.status_code in (401, 403)
     assert "cognion-spa" not in api.text

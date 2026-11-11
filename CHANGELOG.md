@@ -9,6 +9,24 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [1.0.0] - Unreleased
+
+Primera versión estable de Cognión (Incremento 10, `BL-016`): el trabajo de los Incrementos 0 a 9 con una versión única, un
+paquete de instalación y una guía para instalar en una máquina local, en un servidor Linux con Docker o en GCP.
+
+### Added
+- **Versión única** (`US-10.2.1`): el archivo `VERSION` es la fuente; `pyproject.toml`, `frontend/package.json` y FastAPI deben
+  coincidir con él y `GET /api/health` informa `version`.
+- **GitHub Release con paquete de instalación** (`US-10.2.1`): cada tag `vX.Y.Z` publica la imagen y crea una Release con las notas
+  del `CHANGELOG` y el paquete `cognion-X.Y.Z-instalacion.tar.gz`. El CD falla si el tag no coincide con `VERSION`.
+- **Instalación en un servidor Linux con Docker** (`US-10.2.2`): `deploy/servidor/` (compose con memoria y puertos configurables, Caddy con HTTPS,
+  `preparar-env.sh` con la variante `--sin-dominio`, `cognion.sh` con `iniciar`, `administrador`, `desplegar`, `rollback`, `estado` y correo), sin
+  depender de Google Cloud.
+- **Respaldo mínimo del servidor** (`US-10.2.2`): `respaldar.sh` (`pg_dump` verificado, `sha256`, rotación) y `restaurar.sh` (ensayo en base temporal o
+  reemplazo con confirmación). `cognion.sh desplegar` respalda antes de migrar y se aborta si el respaldo falla.
+- **Guía única de instalación** (`US-10.2.2`): `docs/INSTALACION.md`, con los caminos servidor Linux, local sin Docker y GCP, y las limitaciones conocidas de la 1.0.
+  **Limitación:** el camino del servidor con Docker se verificó con un `docker` simulado y todavía no contra Docker real (Issue #624).
+
 ## [0.10.0] - 2026-11-09
 
 Cierre de baseline `BL-015` (Incremento 9 — Correcciones y robustez). **Sin UAT formal** (decisión del 2026-11-09; ver la baseline).

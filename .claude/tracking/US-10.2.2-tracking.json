@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "us_id": "US-10.2.2",
+    "us_title": "Instalación en servidor Linux con Docker, respaldo y guía",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-11T14:37:59.512619+00:00",
+    "completed_at": "2026-11-11T18:08:44.367466+00:00",
+    "total_elapsed_seconds": 12644,
+    "effective_seconds": 12644,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Contexto",
+      "started_at": "2026-11-11T14:37:59.985020+00:00",
+      "completed_at": "2026-11-11T14:38:00.236587+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-11T14:38:00.447578+00:00",
+      "completed_at": "2026-11-11T17:52:49.228963+00:00",
+      "elapsed_seconds": 11688,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-11T17:52:49.384954+00:00",
+      "completed_at": "2026-11-11T18:01:18.953805+00:00",
+      "elapsed_seconds": 509,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 4,
+      "phase_name": "Tests",
+      "started_at": "2026-11-11T18:01:19.994571+00:00",
+      "completed_at": "2026-11-11T18:08:21.986617+00:00",
+      "elapsed_seconds": 421,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality gates",
+      "started_at": "2026-11-11T18:08:22.935942+00:00",
+      "completed_at": "2026-11-11T18:08:40.743003+00:00",
+      "elapsed_seconds": 17,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Docs",
+      "started_at": "2026-11-11T18:08:41.221546+00:00",
+      "completed_at": "2026-11-11T18:08:41.803537+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte",
+      "started_at": "2026-11-11T18:08:42.810731+00:00",
+      "completed_at": "2026-11-11T18:08:43.646571+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 7,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

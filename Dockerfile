@@ -17,6 +17,8 @@ RUN pip install uv && uv sync --frozen --no-dev
 COPY src/ ./src/
 # Migraciones: se aplican como paso de release (fly.toml `release_command`), nunca al arrancar la app (US-8.1.4)
 COPY alembic.ini ./
+# Versión única del proyecto (US-10.2.1): `GET /api/health` la informa
+COPY VERSION ./
 COPY migrations/ ./migrations/
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 ENV PYTHONPATH=/app/src
