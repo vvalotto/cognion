@@ -59,9 +59,14 @@ defecto, `local`, es el que se probó.
 
 1. Instalá `uv`, Node 22 y PostgreSQL 14+ (con `psql` y un rol con permiso para crear bases).
 2. Bajá el "Source code" de la Release y descomprimilo; en esa carpeta: `uv sync`.
-3. `scripts/local/levantar.sh --fondo` crea la base `cognion_local`, compila el frontend, migra, pide el primer Administrador y arranca el servidor; al final
+3. `cp .env.example .env` (el script solo toma de ahí el usuario y el host de PostgreSQL; si tu rol o contraseña no son los del ejemplo, editá
+   `DATABASE_URL` en ese `.env`). Sin ese archivo `levantar.sh` se detiene con un aviso.
+4. `scripts/local/levantar.sh --fondo` crea la base `cognion_local`, compila el frontend, migra, pide el primer Administrador y arranca el servidor; al final
    imprime la dirección que deben usar los alumnos. `scripts/local/detener.sh` lo detiene.
-4. Respaldo y restauración: `scripts/local/respaldar.sh` y `scripts/local/restaurar.sh`.
+5. Respaldo y restauración: `scripts/local/respaldar.sh` (guarda en `~/CognionRespaldos`) y `scripts/local/restaurar.sh <archivo>` (ensayo; con
+   `--sobre-local` reemplaza la base, pide escribir `RESTAURAR` y exige detener antes el servidor).
+6. Actualizar: `scripts/local/detener.sh`, respaldar, descomprimir la versión nueva, `uv sync` y volver a ejecutar `levantar.sh --fondo` (reutiliza la
+   base y su `.env.local`: copiá este último a la carpeta nueva; aplica las migraciones y no toca los datos).
 
 El detalle (red del aula, emails, diagnóstico) está en `docs/plans/DESPLIEGUE-LOCAL.md` del código fuente.
 
