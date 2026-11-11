@@ -1,7 +1,7 @@
 # Reporte UAT — Incremento 10, Iteración 1 (`US-10.1.1`, 2026-11-11)
 
 **Versión probada:** `v0.10.0` (`main` en `64b4262`, `develop` sin cambios en `src/`, `frontend/` ni `migrations/`).
-**Resultado:** ✅ **Sin hallazgos 🔴.** 1 observación 🟡. **Pendiente: la prueba en un celular real (Víctor).**
+**Resultado:** ✅ **Sin hallazgos 🔴.** 1 observación 🟡. La prueba en un celular real **se desestimó** por decisión de Víctor (2026-11-11) y queda como no verificada.
 
 ## Resultados
 
@@ -25,10 +25,10 @@
 | H-1 | 🟡 | El link que el docente copia se arma con `window.location.origin` (`ComisionDetalleDocente.tsx:162`). Si el docente abre la app por `localhost`, el link dice `localhost` y **no funciona en los celulares de los alumnos**. Hay que abrir la app por la IP o el nombre `.local` que ven los alumnos. | Documentarlo en la guía de instalación (`US-10.2.2`). Un arreglo en código (usar una URL pública configurable) sería `src/` + `frontend/`: track formal. |
 
 ## No verificado
-- **Celular real:** el registro y la tarjeta se probaron con un viewport emulado, no con un teléfono. Queda para Víctor: abrir la app por la IP de la red, generar un link y registrarse desde el celular (ver el cierre de `US-10.1.1`).
+- **Celular real:** el registro y la tarjeta se probaron con un viewport emulado, no con un teléfono. **Desestimado por decisión de Víctor (2026-11-11).** Lo único que se comprobó desde un iPhone es que ingresó al sistema por la IP de la red local con el login del docente.
 - **Canal en vivo con JWT vencido** (#605): requiere esperar el vencimiento del token (60 min); solo cubierto por los tests automáticos.
 - **Regresión completa de los RF validados:** no se repitió a mano; la cubren los 2378 tests de la suite.
 - **VM de GCP:** no se desplegó; la carga se midió en la Mac, no en la `e2-micro`.
 
 ## Conclusión
-Con esta evidencia, el código de la `v0.10.0` no tiene hallazgos bloqueantes. Falta confirmar el celular real para cerrar `US-10.1.1`.
+Con esta evidencia, el código de la `v0.10.0` no tiene hallazgos bloqueantes. `US-10.1.1` se cierra con el celular real como riesgo aceptado y declarado (también en `BL-016` y en la guía de instalación).

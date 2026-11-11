@@ -10,7 +10,7 @@ Verificar lo que `BL-015` (`v0.10.0`) dejó sin verificar, para poder llamar est
 - **Capa 1 (pytest):** la suite completa de `BL-015` (2378 tests) sobre el mismo código; `src/`, `frontend/` y `migrations/` no cambiaron desde ese commit.
 - **Capa 2 (HTTP):** `tests/uat/inc10/capa2_http.py` contra el servidor real; `tests/uat/inc10/carga_logins.py` para el efecto de `US-ADJ-63`.
 - **Navegador real:** recorrido manual con el navegador integrado (escritorio y viewport emulado de 375 px).
-- **Celular real:** lo hace Víctor, por la red local.
+- **Celular real:** desestimado por decisión de Víctor (2026-11-11); solo se verificó el ingreso del docente desde un iPhone por la red local.
 
 ## Escenarios
 1. Salud y readiness.
