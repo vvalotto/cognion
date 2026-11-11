@@ -1,8 +1,8 @@
 # Instalar Cognión
 
 > Guía única de instalación. Es la que lleva el paquete `cognion-X.Y.Z-instalacion.tar.gz` de cada versión.
-> Estado: operativo (`US-10.2.2`). El camino del servidor con Docker está verificado con `docker` simulado y por estructura;
-> su prueba en un servidor real es parte de `US-10.3.1`.
+> Estado: operativo (`US-10.2.2`). El camino del servidor con Docker (A) está verificado con `docker` simulado y por estructura, pero
+> **todavía no se ensayó contra Docker real en un servidor** (Issue #624). Los caminos B (local) y C (GCP) sí se probaron en instalaciones reales.
 
 ## 1. Qué camino elegir
 
@@ -102,12 +102,15 @@ nombre `.local` en el camino B) antes de generar el link.
 
 ## 9. Limitaciones conocidas de la versión 1.0
 
+- **El camino A (servidor con Docker) no se ensayó contra Docker real.** Se comprobó la estructura del compose y el comportamiento de `cognion.sh`,
+  `respaldar.sh` y `restaurar.sh` con un `docker` simulado; el arranque real, el certificado HTTPS, el respaldo y la restauración contra PostgreSQL
+  real y la actualización con `desplegar` quedan por probar (Issue #624). Si ensayás este camino y algo falla, avisá: se corrige como `1.0.x`.
 - **Importar preguntas desde PDF (`RF-07`)** y **los KPIs históricos (`RF-18`)** no están en la 1.0. La importación se planifica como importar desde JSON.
 - **No hay respaldo automático a la nube** ni un runbook operativo completo; el respaldo del camino A es local al servidor.
 - **No hay despliegue automático:** el CD publica la imagen, pero el despliegue en el servidor lo ejecutás vos (`./cognion.sh desplegar`).
 - **Solo x86_64** y una sola instancia de la aplicación (sin alta disponibilidad).
-- **UAT de la 1.0:** se verificó en una instalación local, con un navegador de escritorio y un viewport de celular emulado; el servidor con Docker se
-  ensaya en `US-10.3.1`.
+- **UAT de la 1.0:** se verificó en una instalación local (camino B), con un navegador de escritorio y un viewport de celular emulado. No se probó en un
+  celular real ni el canal en vivo con un JWT vencido.
 
 ## 10. Problemas frecuentes
 

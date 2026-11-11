@@ -25,6 +25,7 @@ paquete de instalación y una guía para instalar en una máquina local, en un s
 - **Respaldo mínimo del servidor** (`US-10.2.2`): `respaldar.sh` (`pg_dump` verificado, `sha256`, rotación) y `restaurar.sh` (ensayo en base temporal o
   reemplazo con confirmación). `cognion.sh desplegar` respalda antes de migrar y se aborta si el respaldo falla.
 - **Guía única de instalación** (`US-10.2.2`): `docs/INSTALACION.md`, con los caminos servidor Linux, local sin Docker y GCP, y las limitaciones conocidas de la 1.0.
+  **Limitación:** el camino del servidor con Docker se verificó con un `docker` simulado y todavía no contra Docker real (Issue #624).
 
 ## [0.10.0] - 2026-11-09
 

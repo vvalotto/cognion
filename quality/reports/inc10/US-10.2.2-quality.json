@@ -13,7 +13,7 @@
   "designreviewer": "0 CRITICAL",
   "bash_sintaxis": "bash -n sobre todos los scripts de deploy/servidor en verde; shellcheck no está instalado en este equipo",
   "no_verificado": [
-    "Este equipo no tiene Docker: el compose, el arranque real, el HTTPS de Caddy, pg_dump/pg_restore y los scripts contra contenedores reales no se ejecutaron. Se comprobaron por estructura y con un docker simulado. La prueba real es US-10.3.1.",
-    "La guía no se siguió de punta a punta en un servidor (US-10.3.1)."
+    "Este equipo no tiene Docker: el compose, el arranque real, el HTTPS de Caddy, pg_dump/pg_restore y los scripts contra contenedores reales no se ejecutaron. Se comprobaron por estructura y con un docker simulado. La prueba real quedó pendiente en el Issue #624.",
+    "La guía no se siguió de punta a punta en un servidor (Issue #624)."
   ]
 }
