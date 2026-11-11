@@ -9,4 +9,6 @@ async def test_health_responde_ok():
         response = await client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    cuerpo = response.json()
+    assert cuerpo["status"] == "ok"
+    assert cuerpo["version"]  # US-10.2.1: informa la versión que corre

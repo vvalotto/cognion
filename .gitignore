@@ -62,3 +62,6 @@ tests/uat/datos-reales/
 
 # Caché de import-linter (`lint-imports`)
 .import_linter_cache/
+
+# Paquete de instalación generado por scripts/empaquetar_release.sh (US-10.2.1)
+dist/

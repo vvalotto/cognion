@@ -133,8 +133,10 @@ def test_la_publicacion_en_ci_ocurre_solo_con_etiquetas() -> None:
     job = _cd()
     assert job["permissions"]["packages"] == "write"
     condicionados = [p for p in job["steps"] if p.get("if") == CONDICION_ETIQUETA]
-    assert len(condicionados) == 2
-    assert "GHCR" in " ".join(p["name"] for p in condicionados)
+    # Inicio de sesión y publicación en GHCR, más la verificación de que el tag coincide con VERSION (US-10.2.1).
+    assert len(condicionados) == 3
+    nombres = " ".join(p["name"] for p in condicionados)
+    assert "GHCR" in nombres and "VERSION" in nombres
 
 
 def test_la_imagen_publicada_lleva_la_version_y_el_commit_y_no_latest() -> None:

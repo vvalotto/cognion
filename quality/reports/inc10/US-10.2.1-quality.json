@@ -1,0 +1,19 @@
+{
+  "us": "US-10.2.1",
+  "veredicto": "APROBADO",
+  "tipo": "tooling y release: versión única (VERSION), /api/health con versión, scripts de notas y paquete, CD con verificación de tag y GitHub Release",
+  "tests": {
+    "propios": "unitarios en tests/unit/inc10: coherencia de versiones (pyproject, package.json, package-lock, FastAPI), lectura del archivo, /health, Dockerfile y .dockerignore, estructura del CD; extraer_notas.sh y empaquetar_release.sh con proyecto temporal",
+    "actualizados": "tests/unit/inc0/test_health.py, tests/unit/inc8/test_us_8_1_6_servidor.py (cuerpo de /health) y tests/unit/inc8/test_us_8_6_4_desplegar_y_ci.py (pasos del CD condicionados a un tag)",
+    "regresion": "1227 unitarios en verde"
+  },
+  "lint_imports": "4 contratos kept, 0 broken",
+  "mypy": "0 errores (329 archivos de src/)",
+  "ruff_src": "limpio (los avisos D102 son de métodos de test y el CI solo lo corre sobre src/)",
+  "black_isort": "limpios",
+  "designreviewer": "0 CRITICAL",
+  "no_verificado": [
+    "El job de la GitHub Release del CD no se puede ejecutar localmente: se confirma con el primer tag (v1.0.0). La lógica vive en scripts probados; el workflow solo los invoca."
+  ],
+  "pruebas_manuales": "extraer_notas.sh 1.0.0 y empaquetar_release.sh 1.0.0 contra el repo real (el paquete lleva VERSION y CHANGELOG.md); empaquetar_release.sh 0.10.0 se rechaza por no coincidir con VERSION"
+}
