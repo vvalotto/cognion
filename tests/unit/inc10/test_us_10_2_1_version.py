@@ -28,12 +28,15 @@ class TestVersionCoherente:
         pyproject = tomllib.loads((RAIZ / "pyproject.toml").read_text(encoding="utf-8"))
         paquete = json.loads((RAIZ / "frontend" / "package.json").read_text(encoding="utf-8"))
         bloqueo = json.loads((RAIZ / "frontend" / "package-lock.json").read_text(encoding="utf-8"))
+        uv_lock = tomllib.loads((RAIZ / "uv.lock").read_text(encoding="utf-8"))
+        paquete_uv = next(p for p in uv_lock["package"] if p["name"] == "cognion")
 
         encontradas = {
             "pyproject.toml": pyproject["project"]["version"],
             "frontend/package.json": paquete["version"],
             "frontend/package-lock.json": bloqueo["version"],
             "frontend/package-lock.json (raíz del árbol)": bloqueo["packages"][""]["version"],
+            "uv.lock": paquete_uv["version"],
             "FastAPI": app.version,
         }
         distintas = {lugar: v for lugar, v in encontradas.items() if v != esperada}
