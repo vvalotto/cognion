@@ -27,7 +27,7 @@ Documentos de definición (no se modifican retroactivamente):
 
 **Alcance funcional:** Incrementos 0 a 6 y sus ajustes (3-ADJ a 7-ADJ) cerrados y mergeados a `main`. RF-01 a RF-06, RF-08 a RF-17 y RF-19 a RF-25 en **Validado** (matriz en `docs/traceability/matrix.md`). Quedan en alcance v1 sin implementar: **RF-07** (importación desde PDF, Incremento 7 Iteración 2 — falta decidir con Víctor el spike parseo automático vs. asistido) y **RF-18** (KPIs históricos, diferido sin incremento).
 
-**Despliegue:** primera versión instalable y operable local en la Mac de Víctor (`docs/plans/DESPLIEGUE-LOCAL.md`, `ENTORNO=local`). Despliegue de prueba en una VM `e2-micro` de GCP con la cuenta personal de Víctor (`ADR-025`, `docs/plans/DESPLIEGUE-GCP.md`, scripts en `deploy/gcp/`): verificado una vez y destruido el 2026-10-24 por costo; se retoma con `v0.9.1`. Las Iteraciones 2 y 3 del Incremento 8 (CD, staging, backup, observabilidad) siguen en standby a la espera del convenio institucional con Google; 17 Issues en el [Milestone diferido](https://github.com/vvalotto/cognion/milestone/17). Pendientes de operación: costo real de la IP pública, backup a Cloud Storage, runbook.
+**Despliegue:** (Incremento 10, en curso) paquete de instalación por versión con `deploy/servidor/` para Linux con Docker y guía única `docs/INSTALACION.md`. Antes: primera versión instalable y operable local en la Mac de Víctor (`docs/plans/DESPLIEGUE-LOCAL.md`, `ENTORNO=local`). Despliegue de prueba en una VM `e2-micro` de GCP con la cuenta personal de Víctor (`ADR-025`, `docs/plans/DESPLIEGUE-GCP.md`, scripts en `deploy/gcp/`): verificado una vez y destruido el 2026-10-24 por costo; se retoma con `v0.9.1`. Las Iteraciones 2 y 3 del Incremento 8 (CD, staging, backup, observabilidad) siguen en standby a la espera del convenio institucional con Google; 17 Issues en el [Milestone diferido](https://github.com/vvalotto/cognion/milestone/17). Pendientes de operación: costo real de la IP pública, backup a Cloud Storage, runbook.
 
 **Reglas operativas vigentes:**
 - Los tests de integración y BDD vacían la base a la que apunte `DATABASE_URL`: usar siempre una base descartable inline (`DATABASE_URL=... pytest ...`), nunca la de desarrollo. `tests/unit/` no toca la base.
@@ -49,7 +49,7 @@ Documentos de definición (no se modifican retroactivamente):
 | Frontend | React 19 + TypeScript + Vite |
 | Estilos / UI | Tailwind CSS + shadcn/ui |
 | Containerización | Docker multi-stage |
-| Hosting | Fly.io (testing/staging); producción pendiente |
+| Hosting | Local sin Docker, servidor Linux con Docker (`deploy/servidor/`) y VM de prueba en GCP (`deploy/gcp/`); guía: `docs/INSTALACION.md`. Fly.io ya no se usa (`ADR-025`) |
 | CI/CD | GitHub Actions |
 | Auth | JWT — PyJWT + cryptography |
 | Gestión de paquetes | uv (backend), npm (frontend) |

@@ -1,0 +1,19 @@
+{
+  "us": "US-10.2.2",
+  "veredicto": "APROBADO (con lo no verificado indicado abajo)",
+  "tipo": "tooling de despliegue: deploy/servidor (compose, Caddy, .env, preparar-env, cognion.sh), respaldo y restauración, guía docs/INSTALACION.md",
+  "tests": {
+    "propios": "63 unitarios en tests/unit/inc10 (estructura y composición, preparar-env, guía y paquete, operación de cognion.sh, respaldar.sh y restaurar.sh) con un docker y un curl simulados",
+    "regresion": "1290 unitarios en verde (suite completa)"
+  },
+  "lint_imports": "4 contratos kept, 0 broken",
+  "mypy": "0 errores (329 archivos de src/)",
+  "ruff_src": "limpio",
+  "black_isort": "limpios",
+  "designreviewer": "0 CRITICAL",
+  "bash_sintaxis": "bash -n sobre todos los scripts de deploy/servidor en verde; shellcheck no está instalado en este equipo",
+  "no_verificado": [
+    "Este equipo no tiene Docker: el compose, el arranque real, el HTTPS de Caddy, pg_dump/pg_restore y los scripts contra contenedores reales no se ejecutaron. Se comprobaron por estructura y con un docker simulado. La prueba real es US-10.3.1.",
+    "La guía no se siguió de punta a punta en un servidor (US-10.3.1)."
+  ]
+}
