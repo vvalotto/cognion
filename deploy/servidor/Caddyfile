@@ -1,0 +1,7 @@
+# Proxy HTTPS de la prueba de uso (US-8.6.2, ADR-025). Caddy obtiene y renueva el certificado solo
+# para el dominio de DuckDNS; los WebSockets de la sesión en vivo pasan por reverse_proxy sin configuración extra.
+# Con COGNION_DOMINIO=localhost (verificación en CI) usa un certificado interno.
+{$COGNION_DOMINIO} {
+	encode zstd gzip
+	reverse_proxy app:8000
+}

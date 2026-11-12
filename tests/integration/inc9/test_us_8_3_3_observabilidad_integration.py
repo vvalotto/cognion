@@ -91,7 +91,9 @@ class TestReadinessPorHttp:
                 respuesta = await client.get("/health")
 
         assert respuesta.status_code == 200
-        assert respuesta.json() == {"status": "ok"}
+        cuerpo = respuesta.json()
+        assert cuerpo["status"] == "ok"
+        assert cuerpo["version"]  # US-10.2.1: informa la versión, sin tocar la base
 
 
 class TestBaseInexistenteConServidorReal:

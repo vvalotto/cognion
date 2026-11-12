@@ -3,7 +3,10 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-11-09 — Cierre de `BL-015` (Incremento 9 — Correcciones y robustez, `v0.10.0`). **Sin cambio de estado de ningún RF ni RNF**: ajustes
+> Última actualización: 2026-11-11 — Cierre de `BL-016` (Incremento 10 — Release 1.0.0, `v1.0.0`). **Sin cambio de estado de ningún RF ni RNF**: versión única, paquete de
+> instalación, servidor Linux con Docker, respaldo mínimo y guía; no agrega ni modifica requerimientos. La UAT de estabilidad (Capa 2 HTTP 27/27) y el ensayo de instalación local
+> confirman el comportamiento ya `Validado`. Evidencia: `.cm/baselines/BL-016-incremento-10-release-1-0-0.md`.
+> Anterior — 2026-11-09 — Cierre de `BL-015` (Incremento 9 — Correcciones y robustez, `v0.10.0`). **Sin cambio de estado de ningún RF ni RNF**: ajustes
 > y robustez sobre RF ya "Validado" (link de invitación grupal, aviso del último intento, bcrypt asíncrono, `import-linter`, readiness). Cerrada **sin UAT formal**,
 > por eso nada pasa a "Validado" con esta baseline. Evidencia: `.cm/baselines/BL-015-incremento-9-correcciones-y-robustez.md`.
 > Anterior — 2026-10-15 — Cierre de `BL-012` (Incremento 7-ADJ — Ciclo de vida de la
