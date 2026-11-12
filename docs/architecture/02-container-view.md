@@ -1,170 +1,138 @@
-# 02 Container View
+# 02 Contenedores (C4 nivel 2)
+
+> Vista corregida contra la versión `1.0.0` (Incremento 10.1, Fase 1). Plantilla: `_plantilla-vista.md`.
 
 ## Propósito
 
-Describir la descomposición de Cognión en sus principales contenedores técnicos y las
-relaciones entre ellos.
+Mostrar de qué procesos y almacenes se compone Cognión, con qué tecnología y cómo se comunican, y cómo cambia esa composición según la variante de instalación.
 
-Esta vista muestra cómo el sistema deja de comportarse como una única caja negra y se organiza
-en frontend, backend, persistencia e integraciones externas.
+## Interesados
+
+- **Instalador:** qué procesos hay que levantar en cada variante.
+- **Mantenedor:** dónde corre cada pieza y por qué canal habla con las demás.
+- **Materia:** un monolito modular desplegado como un solo proceso de aplicación.
+
+## Para leer esta vista
+
+Hay **un solo proceso de aplicación** que sirve la API y el frontend ya compilado. El navegador es el único otro "contenedor". Lo que cambia entre instalaciones es lo que rodea a ese proceso (proxy, base, contenedores).
 
 ## Alcance
 
-Incluye:
-
-- contenedores principales de la solución;
-- responsabilidades de cada contenedor;
-- tecnologías asociadas a cada uno;
-- relaciones de alto nivel entre frontend, backend, base de datos y servicio externo.
-
-No incluye todavía la descomposición interna del backend en Bounded Contexts ni el detalle de
-los flujos de runtime entre ellos.
+Contenedores, tecnologías y relaciones de alto nivel. No incluye la estructura interna del backend (`03` y vistas de componentes) ni los pasos de instalación (`60-deployment-view.md`).
 
 ## Fuentes
 
-- `docs/adr/ADR-001-monolito-modular-clean-architecture.md`
-- `docs/adr/ADR-002-event-sourcing-cqrs-sesiones.md`
-- `docs/adr/ADR-003-fastapi-vs-django-channels.md`
-- `docs/adr/ADR-004-postgresql-vs-sqlite.md`
-- `docs/adr/ADR-005-websockets-sesiones-en-vivo.md`
-- `docs/adr/ADR-015-renombrar-bc-sesiones-actividad-evaluativa.md`
+- `docs/adr/ADR-001`, `002`, `003`, `004`, `005`, `018`.
+- `src/servidor.py`, `src/app.py`, `Dockerfile`, `deploy/servidor/docker-compose.yml`, `deploy/servidor/Caddyfile`, `scripts/local/levantar.sh`.
 
 ## Descripción
 
-Cognión se organiza como un monolito modular con dos contenedores de aplicación principales:
+Cognión es un **monolito modular** (`ADR-001`): un único proceso Python (Uvicorn) que ejecuta dos aplicaciones ASGI compuestas en `src/servidor.py`:
 
-- una **SPA React** como interfaz de usuario;
-- una **Backend API** en FastAPI que concentra la lógica de aplicación, expone REST y
-  WebSockets, y organiza internamente los Bounded Contexts con Clean Architecture (ADR-001).
+- la **API** (FastAPI, `src/app.py`), montada bajo `/api`: REST, el canal WebSocket de la sesión en vivo y las rutas de salud;
+- el **frontend compilado**, montado en `/`: una SPA React que se sirve como archivos estáticos y devuelve `index.html` para las rutas de la aplicación.
 
-La persistencia es una **única instancia PostgreSQL** (ADR-004), compartida por todos los BCs.
-El BC Actividad Evaluativa (antes "Sesiones", ver `ADR-015`) agrega, dentro de esa misma
-instancia, una tabla append-only de eventos que funciona como event store (ADR-002) — no hay
-una base de datos separada por BC ni por mecanismo de persistencia.
+La SPA y la API comparten origen, por eso el frontend llama a `/api` sin configuración de red. Los dos viajan en la misma imagen Docker (`Dockerfile`, dos etapas: compila la SPA con Node 22 y la copia al runtime de Python 3.12).
+
+La persistencia es una **única instancia de PostgreSQL** (`ADR-004`) compartida por todos los Bounded Contexts. Con `NullPool` (`ADR-018`) cada operación abre su propia conexión, por eso se configura `max_connections=100`.
+
+Un proceso dentro de la API, el `VerificadorDeVencimientos`, corre en el ciclo de vida de la aplicación (`lifespan`) y cierra las actividades de período abierto vencidas. No hay cola ni worker aparte.
 
 ## Contenedores
 
-### SPA React
+| Contenedor | Tecnología | Responsabilidad | Dónde está |
+|---|---|---|---|
+| **Navegador (SPA)** | React 19, TypeScript, Vite, Tailwind, shadcn/ui | Interfaz de los tres roles y proyección en el aula | `frontend/`, compilado a `frontend/dist` |
+| **Aplicación** | Python 3.12, FastAPI, SQLAlchemy async, Uvicorn | API REST, canal WebSocket, casos de uso, composition root, estáticos del frontend, tarea de vencimientos | `src/` |
+| **PostgreSQL** | PostgreSQL 14+ (16 en la composición Docker) | Tablas relacionales de Identidad y Banco de Preguntas; event store `events` (JSONB, solo se agrega) y read models de Actividad Evaluativa | `migrations/` |
+| **Proxy inverso (según variante)** | Caddy 2 | HTTPS automático y paso de WebSockets hacia la aplicación | `deploy/servidor/Caddyfile`, `deploy/gcp/Caddyfile` |
+| **Servidor de correo** | SMTP externo | Envío de correo | ver `01-system-context.md` |
 
-Interfaz de usuario servida como aplicación de página única, construida con Vite. Atiende los
-flujos de docente, estudiante y administrador, incluida la vista de proyección en aula durante
-actividades evaluativas en vivo.
+Notificaciones y Analytics **no tienen almacenamiento propio**: Notificaciones es reactivo y Analytics proyecta a partir de los datos de otros contextos (`ADR-002`, `ADR-026`).
 
-Consume la Backend API vía REST para operaciones síncronas, y vía WebSocket para la dinámica en
-tiempo real de la actividad evaluativa en vivo (ranking, avance de preguntas).
-
-**Tecnología principal:** `React` + `TypeScript` + `Vite` + `Tailwind CSS` + `shadcn/ui`
-
-### Backend API
-
-Aplicación backend que expone API REST y endpoints WebSocket, aplica Clean Architecture por
-Bounded Context, y coordina la ejecución de Use Cases.
-
-Actúa como composition root del sistema y concentra:
-
-- validación de requests (Pydantic en la frontera);
-- orquestación de comandos y queries por BC;
-- acceso a persistencia compartida (PostgreSQL);
-- integración con el servicio externo de email;
-- broadcast en tiempo real durante actividades evaluativas en vivo.
-
-**Tecnología principal:** `Python` + `FastAPI` + `SQLAlchemy async`
-
-### PostgreSQL
-
-Instancia única de PostgreSQL, compartida por todos los Bounded Contexts.
-
-- Tablas relacionales convencionales para Identidad, Banco de Preguntas y Notificaciones.
-- Tabla append-only `events` (JSONB) para el BC Actividad Evaluativa — event store + soporte de
-  proyecciones de Analytics.
-
-**Tecnología principal:** `PostgreSQL`
-
-### Servicio Email
-
-Servicio externo (SMTP) responsable del envío de notificaciones de apertura/cierre de
-actividad evaluativa.
-
-## Diagrama de contenedores
+## Diagrama
 
 ```mermaid
 flowchart TB
     usuario["Usuario
     Docente · Estudiante · Administrador"]
 
-    subgraph cognion["Cognión"]
-        spa["SPA React
-        React · TypeScript · Vite
-        Interfaz web"]
-
-        api["Backend API
-        Python · FastAPI
-        REST + WebSockets
+    subgraph app["Proceso de aplicación · Uvicorn"]
+        spa["Frontend compilado
+        SPA React
+        servido en /"]
+        api["API
+        FastAPI · bajo /api
+        REST + WebSocket
         Clean Architecture por BC"]
-
-        db["PostgreSQL
-        Instancia única
-        Tablas relacionales + event store (BC Actividad Evaluativa)"]
     end
 
-    email["Servicio Email
-    SMTP / proveedor externo"]
+    db[("PostgreSQL
+    tablas relacionales
+    + events y read models")]
+    smtp["Servidor de correo
+    SMTP"]
 
-    usuario -->|"Usa desde
-    el navegador"| spa
+    usuario -->|"HTTP(S)
+    navegador"| spa
+    spa -->|"REST /api
+    WebSocket /api/sesiones-en-vivo/id/canal"| api
+    api -->|"SQLAlchemy async
+    asyncpg"| db
+    api -->|"smtplib
+    STARTTLS"| smtp
+```
 
-    spa -->|"REST / HTTPS / JSON"| api
-    spa -->|"WebSocket
-    (actividad evaluativa en vivo)"| api
+La variante con servidor Linux agrega Caddy delante de la aplicación; la local no lo usa:
 
-    api -->|"Lee y escribe
-    (tablas relacionales + event store)"| db
-
-    api -->|"Envía notificaciones
-    de apertura/cierre"| email
+```mermaid
+flowchart LR
+    u["Navegadores"] -->|"HTTPS 443"| caddy["Caddy"]
+    caddy -->|"HTTP 8000 · red interna"| app["Aplicación"]
+    app --> db[("PostgreSQL")]
 ```
 
 ## Relaciones
 
-| Relación | Descripción |
-|----------|-------------|
-| `Usuario -> SPA React` | El usuario interactúa con el sistema a través del navegador. |
-| `SPA React -> Backend API (REST)` | El frontend consume la API REST para operaciones síncronas. |
-| `SPA React -> Backend API (WebSocket)` | El frontend recibe actualizaciones en tiempo real durante la actividad evaluativa en vivo. |
-| `Backend API -> PostgreSQL` | El backend persiste y consulta el estado de todos los BCs en la misma instancia. |
-| `Backend API -> Servicio Email` | El backend delega el envío de notificaciones a un proveedor externo. |
+| Relación | Mecanismo | Fuente |
+|---|---|---|
+| Navegador → Aplicación (REST) | HTTP(S) con JSON; JWT en `Authorization` | `src/app.py`, `ADR-007` |
+| Navegador → Aplicación (tiempo real) | WebSocket en `/api/sesiones-en-vivo/{sesion_id}/canal?token=…` | `sesiones_en_vivo_router.py`, `ADR-005` |
+| Aplicación → PostgreSQL | SQLAlchemy async con asyncpg, sin pool (`NullPool`) | `src/shared/frameworks/db.py`, `ADR-017`, `ADR-018` |
+| Aplicación → SMTP | `smtplib` en hilo aparte; STARTTLS validado con `certifi` | `src/shared/frameworks/smtp.py` |
+| Caddy → Aplicación | `reverse_proxy app:8000`; la app corre con `--proxy-headers` | `deploy/servidor/Caddyfile`, `Dockerfile` |
 
-## Restricciones relevantes en esta vista
+## Variantes de instalación
 
-- El frontend no accede directamente a la base de datos ni al servicio de email.
-- Todos los Bounded Contexts comparten la misma instancia PostgreSQL — no hay bases de datos
-  separadas por BC (a diferencia de un enfoque BC-first con persistencia aislada).
-- El event store del BC Actividad Evaluativa convive con las tablas relacionales de los demás
-  BCs en la misma instancia, pero como tabla propia — el aislamiento entre BCs es a nivel de
-  código (Clean Architecture, puertos), no de infraestructura de datos.
-- Las conexiones WebSocket persisten durante toda la actividad evaluativa en vivo.
+| Variante | Qué hay | Fuente |
+|---|---|---|
+| **Local, sin Docker** | Un proceso Uvicorn (con `caffeinate` en macOS) y un PostgreSQL local. Sin Caddy: se accede por HTTP en la red del aula. Base propia `cognion_local`. | `scripts/local/levantar.sh` |
+| **Servidor Linux con Docker** | Tres contenedores: `db`, `app` (imagen de GHCR) y `caddy`. Solo Caddy publica puertos. | `deploy/servidor/docker-compose.yml` |
+| **GCP (prueba)** | La misma composición en una VM, con dominio de DuckDNS. | `deploy/gcp/`, `ADR-025` |
 
-## Decisiones arquitectónicas reflejadas
+## Decisiones reflejadas
 
-- `FastAPI` como backend principal (ADR-003).
-- Monolito modular con Clean Architecture interna (ADR-001).
-- `PostgreSQL` como única base de datos (ADR-004).
-- `Event Sourcing` aplicado solo al BC Actividad Evaluativa (ADR-002).
-- `WebSockets` para la actividad evaluativa en vivo (ADR-005).
+`ADR-001` (monolito modular), `ADR-002` (event sourcing solo en Actividad Evaluativa), `ADR-003` (FastAPI), `ADR-004` (PostgreSQL), `ADR-005` (WebSocket), `ADR-017` y `ADR-018` (sesión y `NullPool`), `ADR-025` (GCP).
 
-## Implicancias para las siguientes vistas
+## Restricciones y calidad
 
-Esta vista deja planteadas dos profundizaciones necesarias:
+- El frontend no accede a la base ni al correo: todo pasa por la API.
+- El aislamiento entre Bounded Contexts es de código, no de infraestructura: comparten la misma base. Lo hace cumplir `import-linter` en el CI.
+- Las conexiones WebSocket duran toda la actividad en vivo; una caída de la aplicación las corta (los clientes reconectan; ver `RNF_v1.md`, escenarios de continuidad).
+- Sin un proceso aparte para tareas: reiniciar la aplicación reinicia también el verificador de vencimientos.
 
-- cómo se organiza el backend internamente en Bounded Contexts (`03-bounded-contexts.md`,
-  a completar en la Iteración 0 del Incremento 1 — BC Identidad, primer BC de dominio tras la
-  revisión de `PLAN_v1.md` del 2026-07-15);
-- cómo colaboran los BCs Actividad Evaluativa y Notificaciones en runtime sin romper sus
-  fronteras (`20-context-map-integrations.md`, a completar cuando se modele Notificaciones en
-  el Incremento 5).
+## Cómo verificar esta vista contra el código
 
-## Siguiente paso
+- Composición: `src/servidor.py` (`mount("/api", api)`, `mount("/", …)`).
+- Imagen: `Dockerfile` (etapas y `CMD`).
+- Servicios y puertos: `deploy/servidor/docker-compose.yml`.
+- Rutas de salud: `GET /api/health` y `GET /api/health/ready` (`src/shared/frameworks/salud.py`).
 
-El siguiente documento de esta carpeta se crea recién en la Iteración 0 — Modelado del
-Incremento 1 (BC Identidad), junto al event storming del primer BC — ver
-`docs/rf/PLAN_v1.md`.
+## Cuándo hay que actualizarla
+
+Un contenedor nuevo (cola, worker, caché), un cambio de proxy o de base, la separación de la SPA en otro servicio o una variante de instalación nueva.
+
+## Sin verificar
+
+- ⚠ Las variantes con Docker (servidor Linux y GCP) no se probaron contra Docker real en esta versión; el compose se verificó con un `docker` simulado (Issue #624).
+- ⚠ No se midió cuántas conexiones simultáneas alcanza la aplicación con 60 estudiantes; `max_connections=100` sale de la estimación de `docker-compose.yml`.
