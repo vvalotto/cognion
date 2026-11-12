@@ -9,7 +9,7 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
-## [1.0.0] - Unreleased
+## [1.0.0] - 2026-11-11
 
 Primera versión estable de Cognión (Incremento 10, `BL-016`): el trabajo de los Incrementos 0 a 9 con una versión única, un
 paquete de instalación y una guía para instalar en una máquina local, en un servidor Linux con Docker o en GCP.
