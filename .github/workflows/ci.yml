@@ -7,8 +7,42 @@ on:
     branches: [develop]
 
 jobs:
+  # Decide si el cambio exige el CI completo. Los cuatro checks obligatorios de `develop` (Lint backend, Lint frontend,
+  # Tests y DesignReviewer) se saltean SOLO si un PR toca únicamente documentación que ningún test lee
+  # (`scripts/ci/alcance_cambio.sh`). Un job salteado por `if` cuenta como aprobado para la protección de la rama.
+  # Ante cualquier falla de este job, o un push, corre todo.
+  alcance:
+    name: Alcance del cambio
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      completo: ${{ steps.decidir.outputs.completo }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Decidir si hace falta el CI completo
+        id: decidir
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENTO: ${{ github.event_name }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ "$EVENTO" != "pull_request" ]; then
+            echo "completo=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          gh api "repos/$REPO/pulls/$PR/files" --paginate \
+            -q '.[] | .filename, (.previous_filename // empty)' > archivos.txt
+          echo "Archivos del PR:"; cat archivos.txt
+          scripts/ci/alcance_cambio.sh < archivos.txt | tee -a "$GITHUB_OUTPUT"
+
   lint-backend:
     name: Lint backend
+    needs: alcance
+    if: ${{ always() && (needs.alcance.result != 'success' || needs.alcance.outputs.completo == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -35,6 +69,8 @@ jobs:
 
   lint-frontend:
     name: Lint frontend
+    needs: alcance
+    if: ${{ always() && (needs.alcance.result != 'success' || needs.alcance.outputs.completo == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -64,6 +100,8 @@ jobs:
 
   test:
     name: Tests
+    needs: alcance
+    if: ${{ always() && (needs.alcance.result != 'success' || needs.alcance.outputs.completo == 'true') }}
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -104,6 +142,8 @@ jobs:
 
   design-review:
     name: DesignReviewer
+    needs: alcance
+    if: ${{ always() && (needs.alcance.result != 'success' || needs.alcance.outputs.completo == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
