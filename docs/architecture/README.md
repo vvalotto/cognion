@@ -51,19 +51,28 @@ carpeta se completan **incrementalmente**:
 ```text
 docs/architecture/
   README.md                          ← este documento
-  01-system-context.md               ← creado
-  02-container-view.md               ← creado
-  03-bounded-contexts.md             ← creado (catálogo de los 5 BC, Iteración 0 Incremento 1)
-  1X-bc-<nombre>.md                  ← pendiente, uno por BC modelado
-  20-context-map-integrations.md     ← creado — v0, solo relaciones ya decididas por ADR
-  24-modelo-datos-postgresql.md      ← creado — principios de persistencia e integración cross-BC
-  24a-modelo-datos-identidad.md            ← creado
+  _plantilla-vista.md                ← plantilla de cada vista (Incremento 10.1)
+  01-system-context.md               ← C4-1 (a corregir, Fase 1)
+  02-container-view.md               ← C4-2 (a corregir, Fase 1)
+  03-bounded-contexts.md             ← catálogo de BC (a corregir, Fase 2)
+  10-componentes-identidad.md        ← C4-3, pendiente (Fase 2)
+  11-componentes-banco-preguntas.md  ← C4-3, pendiente (Fase 2)
+  12-componentes-actividad-evaluativa.md ← C4-3, pendiente (Fase 2)
+  13-componentes-analytics.md        ← C4-3, pendiente (Fase 2)
+  14-componentes-notificaciones.md   ← C4-3, pendiente (Fase 2)
+  20-context-map-integrations.md     ← a corregir (Fase 2)
+  24-modelo-datos-postgresql.md      ← a completar (Fase 3)
+  24a-modelo-datos-identidad.md            ← a corregir (Fase 3)
   24b-modelo-datos-banco-preguntas.md      ← creado
   24c-modelo-datos-actividad-evaluativa.md ← creado
-  30-runtime-interactions.md         ← pendiente
-  40-cross-cutting-concerns.md       ← pendiente
-  60-deployment-view.md              ← pendiente
+  30-runtime-interactions.md         ← pendiente (Fase 3)
+  40-cross-cutting-concerns.md       ← pendiente (Fase 4)
+  50-development-view.md             ← pendiente (Fase 4)
+  60-deployment-view.md              ← pendiente (Fase 4)
 ```
+
+El plan por fases, el relevamiento de brechas y el método de verificación contra el código están en
+`docs/plans/inc10-1/inc10-1-relevamiento-y-plan.md` (Incremento 10.1, documental, sin US).
 
 ## Principios de documentación
 
