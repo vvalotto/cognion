@@ -124,4 +124,4 @@ Un servicio o puerto nuevo en la composición, una variante de instalación nuev
 - ⚠ **Variante C (GCP):** se verificó una vez y la VM se destruyó el 2026-10-24; no se repitió con la `1.0.0`.
 - ⚠ **Variante B:** se ensayó una instalación limpia con la `1.0.0`, pero por HTTP y no en un navegador ni en un celular real; la actualización se simuló cambiando `VERSION` en la misma carpeta.
 - ⚠ **`ENTORNO=produccion`:** ninguna variante se probó con SMTP real de producción.
-- ⚠ **Capacidad:** no se midió la memoria ni las conexiones con 60 estudiantes (`max_connections=100` es una estimación).
+- ⚠ **Capacidad:** no se midió la memoria de la composición Docker ni las conexiones a la base con 60 estudiantes reales (`max_connections=100` es una estimación). El tiempo de cierre de pregunta con 60 conexiones simuladas sí se midió, en una Mac (`US-6.2.9`).

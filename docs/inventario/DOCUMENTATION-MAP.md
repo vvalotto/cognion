@@ -76,7 +76,7 @@ Código y tests › baselines (`.cm/baselines/`) › ADRs (`docs/adr/`) › matr
 |---|---|
 | `docs/rf/RF_v1.md` | Elicitación funcional inicial. Fuente base para la matriz de trazabilidad. |
 | `docs/rf/RNF_v1.md` | Atributos de calidad y escenarios validados. |
-| `docs/rf/ARQ_v1.md` | Arquitectura de referencia inicial. `docs/architecture/` ya tiene contenido propio (vista de contexto, contenedores, catálogo de BC y context map) que la deriva y actualiza por incremento — ver `docs/architecture/README.md`. Los ADRs (hoy 001–015) viven en `docs/adr/`. |
+| `docs/rf/ARQ_v1.md` | Arquitectura de referencia inicial (histórica, no se modifica). La arquitectura vigente está en `docs/architecture/` (contexto, contenedores, componentes por BC, mapa de contexto, datos, runtime, transversal, desarrollo, despliegue y trazabilidad de RNF; índice en su `README.md`). Los ADR (`001` a `027`) viven en `docs/adr/`. |
 | `docs/rf/PLAN_v1.md` | Plan de 7 incrementos. Ajustes de *proceso* (ej. Iteración 0 — Modelado) se documentan en `WORKFLOW-DESARROLLO.md`; el plan mismo no se reescribe salvo agregar la estructura de iteraciones. |
 
 ---

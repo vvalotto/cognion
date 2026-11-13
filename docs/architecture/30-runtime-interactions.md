@@ -243,7 +243,7 @@ sequenceDiagram
 
 ## Restricciones y calidad
 - Un proceso, sin broker: la difusión por WebSocket llega solo a las conexiones de ese proceso. Reiniciar la aplicación corta el canal; los clientes reconectan.
-- Hasta 60 estudiantes simultáneos (RNF_v1): el diseño evita cálculo pesado en el cierre de la pregunta, pero la meta no se midió en esta versión.
+- Hasta 60 estudiantes simultáneos (RNF_v1): el diseño evita cálculo pesado en el cierre de la pregunta. Se midió el 2026-09-22 (`US-6.2.9`, re-medido en `US-6.3.1`) con 60 conexiones simuladas en el `ConnectionManager` real: el caso de uso `CerrarPreguntaActual` tuvo p95 de 79 ms (criterio: 100 ms) y, por HTTP, p95 de 124 ms. Fue en una Mac con PostgreSQL local, no en un servidor ni con red real (`quality/reports/uat/inc6/rendimiento-cierre.json`).
 
 ## Cómo verificar esta vista contra el código
 - Casos de uso: `src/identidad/use_cases/` y `src/actividad_evaluativa/use_cases/` (los docstrings de `execute` listan los errores de cada paso).
