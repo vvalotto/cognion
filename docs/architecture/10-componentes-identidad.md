@@ -77,7 +77,7 @@ flowchart TB
 | entities | `Administrador`, `Docente`, `Estudiante` | Perfiles sobre `Usuario` (tabla `usuario` con tablas de perfil) |
 | entities | `Comision` | Curso de una materia, con docentes asignados y estado activa o inactiva |
 | entities | `Invitacion` | Link de registro: individual o **grupal** (vencimiento de 15 min, 1 h o 1 día, revocable, con contador de usos; `ADR-027`) |
-| entities | `bloqueo_cuenta` | Bloqueo de la cuenta tras el 3.er fallo consecutivo: **permanente** (la levanta el administrador), salvo el último administrador operativo, que queda bloqueado solo por un tiempo para que el sistema no quede sin quien lo opere (`INV-ID-10`, `20`, `21`) |
+| entities | `bloqueo_cuenta` | Bloqueo de la cuenta tras el 3.er fallo consecutivo: **permanente** (se levanta con el reseteo del administrador o al confirmar una recuperación de contraseña), salvo el último administrador operativo, que queda bloqueado solo 15 minutos por defecto para que el sistema no quede sin quien lo opere (`INV-ID-10`, `20`, `21`) |
 | entities | `TokenRecuperacionPassword` | Recuperación por autoservicio |
 | use_cases | `iniciar_sesion`, `politica_bloqueo` | Login, aviso "te queda 1 intento" y bloqueo |
 | use_cases | `crear_usuario`, `listar_cuentas`, `obtener_cuenta`, `editar_cuenta`, `eliminar_cuenta`, `activar_cuenta`, `resetear_password`, `cambiar_password`, `bootstrap_administrador` | Cuentas y primer administrador |
@@ -133,5 +133,5 @@ Bajo `/api`. "Autenticado" = cualquier usuario con token válido.
 Un caso de uso, ruta o puerto nuevo; un cambio de rol exigido; una regla de bloqueo; o un cruce nuevo con otro BC.
 
 ## Sin verificar
-- ⚠ La duración exacta del bloqueo temporal del último administrador viene de configuración y no se contrastó aquí.
+- ⚠ El valor por defecto del bloqueo temporal es de 15 minutos (`iniciar_sesion.py`); el configurado en una instalación puede diferir.
 - ⚠ El detalle de las invariantes `INV-ID-*` no se contrastó aquí: auditoría de `docs/design/domain/` en la Fase 3.
