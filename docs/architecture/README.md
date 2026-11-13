@@ -66,8 +66,8 @@ docs/architecture/
   24b-modelo-datos-banco-preguntas.md      ← creado
   24c-modelo-datos-actividad-evaluativa.md ← creado
   30-runtime-interactions.md         ← creado (Fase 3)
-  40-cross-cutting-concerns.md       ← pendiente (Fase 4)
-  50-development-view.md             ← pendiente (Fase 4)
+  40-cross-cutting-concerns.md       ← creado (Fase 4)
+  50-development-view.md             ← creado (Fase 4)
   60-deployment-view.md              ← pendiente (Fase 4)
 ```
 
