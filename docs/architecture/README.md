@@ -55,9 +55,9 @@ docs/architecture/
   01-system-context.md               ← C4-1 (corregido, Fase 1)
   02-container-view.md               ← C4-2 (corregido, Fase 1)
   03-bounded-contexts.md             ← catálogo de BC (corregido, Fase 2)
-  10-componentes-identidad.md        ← C4-3, pendiente (Fase 2, PR 2b)
+  10-componentes-identidad.md        ← C4-3, creado
   11-componentes-banco-preguntas.md  ← C4-3, creado
-  12-componentes-actividad-evaluativa.md ← C4-3, pendiente (Fase 2, PR 2b)
+  12-componentes-actividad-evaluativa.md ← C4-3, creado
   13-componentes-analytics.md        ← C4-3, creado
   14-componentes-notificaciones.md   ← C4-3, creado
   20-context-map-integrations.md     ← corregido (Fase 2)
