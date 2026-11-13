@@ -17,6 +17,8 @@
 > `ActividadEvaluativaCerrada`, campo `comisiones_ids`).
 > Decisiones de producto/alcance confirmadas con Víctor 2026-09-10 (§6).
 
+> **Nota de vigencia (Incremento 10.1, 2026-11-12, contrastada con la `1.0.0`).** Una diferencia con el código: `CanalEnvioPort.enviar` recibe hoy un cuarto parámetro, `materia_id: UUID | None = None`, con el que `SmtpCanalEnvio` elige la cuenta SMTP de la materia (o la global si no hay una configurada, `ADR-023`). El resto del modelo coincide. Identidad también reutiliza `SmtpCanalEnvio` para la recuperación de contraseña, por su propio adaptador (`CanalRecuperacionPort`, `US-ADJ-38`), sin pasar por los casos de uso de este BC. Vista de componentes: `docs/architecture/14-componentes-notificaciones.md`.
+
 ---
 
 ## 1. Actores
@@ -130,7 +132,7 @@ método:
 
 | Método | Comportamiento |
 |---|---|
-| `enviar(destinatario_email, asunto, cuerpo) -> None` | Envía el mensaje por el canal concreto. Implementación: `SmtpCanalEnvio` (`frameworks/adapters/`), configurado por variables de entorno (`SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM`, mismo criterio de configuración por entorno que el resto del proyecto, `ARQ_v1.md` "Configuración y secretos"). **Decidido en `US-5.1.1`:** `smtplib` estándar + `asyncio.to_thread` — no `aiosmtplib` (candidata original de este documento) — reutiliza el mismo patrón ya probado en `SmtpNotificador` de Identidad (`ADR-012`) sin sumar una dependencia nueva; los dos adaptadores quedan separados por BC. |
+| `enviar(destinatario_email, asunto, cuerpo, materia_id=None) -> None` | Envía el mensaje por el canal concreto; con `materia_id` usa la cuenta SMTP de esa materia (`ADR-023`). Implementación: `SmtpCanalEnvio` (`frameworks/adapters/`), configurado por variables de entorno (`SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`/`SMTP_FROM`, mismo criterio de configuración por entorno que el resto del proyecto, `ARQ_v1.md` "Configuración y secretos"). **Decidido en `US-5.1.1`:** `smtplib` estándar + `asyncio.to_thread` — no `aiosmtplib` (candidata original de este documento) — reutiliza el mismo patrón ya probado en `SmtpNotificador` de Identidad (`ADR-012`) sin sumar una dependencia nueva; los dos adaptadores quedan separados por BC. |
 
 El manejo de fallos (§6, decisión 4) vive en el Use Case que llama a `CanalEnvioPort`, no en el
 adapter: cada fallo de envío se captura, se loguea (`logging`, nivel `warning`, incluye
