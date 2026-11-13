@@ -15,7 +15,7 @@ Todo cruce entre BC vive en un **adaptador** de `src/<bc_consumidor>/frameworks/
 Relaciones entre BC. La estructura interna de cada uno está en `10` a `14-componentes-*.md`.
 
 ## Fuentes
-`src/*/frameworks/adapters/`, `pyproject.toml` (`[tool.importlinter]`), `docs/adr/ADR-002`, `006`, `012`, `019`, `026`, `027`.
+`src/*/frameworks/adapters/`, `pyproject.toml` (`[tool.importlinter]`), `ADR-002`, `006`, `012`, `019`, `026`, `027`.
 
 ## Diagrama
 ```mermaid

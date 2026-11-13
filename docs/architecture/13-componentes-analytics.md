@@ -15,7 +15,7 @@ Analytics **no tiene tablas ni lógica de negocio de escritura**. Cada caso de u
 Estructura interna, API pública y de dónde sale cada dato. El modelo de dominio de las proyecciones está en `docs/design/domain/BC-analytics-modelo.md`.
 
 ## Fuentes
-`src/analytics/`, `docs/adr/ADR-002`, `ADR-026`, `pyproject.toml` (`[tool.importlinter]`), `docs/design/domain/BC-analytics-modelo.md`.
+`src/analytics/`, `ADR-002`, `ADR-026`, `pyproject.toml` (`[tool.importlinter]`), `docs/design/domain/BC-analytics-modelo.md`.
 
 ## Diagrama
 ```mermaid

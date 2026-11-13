@@ -15,7 +15,7 @@ El BC guarda `Materia`, `Banco` (uno por materia) y `PreguntaPlantilla` (de dos 
 Estructura interna, API pública y dependencias. No repite el modelo de dominio ni el esquema de tablas (`24b-modelo-datos-banco-preguntas.md`).
 
 ## Fuentes
-`src/banco_preguntas/`, `docs/adr/ADR-001`, `ADR-026`, `pyproject.toml` (`[tool.importlinter]`), `docs/design/domain/BC-banco-preguntas-modelo.md`.
+`src/banco_preguntas/`, `ADR-001`, `ADR-026`, `pyproject.toml` (`[tool.importlinter]`), `docs/design/domain/BC-banco-preguntas-modelo.md`.
 
 ## Diagrama
 ```mermaid

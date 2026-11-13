@@ -15,7 +15,7 @@ Notificaciones **no expone rutas, no tiene tablas ni capa `interface_adapters`**
 Estructura interna y quién lo invoca. El modelo de dominio está en `docs/design/domain/BC-notificaciones-modelo.md`.
 
 ## Fuentes
-`src/notificaciones/`, `src/actividad_evaluativa/frameworks/adapters/notificacion_port_in_process.py`, `src/identidad/frameworks/adapters/canal_recuperacion_port_in_process.py`, `src/shared/frameworks/smtp.py`, `docs/adr/ADR-006`, `ADR-023`.
+`src/notificaciones/`, `src/actividad_evaluativa/frameworks/adapters/notificacion_port_in_process.py`, `src/identidad/frameworks/adapters/canal_recuperacion_port_in_process.py`, `src/shared/frameworks/smtp.py`, `ADR-006`, `ADR-023`.
 
 ## Diagrama
 ```mermaid
