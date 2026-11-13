@@ -53,3 +53,9 @@ código de la aplicación.
 ## Nota 2026-10-20
 
 Se planificó una prueba de uso en una VM gratuita de GCP con cuenta personal; ver `ADR-025`. Este ADR sigue **en revisión** y no queda reemplazado: la elección definitiva de nube para producción continúa abierta.
+
+---
+
+## Nota de vigencia 2026-11-12 (Incremento 10.1)
+
+Esta decisión (Fly.io como destino de producción) **no está vigente**: Fly.io ya no se usa (`ADR-025`) y la `1.0.0` no se despliega a ningún proveedor desde el CD. Cada versión se instala por una de tres variantes: servidor Linux con Docker (`deploy/servidor/`), local sin Docker (`scripts/local/`) o la VM de prueba en GCP (`deploy/gcp/`). El destino de producción definitivo sigue sin decidirse (depende del convenio con Google o de un servidor de la facultad). El título y el texto original se conservan como registro histórico; la descripción actual está en `docs/architecture/60-deployment-view.md` y en `docs/INSTALACION.md`. La variante del servidor Linux con Docker de la `1.0.0` **no tiene todavía un ADR propio**.
