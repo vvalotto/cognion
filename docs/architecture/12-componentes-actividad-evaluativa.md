@@ -130,5 +130,5 @@ Bajo `/api`.
 Un agregado, evento, caso de uso, ruta o puerto nuevo; cambios en el event store o en los read models; o un cruce nuevo con otro BC.
 
 ## Sin verificar
-- ⚠ Cuántas conexiones WebSocket simultáneas aguanta un solo proceso: la meta es 60 y no se midió aquí.
+- ⚠ El cierre de pregunta con 60 conexiones simuladas cumplió el criterio de 100 ms (p95 de 79 ms, `US-6.2.9`), pero en una Mac, no en un servidor ni con navegadores reales conectados.
 - ⚠ El modelo de dominio y el diagrama de estados de la sesión en vivo no se contrastaron: auditoría de `docs/design/domain/` en la Fase 3.

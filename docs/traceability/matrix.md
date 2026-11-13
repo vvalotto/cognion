@@ -3,7 +3,8 @@
 > Estado documental: vigente
 > Fuente de verdad para: trazabilidad RF → BC → Incremento → US-IEDD → estado, y escenarios de
 > calidad (RNF) → BC/alcance → Incremento → estado
-> Última actualización: 2026-11-11 — Cierre de `BL-016` (Incremento 10 — Release 1.0.0, `v1.0.0`). **Sin cambio de estado de ningún RF ni RNF**: versión única, paquete de
+> Última actualización: 2026-11-13 — Cierre de `BL-017` (Incremento 10.1 — Documentación de arquitectura y diseño detallado, documental, **sin tag**). **Sin cambio de estado de ningún RF ni RNF**: solo documentación. El estado de cada escenario de calidad de `RNF_v1.md` en la `1.0.0` se documenta en `docs/architecture/70-trazabilidad-rnf-vistas.md`. Evidencia: `.cm/baselines/BL-017-incremento-10-1-documentacion-de-arquitectura.md`.
+> Anterior — 2026-11-11 — Cierre de `BL-016` (Incremento 10 — Release 1.0.0, `v1.0.0`). **Sin cambio de estado de ningún RF ni RNF**: versión única, paquete de
 > instalación, servidor Linux con Docker, respaldo mínimo y guía; no agrega ni modifica requerimientos. La UAT de estabilidad (Capa 2 HTTP 27/27) y el ensayo de instalación local
 > confirman el comportamiento ya `Validado`. Evidencia: `.cm/baselines/BL-016-incremento-10-release-1-0-0.md`.
 > Anterior — 2026-11-09 — Cierre de `BL-015` (Incremento 9 — Correcciones y robustez, `v0.10.0`). **Sin cambio de estado de ningún RF ni RNF**: ajustes

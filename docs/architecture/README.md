@@ -1,87 +1,57 @@
-# Architecture Documentation — Cognión
+# Documentación de arquitectura — Cognión
+
+> Contrastada con el código de la versión `1.0.0` (Incremento 10.1, 2026-11). Marco: C4 más vistas de datos, runtime, transversal, desarrollo y despliegue.
 
 ## Propósito
 
-Esta carpeta concentra la **descripción arquitectónica vigente** de Cognión: cómo está
-estructurada la solución, cuáles son sus componentes principales, cómo colaboran entre sí y qué
-restricciones de diseño deben preservarse a medida que el sistema evoluciona.
+Esta carpeta es la **descripción arquitectónica vigente** de Cognión: cómo está estructurada, cómo colaboran sus partes, qué reglas la sostienen y cómo se instala. Está escrita para tres lectores: quien **instala y opera**, quien **mantiene el código** y la **materia** (como material para explicar un sistema real).
 
-No reemplaza a `docs/rf/ARQ_v1.md` (arquitectura de referencia inicial, histórica) ni a
-`docs/adr/` (el *por qué* de cada decisión) — los organiza desde una perspectiva arquitectónica
-descriptiva y se mantiene actualizada por incremento, mientras que ARQ_v1 no se modifica
-retroactivamente.
+No reemplaza a `docs/rf/ARQ_v1.md` (arquitectura inicial, histórica) ni a `docs/adr/` (el *por qué* de cada decisión), ni al modelo de dominio por BC (`docs/design/domain/`). Si una vista contradice al código, **se corrige la vista**: el código y los tests mandan.
 
-## Alcance
+## Por dónde empezar
 
-Describe:
+| Si querés… | Leé |
+|---|---|
+| Entender qué es Cognión y con quién habla | `01-system-context.md` |
+| Instalar y operar | `60-deployment-view.md`, luego `docs/INSTALACION.md` |
+| Ver cómo se divide el sistema | `02-container-view.md`, `03-bounded-contexts.md` |
+| Tocar un Bounded Context | `10` a `14-componentes-*.md` (el que corresponda) |
+| Seguir un flujo de punta a punta | `30-runtime-interactions.md` |
+| Saber qué reglas no romper | `40-cross-cutting-concerns.md`, `50-development-view.md` |
+| Saber qué calidad se cumple de verdad | `70-trazabilidad-rnf-vistas.md` |
 
-- la visión estructural del sistema (contexto, contenedores);
-- la descomposición en Bounded Contexts (a medida que cada uno se modela — ver Iteración 0 en
-  `docs/rf/PLAN_v1.md`);
-- las interacciones relevantes entre BCs;
-- las preocupaciones transversales de arquitectura;
-- la vista de despliegue.
+## Las vistas
 
-No documenta el razonamiento histórico de cada decisión (eso vive en `docs/adr/`) ni el
-modelado de dominio detallado por BC (eso vive en `docs/design/domain/`).
+| Vista | Documento | Pregunta que responde |
+|---|---|---|
+| C4-1 Contexto | `01-system-context.md` | ¿Qué es y con quién habla? |
+| C4-2 Contenedores | `02-container-view.md` | ¿Qué procesos y almacenes hay? |
+| Catálogo de BC | `03-bounded-contexts.md` | ¿Cómo se parte el dominio? |
+| C4-3 Componentes | `10-componentes-identidad.md`, `11-componentes-banco-preguntas.md`, `12-componentes-actividad-evaluativa.md`, `13-componentes-analytics.md`, `14-componentes-notificaciones.md` | ¿Cómo está armado cada BC por dentro? |
+| Mapa de contexto | `20-context-map-integrations.md` | ¿Cómo se relacionan los BC y por qué puertos? |
+| Datos | `24-modelo-datos-postgresql.md`, `24a`, `24b`, `24c` | ¿Qué tablas hay y quién las escribe? |
+| Runtime | `30-runtime-interactions.md` | ¿Qué pasa en los flujos críticos? |
+| Transversal | `40-cross-cutting-concerns.md` | Seguridad, configuración, logging, salud, errores |
+| Desarrollo | `50-development-view.md` | Estructura, dependencias, calidad, CI/CD, versionado |
+| Despliegue | `60-deployment-view.md` | ¿Dónde corre y cómo se instala y opera? |
+| Calidad | `70-trazabilidad-rnf-vistas.md` | ¿Qué escenario de `RNF_v1.md` se cumple y con qué evidencia? |
 
-## Relación con otras carpetas
+Plantilla común de las vistas: `_plantilla-vista.md`.
 
-- `docs/adr/` — registra **por qué** se tomó una decisión arquitectónica.
-- `docs/design/domain/` — modelo de dominio por BC (event storming, agregados, eventos).
-- `docs/architecture/` — describe **cómo queda la solución** a partir de esas decisiones y
-  modelos.
+## Cómo se mantiene
 
-Regla práctica: si el documento justifica una decisión, va en `adr/`; si modela dominio de un
-BC, va en `design/domain/`; si describe la arquitectura actual del sistema, va aquí.
+Cada vista termina con tres secciones que son su contrato de mantenimiento:
+- **Cómo verificar contra el código:** comandos o archivos concretos para comprobar que sigue siendo cierta.
+- **Cuándo hay que actualizarla:** qué tipo de cambio obliga a tocarla.
+- **Sin verificar:** lo que no se pudo contrastar, marcado con ⚠. Una vista no afirma lo que no comprobó.
 
-## Cómo crece esta carpeta
+Al cerrar una baseline se corre `/docs-audit` y se revisan las vistas que el incremento haya invalidado.
 
-A diferencia de `docs/adr/` (que se extrajo completo desde el arranque), las vistas de esta
-carpeta se completan **incrementalmente**:
+## Principios
+- **Descriptivas, no aspiracionales.** Lo que no existe se marca como pendiente.
+- **No duplicar.** Se enlaza a los ADR y a `docs/design/domain/` en vez de repetirlos.
+- **Un diagrama por pregunta.** Cada caja y flecha se puede rastrear a un archivo o a un ADR.
+- **Separar** lo estático (estructura), lo dinámico (flujos) y lo transversal.
 
-- Las vistas globales (`01-system-context.md`, `02-container-view.md`) se escriben una vez,
-  antes del Incremento 0, porque no dependen de ningún BC en particular.
-- Las vistas por BC (`1X-bc-<nombre>.md`) se escriben en la Iteración 0 — Modelado del
-  incremento que introduce o extiende ese BC (ver `docs/rf/PLAN_v1.md`), junto al event storming
-  correspondiente — no todas de una vez.
-
-## Estructura actual de esta carpeta
-
-```text
-docs/architecture/
-  README.md                          ← este documento
-  _plantilla-vista.md                ← plantilla de cada vista (Incremento 10.1)
-  01-system-context.md               ← C4-1 (corregido, Fase 1)
-  02-container-view.md               ← C4-2 (corregido, Fase 1)
-  03-bounded-contexts.md             ← catálogo de BC (corregido, Fase 2)
-  10-componentes-identidad.md        ← C4-3, creado
-  11-componentes-banco-preguntas.md  ← C4-3, creado
-  12-componentes-actividad-evaluativa.md ← C4-3, creado
-  13-componentes-analytics.md        ← C4-3, creado
-  14-componentes-notificaciones.md   ← C4-3, creado
-  20-context-map-integrations.md     ← corregido (Fase 2)
-  24-modelo-datos-postgresql.md      ← corregido (Fase 3)
-  24a-modelo-datos-identidad.md            ← corregido (Fase 3)
-  24b-modelo-datos-banco-preguntas.md      ← creado
-  24c-modelo-datos-actividad-evaluativa.md ← creado
-  30-runtime-interactions.md         ← creado (Fase 3)
-  40-cross-cutting-concerns.md       ← creado (Fase 4)
-  50-development-view.md             ← creado (Fase 4)
-  60-deployment-view.md              ← creado (Fase 4)
-```
-
-El plan por fases, el relevamiento de brechas y el método de verificación contra el código están en
-`docs/plans/inc10-1/inc10-1-relevamiento-y-plan.md` (Incremento 10.1, documental, sin US).
-
-## Principios de documentación
-
-- Descriptivos, no aspiracionales, salvo que se indique explícitamente arquitectura objetivo.
-- No duplicar texto completo ya existente en `adr/` o `design/domain/` — enlazar la fuente.
-- Separar vista estática, vista dinámica y preocupaciones transversales.
-- Acompañar cada vista con el diagrama mínimo necesario (Mermaid, C4).
-
-## Mantenimiento
-
-Cuando cambie la estructura de esta carpeta, actualizar en conjunto: este índice y los enlaces
-cruzados desde `docs/inventario/DOCUMENTATION-MAP.md` y `CLAUDE.md` si corresponde.
+## Cómo se produjo esta versión
+El plan, las brechas y la auditoría del dominio están en `docs/plans/inc10-1/` (Incremento 10.1, documental, sin US). La baseline es `BL-017`.
