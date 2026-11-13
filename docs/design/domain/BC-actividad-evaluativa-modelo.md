@@ -29,6 +29,8 @@
 > `ActividadEvaluativaCreada`/`ActividadEvaluativaCerrada` — este documento usa la terminología
 > del ADR, no la del Issue original.
 
+> **Nota de vigencia (Incremento 10.1, 2026-11-12, contrastada con la `1.0.0`).** Los eventos de dominio coinciden con el código (`eventos.py` y `eventos_en_vivo.py`) y las 22 invariantes (`INV-AE-*`, `INV-AEV-*`) están referenciadas en código o tests. Los nombres `SesionCreada`, `SesionCerrada` e `IntentoRespuestaRegistrado` que aparecen en el texto son anteriores al renombre de `ADR-015` y se conservan solo en notas históricas; en el código son `ActividadEvaluativaCreada`, `ActividadEvaluativaCerrada` y `RespuestaRegistrada`. Los eventos del modo en vivo son `SesionEnVivoCreada`, `EstudianteUnido`, `SesionEnVivoIniciada`, `OpcionesEnVivoMostradas`, `RespuestaEnVivoRegistrada`, `PreguntaEnVivoCerrada`, `SiguientePreguntaPresentada`, `SesionEnVivoFinalizada` y `SesionEnVivoCancelada`. No se listan los puertos de consulta de solo lectura (CQRS) que se fueron agregando: `ActividadQueryPort`, `EvaluacionEstudianteQueryPort`, `EstudianteEvaluacionesQueryPort`, `ProyeccionesEnVivoQueryPort`, `SesionesEnVivoQueryPort` y otros; están en `src/actividad_evaluativa/entities/ports/`. `ADR-026` permite a Analytics leer `events` y `ranking_por_sesion`. Vista de componentes: `docs/architecture/12-componentes-actividad-evaluativa.md`; flujos: `docs/architecture/30-runtime-interactions.md`.
+
 ---
 
 ## 1. Actores

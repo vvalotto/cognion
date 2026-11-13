@@ -27,6 +27,8 @@
 > del incremento cerradas (actualizado 2026-09-16, `US-ADJ-52`). No reemplaza nada de lo ya
 > aprobado en Incremento 1/2 — solo agrega.
 
+> **Nota de vigencia (Incremento 10.1, 2026-11-12, contrastada con la `1.0.0`).** Los eventos y las invariantes (`INV-ID-*`, incluidas las del link grupal `INV-ID-22` y `23`) coinciden con el código; seis de ellas (`INV-ID-02`, `06`, `07`, `15`, `22`, `23`) no se citan por su identificador en el código ni en los tests, aunque su comportamiento sí está implementado (`EXPIRACION_DIAS = 7`, `DURACIONES_GRUPALES_MINUTOS`, un link grupal vigente por comisión). Lo que este modelo no recoge: (1) el hash y la verificación de contraseñas son **asíncronos** (`hash_async` y `verificar_async` con ejecutor propio, `US-ADJ-63`); (2) los puertos de persistencia, de consulta y de seguridad (11 en total, no listados aquí: repositorios de usuario, comisión, invitación y token; `ComisionQueryPort`, `CuentaQueryPort`, `NombreUsuarioQueryPort`; `PasswordHasherPort`, `NotificadorPort`, `CanalRecuperacionPort`, `EvaluacionConsultaPort`) están en `src/identidad/entities/ports/`; (3) desde `BL-015`, Identidad ya no lee modelos ORM de otro BC (`ADR-026`): consulta evaluaciones por un puerto del proveedor. Vista de componentes: `docs/architecture/10-componentes-identidad.md`.
+
 ---
 
 ## 1. Actores

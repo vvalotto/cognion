@@ -28,6 +28,8 @@
 > (numeradas y pasadas a "Implementado" en `RF_v1.md`/`matrix.md` el 2026-09-16,
 > `US-ADJ-52`). No reemplaza nada de lo ya aprobado en `US-4.0.1` — solo agrega.
 
+> **Nota de vigencia (Incremento 10.1, 2026-11-12, contrastada con la `1.0.0`).** Dos diferencias con el código. (1) `ADR-026` autoriza a Analytics, y solo a él, a leer **modelos ORM** de otro BC desde adaptadores de lectura: hoy `EventoModel` y `RankingPorSesionModel` (Actividad Evaluativa) y `PreguntaPlantillaModel` (Banco de Preguntas); a Identidad lo consulta por sus gateways. Donde este modelo dice "vía puertos, sin imports directos", el puerto es de Analytics y su adaptador de `frameworks/adapters/` es el único punto de cruce. (2) Los puertos reales son cinco: `ComisionConsultaPort`, `EstudianteConsultaPort` (existencia de un estudiante, que este modelo no lista), `EvaluacionDesempenoConsultaPort`, `SesionEnVivoDesempenoConsultaPort` y `PreguntaMetadatoConsultaPort`. Los puertos `ActividadQueryPort`, `EvaluacionActivaQueryPort`, `EvaluacionEstudianteQueryPort`, `ComisionRepositoryPort` y `UsuarioRepositoryPort` que aparecen en el texto son de otros BC y se mencionan como lo que se **evaluó y descartó reusar**. Vista de componentes: `docs/architecture/13-componentes-analytics.md`.
+
 ---
 
 ## 1. Actores

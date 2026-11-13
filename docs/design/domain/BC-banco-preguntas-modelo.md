@@ -20,6 +20,8 @@
 > `fecha_creacion` a `PreguntaPlantilla` y paginación a `FiltrarBanco` (`US-ADJ-03`), y se
 > agregó la query `ListarMaterias` (`US-2.1.9`).
 
+> **Nota de vigencia (Incremento 10.1, 2026-11-12, contrastada con la `1.0.0`).** El modelo coincide con el código en eventos e invariantes (`INV-BP-*`). Falta mencionar un puerto que se agregó después: `ComisionConsultaPort` (Banco → Identidad, `tiene_comisiones` y `esta_asignado_a_materia`), con el que se impide borrar una materia con comisiones y se verifica que el docente esté asignado. Además, `ADR-026` permite a Analytics leer `PreguntaPlantillaModel` para los metadatos de las preguntas. Vista de componentes: `docs/architecture/11-componentes-banco-preguntas.md`.
+
 ---
 
 ## 1. Actores
