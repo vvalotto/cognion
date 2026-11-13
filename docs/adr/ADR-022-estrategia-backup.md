@@ -40,3 +40,8 @@ meses. Las credenciales (cuenta de servicio, `DATABASE_URL`) viven en GitHub/Fly
 El workflow en GitHub Actions hacia Drive queda en standby con la nube (`US-8.3.1`). Mientras tanto la misma
 técnica (`pg_dump` con verificación y rotación) se aplica en local con `US-8.5.4`, hacia una carpeta del equipo.
 
+---
+
+## Nota de vigencia 2026-11-12 (Incremento 10.1)
+
+Lo implementado en la `1.0.0` es **más simple** que esta decisión: `respaldar.sh` (y `scripts/local/respaldar.sh`) guarda un `pg_dump` verificado, con `sha256`, en una carpeta local con rotación de 30 copias, y `restaurar.sh` ensaya o reemplaza la base. **No hay copia automática a un Drive institucional ni frecuencia mensual fija**: el operador programa el respaldo (por ejemplo, diario con `cron`) y copia la carpeta fuera del servidor. `cognion.sh desplegar` respalda antes de migrar. La retención de 12 meses de `RNF_v1.md` no está garantizada por la herramienta. Ver `docs/architecture/60-deployment-view.md`.

@@ -68,7 +68,7 @@ docs/architecture/
   30-runtime-interactions.md         ← creado (Fase 3)
   40-cross-cutting-concerns.md       ← creado (Fase 4)
   50-development-view.md             ← creado (Fase 4)
-  60-deployment-view.md              ← pendiente (Fase 4)
+  60-deployment-view.md              ← creado (Fase 4)
 ```
 
 El plan por fases, el relevamiento de brechas y el método de verificación contra el código están en

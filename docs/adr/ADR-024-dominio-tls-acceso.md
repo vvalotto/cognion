@@ -39,3 +39,9 @@ la API servidos desde el mismo origen (`US-8.1.6`).
 ## Nota 2026-10-20
 
 Se planificó una prueba de uso en una VM gratuita de GCP con cuenta personal; ver `ADR-025`. Este ADR sigue **en revisión** y no queda reemplazado: la elección definitiva de nube para producción continúa abierta.
+
+---
+
+## Nota de vigencia 2026-11-12 (Incremento 10.1)
+
+La decisión de usar un subdominio de `fly.dev` quedó sin efecto con `ADR-021`. Lo vigente es: en la variante de servidor Linux con Docker, **Caddy obtiene y renueva el certificado** del dominio que el operador configura (`deploy/servidor/Caddyfile`, `preparar-env.sh <dominio>`), o se usa HTTP sin dominio dentro de una red (`--sin-dominio`); en la VM de prueba de GCP se usó un subdominio gratuito de DuckDNS (`ADR-025`). Ver `docs/architecture/60-deployment-view.md`.
