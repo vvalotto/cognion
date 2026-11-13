@@ -1,59 +1,23 @@
-# 20 Context Map — Integraciones entre Bounded Contexts
+# 20 Mapa de contexto — integraciones entre Bounded Contexts
+
+> Vista contrastada con el código de la versión `1.0.0` (Incremento 10.1, Fase 2). Plantilla: `_plantilla-vista.md`. Reemplaza a la v0 del 2026-09-29.
 
 ## Propósito
+Documentar cómo colaboran los cinco BC en tiempo de ejecución: quién depende de quién, por qué puerto y con qué patrón de *context mapping* de DDD.
 
-Documentar cómo colaboran los Bounded Contexts de Cognión en runtime, usando los patrones de
-relación de context mapping de DDD (Shared Kernel, Customer-Supplier, Conformist, Open Host
-Service, Anticorruption Layer, etc.).
+## Interesados
+**Mantenedor** (antes de agregar un cruce entre BC) y **materia** (ejemplo real de context map con reglas verificadas por herramienta).
 
-## Alcance — versión v0
+## Para leer esta vista
+Todo cruce entre BC vive en un **adaptador** de `src/<bc_consumidor>/frameworks/adapters/`. Es lo único que `import-linter` permite importar de otro BC. Cada fila de la tabla es un adaptador real; la columna "Cómo lee" dice si usa un caso de uso, un gateway (repositorio) del proveedor o, solo en Analytics, el modelo ORM.
 
-Esta es una versión **incremental y deliberadamente incompleta**: solo documenta las relaciones
-ya decididas o inevitables a partir de los ADRs existentes y de la regla de comunicación de
-`03-bounded-contexts.md`. Las relaciones de BCs que todavía no se modelaron (Banco de Preguntas,
-Actividad Evaluativa, Analytics, Notificaciones en detalle) quedan explícitamente **a definir**
-— no se infieren ni se diseñan por anticipado, para evitar diseño especulativo antes de su
-propia Iteración 0 (ver `docs/architecture/README.md` — "no todas de una vez").
+## Alcance
+Relaciones entre BC. La estructura interna de cada uno está en `10` a `14-componentes-*.md`.
 
 ## Fuentes
+`src/*/frameworks/adapters/`, `pyproject.toml` (`[tool.importlinter]`), `ADR-002`, `006`, `012`, `019`, `026`, `027`.
 
-- `docs/adr/ADR-002-event-sourcing-cqrs-sesiones.md`
-- `docs/adr/ADR-006-integracion-directa-sesiones-notificaciones.md`
-- `docs/adr/ADR-012-politica-invitacion-link.md`
-- `docs/adr/ADR-015-renombrar-bc-sesiones-actividad-evaluativa.md` — el BC "Sesiones" citado en
-  los ADRs anteriores se llama, desde el 2026-07-16, **Actividad Evaluativa**.
-- `docs/architecture/03-bounded-contexts.md`
-
-## Relaciones documentadas
-
-| BC origen | BC destino | Patrón | Mecanismo | Fuente |
-|-----------|-----------|--------|-----------|--------|
-| Identidad | Banco de Preguntas, Actividad Evaluativa, Analytics, Notificaciones | **Open Host Service** | Los cuatro BC validan rol/identidad a través de un puerto de Identidad (dependency injection de FastAPI) — ninguno implementa su propia autenticación. | `03-bounded-contexts.md`, `ADR-007` |
-| Identidad | Banco de Preguntas (`Materia`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`) | `Comision.materia_id` referencia una `Materia` dueña de Banco de Preguntas. Identidad define `MateriaPort` en `entities/ports/` y lo implementa en `frameworks/adapters/materia_port_in_process.py`, que invoca `ObtenerMateriaUseCase` de Banco de Preguntas con la misma sesión de BD — sin FK de base entre esquemas de BCs. `CrearComisionUseCase` valida existencia antes de crear la comisión; `RegistrarEstudianteUseCase` resuelve el nombre para `RegistroResponse`. | `docs/specs/inc2/US-2.1.2.md`, `ADR-006` |
-| Actividad Evaluativa | Banco de Preguntas (`Materia`, `PreguntaPlantilla`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-2.1.2`) | `ActividadEvaluativaPeriodoAbierto` referencia una `Materia` y valida `cantidad_preguntas` contra las `PreguntaPlantilla` activas de su banco (INV-AE-01). Actividad Evaluativa define `MateriaConsultaPort`/`PreguntaConsultaPort` en `entities/ports/` y los implementa en `frameworks/adapters/*_in_process.py`, que invocan `ObtenerMateriaUseCase`/`PreguntaRepositoryPort.filtrar()` de Banco de Preguntas con la misma sesión de BD — sin FK de base entre esquemas de BCs. `CrearActividadPeriodoAbiertoUseCase` valida ambas cosas antes de persistir el aggregate. | `docs/specs/inc3/US-3.1.2.md`, `ADR-006` |
-| Actividad Evaluativa | Notificaciones | **Conformist** (acoplamiento directo, deuda técnica consciente) | El Use Case de Actividad Evaluativa llama directamente al Use Case de Notificaciones al abrir/cerrar una actividad de período abierto. | `ADR-006` |
-| Actividad Evaluativa | Analytics | **Customer-Supplier** vía event store compartido | Analytics proyecta read models leyendo directamente el event store (tabla `events`) de Actividad Evaluativa — sin pasar por un puerto de comandos, solo lectura. Desde `US-ADJ-56`, también lee la proyección `ranking_por_sesion` (`US-6.2.3`) para resolver posición/total de participantes del modo en vivo sin reimplementar el desempate, vía `SesionEnVivoDesempenoConsultaPort`. | `ADR-002`, `docs/specs/ajustes/US-ADJ-56.md` |
-| Actividad Evaluativa | Identidad (`Usuario`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-2.1.2`) | `IniciarEvaluacion` valida que el `estudiante_id` del JWT corresponde a un `Usuario` existente con rol Estudiante — más allá del rol ya validado por el JWT (RBAC). Actividad Evaluativa define `EstudianteConsultaPort` en `entities/ports/` y lo implementa en `frameworks/adapters/estudiante_consulta_port_in_process.py`, que invoca `SQLAlchemyUsuarioRepository.obtener_por_id()` de Identidad con la misma sesión de BD — sin FK de base entre esquemas de BCs. Resuelve la relación que quedaba "a definir en Incremento 3". | `docs/specs/inc3/US-3.1.3.md`, `ADR-006` |
-| Actividad Evaluativa | Identidad (`Comision`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-3.1.3`) | `ComisionConsultaPort` propio (`entities/ports/`, implementado en `frameworks/adapters/comision_consulta_port_in_process.py`): `obtener_materia_id` (`US-6.1.1`, resuelve `materia_id` a partir de la Comisión de una sesión en vivo) y, desde `US-ADJ-57`, `esta_asignado_a_materia`/`esta_asignado_a_comision` — delegan en `SQLAlchemyComisionQueryRepository.docente_tiene_comision_en_materia`/`docente_pertenece_a_comision` de Identidad con la misma sesión de BD, sin FK de base entre esquemas de BCs. Consumido por los 6 Use Case de actividades de período abierto (chequeo de materia; `crear` además valida cada id de `comisiones_ids`) y los 8 de sesiones en vivo (chequeo de comisión puntual) para que un Docente solo opere sobre sus propias materias/Comisiones. | `docs/specs/ajustes/US-ADJ-57.md`, `ADR-006` |
-| Analytics | Identidad (`Usuario`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-3.1.3`) | El Docente elige un `estudiante_id` por la URL (no viene del JWT, a diferencia del resto de los endpoints de Analytics) — `obtener_desempeno_de_estudiante` valida que corresponde a un `Usuario` existente con rol Estudiante antes de invocar el Use Case (404 si no). Analytics define su propio `EstudianteConsultaPort` en `entities/ports/` (copia propia, sin importar el de Actividad Evaluativa) y lo implementa en `frameworks/adapters/estudiante_consulta_port_in_process.py`, mismo mecanismo que `Actividad Evaluativa | Identidad (Usuario)` de arriba. | `docs/specs/inc4/US-4.2.1.md`, `ADR-006` |
-| Analytics | Identidad (`Comision`) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-4.2.1`) | Los selectores en cascada Materia → Comisión → Estudiante de `US-4.2.5`/`US-4.2.6` necesitan listar las comisiones de una materia y los estudiantes de una comisión — consulta nueva de punta a punta, no existía en Identidad. Identidad define `ComisionQueryPort` (separado de `ComisionRepositoryPort` por responsabilidad command/query, mismo criterio que `CuentaQueryPort`/`US-2.2.2`) y lo expone también como `GET /materias/{id}/comisiones`/`GET /comisiones/{id}/estudiantes`. Analytics define su propio `ComisionConsultaPort` (copia propia con DTOs propios) y lo implementa en `frameworks/adapters/comision_consulta_port_in_process.py`, invocando `SQLAlchemyComisionQueryRepository` de Identidad con la misma sesión de BD — sin FK de base entre esquemas de BCs. Consumido desde `US-4.2.4` (`ObtenerTasaErrorPorTemaUseCase`, acotar por comisión). Desde `US-ADJ-57`, el mismo puerto suma `esta_asignado_a_materia`/`esta_asignado_a_comision` (delegan en `docente_tiene_comision_en_materia`/`docente_pertenece_a_comision` de Identidad, mismo patrón ya usado por Actividad Evaluativa/Banco de Preguntas) — los 7 Use Case de reportes verifican `docente_id` antes de agregar (materia siempre; comisión puntual además cuando el reporte la recibe), para que un Docente solo vea reportes de sus propias materias/Comisiones. | `docs/specs/inc4/US-4.2.2.md`, `docs/specs/ajustes/US-ADJ-57.md`, `ADR-006` |
-| Analytics | Banco de Preguntas (`PreguntaPlantilla`, metadatos) | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`/`US-4.2.2`) | La tasa de error por unidad/tema (RF-17, `US-4.2.4`) necesita conocer `unidad_tematica`/`tema` de cada pregunta respondida — dato que no viaja en los eventos de Actividad Evaluativa (solo `pregunta_id`), resuelve la pregunta abierta de la sección "Relaciones pendientes de definir". Analytics define `PreguntaMetadatoConsultaPort` (copia propia, DTO `MetadatoPreguntaResumen`) en `entities/ports/` y lo implementa en `frameworks/adapters/pregunta_metadato_consulta_port_in_process.py`, consultando `PreguntaPlantillaModel` de Banco de Preguntas por lote (`WHERE id IN (...)`) con la misma sesión de BD — sin FK de base entre esquemas de BCs. Consumido desde `US-4.2.4` (`ObtenerTasaErrorPorTemaUseCase`, agrupa respuestas por `unidad_tematica`/`tema`). | `docs/specs/inc4/US-4.2.3.md`, `ADR-006` |
-| Identidad | (servicio externo SMTP) | — | BC Identidad envía el email de invitación con su propio adaptador SMTP, independiente del Servicio Email que usará Notificaciones. | `ADR-012` |
-| Identidad | Notificaciones | **Customer-Supplier** (llamada directa in-process, mismo criterio que `ADR-006`) | La recuperación de contraseña por autoservicio reusa el canal de envío ya existente de Notificaciones en vez de un segundo adaptador SMTP propio de Identidad (a diferencia de `GenerarInvitacion`, `ADR-012`) — decisión de producto para no esperar la cuenta SMTP real de producción. Identidad define `CanalRecuperacionPort` en `entities/ports/` y lo implementa en `frameworks/adapters/canal_recuperacion_port_in_process.py`, que invoca `SmtpCanalEnvio` de Notificaciones directo (sin pasar por un Use Case de Notificaciones, a diferencia de `NotificacionPort` — acá el destinatario ya lo tiene Identidad, sin necesidad de resolver un roster). Primera vez que la dependencia entre estos dos BC corre en sentido Identidad → Notificaciones (hasta ahora solo existía Actividad Evaluativa → Notificaciones). | `docs/specs/ajustes/US-ADJ-38.md`, `ADR-006` |
-
-## Relaciones pendientes de definir
-
-Estas relaciones existen conceptualmente (el módulo de arquitectura de `ARQ_v1.md` las
-insinúa) pero **no están modeladas todavía** — se definen recién en la Iteración 0 del
-incremento que introduce el BC consumidor:
-
-- **Identidad → Banco de Preguntas** (RF-03, gestión de cuentas): si la gestión de cuentas del
-  administrador necesita datos de otros BC o es enteramente interna a Identidad. *A definir en
-  Incremento 2, cuando se modele RF-03.* (Nota: la relación Identidad → Banco de Preguntas para
-  `Materia` — no para RF-03 — ya está resuelta y documentada arriba, `US-2.1.2`.)
-
-## Diagrama (relaciones documentadas)
-
+## Diagrama
 ```mermaid
 flowchart LR
     identidad["Identidad
@@ -61,61 +25,90 @@ flowchart LR
     banco["Banco de Preguntas
     (Supporting)"]
     actividad["Actividad Evaluativa
-    (Core Domain)"]
+    (Core)"]
     analytics["Analytics
     (Supporting)"]
-    notificaciones["Notificaciones
+    notif["Notificaciones
     (Generic)"]
-    smtp["SMTP
-    (externo)"]
+    shared["shared/
+    JWT · RBAC · SMTP · DB"]
 
-    identidad -.->|"Open Host Service
-    validación de rol"| banco
-    identidad -.->|"Open Host Service
-    validación de rol"| actividad
-    identidad -.->|"Open Host Service
-    validación de rol"| analytics
-    identidad -.->|"Open Host Service
-    validación de rol"| notificaciones
+    identidad -->|"MateriaPort"| banco
+    identidad -->|"EvaluacionConsultaPort
+    (US-9.4.3)"| actividad
+    identidad -->|"canal de recuperación
+    (SmtpCanalEnvio)"| notif
 
-    identidad -->|"Customer-Supplier
-    MateriaPort in-process (US-2.1.2)"| banco
-    identidad -->|"Customer-Supplier
-    CanalRecuperacionPort (US-ADJ-38)"| notificaciones
+    banco -->|"ComisionConsultaPort
+    (US-9.4.1)"| identidad
 
-    actividad -->|"Conformist
-    llamada directa (ADR-006)"| notificaciones
-    actividad -->|"Customer-Supplier
-    event store compartido (ADR-002)"| analytics
-    actividad -->|"Customer-Supplier
-    EstudianteConsultaPort (US-3.1.3)"| identidad
-    actividad -->|"Customer-Supplier
-    ComisionConsultaPort (US-6.1.1, US-ADJ-57)"| identidad
-    analytics -->|"Customer-Supplier
-    EstudianteConsultaPort (US-4.2.1)"| identidad
-    analytics -->|"Customer-Supplier
-    ComisionConsultaPort (US-4.2.2)"| identidad
-    analytics -->|"Customer-Supplier
-    PreguntaMetadatoConsultaPort (US-4.2.3)"| banco
+    actividad -->|"MateriaConsultaPort
+    PreguntaConsultaPort"| banco
+    actividad -->|"ComisionConsultaPort
+    EstudianteConsultaPort
+    (US-9.4.2)"| identidad
+    actividad -->|"NotificacionPort
+    (ADR-006)"| notif
 
-    identidad -->|"Adaptador SMTP propio
-    (ADR-012)"| smtp
+    analytics -->|"ComisionConsultaPort
+    EstudianteConsultaPort"| identidad
+    analytics -.->|"lee EventoModel y
+    RankingPorSesionModel
+    (ADR-026)"| actividad
+    analytics -.->|"lee PreguntaPlantillaModel
+    (ADR-026)"| banco
+
+    notif -->|"ComisionConsultaPort"| identidad
+
+    identidad -.-> shared
+    actividad -.-> shared
+    banco -.-> shared
+    analytics -.-> shared
+    notif -.-> shared
 ```
+Línea punteada con texto: lectura de un modelo ORM ajeno (solo Analytics) o de `shared/`.
 
-## Siguiente paso
+## Relaciones (una fila por adaptador)
 
-Se actualiza esta vista cada vez que un nuevo incremento modela un BC y define sus relaciones
-reales — no antes. Actualizada en `US-2.1.2` con la relación Identidad → Banco de Preguntas
-(`Materia`, vía `MateriaPort`); en `US-3.1.2` con Actividad Evaluativa → Banco de Preguntas; en
-`US-3.1.3` con Actividad Evaluativa → Identidad (`Usuario`, vía `EstudianteConsultaPort`); en
-`US-4.2.1` con Analytics → Identidad (`Usuario`, mismo mecanismo, puerto propio de Analytics);
-en `US-4.2.2` con Analytics → Identidad (`Comision`, vía `ComisionConsultaPort`, mismo
-mecanismo); en `US-4.2.3` con Analytics → Banco de Preguntas (`PreguntaPlantilla`, vía
-`PreguntaMetadatoConsultaPort`) — resuelve la última relación que quedaba "a definir"; en
-`US-ADJ-38` con Identidad → Notificaciones (`CanalRecuperacionPort`), primera vez que la
-dependencia entre estos dos BC corre en sentido inverso al ya documentado (Actividad
-Evaluativa → Notificaciones, `ADR-006`); en `US-ADJ-57` con la ampliación de Actividad
-Evaluativa → Identidad (`Comision`, vía `ComisionConsultaPort` ya existente desde `US-6.1.1`)
-con las 2 primitivas de pertenencia Docente↔Comisión — la relación en sí ya estaba documentada,
-solo se amplía su propósito. La próxima actualización esperada es cuando un incremento futuro
-introduzca un BC o una relación nueva.
+| Consumidor | Proveedor | Puerto del consumidor | Cómo lee | Patrón | Adaptador |
+|---|---|---|---|---|---|
+| Identidad | Banco de Preguntas | `MateriaPort` | Caso de uso `ObtenerMateria` y gateway de materias | Customer-Supplier | `identidad/…/materia_port_in_process.py` |
+| Identidad | Actividad Evaluativa | `EvaluacionConsultaPort` | Consulta de solo lectura `EstudianteEvaluacionesQueryPort` | Customer-Supplier | `identidad/…/evaluacion_consulta_port_in_process.py` |
+| Identidad | Notificaciones | `CanalRecuperacionPort` | Instancia `SmtpCanalEnvio` | Conformist | `identidad/…/canal_recuperacion_port_in_process.py` |
+| Banco | Identidad | `ComisionConsultaPort` | Gateway de consultas de comisiones (`tiene_comisiones`, `esta_asignado_a_materia`) | Customer-Supplier | `banco_preguntas/…/comision_consulta_port_in_process.py` |
+| Actividad Evaluativa | Banco | `MateriaConsultaPort`, `PreguntaConsultaPort` | Caso de uso `ObtenerMateria` y gateways de banco y preguntas | Customer-Supplier | `actividad_evaluativa/…/materia_consulta_…`, `pregunta_consulta_…` |
+| Actividad Evaluativa | Identidad | `ComisionConsultaPort`, `EstudianteConsultaPort` | Gateways de comisiones, usuarios y `NombreUsuarioQueryPort` | Customer-Supplier | `actividad_evaluativa/…/comision_consulta_…`, `estudiante_consulta_…` |
+| Actividad Evaluativa | Notificaciones | `NotificacionPort` | Instancia los casos de uso `NotificarApertura` y `NotificarCierre` | Conformist (`ADR-006`) | `actividad_evaluativa/…/notificacion_port_in_process.py` |
+| Analytics | Identidad | `ComisionConsultaPort`, `EstudianteConsultaPort` | Gateways de comisiones y usuarios | Customer-Supplier | `analytics/…/comision_consulta_…`, `estudiante_consulta_…` |
+| Analytics | Actividad Evaluativa | `EvaluacionDesempenoConsultaPort`, `SesionEnVivoDesempenoConsultaPort` | **Modelo ORM** `EventoModel`, `RankingPorSesionModel` | Customer-Supplier por datos (`ADR-002`, `ADR-026`) | `analytics/…/evaluacion_desempeno_…`, `sesion_en_vivo_desempeno_…` |
+| Analytics | Banco | `PreguntaMetadatoConsultaPort` | **Modelo ORM** `PreguntaPlantillaModel` | Customer-Supplier por datos (`ADR-026`) | `analytics/…/pregunta_metadato_…` |
+| Notificaciones | Identidad | `ComisionConsultaPort` | Gateway de comisiones (destinatarios) | Customer-Supplier | `notificaciones/…/comision_consulta_port_in_process.py` |
+
+**Transversal (`shared/`, `ADR-019`):** la validación del JWT y los roles, el acceso a base y el envío SMTP viven en `src/shared/` y no son una relación entre BC. Identidad emite el token; el resto solo lo verifica con `shared`.
+
+Sin servicio externo aparte del SMTP: el correo de invitación de Identidad usa su propio adaptador (`src/identidad/frameworks/smtp/`), independiente de Notificaciones.
+
+## Qué impone el CI
+`import-linter` (`uv run lint-imports`, 4 contratos en `pyproject.toml`):
+1. **Capas dentro de cada BC:** `frameworks → interface_adapters → use_cases → entities`. Excepción: los repositorios de `gateways/` importan `frameworks/db/models.py` (9 archivos de Identidad y Banco).
+2. **Aislamiento entre BC:** solo `frameworks/adapters/` puede importar de otro BC (`ADR-006`).
+3. **`shared` no importa de ningún BC.**
+4. **`ADR-026`:** ningún BC salvo Analytics importa los modelos ORM de otro. Desde el Incremento 9 (`BL-015`) no queda ninguna excepción puntual.
+
+## Decisiones reflejadas
+`ADR-002`, `ADR-006` (llamada directa a Notificaciones), `ADR-012` y `ADR-027` (invitación), `ADR-019` (JWT y RBAC en `shared`), `ADR-026` (acoplamiento por datos).
+
+## Restricciones y calidad
+- Los BC comparten una sola base (`02-container-view.md`): el aislamiento es de código, no de infraestructura.
+- La dirección de dependencia de **Actividad Evaluativa → Identidad** y de **Identidad → Actividad Evaluativa** coexisten (mediante puertos distintos): no hay ciclo de imports porque cada cruce va por un adaptador.
+
+## Cómo verificar esta vista contra el código
+- `grep -n "^from src" src/*/frameworks/adapters/*.py` (qué importa cada adaptador de otro BC).
+- `uv run lint-imports` y `tests/unit/inc9/test_guarda_arquitectura.py`.
+
+## Cuándo hay que actualizarla
+Un adaptador nuevo o un puerto nuevo entre BC, una excepción nueva de `ADR-026`, o un cambio en los contratos de `pyproject.toml`.
+
+## Sin verificar
+- ⚠ Los adaptadores de Actividad Evaluativa que no cruzan a otro BC (`*_query_repository.py`) sirven consultas de su propio BC a otros; no se listaron como relaciones propias.
+- ⚠ Un comentario de `pyproject.toml` sobre el contrato de `ADR-026` aún dice que tres adaptadores figuran como excepciones; desde `BL-015` ya no hay ninguna (el comentario quedó desactualizado; se corrige en un cambio de `pyproject.toml`, fuera de este incremento).

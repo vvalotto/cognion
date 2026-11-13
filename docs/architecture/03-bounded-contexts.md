@@ -43,14 +43,11 @@ esta tabla resume el estado del BC como módulo, no reemplaza la matriz).
 ### Identidad
 
 **Responsabilidad:** gestión de usuarios, roles y autenticación. Registro de estudiantes por
-invitación (RF-01), distinción de tres roles fijos — administrador, docente, estudiante (RF-02),
-emisión y validación de JWT.
+invitación individual o grupal con vencimiento y revocación (RF-01, `ADR-012`, `ADR-027`), distinción de tres roles fijos — administrador, docente, estudiante (RF-02), comisiones y asignación de docentes, bloqueo de cuenta y recuperación de contraseña, y emisión del JWT.
 
 **Lenguaje ubicuo:** Usuario, Rol, Credencial, Token, Invitación.
 
-**Frontera:** es el único BC que emite y valida identidad/rol. Ningún otro BC implementa su
-propia autenticación — consumen la validación de Identidad a través de un puerto (ver
-`20-context-map-integrations.md`).
+**Frontera:** es el único BC que autentica y emite el JWT. La verificación del token y los roles (RBAC) viven en `shared/` (`ADR-019`) y cada router de los demás BC la aplica con sus dependencias; ningún otro BC implementa su propia autenticación. Los demás BC consultan a Identidad por datos (comisiones, usuarios) a través de puertos propios (ver `20-context-map-integrations.md`).
 
 ### Banco de Preguntas
 
@@ -87,8 +84,7 @@ RF-17).
 
 **Lenguaje ubicuo:** ReadModel, Proyección, MétricaDeActividadEvaluativa.
 
-**Frontera:** no tiene estado propio de escritura ni lógica de negocio — es enteramente derivado
-del event store de Actividad Evaluativa. No modifica el estado de ningún otro BC.
+**Frontera:** no tiene estado propio de escritura ni lógica de negocio de escritura: es de solo lectura y se calcula al consultar. Lee el event store y los read models de Actividad Evaluativa y los metadatos de pregunta de Banco directamente por sus modelos ORM (excepción de `ADR-026`, solo en adaptadores de lectura), y a Identidad por sus gateways. No modifica el estado de ningún otro BC.
 
 ### Notificaciones
 
@@ -109,21 +105,15 @@ revisada en `US-5.1.1`: se mantienen dos adaptadores SMTP separados por BC, pero
 
 ## Regla de comunicación entre BCs
 
-Ningún BC importa código de otro directamente. Toda comunicación cruza por puertos definidos en
-`entities/ports/` de cada BC, salvo las excepciones ya documentadas por ADR (Actividad
-Evaluativa → Notificaciones, `ADR-006`; Analytics leyendo el event store compartido de Actividad
-Evaluativa, `ADR-002`). `shared/entities/` es la excepción transversal para tipos y utilidades
-sin lógica de negocio de un BC específico (`CLAUDE.md`); `shared/frameworks/` (desde `US-1.1.0`,
-`ADR-017`) es la excepción análoga para infraestructura técnica pura — engine y sesión async de
-SQLAlchemy compartidos por todos los BC contra la misma instancia de PostgreSQL (`ADR-004`,
-`ADR-018` para el uso de `NullPool`). JWT/RBAC (verificación de token, roles) vive también en
-`shared/` desde `ADR-019` (`shared/entities/`, `shared/frameworks/security/`,
-`shared/interface_adapters/security/`) — cada BC sigue armando su propio composition root, sin
-importar directamente de otro BC.
+Ningún BC importa código de otro fuera de `frameworks/adapters/`. Toda comunicación cruza por puertos definidos en `entities/ports/` del BC consumidor, y su implementación es un adaptador en `frameworks/adapters/`. Las capas dentro de cada BC (`entities ← use_cases ← interface_adapters ← frameworks`) y este aislamiento **los hace cumplir `import-linter` en el CI** (`uv run lint-imports`, 4 contratos en `pyproject.toml`); el detalle está en `20-context-map-integrations.md`.
+
+Excepciones documentadas:
+- Actividad Evaluativa → Notificaciones por llamada directa a sus casos de uso (`ADR-006`).
+- Analytics lee modelos ORM de otros BC (`ADR-026`): es el único BC con ese permiso. Desde el Incremento 9 (`BL-015`) ya no queda ninguna otra excepción puntual.
+- Los repositorios SQL de `interface_adapters/gateways/` importan los modelos de `frameworks/db/models.py` de su propio BC (9 archivos de Identidad y Banco).
+
+`shared/` es la excepción transversal para tipos y utilidades sin lógica de negocio de un BC: `shared/entities/` (tipos, JWT y RBAC, `ADR-019`), `shared/frameworks/` (engine y sesión async de SQLAlchemy, `ADR-017` y `ADR-018`; SMTP; logging; versión). Cada BC arma su propio composition root en `frameworks/dependencies.py`, importando de `shared`, nunca de otro BC.
 
 ## Siguiente paso
 
-El modelo de dominio detallado de Identidad (agregados, invariantes, eventos) se desarrolla en
-`docs/design/domain/BC-identidad-modelo.md`, dentro de la Iteración 0 — Modelado del
-Incremento 1. Los demás BC se detallan en su propia Iteración 0, uno por incremento — ver
-`docs/rf/PLAN_v1.md`.
+El detalle de cada BC por dentro está en `10` a `14-componentes-<bc>.md`; las relaciones entre ellos, en `20-context-map-integrations.md`; el modelo de dominio, en `docs/design/domain/`.
