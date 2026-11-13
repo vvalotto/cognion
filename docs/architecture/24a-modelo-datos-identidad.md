@@ -12,7 +12,7 @@ Ver principios generales y aislamiento cross-BC en `24-modelo-datos-postgresql.m
 | `estudiante` | Marca de perfil sobre `usuario`, con su comisión asignada |
 | `comision` | Comisión de una materia, con horario y docentes asignados |
 | `comision_docentes` | Tabla puente N:M entre `comision` y `docente` |
-| `invitacion` | Invitación emitida por un Docente para que un Estudiante se una a una Comisión |
+| `invitacion` | Link de registro emitido por un Docente para una Comisión: individual (un uso) o **grupal** (varios usos hasta que vence o se revoca, `ADR-027`) |
 | `token_recuperacion_password` | Token de un solo uso para recuperación de contraseña |
 
 ## Patrón "marca de perfil" (table-per-subclass manual)
@@ -55,6 +55,7 @@ erDiagram
         int intentos_fallidos_password
         datetime creado_en
         bool deshabilitada
+        datetime bloqueada_hasta "NULL = bloqueo permanente; con valor = temporal"
     }
     ADMINISTRADOR {
         uuid id "PK, FK"
@@ -81,6 +82,9 @@ erDiagram
         datetime generada_en
         datetime expira_en
         datetime usada_en
+        bool grupal
+        int usos "contador de registros del link grupal"
+        datetime revocada_en
     }
     TOKEN_RECUPERACION_PASSWORD {
         uuid id PK
@@ -98,8 +102,9 @@ erDiagram
   Banco de Preguntas, resuelto vía `MateriaPort` (`US-2.1.2`). Es el único caso de FK "lógica"
   cross-BC de este BC.
 - `usuario.email` es único — es el identificador de login.
-- `invitacion.token` y `token_recuperacion_password.token` son únicos y de un solo uso
-  (`usada_en`/`usado_en` marca el consumo).
+- `token_recuperacion_password.token` es único y de un solo uso (`usado_en` marca el consumo).
+- `invitacion.token` es único. La **individual** es de un solo uso (`usada_en`); la **grupal** (`grupal = true`) admite varios: `usos` se incrementa con un `UPDATE` atómico en la base porque varios estudiantes se registran a la vez, y `revocada_en` la desactiva. Hay a lo sumo un link grupal vigente por comisión (migración `f7a3c9d15e82`).
+- `usuario.bloqueada_hasta`: `NULL` con `bloqueada = true` es un bloqueo permanente; con valor es un bloqueo temporal, que hoy solo se aplica al último administrador operativo (migración `c4d1f9a27b60`).
 - Contraseña segura (`INV-ID-11` ampliada, `US-ADJ-36`): mínimo 12 caracteres + mezcla de
   tipos, validada en dominio (`Usuario.validar_password_nueva()`), no en el esquema de BD.
 

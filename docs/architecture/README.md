@@ -61,11 +61,11 @@ docs/architecture/
   13-componentes-analytics.md        ← C4-3, creado
   14-componentes-notificaciones.md   ← C4-3, creado
   20-context-map-integrations.md     ← corregido (Fase 2)
-  24-modelo-datos-postgresql.md      ← a completar (Fase 3)
-  24a-modelo-datos-identidad.md            ← a corregir (Fase 3)
+  24-modelo-datos-postgresql.md      ← corregido (Fase 3)
+  24a-modelo-datos-identidad.md            ← corregido (Fase 3)
   24b-modelo-datos-banco-preguntas.md      ← creado
   24c-modelo-datos-actividad-evaluativa.md ← creado
-  30-runtime-interactions.md         ← pendiente (Fase 3)
+  30-runtime-interactions.md         ← creado (Fase 3)
   40-cross-cutting-concerns.md       ← pendiente (Fase 4)
   50-development-view.md             ← pendiente (Fase 4)
   60-deployment-view.md              ← pendiente (Fase 4)

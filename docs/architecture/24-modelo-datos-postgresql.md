@@ -36,13 +36,27 @@ de otro BC.
 | Banco de Preguntas | Relacional clásico | `24b-modelo-datos-banco-preguntas.md` |
 | Actividad Evaluativa | Event Sourcing + CQRS (`ADR-002`) | `24c-modelo-datos-actividad-evaluativa.md` |
 | Notificaciones | Sin persistencia propia — BC reactivo puro | — |
-| Analytics | Sin persistencia propia — proyecta sobre `events` de Actividad Evaluativa | — |
+| Analytics | Sin persistencia propia — calcula al consultar a partir de `events` y los read models de Actividad Evaluativa, y de los metadatos del Banco (`ADR-026`) | — |
 
 Identidad y Banco de Preguntas resuelven su modelo como tablas con FKs, en el estilo
 relacional tradicional. Actividad Evaluativa es distinto: no tiene una tabla por aggregate
 (no existe `actividad_evaluativa` ni `evaluacion`) — tiene **una única tabla `events`**,
 append-only, donde cada fila es un evento de dominio ya ocurrido. El aggregate se reconstruye
 en memoria haciendo replay del stream (`aggregate_type` + `aggregate_id`), no se lee como fila.
+
+## Propiedad de las tablas (14)
+
+| Tabla | BC dueño | Quién escribe | Quién la lee de otro BC |
+|---|---|---|---|
+| `usuario`, `administrador`, `docente`, `estudiante` | Identidad | Identidad | Los demás BC, por los gateways de Identidad |
+| `comision`, `comision_docentes` | Identidad | Identidad | Banco, Actividad Evaluativa, Analytics y Notificaciones, por gateways |
+| `invitacion`, `token_recuperacion_password` | Identidad | Identidad | — |
+| `materia`, `banco`, `pregunta_plantilla` | Banco de Preguntas | Banco | Identidad y Actividad Evaluativa (casos de uso y gateways); Analytics lee `pregunta_plantilla` por su modelo ORM (`ADR-026`) |
+| `events` | Actividad Evaluativa | Solo `SQLAlchemyEventStore` (se agrega, nunca se modifica ni se borra) | Analytics (modelo ORM, `ADR-026`) |
+| `ranking_por_sesion`, `distribucion_por_pregunta` | Actividad Evaluativa | Los casos de uso del modo en vivo, en la misma transacción que el evento | Analytics (`ranking_por_sesion`) |
+
+Notificaciones y Analytics no tienen tablas. Hay 19 migraciones en `migrations/versions/`; `alembic downgrade base` funciona y hay una guarda que impide que vuelva a romperse (`US-8.3.4`).
+
 
 ## Cómo se sostiene el aislamiento entre BC sin frontera física
 
@@ -53,24 +67,7 @@ en memoria haciendo replay del stream (`aggregate_type` + `aggregate_id`), no se
    ejecución contra un puerto (`US-2.1.2`, refactor explícito para eliminar el import directo
    entre BCs).
 
-2. **Comunicación cruzada = puertos in-process, nunca JOIN SQL.** Cuando un BC necesita datos
-   de otro, no hace una consulta contra la tabla del otro BC — llama a un puerto definido en su
-   propio `entities/ports/`, implementado por un adapter in-process que sí conoce el otro BC
-   por dentro. Puertos cruzados existentes a la fecha:
-
-   | Puerto | BC consumidor → BC provisto | Origen |
-   |--------|------------------------------|--------|
-   | `MateriaPort` | Identidad → Banco de Preguntas | `US-2.1.2` |
-   | `ComisionConsultaPort` (Analytics) | Analytics → Identidad | `US-4.2.2` |
-   | `PreguntaMetadatoConsultaPort` | Analytics → Banco de Preguntas | `US-4.2.3` |
-   | `ComisionConsultaPort` (Notificaciones) | Notificaciones → Identidad | Incremento 5 |
-   | `ComisionConsultaPort` (Banco de Preguntas) | Banco de Preguntas → Identidad | Paso 8, estabilización |
-   | `EvaluacionConsultaPort` | Identidad → Actividad Evaluativa | Paso 8, estabilización |
-   | `ComisionConsultaPort` (Actividad Evaluativa en vivo) | Actividad Evaluativa → Identidad | `US-6.0.1` |
-
-   Nota: varios puertos se llaman `ComisionConsultaPort` en BC distintos — son interfaces
-   independientes, cada una definida en el `entities/ports/` de su propio BC consumidor, no
-   una interfaz compartida.
+2. **Comunicación cruzada = puertos in-process, no JOIN SQL entre BC.** Cuando un BC necesita datos de otro, llama a un puerto de su propio `entities/ports/`, implementado por un adaptador en `frameworks/adapters/` que conoce el otro BC. La lista completa de cruces, adaptador por adaptador, está en `20-context-map-integrations.md`. **Excepción** (`ADR-026`): solo Analytics puede leer los modelos ORM de otro BC (`EventoModel`, `RankingPorSesionModel`, `PreguntaPlantillaModel`), y solo en adaptadores de lectura; `import-linter` lo hace cumplir en el CI.
 
 3. **Cada BC arma su propio composition root.** `frameworks/dependencies.py` de cada BC
    importa de `shared/`, nunca de otro BC directamente.
@@ -85,9 +82,7 @@ entre BC, porque no normaliza el prefijo `src.` de los imports reales (`from src
 Con eso, la métrica de distancia colapsa y marca CRITICAL en cualquier paquete de baja
 abstracción — sin relación real con el acoplamiento de este modelo de datos. El detalle
 completo vive en `CLAUDE.md` §Quality gates y en `docs/specs/ajustes/US-ADJ-13.md` /
-`US-ADJ-19.md`. Mismo bug explica por qué `LayerViolationsAnalyzer` nunca reporta nada: la
-regla de capas (`entities → use_cases → interface_adapters → frameworks`) se sostiene por
-revisión humana/asistida, no por ese chequeo automatizado, hasta que se resuelva upstream.
+`US-ADJ-19.md`. Mismo bug explica por qué `LayerViolationsAnalyzer` nunca reporta nada: por eso la regla de capas y el aislamiento entre BC los hace cumplir **`import-linter`** en el CI (`uv run lint-imports`, Incremento 9), no ese chequeo.
 
 ## Fuente de verdad
 
