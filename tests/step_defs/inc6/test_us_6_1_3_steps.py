@@ -12,11 +12,10 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.app import app
-from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
-    headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     iniciar_y_finalizar,
     preparar_sesion,
@@ -118,8 +117,8 @@ def sesion_inexistente(context):
 @when("el Estudiante se une")
 def estudiante_se_une(context):
     """Une al Estudiante con un Docente conectado al canal, para verificar el broadcast."""
-    docente_token = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)["Authorization"].split()[1]
     sesion_id = context["sesion_id"]
+    docente_token = run_async(headers_docente_de_sesion(sesion_id))["Authorization"].split()[1]
     with TestClient(app) as client:
         with client.websocket_connect(
             f"/sesiones-en-vivo/{sesion_id}/canal?token={docente_token}"

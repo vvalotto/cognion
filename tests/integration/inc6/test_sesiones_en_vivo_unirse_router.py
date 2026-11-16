@@ -22,6 +22,7 @@ from tests.integration.inc6._helpers import (
     correr,
     crear_estudiante,
     headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     iniciar_y_finalizar,
     preparar_sesion,
@@ -173,7 +174,7 @@ class TestBroadcastAlDocente:
     def test_el_docente_conectado_recibe_la_lista_actualizada(self) -> None:
         sesion_id, comision_id = correr(preparar_sesion())
         _, headers = correr(crear_estudiante(comision_id))
-        token = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)["Authorization"].split()[1]
+        token = correr(headers_docente_de_sesion(sesion_id))["Authorization"].split()[1]
 
         with TestClient(app) as client:
             with client.websocket_connect(
