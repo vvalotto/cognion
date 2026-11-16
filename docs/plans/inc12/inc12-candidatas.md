@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15; sin iniciar.** No hay Milestone ni Issues creados: los de cada iteración se crean al abrirla, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 abierta (2026-11-15): paso 1 hecho, a la espera de que Víctor apruebe la lista.** No hay Milestone ni Issues creados: se crean al aprobar el resultado del paso 1.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -40,6 +40,18 @@ Sin ADR. Cada punto es de horas.
 | `DO-01`, `DO-04` | Usuario sin privilegios y versión fija de `uv` en la imagen; `--forwarded-allow-ips` acotado; `healthcheck` contra `/api/health/ready`; medir cuánto duran 30 MB de registros | Herramientas |
 | `CA-02`, `IQ-04`, `DO-05` | Una sola versión de Python en `pyproject.toml`, CI, imagen y `CLAUDE.md`; el CI corre `tsc -b`; borrar `fly.toml` y sus tests; renombrar el job del CD | Herramientas |
 | `DC-01`, `DC-02` | Reescribir `README.md`; corregir en `CLAUDE.md` lo que el código desmiente | Documental |
+
+**Resultado del paso 1 (2026-11-15).** Los 11 hallazgos se verificaron leyendo el código. Ninguno se descartó; no se ejecutó nada.
+
+| Hallazgo | Resultado | Qué cambia en el alcance |
+|---|---|---|
+| `VT-03` | Ajustado | El CI usa una base llamada `cognion`. La guarda por sufijo `_test` la rechazaría: hay que renombrar la base del CI o elegir otro criterio |
+| `IM-04` | Ajustado | El código dice en el docstring que no hay verificación de rol por decisión de diseño. Hay que decidir con Víctor quién puede conectarse antes de escribir la spec |
+| `AQ-04` | Confirmado en código | Falta la prueba en navegador; recién ahí se decide si hay `US-12.1.2` |
+| `DO-02` | Confirmado | La guía documenta `cron` a mano; `salud.sh` no mira los respaldos |
+| `DO-05` | Confirmado | El borrado alcanza a 3 tests, el comentario del `Dockerfile` y el `needs:` del CD |
+| `CA-02`, `IQ-04`, `DO-01`, `DO-04`, `DC-01`, `DC-02` | Confirmado | Sin cambios; `CA-02` suma `.pre-commit-config.yaml` y `DC-02` tiene las líneas corridas |
+| `IQ-05`, `IQ-06` | No verificados | Baja, sin iteración; se ven si queda tiempo |
 
 **Criterio de salida:**
 
@@ -224,7 +236,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | Hallazgo | Severidad | Confianza | Iteración | Estado | Historia / PR / decisión |
 |---|---|---|---|---|---|
 | `CA-01` | Media | | 2 | Pendiente | |
-| `CA-02` | Baja | | 1 | Pendiente | |
+| `CA-02` | Baja | | 1 | Confirmado | Confirmado. Además `.pre-commit-config.yaml` usa `python3.12`; `CLAUDE.md` dice 3.11 (línea 47) |
 | `CA-03` | Media | | 2 | Pendiente | |
 | `AC-01` | Alta | | 4 | Pendiente | |
 | `AC-02` | Media | | 4 | Pendiente | |
@@ -240,23 +252,23 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `IM-01` | Media | | 2 | Pendiente | |
 | `IM-02` | Alta | | 2 | Pendiente | |
 | `IM-03` | Alta | I | 2 | Pendiente | |
-| `IM-04` | Media | | 1 | Pendiente | |
+| `IM-04` | Media | | 1 | Confirmado | Ajustado. La ausencia de rol está documentada como decisión en el docstring del endpoint, aunque §16 del modelo no la dice. Cambia comportamiento: falta decidir quién es "participante" (ver Resultado del paso 1) |
 | `IM-05` | Media | | 2 | Pendiente | |
 | `IM-06` | Media | I | 2 | Pendiente | |
 | `IM-07` | Baja | | 4 | Pendiente | |
 | `AQ-01` | Alta | I | 3 | Pendiente | |
 | `AQ-02` | Media | | T | Pendiente | |
 | `AQ-03` | Media | | 4 | Pendiente | |
-| `AQ-04` | Media | I | 1 | Pendiente | |
+| `AQ-04` | Media | I | 1 | Confirmado | Confirmado en código (60 min, sin renovación); falta la prueba en navegador |
 | `VT-01` | Media | | 2 | Pendiente | |
 | `VT-02` | Media | | 2 | Pendiente | |
-| `VT-03` | Media | | 1 | Pendiente | |
+| `VT-03` | Media | | 1 | Confirmado | Ajustado. La guarda por sufijo `_test` rompería el CI, cuya base se llama `cognion`: hay que renombrarla o guardar por otro criterio |
 | `VT-04` | Media | | T | Pendiente | |
 | `VT-05` | Baja | | — | Pendiente | |
 | `IQ-01` | Alta | | 2 | Pendiente | |
 | `IQ-02` | Media | | T | Pendiente | |
 | `IQ-03` | Media | | T | Pendiente | |
-| `IQ-04` | Baja | | 1 | Pendiente | |
+| `IQ-04` | Baja | | 1 | Confirmado | Confirmado. `npm run build` ya ejecuta `tsc -b` |
 | `IQ-05` | Baja | | — | Pendiente | |
 | `IQ-06` | Baja | | — | Pendiente | |
 | `FE-01` | Media | | 4 | Pendiente | |
@@ -265,11 +277,11 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `FE-04` | Media | | 4 | Pendiente | |
 | `FE-05` | Baja | | — | Pendiente | |
 | `FE-06` | Baja | I | — | Pendiente | |
-| `DO-01` | Media | | 1 | Pendiente | |
-| `DO-02` | Alta | | 1 | Pendiente | |
+| `DO-01` | Media | | 1 | Confirmado | Confirmado: sin `USER`, `pip install uv` sin versión, `--forwarded-allow-ips "*"`, etiquetas móviles |
+| `DO-02` | Alta | | 1 | Confirmado | Confirmado. La guía solo documenta `cron`; `salud.sh` no mira los respaldos |
 | `DO-03` | Media | I | 2 | Pendiente | |
-| `DO-04` | Media | | 1 | Pendiente | |
-| `DO-05` | Baja | | 1 | Pendiente | |
+| `DO-04` | Media | | 1 | Confirmado | Confirmado. El `healthcheck` del compose usa `/api/health`; `/api/health/ready` existe |
+| `DO-05` | Baja | | 1 | Confirmado | Confirmado. Tres tests leen `fly.toml`; el comentario del `Dockerfile` (línea 18) y `needs:` del CD (línea 88) también lo nombran |
 | `DO-06` | Media | | T | Pendiente | |
 | `PR-01` | Alta | I | T | Pendiente | |
 | `PR-02` | Media | | T | Pendiente | |
@@ -277,8 +289,8 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `PR-04` | Media | | T | Pendiente | |
 | `PR-05` | Baja | | T | Pendiente | |
 | `PR-06` | Baja | | — | Pendiente | |
-| `DC-01` | Media | | 1 | Pendiente | |
-| `DC-02` | Media | | 1 | Pendiente | |
+| `DC-01` | Media | | 1 | Confirmado | Confirmado |
+| `DC-02` | Media | | 1 | Confirmado | Confirmado, con líneas corridas: Python en 47, regla entre contextos en 85, "0–6" en 98, deploy automático en 106 y 159 |
 | `DC-03` | Baja | | — | Pendiente | |
 | `DC-04` | Media | | T | Pendiente | |
 | `DC-05` | Baja | | — | Pendiente | |
