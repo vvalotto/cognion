@@ -17,6 +17,7 @@ from tests.integration.inc6._helpers import (
     cerrar_pregunta_actual,
     crear_estudiante,
     headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -57,10 +58,6 @@ def limpiar_tablas_sesion_en_vivo():
 @pytest.fixture
 def context():
     return {}
-
-
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
 
 
 async def _get(sesion_id: str, headers: dict[str, str]):
@@ -156,12 +153,16 @@ def cliente_de_us_6_2_8(context):
 
 @when("el Docente consulta el estado")
 def docente_consulta_estado(context):
-    context["response"] = run_async(_get(context["sesion_id"], _docente()))
+    context["response"] = run_async(
+        _get(context["sesion_id"], run_async(headers_docente_de_sesion(context["sesion_id"])))
+    )
 
 
 @when("se consulta el estado")
 def se_consulta_estado(context):
-    context["response"] = run_async(_get(context["sesion_id"], _docente()))
+    context["response"] = run_async(
+        _get(context["sesion_id"], run_async(headers_docente_de_sesion(context["sesion_id"])))
+    )
 
 
 @when("un Estudiante consulta el estado")
@@ -171,7 +172,9 @@ def estudiante_consulta_estado(context):
 
 @when("consulta el estado")
 def consulta_estado(context):
-    context["response"] = run_async(_get(context["sesion_id"], _docente()))
+    context["response"] = run_async(
+        _get(context["sesion_id"], run_async(headers_docente_de_sesion(context["sesion_id"])))
+    )
 
 
 @then("total_participantes es 5 y cantidad_respuestas es 3")

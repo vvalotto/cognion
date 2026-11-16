@@ -83,7 +83,7 @@ flowchart TB
 | entities/ports | `ActividadQueryPort`, `EvaluacionActivaQueryPort`, `EvaluacionEstudianteQueryPort`, `EstudianteEvaluacionesQueryPort`, `ParticipantesSesionQueryPort`, `SesionesEnVivoQueryPort` | Consultas de solo lectura (CQRS) |
 | use_cases | `crear_actividad_periodo_abierto`, `modificar_periodo_disponibilidad`, `modificar_titulo_actividad`, `cerrar_actividad`, `listar_actividades[_visibles]`, `obtener_actividad` | Actividades de período abierto |
 | use_cases | `iniciar_evaluacion`, `registrar_respuesta`, `suspender_evaluacion`, `reanudar_evaluacion`, `finalizar_evaluacion`, `obtener_revision_evaluacion` | Intento del estudiante |
-| use_cases | `crear_sesion_en_vivo`, `iniciar_sesion_en_vivo`, `unirse_a_sesion_en_vivo`, `mostrar_opciones_en_vivo`, `responder_pregunta_en_vivo`, `cerrar_pregunta_actual`, `avanzar_siguiente_pregunta`, `finalizar_sesion_en_vivo`, `cancelar_sesion_en_vivo`, `obtener_ranking`, `obtener_estado_sesion`, `listar_participantes`, `listar_sesiones_en_vivo` | Sesión en vivo |
+| use_cases | `crear_sesion_en_vivo`, `iniciar_sesion_en_vivo`, `unirse_a_sesion_en_vivo`, `mostrar_opciones_en_vivo`, `responder_pregunta_en_vivo`, `cerrar_pregunta_actual`, `avanzar_siguiente_pregunta`, `finalizar_sesion_en_vivo`, `cancelar_sesion_en_vivo`, `obtener_ranking`, `obtener_estado_sesion`, `autorizar_acceso_sesion_en_vivo`, `autorizar_conexion_canal`, `listar_participantes`, `listar_sesiones_en_vivo` | Sesión en vivo |
 | use_cases | `verificar_vencimientos`, `verificar_autorizacion_comision` | Cierre automático por vencimiento; el docente debe estar asignado |
 | interface_adapters | 10 controllers | HTTP a casos de uso |
 | frameworks | `SQLAlchemyEventStore` | Guarda y lee eventos de la tabla `events` |
@@ -100,8 +100,8 @@ Bajo `/api`.
 | `POST /evaluaciones`, `POST /evaluaciones/{id}/{respuestas,suspender,reanudar,finalizar}` | Estudiante |
 | `GET /evaluaciones/{id}/revision` | Estudiante o docente |
 | `POST /sesiones-en-vivo`, `…/{id}/{iniciar,cancelar,mostrar-opciones,cerrar-pregunta,avanzar,finalizar}`, `GET …/{id}/participantes` | Docente |
-| `POST /sesiones-en-vivo/{id}/{unirse,responder}` | Estudiante |
-| `GET /sesiones-en-vivo`, `GET …/{id}`, `GET …/{id}/ranking` | Estudiante o docente |
+| `POST /sesiones-en-vivo/{id}/{unirse,responder}` | Estudiante; `unirse` exige además pertenecer a la comisión de la sesión (`US-12.1.2`, 403) |
+| `GET /sesiones-en-vivo`, `GET …/{id}`, `GET …/{id}/ranking` | Estudiante o docente; `…/{id}` y `…/{id}/ranking` exigen además pertenecer a la comisión de la sesión (`US-12.1.2`, 403; 404 si no existe) |
 | `WebSocket /sesiones-en-vivo/{id}/canal?token=…` | JWT válido y pertenencia a la comisión de la sesión (`US-12.1.1`): docente asignado a ella, estudiante de ella o administrador; si no, cierre `1008`. Docente y estudiante comparten el canal de lectura |
 
 ## Relaciones con otros BC

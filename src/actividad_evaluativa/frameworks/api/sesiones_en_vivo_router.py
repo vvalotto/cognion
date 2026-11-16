@@ -55,6 +55,7 @@ from src.actividad_evaluativa.frameworks.api.schemas import (
     SesionEnVivoResumenResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
+    autorizar_acceso_sesion,
     get_conduccion_en_vivo_controller,
     get_connection_manager,
     get_current_user,
@@ -354,14 +355,14 @@ async def finalizar_sesion_en_vivo(
 @router.post(
     "/{sesion_id}/unirse",
     response_model=ParticipacionEnVivoResponse,
-    dependencies=[Depends(require_estudiante)],
+    dependencies=[Depends(require_estudiante), Depends(autorizar_acceso_sesion)],
 )
 async def unirse_a_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
 ) -> ParticipacionEnVivoResponse:
-    """Une al Estudiante autenticado a la sesión (idempotente, 200); 404/422 si se rechaza."""
+    """Une al Estudiante de la comisión a la sesión (idempotente, 200); 403/404/422 si se rechaza."""
     try:
         participacion = await controller.unirse(sesion_id, usuario.usuario_id)
     except (SesionNoExiste, EstudianteNoExiste) as exc:
@@ -490,7 +491,11 @@ async def listar_sesiones_en_vivo(
     ]
 
 
-@router.get("/{sesion_id}", response_model=EstadoSesionEnVivoResponse)
+@router.get(
+    "/{sesion_id}",
+    response_model=EstadoSesionEnVivoResponse,
+    dependencies=[Depends(require_estudiante_o_docente), Depends(autorizar_acceso_sesion)],
+)
 async def obtener_estado_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(require_estudiante_o_docente),
@@ -528,7 +533,11 @@ async def listar_participantes_de_sesion(
     ]
 
 
-@router.get("/{sesion_id}/ranking", response_model=list[RankingItemResponse])
+@router.get(
+    "/{sesion_id}/ranking",
+    response_model=list[RankingItemResponse],
+    dependencies=[Depends(require_estudiante_o_docente), Depends(autorizar_acceso_sesion)],
+)
 async def obtener_ranking_de_sesion(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(require_estudiante_o_docente),

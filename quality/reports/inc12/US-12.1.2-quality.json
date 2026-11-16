@@ -1,0 +1,12 @@
+{
+ "us": "US-12.1.2",
+ "mypy": "Success: no issues found in 332 source files",
+ "lint-imports": "4 kept, 0 broken",
+ "ruff src/": "All checks passed",
+ "black/isort": "ok",
+ "designreviewer": "0 CRITICAL",
+ "codeguard": "4 archivos; los 10 errores son vulture/codespell no instalados y timeouts de mypy de 10s (software_limpio#70/#71); sin hallazgos de CC/MI",
+ "pylint": "9.52 sobre los dos casos de uso",
+ "radon": "CC promedio A (3.0); MI A (75.61 y 100.00)",
+ "cobertura_casos_de_uso": "98% (la linea sin cubrir es el else de un rol sin regla de pertenencia, inalcanzable con el enum actual)"
+}
