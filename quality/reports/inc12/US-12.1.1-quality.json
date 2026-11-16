@@ -1,0 +1,9 @@
+{
+ "us": "US-12.1.1",
+ "mypy": "Success: no issues found in 331 source files",
+ "lint-imports": "4 kept, 0 broken",
+ "black/ruff/isort": "ok",
+ "designreviewer": "0 CRITICAL",
+ "codeguard": "4 archivos; los errores son vulture/codespell no instalados y timeouts de mypy/pylint de 10s (software_limpio#70/#71); sin hallazgos nuevos de CC/MI; pylint 8.89 a 9.45; PEP8 E501 preexistentes en imports",
+ "cobertura_casos_de_uso": "96% (la línea sin cubrir es el return False final, inalcanzable con el enum actual)"
+}

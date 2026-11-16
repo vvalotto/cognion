@@ -857,6 +857,8 @@ de selección + confirmación separado — el comando en sí no cambia de forma 
 parámetros), solo el gesto de UI que lo invoca. Coherente con INV-AEV-07 (un solo intento): no
 hace falta un paso de confirmación cuando no hay nada que reconsiderar antes de responder.
 
+**Autorización del canal (`US-12.1.1`, 2026-11-16).** Una conexión al canal `sesion_id` se acepta solo si el usuario pertenece a la comisión de la sesión: el Docente asignado a ella, un Estudiante de ella (aunque todavía no se haya unido) o un Administrador. Cualquier otro caso, incluida una sesión inexistente, se cierra con `1008`.
+
 ## 17. Hot spots — resueltos con Víctor (2026-09-17), única ronda
 
 1. **Sala de espera (`EnEspera`) antes de iniciar — confirmado.** El Docente crea la sesión

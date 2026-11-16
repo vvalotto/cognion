@@ -63,6 +63,7 @@ from src.actividad_evaluativa.frameworks.dependencies import (
     get_sesiones_en_vivo_controller,
     get_sesiones_en_vivo_listado_controller,
     get_sesiones_en_vivo_query_controller,
+    puede_conectar_al_canal,
     require_docente,
     require_estudiante,
     require_estudiante_o_docente,
@@ -422,16 +423,21 @@ async def canal_sesion_en_vivo(
 
     El JWT viaja como query param (`?token=...`) — la API nativa `WebSocket` del navegador no
     permite fijar el header `Authorization` en el handshake (`US-6.1.1`). Se rechaza la
-    conexión con el código `1008` (política violada) si el token falta, es inválido o expiró —
-    sin verificación de rol adicional: Docente y Estudiante comparten el mismo canal de lectura
+    conexión con el código `1008` (política violada) si el token falta, es inválido o expiró, y
+    también si el usuario no pertenece a la comisión de la sesión (`US-12.1.1`): el docente
+    asignado a ella, un estudiante de ella o un administrador. Una sesión inexistente se rechaza
+    igual. Docente y Estudiante comparten el mismo canal de lectura
     (`BC-actividad-evaluativa-modelo.md` §16).
     """
     if token is None:
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
     try:
-        get_jwt_issuer().verificar(token)
+        payload = get_jwt_issuer().verificar(token)
     except (JWTInvalido, JWTExpirado):
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+    if not await puede_conectar_al_canal(sesion_id, payload.usuario_id, payload.rol):
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
 

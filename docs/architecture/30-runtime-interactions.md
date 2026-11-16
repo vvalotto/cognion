@@ -232,7 +232,7 @@ sequenceDiagram
 - Responder valida: pregunta actual, opciones mostradas, pregunta no cerrada, tiempo y una sola respuesta por estudiante (el doble envío concurrente lo resuelve el chequeo optimista).
 - **El ranking se actualiza al responder**, en la misma transacción que el evento; cerrar la pregunta no calcula nada pesado, solo lee lo acumulado (rendimiento con 60 estudiantes).
 - Puntaje: `1000 × FactorTiempo × FactorDificultad × FactorImportancia` (0 si es incorrecta), ranking por suma simple (`puntaje_en_vivo.py`, spike de RF-10).
-- El WebSocket autentica con el JWT en la URL y no chequea rol: docente y estudiante comparten el canal de lectura. Un handshake rechazado llega al navegador como cierre `1006`, no `1008`; el cliente consulta el estado por HTTP y, si recibe `401`, vuelve al login (`#605`).
+- El WebSocket autentica con el JWT en la URL y, desde `US-12.1.1`, comprueba que el usuario pertenezca a la comisión de la sesión (docente asignado, estudiante de la comisión o administrador); docente y estudiante comparten el canal de lectura. Un handshake rechazado llega al navegador como cierre `1006`, no `1008`; el cliente consulta el estado por HTTP y, si recibe `401`, vuelve al login (`#605`).
 
 **Tests:** `tests/features/inc6/` (`US-6.1.2` a `US-6.2.8`: crear, unirse, iniciar, mostrar opciones, responder, cerrar pregunta, avanzar, finalizar y consultar estado) y `tests/integration/inc6/test_canal_tiempo_real.py`.
 

@@ -21,6 +21,7 @@ from src.shared.frameworks.db import SessionLocal
 from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -102,7 +103,7 @@ async def _post(context, contenido, pregunta_id=None, headers=None):
 
 def _responder_con_canal(context, contenido) -> None:
     """Responde con el Docente y el Estudiante conectados al canal, para verificar el broadcast."""
-    docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
+    docente = run_async(headers_docente_de_sesion(context["sesion_id"]))
     tokens = [
         docente["Authorization"].split()[1],
         context["headers"]["Authorization"].split()[1],

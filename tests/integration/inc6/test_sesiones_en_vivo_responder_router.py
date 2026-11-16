@@ -24,6 +24,7 @@ from tests.integration.inc6._helpers import (
     correr,
     crear_estudiante,
     headers_de,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -328,7 +329,8 @@ class TestBroadcastDelConteo:
         _, headers = correr(crear_estudiante(comision_id))
         correr(unirse_a_sesion(sesion_id, headers))
         pregunta_id = correr(pregunta_actual_de(sesion_id))
-        token_docente = headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)["Authorization"].split()[1]
+        docente = correr(headers_docente_de_sesion(sesion_id))
+        token_docente = docente["Authorization"].split()[1]
         token_estudiante = headers["Authorization"].split()[1]
 
         with TestClient(app) as client:
