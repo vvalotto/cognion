@@ -199,6 +199,12 @@ No tocan `src/`. Avanzan en paralelo y se asignan a la iteración donde molestan
 | `PR-03`, `DC-04` | Separar evidencia de documentación viva; una sola fuente por tema | Iteración 4, antes de `BL-019` |
 | `VT-04` | **No se reorganizan los tests.** Índice de qué prueba cada carpeta y ubicación correcta de los nuevos | Iteración 2 |
 
+## Candidatos nuevos
+
+| Candidato | Origen | Qué falta |
+|---|---|---|
+| `UnirseASesionEnVivoUseCase` no comprueba que la comisión del estudiante sea la de la sesión, y `GET /sesiones-en-vivo/{id}` tampoco autoriza por comisión | `US-12.1.1`, 2026-11-16 | Decidir al cerrar la Iteración 1 si se corrige (mismo hueco que `IM-04`, por otra puerta) |
+
 ## Hallazgos de severidad Baja sin iteración
 
 No condicionan la versión estable. Se cierran si una historia pasa por ahí.
@@ -236,7 +242,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | Hallazgo | Severidad | Confianza | Iteración | Estado | Historia / PR / decisión |
 |---|---|---|---|---|---|
 | `CA-01` | Media | | 2 | Pendiente | |
-| `CA-02` | Baja | | 1 | Confirmado | Confirmado. Además `.pre-commit-config.yaml` usa `python3.12`; `CLAUDE.md` dice 3.11 (línea 47) |
+| `CA-02` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `CA-03` | Media | | 2 | Pendiente | |
 | `AC-01` | Alta | | 4 | Pendiente | |
 | `AC-02` | Media | | 4 | Pendiente | |
@@ -252,7 +258,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `IM-01` | Media | | 2 | Pendiente | |
 | `IM-02` | Alta | | 2 | Pendiente | |
 | `IM-03` | Alta | I | 2 | Pendiente | |
-| `IM-04` | Media | | 1 | Confirmado | Ajustado. La ausencia de rol está documentada como decisión en el docstring del endpoint, aunque §16 del modelo no la dice. Cambia comportamiento: falta decidir quién es "participante" (ver Resultado del paso 1) |
+| `IM-04` | Media | | 1 | En curso | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645). Regla A (decisión de Víctor, 2026-11-15) |
 | `IM-05` | Media | | 2 | Pendiente | |
 | `IM-06` | Media | I | 2 | Pendiente | |
 | `IM-07` | Baja | | 4 | Pendiente | |
@@ -262,13 +268,13 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `AQ-04` | Media | I | 1 | Confirmado | Confirmado en código (60 min, sin renovación); falta la prueba en navegador |
 | `VT-01` | Media | | 2 | Pendiente | |
 | `VT-02` | Media | | 2 | Pendiente | |
-| `VT-03` | Media | | 1 | Confirmado | Ajustado. La guarda por sufijo `_test` rompería el CI, cuya base se llama `cognion`: hay que renombrarla o guardar por otro criterio |
+| `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `VT-04` | Media | | T | Pendiente | |
 | `VT-05` | Baja | | — | Pendiente | |
 | `IQ-01` | Alta | | 2 | Pendiente | |
 | `IQ-02` | Media | | T | Pendiente | |
 | `IQ-03` | Media | | T | Pendiente | |
-| `IQ-04` | Baja | | 1 | Confirmado | Confirmado. `npm run build` ya ejecuta `tsc -b` |
+| `IQ-04` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `IQ-05` | Baja | | — | Pendiente | |
 | `IQ-06` | Baja | | — | Pendiente | |
 | `FE-01` | Media | | 4 | Pendiente | |
@@ -281,7 +287,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `DO-02` | Alta | | 1 | Confirmado | Confirmado. La guía solo documenta `cron`; `salud.sh` no mira los respaldos |
 | `DO-03` | Media | I | 2 | Pendiente | |
 | `DO-04` | Media | | 1 | Confirmado | Confirmado. El `healthcheck` del compose usa `/api/health`; `/api/health/ready` existe |
-| `DO-05` | Baja | | 1 | Confirmado | Confirmado. Tres tests leen `fly.toml`; el comentario del `Dockerfile` (línea 18) y `needs:` del CD (línea 88) también lo nombran |
+| `DO-05` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `DO-06` | Media | | T | Pendiente | |
 | `PR-01` | Alta | I | T | Pendiente | |
 | `PR-02` | Media | | T | Pendiente | |

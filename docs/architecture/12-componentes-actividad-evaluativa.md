@@ -102,7 +102,7 @@ Bajo `/api`.
 | `POST /sesiones-en-vivo`, `…/{id}/{iniciar,cancelar,mostrar-opciones,cerrar-pregunta,avanzar,finalizar}`, `GET …/{id}/participantes` | Docente |
 | `POST /sesiones-en-vivo/{id}/{unirse,responder}` | Estudiante |
 | `GET /sesiones-en-vivo`, `GET …/{id}`, `GET …/{id}/ranking` | Estudiante o docente |
-| `WebSocket /sesiones-en-vivo/{id}/canal?token=…` | Cualquier usuario con JWT válido; sin chequeo de rol (docente y estudiante comparten el canal de lectura) |
+| `WebSocket /sesiones-en-vivo/{id}/canal?token=…` | JWT válido y pertenencia a la comisión de la sesión (`US-12.1.1`): docente asignado a ella, estudiante de ella o administrador; si no, cierre `1008`. Docente y estudiante comparten el canal de lectura |
 
 ## Relaciones con otros BC
 | Hacia | Qué | Mecanismo |

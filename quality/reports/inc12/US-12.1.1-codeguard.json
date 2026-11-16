@@ -1,0 +1,914 @@
+{
+  "summary": {
+    "total_files": 4,
+    "checks_executed": 9,
+    "elapsed_seconds": 70.19,
+    "timestamp": "2026-11-16T09:44:40.612126",
+    "total_issues": 42,
+    "errors": 11,
+    "warnings": 9,
+    "infos": 22
+  },
+  "results": [
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (104 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 74
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (105 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 80
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 83
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": 214
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 42.3 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.45/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 65
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (104 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 80
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (105 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 89
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (103 > 100 characters)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": 92
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "error",
+      "message": "pylint execution timed out (>10s)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "error",
+      "message": "mypy execution timed out (>10s)",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "info",
+      "message": "✓ PEP8 compliant",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 100.0 (grade A)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 8.89/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+      "line": null
+    },
+    {
+      "check": "Security",
+      "severity": "info",
+      "message": "✓ No security issues detected",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "PEP8",
+      "severity": "warning",
+      "message": "PEP8: E501 line too long (106 > 100 characters)",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": 1
+    },
+    {
+      "check": "Complexity",
+      "severity": "info",
+      "message": "✓ All functions below complexity threshold (≤10)",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "DeadCode",
+      "severity": "error",
+      "message": "vulture not installed. Run: pip install vulture",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "Maintainability",
+      "severity": "info",
+      "message": "✓ Maintainability index: 79.2 (grade A)",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "Pylint",
+      "severity": "info",
+      "message": "✓ Pylint score: 9.20/10 (>= 8.0)",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "Spelling",
+      "severity": "error",
+      "message": "codespell not installed. Run: pip install codespell",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "Types",
+      "severity": "info",
+      "message": "✓ Type checking completed",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    },
+    {
+      "check": "UnusedImports",
+      "severity": "info",
+      "message": "✓ No unused imports detected",
+      "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+      "line": null
+    }
+  ],
+  "by_severity": {
+    "errors": [
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      }
+    ],
+    "warnings": [
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (104 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 74
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 80
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 83
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 214
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 65
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (104 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 80
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 89
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 92
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (106 > 100 characters)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": 1
+      }
+    ],
+    "infos": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 42.3 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.45/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.89/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 79.2 (grade A)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.20/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      }
+    ]
+  },
+  "by_module": {
+    "api/sesiones_en_vivo_router.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (104 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 74
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 80
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 83
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": 214
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 42.3 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.45/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py",
+        "line": null
+      }
+    ],
+    "controllers/canal_en_vivo_controller.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "info",
+        "message": "✓ PEP8 compliant",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 8.89/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/interface_adapters/controllers/canal_en_vivo_controller.py",
+        "line": null
+      }
+    ],
+    "frameworks/dependencies.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 65
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (104 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 80
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (105 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 89
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (103 > 100 characters)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": 92
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 100.0 (grade A)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "error",
+        "message": "pylint execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "error",
+        "message": "mypy execution timed out (>10s)",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/frameworks/dependencies.py",
+        "line": null
+      }
+    ],
+    "use_cases/autorizar_conexion_canal.py": [
+      {
+        "check": "Security",
+        "severity": "info",
+        "message": "✓ No security issues detected",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "PEP8",
+        "severity": "warning",
+        "message": "PEP8: E501 line too long (106 > 100 characters)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": 1
+      },
+      {
+        "check": "Complexity",
+        "severity": "info",
+        "message": "✓ All functions below complexity threshold (≤10)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "DeadCode",
+        "severity": "error",
+        "message": "vulture not installed. Run: pip install vulture",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Maintainability",
+        "severity": "info",
+        "message": "✓ Maintainability index: 79.2 (grade A)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Pylint",
+        "severity": "info",
+        "message": "✓ Pylint score: 9.20/10 (>= 8.0)",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Spelling",
+        "severity": "error",
+        "message": "codespell not installed. Run: pip install codespell",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "Types",
+        "severity": "info",
+        "message": "✓ Type checking completed",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      },
+      {
+        "check": "UnusedImports",
+        "severity": "info",
+        "message": "✓ No unused imports detected",
+        "file": "src/actividad_evaluativa/use_cases/autorizar_conexion_canal.py",
+        "line": null
+      }
+    ]
+  }
+}

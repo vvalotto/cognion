@@ -31,7 +31,7 @@ Preocupaciones comunes de la aplicación. No incluye el despliegue (`60-deployme
 
 ## 1. Seguridad
 
-**Autenticación.** Identidad emite un JWT (`HS256`, 60 minutos por defecto, **sin refresh**, `ADR-013`). El cliente lo manda en `Authorization: Bearer`. `get_current_user` responde `401` si falta o no es válido. El canal WebSocket lo recibe en `?token=` porque el navegador no permite fijar cabeceras en el handshake.
+**Autenticación.** Identidad emite un JWT (`HS256`, 60 minutos por defecto, **sin refresh**, `ADR-013`). El cliente lo manda en `Authorization: Bearer`. `get_current_user` responde `401` si falta o no es válido. El canal WebSocket lo recibe en `?token=` porque el navegador no permite fijar cabeceras en el handshake, y además exige pertenecer a la comisión de la sesión (`US-12.1.1`).
 
 **Autorización (RBAC).** `require_rol([...])` compone sobre `get_current_user` y responde `403` si el rol no está permitido. Tres roles: administrador, docente y estudiante (`ADR-007`, `ADR-019`). Hay combinaciones listas para usar: `require_administrador`, `require_docente`, `require_estudiante` y `require_docente_o_administrador`. Además de la regla de rol, los casos de uso del docente verifican que esté **asignado a la comisión o a la materia** (`ComisionNoAutorizada`, `MateriaNoAutorizada`).
 
