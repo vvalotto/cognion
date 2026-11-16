@@ -7,7 +7,7 @@ on:
       - "v*.*.*"
 
 jobs:
-  build-and-deploy:
+  publicar-imagen:
     name: Build, publicación y healthcheck
     runs-on: ubuntu-latest
     permissions:
@@ -85,7 +85,7 @@ jobs:
   # imagen se publicó bien. La lógica vive en scripts/ (probados); el workflow únicamente los invoca.
   release:
     name: GitHub Release
-    needs: build-and-deploy
+    needs: publicar-imagen
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:

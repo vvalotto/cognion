@@ -124,7 +124,7 @@ CONDICION_ETIQUETA = "startsWith(github.ref, 'refs/tags/v')"
 
 def _cd() -> dict:
     return yaml.safe_load((RAIZ / ".github" / "workflows" / "cd.yml").read_text())["jobs"][
-        "build-and-deploy"
+        "publicar-imagen"
     ]
 
 

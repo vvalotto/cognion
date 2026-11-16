@@ -32,7 +32,7 @@ Documentos de definición (no se modifican retroactivamente):
 **Congelación funcional (decisión de Víctor, 2026-11-15):** no entra funcionalidad nueva a `develop` hasta tener una versión estable con las mejoras de la revisión de diseño (`docs/revision-diseno-2026-11/`). El **Incremento 12 — Calidad de diseño** se ejecuta antes que el 11 (Mejoras funcionales, #616 a #619, postergado): proceso en `docs/plans/inc12/inc12-proceso.md`, alcance y seguimiento por hallazgo en `docs/plans/inc12/inc12-candidatas.md`. Aprobado y sin iniciar.
 
 **Reglas operativas vigentes:**
-- Los tests de integración y BDD vacían la base a la que apunte `DATABASE_URL`: usar siempre una base descartable inline (`DATABASE_URL=... pytest ...`), nunca la de desarrollo. `tests/unit/` no toca la base.
+- Los tests de integración y BDD vacían la base a la que apunte `DATABASE_URL`: usar siempre una base descartable inline (`DATABASE_URL=... pytest ...`), nunca la de desarrollo. `tests/conftest.py` corta la corrida (exit 4) si el nombre de la base no termina en `_test`. `tests/unit/` no toca la base.
 - Antes de cerrar una baseline: UAT (Capa 1 + Capa 2) y verificación en navegador real; Vitest con `fetch` mockeado no ve CORS, cascada CSS ni `AbortSignal`.
 - Frontend: validar con `tsc -b` (no `--noEmit` solo) y `oxlint`; nunca `prettier --write`.
 - El pre-push (`DesignReviewer`/`CBOAnalyzer`) es el único gate que mide acoplamiento; un controller o use case cerca de CBO=10 puede bloquear recién al pushear (separar por responsabilidad command/query).
@@ -44,7 +44,7 @@ Documentos de definición (no se modifican retroactivamente):
 
 | Capa | Tecnología |
 |------|-----------|
-| Backend | Python 3.11 + FastAPI (async) |
+| Backend | Python 3.12 + FastAPI (async) |
 | ORM | SQLAlchemy async + Alembic |
 | Base de datos | PostgreSQL |
 | Event store | Tabla append-only en PostgreSQL (JSONB) |
