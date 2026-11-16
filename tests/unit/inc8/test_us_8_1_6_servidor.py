@@ -1,6 +1,5 @@
 """El servidor sirve la API bajo `/api` y el frontend compilado en la raíz (US-8.1.6)."""
 
-import tomllib
 from pathlib import Path
 from uuid import uuid4
 
@@ -87,9 +86,3 @@ def test_dockerfile_arranca_el_servidor_y_embebe_la_base_api() -> None:
     assert "src.servidor:servidor" in cmd
     assert "--proxy-headers" in cmd
     assert 'ARG VITE_API_BASE_URL="/api"' in dockerfile
-
-
-def test_fly_toml_chequea_la_salud_bajo_api() -> None:
-    """Con la API montada en `/api`, el healthcheck de Fly debe apuntar ahí."""
-    config = tomllib.loads((_RAIZ / "fly.toml").read_text(encoding="utf-8"))
-    assert config["http_service"]["checks"][0]["path"] == "/api/health"

@@ -97,7 +97,7 @@ class TestImagenYCd:
         flujo = yaml.safe_load(
             (RAIZ / ".github" / "workflows" / "cd.yml").read_text(encoding="utf-8")
         )
-        pasos = flujo["jobs"]["build-and-deploy"]["steps"]
+        pasos = flujo["jobs"]["publicar-imagen"]["steps"]
         nombres = [paso.get("name", "") for paso in pasos]
 
         indice_verificacion = next(i for i, n in enumerate(nombres) if "coincide con VERSION" in n)
@@ -115,6 +115,6 @@ class TestImagenYCd:
         release = flujo["jobs"]["release"]
 
         assert release["if"] == "startsWith(github.ref, 'refs/tags/v')"
-        assert release["needs"] == "build-and-deploy"
+        assert release["needs"] == "publicar-imagen"
         assert release["permissions"] == {"contents": "write"}
-        assert flujo["jobs"]["build-and-deploy"]["permissions"]["contents"] == "read"
+        assert flujo["jobs"]["publicar-imagen"]["permissions"]["contents"] == "read"

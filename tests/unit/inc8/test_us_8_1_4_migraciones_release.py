@@ -1,6 +1,5 @@
 """Las migraciones son un paso de release, no del arranque de la app (US-8.1.4)."""
 
-import tomllib
 from pathlib import Path
 
 _RAIZ = Path(__file__).resolve().parents[3]
@@ -23,20 +22,6 @@ def test_el_cmd_de_la_imagen_no_migra() -> None:
     assert len(lineas_cmd) == 1
     assert "uvicorn" in lineas_cmd[0]
     assert "alembic" not in lineas_cmd[0]
-
-
-def test_fly_toml_declara_el_release_command() -> None:
-    """Fly corre `alembic upgrade head` antes de reemplazar la versión en producción."""
-    config = tomllib.loads((_RAIZ / "fly.toml").read_text(encoding="utf-8"))
-    assert config["deploy"]["release_command"] == "uv run alembic upgrade head"
-
-
-def test_fly_toml_expone_el_servicio_con_healthcheck() -> None:
-    """El servicio HTTP escucha en 8000, fuerza HTTPS y usa `/api/health` (US-8.1.6)."""
-    servicio = tomllib.loads((_RAIZ / "fly.toml").read_text(encoding="utf-8"))["http_service"]
-    assert servicio["internal_port"] == 8000
-    assert servicio["force_https"] is True
-    assert servicio["checks"][0]["path"] == "/api/health"
 
 
 def test_la_app_no_ejecuta_alembic_al_arrancar() -> None:
