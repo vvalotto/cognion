@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -67,6 +68,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudia
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.canal_en_vivo_controller import (
+    CanalEnVivoController,
+)
 from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_controller import (
     ConduccionEnVivoController,
 )
@@ -87,6 +91,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_li
 )
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
+)
+from src.actividad_evaluativa.use_cases.autorizar_conexion_canal import (
+    AutorizarConexionCanalUseCase,
 )
 from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
     AvanzarSiguientePreguntaUseCase,
@@ -149,7 +156,7 @@ from src.actividad_evaluativa.use_cases.verificar_vencimientos import (
 from src.settings import settings
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import get_session
+from src.shared.frameworks.db import SessionLocal, get_session
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.shared.interface_adapters.security.get_current_user import build_get_current_user
 from src.shared.interface_adapters.security.require_rol import require_rol
@@ -305,6 +312,28 @@ def get_canal_tiempo_real() -> CanalTiempoRealPort:
 def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
     """Provee `ComisionConsultaPort` (Actividad Evaluativa → Identidad, `US-6.1.1`)."""
     return ComisionConsultaPortInProcess(session)
+
+
+def armar_canal_en_vivo_controller(session: AsyncSession) -> CanalEnVivoController:
+    """Arma el `CanalEnVivoController` (`US-12.1.1`)."""
+    return CanalEnVivoController(
+        AutorizarConexionCanalUseCase(
+            SQLAlchemyEventStore(session),
+            ComisionConsultaPortInProcess(session),
+            EstudianteConsultaPortInProcess(session),
+        )
+    )
+
+
+async def puede_conectar_al_canal(sesion_id: UUID, usuario_id: UUID, rol: TipoPerfil) -> bool:
+    """Decide si el usuario puede abrir el canal, con una sesión de base que dura solo la consulta.
+
+    No es una dependencia de FastAPI a propósito: una dependencia con `yield` viviría tanto como
+    la conexión WebSocket y cada alumno conectado retendría una conexión de base toda la clase.
+    """
+    async with SessionLocal() as session:
+        controller = armar_canal_en_vivo_controller(session)
+        return await controller.puede_conectar(sesion_id, usuario_id, rol)
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:
