@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 abierta (2026-11-15): paso 1 hecho, a la espera de que Víctor apruebe la lista.** No hay Milestone ni Issues creados: se crean al aprobar el resultado del paso 1.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647 y #645; pendientes #646, #648 y #649. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -28,6 +28,8 @@ El orden sale del [capítulo 13](../../revision-diseno-2026-11/13-plan-priorizad
 Los identificadores `US-12.M.K` de abajo son tentativos. La agrupación busca pocas historias por iteración, juntando lo que se prueba junto.
 
 ## Iteración 1 — Cierres rápidos y operación
+
+Issues: [#645](https://github.com/vvalotto/cognion/issues/645) `IM-04`, [#646](https://github.com/vvalotto/cognion/issues/646) `DO-02`/`DO-01`/`DO-04`, [#647](https://github.com/vvalotto/cognion/issues/647) `CA-02`/`IQ-04`/`DO-05`/`VT-03`, [#648](https://github.com/vvalotto/cognion/issues/648) `DC-01`/`DC-02`, [#649](https://github.com/vvalotto/cognion/issues/649) `AQ-04`.
 
 Sin ADR. Cada punto es de horas.
 
@@ -258,14 +260,14 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `IM-01` | Media | | 2 | Pendiente | |
 | `IM-02` | Alta | | 2 | Pendiente | |
 | `IM-03` | Alta | I | 2 | Pendiente | |
-| `IM-04` | Media | | 1 | En curso | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645). Regla A (decisión de Víctor, 2026-11-15) |
+| `IM-04` | Media | | 1 | Cerrado | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645), PR [#652](https://github.com/vvalotto/cognion/pull/652). Regla A (decisión de Víctor, 2026-11-15). Sin el ticket de un solo uso para el token |
 | `IM-05` | Media | | 2 | Pendiente | |
 | `IM-06` | Media | I | 2 | Pendiente | |
 | `IM-07` | Baja | | 4 | Pendiente | |
 | `AQ-01` | Alta | I | 3 | Pendiente | |
 | `AQ-02` | Media | | T | Pendiente | |
 | `AQ-03` | Media | | 4 | Pendiente | |
-| `AQ-04` | Media | I | 1 | Confirmado | Confirmado en código (60 min, sin renovación); falta la prueba en navegador |
+| `AQ-04` | Media | I | 1 | Confirmado | Issue [#649](https://github.com/vvalotto/cognion/issues/649). Confirmado en código (60 min, sin renovación); falta la prueba en navegador |
 | `VT-01` | Media | | 2 | Pendiente | |
 | `VT-02` | Media | | 2 | Pendiente | |
 | `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
@@ -283,10 +285,10 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `FE-04` | Media | | 4 | Pendiente | |
 | `FE-05` | Baja | | — | Pendiente | |
 | `FE-06` | Baja | I | — | Pendiente | |
-| `DO-01` | Media | | 1 | Confirmado | Confirmado: sin `USER`, `pip install uv` sin versión, `--forwarded-allow-ips "*"`, etiquetas móviles |
-| `DO-02` | Alta | | 1 | Confirmado | Confirmado. La guía solo documenta `cron`; `salud.sh` no mira los respaldos |
+| `DO-01` | Media | | 1 | Confirmado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Confirmado: sin `USER`, `pip install uv` sin versión, `--forwarded-allow-ips "*"`, etiquetas móviles |
+| `DO-02` | Alta | | 1 | Confirmado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Confirmado. La guía solo documenta `cron`; `salud.sh` no mira los respaldos |
 | `DO-03` | Media | I | 2 | Pendiente | |
-| `DO-04` | Media | | 1 | Confirmado | Confirmado. El `healthcheck` del compose usa `/api/health`; `/api/health/ready` existe |
+| `DO-04` | Media | | 1 | Confirmado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Confirmado. El `healthcheck` del compose usa `/api/health`; `/api/health/ready` existe |
 | `DO-05` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `DO-06` | Media | | T | Pendiente | |
 | `PR-01` | Alta | I | T | Pendiente | |
@@ -295,8 +297,8 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `PR-04` | Media | | T | Pendiente | |
 | `PR-05` | Baja | | T | Pendiente | |
 | `PR-06` | Baja | | — | Pendiente | |
-| `DC-01` | Media | | 1 | Confirmado | Confirmado |
-| `DC-02` | Media | | 1 | Confirmado | Confirmado, con líneas corridas: Python en 47, regla entre contextos en 85, "0–6" en 98, deploy automático en 106 y 159 |
+| `DC-01` | Media | | 1 | Confirmado | Issue [#648](https://github.com/vvalotto/cognion/issues/648). Confirmado |
+| `DC-02` | Media | | 1 | Confirmado | Issue [#648](https://github.com/vvalotto/cognion/issues/648). Confirmado, con líneas corridas: Python en 47, regla entre contextos en 85, "0–6" en 98, deploy automático en 106 y 159 |
 | `DC-03` | Baja | | — | Pendiente | |
 | `DC-04` | Media | | T | Pendiente | |
 | `DC-05` | Baja | | — | Pendiente | |
