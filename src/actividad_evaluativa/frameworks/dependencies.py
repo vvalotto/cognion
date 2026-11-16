@@ -11,9 +11,10 @@ from datetime import timedelta
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.actividad_evaluativa.entities.errors import ComisionNoAutorizada, SesionNoExiste
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
 from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
@@ -92,6 +93,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_li
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
 )
+from src.actividad_evaluativa.use_cases.autorizar_acceso_sesion_en_vivo import (
+    AutorizarAccesoSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.autorizar_conexion_canal import (
     AutorizarConexionCanalUseCase,
 )
@@ -154,6 +158,7 @@ from src.actividad_evaluativa.use_cases.verificar_vencimientos import (
     VerificarVencimientosUseCase,
 )
 from src.settings import settings
+from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal, get_session
@@ -314,14 +319,19 @@ def get_comision_consulta_port(session: SessionDep) -> ComisionConsultaPort:
     return ComisionConsultaPortInProcess(session)
 
 
+def armar_autorizar_acceso_sesion(session: AsyncSession) -> AutorizarAccesoSesionEnVivoUseCase:
+    """Arma el caso de uso con la regla de pertenencia a la comisión de la sesión (`US-12.1.2`)."""
+    return AutorizarAccesoSesionEnVivoUseCase(
+        SQLAlchemyEventStore(session),
+        ComisionConsultaPortInProcess(session),
+        EstudianteConsultaPortInProcess(session),
+    )
+
+
 def armar_canal_en_vivo_controller(session: AsyncSession) -> CanalEnVivoController:
     """Arma el `CanalEnVivoController` (`US-12.1.1`)."""
     return CanalEnVivoController(
-        AutorizarConexionCanalUseCase(
-            SQLAlchemyEventStore(session),
-            ComisionConsultaPortInProcess(session),
-            EstudianteConsultaPortInProcess(session),
-        )
+        AutorizarConexionCanalUseCase(armar_autorizar_acceso_sesion(session))
     )
 
 
@@ -334,6 +344,26 @@ async def puede_conectar_al_canal(sesion_id: UUID, usuario_id: UUID, rol: TipoPe
     async with SessionLocal() as session:
         controller = armar_canal_en_vivo_controller(session)
         return await controller.puede_conectar(sesion_id, usuario_id, rol)
+
+
+async def autorizar_acceso_sesion(
+    sesion_id: UUID,
+    session: SessionDep,
+    usuario: JWTPayload = Depends(get_current_user),
+) -> None:
+    """Dependency HTTP: exige que el usuario pertenezca a la comisión de la sesión (`US-12.1.2`).
+
+    404 si la sesión no existe y 403 si el usuario no pertenece a su comisión. Va después de la
+    dependency de rol, que decide quién puede llamar al endpoint.
+    """
+    try:
+        await armar_autorizar_acceso_sesion(session).execute(
+            sesion_id, usuario.usuario_id, usuario.rol
+        )
+    except SesionNoExiste as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except ComisionNoAutorizada as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
 
 
 def get_sesiones_en_vivo_controller(session: SessionDep) -> SesionesEnVivoController:

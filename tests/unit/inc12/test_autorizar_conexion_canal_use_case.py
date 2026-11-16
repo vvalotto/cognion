@@ -4,6 +4,9 @@ from uuid import uuid4
 
 import pytest
 
+from src.actividad_evaluativa.use_cases.autorizar_acceso_sesion_en_vivo import (
+    AutorizarAccesoSesionEnVivoUseCase,
+)
 from src.actividad_evaluativa.use_cases.autorizar_conexion_canal import (
     AutorizarConexionCanalUseCase,
 )
@@ -35,7 +38,9 @@ async def _escenario():
     estudiante_c1, estudiante_c2 = uuid4(), uuid4()
     estudiantes.comisiones_por_estudiante.update({estudiante_c1: c1, estudiante_c2: c2})
 
-    use_case = AutorizarConexionCanalUseCase(event_store, comision_consulta, estudiantes)
+    use_case = AutorizarConexionCanalUseCase(
+        AutorizarAccesoSesionEnVivoUseCase(event_store, comision_consulta, estudiantes)
+    )
     return use_case, sesion.id, docente_c1, docente_c2, estudiante_c1, estudiante_c2
 
 

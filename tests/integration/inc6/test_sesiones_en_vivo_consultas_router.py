@@ -62,7 +62,9 @@ class TestEstadoAPIIntegration:
     async def test_sesion_en_espera_sin_pregunta_actual(self):
         sesion_id, _ = await preparar_sesion(opcion_multiple=True)
 
-        response = await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())
+        response = await _get(
+            f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id)
+        )
 
         assert response.status_code == 200
         cuerpo = response.json()
@@ -137,7 +139,9 @@ class TestEstadoAPIIntegration:
         for _, headers in unidos[:3]:
             await _responder(sesion_id, headers, pregunta_id, 1)
 
-        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+        cuerpo = (
+            await _get(f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id))
+        ).json()
 
         assert cuerpo["total_participantes"] == 4
         assert cuerpo["cantidad_respuestas"] == 3
@@ -145,7 +149,9 @@ class TestEstadoAPIIntegration:
     async def test_sin_pregunta_actual_cantidad_respuestas_es_cero(self):
         sesion_id, _ = await preparar_sesion(opcion_multiple=True)
 
-        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+        cuerpo = (
+            await _get(f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id))
+        ).json()
 
         assert cuerpo["cantidad_respuestas"] == 0
         assert cuerpo["resultado_pregunta"] is None
@@ -160,7 +166,9 @@ class TestEstadoAPIIntegration:
         await _responder(sesion_id, headers, await pregunta_actual_de(sesion_id), 1)
         await cerrar_pregunta_actual(sesion_id)
 
-        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+        cuerpo = (
+            await _get(f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id))
+        ).json()
 
         resultado = cuerpo["resultado_pregunta"]
         assert resultado is not None
@@ -173,7 +181,9 @@ class TestEstadoAPIIntegration:
         await iniciar_sesion(sesion_id)
         await mostrar_opciones(sesion_id)
 
-        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+        cuerpo = (
+            await _get(f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id))
+        ).json()
 
         assert cuerpo["resultado_pregunta"] is None
 
@@ -193,7 +203,9 @@ class TestEstadoAPIIntegration:
     async def test_estado_anterior_sigue_funcionando(self):
         sesion_id, _ = await preparar_sesion(opcion_multiple=True)
 
-        cuerpo = (await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())).json()
+        cuerpo = (
+            await _get(f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id))
+        ).json()
 
         assert cuerpo["estado"] == "EnEspera"
         assert cuerpo["pregunta_actual"] is None
@@ -205,7 +217,7 @@ class TestEstadoAPIIntegration:
         await iniciar_sesion(sesion_id)
         antes = await _contar_eventos(session, sesion_id)
 
-        await _get(f"/sesiones-en-vivo/{sesion_id}", _docente())
+        await _get(f"/sesiones-en-vivo/{sesion_id}", await headers_docente_de_sesion(sesion_id))
 
         assert await _contar_eventos(session, sesion_id) == antes
 
@@ -238,7 +250,8 @@ class TestParticipantesAPIIntegration:
             ids.append(estudiante_id)
 
         response = await _get(
-            f"/sesiones-en-vivo/{sesion_id}/participantes", await headers_docente_de_sesion(sesion_id)
+            f"/sesiones-en-vivo/{sesion_id}/participantes",
+            await headers_docente_de_sesion(sesion_id),
         )
 
         assert response.status_code == 200
@@ -248,7 +261,8 @@ class TestParticipantesAPIIntegration:
         sesion_id, _ = await preparar_sesion()
 
         response = await _get(
-            f"/sesiones-en-vivo/{sesion_id}/participantes", await headers_docente_de_sesion(sesion_id)
+            f"/sesiones-en-vivo/{sesion_id}/participantes",
+            await headers_docente_de_sesion(sesion_id),
         )
 
         assert response.json() == []
@@ -259,7 +273,8 @@ class TestParticipantesAPIIntegration:
         await unirse_a_sesion(sesion_id, headers)
 
         response = await _get(
-            f"/sesiones-en-vivo/{sesion_id}/participantes", await headers_docente_de_sesion(sesion_id)
+            f"/sesiones-en-vivo/{sesion_id}/participantes",
+            await headers_docente_de_sesion(sesion_id),
         )
 
         assert response.json()[0]["nombre"] == "Estudiante"
@@ -291,7 +306,9 @@ class TestRankingAPIIntegration:
     async def test_docente_lo_ve_en_cualquier_momento(self):
         sesion_id, estudiante_id, _, puntaje = await self._sesion_con_puntaje()
 
-        response = await _get(f"/sesiones-en-vivo/{sesion_id}/ranking", _docente())
+        response = await _get(
+            f"/sesiones-en-vivo/{sesion_id}/ranking", await headers_docente_de_sesion(sesion_id)
+        )
 
         assert response.status_code == 200
         fila = response.json()[0]

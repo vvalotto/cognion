@@ -22,6 +22,7 @@ from tests.integration.inc6._helpers import (
     crear_estudiantes,
     headers_de,
     headers_docente_de_comision,
+    headers_docente_de_sesion,
     iniciar_sesion,
     mostrar_opciones,
     pregunta_actual_de,
@@ -32,10 +33,6 @@ from tests.integration.inc6._helpers import (
 
 CORRECTA = {"opcion_indice": 1}
 INCORRECTA = {"opcion_indice": 0}
-
-
-def _docente() -> dict[str, str]:
-    return headers_de(uuid.uuid4(), TipoPerfil.DOCENTE)
 
 
 def _token(headers: dict[str, str]) -> str:
@@ -184,7 +181,10 @@ class TestRespuestasSimultaneas:
                     for posicion, (_, headers) in enumerate(estudiantes)
                 ]
             )
-            ranking = await client.get(f"/sesiones-en-vivo/{sesion_id}/ranking", headers=_docente())
+            ranking = await client.get(
+                f"/sesiones-en-vivo/{sesion_id}/ranking",
+                headers=await headers_docente_de_sesion(sesion_id),
+            )
 
         assert [r.status_code for r in respuestas] == [200] * 60
         resultado = await session.execute(
@@ -262,7 +262,10 @@ class TestRespuestaTardia:
                 json={"pregunta_id": pregunta_id, "contenido": CORRECTA},
                 headers=headers,
             )
-            ranking = await client.get(f"/sesiones-en-vivo/{sesion_id}/ranking", headers=_docente())
+            ranking = await client.get(
+                f"/sesiones-en-vivo/{sesion_id}/ranking",
+                headers=await headers_docente_de_sesion(sesion_id),
+            )
 
         assert respuesta.status_code == 422
         assert "fuera del tiempo límite" in respuesta.json()["detail"]

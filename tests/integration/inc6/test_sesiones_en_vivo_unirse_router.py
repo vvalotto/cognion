@@ -120,7 +120,9 @@ class TestUnirseAPIIntegration:
                 headers=headers_de(uuid.uuid4(), TipoPerfil.ESTUDIANTE),
             )
 
-        assert response.status_code == 404
+        # US-12.1.2: sin comisión en Identidad no pertenece a la de la sesión, así que ahora
+        # lo frena la autorización por comisión (403) antes de buscarlo como participante.
+        assert response.status_code == 403
 
     async def test_rechazo_por_rol_docente(self):
         sesion_id, _ = await preparar_sesion()
