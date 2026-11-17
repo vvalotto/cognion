@@ -20,15 +20,6 @@ class TestDockerfile:
     def test_uv_tiene_version_fija(self) -> None:
         assert re.search(r"pip install .*uv==\d+\.\d+\.\d+", DOCKERFILE)
 
-    def test_la_version_de_uv_es_la_del_proyecto(self) -> None:
-        import subprocess
-
-        fijada = re.search(r"uv==(\d+\.\d+\.\d+)", DOCKERFILE).group(1)
-        real = subprocess.run(["uv", "--version"], capture_output=True, text=True, check=False)
-        if real.returncode != 0:
-            pytest.skip("uv no está instalado")
-        assert fijada == real.stdout.split()[1]
-
     @pytest.mark.parametrize("linea", re.findall(r"^FROM (\S+)", DOCKERFILE, re.MULTILINE))
     def test_las_imagenes_base_fijan_la_version_de_parche(self, linea: str) -> None:
         assert re.search(r":\d+\.\d+\.\d+", linea), linea

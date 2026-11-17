@@ -13,7 +13,8 @@ RUN npm run build
 FROM python:3.12.16-slim
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
-# Versión fija de uv (la misma que genera `uv.lock`): una imagen reconstruida no cambia de herramienta sola (DO-01)
+# Versión fija de uv (la que se usó para verificar la imagen): una imagen reconstruida no cambia de herramienta sola (DO-01).
+# El CI instala el uv más reciente; subir esta versión es un cambio deliberado, no automático.
 RUN pip install --no-cache-dir uv==0.9.18 && uv sync --frozen --no-dev
 COPY src/ ./src/
 # Migraciones: se aplican como paso de release (`cognion.sh desplegar`), nunca al arrancar la app (US-8.1.4)
