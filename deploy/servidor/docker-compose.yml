@@ -13,7 +13,7 @@ x-logging: &logging
 
 services:
   db:
-    image: postgres:16
+    image: postgres:16.16
     restart: unless-stopped
     mem_limit: ${COGNION_MEM_DB:-1g}
     environment:
@@ -40,6 +40,8 @@ services:
     restart: unless-stopped
     mem_limit: ${COGNION_MEM_APP:-1g}
     env_file: .env
+    environment:
+      FORWARDED_ALLOW_IPS: ${COGNION_SUBNET:-172.29.77.0/24}
     depends_on:
       db:
         condition: service_healthy
@@ -48,7 +50,7 @@ services:
         - CMD
         - python
         - -c
-        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health/ready', timeout=3)"
       interval: 15s
       timeout: 5s
       retries: 5
@@ -56,7 +58,7 @@ services:
     logging: *logging
 
   caddy:
-    image: caddy:2
+    image: caddy:2.11.9
     restart: unless-stopped
     mem_limit: 64m
     environment:
@@ -72,6 +74,14 @@ services:
       app:
         condition: service_healthy
     logging: *logging
+
+# Red interna con rango fijo: la aplicación solo confía en las cabeceras `X-Forwarded-*` que vienen de ella (DO-01).
+# Si el rango choca con otra red del servidor, cambiá COGNION_SUBNET en el .env.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${COGNION_SUBNET:-172.29.77.0/24}
 
 volumes:
   db-data:

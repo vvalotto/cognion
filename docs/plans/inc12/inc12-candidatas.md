@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647 y #645; pendientes #654 (`US-12.1.2`), #646, #648 y #649. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`) y #646; pendientes #648 y #649. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -285,10 +285,10 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `FE-04` | Media | | 4 | Pendiente | |
 | `FE-05` | Baja | | — | Pendiente | |
 | `FE-06` | Baja | I | — | Pendiente | |
-| `DO-01` | Media | | 1 | Confirmado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Confirmado: sin `USER`, `pip install uv` sin versión, `--forwarded-allow-ips "*"`, etiquetas móviles |
-| `DO-02` | Alta | | 1 | Confirmado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Confirmado. La guía solo documenta `cron`; `salud.sh` no mira los respaldos |
+| `DO-01` | Media | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Imagen con usuario `cognion` (UID 10001), `uv==0.9.18`, bases con versión de parche, `FORWARDED_ALLOW_IPS` acotado a la red interna (también en `deploy/gcp`). **Sin ensayar con Docker real** (Issue #624) |
+| `DO-02` | Alta | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). `iniciar` y `desplegar` programan el cron; `estado` informa la antigüedad del último respaldo y avisa; la copia externa es un paso verificado de la guía (sección 7) |
 | `DO-03` | Media | I | 2 | Pendiente | |
-| `DO-04` | Media | | 1 | Confirmado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Confirmado. El `healthcheck` del compose usa `/api/health`; `/api/health/ready` existe |
+| `DO-04` | Media | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). `healthcheck` a `/api/health/ready`. Registros: 30 MB por servicio, ~151 B por línea; con los chequeos de salud cada 15 s alcanzan para ~4 a 5 semanas (estimado) |
 | `DO-05` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `DO-06` | Media | | T | Pendiente | |
 | `PR-01` | Alta | I | T | Pendiente | |
