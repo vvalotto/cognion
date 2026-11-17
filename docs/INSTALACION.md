@@ -90,11 +90,17 @@ datos, hay que restaurar el respaldo hecho justo antes (sección 7).
 
 - `./cognion.sh respaldar` (o `./respaldar.sh`) guarda un `pg_dump` verificado, con su `sha256`, en `./respaldos/` y conserva los últimos 30
   (`COGNION_RESPALDOS_N`). Carpeta distinta: `COGNION_RESPALDOS`.
-- **Respaldo diario con `cron`** (editá la ruta):
-  ```
-  0 3 * * *  cd /opt/cognion/deploy/servidor && ./respaldar.sh >> respaldos/respaldar.log 2>&1
-  ```
+- **El respaldo diario queda programado solo.** `./cognion.sh iniciar` y `./cognion.sh desplegar` dejan una línea en el `cron` del usuario que lo
+  ejecuta (a las 3:00 de cada día; otro horario: `COGNION_RESPALDO_HORARIO="15 2 * * *"`). Es idempotente: volver a correrlos no la duplica. Para
+  programarlo a mano: `./cognion.sh programar-respaldo`. El resultado de cada corrida queda en `respaldos/respaldar.log`. Si el servidor no tiene
+  `crontab`, el comando avisa y hay que programar `./respaldar.sh` con el planificador que haya.
+- **`./cognion.sh estado` vigila los respaldos:** informa cuándo se hizo el último y avisa si tiene más de 36 horas (`COGNION_RESPALDO_MAX_HORAS`),
+  si no hay ninguno o si el respaldo diario no está programado. Miralo después de un corte de luz o de un cambio de servidor.
 - **Copiá `respaldos/` fuera del servidor** (otro equipo, otro disco): si el disco se rompe, se pierden la base y también las copias que estén en él.
+  La copia no se hace sola, así que verificala una vez y repetí la verificación cada mes:
+  1. Copiá: `rsync -av usuario@servidor:/opt/cognion/deploy/servidor/respaldos/ ~/CognionRespaldos/` (o `scp`, o el disco externo que uses).
+  2. Comprobá la copia: `cd ~/CognionRespaldos && sha256sum -c cognion-<fecha>.dump.sha256` (en macOS: `shasum -a 256 -c …`). Tiene que decir `OK`.
+  3. Ensayá restaurar esa copia (siguiente punto). Un respaldo que nunca se restauró no está comprobado.
 - **Ensayo de restauración** (no toca la base real; recomendado una vez por mes): `./cognion.sh restaurar respaldos/cognion-<fecha>.dump`.
 - **Restaurar de verdad:** `./cognion.sh restaurar respaldos/cognion-<fecha>.dump --reemplazar` (pide escribir `RESTAURAR`; detiene la aplicación,
   restaura en una sola transacción y la vuelve a levantar; se pierde lo cargado después de ese respaldo).
@@ -111,7 +117,8 @@ nombre `.local` en el camino B) antes de generar el link.
   `respaldar.sh` y `restaurar.sh` con un `docker` simulado; el arranque real, el certificado HTTPS, el respaldo y la restauración contra PostgreSQL
   real y la actualización con `desplegar` quedan por probar (Issue #624). Si ensayás este camino y algo falla, avisá: se corrige como `1.0.x`.
 - **Importar preguntas desde PDF (`RF-07`)** y **los KPIs históricos (`RF-18`)** no están en la 1.0. La importación se planifica como importar desde JSON.
-- **No hay respaldo automático a la nube** ni un runbook operativo completo; el respaldo del camino A es local al servidor.
+- **No hay respaldo automático a la nube** ni un runbook operativo completo; el respaldo del camino A es local al servidor y la copia externa es un paso manual (sección 7).
+- **Los registros ocupan hasta 30 MB por servicio** (3 archivos de 10 MB, rotados). Con el uso previsto (una comisión de 60 alumnos) los de la aplicación alcanzan para unas 4 a 5 semanas; antes de ese plazo se pisan los más viejos. Si necesitás conservar más, copiá los de `docker compose logs` antes.
 - **No hay despliegue automático:** el CD publica la imagen, pero el despliegue en el servidor lo ejecutás vos (`./cognion.sh desplegar`).
 - **Solo x86_64** y una sola instancia de la aplicación (sin alta disponibilidad).
 - **UAT de la 1.0:** se verificó en una instalación local (camino B), con un navegador de escritorio y un viewport de celular emulado. No se probó en un

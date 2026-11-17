@@ -47,6 +47,9 @@ services:
     restart: unless-stopped
     mem_limit: 300m
     env_file: .env
+    environment:
+      # La imagen ya no confía en cualquier origen (DO-01): solo en el proxy de esta red interna
+      FORWARDED_ALLOW_IPS: 172.29.78.0/24
     depends_on:
       db:
         condition: service_healthy
@@ -79,6 +82,12 @@ services:
       app:
         condition: service_healthy
     logging: *logging
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.29.78.0/24
 
 volumes:
   db-data:

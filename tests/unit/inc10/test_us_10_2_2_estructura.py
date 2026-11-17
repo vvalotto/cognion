@@ -225,7 +225,7 @@ class TestGuia:
     def test_cada_subcomando_de_cognion_sh_que_menciona_existe(self) -> None:
         guia = GUIA.read_text(encoding="utf-8")
         script = (SERVIDOR / "cognion.sh").read_text(encoding="utf-8")
-        mencionados = set(re.findall(r"\./cognion\.sh ([a-z]+)", guia))
+        mencionados = set(re.findall(r"\./cognion\.sh ([a-z][a-z-]*)", guia))
 
         assert {
             "iniciar",

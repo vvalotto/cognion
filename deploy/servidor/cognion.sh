@@ -14,6 +14,7 @@
 #                              la reemplaza y espera la salud; si no responde vuelve sola a la anterior (US-8.6.4)
 #   cognion.sh rollback        vuelve a la versión anterior (solo de imagen: las migraciones no se deshacen)
 #   cognion.sh respaldar       copia verificada de la base (pg_dump) en ./respaldos, con rotación (ver respaldar.sh)
+#   cognion.sh programar-respaldo  deja el respaldo diario en el cron del usuario (idempotente; `iniciar` y `desplegar` lo hacen solos)
 #   cognion.sh restaurar <archivo> [--reemplazar]  ensayo de restauración, o reemplazo de la base (ver restaurar.sh)
 #   cognion.sh logs [servicio] sigue el log
 #   cognion.sh detener         baja los servicios (los datos quedan en el volumen)
@@ -48,6 +49,36 @@ escribir_env() {
   printf '%s=%s\n' "$1" "$2" >> "$tmp"
   mv "$tmp" .env
 }
+# Respaldo programado (DO-02). Una sola línea en el cron del usuario, marcada para poder reemplazarla sin duplicarla.
+MARCA_CRON="# cognion-respaldo"
+carpeta_respaldos() { echo "${COGNION_RESPALDOS:-./respaldos}"; }
+respaldo_programado() { command -v crontab >/dev/null 2>&1 && crontab -l 2>/dev/null | grep -q -F "$MARCA_CRON"; }
+programar_respaldo() {
+  command -v crontab >/dev/null 2>&1 || { echo "AVISO: no hay 'crontab' en este servidor; programá ./respaldar.sh con tu planificador." >&2; return 1; }
+  local destino linea resto
+  destino="$(carpeta_respaldos)"; (umask 077; mkdir -p "$destino")
+  linea="${COGNION_RESPALDO_HORARIO:-0 3 * * *} cd $(pwd) && ${COGNION_RESPALDOS:+COGNION_RESPALDOS=$COGNION_RESPALDOS }./respaldar.sh >> ${destino}/respaldar.log 2>&1 ${MARCA_CRON}"
+  resto="$(crontab -l 2>/dev/null | grep -v -F "$MARCA_CRON" || true)"
+  { [ -n "$resto" ] && printf '%s\n' "$resto"; printf '%s\n' "$linea"; } | crontab - || return 1
+  echo "Respaldo programado: ${COGNION_RESPALDO_HORARIO:-0 3 * * *} (cron del usuario $(id -un))."
+}
+# Edad del último respaldo y si el cron está puesto: la copia que nadie mira no sirve (DO-02).
+mostrar_respaldos() {
+  local destino ultimo ahora hechos horas maximo="${COGNION_RESPALDO_MAX_HORAS:-36}"
+  destino="$(carpeta_respaldos)"
+  ultimo="$(ls -1 "$destino"/cognion-*.dump 2>/dev/null | sort | tail -n 1 || true)"
+  if [ -z "$ultimo" ]; then
+    echo "AVISO: no hay respaldos en ${destino}. Ejecutá: ./cognion.sh respaldar"
+  else
+    ahora="$(date +%s)"; hechos="$(stat -c %Y "$ultimo" 2>/dev/null || stat -f %m "$ultimo")"
+    horas=$(( (ahora - hechos) / 3600 ))
+    echo "Último respaldo:  $(basename "$ultimo") (hace ${horas} h)"
+    if [ "$horas" -gt "$maximo" ]; then
+      echo "AVISO: el último respaldo tiene más de ${maximo} h. Revisá ${destino}/respaldar.log y el cron (crontab -l)."
+    fi
+  fi
+  if respaldo_programado; then echo "Respaldo diario:  programado en el cron"; else echo "AVISO: el respaldo diario no está programado. Ejecutá: ./cognion.sh programar-respaldo"; fi
+}
 # Levanta la aplicación con la imagen que dice .env y espera a que su healthcheck (/api/health) responda.
 levantar_app() { compose up -d --wait --wait-timeout "${COGNION_ESPERA_SALUD:-90}" app; }
 
@@ -58,6 +89,7 @@ case "${1:-}" in
     compose up -d --wait app
     compose up -d caddy
     echo "Servicios arriba. Probá: $(url_base)/api/health"
+    programar_respaldo || true
     ;;
   migrar)
     compose up -d --wait db
@@ -117,6 +149,7 @@ print('Enviado a', os.environ['DESTINO'])
     echo "Versión actual:   $(leer_env COGNION_IMAGE)"
     echo "Versión anterior: $(leer_env COGNION_IMAGE_ANTERIOR)"
     mostrar_salud "$(url_base)"
+    mostrar_respaldos
     ;;
   desplegar)
     imagen="${2:-}"
@@ -145,6 +178,7 @@ print('Enviado a', os.environ['DESTINO'])
     escribir_env COGNION_IMAGE "$imagen"
     if levantar_app; then
       echo "Desplegado: $imagen. Versión anterior guardada para rollback: $actual"
+      programar_respaldo || true
       exit 0
     fi
 
@@ -172,6 +206,9 @@ print('Enviado a', os.environ['DESTINO'])
   respaldar)
     exec ./respaldar.sh "${@:2}"
     ;;
+  programar-respaldo)
+    programar_respaldo || abortar "No se pudo programar el respaldo." "Programá ./respaldar.sh con el planificador del servidor."
+    ;;
   restaurar)
     exec ./restaurar.sh "${@:2}"
     ;;
@@ -182,7 +219,7 @@ print('Enviado a', os.environ['DESTINO'])
     compose down
     ;;
   *)
-    sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
     exit 1
     ;;
 esac
