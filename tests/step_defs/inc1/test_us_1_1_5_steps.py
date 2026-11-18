@@ -93,7 +93,7 @@ def sin_header_authorization(context):
     context["token"] = None
 
 
-@given("un JWT cuyo exp ya pasó (más de 60 minutos desde la emisión, ADR-013)")
+@given("un JWT cuyo exp ya pasó (vencido desde la emisión, ADR-013)")
 def jwt_expirado(context):
     context["token"] = _token_expirado("administrador")
 

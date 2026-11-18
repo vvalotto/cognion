@@ -1,0 +1,10 @@
+{
+ "us": "US-12.1.3",
+ "mypy": "Success: no issues found in 332 source files",
+ "lint-imports": "4 kept, 0 broken",
+ "ruff src/": "All checks passed",
+ "black/isort": "ok",
+ "designreviewer": "0 CRITICAL",
+ "codeguard": "no aplica: el único cambio en src/ es un valor por defecto de una línea (settings.py) y un docstring",
+ "tests": "inc1: 300 pasan (unit, step_defs, integration)"
+}

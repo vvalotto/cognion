@@ -4,7 +4,7 @@ from uuid import uuid4
 import jwt as pyjwt
 import pytest
 
-from src.settings import settings
+from src.settings import Settings, settings
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
@@ -22,14 +22,25 @@ class TestPyJWTIssuer:
         assert payload["sub"] == str(usuario_id)
         assert jwt_vo.rol == TipoPerfil.DOCENTE
 
-    def test_expira_60_minutos_despues_de_la_emision(self):
-        issuer = PyJWTIssuer()
+    def test_el_vencimiento_por_defecto_es_una_jornada(self, monkeypatch):
+        """8 horas (US-12.1.3, AQ-04): con 60 minutos la sesión se cerraba en mitad de la clase.
+
+        Se ignoran el `.env` y la variable de entorno: lo que se fija es el valor por defecto del código.
+        """
+        monkeypatch.delenv("ACCESS_TOKEN_EXPIRE_MINUTES", raising=False)
+
+        sin_entorno = Settings(_env_file=None, database_url="x", secret_key="x")
+
+        assert sin_entorno.access_token_expire_minutes == 480
+
+    def test_respeta_el_vencimiento_configurado(self, monkeypatch):
+        monkeypatch.setattr(settings, "access_token_expire_minutes", 5)
         antes = datetime.now(UTC)
 
-        jwt_vo = issuer.emitir(uuid4(), TipoPerfil.ESTUDIANTE)
+        jwt_vo = PyJWTIssuer().emitir(uuid4(), TipoPerfil.ESTUDIANTE)
 
         delta_minutos = (jwt_vo.expira_en - antes).total_seconds() / 60
-        assert 59.0 <= delta_minutos <= 61.0
+        assert 4.0 <= delta_minutos <= 6.0
 
     def test_emite_rol_distinto_por_cada_tipo_de_perfil(self):
         issuer = PyJWTIssuer()

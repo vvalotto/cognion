@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`) y #646; pendientes #658 (`US-12.1.3`, de `AQ-04`), #648 y #649. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`), #646, #649 y #658 (`US-12.1.3`); pendiente #648 (`README.md` y `CLAUDE.md`, al final). Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -269,7 +269,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `AQ-01` | Alta | I | 3 | Pendiente | |
 | `AQ-02` | Media | | T | Pendiente | |
 | `AQ-03` | Media | | 4 | Pendiente | |
-| `AQ-04` | Media | I | 1 | En curso | Issue [#649](https://github.com/vvalotto/cognion/issues/649). **Confirmado en navegador el 2026-11-17**: sin tocar nada, la sala de espera recibe 401 al vencer el token y la app manda a `/login` sin aviso. Decisión de Víctor (2026-11-18): 8 horas por defecto. `US-12.1.3`, Issue [#658](https://github.com/vvalotto/cognion/issues/658) |
+| `AQ-04` | Media | I | 1 | Cerrado | Issue [#649](https://github.com/vvalotto/cognion/issues/649). **Confirmado en navegador el 2026-11-17**: sin tocar nada, la sala de espera recibe 401 al vencer el token y la app manda a `/login` sin aviso. Decisión de Víctor (2026-11-18): 8 horas por defecto. `US-12.1.3` (PR de código y `ADR-013` enmendado), Issue [#658](https://github.com/vvalotto/cognion/issues/658) |
 | `VT-01` | Media | | 2 | Pendiente | |
 | `VT-02` | Media | | 2 | Pendiente | |
 | `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |

@@ -251,7 +251,7 @@ por id a la comisión, se expone por puerto propio — no se duplica el aggregat
   un `Usuario` (autorización RBAC, `ADR-007`) — el detalle de qué recurso corresponde a qué rol
   se especifica en las US de la Iteración 1, no en este modelo.
 - **`JWT`** — no es parte del aggregate `Usuario`; se emite en el comando `IniciarSesion` con
-  claim de `rol` (derivado del `perfil`), expira a los 60 minutos, sin refresh ni blacklist
+  claim de `rol` (derivado del `perfil`), expira a las 8 horas por defecto (`US-12.1.3`; eran 60 minutos), sin refresh ni blacklist
   (`ADR-013`). No se persiste server-side (diseño stateless de `ADR-007`).
 
 ---

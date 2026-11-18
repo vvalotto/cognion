@@ -38,6 +38,6 @@ Feature: Autorización por rol (RBAC) (US-1.1.5)
 
   @autorizacion @error
   Scenario: JWT expirado
-    Given un JWT cuyo exp ya pasó (más de 60 minutos desde la emisión, ADR-013)
+    Given un JWT cuyo exp ya pasó (vencido desde la emisión, ADR-013)
     When se solicita cualquier recurso protegido
     Then el sistema responde 401 Unauthorized

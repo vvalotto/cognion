@@ -31,7 +31,7 @@ Preocupaciones comunes de la aplicación. No incluye el despliegue (`60-deployme
 
 ## 1. Seguridad
 
-**Autenticación.** Identidad emite un JWT (`HS256`, 60 minutos por defecto, **sin refresh**, `ADR-013`). El cliente lo manda en `Authorization: Bearer`. `get_current_user` responde `401` si falta o no es válido. El canal WebSocket lo recibe en `?token=` porque el navegador no permite fijar cabeceras en el handshake, y además exige pertenecer a la comisión de la sesión (`US-12.1.1`). Desde `US-12.1.2` la misma regla (`AutorizarAccesoSesionEnVivoUseCase`) protege `unirse`, `GET /sesiones-en-vivo/{id}` y su `/ranking`, con 403 si no se pertenece y 404 si la sesión no existe.
+**Autenticación.** Identidad emite un JWT (`HS256`, 8 horas por defecto desde `US-12.1.3` —eran 60 minutos y la sesión se cerraba en mitad de la clase—, **sin refresh**, `ADR-013`). El cliente lo manda en `Authorization: Bearer`. `get_current_user` responde `401` si falta o no es válido. El canal WebSocket lo recibe en `?token=` porque el navegador no permite fijar cabeceras en el handshake, y además exige pertenecer a la comisión de la sesión (`US-12.1.1`). Desde `US-12.1.2` la misma regla (`AutorizarAccesoSesionEnVivoUseCase`) protege `unirse`, `GET /sesiones-en-vivo/{id}` y su `/ranking`, con 403 si no se pertenece y 404 si la sesión no existe.
 
 **Autorización (RBAC).** `require_rol([...])` compone sobre `get_current_user` y responde `403` si el rol no está permitido. Tres roles: administrador, docente y estudiante (`ADR-007`, `ADR-019`). Hay combinaciones listas para usar: `require_administrador`, `require_docente`, `require_estudiante` y `require_docente_o_administrador`. Además de la regla de rol, los casos de uso del docente verifican que esté **asignado a la comisión o a la materia** (`ComisionNoAutorizada`, `MateriaNoAutorizada`).
 
@@ -57,7 +57,7 @@ Toda la configuración sale de variables de entorno (`.env`) leídas por `src/se
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` | `localhost`, `25` | Cuenta de correo global |
 | `SMTP_CUENTAS_POR_MATERIA` | vacío | Cuenta propia por materia (`ADR-023`) |
 | `LOG_LEVEL`, `LOG_FORMAT` | `INFO`, `texto` | `json` para un registro estructurado |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | `60` | Duración del token |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | `480` | Duración del token (8 horas, `US-12.1.3`) |
 | `ADMINISTRADOR_BLOQUEO_TEMPORAL_MINUTOS` | `15` | Bloqueo del último administrador |
 | `VERIFICADOR_VENCIMIENTOS_CADENCIA_SEGUNDOS`, `…_UMBRAL_INACTIVIDAD_MINUTOS` | `120`, `15` | Tarea de vencimientos |
 | `CORS_ALLOWED_ORIGINS`, `FRONTEND_URL` | `http://localhost:5173` | Orígenes y base de los links de los correos |

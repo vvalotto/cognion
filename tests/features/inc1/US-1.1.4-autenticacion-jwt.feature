@@ -10,7 +10,7 @@ Feature: Autenticación con JWT por rol (US-1.1.4)
     Given un Usuario con perfil Docente y contraseña "Docente#2026"
     When ejecuta IniciarSesion(email, "Docente#2026")
     Then el sistema emite un JWT con claim rol "docente"
-    And el JWT expira 60 minutos después de la emisión
+    And el JWT expira según el vencimiento configurado
     And se emite el evento SesionIniciada
 
   @autenticacion @happy-path
