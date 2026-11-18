@@ -35,7 +35,7 @@ Documentos de definición (no se modifican retroactivamente):
 - Los tests de integración y BDD vacían la base a la que apunte `DATABASE_URL`: usar siempre una base descartable inline (`DATABASE_URL=... pytest ...`), nunca la de desarrollo. `tests/conftest.py` corta la corrida (exit 4) si el nombre de la base no termina en `_test`. `tests/unit/` no toca la base.
 - Antes de cerrar una baseline: UAT (Capa 1 + Capa 2) y verificación en navegador real; Vitest con `fetch` mockeado no ve CORS, cascada CSS ni `AbortSignal`.
 - Frontend: validar con `tsc -b` (no `--noEmit` solo) y `oxlint`; nunca `prettier --write`.
-- El pre-push (`DesignReviewer`/`CBOAnalyzer`) es el único gate que mide acoplamiento; un controller o use case cerca de CBO=10 puede bloquear recién al pushear (separar por responsabilidad command/query).
+- El pre-push (`DesignReviewer`/`CBOAnalyzer`) es el único gate que mide acoplamiento; un controller o use case cerca de CBO=10 puede bloquear recién al pushear (separar por responsabilidad command/query). Para enterarse antes: `scripts/calidad.sh` corre en local lo mismo que el CI (ruff, mypy, import-linter, DesignReviewer y el frontend; `--completo` suma pytest, `--seguridad` suma `pip-audit` y `npm audit`) y avisa si el hook de push no está activo en el clon.
 
 **Higiene de repositorio** (relevamiento del 2026-09-30): cerrada; sin ramas ni PR abandonados conocidos.
 

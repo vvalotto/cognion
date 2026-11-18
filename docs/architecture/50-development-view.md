@@ -58,6 +58,8 @@ El detalle de cada cruce está en `20-context-map-integrations.md`.
 | **Commit** (`.githooks/pre-commit`) | `black`, `isort`, `ruff`, `mypy` sobre todo `src/`, `CodeGuard` | `mypy`, sí; `CodeGuard`, no (solo advierte) |
 | **Push** (`.githooks/pre-push`) | `DesignReviewer` sobre `src/` con `--config pyproject.toml` | Sí, si hay CRITICAL (acoplamiento `max_cbo = 10`, `max_wmc = 25`, objetos Dios) |
 | **CI** (`.github/workflows/ci.yml`) | `Lint backend` (ruff, mypy, import-linter), `Lint frontend` (oxlint, `tsc`, vitest), `Tests` (pytest con PostgreSQL 16), `DesignReviewer` | Sí: los cuatro son obligatorios en `develop` |
+| **CI, seguridad** (mismo workflow, job `Seguridad de dependencias`) | `pip-audit` y `npm audit --omit=dev` sobre lo que se despliega | No: avisa, no bloquea (`IQ-05`) |
+| **Local, todo junto** (`scripts/calidad.sh`) | Lo mismo que el CI, con un comando; `--completo` suma pytest, `--seguridad` los audits | No bloquea; un test comprueba que no se desfase del CI (`IQ-06`) |
 | **Cierre de baseline** | `ArchitectAnalyst` (siempre manual, `--config pyproject.toml`, con `coverage.json` generado antes), UAT y verificación en navegador | No bloquea el merge; informa tendencias |
 
 Notas operativas:

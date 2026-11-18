@@ -29,6 +29,8 @@ Si algún test falla, **no avances** — resolvé los fallos en la fase correspo
 
 ## Acción
 
+> **Antes de las herramientas de abajo, corré `scripts/calidad.sh`** (agregá `--completo` si todavía no corriste pytest sobre una base `*_test`). Reproduce los gates del CI, DesignReviewer incluido, y es la forma de enterarse del acoplamiento *antes* del push. Si falla, resolvelo antes de seguir.
+
 Ejecutar herramientas de análisis estático y validar que todas las métricas de calidad superan los umbrales mínimos establecidos.
 
 ---
