@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`) y #646; pendientes #648 y #649. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`) y #646; pendientes #658 (`US-12.1.3`, de `AQ-04`), #648 y #649. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -29,7 +29,7 @@ Los identificadores `US-12.M.K` de abajo son tentativos. La agrupación busca po
 
 ## Iteración 1 — Cierres rápidos y operación
 
-Issues: [#645](https://github.com/vvalotto/cognion/issues/645) `IM-04`, [#646](https://github.com/vvalotto/cognion/issues/646) `DO-02`/`DO-01`/`DO-04`, [#647](https://github.com/vvalotto/cognion/issues/647) `CA-02`/`IQ-04`/`DO-05`/`VT-03`, [#648](https://github.com/vvalotto/cognion/issues/648) `DC-01`/`DC-02`, [#649](https://github.com/vvalotto/cognion/issues/649) `AQ-04`, [#654](https://github.com/vvalotto/cognion/issues/654) hueco de `IM-04` (`US-12.1.2`).
+Issues: [#645](https://github.com/vvalotto/cognion/issues/645) `IM-04`, [#646](https://github.com/vvalotto/cognion/issues/646) `DO-02`/`DO-01`/`DO-04`, [#647](https://github.com/vvalotto/cognion/issues/647) `CA-02`/`IQ-04`/`DO-05`/`VT-03`, [#648](https://github.com/vvalotto/cognion/issues/648) `DC-01`/`DC-02`, [#649](https://github.com/vvalotto/cognion/issues/649) `AQ-04`, [#654](https://github.com/vvalotto/cognion/issues/654) hueco de `IM-04` (`US-12.1.2`), [#658](https://github.com/vvalotto/cognion/issues/658) `AQ-04` (`US-12.1.3`).
 
 Sin ADR. Cada punto es de horas.
 
@@ -38,7 +38,7 @@ Sin ADR. Cada punto es de horas.
 | `DO-02` (Alta) | `cognion.sh` programa el respaldo al desplegar y `cognion.sh salud` avisa si el último está vencido. La copia fuera del servidor pasa a ser un paso verificado de la guía | Herramientas |
 | `IM-04` | El canal en vivo verifica que el usuario sea docente de la comisión o participante de la sesión antes de conectar | Formal, **con BDD** (cambia comportamiento): `US-12.1.1` |
 | `VT-03` | `conftest.py` aborta si `DATABASE_URL` no apunta a una base de prueba | Herramientas (`tests/`) |
-| `AQ-04` | Probar en navegador el vencimiento del token durante una sesión en vivo. Si se confirma, ajustar la duración | Verificación; si hay cambio en `settings.py`, historia formal chica: `US-12.1.2` |
+| `AQ-04` | Probar en navegador el vencimiento del token durante una sesión en vivo. Si se confirma, ajustar la duración | Verificación; si hay cambio en `settings.py`, historia formal chica: `US-12.1.3` |
 | `DO-01`, `DO-04` | Usuario sin privilegios y versión fija de `uv` en la imagen; `--forwarded-allow-ips` acotado; `healthcheck` contra `/api/health/ready`; medir cuánto duran 30 MB de registros | Herramientas |
 | `CA-02`, `IQ-04`, `DO-05` | Una sola versión de Python en `pyproject.toml`, CI, imagen y `CLAUDE.md`; el CI corre `tsc -b`; borrar `fly.toml` y sus tests; renombrar el job del CD | Herramientas |
 | `DC-01`, `DC-02` | Reescribir `README.md`; corregir en `CLAUDE.md` lo que el código desmiente | Documental |
@@ -49,7 +49,7 @@ Sin ADR. Cada punto es de horas.
 |---|---|---|
 | `VT-03` | Ajustado | El CI usa una base llamada `cognion`. La guarda por sufijo `_test` la rechazaría: hay que renombrar la base del CI o elegir otro criterio |
 | `IM-04` | Ajustado | El código dice en el docstring que no hay verificación de rol por decisión de diseño. Hay que decidir con Víctor quién puede conectarse antes de escribir la spec |
-| `AQ-04` | Confirmado en código | Falta la prueba en navegador; recién ahí se decide si hay `US-12.1.2` |
+| `AQ-04` | Confirmado en código | Probado en navegador el 2026-11-17: se confirma; hay `US-12.1.3` |
 | `DO-02` | Confirmado | La guía documenta `cron` a mano; `salud.sh` no mira los respaldos |
 | `DO-05` | Confirmado | El borrado alcanza a 3 tests, el comentario del `Dockerfile` y el `needs:` del CD |
 | `CA-02`, `IQ-04`, `DO-01`, `DO-04`, `DC-01`, `DC-02` | Confirmado | Sin cambios; `CA-02` suma `.pre-commit-config.yaml` y `DC-02` tiene las líneas corridas |
@@ -206,6 +206,8 @@ No tocan `src/`. Avanzan en paralelo y se asignan a la iteración donde molestan
 | Candidato | Origen | Qué falta |
 |---|---|---|
 | `UnirseASesionEnVivoUseCase` no comprueba que la comisión del estudiante sea la de la sesión, y `GET /sesiones-en-vivo/{id}` tampoco autoriza por comisión | `US-12.1.1`, 2026-11-16 | **Decidido 2026-11-16 (Víctor): se corrige en la Iteración 1** como `US-12.1.2`, Issue [#654](https://github.com/vvalotto/cognion/issues/654). Incluye también `GET /{id}/ranking`, que tampoco autoriza por comisión |
+| Avisar en `/login` que la sesión venció, y volver a la página de origen después de re-ingresar (hoy no dice nada y cae en Inicio) | `AQ-04`, 2026-11-17 | Toca `frontend/`: gate de diseño UX primero. Sin decidir iteración |
+| Renovación automática del token | `AQ-04`, 2026-11-17 | ADR nuevo; Incremento 11 (`v1.2.0`) por la congelación funcional |
 
 ## Hallazgos de severidad Baja sin iteración
 
@@ -267,7 +269,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `AQ-01` | Alta | I | 3 | Pendiente | |
 | `AQ-02` | Media | | T | Pendiente | |
 | `AQ-03` | Media | | 4 | Pendiente | |
-| `AQ-04` | Media | I | 1 | Confirmado | Issue [#649](https://github.com/vvalotto/cognion/issues/649). Confirmado en código (60 min, sin renovación); falta la prueba en navegador |
+| `AQ-04` | Media | I | 1 | En curso | Issue [#649](https://github.com/vvalotto/cognion/issues/649). **Confirmado en navegador el 2026-11-17**: sin tocar nada, la sala de espera recibe 401 al vencer el token y la app manda a `/login` sin aviso. Decisión de Víctor (2026-11-18): 8 horas por defecto. `US-12.1.3`, Issue [#658](https://github.com/vvalotto/cognion/issues/658) |
 | `VT-01` | Media | | 2 | Pendiente | |
 | `VT-02` | Media | | 2 | Pendiente | |
 | `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
