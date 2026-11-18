@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`), #646, #649 y #658 (`US-12.1.3`); pendiente #648 (`README.md` y `CLAUDE.md`, al final). Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`), #646, #649 y #658 (`US-12.1.3`); cerrado también #648 (`README.md` y `CLAUDE.md`). Falta cerrar la iteración. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -299,8 +299,8 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `PR-04` | Media | | T | Pendiente | |
 | `PR-05` | Baja | | T | Pendiente | |
 | `PR-06` | Baja | | — | Pendiente | |
-| `DC-01` | Media | | 1 | Confirmado | Issue [#648](https://github.com/vvalotto/cognion/issues/648). Confirmado |
-| `DC-02` | Media | | 1 | Confirmado | Issue [#648](https://github.com/vvalotto/cognion/issues/648). Confirmado, con líneas corridas: Python en 47, regla entre contextos en 85, "0–6" en 98, deploy automático en 106 y 159 |
+| `DC-01` | Media | | 1 | Cerrado | Issue [#648](https://github.com/vvalotto/cognion/issues/648). `README.md` reescrito: qué es, qué hace, estado `1.0.0`, instalación, stack y arquitectura |
+| `DC-02` | Media | | 1 | Cerrado | Issue [#648](https://github.com/vvalotto/cognion/issues/648). `CLAUDE.md`: despliegue manual, gate de `main`, rango de incrementos, regla entre contextos (la real, con `AC-01` sin resolver) y el ítem resuelto fuera de la lista. La separación en dos archivos que recomendaba el informe queda sin hacer |
 | `DC-03` | Baja | | — | Pendiente | |
 | `DC-04` | Media | | T | Pendiente | |
 | `DC-05` | Baja | | — | Pendiente | |

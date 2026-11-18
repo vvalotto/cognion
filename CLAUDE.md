@@ -82,7 +82,7 @@ src/<bc>/
 └── frameworks/         → FastAPI, SQLAlchemy, WebSockets — implementa puertos
 ```
 
-**Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: solo por puertos definidos en `entities/ports/` — nunca imports directos entre BCs. `shared/` es la única excepción transversal: puede tener las 4 capas (`entities/`, `use_cases/`, `interface_adapters/`, `frameworks/`) cuando el contenido es genuinamente transversal — sin lógica de negocio de un BC específico — no solo `entities/` (`ADR-017` para `shared/frameworks/db.py`, `ADR-019` para JWT/RBAC en `shared/entities/`+`frameworks/security/`+`interface_adapters/security/`). Cada BC sigue armando su propio composition root en `frameworks/dependencies.py`, importando de `shared` — nunca de otro BC.
+**Regla de imports:** las capas internas nunca importan capas externas. Comunicación entre BCs: el BC consumidor define un puerto en su `entities/ports/` y lo implementa un adaptador en su `frameworks/adapters/`; ese adaptador es el único lugar donde se importa de otro BC, y lo hace contra los internos del proveedor (gateways, casos de uso), porque ningún BC publica una interfaz propia (hallazgo `AC-01`, sin resolver). Fuera de `frameworks/adapters/`, nunca imports entre BCs. `shared/` es la única excepción transversal: puede tener las 4 capas (`entities/`, `use_cases/`, `interface_adapters/`, `frameworks/`) cuando el contenido es genuinamente transversal — sin lógica de negocio de un BC específico — no solo `entities/` (`ADR-017` para `shared/frameworks/db.py`, `ADR-019` para JWT/RBAC en `shared/entities/`+`frameworks/security/`+`interface_adapters/security/`). Cada BC sigue armando su propio composition root en `frameworks/dependencies.py`, importando de `shared` — nunca de otro BC.
 
 **Estas reglas las hace cumplir `import-linter` en el CI** (`uv run lint-imports`, contratos en `[tool.importlinter]` de `pyproject.toml`): capas dentro de cada BC, solo `frameworks/adapters/` importa de otro BC, `shared` no importa de ningún BC, y solo Analytics lee los modelos ORM de otro BC (`ADR-026`; las tres excepciones que quedaban, #600 a #602, se migraron en la Iteración 4 del Incremento 9 y ya no figuran en `ignore_imports`). La excepción de los gateways SQL está declarada ahí mismo (9 archivos de `identidad` y `banco_preguntas`).
 
@@ -95,7 +95,7 @@ Referencia completa: `docs/plans/WORKFLOW-DESARROLLO.md`. Referencia de polític
 ### Jerarquía de trabajo
 
 ```
-Incremento (PLAN_v1.md, 0–6) → Baseline (BL-NNN) + tag git (v0.N.0) + Milestone GitHub
+Incremento (PLAN_v1.md definía 0–6; el proyecto llegó al 10 y sigue con el 12) → Baseline (BL-NNN) + tag git (vX.Y.Z) + Milestone GitHub
   └── Iteración
         └── US-IEDD (US-N.M.K) → GitHub Issue + docs/specs/incN/US-N.M.K.md + feature branch + /implement-us
 ```
@@ -103,7 +103,7 @@ Incremento (PLAN_v1.md, 0–6) → Baseline (BL-NNN) + tag git (v0.N.0) + Milest
 ### Branching
 
 ```
-main          ← baselines (v0.N.0) — deploy automático al mergear
+main          ← baselines (vX.Y.Z) — el CD construye la imagen y, con tag, la publica en GHCR; el despliegue es manual
   └── develop ← integración continua — recibe PRs de cada US
         ├── feature/US-N.M.K-descripcion-corta
         ├── feature/inc-N-descripcion-corta    ← incrementos técnicos sin US
@@ -156,7 +156,7 @@ el merge es a la rama default.
 | Commit backend | CodeGuard | Pre-commit automático | No — solo advierte |
 | Push backend | DesignReviewer | Pre-push automático | Sí, si CRITICAL |
 | Push/PR a develop | lint + import-linter + tests + DesignReviewer | GitHub Actions CI | Sí |
-| Merge/tag a main | build Docker + deploy + healthcheck | GitHub Actions CD | Sí |
+| Merge/tag a main | build Docker; con tag, publicación en GHCR y GitHub Release (no despliega) | GitHub Actions CD | Sí |
 | Cierre de Incremento | DesignReviewer manual + verificación UX | Manual | 0 CRITICAL requerido |
 | UAT | Tests funcionales (Capa 1 + Capa 2) | Manual | Debe aprobar antes de merge a main |
 | Cierre de Baseline | ArchitectAnalyst | **Siempre manual** | No bloquea — informa tendencias |
@@ -233,13 +233,8 @@ Decidir el track **antes de codear**:
 
 ## Ítems abiertos que requieren decisión
 
-- ~~**Algoritmo de puntaje en modo en vivo** (RF-10)~~ — **resuelto 2026-09-17** con Víctor,
-  antes del event storming del Incremento 6, Iteración 0
-  (`docs/plans/inc6/inc6-candidatas.md` §Spike RF-10): `Puntaje = 1000 × FactorTiempo ×
-  FactorDificultad × FactorImportancia` (0 si incorrecta), `FactorTiempo` lineal en `[0.5, 1.0]`
-  según `tiempo_respuesta`/`tiempo_límite_sesión` (fijo por sesión, sin default),
-  `FactorDificultad`/`FactorImportancia` en `{1.0, 1.5, 2.0}` por nivel BAJO/MEDIO/ALTO,
-  ranking = suma simple sin bonus por racha.
+> Resuelto, no reabrir: el algoritmo de puntaje en modo en vivo (`RF-10`), decidido el 2026-09-17; está en `docs/plans/inc6/inc6-candidatas.md` §Spike RF-10 y en el código.
+
 - **Mecanismo de importación desde PDF** (RF-07): parseo automático vs. asistido. Se decide en Incremento 7.
 - **Infraestructura definitiva** (ARQ_v1.md) — **en standby desde 2026-10-17**: depende de si se puede usar
   el convenio de la Universidad con Google (ver bloque del Incremento 8 y `ADR-021`, en revisión). Texto
