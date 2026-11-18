@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 cerrada el 2026-11-18; sigue la Iteración 2** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados los 7 Issues (#645 a #649, #654 y #658); `IQ-05` e `IQ-06` se hicieron en el PR #662 sin Issue propio. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 cerrada el 2026-11-18; Iteración 2 abierta con 9 Issues (#665 a #673)** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados los 7 Issues (#645 a #649, #654 y #658); `IQ-05` e `IQ-06` se hicieron en el PR #662 sin Issue propio. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -74,6 +74,8 @@ Regresión: pytest y Vitest en el CI de cada PR (verde); Playwright en local, 13
 **Decisiones de la iteración:** canal en vivo con la regla A (`IM-04`); token de 8 horas (`AQ-04`); `IQ-05` e `IQ-06` hechos en lugar de diferidos.
 
 ## Iteración 2 — Los bordes de cada contexto
+
+Issues (2026-11-18): [#665](https://github.com/vvalotto/cognion/issues/665) red de seguridad en el CI (`VT-01`, `VT-02`, `DO-03`), [#666](https://github.com/vvalotto/cognion/issues/666) guardas con lista de excepciones (`IM-03`, `IM-02`, `CA-01`), [#667](https://github.com/vvalotto/cognion/issues/667) cuatro ADR, [#668](https://github.com/vvalotto/cognion/issues/668) `US-12.2.1`, [#669](https://github.com/vvalotto/cognion/issues/669) `US-12.2.2`, [#670](https://github.com/vvalotto/cognion/issues/670) `US-12.2.3`, [#671](https://github.com/vvalotto/cognion/issues/671) `US-12.2.4`, [#672](https://github.com/vvalotto/cognion/issues/672) `US-12.2.5`, [#673](https://github.com/vvalotto/cognion/issues/673) `US-12.2.6`.
 
 **Paso 1, confirmar:** `IM-03` (buscar si alguna de las 8 operaciones de dos escrituras puede fallar a mitad de camino y qué deja) e `IM-06` (medir el costo real de `NullPool`).
 
@@ -264,9 +266,9 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 
 | Hallazgo | Severidad | Confianza | Iteración | Estado | Historia / PR / decisión |
 |---|---|---|---|---|---|
-| `CA-01` | Media | | 2 | Pendiente | |
+| `CA-01` | Media | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#670](https://github.com/vvalotto/cognion/issues/670) |
 | `CA-02` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
-| `CA-03` | Media | | 2 | Pendiente | |
+| `CA-03` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#671](https://github.com/vvalotto/cognion/issues/671) |
 | `AC-01` | Alta | | 4 | Pendiente | |
 | `AC-02` | Media | | 4 | Pendiente | |
 | `AC-03` | Alta | I | 4 | Pendiente | |
@@ -274,27 +276,27 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `DM-01` | Alta | | 3 | Pendiente | |
 | `DM-02` | Alta | | 3 | Pendiente | |
 | `DM-03` | Media | | 3 | Pendiente | |
-| `DM-04` | Media | | 2 | Pendiente | |
+| `DM-04` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#668](https://github.com/vvalotto/cognion/issues/668) |
 | `DM-05` | Alta | | 3 | Pendiente | |
 | `DM-06` | Media | | 3 | Pendiente | |
 | `DM-07` | Media | | 3 | Pendiente | |
-| `IM-01` | Media | | 2 | Pendiente | |
-| `IM-02` | Alta | | 2 | Pendiente | |
-| `IM-03` | Alta | I | 2 | Confirmado | Reproducido con la base real: materia sin banco y token de recuperación reutilizable tras un fallo. Son 5 casos de uso con dos escrituras seguidas, no 8 (ver el resultado del paso 1) |
+| `IM-01` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#671](https://github.com/vvalotto/cognion/issues/671) |
+| `IM-02` | Alta | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#669](https://github.com/vvalotto/cognion/issues/669) |
+| `IM-03` | Alta | I | 2 | Confirmado | Reproducido con la base real: materia sin banco y token de recuperación reutilizable tras un fallo. Son 5 casos de uso con dos escrituras seguidas, no 8 (ver el resultado del paso 1). Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#668](https://github.com/vvalotto/cognion/issues/668) |
 | `IM-04` | Media | | 1 | Cerrado | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645), PR [#652](https://github.com/vvalotto/cognion/pull/652). Regla A (decisión de Víctor, 2026-11-15). Sin el ticket de un solo uso para el token |
-| `IM-05` | Media | | 2 | Pendiente | |
-| `IM-06` | Media | I | 2 | Confirmado | Costo medido en local: ~11 ms por operación con `NullPool` contra ~0,9 ms con pool; el costo en el servidor sin medir |
+| `IM-05` | Media | | 2 | Pendiente | Issues [#672](https://github.com/vvalotto/cognion/issues/672) |
+| `IM-06` | Media | I | 2 | Confirmado | Costo medido en local: ~11 ms por operación con `NullPool` contra ~0,9 ms con pool; el costo en el servidor sin medir. Issues [#672](https://github.com/vvalotto/cognion/issues/672) |
 | `IM-07` | Baja | | 4 | Pendiente | |
 | `AQ-01` | Alta | I | 3 | Pendiente | |
 | `AQ-02` | Media | | T | Pendiente | |
 | `AQ-03` | Media | | 4 | Pendiente | |
 | `AQ-04` | Media | I | 1 | Cerrado | Issue [#649](https://github.com/vvalotto/cognion/issues/649). **Confirmado en navegador el 2026-11-17**: sin tocar nada, la sala de espera recibe 401 al vencer el token y la app manda a `/login` sin aviso. Decisión de Víctor (2026-11-18): 8 horas por defecto. `US-12.1.3` (PR de código y `ADR-013` enmendado), Issue [#658](https://github.com/vvalotto/cognion/issues/658) |
-| `VT-01` | Media | | 2 | Pendiente | |
-| `VT-02` | Media | | 2 | Pendiente | |
+| `VT-01` | Media | | 2 | Pendiente | Issues [#665](https://github.com/vvalotto/cognion/issues/665) |
+| `VT-02` | Media | | 2 | Pendiente | Issues [#665](https://github.com/vvalotto/cognion/issues/665) |
 | `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `VT-04` | Media | | T | Pendiente | |
 | `VT-05` | Baja | | — | Pendiente | |
-| `IQ-01` | Alta | | 2 | Pendiente | |
+| `IQ-01` | Alta | | 2 | Pendiente | Issues [#673](https://github.com/vvalotto/cognion/issues/673) |
 | `IQ-02` | Media | | T | Pendiente | |
 | `IQ-03` | Media | | T | Pendiente | |
 | `IQ-04` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
@@ -308,7 +310,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `FE-06` | Baja | I | — | Pendiente | |
 | `DO-01` | Media | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Imagen con usuario `cognion` (UID 10001), `uv==0.9.18`, bases con versión de parche, `FORWARDED_ALLOW_IPS` acotado a la red interna (también en `deploy/gcp`). **Sin ensayar con Docker real** (Issue #624) |
 | `DO-02` | Alta | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). `iniciar` y `desplegar` programan el cron; `estado` informa la antigüedad del último respaldo y avisa; la copia externa es un paso verificado de la guía (sección 7) |
-| `DO-03` | Media | I | 2 | Pendiente | |
+| `DO-03` | Media | I | 2 | Pendiente | Issues [#665](https://github.com/vvalotto/cognion/issues/665) |
 | `DO-04` | Media | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). `healthcheck` a `/api/health/ready`. Registros: 30 MB por servicio, ~151 B por línea; con los chequeos de salud cada 15 s alcanzan para ~4 a 5 semanas (estimado) |
 | `DO-05` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `DO-06` | Media | | T | Pendiente | |
