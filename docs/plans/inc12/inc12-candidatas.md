@@ -103,7 +103,7 @@ Issues (2026-11-18): [#665](https://github.com/vvalotto/cognion/issues/665) red 
 | `VT-02` | El CI corre el umbral de cobertura del frontend y los circuitos de Playwright |
 | `DO-03` | `imagen-smoke.yml` levanta `deploy/servidor/`, que es la variante que se entrega (relacionado con el Issue #624) |
 | `IM-03` | Test que falla si hay un `commit()` fuera de la unidad de trabajo; los 21 actuales entran como excepciones |
-| `IM-02` | Test que cuenta los `raise HTTPException` de los routers y no deja que el número suba |
+| `IM-02` | Test que cuenta los `raise HTTPException` de los routers y no deja que el número suba (hecho en #666: 136 en 19 routers; el informe decía 138 en 21) |
 | `CA-01` | La excepción del contrato de capas ya existe; es la lista a vaciar |
 
 **Paso 4, historias:**
@@ -266,7 +266,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 
 | Hallazgo | Severidad | Confianza | Iteración | Estado | Historia / PR / decisión |
 |---|---|---|---|---|---|
-| `CA-01` | Media | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#670](https://github.com/vvalotto/cognion/issues/670) |
+| `CA-01` | Media | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#670](https://github.com/vvalotto/cognion/issues/670). Guarda en lugar (Issue #666): 10 gateways que importan los modelos ORM y los `ignore_imports` fijados; los vacía `US-12.2.3` |
 | `CA-02` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `CA-03` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#671](https://github.com/vvalotto/cognion/issues/671) |
 | `AC-01` | Alta | | 4 | Pendiente | |
@@ -281,8 +281,8 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `DM-06` | Media | | 3 | Pendiente | |
 | `DM-07` | Media | | 3 | Pendiente | |
 | `IM-01` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#671](https://github.com/vvalotto/cognion/issues/671) |
-| `IM-02` | Alta | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#669](https://github.com/vvalotto/cognion/issues/669) |
-| `IM-03` | Alta | I | 2 | Confirmado | Reproducido con la base real: materia sin banco y token de recuperación reutilizable tras un fallo. Son 5 casos de uso con dos escrituras seguidas, no 8 (ver el resultado del paso 1). Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#668](https://github.com/vvalotto/cognion/issues/668) |
+| `IM-02` | Alta | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#669](https://github.com/vvalotto/cognion/issues/669). Guarda en lugar (Issue #666): 136 `raise HTTPException` en 19 routers, el número solo puede bajar; los baja `US-12.2.2` |
+| `IM-03` | Alta | I | 2 | Confirmado | Reproducido con la base real: materia sin banco y token de recuperación reutilizable tras un fallo. Son 5 casos de uso con dos escrituras seguidas, no 8 (ver el resultado del paso 1). Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#668](https://github.com/vvalotto/cognion/issues/668). Guarda en lugar (Issue #666): los 21 `commit()` están declarados y no pueden crecer; los vacía `US-12.2.1` |
 | `IM-04` | Media | | 1 | Cerrado | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645), PR [#652](https://github.com/vvalotto/cognion/pull/652). Regla A (decisión de Víctor, 2026-11-15). Sin el ticket de un solo uso para el token |
 | `IM-05` | Media | | 2 | Pendiente | Issues [#672](https://github.com/vvalotto/cognion/issues/672) |
 | `IM-06` | Media | I | 2 | Confirmado | Costo medido en local: ~11 ms por operación con `NullPool` contra ~0,9 ms con pool; el costo en el servidor sin medir. Issues [#672](https://github.com/vvalotto/cognion/issues/672) |
