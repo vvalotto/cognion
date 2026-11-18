@@ -161,3 +161,30 @@ jobs:
 
       - name: DesignReviewer
         run: uv run designreviewer src/ --config pyproject.toml
+
+  # Dependencias con vulnerabilidades conocidas (IQ-05). NO bloquea: ningún check obligatorio de `develop` depende de este
+  # job, y cada paso lleva `continue-on-error`. Un hallazgo aparece como aviso amarillo; se revisa y se decide, no frena el PR.
+  # Si el resultado se mantiene limpio un tiempo, se puede volver obligatorio (se decide en una iteración, no aquí).
+  seguridad:
+    name: Seguridad de dependencias (no bloquea)
+    needs: alcance
+    if: ${{ always() && (needs.alcance.result != 'success' || needs.alcance.outputs.completo == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      # Solo lo que se despliega: sin el grupo de desarrollo y sin el proyecto mismo.
+      - name: pip-audit (Python, dependencias de producción)
+        continue-on-error: true
+        run: |
+          uv export --frozen --no-dev --no-hashes --no-emit-project -o requirements-audit.txt
+          uvx pip-audit -r requirements-audit.txt --no-deps --disable-pip
+
+      # `--omit=dev`: las herramientas de compilación (vite, tailwind, shadcn) no llegan al `dist` que se despliega.
+      - name: npm audit (frontend, dependencias de producción)
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
+        working-directory: frontend

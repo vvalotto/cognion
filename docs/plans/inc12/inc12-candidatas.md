@@ -53,7 +53,7 @@ Sin ADR. Cada punto es de horas.
 | `DO-02` | Confirmado | La guía documenta `cron` a mano; `salud.sh` no mira los respaldos |
 | `DO-05` | Confirmado | El borrado alcanza a 3 tests, el comentario del `Dockerfile` y el `needs:` del CD |
 | `CA-02`, `IQ-04`, `DO-01`, `DO-04`, `DC-01`, `DC-02` | Confirmado | Sin cambios; `CA-02` suma `.pre-commit-config.yaml` y `DC-02` tiene las líneas corridas |
-| `IQ-05`, `IQ-06` | No verificados | Baja, sin iteración; se ven si queda tiempo |
+| `IQ-05`, `IQ-06` | Confirmados y hechos en la Iteración 1 | Decisión de Víctor (2026-11-18): se hacen ahora |
 
 **Criterio de salida:**
 
@@ -279,8 +279,8 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `IQ-02` | Media | | T | Pendiente | |
 | `IQ-03` | Media | | T | Pendiente | |
 | `IQ-04` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
-| `IQ-05` | Baja | | — | Pendiente | |
-| `IQ-06` | Baja | | — | Pendiente | |
+| `IQ-05` | Baja | | 1 | Cerrado | `pip-audit` (Python: sin hallazgos) y `npm audit --omit=dev` en el CI como job que no bloquea. El audit encontró 9 altas, todas de herramientas de compilación declaradas como dependencias de producción (`shadcn`, `@tailwindcss/vite`, `tailwindcss`, `tw-animate-css`): se movieron a `devDependencies`, el `dist` quedó idéntico y el audit da 0 |
+| `IQ-06` | Baja | | 1 | Cerrado | `scripts/calidad.sh`: corre en local lo mismo que el CI (con `--completo` suma pytest) y avisa si el hook de push no está activo; un test comprueba que no se desfase del CI. Lo usa la fase 7 de `implement-us` |
 | `FE-01` | Media | | 4 | Pendiente | |
 | `FE-02` | Media | I | 4 | Pendiente | |
 | `FE-03` | Media | | 4 | Pendiente | |
