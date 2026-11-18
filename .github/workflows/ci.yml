@@ -94,8 +94,9 @@ jobs:
         run: npx tsc -b
         working-directory: frontend
 
-      - name: Vitest
-        run: npm run test
+      # Con cobertura: aplica los umbrales de 80 % de `vite.config.ts` (VT-02). Hoy mide ~94 % de sentencias y ~86 % de ramas.
+      - name: Vitest (con umbrales de cobertura)
+        run: npm run test:coverage
         working-directory: frontend
 
   test:
@@ -140,6 +141,14 @@ jobs:
       - name: pytest
         run: uv run pytest --cov=src --cov-report=term-missing
 
+      # Dos números, no uno (VT-01): las capas internas y `frameworks/`, cada una con su umbral unos puntos por debajo del valor
+      # medido (97,1 % y 84,9 % el 2026-11-18). Sin esto el promedio tapa lo que `frameworks/` deja sin probar.
+      - name: Cobertura de las capas internas
+        run: uv run coverage report --omit='src/*/frameworks/*' --fail-under=95
+
+      - name: Cobertura de frameworks/
+        run: uv run coverage report --include='src/*/frameworks/*' --fail-under=82
+
   design-review:
     name: DesignReviewer
     needs: alcance
@@ -161,6 +170,76 @@ jobs:
 
       - name: DesignReviewer
         run: uv run designreviewer src/ --config pyproject.toml
+
+  # Circuitos de la sesión en vivo de punta a punta en un navegador real (VT-02, Issue #665). Levanta el backend y el
+  # frontend en modo desarrollo (`StrictMode` activo, US-ADJ-20), como lo hace `frontend/playwright.config.ts`.
+  e2e:
+    name: E2E (Playwright)
+    needs: alcance
+    if: ${{ always() && (needs.alcance.result != 'success' || needs.alcance.outputs.completo == 'true') }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: cognion_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/cognion_test
+      SECRET_KEY: ci-secret-key-solo-para-pipeline-no-usar-en-otro-entorno
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: uv sync --all-groups --frozen
+
+      - name: Apply migrations
+        run: uv run alembic upgrade head
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Install Chromium (Playwright)
+        run: npx playwright install --with-deps chromium
+        working-directory: frontend
+
+      - name: Playwright
+        run: npm run test:e2e
+        working-directory: frontend
+
+      - name: Informe y trazas ante un fallo
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-fallo
+          path: |
+            frontend/test-results
+            quality/reports/uat/inc6/playwright-report
+          retention-days: 7
 
   # Dependencias con vulnerabilidades conocidas (IQ-05). NO bloquea: ningún check obligatorio de `develop` depende de este
   # job, y cada paso lleva `continue-on-error`. Un hallazgo aparece como aviso amarillo; se revisa y se decide, no frena el PR.

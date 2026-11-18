@@ -58,6 +58,9 @@ El detalle de cada cruce está en `20-context-map-integrations.md`.
 | **Commit** (`.githooks/pre-commit`) | `black`, `isort`, `ruff`, `mypy` sobre todo `src/`, `CodeGuard` | `mypy`, sí; `CodeGuard`, no (solo advierte) |
 | **Push** (`.githooks/pre-push`) | `DesignReviewer` sobre `src/` con `--config pyproject.toml` | Sí, si hay CRITICAL (acoplamiento `max_cbo = 10`, `max_wmc = 25`, objetos Dios) |
 | **CI** (`.github/workflows/ci.yml`) | `Lint backend` (ruff, mypy, import-linter), `Lint frontend` (oxlint, `tsc`, vitest), `Tests` (pytest con PostgreSQL 16), `DesignReviewer` | Sí: los cuatro son obligatorios en `develop` |
+| **CI, E2E** (job `E2E (Playwright)`) | Los circuitos de la sesión en vivo en Chrome real, con el backend y el frontend en modo desarrollo | Visible, no obligatorio hasta que se agregue a la protección de la rama (`VT-02`) |
+| **CI, cobertura** (jobs `Tests` y `Lint frontend`) | Backend: total ≥ 90 %, capas internas ≥ 95 % y `frameworks/` ≥ 82 % (medido 92,8 / 97,1 / 84,9 el 2026-11-18); frontend: 80 % de Vitest | Sí, dentro de `Tests` y `Lint frontend` (`VT-01`, `VT-02`) |
+| **CI, servidor** (`imagen-smoke.yml`, job `Servidor con Docker real`) | `deploy/servidor/` contra Docker real: levanta, respalda, ensaya la restauración, despliega, hace rollback y comprueba el proxy | Solo al tocar `Dockerfile`, `deploy/` o el script (`DO-03`) |
 | **CI, seguridad** (mismo workflow, job `Seguridad de dependencias`) | `pip-audit` y `npm audit --omit=dev` sobre lo que se despliega | No: avisa, no bloquea (`IQ-05`) |
 | **Local, todo junto** (`scripts/calidad.sh`) | Lo mismo que el CI, con un comando; `--completo` suma pytest, `--seguridad` los audits | No bloquea; un test comprueba que no se desfase del CI (`IQ-06`) |
 | **Cierre de baseline** | `ArchitectAnalyst` (siempre manual, `--config pyproject.toml`, con `coverage.json` generado antes), UAT y verificación en navegador | No bloquea el merge; informa tendencias |

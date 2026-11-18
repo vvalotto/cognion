@@ -1,6 +1,8 @@
 name: Imagen y composición (smoke)
 
-# Verifica que la imagen arranca de verdad y que deploy/gcp/ levanta completo (US-8.6.2, ADR-025).
+# Verifica que la imagen arranca de verdad y que deploy/gcp/ levanta completo (US-8.6.2, ADR-025), y que deploy/servidor/, que
+# es la variante que se entrega en el paquete de instalación, levanta, respalda, restaura y despliega contra Docker real
+# (DO-03, Issue #665; antes solo se probaba con un `docker` simulado, Issue #624).
 # Solo corre si cambia algo que puede romperlo, para no alargar el CI de los demás PRs.
 on:
   # `push` (y no `pull_request`) para verificar la rama antes de abrir el PR; el resultado queda asociado al commit
@@ -15,6 +17,7 @@ on:
       - uv.lock
       - src/servidor.py
       - tests/uat/inc8/verificar_composicion_gcp.sh
+      - tests/uat/inc12/verificar_servidor.sh
       - .github/workflows/imagen-smoke.yml
   workflow_dispatch:
 
@@ -64,4 +67,38 @@ jobs:
         if: always()
         run: |
           cd deploy/gcp
+          docker compose down -v
+
+  servidor:
+    name: Servidor con Docker real
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Construir la imagen
+        run: docker build -t cognion:ci .
+
+      - name: Preparar la configuración (dominio localhost, certificado interno)
+        run: |
+          deploy/servidor/preparar-env.sh localhost
+          sed -i 's|^COGNION_IMAGE=.*|COGNION_IMAGE=cognion:ci|' deploy/servidor/.env
+
+      - name: Levantar la composición del servidor
+        run: deploy/servidor/cognion.sh iniciar
+
+      - name: Verificar (respaldo, restauración, despliegue, rollback, proxy)
+        run: tests/uat/inc12/verificar_servidor.sh
+
+      - name: Logs ante un fallo
+        if: failure()
+        run: |
+          cd deploy/servidor
+          docker compose ps -a
+          docker compose logs --no-color --tail=200
+
+      - name: Limpiar
+        if: always()
+        run: |
+          cd deploy/servidor
           docker compose down -v
