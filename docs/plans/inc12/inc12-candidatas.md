@@ -77,6 +77,13 @@ Regresión: pytest y Vitest en el CI de cada PR (verde); Playwright en local, 13
 
 **Paso 1, confirmar:** `IM-03` (buscar si alguna de las 8 operaciones de dos escrituras puede fallar a mitad de camino y qué deja) e `IM-06` (medir el costo real de `NullPool`).
 
+**Resultado del paso 1 (2026-11-18).** Se verificó leyendo el código y ejecutando contra la base real (`cognion_test`), con un fallo inyectado en la segunda escritura.
+
+| Hallazgo | Resultado | Qué cambia en el alcance |
+|---|---|---|
+| `IM-03` | Confirmado, con el conteo corregido | El mecanismo se reprodujo. Los `commit()` son 21 (20 en repositorios, 1 en el event store), como dice el informe. **Los casos de uso con dos escrituras seguidas son 5, no 8**: `eliminar_materia`, `eliminar_comision`, `cambiar_password` e `iniciar_sesion` tienen dos escrituras en ramas excluyentes (una u otra, nunca las dos). Los 5 reales y lo que deja un fallo en la segunda: `crear_materia` deja una **materia sin banco** (reproducido; viola `INV-BP-01`); `confirmar_nueva_password` cambia la contraseña y **deja el token sin marcar como usado: el mismo token se aceptó una segunda vez** (reproducido); `registrar_estudiante` crea al estudiante y deja la invitación sin consumir (leído, no ejecutado); `eliminar_cuenta` borra los tokens y falla al borrar al usuario, sin daño y reintentable (leído); `solicitar_recuperacion_password` invalida los tokens previos y no guarda el nuevo, sin daño (leído). Para que ocurra hace falta que la base falle justo entre las dos escrituras: improbable, pero con consecuencias en dos casos |
+| `IM-06` | Confirmado, el costo medido es chico | Con `NullPool` cada operación tarda ~11 ms (mediana; p95 16 ms) frente a ~0,9 ms con un pool: unas 13 veces, pero ~10 ms absolutos. 60 operaciones a la vez: 261 ms en total con `NullPool` y 64 ms con un pool de 5+10. Medido en una Mac contra PostgreSQL local, sin red ni la CPU de un servidor chico: **el costo en el servidor sigue sin medirse** y no se puede medir aquí. `US-12.2.5` mantiene su alcance; que la clase de pool salga de la configuración es el cambio, y volver a medir en un servidor queda como verificación pendiente (junto con el Issue #624) |
+
 **Paso 2, ADR:**
 
 | ADR | Decide | Hallazgos |
@@ -273,10 +280,10 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `DM-07` | Media | | 3 | Pendiente | |
 | `IM-01` | Media | | 2 | Pendiente | |
 | `IM-02` | Alta | | 2 | Pendiente | |
-| `IM-03` | Alta | I | 2 | Pendiente | |
+| `IM-03` | Alta | I | 2 | Confirmado | Reproducido con la base real: materia sin banco y token de recuperación reutilizable tras un fallo. Son 5 casos de uso con dos escrituras seguidas, no 8 (ver el resultado del paso 1) |
 | `IM-04` | Media | | 1 | Cerrado | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645), PR [#652](https://github.com/vvalotto/cognion/pull/652). Regla A (decisión de Víctor, 2026-11-15). Sin el ticket de un solo uso para el token |
 | `IM-05` | Media | | 2 | Pendiente | |
-| `IM-06` | Media | I | 2 | Pendiente | |
+| `IM-06` | Media | I | 2 | Confirmado | Costo medido en local: ~11 ms por operación con `NullPool` contra ~0,9 ms con pool; el costo en el servidor sin medir |
 | `IM-07` | Baja | | 4 | Pendiente | |
 | `AQ-01` | Alta | I | 3 | Pendiente | |
 | `AQ-02` | Media | | T | Pendiente | |
