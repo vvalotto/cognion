@@ -170,11 +170,11 @@ python_functions = ["test_*"]
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["tests/*", "src/*/frameworks/*"]
+omit = ["tests/*"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 0
+fail_under = 90  # total medido 92,8 %; ver los dos umbrales por capa en ci.yml y scripts/calidad.sh (VT-01)
 
 # ---------------------------------------------------------------------------
 # Quality agents (software_limpio)

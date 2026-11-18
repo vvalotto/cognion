@@ -48,12 +48,15 @@ fi
 if [ "$hacer_frontend" = 1 ]; then
   CARPETA=frontend paso "oxlint" npm run lint
   CARPETA=frontend paso "tsc -b" npx tsc -b
-  CARPETA=frontend paso "Vitest" npm run test
+  CARPETA=frontend paso "Vitest (con umbrales de cobertura)" npm run test:coverage
 fi
 
 if [ "$hacer_tests" = 1 ]; then
   case "${DATABASE_URL:-}" in
-    *_test) paso "pytest" uv run pytest --cov=src --cov-report=term-missing ;;
+    *_test)
+      paso "pytest" uv run pytest --cov=src --cov-report=term-missing
+      paso "cobertura de las capas internas" uv run coverage report --omit='src/*/frameworks/*' --fail-under=95
+      paso "cobertura de frameworks/" uv run coverage report --include='src/*/frameworks/*' --fail-under=82 ;;
     *) echo; echo "✘ pytest: DATABASE_URL tiene que apuntar a una base cuyo nombre termine en _test (los tests la vacían)."; fallaron+=("pytest (sin base *_test)") ;;
   esac
 fi

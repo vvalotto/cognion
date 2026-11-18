@@ -5,7 +5,9 @@
 set -euo pipefail
 
 PREFIX="${1:?Uso: limpiar_uat.sh <EMAIL_PREFIX> — ver el resumen que imprimió el guión}"
-DB_URL="postgresql://user:password@localhost:5432/cognion"
+# Misma base que usa la aplicación (DATABASE_URL, sin el `+asyncpg` del driver); sin ella, la de desarrollo de siempre.
+DB_URL="${DATABASE_URL:-postgresql://user:password@localhost:5432/cognion}"
+DB_URL="${DB_URL/+asyncpg/}"
 
 psql "$DB_URL" -q -c "
   CREATE TEMP TABLE sesiones_uat AS
