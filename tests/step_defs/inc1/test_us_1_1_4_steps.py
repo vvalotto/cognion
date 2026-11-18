@@ -10,6 +10,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
+from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal
 from tests.step_defs.inc1._auth_headers import admin_headers
@@ -168,11 +169,14 @@ def valida_jwt_con_rol(context, rol):
     assert context["response"].json()["rol"] == rol
 
 
-@then("el JWT expira 60 minutos después de la emisión")
-def valida_expiracion_60_minutos(context):
+@then("el JWT expira según el vencimiento configurado")
+def valida_expiracion_configurada(context):
     expira_en = datetime.fromisoformat(context["response"].json()["expira_en"])
     delta_minutos = (expira_en - context["antes_de_login"]).total_seconds() / 60
-    assert 59.0 <= delta_minutos <= 61.0
+    esperado = (
+        settings.access_token_expire_minutes
+    )  # 480 por defecto; el `.env` local puede cambiarlo
+    assert esperado - 1.0 <= delta_minutos <= esperado + 1.0
 
 
 @then("se emite el evento SesionIniciada")

@@ -15,7 +15,7 @@ from src.shared.entities.tipo_perfil import TipoPerfil
 
 
 class PyJWTIssuer(JWTIssuerPort):
-    """Emite y verifica tokens de sesión firmados con `settings.secret_key` (exp. 60 min)."""
+    """Emite y verifica tokens de sesión firmados con `settings.secret_key` (exp. 8 h por defecto)."""
 
     def emitir(self, usuario_id: UUID, rol: TipoPerfil, nombre: str = "") -> JWT:
         """Firma un JWT con claims `sub`, `rol` y `nombre`, `exp` a `access_token_expire_minutes`.
