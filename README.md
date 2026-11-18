@@ -20,7 +20,7 @@ Se está trabajando en la calidad de diseño de cara a la `1.1.0`: hasta entonce
 
 ## Instalación
 
-La guía única es [`docs/INSTALACION.md`](docs/INSTALACION.md). Hay tres caminos: un servidor Linux con Docker, una sola máquina sin Docker (para una clase), o una VM en Google Cloud. El del servidor con Docker todavía no se ensayó contra Docker real (Issue #624).
+La guía única es [`docs/INSTALACION.md`](docs/INSTALACION.md). Hay tres caminos: un servidor Linux con Docker, una sola máquina sin Docker (para una clase), o una VM en Google Cloud. El del servidor con Docker lo prueba el CI contra Docker real en `localhost`; en un servidor con dominio y certificado todavía no se ensayó (Issue #624).
 
 ## Stack
 

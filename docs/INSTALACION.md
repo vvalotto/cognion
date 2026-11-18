@@ -1,8 +1,8 @@
 # Instalar Cognión
 
 > Guía única de instalación. Es la que lleva el paquete `cognion-X.Y.Z-instalacion.tar.gz` de cada versión.
-> Estado: operativo (`US-10.2.2`). El camino del servidor con Docker (A) está verificado con `docker` simulado y por estructura, pero
-> **todavía no se ensayó contra Docker real en un servidor** (Issue #624). Los caminos B (local) y C (GCP) sí se probaron en instalaciones reales.
+> Estado: operativo (`US-10.2.2`). El camino del servidor con Docker (A) lo prueba el CI contra Docker real en `localhost` (desde el 2026-11-18: levanta, respalda,
+> ensaya la restauración, despliega y hace rollback), pero **todavía no se ensayó en un servidor con dominio, certificado y firewall** (Issue #624). Los caminos B (local) y C (GCP) sí se probaron en instalaciones reales.
 
 ## 1. Qué camino elegir
 
@@ -113,9 +113,9 @@ nombre `.local` en el camino B) antes de generar el link.
 
 ## 9. Limitaciones conocidas de la versión 1.0
 
-- **El camino A (servidor con Docker) no se ensayó contra Docker real.** Se comprobó la estructura del compose y el comportamiento de `cognion.sh`,
-  `respaldar.sh` y `restaurar.sh` con un `docker` simulado; el arranque real, el certificado HTTPS, el respaldo y la restauración contra PostgreSQL
-  real y la actualización con `desplegar` quedan por probar (Issue #624). Si ensayás este camino y algo falla, avisá: se corrige como `1.0.x`.
+- **El camino A (servidor con Docker) no se ensayó en un servidor real.** El CI lo ejercita contra Docker real en `localhost` (con certificado interno):
+  arranque, respaldo y ensayo de restauración contra PostgreSQL real, `desplegar` y `rollback`. Quedan por probar el certificado de Let's Encrypt con
+  un dominio, el firewall y el comportamiento en un servidor de la facultad (Issue #624). Si ensayás este camino y algo falla, avisá: se corrige como `1.0.x`.
 - **Importar preguntas desde PDF (`RF-07`)** y **los KPIs históricos (`RF-18`)** no están en la 1.0. La importación se planifica como importar desde JSON.
 - **No hay respaldo automático a la nube** ni un runbook operativo completo; el respaldo del camino A es local al servidor y la copia externa es un paso manual (sección 7).
 - **Los registros ocupan hasta 30 MB por servicio** (3 archivos de 10 MB, rotados). Con el uso previsto (una comisión de 60 alumnos) los de la aplicación alcanzan para unas 4 a 5 semanas; antes de ese plazo se pisan los más viejos. Si necesitás conservar más, copiá los de `docker compose logs` antes.
