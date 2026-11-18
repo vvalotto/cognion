@@ -134,5 +134,5 @@ Un contenedor nuevo (cola, worker, caché), un cambio de proxy o de base, la sep
 
 ## Sin verificar
 
-- ⚠ Las variantes con Docker (servidor Linux y GCP) no se probaron contra Docker real en esta versión; el compose se verificó con un `docker` simulado (Issue #624).
+- ⚠ Las variantes con Docker (servidor Linux y GCP) no se probaron contra Docker real en la `1.0.0`; desde el 2026-11-18 el smoke del CI levanta ambas con Docker real en `localhost`. Sigue sin ensayo en un servidor con dominio y certificado (Issue #624).
 - ⚠ No se midió cuántas conexiones simultáneas alcanza la aplicación con 60 estudiantes; `max_connections=100` sale de la estimación de `docker-compose.yml`.

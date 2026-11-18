@@ -29,7 +29,7 @@ Topologías, red, ciclo de vida (instalar, actualizar, volver atrás, respaldar)
 | Configuración | `deploy/servidor/.env` (lo genera `preparar-env.sh`; no está en el repo) | `.env.local` (lo crea `levantar.sh`) | `.env` de la VM |
 | Entorno por defecto | `ENTORNO=local`, `EMAIL_MODO=consola` | `ENTORNO=local`, `EMAIL_MODO=consola` | `ENTORNO=local`, `EMAIL_MODO=consola` |
 | Operación | `deploy/servidor/cognion.sh` | `scripts/local/levantar.sh`, `detener.sh`, `respaldar.sh`, `restaurar.sh` | `deploy/gcp/` (`aprovisionar.sh`, `desplegar.sh`, `destruir.sh`) |
-| Estado de verificación | ⚠ Solo con `docker` simulado (Issue #624) | Instalación limpia ensayada en la Mac con la `1.0.0` | Verificada una vez y destruida el 2026-10-24 |
+| Estado de verificación | ⚠ Docker real en `localhost` desde el CI (2026-11-18); sin ensayo en un servidor con dominio (Issue #624) | Instalación limpia ensayada en la Mac con la `1.0.0` | Verificada una vez y destruida el 2026-10-24 |
 
 ## Topología de A y C (Docker)
 
@@ -120,7 +120,7 @@ flowchart LR
 Un servicio o puerto nuevo en la composición, una variante de instalación nueva (otro proxy, una nube distinta), un cambio en el respaldo o en la actualización, o un ADR de despliegue nuevo.
 
 ## Sin verificar
-- ⚠ **Variante A (servidor Linux con Docker):** probada con un `docker` y un `curl` simulados, **no contra Docker real** (Issue #624). Es la variante recomendada para el uso estable.
+- ⚠ **Variante A (servidor Linux con Docker):** probada con un `docker` y un `curl` simulados y, desde el 2026-11-18, por el smoke del CI contra Docker real en `localhost` (21 chequeos: arranque, respaldo, restauración, despliegue y rollback). **Sin ensayo en un servidor con dominio, certificado y firewall** (Issue #624). Es la variante recomendada para el uso estable.
 - ⚠ **Variante C (GCP):** se verificó una vez y la VM se destruyó el 2026-10-24; no se repitió con la `1.0.0`.
 - ⚠ **Variante B:** se ensayó una instalación limpia con la `1.0.0`, pero por HTTP y no en un navegador ni en un celular real; la actualización se simuló cambiando `VERSION` en la misma carpeta.
 - ⚠ **`ENTORNO=produccion`:** ninguna variante se probó con SMTP real de producción.

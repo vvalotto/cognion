@@ -291,8 +291,8 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `AQ-02` | Media | | T | Pendiente | |
 | `AQ-03` | Media | | 4 | Pendiente | |
 | `AQ-04` | Media | I | 1 | Cerrado | Issue [#649](https://github.com/vvalotto/cognion/issues/649). **Confirmado en navegador el 2026-11-17**: sin tocar nada, la sala de espera recibe 401 al vencer el token y la app manda a `/login` sin aviso. Decisión de Víctor (2026-11-18): 8 horas por defecto. `US-12.1.3` (PR de código y `ADR-013` enmendado), Issue [#658](https://github.com/vvalotto/cognion/issues/658) |
-| `VT-01` | Media | | 2 | En curso | Issues [#665](https://github.com/vvalotto/cognion/issues/665). Medido: total 92,8 %, capas internas 97,1 %, `frameworks/` 84,9 % (2544 tests). Umbrales 90 / 95 / 82 |
-| `VT-02` | Media | | 2 | En curso | Issues [#665](https://github.com/vvalotto/cognion/issues/665). Vitest con umbrales en el CI (mide ~94 % de sentencias); job de Playwright; el `teardown` del e2e usa `DATABASE_URL` |
+| `VT-01` | Media | | 2 | Cerrado | Issues [#665](https://github.com/vvalotto/cognion/issues/665). Medido: total 92,8 %, capas internas 97,1 %, `frameworks/` 84,9 % (2544 tests). Umbrales 90 / 95 / 82. PR [#675](https://github.com/vvalotto/cognion/pull/675) |
+| `VT-02` | Media | | 2 | Cerrado | Issues [#665](https://github.com/vvalotto/cognion/issues/665). Vitest con umbrales en el CI (mide ~94 % de sentencias); job de Playwright; el `teardown` del e2e usa `DATABASE_URL`. PR [#675](https://github.com/vvalotto/cognion/pull/675); el job de Playwright no es obligatorio hasta que se agregue a la protección de la rama |
 | `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `VT-04` | Media | | T | Pendiente | |
 | `VT-05` | Baja | | — | Pendiente | |
@@ -310,7 +310,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `FE-06` | Baja | I | — | Pendiente | |
 | `DO-01` | Media | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). Imagen con usuario `cognion` (UID 10001), `uv==0.9.18`, bases con versión de parche, `FORWARDED_ALLOW_IPS` acotado a la red interna (también en `deploy/gcp`). **Sin ensayar con Docker real** (Issue #624) |
 | `DO-02` | Alta | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). `iniciar` y `desplegar` programan el cron; `estado` informa la antigüedad del último respaldo y avisa; la copia externa es un paso verificado de la guía (sección 7) |
-| `DO-03` | Media | I | 2 | En curso | Issues [#665](https://github.com/vvalotto/cognion/issues/665). Job `Servidor con Docker real` en `imagen-smoke.yml` con `tests/uat/inc12/verificar_servidor.sh`; `deploy/gcp/` se sigue probando |
+| `DO-03` | Media | I | 2 | Cerrado | Issues [#665](https://github.com/vvalotto/cognion/issues/665). Job `Servidor con Docker real` en `imagen-smoke.yml` con `tests/uat/inc12/verificar_servidor.sh`; `deploy/gcp/` se sigue probando. PR [#675](https://github.com/vvalotto/cognion/pull/675): 21 de 21 chequeos contra Docker real a la primera. No cubre un servidor con dominio, certificado y firewall; el Issue #624 sigue abierto por eso |
 | `DO-04` | Media | | 1 | Cerrado | Issue [#646](https://github.com/vvalotto/cognion/issues/646). `healthcheck` a `/api/health/ready`. Registros: 30 MB por servicio, ~151 B por línea; con los chequeos de salud cada 15 s alcanzan para ~4 a 5 semanas (estimado) |
 | `DO-05` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `DO-06` | Media | | T | Pendiente | |
