@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 en curso** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados #647, #645, #654 (`US-12.1.2`), #646, #649 y #658 (`US-12.1.3`); cerrado también #648 (`README.md` y `CLAUDE.md`). Falta cerrar la iteración. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 cerrada el 2026-11-18; sigue la Iteración 2** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados los 7 Issues (#645 a #649, #654 y #658); `IQ-05` e `IQ-06` se hicieron en el PR #662 sin Issue propio. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).
@@ -61,6 +61,17 @@ Sin ADR. Cada punto es de horas.
 2. `pytest tests/integration` con la base de desarrollo en `DATABASE_URL` termina sin tocarla.
 3. Un usuario autenticado que no pertenece a la sesión recibe un rechazo al abrir el canal en vivo.
 4. `pyproject.toml`, el CI y el `Dockerfile` declaran la misma versión de Python.
+
+**Cierre (2026-11-18).** Criterio de salida medido:
+
+1. **Respaldo programado y vigilado.** Dado por hecho por decisión de Víctor. Se comprobó con `docker` y `crontab` simulados, y el build real de la imagen en el CI; **no se ensayó en un servidor con Docker** (Issue #624).
+2. **`pytest` no toca la base de desarrollo.** Cumplido: `tests/conftest.py` aborta (exit 4) si la base no termina en `_test`; 5 tests lo fijan (`#650`).
+3. **Rechazo al abrir el canal sin pertenecer a la sesión.** Cumplido (`US-12.1.1`, escenario 4), y la misma regla en `unirse`, estado y ranking (`US-12.1.2`). Los 13 circuitos de Playwright en Chrome real pasan.
+4. **Una sola versión de Python.** Cumplido (3.12 en `pyproject.toml`, CI, imagen y `CLAUDE.md`, `#650`).
+
+Regresión: pytest y Vitest en el CI de cada PR (verde); Playwright en local, 13 de 13. Sin baseline: la `BL-018` cierra con la Iteración 2.
+
+**Decisiones de la iteración:** canal en vivo con la regla A (`IM-04`); token de 8 horas (`AQ-04`); `IQ-05` e `IQ-06` hechos en lugar de diferidos.
 
 ## Iteración 2 — Los bordes de cada contexto
 
@@ -173,9 +184,9 @@ Frontend, por track informal y con verificación en navegador real:
 | Hallazgo | Acción |
 |---|---|
 | `FE-01` | Tipos generados desde OpenAPI y verificación en el CI de que están al día |
-| `FE-03` | El cliente HTTP recibe un manejador de sesión perdida y deja de importar el router |
+| `FE-03` | El cliente HTTP recibe un manejador de sesión perdida y deja de importar el router. **Suma** (2026-11-18): el aviso de sesión vencida en `/login` y volver a la página de origen (candidato de `AQ-04`) |
 | `FE-02` | Un hook propio de consulta; migrar primero las páginas con supresiones de dependencias |
-| `FE-04` | Riesgo aceptado asentado en `ADR-013` y cabecera `Content-Security-Policy` en Caddy |
+| `FE-04` | Riesgo aceptado asentado en `ADR-013` (ya enmendado el 2026-11-18 por `US-12.1.3`; se suma a esa enmienda) y cabecera `Content-Security-Policy` en Caddy |
 
 **Criterio de salida:**
 
@@ -206,8 +217,9 @@ No tocan `src/`. Avanzan en paralelo y se asignan a la iteración donde molestan
 | Candidato | Origen | Qué falta |
 |---|---|---|
 | `UnirseASesionEnVivoUseCase` no comprueba que la comisión del estudiante sea la de la sesión, y `GET /sesiones-en-vivo/{id}` tampoco autoriza por comisión | `US-12.1.1`, 2026-11-16 | **Decidido 2026-11-16 (Víctor): se corrige en la Iteración 1** como `US-12.1.2`, Issue [#654](https://github.com/vvalotto/cognion/issues/654). Incluye también `GET /{id}/ranking`, que tampoco autoriza por comisión |
-| Avisar en `/login` que la sesión venció, y volver a la página de origen después de re-ingresar (hoy no dice nada y cae en Inicio) | `AQ-04`, 2026-11-17 | Toca `frontend/`: gate de diseño UX primero. Sin decidir iteración |
-| Renovación automática del token | `AQ-04`, 2026-11-17 | ADR nuevo; Incremento 11 (`v1.2.0`) por la congelación funcional |
+| Avisar en `/login` que la sesión venció, y volver a la página de origen después de re-ingresar (hoy no dice nada y cae en Inicio) | `AQ-04`, 2026-11-17 | **Asignado a la Iteración 4 (2026-11-18)**, junto con `FE-03` (manejador de sesión perdida en el cliente HTTP): es el mismo lugar del código. Toca `frontend/`: pasa antes por el gate de diseño UX |
+| Renovación automática del token | `AQ-04`, 2026-11-17 | **Asignado al Incremento 11, `v1.2.0` (2026-11-18)**: ADR nuevo y es funcionalidad, así que espera la congelación. Reemplazaría al valor fijo de 8 horas |
+| El `teardown` del e2e (`tests/uat/inc6/limpiar_uat.sh`) tiene fija la base `cognion`: contra otra base no limpia lo sembrado. Playwright tampoco corre en el CI | Corrida de Playwright, 2026-11-18 | Sin decidir; encaja en el Transversal de instrumentos (junto a `VT-05`) |
 
 ## Hallazgos de severidad Baja sin iteración
 
