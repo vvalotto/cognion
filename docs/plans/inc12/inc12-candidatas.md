@@ -123,7 +123,7 @@ Issues (2026-11-18): [#665](https://github.com/vvalotto/cognion/issues/665) red 
 
 1. Ningún `commit()` fuera de la unidad de trabajo, salvo el del event store (decidido en `ADR-028`, 2026-11-25), con la lista de excepciones reducida a ese único archivo.
 2. El contrato de capas no tiene `ignore_imports`.
-3. Los routers no importan `entities/errors.py` para traducir errores. El número objetivo de `HTTPException` se fija al confirmar.
+3. Los routers no importan `entities/errors.py` para traducir errores, salvo los 2 `except` locales declarados. Objetivo de `HTTPException` (`ADR-029`): 4, a reducir a 2.
 4. La cobertura informada incluye `frameworks/`.
 
 **Cierre:** `BL-018`, `v1.0.1`, con UAT de regresión.
@@ -281,7 +281,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `DM-06` | Media | | 3 | Pendiente | |
 | `DM-07` | Media | | 3 | Pendiente | |
 | `IM-01` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#671](https://github.com/vvalotto/cognion/issues/671) |
-| `IM-02` | Alta | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#669](https://github.com/vvalotto/cognion/issues/669). Guarda en lugar (Issue #666): 136 `raise HTTPException` en 19 routers, el número solo puede bajar; los baja `US-12.2.2` |
+| `IM-02` | Alta | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#669](https://github.com/vvalotto/cognion/issues/669). Guarda en lugar (Issue #666): 136 `raise HTTPException` en 19 routers, el número solo puede bajar; los baja `US-12.2.2`. Decidido en [`ADR-029`](../../adr/ADR-029-errores-de-dominio-con-categoria.md) (2026-11-25): base `ErrorDeDominio` con 5 categorías y un manejador en `app.py`; `except` local para los 2 casos 404/422 según el endpoint |
 | `IM-03` | Alta | I | 2 | Confirmado | Reproducido con la base real: materia sin banco y token de recuperación reutilizable tras un fallo. Son 5 casos de uso con dos escrituras seguidas, no 8 (ver el resultado del paso 1). Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#668](https://github.com/vvalotto/cognion/issues/668). Guarda en lugar (Issue #666): los 21 `commit()` están declarados y no pueden crecer; los vacía `US-12.2.1`. Decidido en [`ADR-028`](../../adr/ADR-028-unidad-de-trabajo-por-request.md) (2026-11-25): unidad de trabajo por request para Identidad y Banco, con `scope="function"`; el event store conserva su commit |
 | `IM-04` | Media | | 1 | Cerrado | `US-12.1.1`, Issue [#645](https://github.com/vvalotto/cognion/issues/645), PR [#652](https://github.com/vvalotto/cognion/pull/652). Regla A (decisión de Víctor, 2026-11-15). Sin el ticket de un solo uso para el token |
 | `IM-05` | Media | | 2 | Pendiente | Issues [#672](https://github.com/vvalotto/cognion/issues/672) |
