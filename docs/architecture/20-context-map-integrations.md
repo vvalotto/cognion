@@ -90,7 +90,7 @@ Sin servicio externo aparte del SMTP: el correo de invitación de Identidad usa 
 
 ## Qué impone el CI
 `import-linter` (`uv run lint-imports`, 4 contratos en `pyproject.toml`):
-1. **Capas dentro de cada BC:** `frameworks → interface_adapters → use_cases → entities`. Excepción: los repositorios de `gateways/` importan `frameworks/db/models.py` (9 archivos de Identidad y Banco).
+1. **Capas dentro de cada BC:** `frameworks → interface_adapters → use_cases → entities`. Excepción: los repositorios de `gateways/` importan `frameworks/db/models.py` (10 archivos de Identidad y Banco; `ADR-030` decide moverlos a `frameworks/repositories/`).
 2. **Aislamiento entre BC:** solo `frameworks/adapters/` puede importar de otro BC (`ADR-006`).
 3. **`shared` no importa de ningún BC.**
 4. **`ADR-026`:** ningún BC salvo Analytics importa los modelos ORM de otro. Desde el Incremento 9 (`BL-015`) no queda ninguna excepción puntual.

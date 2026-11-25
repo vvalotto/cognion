@@ -110,7 +110,7 @@ Ningún BC importa código de otro fuera de `frameworks/adapters/`. Toda comunic
 Excepciones documentadas:
 - Actividad Evaluativa → Notificaciones por llamada directa a sus casos de uso (`ADR-006`).
 - Analytics lee modelos ORM de otros BC (`ADR-026`): es el único BC con ese permiso. Desde el Incremento 9 (`BL-015`) ya no queda ninguna otra excepción puntual.
-- Los repositorios SQL de `interface_adapters/gateways/` importan los modelos de `frameworks/db/models.py` de su propio BC (9 archivos de Identidad y Banco).
+- Los repositorios SQL de `interface_adapters/gateways/` importan los modelos de `frameworks/db/models.py` de su propio BC (10 archivos de Identidad y Banco; `ADR-030` decide moverlos a `frameworks/repositories/`).
 
 `shared/` es la excepción transversal para tipos y utilidades sin lógica de negocio de un BC: `shared/entities/` (tipos, JWT y RBAC, `ADR-019`), `shared/frameworks/` (engine y sesión async de SQLAlchemy, `ADR-017` y `ADR-018`; SMTP; logging; versión). Cada BC arma su propio composition root en `frameworks/dependencies.py`, importando de `shared`, nunca de otro BC.
 
