@@ -69,3 +69,16 @@ Medición del 2026-11-25 (AST sobre `src/*/frameworks/api/`):
 - ⚠️ **Puede cambiar el comportamiento donde hoy un error de dominio no estaba listado en un endpoint** y salía como 500: pasará a ser un 4xx. Es una mejora deliberada, pero `US-12.2.2` debe listar los casos que encuentre, porque podrían estar tapando un defecto.
 - ⚠️ La migración se puede partir por contexto: 39 clases de Actividad Evaluativa, 25 de Identidad, 8 de Banco y 4 de Analytics, más las 2 de `shared`.
 - ⚠️ **Los nombres repetidos entre contextos** (`MateriaNoAutorizada` en 4, `ComisionNoAutorizada` y `MateriaNoExiste` en 3, `ActividadNoExiste` y `ComisionNoExiste` en 2) son clases distintas que significan lo mismo: al re-clasificarlas conviene que `US-12.2.2` decida si se unifican en una sola de `shared/`. Se anota como oportunidad, no como parte de esta decisión.
+
+## Enmienda 2026-11-25 (al escribir `US-12.2.2`)
+
+Al revisar cada traducción para la spec apareció algo que la medición original no vio: **no son 2 las clases cuya traducción depende del endpoint, son 6**, todas de Identidad. La medición solo buscaba clases con distinto código; también hay clases con distinta **forma del `detail`**, y el frontend usa esos campos (`bloqueada`, `codigo`, `intentos_restantes`):
+
+| Clase | Qué cambia según el endpoint |
+|---|---|
+| `ComisionNoExiste`, `MateriaNoExiste` | El código: 422 si el id viene en el cuerpo, 404 si viene en la URL (los 2 casos del texto original) |
+| `CuentaBloqueadaError` | 403 con texto en `auth_router`; 403 con `{mensaje, bloqueada: true}` en `perfil_router` |
+| `InvitacionInvalida` | 404 con texto en `invitaciones_grupales_router`; 404 o 422 con `{codigo, mensaje}` en `errores_invitacion.py` |
+| `PasswordDemasiadoCorta`, `PasswordSinComplejidadSuficiente` | Texto en 4 routers; `{mensaje}` en `perfil_router`; `{codigo: "password_invalida", mensaje}` en `errores_invitacion.py` |
+
+**La decisión no cambia, se amplía su excepción:** el criterio "un router solo conserva un `except` propio cuando la respuesta depende del endpoint y no del error" se aplica a estos 6 casos, no a 2, y unificarlos cambiaría una respuesta que el frontend lee. Por eso el objetivo de `raise HTTPException` en los routers deja de ser 4: la estimación es de **6 a 8**, y la guarda de `US-12.2.2` lo fija exacto tras clasificar los casos en la Fase 0.

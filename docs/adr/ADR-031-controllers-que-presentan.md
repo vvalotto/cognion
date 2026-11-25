@@ -65,3 +65,12 @@ Se comprobó que **FastAPI valida un `dataclass` simple contra el `response_mode
 - ⚠️ **El umbral de CBO de los controllers puede apretar** (los controllers ya se partieron para no pasarlo, `IQ-01`): el mapeo va en funciones de `presenters/`, no en los controllers, y los controllers importan funciones y no clases. `US-12.2.6` recalibra el umbral al final.
 - ⚠️ **Es un cambio ancho:** 29 controllers, 20 routers y 33 archivos de test. Por eso va después de `US-12.2.2` y `US-12.2.3`, y corre la suite completa y Playwright.
 - ⚠️ Los dos puertos que hoy importa un router (`PreguntaConsultaPort`, `EstudianteConsultaPort`) pasan a ser colaboradores del controller o de un caso de uso.
+
+## Enmienda 2026-11-25 (al escribir `US-12.2.4`)
+
+El contexto decía que 8 métodos de controllers tienen más de una sentencia y que **los 8 son lógica de aplicación**. Al leer el cuerpo de cada uno, **solo 4 lo son**:
+
+- Pasan a casos de uso: `registrar_estudiante` (consulta un repositorio y un puerto, con `assert` para condiciones de negocio), `listar_comisiones_por_materia`, `listar_estudiantes` y `obtener_comision` (comprueban existencia y autorización y levantan errores de dominio).
+- Se quedan en el controller: `suspender_evaluacion` y `finalizar_evaluacion` (un `assert resultado is not None` defensivo, que se reemplaza por un tipo que no admite `None`) y `resetear_password` y `confirmar` (desempaquetan una tupla y descartan los eventos para devolver el usuario). Eso es adaptación y presentación del resultado, que es justamente el trabajo que esta decisión le da al controller.
+
+Además, dos routers hacen trabajo de aplicación directamente: `evaluaciones_router` enriquece cada pregunta con enunciado y opciones llamando a `PreguntaConsultaPort`, y `analytics_router` recibe `EstudianteConsultaPort`. Ese trabajo pasa al controller. **La decisión no cambia**; cambia el alcance de "8 métodos a casos de uso" a 4 casos de uso nuevos.
