@@ -22,7 +22,7 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
     async def guardar(self, materia: Materia) -> None:
         """Guarda una materia nueva."""
         self._session.add(MateriaModel(id=materia.id, nombre=materia.nombre))
-        await self._session.commit()
+        await self._session.flush()
 
     async def actualizar(self, materia: Materia) -> None:
         """Guarda cambios sobre una materia existente (nombre y `activa`)."""
@@ -31,7 +31,7 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
             return
         modelo.nombre = materia.nombre
         modelo.activa = materia.activa
-        await self._session.commit()
+        await self._session.flush()
 
     async def eliminar(self, materia_id: UUID) -> None:
         """Borra físicamente una materia sin preguntas ni comisiones asociadas.
@@ -49,7 +49,7 @@ class SQLAlchemyMateriaRepository(MateriaRepositoryPort):
         if banco_modelo is not None:
             await self._session.delete(banco_modelo)
         await self._session.delete(modelo)
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_nombre(self, nombre: str) -> Materia | None:
         """Busca una materia por nombre, o `None` si no existe (INV-BP-00)."""

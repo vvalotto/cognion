@@ -151,7 +151,7 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
             modelo = _modelo_desde_opcion_multiple(pregunta)
 
         self._session.add(modelo)
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_id(
         self, pregunta_id: UUID
@@ -220,4 +220,4 @@ class SQLAlchemyPreguntaRepository(PreguntaRepositoryPort):
 
         _aplicar_pregunta_a_modelo(modelo, pregunta)
 
-        await self._session.commit()
+        await self._session.flush()

@@ -15,16 +15,20 @@ _RESTRICCION_EMAIL = "usuario_email_key"
 
 @asynccontextmanager
 async def email_unico(session: AsyncSession, email: str) -> AsyncIterator[None]:
-    """Convierte la violación de unicidad del email en `EmailYaRegistrado` y deshace la sesión.
+    """Convierte la violación de unicidad del email en `EmailYaRegistrado`, deshaciendo solo lo de este bloque.
 
     Dos registros del mismo email a la vez pasan juntos el chequeo previo `existe_email` y los
     frena la restricción única: es el mismo "email ya registrado", no un error 500. Cualquier otra
     violación de integridad se vuelve a lanzar tal cual.
+
+    El bloque corre dentro de un punto de guardado (`begin_nested`) y no deshace la sesión entera: con
+    la unidad de trabajo por request (`ADR-028`), un `rollback()` de la sesión descartaría también lo que
+    el request ya había escrito antes. El `flush()` que dispara la violación debe estar dentro del bloque.
     """
     try:
-        yield
+        async with session.begin_nested():
+            yield
     except IntegrityError as exc:
-        await session.rollback()
         if _RESTRICCION_EMAIL in str(exc):
             raise EmailYaRegistrado(email) from exc
         raise
