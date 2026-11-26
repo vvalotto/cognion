@@ -288,6 +288,22 @@ class TestGuardaDeCapasYRepositorios:
             f"ya no lo hacen (actualizá la lista, US-12.2.3): {sorted(set(GATEWAYS_QUE_IMPORTAN_MODELOS) - set(real))}"
         )
 
+    def test_todo_repositorio_sql_vive_en_frameworks_repositories(self) -> None:
+        """`ADR-030`: `*_repository.py` y `email_unico.py` solo bajo `frameworks/repositories/`."""
+        fuera = sorted(
+            _relativo(p)
+            for patron in ("*_repository.py", "email_unico.py")
+            for p in SRC.glob(f"*/**/{patron}")
+            if p.parent.name != "repositories" or p.parent.parent.name != "frameworks"
+        )
+        assert fuera == [], f"Repositorios fuera de frameworks/repositories/: {fuera}"
+
+    def test_frameworks_adapters_no_contiene_repositorios(self) -> None:
+        assert sorted(_relativo(p) for p in SRC.glob("*/frameworks/adapters/*_repository.py")) == []
+
+    def test_no_existe_interface_adapters_gateways(self) -> None:
+        assert sorted(_relativo(p) for p in SRC.glob("*/interface_adapters/gateways")) == []
+
     def test_las_excepciones_de_import_linter_son_las_declaradas(self) -> None:
         contratos = tomllib.loads((RAIZ / "pyproject.toml").read_text(encoding="utf-8"))["tool"][
             "importlinter"

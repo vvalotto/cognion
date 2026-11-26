@@ -13,7 +13,7 @@ from sqlalchemy import text
 
 from src.app import app
 from src.banco_preguntas.entities.materia import Materia
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
 from src.identidad.entities.comision import Comision

@@ -11,7 +11,7 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
 from src.banco_preguntas.use_cases.obtener_materia import ObtenerMateriaUseCase

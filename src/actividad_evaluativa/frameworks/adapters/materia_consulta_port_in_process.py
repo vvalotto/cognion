@@ -17,7 +17,7 @@ from src.actividad_evaluativa.entities.ports.materia_consulta_port import (
     MateriaConsultaPort,
     MateriaDTO,
 )
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
 from src.banco_preguntas.use_cases.obtener_materia import ObtenerMateriaUseCase

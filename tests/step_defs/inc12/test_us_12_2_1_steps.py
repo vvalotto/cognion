@@ -16,7 +16,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app import app
-from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
+from src.banco_preguntas.frameworks.repositories.banco_repository import (
     SQLAlchemyBancoRepository,
 )
 from src.identidad.entities.token_recuperacion_password import TokenRecuperacionPassword
