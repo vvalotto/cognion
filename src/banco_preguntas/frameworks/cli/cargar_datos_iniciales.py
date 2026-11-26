@@ -25,13 +25,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from src.banco_preguntas.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
-from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
+from src.banco_preguntas.frameworks.repositories.banco_repository import (
     SQLAlchemyBancoRepository,
 )
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
-from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
+from src.banco_preguntas.frameworks.repositories.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
 from src.banco_preguntas.interface_adapters.importadores.json_importador import leer_json

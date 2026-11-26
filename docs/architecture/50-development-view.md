@@ -44,7 +44,7 @@ flowchart LR
 
 `import-linter` (`uv run lint-imports`, 4 contratos en `[tool.importlinter]` de `pyproject.toml`) falla el CI si se rompe alguna:
 
-1. **Capas dentro de cada BC:** una capa solo importa las internas. Excepción declarada: los repositorios de `interface_adapters/gateways/` importan los modelos ORM de `frameworks/db/models.py` de su mismo BC.
+1. **Capas dentro de cada BC:** una capa solo importa las internas. Sin excepciones: los repositorios SQL viven en `frameworks/repositories/` (`ADR-030`, `US-12.2.3`) y tres contratos más les prohíben importar de otro contexto.
 2. **Aislamiento entre BC:** solo `frameworks/adapters/` puede importar de otro BC.
 3. **`shared` no importa de ningún BC.**
 4. **`ADR-026`:** ningún BC salvo Analytics lee los modelos ORM de otro.
@@ -58,7 +58,7 @@ El detalle de cada cruce está en `20-context-map-integrations.md`.
 | **Commit** (`.githooks/pre-commit`) | `black`, `isort`, `ruff`, `mypy` sobre todo `src/`, `CodeGuard` | `mypy`, sí; `CodeGuard`, no (solo advierte) |
 | **Push** (`.githooks/pre-push`) | `DesignReviewer` sobre `src/` con `--config pyproject.toml` | Sí, si hay CRITICAL (acoplamiento `max_cbo = 10`, `max_wmc = 25`, objetos Dios) |
 | **CI** (`.github/workflows/ci.yml`) | `Lint backend` (ruff, mypy, import-linter), `Lint frontend` (oxlint, `tsc`, vitest), `Tests` (pytest con PostgreSQL 16), `DesignReviewer` | Sí: los cuatro son obligatorios en `develop` |
-| **CI, guardas de deuda** (dentro de `Tests`: `tests/unit/inc12/test_guardas_con_excepciones.py`) | Listas exactas de excepciones: `commit()` solo en la unidad de trabajo y el event store (eran 21; `US-12.2.1`), los 3 casos de uso que escriben y después levantan un error, 136 `raise HTTPException` en routers, 10 gateways que importan los modelos ORM y los `ignore_imports` de import-linter. Si una crece, el test falla; si baja, obliga a actualizar la lista | Sí, dentro de `Tests` (`IM-03`, `IM-02`, `CA-01`) |
+| **CI, guardas de deuda** (dentro de `Tests`: `tests/unit/inc12/test_guardas_con_excepciones.py`) | Listas exactas de excepciones: `commit()` solo en la unidad de trabajo y el event store (eran 21; `US-12.2.1`), los 3 casos de uso que escriben y después levantan un error, 136 `raise HTTPException` en routers, la ubicación de los repositorios (todos en `frameworks/repositories/`) y los `ignore_imports` de import-linter. Si una crece, el test falla; si baja, obliga a actualizar la lista | Sí, dentro de `Tests` (`IM-03`, `IM-02`, `CA-01`) |
 | **CI, E2E** (job `E2E (Playwright)`) | Los circuitos de la sesión en vivo en Chrome real, con el backend y el frontend en modo desarrollo | Visible, no obligatorio hasta que se agregue a la protección de la rama (`VT-02`) |
 | **CI, cobertura** (jobs `Tests` y `Lint frontend`) | Backend: total ≥ 90 %, capas internas ≥ 95 % y `frameworks/` ≥ 82 % (medido 92,8 / 97,1 / 84,9 el 2026-11-18); frontend: 80 % de Vitest | Sí, dentro de `Tests` y `Lint frontend` (`VT-01`, `VT-02`) |
 | **CI, servidor** (`imagen-smoke.yml`, job `Servidor con Docker real`) | `deploy/servidor/` contra Docker real: levanta, respalda, ensaya la restauración, despliega, hace rollback y comprueba el proxy | Solo al tocar `Dockerfile`, `deploy/` o el script (`DO-03`) |

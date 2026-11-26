@@ -12,10 +12,10 @@ import uuid
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
-from src.identidad.interface_adapters.gateways.comision_repository import (
+from src.identidad.frameworks.repositories.comision_repository import (
     SQLAlchemyComisionRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.notificaciones.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )

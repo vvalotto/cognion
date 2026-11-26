@@ -27,24 +27,24 @@ from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
-from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
+from src.banco_preguntas.frameworks.repositories.banco_repository import (
     SQLAlchemyBancoRepository,
 )
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
-from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
+from src.banco_preguntas.frameworks.repositories.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
-from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.comision_repository import (
+from src.identidad.frameworks.repositories.comision_repository import (
     SQLAlchemyComisionRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import (
+from src.identidad.frameworks.repositories.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
+from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import (

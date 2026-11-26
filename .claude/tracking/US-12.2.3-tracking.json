@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "us_id": "US-12.2.3",
+    "us_title": "Todos los repositorios SQL viven en frameworks/repositories",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-26T14:46:54.625972+00:00",
+    "completed_at": "2026-11-26T15:45:36.350676+00:00",
+    "total_elapsed_seconds": 3521,
+    "effective_seconds": 3521,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de contexto",
+      "started_at": "2026-11-26T14:46:54.847985+00:00",
+      "completed_at": "2026-11-26T14:47:22.472453+00:00",
+      "elapsed_seconds": 27,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-26T14:47:22.669849+00:00",
+      "completed_at": "2026-11-26T14:49:35.810718+00:00",
+      "elapsed_seconds": 133,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-26T14:49:35.963571+00:00",
+      "completed_at": "2026-11-26T15:30:10.058120+00:00",
+      "elapsed_seconds": 2434,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 7,
+      "phase_name": "Quality gates",
+      "started_at": "2026-11-26T15:30:10.648392+00:00",
+      "completed_at": "2026-11-26T15:30:58.877539+00:00",
+      "elapsed_seconds": 48,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 8,
+      "phase_name": "Documentación",
+      "started_at": "2026-11-26T15:30:59.018206+00:00",
+      "completed_at": "2026-11-26T15:45:35.924468+00:00",
+      "elapsed_seconds": 876,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 9,
+      "phase_name": "Reporte final",
+      "started_at": "2026-11-26T15:45:36.067892+00:00",
+      "completed_at": "2026-11-26T15:45:36.212878+00:00",
+      "elapsed_seconds": 0,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 6,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

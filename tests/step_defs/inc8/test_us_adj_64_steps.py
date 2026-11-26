@@ -18,8 +18,8 @@ from pytest_bdd import given, parsers, scenarios, then, when
 from sqlalchemy import text
 
 from src.identidad.entities.usuario import Usuario
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.settings import Settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import unidad_de_trabajo

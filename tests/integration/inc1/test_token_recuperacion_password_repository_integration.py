@@ -4,10 +4,10 @@ from datetime import UTC, datetime
 from src.identidad.entities.token_recuperacion_password import TokenRecuperacionPassword
 from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.db.models import TokenRecuperacionPasswordModel
-from src.identidad.interface_adapters.gateways.token_recuperacion_password_repository import (
+from src.identidad.frameworks.repositories.token_recuperacion_password_repository import (
     SQLAlchemyTokenRecuperacionPasswordRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 

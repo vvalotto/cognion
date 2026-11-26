@@ -23,10 +23,10 @@ from src.actividad_evaluativa.frameworks.dependencies import (
 from src.app import app
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
-from src.identidad.interface_adapters.gateways.comision_repository import (
+from src.identidad.frameworks.repositories.comision_repository import (
     SQLAlchemyComisionRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.conftest import _id_desde_headers, asignar_docente_a_materia

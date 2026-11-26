@@ -12,7 +12,7 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.identidad.interface_adapters.gateways.comision_query_repository import (
+from src.identidad.frameworks.repositories.comision_query_repository import (
     SQLAlchemyComisionQueryRepository,
 )
 from src.notificaciones.entities.ports.comision_consulta_port import (

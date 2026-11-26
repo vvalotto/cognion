@@ -16,8 +16,8 @@ import httpx
 import pytest
 
 from src.identidad.entities.usuario import Usuario
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.inc8._servidor_real import ServidorReal
 

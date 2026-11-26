@@ -234,13 +234,6 @@ layers = [
     "(use_cases)",
     "(entities)",
 ]
-# Excepción documentada (decisión de Víctor, 2026-11-08): los repositorios SQLAlchemy viven en
-# `interface_adapters/gateways/` pero sus modelos ORM viven en `frameworks/db/models.py`. Es la
-# convención del proyecto desde el Incremento 1 (9 archivos: identidad y banco_preguntas); la regla
-# escrita se corrigió en `CLAUDE.md`. Cualquier otro import hacia una capa externa sigue prohibido.
-ignore_imports = [
-    "src.*.interface_adapters.gateways.** -> src.*.frameworks.db.models",
-]
 
 [[tool.importlinter.contracts]]
 name = "Aislamiento entre BC: solo frameworks/adapters puede importar de otro BC (ADR-006)"
@@ -254,6 +247,39 @@ modules = [
 ]
 ignore_imports = [
     "src.*.frameworks.adapters.** -> src.**",
+]
+
+[[tool.importlinter.contracts]]
+name = "ADR-030: los repositorios de Identidad no importan de otro contexto"
+type = "forbidden"
+source_modules = ["src.identidad.frameworks.repositories"]
+forbidden_modules = [
+    "src.actividad_evaluativa",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
+]
+
+[[tool.importlinter.contracts]]
+name = "ADR-030: los repositorios de Banco de Preguntas no importan de otro contexto"
+type = "forbidden"
+source_modules = ["src.banco_preguntas.frameworks.repositories"]
+forbidden_modules = [
+    "src.identidad",
+    "src.actividad_evaluativa",
+    "src.notificaciones",
+    "src.analytics",
+]
+
+[[tool.importlinter.contracts]]
+name = "ADR-030: los repositorios de Actividad Evaluativa no importan de otro contexto"
+type = "forbidden"
+source_modules = ["src.actividad_evaluativa.frameworks.repositories"]
+forbidden_modules = [
+    "src.identidad",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
 ]
 
 [[tool.importlinter.contracts]]

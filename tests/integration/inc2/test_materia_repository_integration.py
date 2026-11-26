@@ -2,10 +2,10 @@ import uuid
 
 from src.banco_preguntas.entities.banco import Banco
 from src.banco_preguntas.entities.materia import Materia
-from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
+from src.banco_preguntas.frameworks.repositories.banco_repository import (
     SQLAlchemyBancoRepository,
 )
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
 

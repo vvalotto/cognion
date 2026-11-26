@@ -17,7 +17,7 @@ from src.analytics.entities.ports.comision_consulta_port import (
     ComisionResumen,
     EstudianteResumen,
 )
-from src.identidad.interface_adapters.gateways.comision_query_repository import (
+from src.identidad.frameworks.repositories.comision_query_repository import (
     SQLAlchemyComisionQueryRepository,
 )
 

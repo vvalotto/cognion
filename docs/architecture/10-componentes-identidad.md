@@ -39,8 +39,6 @@ flowchart TB
     end
     subgraph ia["interface_adapters"]
         ctl["controllers (12)"]
-        gw["gateways (8)
-        repositorios y consultas SQL"]
     end
     subgraph uc["use_cases (28)"]
         u["sesión y bloqueo · cuentas
@@ -86,7 +84,7 @@ flowchart TB
 | use_cases | `autoregistrar_docente`, `autoregistrar_estudiante`, `listar_materias_del_estudiante` | Autoservicio y portal de entrada |
 | use_cases | `solicitar_recuperacion_password`, `confirmar_nueva_password` | Recuperación de contraseña |
 | entities/ports | 12 puertos: repositorios (usuario, comisión, invitación, token), consultas (`ComisionQueryPort`, `CuentaQueryPort`, `NombreUsuarioQueryPort`), `PasswordHasherPort`, `NotificadorPort`, `CanalRecuperacionPort`, `MateriaPort`, `EvaluacionConsultaPort` | Contratos hacia persistencia, seguridad y otros BC |
-| interface_adapters | 12 controllers y 8 gateways SQL | HTTP a casos de uso y repositorios SQLAlchemy |
+| interface_adapters | 12 controllers | HTTP a casos de uso |
 | frameworks | `PasswordHasher` | bcrypt en un ejecutor propio, para no bloquear el event loop (`ADR-014`, `US-ADJ-63`) |
 | frameworks | `NotificadorSmtp` | Correo de invitación, adaptador propio (`ADR-012`) |
 | frameworks | CLI `bootstrap_administrador` | Primer administrador al instalar (`ADR-016`) |
@@ -121,7 +119,7 @@ Bajo `/api`. "Autenticado" = cualquier usuario con token válido.
 
 ## Restricciones y calidad
 - **Seguridad:** el bloqueo limita los intentos de adivinar una contraseña. Un bloqueo temporal (último administrador) responde 403 con `codigo: cuenta_bloqueada_temporal` y los segundos que faltan. Hash bcrypt asíncrono.
-- **Capas y aislamiento:** `import-linter` impide importar capas externas y a otros BC fuera de `frameworks/adapters/`. Excepción: los 8 gateways SQL importan `frameworks/db/models.py` de este mismo BC.
+- **Capas y aislamiento:** `import-linter` impide importar capas externas y a otros BC fuera de `frameworks/adapters/`. Los 8 repositorios SQL viven en `frameworks/repositories/` (`ADR-030`) y no tienen excepción en el contrato de capas.
 - Los tokens de invitación no se imprimen en el log de acceso (`US-ADJ-68`).
 
 ## Cómo verificar esta vista contra el código

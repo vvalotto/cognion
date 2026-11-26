@@ -5,6 +5,15 @@ from __future__ import annotations
 from src.banco_preguntas.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
+from src.banco_preguntas.frameworks.repositories.banco_repository import (
+    SQLAlchemyBancoRepository,
+)
+from src.banco_preguntas.frameworks.repositories.materia_repository import (
+    SQLAlchemyMateriaRepository,
+)
+from src.banco_preguntas.frameworks.repositories.pregunta_repository import (
+    SQLAlchemyPreguntaRepository,
+)
 from src.banco_preguntas.interface_adapters.controllers.bancos_controller import (
     BancosController,
 )
@@ -13,15 +22,6 @@ from src.banco_preguntas.interface_adapters.controllers.materias_controller impo
 )
 from src.banco_preguntas.interface_adapters.controllers.preguntas_controller import (
     PreguntasController,
-)
-from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
-    SQLAlchemyBancoRepository,
-)
-from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
-    SQLAlchemyMateriaRepository,
-)
-from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
-    SQLAlchemyPreguntaRepository,
 )
 from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (

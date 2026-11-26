@@ -2,10 +2,10 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from src.actividad_evaluativa.entities.evaluacion import EstadoEvaluacion
-from src.actividad_evaluativa.frameworks.adapters.evaluacion_activa_query_repository import (
+from src.actividad_evaluativa.frameworks.db.models import EventoModel
+from src.actividad_evaluativa.frameworks.repositories.evaluacion_activa_query_repository import (
     _resumen_de_stream,
 )
-from src.actividad_evaluativa.frameworks.db.models import EventoModel
 
 
 def _evento(

@@ -45,12 +45,12 @@ from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_pr
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
-from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
-    SQLAlchemyProyeccionesEnVivoQuery,
-)
 from src.actividad_evaluativa.frameworks.dependencies import get_connection_manager
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.repositories.proyecciones_en_vivo_repository import (
+    SQLAlchemyProyeccionesEnVivoQuery,
 )
 from src.actividad_evaluativa.frameworks.websockets.websocket_canal_tiempo_real import (
     WebSocketCanalTiempoReal,

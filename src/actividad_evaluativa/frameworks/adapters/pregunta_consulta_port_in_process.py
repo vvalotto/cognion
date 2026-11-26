@@ -24,10 +24,10 @@ from src.actividad_evaluativa.entities.puntaje_en_vivo import (
     NivelPregunta,
 )
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
-from src.banco_preguntas.interface_adapters.gateways.banco_repository import (
+from src.banco_preguntas.frameworks.repositories.banco_repository import (
     SQLAlchemyBancoRepository,
 )
-from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
+from src.banco_preguntas.frameworks.repositories.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
 
