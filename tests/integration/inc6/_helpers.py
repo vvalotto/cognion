@@ -15,11 +15,11 @@ from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store impo
 from src.app import app
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
+from src.identidad.frameworks.db.models import comision_docentes
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.interface_adapters.gateways.comision_repository import (
     SQLAlchemyComisionRepository,
 )
-from src.identidad.frameworks.db.models import comision_docentes
 from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )

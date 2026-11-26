@@ -100,8 +100,8 @@ class TestCrearSesionEnVivoAPIIntegration:
     async def test_creacion_exitosa(self, session, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
-                client, session, admin_headers, 20
+            materia_id, comision_id, docente_headers = (
+                await _crear_materia_con_preguntas_y_comision(client, session, admin_headers, 20)
             )
 
             response = await client.post(
@@ -139,8 +139,10 @@ class TestCrearSesionEnVivoAPIIntegration:
 
     async def test_filtra_por_unidad_y_tema(self, session, admin_headers):
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            _materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
-                client, session, admin_headers, 6, unidad="U9", tema="T9"
+            _materia_id, comision_id, docente_headers = (
+                await _crear_materia_con_preguntas_y_comision(
+                    client, session, admin_headers, 6, unidad="U9", tema="T9"
+                )
             )
 
             response = await client.post(
@@ -162,8 +164,8 @@ class TestCrearSesionEnVivoAPIIntegration:
     async def test_preguntas_insuficientes(self, session, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            _materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
-                client, session, admin_headers, 5
+            _materia_id, comision_id, docente_headers = (
+                await _crear_materia_con_preguntas_y_comision(client, session, admin_headers, 5)
             )
 
             response = await client.post(
@@ -182,8 +184,8 @@ class TestCrearSesionEnVivoAPIIntegration:
     async def test_tiempo_limite_invalido(self, session, admin_headers):
         antes = await _contar_streams_de_sesiones(session)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            _materia_id, comision_id, docente_headers = await _crear_materia_con_preguntas_y_comision(
-                client, session, admin_headers, 20
+            _materia_id, comision_id, docente_headers = (
+                await _crear_materia_con_preguntas_y_comision(client, session, admin_headers, 20)
             )
 
             response = await client.post(

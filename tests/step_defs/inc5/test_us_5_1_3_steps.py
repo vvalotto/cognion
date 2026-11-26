@@ -256,12 +256,8 @@ def actividad_vigente_restringida_a_a_2_y_b_1(context, monkeypatch):
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
     materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(
-        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
-    )
-    comision_b_id, *emails_b = run_async(
-        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
-    )
+    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2, docente_id))
+    comision_b_id, *emails_b = run_async(_crear_comision_con_estudiantes(materia_id, 1, docente_id))
     actividad_id = run_async(
         _post_crear_actividad(materia_id, [comision_a_id, comision_b_id], headers)
     )
@@ -372,9 +368,7 @@ def verificar_no_se_envia_ningun_email_de_cierre(context):
 @given("una actividad restringida a la comisión A con 2 estudiantes")
 def actividad_restringida_a_comision_a_2_estudiantes(context):
     materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(
-        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
-    )
+    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2, docente_id))
     actividad_id = run_async(_post_crear_actividad(materia_id, [comision_a_id], headers))
     context["actividad_id"] = actividad_id
     context["docente_headers"] = headers

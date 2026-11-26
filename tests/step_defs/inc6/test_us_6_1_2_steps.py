@@ -151,9 +151,7 @@ async def _payload_primer_evento(sesion_id: str) -> dict:
 
 
 def _dado_comision_con_preguntas(context, cantidad: int) -> None:
-    _materia_id, comision_id, headers = run_async(
-        _crear_materia_con_preguntas_y_comision(cantidad)
-    )
+    _materia_id, comision_id, headers = run_async(_crear_materia_con_preguntas_y_comision(cantidad))
     context["comision_id"] = comision_id
     context["docente_headers"] = headers
 
@@ -199,7 +197,10 @@ def docente_crea_sesion(context, cantidad, tiempo):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
         _post_crear_sesion(
-            context["comision_id"], cantidad, tiempo, context.get("docente_headers") or docente_headers()
+            context["comision_id"],
+            cantidad,
+            tiempo,
+            context.get("docente_headers") or docente_headers(),
         )
     )
 
@@ -211,7 +212,10 @@ def docente_intenta_crear_con_cantidad(context, cantidad):
     context["antes"] = run_async(_contar_sesiones())
     context["response"] = run_async(
         _post_crear_sesion(
-            context["comision_id"], cantidad, 30, context.get("docente_headers") or docente_headers()
+            context["comision_id"],
+            cantidad,
+            30,
+            context.get("docente_headers") or docente_headers(),
         )
     )
 
