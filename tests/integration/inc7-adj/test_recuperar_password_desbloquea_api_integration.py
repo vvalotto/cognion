@@ -24,16 +24,19 @@ async def _crear_usuario(session, perfil: TipoPerfil = TipoPerfil.DOCENTE, **cam
     usuario = Usuario.crear("Cuenta", email, BcryptPasswordHasher().hash(PASSWORD_VIEJA), perfil)
     repo = SQLAlchemyUsuarioRepository(session)
     await repo.guardar(usuario)
+    await session.commit()
     if campos:
         for campo, valor in campos.items():
             setattr(usuario, campo, valor)
         await repo.actualizar(usuario)
+        await session.commit()
     return usuario
 
 
 async def _crear_token(session, usuario: Usuario) -> TokenRecuperacionPassword:
     token = TokenRecuperacionPassword.crear(usuario.id)
     await SQLAlchemyTokenRecuperacionPasswordRepository(session).guardar(token)
+    await session.commit()
     return token
 
 
@@ -118,6 +121,7 @@ class TestRecuperarPasswordDesbloqueaAPIIntegration:
         token = TokenRecuperacionPassword.crear(usuario.id)
         token.expira_en = datetime.now(UTC) - timedelta(seconds=1)
         await SQLAlchemyTokenRecuperacionPasswordRepository(session).guardar(token)
+        await session.commit()
 
         response = await _confirmar(token.token)
 

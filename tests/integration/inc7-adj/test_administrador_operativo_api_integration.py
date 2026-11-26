@@ -20,10 +20,12 @@ async def _crear(session, perfil: TipoPerfil, **campos: object) -> Usuario:
     )
     repo = SQLAlchemyUsuarioRepository(session)
     await repo.guardar(usuario)
+    await session.commit()
     if campos:
         for campo, valor in campos.items():
             setattr(usuario, campo, valor)
         await repo.actualizar(usuario)
+        await session.commit()
     return usuario
 
 

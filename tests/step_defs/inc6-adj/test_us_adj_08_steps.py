@@ -28,7 +28,7 @@ from src.identidad.interface_adapters.gateways.invitacion_repository import (
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc6-adj/US-ADJ-08-invitacion-preview.feature")
 
@@ -39,7 +39,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
@@ -65,7 +65,7 @@ def context():
 
 
 async def _crear_invitacion_vigente() -> str:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         invitacion_repo = SQLAlchemyInvitacionRepository(session)
@@ -89,7 +89,7 @@ async def _crear_invitacion_vigente() -> str:
 
 
 async def _vencer_invitacion(token: str) -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         invitacion_repo = SQLAlchemyInvitacionRepository(session)
         invitacion = await invitacion_repo.obtener_por_token(token)
         modelo = await session.get(InvitacionModel, invitacion.id)
@@ -98,7 +98,7 @@ async def _vencer_invitacion(token: str) -> None:
 
 
 async def _marcar_usada(token: str) -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         invitacion_repo = SQLAlchemyInvitacionRepository(session)
         invitacion = await invitacion_repo.obtener_por_token(token)
         modelo = await session.get(InvitacionModel, invitacion.id)
@@ -194,7 +194,7 @@ def valida_ambas_200(context):
 @then("la Invitación sigue vigente (usada_en sigue en null)")
 def valida_invitacion_sigue_vigente(context):
     async def _verificar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             invitacion_repo = SQLAlchemyInvitacionRepository(session)
             invitacion = await invitacion_repo.obtener_por_token(context["token"])
             assert invitacion is not None

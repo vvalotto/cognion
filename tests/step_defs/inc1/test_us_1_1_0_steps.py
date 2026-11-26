@@ -11,7 +11,7 @@ from sqlalchemy import text
 from src.app import app
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/inc1/US-1.1.0-alta-usuarios-comision-docentes.feature")
@@ -23,7 +23,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision"))
@@ -123,7 +123,7 @@ async def _crear_estudiante_fixture() -> str:
     )
     comision_id = comision_resp.json()["id"]
 
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         estudiante = Usuario.crear_estudiante(
             "Estudiante Test", "estudiante.bdd@fiuner.edu.ar", "hash", uuid.UUID(comision_id)

@@ -28,7 +28,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/sp-adj-01/US-ADJ-05-paginar-cuentas.feature")
@@ -42,7 +42,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
@@ -67,7 +67,7 @@ def context():
 
 async def _crear_cuenta_docente(indice: int) -> str:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         usuario = Usuario.crear(
             f"Docente {indice}",
@@ -81,7 +81,7 @@ async def _crear_cuenta_docente(indice: int) -> str:
 
 async def _crear_cuenta_estudiante_bloqueada(indice: int, comision_id: uuid.UUID) -> str:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         usuario = Usuario.crear_estudiante(
             f"Estudiante Bloqueado {indice}",
@@ -96,7 +96,7 @@ async def _crear_cuenta_estudiante_bloqueada(indice: int, comision_id: uuid.UUID
 
 async def _crear_comision_dummy() -> uuid.UUID:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(

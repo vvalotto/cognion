@@ -40,10 +40,13 @@ async def materia_y_comision(
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuarios.guardar(admin)
+    await session.commit()
     comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
     await comisiones.guardar(comision)
+    await session.commit()
     comision.asignar_docente(_id_desde_headers(docente_headers))
     await comisiones.actualizar(comision)
+    await session.commit()
 
     emails = []
     for i in range(estudiantes):
@@ -51,6 +54,7 @@ async def materia_y_comision(
         await usuarios.guardar(
             Usuario.crear_estudiante(f"Estudiante {i}", email, "hash", comision.id)
         )
+        await session.commit()
         emails.append(email)
     return materia_id, str(comision.id), emails
 

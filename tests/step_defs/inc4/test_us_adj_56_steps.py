@@ -33,7 +33,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import asignar_docente_a_materia
 
@@ -51,7 +51,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM ranking_por_sesion"))
         await session.commit()
@@ -88,13 +88,16 @@ async def _crear_estudiante_de_materia(session, materia_id) -> tuple[Usuario, Co
         "Admin", f"admin.{uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "Lunes 14-16hs", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiante = Usuario.crear_estudiante(
         "Estudiante", f"estudiante.{uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante)
+    await session.commit()
     return estudiante, comision
 
 
@@ -276,7 +279,7 @@ def _get_mi_desempeno(context, materia_id=None) -> None:
 @given("un Estudiante que participó en dos sesiones en vivo finalizadas de su materia")
 def estudiante_con_dos_sesiones_finalizadas(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -296,7 +299,7 @@ def estudiante_con_dos_sesiones_finalizadas(context):
 @given("una sesión en la que el Estudiante quedó 3° de 14")
 def sesion_con_posicion_3_de_14(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -321,7 +324,7 @@ def sesion_con_posicion_3_de_14(context):
 @given("una sesión en vivo todavía en curso")
 def sesion_en_curso(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -338,7 +341,7 @@ def sesion_en_curso(context):
 @given("una sesión en vivo cancelada antes de iniciar")
 def sesion_cancelada(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -356,7 +359,7 @@ def sesion_cancelada(context):
 @given("un Estudiante que se unió a una sesión y no respondió ninguna pregunta")
 def estudiante_se_unio_sin_responder(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -374,7 +377,7 @@ def estudiante_se_unio_sin_responder(context):
 @given("un Estudiante con evaluaciones de período abierto y sesiones en vivo")
 def estudiante_con_periodo_abierto_y_en_vivo(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -398,7 +401,7 @@ def estudiante_con_periodo_abierto_y_en_vivo(context):
 @given("un Estudiante que nunca participó en una sesión en vivo")
 def estudiante_sin_sesiones_en_vivo(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, _ = await _crear_estudiante_de_materia(session, context["materia_id"])
             context["estudiante_id"] = estudiante.id
 
@@ -408,7 +411,7 @@ def estudiante_sin_sesiones_en_vivo(context):
 @given('el Docente en "Desempeño por alumno" con un estudiante elegido')
 def docente_con_estudiante_elegido(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )
@@ -431,7 +434,7 @@ def estudiante_con_sesiones_en_dos_materias(context):
     otra_materia_id = uuid4()
 
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             estudiante, comision_x = await _crear_estudiante_de_materia(
                 session, context["materia_id"]
             )

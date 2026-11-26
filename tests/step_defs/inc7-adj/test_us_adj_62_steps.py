@@ -21,7 +21,7 @@ from src.identidad.interface_adapters.gateways.token_recuperacion_password_repos
 )
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc7-adj/US-ADJ-62-recuperar-password-desbloquea.feature")
 
@@ -35,7 +35,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM token_recuperacion_password"))
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
@@ -70,7 +70,7 @@ async def _crear_usuario(perfil: TipoPerfil, **campos: object) -> Usuario:
     usuario = Usuario.crear(
         "Cuenta BDD", email, BcryptPasswordHasher().hash(PASSWORD_VIEJA), perfil
     )
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         await repo.guardar(usuario)
         if campos:
@@ -84,20 +84,20 @@ async def _crear_token(usuario: Usuario, *, vencido: bool = False) -> str:
     token = TokenRecuperacionPassword.crear(usuario.id)
     if vencido:
         token.expira_en = datetime.now(UTC) - timedelta(seconds=1)
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await SQLAlchemyTokenRecuperacionPasswordRepository(session).guardar(token)
     return token.token
 
 
 async def _recargar(usuario_id: uuid.UUID) -> Usuario:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario = await SQLAlchemyUsuarioRepository(session).obtener_por_id(usuario_id)
     assert usuario is not None
     return usuario
 
 
 async def _token_usado_en(token: str) -> datetime | None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         resultado = await session.execute(
             select(TokenRecuperacionPasswordModel).where(
                 TokenRecuperacionPasswordModel.token == token

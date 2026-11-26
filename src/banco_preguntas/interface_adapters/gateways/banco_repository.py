@@ -22,7 +22,7 @@ class SQLAlchemyBancoRepository(BancoRepositoryPort):
     async def guardar(self, banco: Banco) -> None:
         """Guarda un banco nuevo."""
         self._session.add(BancoModel(id=banco.id, materia_id=banco.materia_id))
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_id(self, banco_id: UUID) -> Banco | None:
         """Busca un banco por id, o `None` si no existe."""

@@ -2,11 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Annotated
-
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.banco_preguntas.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
@@ -47,12 +42,10 @@ from src.banco_preguntas.use_cases.verificar_autorizacion_materia import (
 )
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import get_session
+from src.shared.frameworks.db import SessionDep
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.shared.interface_adapters.security.get_current_user import build_get_current_user
 from src.shared.interface_adapters.security.require_rol import require_rol
-
-SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 def get_materias_controller(session: SessionDep) -> MateriasController:

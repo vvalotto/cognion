@@ -25,7 +25,7 @@ class SQLAlchemyTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRep
     async def guardar(self, token: TokenRecuperacionPassword) -> None:
         """Guarda un token nuevo."""
         self._session.add(self._a_model(token))
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_token(self, token: str) -> TokenRecuperacionPassword | None:
         """Busca un token de recuperación por su valor, o `None` si no existe."""
@@ -47,7 +47,7 @@ class SQLAlchemyTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRep
             )
             .values(usado_en=ahora)
         )
-        await self._session.commit()
+        await self._session.flush()
 
     async def actualizar(self, token: TokenRecuperacionPassword) -> None:
         """Guarda cambios sobre un token existente.
@@ -59,7 +59,7 @@ class SQLAlchemyTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRep
         if modelo is None:
             raise ValueError(f"TokenRecuperacionPassword '{token.id}' no existe para actualizar.")
         modelo.usado_en = token.usado_en
-        await self._session.commit()
+        await self._session.flush()
 
     async def eliminar_de(self, usuario_id: UUID) -> None:
         """Borra físicamente todos los tokens de `usuario_id`."""
@@ -68,7 +68,7 @@ class SQLAlchemyTokenRecuperacionPasswordRepository(TokenRecuperacionPasswordRep
                 TokenRecuperacionPasswordModel.usuario_id == usuario_id
             )
         )
-        await self._session.commit()
+        await self._session.flush()
 
     @staticmethod
     def _a_model(token: TokenRecuperacionPassword) -> TokenRecuperacionPasswordModel:

@@ -21,11 +21,13 @@ class TestListarComisionesPorMateria:
         query_repo = SQLAlchemyComisionQueryRepository(session)
         admin = Usuario.crear("Vic", "vic.query1@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision_1 = Comision.crear(materia_id, "lu 10-12", admin.id)
         comision_2 = Comision.crear(materia_id, "ma 14-16", admin.id)
         await comision_repo.guardar(comision_1)
         await comision_repo.guardar(comision_2)
+        await session.commit()
 
         resultado = await query_repo.listar_comisiones_por_materia(materia_id)
 
@@ -37,9 +39,11 @@ class TestListarComisionesPorMateria:
         query_repo = SQLAlchemyComisionQueryRepository(session)
         admin = Usuario.crear("Vic", "vic.query4@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         resultado = await query_repo.listar_comisiones_por_materia(materia_id)
 
@@ -54,11 +58,14 @@ class TestListarComisionesPorMateria:
         docente = Usuario.crear("Doc", "doc.query5@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         resultado = await query_repo.listar_comisiones_por_materia(materia_id)
 
@@ -79,12 +86,15 @@ class TestListarEstudiantes:
         query_repo = SQLAlchemyComisionQueryRepository(session)
         admin = Usuario.crear("Vic", "vic.query2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         estudiante = Usuario.crear_estudiante(
             "Ana Pérez", "ana.query@fiuner.edu.ar", "hash", comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         resultado = await query_repo.listar_estudiantes(comision.id)
 
@@ -98,8 +108,10 @@ class TestListarEstudiantes:
         query_repo = SQLAlchemyComisionQueryRepository(session)
         admin = Usuario.crear("Vic", "vic.query3@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         resultado = await query_repo.listar_estudiantes(comision.id)
 
@@ -115,10 +127,13 @@ class TestTieneComisionesAsignadas:
         docente = Usuario.crear("Doc", "doc.query6@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         resultado = await query_repo.tiene_comisiones_asignadas(docente.id)
 
@@ -129,6 +144,7 @@ class TestTieneComisionesAsignadas:
         query_repo = SQLAlchemyComisionQueryRepository(session)
         docente = Usuario.crear("Doc", "doc.query7@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(docente)
+        await session.commit()
 
         resultado = await query_repo.tiene_comisiones_asignadas(docente.id)
 
@@ -148,10 +164,13 @@ class TestDocentePerteneceAComision:
         docente = Usuario.crear("Doc", "doc.pertenece1@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         resultado = await query_repo.docente_pertenece_a_comision(docente.id, comision.id)
 
@@ -167,8 +186,10 @@ class TestDocentePerteneceAComision:
         docente = Usuario.crear("Doc", "doc.pertenece2@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         resultado = await query_repo.docente_pertenece_a_comision(docente.id, comision.id)
 
@@ -185,12 +206,15 @@ class TestDocentePerteneceAComision:
         docente = Usuario.crear("Doc", "doc.pertenece3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision_propia = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         comision_ajena = Comision.crear(uuid.uuid4(), "ma 14-16", admin.id)
         await comision_repo.guardar(comision_propia)
         await comision_repo.guardar(comision_ajena)
+        await session.commit()
         comision_propia.asignar_docente(docente.id)
         await comision_repo.actualizar(comision_propia)
+        await session.commit()
 
         resultado = await query_repo.docente_pertenece_a_comision(docente.id, comision_ajena.id)
 
@@ -208,11 +232,14 @@ class TestDocenteTieneComisionEnMateria:
         docente = Usuario.crear("Doc", "doc.materia1@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, materia_id)
 
@@ -223,6 +250,7 @@ class TestDocenteTieneComisionEnMateria:
         query_repo = SQLAlchemyComisionQueryRepository(session)
         docente = Usuario.crear("Doc", "doc.materia2@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(docente)
+        await session.commit()
 
         resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, uuid.uuid4())
 
@@ -236,10 +264,13 @@ class TestDocenteTieneComisionEnMateria:
         docente = Usuario.crear("Doc", "doc.materia3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         resultado = await query_repo.docente_tiene_comision_en_materia(docente.id, uuid.uuid4())
 
@@ -258,10 +289,12 @@ class TestExisteComisionEnMateria:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         admin = Usuario.crear("Vic", "vic.query9@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         await SQLAlchemyComisionRepository(session).guardar(
             Comision.crear(materia_id, "lu 10-12", admin.id)
         )
+        await session.commit()
 
         assert await SQLAlchemyComisionQueryRepository(session).existe_comision_en_materia(
             materia_id
@@ -271,12 +304,15 @@ class TestExisteComisionEnMateria:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         admin = Usuario.crear("Vic", "vic.query10@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         comision_repo = SQLAlchemyComisionRepository(session)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.deshabilitar()
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         assert await SQLAlchemyComisionQueryRepository(session).existe_comision_en_materia(
             materia_id

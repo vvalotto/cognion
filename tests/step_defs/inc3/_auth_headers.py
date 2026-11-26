@@ -14,7 +14,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 
@@ -30,7 +30,7 @@ async def crear_docente() -> tuple[str, dict[str, str]]:
     (relación ORM, no INSERT directo) — a diferencia de `docente_headers()`, este id debe
     existir de verdad en la BD para poder asignarlo con `asignar_docente_a_comision` (`US-ADJ-57`).
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         docente = Usuario.crear(
             "Docente",
             f"docente.{uuid.uuid4()}@fiuner.edu.ar",
@@ -45,7 +45,7 @@ async def crear_docente() -> tuple[str, dict[str, str]]:
 
 async def asignar_docente_a_comision(comision_id: str, docente_id: str) -> None:
     """Asigna un `docente_id` real (`crear_docente`) a una Comisión ya persistida (`US-ADJ-57`)."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         comision_repo = SQLAlchemyComisionRepository(session)
         comision = await comision_repo.obtener_por_id(uuid.UUID(comision_id))
         assert comision is not None
@@ -60,7 +60,7 @@ async def docente_asignado_a_materia(materia_id: str) -> tuple[str, dict[str, st
     de seed que solo necesitan un Docente autorizado para cargar preguntas en una materia
     nueva, sin que a esa Comisión le importe después ningún otro dato (horario, admin dueño).
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         hasher = BcryptPasswordHasher()
@@ -97,7 +97,7 @@ async def crear_estudiante() -> tuple[str, dict[str, str]]:
     `IniciarEvaluacionUseCase` valida al estudiante contra BC Identidad (`EstudianteConsultaPort`)
     — a diferencia de `docente_headers`, este `estudiante_id` debe existir de verdad en la BD.
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         hasher = BcryptPasswordHasher()
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -127,7 +127,7 @@ async def crear_estudiante_de_materia(materia_id: str) -> tuple[str, dict[str, s
     `ListarMateriasDelEstudianteUseCase` (`US-3.4.5`) resuelve esa materia vía `MateriaPort` —
     a diferencia de `IniciarEvaluacionUseCase`, no alcanza con un id aleatorio.
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         hasher = BcryptPasswordHasher()
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)

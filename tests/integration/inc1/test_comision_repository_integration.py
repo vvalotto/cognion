@@ -17,10 +17,12 @@ class TestSQLAlchemyComisionRepositoryIntegration:
         repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear("Vic", "vic.repo@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
 
         await repo.guardar(comision)
+        await session.commit()
         recuperada = await repo.obtener_por_id(comision.id)
 
         assert recuperada is not None
@@ -33,14 +35,18 @@ class TestSQLAlchemyComisionRepositoryIntegration:
 
         docente = Usuario.crear("Ana", "ana3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(docente)
+        await session.commit()
         admin = Usuario.crear("Vic", "vic.repo2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
 
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         recuperada = await comision_repo.obtener_por_id(comision.id)
         assert recuperada.docentes_asignados == [docente.id]
@@ -56,3 +62,4 @@ class TestSQLAlchemyComisionRepositoryIntegration:
 
         with pytest.raises(ValueError):
             await repo.actualizar(comision)
+            await session.commit()

@@ -29,8 +29,10 @@ async def _banco_persistido(session) -> Banco:
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     return banco
 
 
@@ -71,6 +73,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
         )
 
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         resultado = await session.execute(
             select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
@@ -103,6 +106,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
         )
 
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         resultado = await session.execute(
             select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
@@ -134,6 +138,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             ],
         )
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         recuperada = await pregunta_repo.obtener_por_id(pregunta.id)
 
@@ -156,6 +161,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             respuesta_correcta=True,
         )
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         recuperada = await pregunta_repo.obtener_por_id(pregunta.id)
 
@@ -185,6 +191,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             ],
         )
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         pregunta.editar(
             metadatos=MetadatosPregunta(
@@ -200,6 +207,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             ],
         )
         await pregunta_repo.actualizar(pregunta)
+        await session.commit()
 
         resultado = await session.execute(
             select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
@@ -228,6 +236,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             respuesta_correcta=True,
         )
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         pregunta.editar(
             metadatos=MetadatosPregunta(
@@ -240,6 +249,7 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             respuesta_correcta=False,
         )
         await pregunta_repo.actualizar(pregunta)
+        await session.commit()
 
         resultado = await session.execute(
             select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)
@@ -263,9 +273,11 @@ class TestSQLAlchemyPreguntaRepositoryIntegration:
             respuesta_correcta=True,
         )
         await pregunta_repo.guardar(pregunta)
+        await session.commit()
 
         pregunta.eliminar()
         await pregunta_repo.actualizar(pregunta)
+        await session.commit()
 
         resultado = await session.execute(
             select(PreguntaPlantillaModel).where(PreguntaPlantillaModel.id == pregunta.id)

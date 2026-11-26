@@ -25,7 +25,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 scenarios("../../features/inc4/US-4.2.2-comision-query-port.feature")
@@ -37,7 +37,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
@@ -85,6 +85,7 @@ async def _crear_admin(session) -> Usuario:
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     return admin
 
 
@@ -107,6 +108,7 @@ async def _crear_docente(session) -> Usuario:
         "Docente", f"docente.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.DOCENTE
     )
     await usuario_repo.guardar(docente)
+    await session.commit()
     return docente
 
 
@@ -115,7 +117,7 @@ async def _crear_materia_con_comisiones(
 ) -> tuple[uuid.UUID, list[Comision], uuid.UUID]:
     """`US-ADJ-57`: el Docente devuelto está asignado a todas las comisiones creadas."""
     materia_id = await _crear_materia_real()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -130,7 +132,7 @@ async def _crear_materia_con_comisiones(
 async def _crear_comision_con_estudiantes(
     cantidad: int,
 ) -> tuple[Comision, list[Usuario], uuid.UUID]:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -154,7 +156,7 @@ async def _crear_comision_con_estudiantes(
 
 
 async def _crear_comision_vacia() -> tuple[Comision, uuid.UUID]:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -241,7 +243,7 @@ def get_comisiones_de_materia(context):
 @when("ComisionConsultaPort.listar_comisiones_por_materia(X) se invoca in-process")
 def invocar_puerto_in_process(context):
     async def _invocar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             port = ComisionConsultaPortInProcess(session)
             return await port.listar_comisiones_por_materia(context["materia_id"])
 

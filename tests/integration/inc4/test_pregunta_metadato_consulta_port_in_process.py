@@ -51,8 +51,10 @@ async def _banco_persistido(session) -> Banco:
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     return banco
 
 
@@ -72,6 +74,7 @@ async def _pregunta_persistida(
         opciones=[Opcion(texto="A", es_correcta=True), Opcion(texto="B", es_correcta=False)],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta
 
 
@@ -116,6 +119,7 @@ class TestPreguntaMetadatoConsultaPortInProcess:
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         pregunta.eliminar()
         await pregunta_repo.actualizar(pregunta)
+        await session.commit()
 
         adapter = PreguntaMetadatoConsultaPortInProcess(session)
         resultado = await adapter.obtener_metadatos([pregunta.id])

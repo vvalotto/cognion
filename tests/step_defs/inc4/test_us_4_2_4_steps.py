@@ -42,7 +42,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import (
     asignar_docente_a_comision_existente,
@@ -61,7 +61,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -103,8 +103,10 @@ async def _materia_con_banco_y_pregunta(session, unidad_tematica: str, tema: str
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     pregunta = PreguntaPlantillaOpcionMultiple.crear(
         banco_id=banco.id,
         metadatos=MetadatosPregunta(
@@ -117,6 +119,7 @@ async def _materia_con_banco_y_pregunta(session, unidad_tematica: str, tema: str
         opciones=[Opcion(texto="A", es_correcta=True), Opcion(texto="B", es_correcta=False)],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return materia, pregunta.id
 
 
@@ -129,13 +132,16 @@ async def _comision_con_estudiante(session, materia_id):
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiante = Usuario.crear_estudiante(
         "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante)
+    await session.commit()
     return comision, estudiante
 
 
@@ -205,7 +211,7 @@ async def _evaluacion_finalizada_con_respuesta(
 @given("una materia con Evaluacion finalizadas de 2 comisiones distintas")
 def materia_con_evaluaciones_de_dos_comisiones(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia, pregunta_id = await _materia_con_banco_y_pregunta(
                 session, "Unidad 1", "Herencia"
             )
@@ -246,7 +252,7 @@ def materia_sin_evaluaciones(context):
 @given("una comisión de otra materia")
 def comision_de_otra_materia(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia, _ = await _materia_con_banco_y_pregunta(session, "Unidad 1", "Herencia")
             otra_materia_id = uuid4()
             comision, _ = await _comision_con_estudiante(session, otra_materia_id)

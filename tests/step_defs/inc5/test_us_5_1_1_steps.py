@@ -30,7 +30,7 @@ from src.notificaciones.frameworks.adapters.comision_consulta_port_in_process im
 from src.notificaciones.frameworks.adapters.smtp_canal_envio import SmtpCanalEnvio
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc5/US-5.1.1-infraestructura-notificaciones.feature")
 
@@ -41,7 +41,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision"))
         await session.execute(text("DELETE FROM docente"))
@@ -68,11 +68,12 @@ async def _crear_admin(session) -> Usuario:
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     return admin
 
 
 async def _crear_comision(materia_id: uuid.UUID | None = None) -> Comision:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         comision = Comision.crear(materia_id or uuid4(), "lu 10-12", admin.id)
@@ -81,14 +82,14 @@ async def _crear_comision(materia_id: uuid.UUID | None = None) -> Comision:
 
 
 async def _deshabilitar_comision(comision: Comision) -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         comision_repo = SQLAlchemyComisionRepository(session)
         comision.deshabilitar()
         await comision_repo.actualizar(comision)
 
 
 async def _inscribir_estudiante(comision_id: uuid.UUID, nombre: str) -> Usuario:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         estudiante = Usuario.crear_estudiante(
             nombre, f"{nombre.lower()}.{uuid.uuid4()}@fiuner.edu.ar", "hash", comision_id
@@ -171,7 +172,7 @@ def otro_estudiante_solo_en_a(context):
 @when("se invoca ComisionConsultaPort.listar_destinatarios([A, B])")
 def invocar_listar_destinatarios_a_b(context):
     async def _invocar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             port = ComisionConsultaPortInProcess(session)
             return await port.listar_destinatarios(
                 [context["comision_a"].id, context["comision_b"].id]
@@ -206,7 +207,7 @@ def materia_con_comisiones_activas_e_inactiva(context):
 @when("se invoca ComisionConsultaPort.listar_comisiones_por_materia(materia_id)")
 def invocar_listar_comisiones_por_materia(context):
     async def _invocar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             port = ComisionConsultaPortInProcess(session)
             return await port.listar_comisiones_por_materia(context["materia_id"])
 
@@ -229,7 +230,7 @@ def comision_recien_creada_sin_inscripciones(context):
 @when("se invoca ComisionConsultaPort.listar_destinatarios([comision_id])")
 def invocar_listar_destinatarios_comision_vacia(context):
     async def _invocar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             port = ComisionConsultaPortInProcess(session)
             return await port.listar_destinatarios([context["comision"].id])
 
@@ -257,7 +258,7 @@ def comision_con_2_estudiantes(context):
 @when("se invoca ComisionQueryPort.listar_estudiantes_con_email(comision_id)")
 def invocar_listar_estudiantes_con_email(context):
     async def _invocar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             query = SQLAlchemyComisionQueryRepository(session)
             return await query.listar_estudiantes_con_email(context["comision"].id)
 
@@ -277,7 +278,7 @@ def verificar_elementos_incluyen_email(context):
 @then("ComisionQueryPort.listar_estudiantes(comision_id) sigue devolviendo solo id y nombre")
 def verificar_listar_estudiantes_sigue_igual(context):
     async def _invocar():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             query = SQLAlchemyComisionQueryRepository(session)
             return await query.listar_estudiantes(context["comision"].id)
 

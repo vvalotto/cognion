@@ -16,6 +16,7 @@ class TestSQLAlchemyMateriaRepositoryIntegration:
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
 
         await repo.guardar(materia)
+        await session.commit()
         recuperada = await repo.obtener_por_nombre(materia.nombre)
 
         assert recuperada is not None
@@ -31,6 +32,7 @@ class TestSQLAlchemyMateriaRepositoryIntegration:
         repo = SQLAlchemyMateriaRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
         await repo.guardar(materia)
+        await session.commit()
 
         materias = await repo.listar()
 
@@ -43,9 +45,11 @@ class TestSQLAlchemyBancoRepositoryIntegration:
         banco_repo = SQLAlchemyBancoRepository(session)
         materia = Materia.crear(f"Gestión de Proyectos {uuid.uuid4()}")
         await materia_repo.guardar(materia)
+        await session.commit()
 
         banco = Banco.crear(materia.id)
         await banco_repo.guardar(banco)
+        await session.commit()
 
         recuperada = await materia_repo.obtener_por_nombre(materia.nombre)
         assert recuperada is not None
@@ -55,8 +59,10 @@ class TestSQLAlchemyBancoRepositoryIntegration:
         banco_repo = SQLAlchemyBancoRepository(session)
         materia = Materia.crear(f"Análisis de Sistemas {uuid.uuid4()}")
         await materia_repo.guardar(materia)
+        await session.commit()
         banco = Banco.crear(materia.id)
         await banco_repo.guardar(banco)
+        await session.commit()
 
         recuperado = await banco_repo.obtener_por_materia_id(materia.id)
 

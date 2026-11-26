@@ -53,24 +53,24 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         return resultado.scalar_one_or_none() is not None
 
     async def guardar(self, usuario: Usuario) -> None:
-        """Guarda el usuario y su modelo de perfil correspondiente."""
-        self._session.add(
-            UsuarioModel(
-                id=usuario.id,
-                nombre=usuario.nombre,
-                email=usuario.email,
-                password_hash=usuario.password_hash,
-                creado_en=usuario.creado_en,
-            )
-        )
+        """Guarda el usuario y su modelo de perfil; no confirma (lo hace la unidad de trabajo)."""
         async with email_unico(self._session, usuario.email):
+            self._session.add(
+                UsuarioModel(
+                    id=usuario.id,
+                    nombre=usuario.nombre,
+                    email=usuario.email,
+                    password_hash=usuario.password_hash,
+                    creado_en=usuario.creado_en,
+                )
+            )
             # Flush intermedio: no hay `relationship()` declarada entre UsuarioModel y los
             # modelos de perfil, así que SQLAlchemy no infiere el orden de inserción a partir
             # de la FK — sin este flush, ambos inserts pueden viajar en el mismo batch y violar
             # la constraint si el perfil se ejecuta antes que el usuario.
             await self._session.flush()
             self._session.add(self._perfil_model(usuario))
-            await self._session.commit()
+            await self._session.flush()
 
     async def actualizar(self, usuario: Usuario) -> None:
         """Guarda `nombre`, `email`, `password_hash`, `bloqueada`, `deshabilitada` y contadores."""
@@ -85,7 +85,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         usuario_model.bloqueada_hasta = usuario.bloqueada_hasta
         usuario_model.intentos_fallidos_login = usuario.intentos_fallidos_login
         usuario_model.intentos_fallidos_password = usuario.intentos_fallidos_password
-        await self._session.commit()
+        await self._session.flush()
 
     async def contar_administradores_operativos(self, excluyendo: UUID | None = None) -> int:
         """Cuenta los Administradores ni deshabilitados ni bloqueados."""
@@ -110,7 +110,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         usuario_model = await self._session.get(UsuarioModel, usuario_id)
         if usuario_model is not None:
             await self._session.delete(usuario_model)
-        await self._session.commit()
+        await self._session.flush()
 
     @staticmethod
     def _perfil_model(usuario: Usuario) -> AdministradorModel | DocenteModel | EstudianteModel:

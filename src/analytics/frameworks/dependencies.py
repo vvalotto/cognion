@@ -11,11 +11,6 @@ componiendo los 3 puertos de consulta ya provistos.
 
 from __future__ import annotations
 
-from typing import Annotated
-
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
@@ -71,12 +66,10 @@ from src.analytics.use_cases.obtener_tasa_error_por_tema import (
 )
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import get_session
+from src.shared.frameworks.db import SessionDep
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.shared.interface_adapters.security.get_current_user import build_get_current_user
 from src.shared.interface_adapters.security.require_rol import require_rol
-
-SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 def get_evaluacion_desempeno_consulta_port(

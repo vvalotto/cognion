@@ -28,7 +28,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc3._auth_headers import (
     admin_headers,
     asignar_docente_a_comision,
@@ -44,7 +44,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -160,7 +160,7 @@ async def _crear_comision_con_estudiantes(
 ) -> list[str]:
     """Crea la Comisión y la asigna a `docente_id` (`US-ADJ-57`) — el mismo Docente que crea y
     cierra la actividad debe estar asignado a cada Comisión que la restrinja."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(
@@ -214,7 +214,7 @@ async def _post_cerrar_actividad(actividad_id: str, headers: dict[str, str]) -> 
 
 
 async def _backdatear_fecha_cierre(actividad_id: str, nueva_fecha_cierre: datetime) -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(
             text(
                 "UPDATE events SET payload = jsonb_set(payload, '{fecha_cierre}', "
@@ -256,12 +256,8 @@ def actividad_vigente_restringida_a_a_2_y_b_1(context, monkeypatch):
     _apuntar_settings_al_stub(monkeypatch, servidor)
 
     materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(
-        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
-    )
-    comision_b_id, *emails_b = run_async(
-        _crear_comision_con_estudiantes(materia_id, 1, docente_id)
-    )
+    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2, docente_id))
+    comision_b_id, *emails_b = run_async(_crear_comision_con_estudiantes(materia_id, 1, docente_id))
     actividad_id = run_async(
         _post_crear_actividad(materia_id, [comision_a_id, comision_b_id], headers)
     )
@@ -343,7 +339,7 @@ def actividad_vigente_con_fecha_cierre_pasada(context, monkeypatch):
 
 
 async def _correr_verificador_vencimientos() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         use_case = build_verificar_vencimientos_use_case(session)
         await use_case.execute()
 
@@ -372,9 +368,7 @@ def verificar_no_se_envia_ningun_email_de_cierre(context):
 @given("una actividad restringida a la comisión A con 2 estudiantes")
 def actividad_restringida_a_comision_a_2_estudiantes(context):
     materia_id, docente_id, headers = run_async(_crear_materia_con_preguntas(20))
-    comision_a_id, *emails_a = run_async(
-        _crear_comision_con_estudiantes(materia_id, 2, docente_id)
-    )
+    comision_a_id, *emails_a = run_async(_crear_comision_con_estudiantes(materia_id, 2, docente_id))
     actividad_id = run_async(_post_crear_actividad(materia_id, [comision_a_id], headers))
     context["actividad_id"] = actividad_id
     context["docente_headers"] = headers

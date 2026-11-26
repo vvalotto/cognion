@@ -23,7 +23,7 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
     async def guardar(self, invitacion: Invitacion) -> None:
         """Guarda una invitación nueva."""
         self._session.add(self._a_model(invitacion))
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_token(self, token: str) -> Invitacion | None:
         """Busca una invitación por token, o `None` si no existe."""
@@ -45,7 +45,7 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
         modelo.usada_en = invitacion.usada_en
         modelo.revocada_en = invitacion.revocada_en
         modelo.usos = invitacion.usos
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_id(self, invitacion_id: UUID) -> Invitacion | None:
         """Busca una invitación por id, o `None` si no existe."""
@@ -86,7 +86,7 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
             if modelo is not None:
                 modelo.revocada_en = anterior.revocada_en
         self._session.add(self._a_model(nueva))
-        await self._session.commit()
+        await self._session.flush()
 
     async def incrementar_usos(self, invitacion_id: UUID) -> None:
         """Suma un uso con un `UPDATE usos = usos + 1`: seguro ante registros simultáneos."""
@@ -95,7 +95,7 @@ class SQLAlchemyInvitacionRepository(InvitacionRepositoryPort):
             .where(InvitacionModel.id == invitacion_id)
             .values(usos=InvitacionModel.usos + 1)
         )
-        await self._session.commit()
+        await self._session.flush()
 
     @staticmethod
     def _a_model(invitacion: Invitacion) -> InvitacionModel:

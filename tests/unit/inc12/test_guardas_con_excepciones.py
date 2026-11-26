@@ -4,7 +4,7 @@ Cada guarda fija hoy una deuda conocida: el número no puede crecer, y las histo
 Las listas son exactas a propósito: si una historia baja un número, el test falla y obliga a actualizar la lista, así la
 deuda declarada nunca queda por encima de la real.
 
-- `IM-03`: ningún `commit()` fuera de los 8 archivos de hoy. Los vacía `US-12.2.1` (unidad de trabajo).
+- `IM-03`: ningún `commit()` fuera de la unidad de trabajo (`shared/frameworks/db.py`) y del event store, la única excepción de `ADR-028`. Lo cumplió `US-12.2.1`.
 - `IM-02`: los `raise HTTPException` de los routers. Los baja `US-12.2.2` (errores de dominio traducidos en un solo lugar).
 - `CA-01`: los gateways que importan los modelos ORM de `frameworks/`, y las excepciones de `import-linter`.
   Las vacía `US-12.2.3` (repositorios SQL en `frameworks/`).
@@ -23,16 +23,11 @@ import pytest
 RAIZ = Path(__file__).resolve().parents[3]
 SRC = RAIZ / "src"
 
-# --- IM-03: commit() fuera de una unidad de trabajo (21 hoy: 20 en repositorios y 1 en el event store) ---------------
+# --- IM-03: commit() fuera de la unidad de trabajo. Desde `US-12.2.1` solo ella y el event store (`ADR-028`) ---------
 COMMITS_PERMITIDOS: dict[str, int] = {
     "src/actividad_evaluativa/frameworks/event_store/sqlalchemy_event_store.py": 1,
-    "src/banco_preguntas/interface_adapters/gateways/banco_repository.py": 1,
-    "src/banco_preguntas/interface_adapters/gateways/materia_repository.py": 3,
-    "src/banco_preguntas/interface_adapters/gateways/pregunta_repository.py": 2,
-    "src/identidad/interface_adapters/gateways/comision_repository.py": 3,
-    "src/identidad/interface_adapters/gateways/invitacion_repository.py": 4,
-    "src/identidad/interface_adapters/gateways/token_recuperacion_password_repository.py": 4,
-    "src/identidad/interface_adapters/gateways/usuario_repository.py": 3,
+    # La unidad de trabajo misma: confirma al salir bien y ante un error controlado (dos caminos).
+    "src/shared/frameworks/db.py": 2,
 }
 
 # --- IM-02: `raise HTTPException` en los routers (136 hoy, 19 archivos) -------------------------------------------------
@@ -147,12 +142,111 @@ class TestGuardaDeCommits:
             COMMITS_PERMITIDOS, real, "commit()", "US-12.2.1"
         )
 
-    def test_el_total_declarado_es_el_del_informe(self) -> None:
-        assert sum(COMMITS_PERMITIDOS.values()) == 21
+    def test_solo_la_unidad_de_trabajo_y_el_event_store_confirman(self) -> None:
+        assert sorted(COMMITS_PERMITIDOS) == [
+            "src/actividad_evaluativa/frameworks/event_store/sqlalchemy_event_store.py",
+            "src/shared/frameworks/db.py",
+        ]
 
     def test_detecta_un_commit_nuevo(self) -> None:
         assert contar_commits("async def f(s):\n    await s.commit()\n") == 1
         assert contar_commits("def f(s):\n    s.flush()\n") == 0
+
+
+# --- IM-03: casos de uso que escriben y después levantan un error (`ADR-028`, enmienda del 2026-11-26) --------------------
+# La unidad de trabajo confirma ante un error controlado, así que estos tres siguen funcionando (el intento fallido de login
+# se cuenta y el bloqueo de cuenta rige, `INV-ID-10` e `INV-ID-21`). Un caso nuevo debe ser una decisión consciente.
+ESCRIBEN_Y_LUEGO_LEVANTAN: dict[str, list[str]] = {
+    "src/identidad/use_cases/cambiar_password.py": ["execute"],
+    "src/identidad/use_cases/iniciar_sesion.py": ["execute"],
+    "src/identidad/use_cases/politica_bloqueo.py": ["rechazar_si_bloqueada"],
+}
+_METODOS_DE_ESCRITURA = {
+    "guardar",
+    "actualizar",
+    "eliminar",
+    "eliminar_de",
+    "reemplazar",
+    "incrementar_usos",
+    "invalidar_activos_de",
+}
+
+
+def funciones_que_escriben_y_luego_levantan(codigo: str) -> list[str]:
+    """Nombres de las funciones con una escritura por repositorio seguida (más abajo) de un `raise`."""
+    nombres: list[str] = []
+    for funcion in ast.walk(ast.parse(codigo)):
+        if not isinstance(funcion, ast.FunctionDef | ast.AsyncFunctionDef):
+            continue
+        lineas_de_escritura: list[int] = []
+        lineas_de_raise: list[int] = []
+        for nodo in ast.walk(funcion):
+            if isinstance(nodo, ast.Raise):
+                lineas_de_raise.append(nodo.lineno)
+            elif (
+                isinstance(nodo, ast.Await)
+                and isinstance(nodo.value, ast.Call)
+                and isinstance(nodo.value.func, ast.Attribute)
+                and nodo.value.func.attr in _METODOS_DE_ESCRITURA
+                and any(
+                    k in ast.unparse(nodo.value.func.value)
+                    for k in ("repositorio", "repository", "repo")
+                )
+            ):
+                lineas_de_escritura.append(nodo.lineno)
+        if lineas_de_escritura and any(r > min(lineas_de_escritura) for r in lineas_de_raise):
+            nombres.append(funcion.name)
+    return nombres
+
+
+class TestGuardaDeEscribirYLuegoLevantar:
+    """`IM-03`: un error controlado deja confirmado lo escrito antes de levantarse; solo hay 3 casos y son intencionales."""
+
+    def test_los_casos_que_escriben_y_luego_levantan_son_los_declarados(self) -> None:
+        real: dict[str, list[str]] = {}
+        for archivo in SRC.glob("*/use_cases/*.py"):
+            nombres = funciones_que_escriben_y_luego_levantan(archivo.read_text(encoding="utf-8"))
+            if nombres:
+                real[_relativo(archivo)] = sorted(nombres)
+        assert real == dict(sorted(ESCRIBEN_Y_LUEGO_LEVANTAN.items())), (
+            "Un caso de uso escribe y después levanta un error: con la unidad de trabajo, si el error es controlado se "
+            f"confirma lo escrito. Declaralo con una justificación. Real: {real}"
+        )
+
+    def test_detecta_una_escritura_seguida_de_un_raise(self) -> None:
+        codigo = (
+            "async def f(self):\n"
+            "    await self._usuario_repositorio.actualizar(u)\n"
+            "    raise ValueError()\n"
+        )
+        assert funciones_que_escriben_y_luego_levantan(codigo) == ["f"]
+
+    def test_no_marca_un_raise_previo_a_la_escritura(self) -> None:
+        codigo = (
+            "async def f(self):\n"
+            "    if x:\n        raise ValueError()\n"
+            "    await self._usuario_repositorio.guardar(u)\n"
+        )
+        assert funciones_que_escriben_y_luego_levantan(codigo) == []
+
+
+class TestGuardaDeLaSesion:
+    """`US-12.2.1`: la sesión del request sale de un único `SessionDep` de `shared/`."""
+
+    def test_ningun_contexto_define_su_propio_session_dep(self) -> None:
+        propios = [
+            _relativo(archivo)
+            for archivo in SRC.glob("*/frameworks/dependencies.py")
+            if re.search(r"^SessionDep\s*=", archivo.read_text(encoding="utf-8"), re.MULTILINE)
+        ]
+        assert propios == []
+
+    def test_ningun_repositorio_confirma_la_transaccion(self) -> None:
+        for archivo in [
+            *SRC.glob("*/interface_adapters/gateways/*.py"),
+            *SRC.glob("*/frameworks/repositories/*.py"),
+        ]:
+            assert contar_commits(archivo.read_text(encoding="utf-8")) == 0, _relativo(archivo)
 
 
 class TestGuardaDeHttpException:

@@ -28,7 +28,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import asignar_docente_a_materia
 
@@ -44,7 +44,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
@@ -86,8 +86,10 @@ async def _comision_con_estudiantes(session, materia_id, cantidad: int):
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiantes = []
     for _ in range(cantidad):
@@ -95,6 +97,7 @@ async def _comision_con_estudiantes(session, materia_id, cantidad: int):
             "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
         estudiantes.append(estudiante)
     return comision, estudiantes
 
@@ -179,7 +182,7 @@ async def _actividad_creada(
 @given("una actividad restringida a la comisión C1 con 4 estudiantes")
 def actividad_restringida_con_cuatro_estudiantes(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_id = uuid4()
             comision, estudiantes = await _comision_con_estudiantes(session, materia_id, 4)
             store = SQLAlchemyEventStore(session)
@@ -197,7 +200,7 @@ def estados_mixtos(context):
     finalizo, en_curso, suspendio, _nunca_inicio = context["estudiantes"]
 
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             store = SQLAlchemyEventStore(session)
             evaluacion_finalizo = await _iniciar_evaluacion(
                 store, context["actividad_id"], finalizo.id
@@ -215,7 +218,7 @@ def estados_mixtos(context):
 @given("una actividad sin comisiones_ids visible a toda la materia con 2 comisiones")
 def actividad_sin_restriccion_dos_comisiones(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_id = uuid4()
             _comision_1, estudiantes_1 = await _comision_con_estudiantes(session, materia_id, 1)
             _comision_2, estudiantes_2 = await _comision_con_estudiantes(session, materia_id, 1)

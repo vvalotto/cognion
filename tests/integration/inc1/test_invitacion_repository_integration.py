@@ -25,13 +25,17 @@ async def _crear_invitacion(session) -> tuple[Invitacion, Comision]:
         "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     docente = Usuario.crear("Ana", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
     await usuario_repo.guardar(docente)
+    await session.commit()
     comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     invitacion = Invitacion.crear(comision.id, docente.id)
     await invitacion_repo.guardar(invitacion)
+    await session.commit()
     return invitacion, comision
 
 
@@ -67,6 +71,7 @@ class TestSQLAlchemyInvitacionRepositoryIntegration:
         invitacion.aceptar(ahora)
 
         await invitacion_repo.actualizar(invitacion)
+        await session.commit()
 
         modelo = await session.get(InvitacionModel, invitacion.id)
         assert modelo.usada_en == ahora

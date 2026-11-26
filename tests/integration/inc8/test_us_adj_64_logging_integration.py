@@ -42,6 +42,7 @@ async def test_recuperar_password_deja_el_email_y_el_link_en_la_salida_real(
     await SQLAlchemyUsuarioRepository(session).guardar(
         Usuario.crear("Docente", email, BcryptPasswordHasher().hash("x"), TipoPerfil.DOCENTE)
     )
+    await session.commit()
 
     async with httpx.AsyncClient(base_url=servidor.url) as client:
         respuesta = await client.post(

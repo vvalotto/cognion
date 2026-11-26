@@ -8,20 +8,13 @@ para que los Use Case de `US-5.1.2`/`US-5.1.3` las reciban inyectadas.
 
 from __future__ import annotations
 
-from typing import Annotated
-
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.notificaciones.entities.ports.canal_envio_port import CanalEnvioPort
 from src.notificaciones.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.notificaciones.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
 from src.notificaciones.frameworks.adapters.smtp_canal_envio import SmtpCanalEnvio
-from src.shared.frameworks.db import get_session
-
-SessionDep = Annotated[AsyncSession, Depends(get_session)]
+from src.shared.frameworks.db import SessionDep
 
 
 def get_canal_envio_port() -> CanalEnvioPort:

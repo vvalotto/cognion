@@ -26,7 +26,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import asignar_docente_a_materia
 
@@ -42,7 +42,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
@@ -77,7 +77,7 @@ def _headers_estudiante(estudiante_id) -> dict[str, str]:
 
 async def _crear_estudiante_real() -> Usuario:
     """Persiste un `Usuario` con rol Estudiante real — lo exige `EstudianteConsultaPort.existe`."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         hasher = BcryptPasswordHasher()
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -191,7 +191,7 @@ async def _crear_evaluacion_finalizada(
 def docente_y_estudiante_con_dos_evaluaciones(context):
     async def _setup():
         estudiante = await _crear_estudiante_real()
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             store = SQLAlchemyEventStore(session)
             actividad_id = uuid4()
             await _crear_actividad(store, actividad_id, context["materia_id"])

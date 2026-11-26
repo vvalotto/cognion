@@ -43,7 +43,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import (
     asignar_docente_a_comision_existente,
@@ -62,7 +62,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -112,17 +112,21 @@ async def _comision_con_dos_estudiantes(session, materia_id):
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiante_1 = Usuario.crear_estudiante(
         "Estudiante Uno", f"e1.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante_1)
+    await session.commit()
     estudiante_2 = Usuario.crear_estudiante(
         "Estudiante Dos", f"e2.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante_2)
+    await session.commit()
     return comision, estudiante_1, estudiante_2
 
 
@@ -135,13 +139,16 @@ async def _comision_con_un_estudiante(session, materia_id):
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiante = Usuario.crear_estudiante(
         "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante)
+    await session.commit()
     return comision, estudiante
 
 
@@ -219,6 +226,7 @@ async def _pregunta_persistida(session, banco_id) -> uuid.UUID:
         respuesta_correcta=True,
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta.id
 
 
@@ -301,7 +309,7 @@ def comision_con_estudiantes_en_distinto_estado(context):
     "el segundo estudiante no rindió" implica que el primero sí la rindió)."""
 
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_id = uuid4()
             comision, estudiante_1, estudiante_2 = await _comision_con_dos_estudiantes(
                 session, materia_id
@@ -326,7 +334,7 @@ def comision_con_estudiantes_en_distinto_estado(context):
 @given("una actividad abierta ahora, visible a la comisión, que el segundo estudiante no rindió")
 def actividad_abierta_visible_a_la_comision(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             store = SQLAlchemyEventStore(session)
             actividad_id = uuid4()
             await _actividad_abierta_creada(
@@ -340,7 +348,7 @@ def actividad_abierta_visible_a_la_comision(context):
 @given("una comisión cuyos estudiantes nunca finalizaron ninguna Evaluacion")
 def comision_sin_evaluaciones_finalizadas(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_id = uuid4()
             comision, _estudiante_1, _estudiante_2 = await _comision_con_dos_estudiantes(
                 session, materia_id
@@ -356,7 +364,7 @@ def comision_sin_evaluaciones_finalizadas(context):
 @given("una comisión de otra materia")
 def comision_de_otra_materia(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_id = uuid4()
             otra_materia_id = uuid4()
             comision, _estudiante = await _comision_con_un_estudiante(session, otra_materia_id)
@@ -381,7 +389,7 @@ def estudiante_autenticado(context):
 @given("una Evaluacion Finalizada de un Estudiante que no es quien hace la request")
 def evaluacion_finalizada_de_estudiante_ajeno(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_repo = SQLAlchemyMateriaRepository(session)
             banco_repo = SQLAlchemyBancoRepository(session)
             materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")

@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from typing import Annotated
 
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
+from starlette.exceptions import HTTPException
 
 from src.settings import settings
 
@@ -24,7 +28,52 @@ engine = create_async_engine(settings.database_url, echo=False, poolclass=NullPo
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 
-async def get_session() -> AsyncIterator[AsyncSession]:
-    """Provee una sesión async por request, cerrándola al finalizar."""
+def es_error_controlado(exc: BaseException) -> bool:
+    """Dice si `exc` es el resultado de una regla de negocio o de un control de seguridad.
+
+    Un error controlado es una respuesta esperada y se respeta: lo escrito hasta ese punto
+    se confirma (por ejemplo, el intento fallido de login que cuenta para el bloqueo de
+    cuenta, `INV-ID-21`). Lo son un `HTTPException` con código menor a 500 y toda clase
+    definida en un `entities/errors.py`, que se reconoce por el módulo donde está para no
+    importar ningún contexto. Cualquier otra excepción es una falla técnica (acceso a la
+    base, pérdida de la conexión, un error del código) y revierte todo (`ADR-028`, enmienda
+    del 2026-11-26).
+    """
+    if isinstance(exc, HTTPException):
+        return exc.status_code < 500
+    return type(exc).__module__.endswith(".entities.errors")
+
+
+@asynccontextmanager
+async def unidad_de_trabajo() -> AsyncIterator[AsyncSession]:
+    """Abre una sesión; la confirma al salir bien o ante un error controlado, si no la revierte.
+
+    Es la única unidad de trabajo del proyecto: la usan `get_session` (un request) y los
+    puntos de entrada que no lo son (CLI, tests). Los repositorios hacen `flush()` y no
+    confirman. El event store de Actividad Evaluativa sigue confirmando en `append`
+    (`ADR-028`). Si la tarea se cancela, el cierre de la sesión descarta lo pendiente.
+    """
     async with SessionLocal() as session:
+        try:
+            yield session
+        except Exception as exc:
+            if es_error_controlado(exc):
+                await session.commit()
+            else:
+                await session.rollback()
+            raise
+        await session.commit()
+
+
+async def get_session() -> AsyncIterator[AsyncSession]:
+    """Provee una sesión por request y la confirma o revierte al terminar (`unidad_de_trabajo`)."""
+    async with unidad_de_trabajo() as session:
         yield session
+
+
+SessionDep = Annotated[AsyncSession, Depends(get_session, scope="function")]
+"""Sesión del request.
+
+`scope="function"` es obligatorio: con el alcance por defecto, un `commit()` que falla después
+del `yield` ocurre cuando el cliente ya recibió el 200 (FastAPI 0.139, `ADR-028`).
+"""

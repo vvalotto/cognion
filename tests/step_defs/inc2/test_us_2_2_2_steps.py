@@ -19,7 +19,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/inc2/US-2.2.2-listado-cuentas.feature")
@@ -31,7 +31,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
@@ -58,7 +58,7 @@ async def _crear_cuenta(
     nombre: str, email: str, tipo_perfil: TipoPerfil, bloqueada: bool = False
 ) -> None:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         if tipo_perfil is TipoPerfil.ESTUDIANTE:
             comision_repo = SQLAlchemyComisionRepository(session)

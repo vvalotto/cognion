@@ -30,6 +30,7 @@ async def _crear(session, tipo: TipoPerfil = TipoPerfil.DOCENTE) -> str:
     email = f"persona.{uuid.uuid4()}@fiuner.edu.ar"
     usuario = Usuario.crear("Persona", email, BcryptPasswordHasher().hash(PASSWORD), tipo)
     await SQLAlchemyUsuarioRepository(session).guardar(usuario)
+    await session.commit()
     return email
 
 

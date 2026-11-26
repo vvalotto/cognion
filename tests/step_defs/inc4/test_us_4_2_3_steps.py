@@ -28,7 +28,7 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
 from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import (
     SQLAlchemyPreguntaRepository,
 )
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc4/US-4.2.3-pregunta-metadato-query-port.feature")
 
@@ -39,7 +39,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
         await session.execute(text("DELETE FROM materia"))
@@ -63,8 +63,10 @@ async def _banco_persistido(session) -> Banco:
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     return banco
 
 
@@ -84,13 +86,14 @@ async def _pregunta_persistida(
         opciones=[Opcion(texto="A", es_correcta=True), Opcion(texto="B", es_correcta=False)],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta
 
 
 @given("3 preguntas con unidad_tematica/tema distintos")
 def tres_preguntas_con_metadatos_distintos(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             banco = await _banco_persistido(session)
             p1 = await _pregunta_persistida(session, banco.id, "Unidad 1", "Herencia")
             p2 = await _pregunta_persistida(session, banco.id, "Unidad 1", "Polimorfismo")
@@ -108,7 +111,7 @@ def tres_preguntas_con_metadatos_distintos(context):
 @given("2 preguntas existentes y 1 id que no corresponde a ninguna")
 def dos_preguntas_y_un_id_inexistente(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             banco = await _banco_persistido(session)
             p1 = await _pregunta_persistida(session, banco.id, "Unidad 1", "Herencia")
             p2 = await _pregunta_persistida(session, banco.id, "Unidad 1", "Polimorfismo")
@@ -121,7 +124,7 @@ def dos_preguntas_y_un_id_inexistente(context):
 @given("una pregunta con activa=false y sus metadatos de unidad_tematica/tema")
 def pregunta_eliminada_con_metadatos(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             banco = await _banco_persistido(session)
             pregunta = await _pregunta_persistida(session, banco.id, "Unidad 3", "Cohesión")
             pregunta_repo = SQLAlchemyPreguntaRepository(session)
@@ -136,7 +139,7 @@ def pregunta_eliminada_con_metadatos(context):
 @when("PreguntaMetadatoConsultaPort.obtener_metadatos([id1, id2, id3]) se invoca")
 def invoca_obtener_metadatos_con_ids_del_contexto(context):
     async def _call():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             adapter = PreguntaMetadatoConsultaPortInProcess(session)
             return await adapter.obtener_metadatos(context["ids"])
 
@@ -146,7 +149,7 @@ def invoca_obtener_metadatos_con_ids_del_contexto(context):
 @when("se invoca obtener_metadatos con los 3 ids")
 def invoca_obtener_metadatos_con_los_3_ids(context):
     async def _call():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             adapter = PreguntaMetadatoConsultaPortInProcess(session)
             return await adapter.obtener_metadatos(context["ids"])
 
@@ -156,7 +159,7 @@ def invoca_obtener_metadatos_con_los_3_ids(context):
 @when("se invoca obtener_metadatos([])")
 def invoca_obtener_metadatos_vacio(context):
     async def _call():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             adapter = PreguntaMetadatoConsultaPortInProcess(session)
             return await adapter.obtener_metadatos([])
 
@@ -166,7 +169,7 @@ def invoca_obtener_metadatos_vacio(context):
 @when("se invoca obtener_metadatos incluyendo su id")
 def invoca_obtener_metadatos_incluyendo_su_id(context):
     async def _call():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             adapter = PreguntaMetadatoConsultaPortInProcess(session)
             return await adapter.obtener_metadatos([context["pregunta_id"]])
 

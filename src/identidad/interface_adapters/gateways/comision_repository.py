@@ -29,7 +29,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
                 administrador_id=comision.administrador_id,
             )
         )
-        await self._session.commit()
+        await self._session.flush()
 
     async def obtener_por_id(self, comision_id: UUID) -> Comision | None:
         """Busca una comisión por id junto con sus docentes, o `None` si no existe."""
@@ -65,7 +65,7 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
                 if docente_model is not None:
                     modelo.docentes.append(docente_model)
 
-        await self._session.commit()
+        await self._session.flush()
 
     async def eliminar(self, comision_id: UUID) -> None:
         """Borra físicamente una comisión sin estudiantes inscriptos ni docentes asignados."""
@@ -73,4 +73,4 @@ class SQLAlchemyComisionRepository(ComisionRepositoryPort):
         if modelo is None:
             return
         await self._session.delete(modelo)
-        await self._session.commit()
+        await self._session.flush()
