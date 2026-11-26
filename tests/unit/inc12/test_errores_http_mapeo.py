@@ -58,7 +58,9 @@ def test_toda_clase_de_un_errors_py_hereda_de_error_de_dominio() -> None:
     """Un error nuevo no puede quedar sin categoría (saldría como 500)."""
     sin_categoria: list[str] = []
     for archivo in sorted(RAIZ.glob("src/*/entities/errors.py")):
-        modulo = importlib.import_module(archivo.relative_to(RAIZ).with_suffix("").as_posix().replace("/", "."))
+        modulo = importlib.import_module(
+            archivo.relative_to(RAIZ).with_suffix("").as_posix().replace("/", ".")
+        )
         for nombre, clase in inspect.getmembers(modulo, inspect.isclass):
             if clase.__module__ == modulo.__name__ and not issubclass(clase, ErrorDeDominio):
                 sin_categoria.append(f"{modulo.__name__}.{nombre}")

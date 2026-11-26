@@ -4,20 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
-from src.actividad_evaluativa.entities.errors import (
-    ActividadNoExiste,
-    EstudianteNoExiste,
-    EvaluacionNoExiste,
-    EvaluacionNoSuspendida,
-    EvaluacionSuspendida,
-    EvaluacionYaFinalizada,
-    EvaluacionYaSuspendida,
-    FueraDePeriodo,
-    IntentosAgotados,
-    PreguntaNoAsignada,
-)
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.frameworks.api.schemas import (
@@ -104,16 +92,9 @@ async def iniciar_evaluacion(
 
     Responde 404/422 ante los rechazos de dominio.
     """
-    try:
-        evaluacion, _creada = await controller.iniciar_evaluacion(
-            body.actividad_id, usuario.usuario_id
-        )
-    except (ActividadNoExiste, EstudianteNoExiste) as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except FueraDePeriodo as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    evaluacion, _creada = await controller.iniciar_evaluacion(
+        body.actividad_id, usuario.usuario_id
+    )
 
     return await _a_response(evaluacion, pregunta_consulta)
 
@@ -134,21 +115,9 @@ async def registrar_respuesta(
 
     Responde 404/422 ante los rechazos de dominio. No informa `es_correcta` en la respuesta.
     """
-    try:
-        respuesta = await controller.registrar_respuesta(
-            evaluacion_id, usuario.usuario_id, body.pregunta_id, body.contenido
-        )
-    except (EvaluacionNoExiste, PreguntaNoAsignada) as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (
-        IntentosAgotados,
-        EvaluacionSuspendida,
-        EvaluacionYaFinalizada,
-        FueraDePeriodo,
-    ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    respuesta = await controller.registrar_respuesta(
+        evaluacion_id, usuario.usuario_id, body.pregunta_id, body.contenido
+    )
 
     return RespuestaResponse(
         id=respuesta.id,
@@ -174,14 +143,7 @@ async def suspender_evaluacion(
 
     Responde 404/422 ante los rechazos de dominio. No valida período vigente.
     """
-    try:
-        evaluacion = await controller.suspender_evaluacion(evaluacion_id, usuario.usuario_id)
-    except EvaluacionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (EvaluacionYaSuspendida, EvaluacionYaFinalizada) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    evaluacion = await controller.suspender_evaluacion(evaluacion_id, usuario.usuario_id)
 
     return await _a_response(evaluacion, pregunta_consulta)
 
@@ -202,14 +164,7 @@ async def reanudar_evaluacion(
 
     Responde 404/422 ante los rechazos de dominio.
     """
-    try:
-        evaluacion = await controller.reanudar_evaluacion(evaluacion_id, usuario.usuario_id)
-    except EvaluacionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (EvaluacionNoSuspendida, EvaluacionYaFinalizada, FueraDePeriodo) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    evaluacion = await controller.reanudar_evaluacion(evaluacion_id, usuario.usuario_id)
 
     return await _a_response(evaluacion, pregunta_consulta)
 
@@ -230,13 +185,6 @@ async def finalizar_evaluacion(
 
     Responde 404/422 ante los rechazos de dominio. No valida período vigente.
     """
-    try:
-        evaluacion = await controller.finalizar_evaluacion(evaluacion_id, usuario.usuario_id)
-    except EvaluacionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except EvaluacionYaFinalizada as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    evaluacion = await controller.finalizar_evaluacion(evaluacion_id, usuario.usuario_id)
 
     return await _a_response(evaluacion, pregunta_consulta)

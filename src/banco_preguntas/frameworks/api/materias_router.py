@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response, status
 
-from src.banco_preguntas.entities.errors import MateriaNoExiste, MateriaYaExiste
 from src.banco_preguntas.frameworks.api.schemas import (
     CrearMateriaRequest,
     EditarMateriaRequest,
@@ -51,10 +50,7 @@ async def crear_materia(
     2026-09-15): el Administrador arma la estructura Materia→Comisión→Docente, el Docente
     consume (carga/edita preguntas en el banco), no crea Materias.
     """
-    try:
-        materia, banco, _evento_materia, _evento_banco = await controller.crear_materia(body.nombre)
-    except MateriaYaExiste as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    materia, banco, _evento_materia, _evento_banco = await controller.crear_materia(body.nombre)
 
     return MateriaResponse(id=materia.id, nombre=materia.nombre, banco_id=banco.id)
 
@@ -75,12 +71,7 @@ async def editar_materia(
     2026-09-15). Responde 404 si la materia no existe, 409 si el nombre nuevo ya pertenece
     a otra.
     """
-    try:
-        materia = await controller.editar_materia(materia_id, body.nombre)
-    except MateriaNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaYaExiste as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    materia = await controller.editar_materia(materia_id, body.nombre)
 
     return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)
 
@@ -99,10 +90,7 @@ async def eliminar_materia(
     204 si se borró físicamente (borra también su banco vacío); 200 con la materia
     (`activa=false`) si se deshabilitó. 404 si la materia no existe.
     """
-    try:
-        materia = await controller.eliminar_materia(materia_id)
-    except MateriaNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    materia = await controller.eliminar_materia(materia_id)
 
     if materia is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -152,9 +140,6 @@ async def activar_materia(
     controller: MateriasController = Depends(get_materias_controller),
 ) -> MateriaBasicaResponse:
     """Reactiva una materia deshabilitada; 404 si no existe."""
-    try:
-        materia = await controller.activar_materia(materia_id)
-    except MateriaNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    materia = await controller.activar_materia(materia_id)
 
     return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)

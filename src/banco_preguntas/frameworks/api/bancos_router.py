@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 
-from src.banco_preguntas.entities.errors import BancoNoExiste, MateriaNoAutorizada
 from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.frameworks.api.schemas import (
     PreguntaOpcionMultipleResponse,
@@ -50,21 +49,16 @@ async def filtrar_preguntas(
     paginar — mismo comportamiento que antes de esta US. Responde 404 si el banco no existe,
     403 si el Docente no tiene ninguna Comisión asignada en la materia del banco (`US-ADJ-57`).
     """
-    try:
-        resultado = await controller.filtrar_preguntas(
-            banco_id=banco_id,
-            unidad=unidad,
-            tema=tema,
-            dificultad=dificultad,
-            importancia=importancia,
-            pagina=pagina,
-            tamanio_pagina=tamanio_pagina,
-            docente_id=usuario.usuario_id,
-        )
-    except BancoNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    resultado = await controller.filtrar_preguntas(
+        banco_id=banco_id,
+        unidad=unidad,
+        tema=tema,
+        dificultad=dificultad,
+        importancia=importancia,
+        pagina=pagina,
+        tamanio_pagina=tamanio_pagina,
+        docente_id=usuario.usuario_id,
+    )
 
     return PreguntasPaginadasResponse(
         preguntas=[

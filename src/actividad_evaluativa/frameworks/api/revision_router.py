@@ -7,9 +7,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
-from src.actividad_evaluativa.entities.errors import EvaluacionNoExiste, EvaluacionNoFinalizada
 from src.actividad_evaluativa.entities.revision_evaluacion import RevisionEvaluacion
 from src.actividad_evaluativa.frameworks.api.schemas import (
     DetallePreguntaRevisionResponse,
@@ -71,15 +70,8 @@ async def obtener_revision(
     Responde 404/422 ante los rechazos de dominio — 422 si todavía no fue finalizada.
     """
     verificar_propietario = usuario.rol is TipoPerfil.ESTUDIANTE
-    try:
-        revision = await controller.obtener_revision(
-            evaluacion_id, usuario.usuario_id, verificar_propietario
-        )
-    except EvaluacionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except EvaluacionNoFinalizada as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    revision = await controller.obtener_revision(
+        evaluacion_id, usuario.usuario_id, verificar_propietario
+    )
 
     return _a_response(revision)

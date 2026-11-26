@@ -6,12 +6,6 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.analytics.entities.errors import (
-    ActividadNoExiste,
-    ComisionNoAutorizada,
-    ComisionNoPerteneceAMateria,
-    MateriaNoAutorizada,
-)
 from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.frameworks.api.schemas import (
     CompletitudFilaResponse,
@@ -132,12 +126,9 @@ async def obtener_desempeno_de_estudiante(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No existe un Estudiante con id {estudiante_id}.",
         )
-    try:
-        desempeno = await controller.obtener_desempeno_de_estudiante(
-            estudiante_id, materia_id, usuario.usuario_id
-        )
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    desempeno = await controller.obtener_desempeno_de_estudiante(
+        estudiante_id, materia_id, usuario.usuario_id
+    )
     return _a_response(desempeno)
 
 
@@ -158,16 +149,9 @@ async def obtener_tasa_error_por_tema(
     → 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización sobre la materia, o sobre
     la comisión puntual → 403 (`US-ADJ-57`).
     """
-    try:
-        tasas = await controller.obtener_tasa_error_por_tema(
-            materia_id, comision_id, usuario.usuario_id
-        )
-    except ComisionNoPerteneceAMateria as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    tasas = await controller.obtener_tasa_error_por_tema(
+        materia_id, comision_id, usuario.usuario_id
+    )
     return [
         TasaErrorTemaResponse(
             unidad_tematica=tasa.unidad_tematica,
@@ -196,16 +180,9 @@ async def obtener_desempeno_por_comision(
     `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`, mismo
     criterio que `obtener_tasa_error_por_tema`). Docente sin autorización → 403 (`US-ADJ-57`).
     """
-    try:
-        filas = await controller.obtener_desempeno_por_comision(
-            materia_id, comision_id, usuario.usuario_id
-        )
-    except ComisionNoPerteneceAMateria as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    filas = await controller.obtener_desempeno_por_comision(
+        materia_id, comision_id, usuario.usuario_id
+    )
     return [
         DesempenoComisionFilaResponse(
             estudiante_id=fila.estudiante_id,
@@ -239,12 +216,9 @@ async def obtener_evolucion_temporal_estudiante(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No existe un Estudiante con id {estudiante_id}.",
         )
-    try:
-        puntos = await controller.obtener_evolucion_temporal_estudiante(
-            estudiante_id, materia_id, usuario.usuario_id
-        )
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    puntos = await controller.obtener_evolucion_temporal_estudiante(
+        estudiante_id, materia_id, usuario.usuario_id
+    )
     return [
         EvolucionTemporalPuntoResponse(
             actividad_id=punto.actividad_id,
@@ -272,16 +246,9 @@ async def obtener_evolucion_temporal_comision(
     `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`).
     Docente sin autorización → 403 (`US-ADJ-57`).
     """
-    try:
-        puntos = await controller.obtener_evolucion_temporal_comision(
-            materia_id, comision_id, usuario.usuario_id
-        )
-    except ComisionNoPerteneceAMateria as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    puntos = await controller.obtener_evolucion_temporal_comision(
+        materia_id, comision_id, usuario.usuario_id
+    )
     return [
         EvolucionTemporalComisionPuntoResponse(
             actividad_id=punto.actividad_id,
@@ -308,16 +275,9 @@ async def obtener_ranking_preguntas_falladas(
     Sin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`
     → 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización → 403 (`US-ADJ-57`).
     """
-    try:
-        ranking = await controller.obtener_ranking_preguntas_falladas(
-            materia_id, comision_id, usuario.usuario_id
-        )
-    except ComisionNoPerteneceAMateria as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    ranking = await controller.obtener_ranking_preguntas_falladas(
+        materia_id, comision_id, usuario.usuario_id
+    )
     return [
         RankingPreguntaFalladaResponse(
             pregunta_id=fila.pregunta_id,
@@ -347,14 +307,9 @@ async def obtener_completitud_por_actividad(
     `actividad_id` inexistente → 404 (`ActividadNoExiste`). Docente sin Comisión asignada en
     la materia de la actividad → 403 (`US-ADJ-57`).
     """
-    try:
-        completitud = await controller.obtener_completitud_por_actividad(
-            actividad_id, usuario.usuario_id
-        )
-    except ActividadNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    completitud = await controller.obtener_completitud_por_actividad(
+        actividad_id, usuario.usuario_id
+    )
     return CompletitudPorActividadResponse(
         detalle=[
             CompletitudFilaResponse(

@@ -5,21 +5,10 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
     ActividadEvaluativaPeriodoAbierto,
-)
-from src.actividad_evaluativa.entities.errors import (
-    ActividadNoExiste,
-    ActividadYaCerrada,
-    CantidadIntentosInvalida,
-    ComisionNoAutorizada,
-    MateriaNoAutorizada,
-    MateriaNoExiste,
-    NoSePuedeAcortarConEvaluacionesActivas,
-    PeriodoInvalido,
-    PreguntasInsuficientes,
 )
 from src.actividad_evaluativa.entities.ports.actividad_query_port import ActividadResumen
 from src.actividad_evaluativa.frameworks.api.schemas import (
@@ -117,10 +106,7 @@ async def listar_actividades(
     El Docente solo ve las actividades de una materia donde tiene al menos una Comisión
     asignada (`US-ADJ-57`); 403 si no.
     """
-    try:
-        resumenes = await controller.listar_actividades(materia_id, usuario.usuario_id)
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    resumenes = await controller.listar_actividades(materia_id, usuario.usuario_id)
     ahora = datetime.now(UTC)
     return [_a_resumen_response(resumen, ahora) for resumen in resumenes]
 
@@ -170,12 +156,7 @@ async def obtener_actividad(
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    try:
-        resumen = await controller.obtener_actividad(actividad_id, usuario.usuario_id)
-    except ActividadNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    resumen = await controller.obtener_actividad(actividad_id, usuario.usuario_id)
 
     ahora = datetime.now(UTC)
     return _a_resumen_response(resumen, ahora)
@@ -197,27 +178,18 @@ async def crear_actividad(
     403 si el Docente no tiene ninguna Comisión asignada en `materia_id`, o si alguna de
     `comisiones_ids` no es una Comisión propia (`US-ADJ-57`).
     """
-    try:
-        actividad, _evento = await controller.crear_actividad(
-            body.materia_id,
-            body.fecha_apertura,
-            body.fecha_cierre,
-            body.cantidad_preguntas,
-            body.cantidad_intentos_permitidos,
-            body.titulo,
-            frozenset(body.comisiones_ids),
-            body.unidad_tematica,
-            body.tema,
-            usuario.usuario_id,
-        )
-    except MateriaNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (MateriaNoAutorizada, ComisionNoAutorizada) as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (PreguntasInsuficientes, PeriodoInvalido, CantidadIntentosInvalida) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    actividad, _evento = await controller.crear_actividad(
+        body.materia_id,
+        body.fecha_apertura,
+        body.fecha_cierre,
+        body.cantidad_preguntas,
+        body.cantidad_intentos_permitidos,
+        body.titulo,
+        frozenset(body.comisiones_ids),
+        body.unidad_tematica,
+        body.tema,
+        usuario.usuario_id,
+    )
 
     return _a_response(actividad)
 
@@ -238,22 +210,9 @@ async def modificar_periodo_disponibilidad(
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    try:
-        actividad = await controller.modificar_periodo_disponibilidad(
-            actividad_id, body.nueva_fecha_cierre, usuario.usuario_id
-        )
-    except ActividadNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (
-        PeriodoInvalido,
-        NoSePuedeAcortarConEvaluacionesActivas,
-        ActividadYaCerrada,
-    ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    actividad = await controller.modificar_periodo_disponibilidad(
+        actividad_id, body.nueva_fecha_cierre, usuario.usuario_id
+    )
 
     return _a_response(actividad)
 
@@ -274,14 +233,9 @@ async def modificar_titulo(
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    try:
-        actividad = await controller.modificar_titulo(
-            actividad_id, body.nuevo_titulo, usuario.usuario_id
-        )
-    except ActividadNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    actividad = await controller.modificar_titulo(
+        actividad_id, body.nuevo_titulo, usuario.usuario_id
+    )
 
     return _a_response(actividad)
 
@@ -301,15 +255,6 @@ async def cerrar_actividad(
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    try:
-        actividad = await controller.cerrar_actividad(actividad_id, usuario.usuario_id)
-    except ActividadNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except ActividadYaCerrada as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    actividad = await controller.cerrar_actividad(actividad_id, usuario.usuario_id)
 
     return _a_response(actividad)
