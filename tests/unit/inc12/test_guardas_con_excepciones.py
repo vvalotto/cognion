@@ -56,24 +56,11 @@ HTTPEXCEPTION_EN_ROUTERS: dict[str, int] = {
 }
 
 # --- CA-01: gateways SQL de `interface_adapters/` que importan los modelos ORM de `frameworks/` (10 hoy) ---------------
-GATEWAYS_QUE_IMPORTAN_MODELOS: list[str] = [
-    "src/banco_preguntas/interface_adapters/gateways/banco_repository.py",
-    "src/banco_preguntas/interface_adapters/gateways/materia_repository.py",
-    "src/banco_preguntas/interface_adapters/gateways/pregunta_repository.py",
-    "src/identidad/interface_adapters/gateways/comision_query_repository.py",
-    "src/identidad/interface_adapters/gateways/comision_repository.py",
-    "src/identidad/interface_adapters/gateways/cuenta_query_repository.py",
-    "src/identidad/interface_adapters/gateways/invitacion_repository.py",
-    "src/identidad/interface_adapters/gateways/nombre_usuario_query_repository.py",
-    "src/identidad/interface_adapters/gateways/token_recuperacion_password_repository.py",
-    "src/identidad/interface_adapters/gateways/usuario_repository.py",
-]
+GATEWAYS_QUE_IMPORTAN_MODELOS: list[str] = []
 
 # --- CA-01: excepciones declaradas en los contratos de import-linter -----------------------------------------------------
 IGNORE_IMPORTS_POR_CONTRATO: dict[str, list[str]] = {
-    "Capas dentro de cada BC: entities <- use_cases <- interface_adapters <- frameworks": [
-        "src.*.interface_adapters.gateways.** -> src.*.frameworks.db.models"
-    ],
+    "Capas dentro de cada BC: entities <- use_cases <- interface_adapters <- frameworks": [],
     "Aislamiento entre BC: solo frameworks/adapters puede importar de otro BC (ADR-006)": [
         "src.*.frameworks.adapters.** -> src.**"
     ],

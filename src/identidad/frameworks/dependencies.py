@@ -14,6 +14,22 @@ from src.identidad.frameworks.adapters.evaluacion_consulta_port_in_process impor
     EvaluacionConsultaPortInProcess,
 )
 from src.identidad.frameworks.adapters.materia_port_in_process import MateriaPortInProcess
+from src.identidad.frameworks.repositories.comision_query_repository import (
+    SQLAlchemyComisionQueryRepository,
+)
+from src.identidad.frameworks.repositories.comision_repository import (
+    SQLAlchemyComisionRepository,
+)
+from src.identidad.frameworks.repositories.cuenta_query_repository import (
+    SQLAlchemyCuentaQueryRepository,
+)
+from src.identidad.frameworks.repositories.invitacion_repository import (
+    SQLAlchemyInvitacionRepository,
+)
+from src.identidad.frameworks.repositories.token_recuperacion_password_repository import (
+    SQLAlchemyTokenRecuperacionPasswordRepository,
+)
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.frameworks.smtp.notificador_smtp import SmtpNotificador
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
@@ -40,22 +56,6 @@ from src.identidad.interface_adapters.controllers.recuperacion_password_controll
 )
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
-from src.identidad.interface_adapters.gateways.comision_query_repository import (
-    SQLAlchemyComisionQueryRepository,
-)
-from src.identidad.interface_adapters.gateways.comision_repository import (
-    SQLAlchemyComisionRepository,
-)
-from src.identidad.interface_adapters.gateways.cuenta_query_repository import (
-    SQLAlchemyCuentaQueryRepository,
-)
-from src.identidad.interface_adapters.gateways.invitacion_repository import (
-    SQLAlchemyInvitacionRepository,
-)
-from src.identidad.interface_adapters.gateways.token_recuperacion_password_repository import (
-    SQLAlchemyTokenRecuperacionPasswordRepository,
-)
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.use_cases.activar_comision import ActivarComisionUseCase
 from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.asignar_docente_a_comision import AsignarDocenteAComisionUseCase

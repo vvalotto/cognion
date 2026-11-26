@@ -21,7 +21,7 @@ from src.identidad.frameworks.db.models import (
     EstudianteModel,
     UsuarioModel,
 )
-from src.identidad.interface_adapters.gateways.email_unico import email_unico
+from src.identidad.frameworks.repositories.email_unico import email_unico
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 _MODEL_POR_PERFIL: dict[TipoPerfil, type[AdministradorModel | DocenteModel | EstudianteModel]] = {

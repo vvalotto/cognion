@@ -18,7 +18,7 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.banco_preguntas.entities.ports.comision_consulta_port import ComisionConsultaPort
-from src.identidad.interface_adapters.gateways.comision_query_repository import (
+from src.identidad.frameworks.repositories.comision_query_repository import (
     SQLAlchemyComisionQueryRepository,
 )
 

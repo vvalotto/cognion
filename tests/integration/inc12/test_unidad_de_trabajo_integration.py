@@ -12,8 +12,8 @@ from sqlalchemy import text
 
 from src.identidad.entities.errors import CredencialesInvalidas, EmailYaRegistrado
 from src.identidad.entities.usuario import Usuario
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import SessionLocal, unidad_de_trabajo
 

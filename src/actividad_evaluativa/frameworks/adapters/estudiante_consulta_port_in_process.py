@@ -16,10 +16,10 @@ from src.actividad_evaluativa.entities.ports.estudiante_consulta_port import (
     EstudianteConsultaPort,
 )
 from src.identidad.entities.usuario import Estudiante
-from src.identidad.interface_adapters.gateways.nombre_usuario_query_repository import (
+from src.identidad.frameworks.repositories.nombre_usuario_query_repository import (
     SQLAlchemyNombreUsuarioQueryRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import (
+from src.identidad.frameworks.repositories.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil

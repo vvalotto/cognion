@@ -28,10 +28,10 @@ from src.identidad.entities.errors import (
 )
 from src.identidad.entities.ports.password_hasher_port import PasswordHasherPort
 from src.identidad.entities.ports.usuario_repository_port import UsuarioRepositoryPort
-from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.usuario_repository import (
+from src.identidad.frameworks.repositories.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
+from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.use_cases.bootstrap_administrador import BootstrapAdministradorUseCase
 from src.shared.frameworks.db import unidad_de_trabajo
 

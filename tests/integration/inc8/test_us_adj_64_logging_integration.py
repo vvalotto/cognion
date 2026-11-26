@@ -14,8 +14,8 @@ import httpx
 import pytest
 
 from src.identidad.entities.usuario import Usuario
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.conftest import _id_desde_headers
 from tests.integration.inc8._escenarios_logging import intentar_websocket, materia_y_comision

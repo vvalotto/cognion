@@ -17,8 +17,8 @@ from src.identidad.frameworks.cli.bootstrap_administrador import (
     ejecutar,
     pedir_password_confirmada,
 )
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc8/US-ADJ-65-bootstrap-confirmacion.feature")

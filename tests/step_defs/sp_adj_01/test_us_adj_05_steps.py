@@ -20,13 +20,13 @@ from sqlalchemy import text
 from src.app import app
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
-from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
-from src.identidad.interface_adapters.gateways.comision_repository import (
+from src.identidad.frameworks.repositories.comision_repository import (
     SQLAlchemyComisionRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import (
+from src.identidad.frameworks.repositories.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
+from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.shared.entities.tipo_perfil import TipoPerfil
 from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc1._auth_headers import admin_headers

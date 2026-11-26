@@ -14,7 +14,7 @@ from src.identidad.frameworks.db.models import (
     EstudianteModel,
     UsuarioModel,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import (
+from src.identidad.frameworks.repositories.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil

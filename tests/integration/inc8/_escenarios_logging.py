@@ -10,10 +10,10 @@ from websockets.exceptions import WebSocketException
 
 from src.identidad.entities.comision import Comision
 from src.identidad.entities.usuario import Usuario
-from src.identidad.interface_adapters.gateways.comision_repository import (
+from src.identidad.frameworks.repositories.comision_repository import (
     SQLAlchemyComisionRepository,
 )
-from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
+from src.identidad.frameworks.repositories.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
 from tests.integration.conftest import _id_desde_headers, asignar_docente_a_materia
 from tests.integration.inc8._servidor_real import ServidorReal
