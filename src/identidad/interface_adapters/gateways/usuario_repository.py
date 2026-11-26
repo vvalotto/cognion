@@ -53,7 +53,7 @@ class SQLAlchemyUsuarioRepository(UsuarioRepositoryPort):
         return resultado.scalar_one_or_none() is not None
 
     async def guardar(self, usuario: Usuario) -> None:
-        """Guarda el usuario y su modelo de perfil correspondiente (sin confirmar: lo hace la unidad de trabajo)."""
+        """Guarda el usuario y su modelo de perfil; no confirma (lo hace la unidad de trabajo)."""
         async with email_unico(self._session, usuario.email):
             self._session.add(
                 UsuarioModel(
