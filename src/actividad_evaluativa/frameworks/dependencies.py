@@ -8,7 +8,6 @@ patrón que `src/banco_preguntas/frameworks/dependencies.py`.
 from __future__ import annotations
 
 from datetime import timedelta
-from typing import Annotated
 from uuid import UUID
 
 from fastapi import Depends, HTTPException, status
@@ -161,12 +160,10 @@ from src.settings import settings
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.ports.jwt_issuer_port import JWTIssuerPort
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal, get_session
+from src.shared.frameworks.db import SessionDep, SessionLocal
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from src.shared.interface_adapters.security.get_current_user import build_get_current_user
 from src.shared.interface_adapters.security.require_rol import require_rol
-
-SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 def get_event_store(session: SessionDep) -> EventStorePort:
