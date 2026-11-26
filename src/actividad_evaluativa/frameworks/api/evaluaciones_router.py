@@ -92,9 +92,7 @@ async def iniciar_evaluacion(
 
     Responde 404/422 ante los rechazos de dominio.
     """
-    evaluacion, _creada = await controller.iniciar_evaluacion(
-        body.actividad_id, usuario.usuario_id
-    )
+    evaluacion, _creada = await controller.iniciar_evaluacion(body.actividad_id, usuario.usuario_id)
 
     return await _a_response(evaluacion, pregunta_consulta)
 
