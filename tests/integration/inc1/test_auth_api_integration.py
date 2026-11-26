@@ -18,6 +18,7 @@ class TestAuthAPIIntegration:
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -42,6 +43,7 @@ class TestAuthAPIIntegration:
         email = f"admin.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Admin", email, hasher.hash("Admin#2026"), TipoPerfil.ADMINISTRADOR)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -65,14 +67,17 @@ class TestAuthAPIIntegration:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         email = f"estudiante.{uuid.uuid4()}@fiuner.edu.ar"
         estudiante = Usuario.crear_estudiante(
             "Estudiante", email, hasher.hash("Estudiante#2026"), comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -89,6 +94,7 @@ class TestAuthAPIIntegration:
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -104,6 +110,7 @@ class TestAuthAPIIntegration:
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -132,6 +139,7 @@ class TestBloqueoCuentaLoginAPIIntegration:
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -152,6 +160,7 @@ class TestBloqueoCuentaLoginAPIIntegration:
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -172,6 +181,7 @@ class TestBloqueoCuentaLoginAPIIntegration:
         email = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente", email, hasher.hash("Docente#2026"), TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

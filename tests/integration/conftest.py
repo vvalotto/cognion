@@ -15,12 +15,12 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM token_recuperacion_password"))
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
@@ -41,7 +41,7 @@ async def limpiar_tablas_identidad():
 
 @pytest.fixture
 async def session():
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         yield session
 
 
@@ -78,7 +78,7 @@ async def asignar_docente_a_materia(materia_id: str, docente_headers: dict[str, 
     que cambiar de identidad ni los tests pedir un fixture nuevo.
     """
     docente_id = _id_desde_headers(docente_headers)
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
 
@@ -116,7 +116,7 @@ async def asignar_docente_a_comision_existente(
     `asignar_docente_a_materia` ya llamado antes en el mismo test (mismo `docente_id`).
     """
     docente_id = _id_desde_headers(docente_headers)
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
 

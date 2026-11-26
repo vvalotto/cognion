@@ -24,6 +24,7 @@ class TestObtenerNombres:
         admin = Usuario.crear("Adm", "adm.942@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuarios.guardar(docente)
         await usuarios.guardar(admin)
+        await session.commit()
 
         resultado = await SQLAlchemyNombreUsuarioQueryRepository(session).obtener_nombres(
             [docente.id, admin.id, uuid.uuid4()]

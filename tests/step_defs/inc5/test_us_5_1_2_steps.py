@@ -25,7 +25,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc3._auth_headers import (
     admin_headers,
     asignar_docente_a_comision,
@@ -41,7 +41,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -152,7 +152,7 @@ async def _crear_comision_con_estudiantes(
 ) -> list[str]:
     """Crea la Comisión y la asigna a `docente_id` (`US-ADJ-57`) — el mismo Docente que crea la
     actividad debe estar asignado a cada Comisión que la restrinja."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(

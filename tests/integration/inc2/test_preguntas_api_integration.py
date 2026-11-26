@@ -35,8 +35,10 @@ async def _banco_persistido(session, docente_headers: dict[str, str] | None = No
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     if docente_headers is not None:
         await asignar_docente_a_materia(str(materia.id), docente_headers)
     return banco
@@ -59,6 +61,7 @@ async def _pregunta_om_persistida(session, banco_id: uuid.UUID) -> PreguntaPlant
         ],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta
 
 
@@ -76,6 +79,7 @@ async def _pregunta_vf_persistida(session, banco_id: uuid.UUID) -> PreguntaPlant
         respuesta_correcta=True,
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta
 
 
@@ -365,6 +369,7 @@ class TestEditarPreguntaAPIIntegration:
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         pregunta.activa = False
         await pregunta_repo.actualizar(pregunta)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -429,6 +434,7 @@ class TestEliminarPreguntaAPIIntegration:
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         pregunta.activa = False
         await pregunta_repo.actualizar(pregunta)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

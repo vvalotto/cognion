@@ -16,7 +16,7 @@ from src.identidad.entities.usuario import Usuario
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc9/US-ADJ-69-aviso-ultimo-intento.feature")
 
@@ -30,7 +30,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
@@ -63,7 +63,7 @@ async def _login(email: str, password: str) -> Response:
 
 async def _crear_cuenta(tipo: TipoPerfil, intentos_fallidos: int) -> str:
     email = f"persona.bdd69.{uuid.uuid4()}@fiuner.edu.ar"
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         usuario = Usuario.crear(
             "Persona BDD", email, BcryptPasswordHasher().hash(_PASSWORD_CORRECTA), tipo

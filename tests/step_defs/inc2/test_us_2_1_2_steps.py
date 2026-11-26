@@ -16,7 +16,7 @@ from src.banco_preguntas.interface_adapters.gateways.materia_repository import (
     SQLAlchemyMateriaRepository,
 )
 from src.identidad.frameworks.db.models import ComisionModel
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc1._auth_headers import admin_headers, docente_headers
 
 scenarios("../../features/inc2/US-2.1.2-comision-materia-port.feature")
@@ -28,7 +28,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision"))
@@ -81,7 +81,7 @@ async def _simular_migracion_de_datos(nombre_materia: str) -> tuple[uuid.UUID, u
     string) para simular el estado de BL-002, corre la misma consulta de backfill que usa
     `upgrade()`, y la elimina al finalizar — sin tocar el historial de Alembic.
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         materia_repo = SQLAlchemyMateriaRepository(session)
         materia = Materia.crear(nombre_materia)
         await materia_repo.guardar(materia)
@@ -124,7 +124,7 @@ def materia_creada(context):
 @when("se ejecuta la migración de datos")
 def ejecuta_migracion(context):
     async def _ejecutar() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             await session.execute(
                 text(
                     "UPDATE comision SET materia_id = materia.id "
@@ -142,7 +142,7 @@ def ejecuta_migracion(context):
 @then("la Comisión queda con materia_id apuntando a esa Materia")
 def valida_materia_id_migrada(context):
     async def _verificar() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             modelo = await session.get(ComisionModel, context["comision_id"])
             assert modelo.materia_id == context["materia_id_esperada"]
 
@@ -160,7 +160,7 @@ def administrador_autenticado():
 @given("una Materia existente con id <materia_id>")
 def materia_existente(context):
     async def _crear() -> str:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_repo = SQLAlchemyMateriaRepository(session)
             materia = Materia.crear(f"Materia BDD 212 {uuid.uuid4()}")
             await materia_repo.guardar(materia)

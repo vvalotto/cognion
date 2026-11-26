@@ -17,6 +17,7 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
         usuario = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash123", TipoPerfil.DOCENTE)
 
         await repo.guardar(usuario)
+        await session.commit()
         recuperado = await repo.obtener_por_id(usuario.id)
 
         assert recuperado is not None
@@ -27,6 +28,7 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
         repo = SQLAlchemyUsuarioRepository(session)
         usuario = Usuario.crear("Ana", "ana2@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await repo.guardar(usuario)
+        await session.commit()
 
         assert await repo.existe_email("ana2@fiuner.edu.ar") is True
         assert await repo.existe_email("nadie@fiuner.edu.ar") is False
@@ -58,6 +60,7 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
         repo = SQLAlchemyUsuarioRepository(session)
         usuario = Usuario.crear("Ana", "ana3@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await repo.guardar(usuario)
+        await session.commit()
 
         recuperado = await repo.obtener_por_email("ana3@fiuner.edu.ar")
 
@@ -75,11 +78,14 @@ class TestSQLAlchemyUsuarioRepositoryIntegration:
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear("Vic", "vic.est@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         estudiante = Usuario.crear_estudiante("Nico", "nico.est@fiuner.edu.ar", "hash", comision.id)
         await usuario_repo.guardar(estudiante)
+        await session.commit()
         recuperado = await usuario_repo.obtener_por_id(estudiante.id)
 
         assert recuperado is not None

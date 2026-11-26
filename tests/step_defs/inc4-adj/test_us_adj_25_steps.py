@@ -21,7 +21,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 scenarios("../../features/inc4-adj/US-ADJ-25-asignar-docente-comision.feature")
@@ -33,7 +33,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
@@ -85,11 +85,12 @@ async def _crear_admin(session) -> Usuario:
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     return admin
 
 
 async def _crear_comision(con_docente: bool) -> tuple[Comision, Usuario | None]:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
@@ -109,7 +110,7 @@ async def _crear_comision(con_docente: bool) -> tuple[Comision, Usuario | None]:
 
 
 async def _crear_usuario(perfil: TipoPerfil) -> Usuario:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         if perfil == TipoPerfil.ESTUDIANTE:
             comision, _ = await _crear_comision(con_docente=False)

@@ -28,10 +28,13 @@ async def _estudiante(session, nombre: str, email: str) -> tuple[Usuario, Comisi
     usuarios = SQLAlchemyUsuarioRepository(session)
     admin = Usuario.crear("Vic", f"adm.{email}", "hash", TipoPerfil.ADMINISTRADOR)
     await usuarios.guardar(admin)
+    await session.commit()
     comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
     await SQLAlchemyComisionRepository(session).guardar(comision)
+    await session.commit()
     estudiante = Usuario.crear_estudiante(nombre, email, "hash", comision.id)
     await usuarios.guardar(estudiante)
+    await session.commit()
     return estudiante, comision
 
 

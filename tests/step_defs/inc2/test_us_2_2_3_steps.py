@@ -19,7 +19,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.step_defs.inc1._auth_headers import admin_headers
 
 scenarios("../../features/inc2/US-2.2.3-detalle-cuenta.feature")
@@ -31,7 +31,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
@@ -62,7 +62,7 @@ async def _get(path: str):
 
 async def _crear_docente() -> uuid.UUID:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         email = f"docente.bdd223.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear("Docente BDD", email, hasher.hash("x"), TipoPerfil.DOCENTE)
@@ -72,7 +72,7 @@ async def _crear_docente() -> uuid.UUID:
 
 async def _crear_estudiante() -> tuple[uuid.UUID, uuid.UUID]:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         admin = Usuario.crear(

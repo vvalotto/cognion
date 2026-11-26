@@ -43,7 +43,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.conftest import (
     asignar_docente_a_comision_existente,
@@ -62,7 +62,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -103,8 +103,10 @@ async def _materia_con_banco(session):
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     return materia, banco
 
 
@@ -122,6 +124,7 @@ async def _pregunta_persistida(session, banco_id, unidad_tematica: str, tema: st
         opciones=[Opcion(texto="A", es_correcta=True), Opcion(texto="B", es_correcta=False)],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta.id
 
 
@@ -134,13 +137,16 @@ async def _comision_con_estudiante(session, materia_id):
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiante = Usuario.crear_estudiante(
         "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante)
+    await session.commit()
     return comision, estudiante
 
 
@@ -210,7 +216,7 @@ async def _evaluacion_finalizada_con_respuesta(
 @given("una materia con respuestas vigentes de 5 preguntas distintas")
 def materia_con_cinco_preguntas(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia, banco = await _materia_con_banco(session)
             _comision, estudiante = await _comision_con_estudiante(session, materia.id)
             store = SQLAlchemyEventStore(session)
@@ -233,7 +239,7 @@ def la_misma_materia_de_arriba(context):
     """Escenarios BDD son independientes entre sí — reconstruye el mismo setup."""
 
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia, banco = await _materia_con_banco(session)
             comision, estudiante_1 = await _comision_con_estudiante(session, materia.id)
             pregunta_id = await _pregunta_persistida(session, banco.id, "Unidad 1", "T1")
@@ -254,7 +260,7 @@ def la_misma_materia_de_arriba(context):
 @given("una pregunta con 1 presentación y 1 fallo, y otra con 50 presentaciones y 10 fallos")
 def preguntas_con_distinto_conteo(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia, banco = await _materia_con_banco(session)
             _comision, estudiante = await _comision_con_estudiante(session, materia.id)
             pregunta_baja = await _pregunta_persistida(session, banco.id, "U1", "Baja")
@@ -286,7 +292,7 @@ def materia_sin_respuestas(context):
 @given("una comisión de otra materia")
 def comision_de_otra_materia(context):
     async def _setup():
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia, _banco = await _materia_con_banco(session)
             otra_materia_id = uuid4()
             comision, _estudiante = await _comision_con_estudiante(session, otra_materia_id)

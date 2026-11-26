@@ -23,7 +23,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
 )
 from src.settings import settings
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 scenarios("../../features/inc4-adj/US-ADJ-26-generar-invitacion.feature")
@@ -35,7 +35,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
@@ -148,6 +148,7 @@ async def _crear_admin(session) -> Usuario:
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     return admin
 
 
@@ -157,17 +158,18 @@ async def _crear_docente(session) -> Usuario:
         "Docente", f"docente.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE
     )
     await usuario_repo.guardar(docente)
+    await session.commit()
     return docente
 
 
 async def _crear_docente_suelto() -> Usuario:
     """Crea un Docente sin asignarlo a ninguna comisión (sesión propia)."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         return await _crear_docente(session)
 
 
 async def _crear_comision_con_docente_asignado() -> tuple[Comision, Usuario]:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         docente = await _crear_docente(session)
         comision_repo = SQLAlchemyComisionRepository(session)

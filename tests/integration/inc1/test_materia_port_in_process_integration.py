@@ -12,6 +12,7 @@ class TestMateriaPortInProcessIntegration:
         materia_repo = SQLAlchemyMateriaRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
         await materia_repo.guardar(materia)
+        await session.commit()
 
         puerto = MateriaPortInProcess(session)
         resultado = await puerto.obtener(materia.id)

@@ -22,7 +22,7 @@ from src.identidad.frameworks.security.password_hasher import BcryptPasswordHash
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
 from src.settings import Settings
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.integration.inc8._escenarios_logging import intentar_websocket, materia_y_comision
 from tests.integration.inc8._servidor_real import ServidorReal
@@ -41,7 +41,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         for tabla in (
             "events",
             "pregunta_plantilla",
@@ -103,7 +103,7 @@ def servidor_consola_con_cuenta(ctx: dict[str, Any]) -> None:
     ctx["email"] = f"docente.{uuid.uuid4()}@fiuner.edu.ar"
 
     async def crear() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             await SQLAlchemyUsuarioRepository(session).guardar(
                 Usuario.crear(
                     "Docente", ctx["email"], BcryptPasswordHasher().hash("x"), TipoPerfil.DOCENTE
@@ -120,7 +120,7 @@ def servidor_consola_con_comision(ctx: dict[str, Any]) -> None:
     headers, _ = _jwt_docente()
 
     async def preparar() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             _, comision_id, _ = await materia_y_comision(
                 servidor, session, _admin_headers(), headers
             )
@@ -136,7 +136,7 @@ def servidor_consola_con_estudiante(ctx: dict[str, Any]) -> None:
     headers, _ = _jwt_docente()
 
     async def preparar() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             materia_id, comision_id, emails = await materia_y_comision(
                 servidor, session, _admin_headers(), headers, estudiantes=1
             )
@@ -158,7 +158,7 @@ def servidor_con_invitacion(ctx: dict[str, Any]) -> None:
     headers, _ = _jwt_docente()
 
     async def preparar() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             _, comision_id, _ = await materia_y_comision(
                 servidor, session, _admin_headers(), headers
             )

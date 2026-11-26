@@ -20,11 +20,13 @@ async def _crear_docente(session, **campos: object) -> Usuario:
     )
     repo = SQLAlchemyUsuarioRepository(session)
     await repo.guardar(usuario)
+    await session.commit()
     if campos:
         # `guardar()` no persiste `deshabilitada`/`bloqueada`/contadores: solo `actualizar()`.
         for campo, valor in campos.items():
             setattr(usuario, campo, valor)
         await repo.actualizar(usuario)
+        await session.commit()
     return usuario
 
 
@@ -73,6 +75,7 @@ class TestLoginCuentaDeshabilitadaAPIIntegration:
         usuario = await _crear_docente(session, deshabilitada=True)
         usuario.activar()
         await SQLAlchemyUsuarioRepository(session).actualizar(usuario)
+        await session.commit()
 
         response = await _login(usuario.email, PASSWORD)
 

@@ -30,11 +30,13 @@ class TestComisionConsultaPortInProcess:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision_a = Comision.crear(materia_id, "lu 10-12", admin.id)
         comision_b = Comision.crear(materia_id, "ma 14-16", admin.id)
         await comision_repo.guardar(comision_a)
         await comision_repo.guardar(comision_b)
+        await session.commit()
 
         estudiante_en_ambas = Usuario.crear_estudiante(
             "Ana Pérez", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", comision_a.id
@@ -44,6 +46,7 @@ class TestComisionConsultaPortInProcess:
         )
         await usuario_repo.guardar(estudiante_en_ambas)
         await usuario_repo.guardar(estudiante_solo_a)
+        await session.commit()
 
         notificaciones_port = ComisionConsultaPortInProcess(session)
         resultado = await notificaciones_port.listar_destinatarios([comision_a.id, comision_b.id])
@@ -61,14 +64,18 @@ class TestComisionConsultaPortInProcess:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comisiones = [Comision.crear(materia_id, f"horario-{i}", admin.id) for i in range(3)]
         for comision in comisiones:
             await comision_repo.guardar(comision)
+            await session.commit()
         comision_inactiva = Comision.crear(materia_id, "horario-inactiva", admin.id)
         await comision_repo.guardar(comision_inactiva)
+        await session.commit()
         comision_inactiva.deshabilitar()
         await comision_repo.actualizar(comision_inactiva)
+        await session.commit()
 
         notificaciones_port = ComisionConsultaPortInProcess(session)
         resultado = await notificaciones_port.listar_comisiones_por_materia(materia_id)
@@ -82,8 +89,10 @@ class TestComisionConsultaPortInProcess:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         notificaciones_port = ComisionConsultaPortInProcess(session)
         resultado = await notificaciones_port.listar_destinatarios([comision.id])

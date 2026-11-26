@@ -15,7 +15,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc2/US-2.2.1-bloqueo-cuenta-login.feature")
 
@@ -28,7 +28,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas_identidad() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM invitacion"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM estudiante"))
@@ -61,7 +61,7 @@ async def _crear_usuario_con_estado(
     *, intentos_fallidos_login: int = 0, bloqueada: bool = False
 ) -> uuid.UUID:
     hasher = BcryptPasswordHasher()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         email = f"docente.bdd221.{uuid.uuid4()}@fiuner.edu.ar"
         usuario = Usuario.crear(
@@ -75,7 +75,7 @@ async def _crear_usuario_con_estado(
 
 
 async def _obtener_usuario(usuario_id: uuid.UUID) -> Usuario:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repo = SQLAlchemyUsuarioRepository(session)
         usuario = await repo.obtener_por_id(usuario_id)
         assert usuario is not None

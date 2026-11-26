@@ -19,7 +19,7 @@ from src.identidad.frameworks.cli.bootstrap_administrador import (
 )
 from src.identidad.frameworks.security.password_hasher import BcryptPasswordHasher
 from src.identidad.interface_adapters.gateways.usuario_repository import SQLAlchemyUsuarioRepository
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 scenarios("../../features/inc8/US-ADJ-65-bootstrap-confirmacion.feature")
 
@@ -35,7 +35,7 @@ def run_async(coro):
 
 
 async def _vaciar() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         for tabla in (
             "token_recuperacion_password",
             "invitacion",
@@ -66,7 +66,7 @@ def ctx() -> dict[str, Any]:
 
 def _contar(tabla: str) -> int:
     async def consulta() -> int:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             return int((await session.execute(text(f"SELECT count(*) FROM {tabla}"))).scalar_one())
 
     return run_async(consulta())
@@ -74,7 +74,7 @@ def _contar(tabla: str) -> int:
 
 def _ejecutar(ctx: dict[str, Any], capsys: pytest.CaptureFixture[str], pedir) -> None:
     async def correr() -> int:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             return await ejecutar(
                 ctx["env"], pedir, SQLAlchemyUsuarioRepository(session), BcryptPasswordHasher()
             )
@@ -100,7 +100,7 @@ def _pedir_con_teclado(ctx: dict[str, Any]):
 
 def _crear_administrador_previo() -> None:
     async def crear() -> None:
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             codigo = await ejecutar(
                 {**ENV, "ADMIN_EMAIL": "previo@uner.edu.ar", "ADMIN_PASSWORD": VALIDA},
                 lambda: None,

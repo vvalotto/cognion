@@ -33,8 +33,10 @@ from src.banco_preguntas.interface_adapters.gateways.pregunta_repository import 
 async def _banco(session) -> Banco:
     materia = Materia.crear(f"Materia {uuid.uuid4()}")
     await SQLAlchemyMateriaRepository(session).guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await SQLAlchemyBancoRepository(session).guardar(banco)
+    await session.commit()
     return banco
 
 
@@ -57,6 +59,7 @@ class TestObtenerNiveles:
             [Opcion(texto="A", es_correcta=True), Opcion(texto="B", es_correcta=False)],
         )
         await SQLAlchemyPreguntaRepository(session).guardar(pregunta)
+        await session.commit()
 
         niveles = await PreguntaConsultaPortInProcess(session).obtener_niveles(pregunta.id)
 
@@ -68,6 +71,7 @@ class TestObtenerNiveles:
             banco.id, _metadatos(Dificultad.BAJO, Importancia.ALTO), True
         )
         await SQLAlchemyPreguntaRepository(session).guardar(pregunta)
+        await session.commit()
 
         niveles = await PreguntaConsultaPortInProcess(session).obtener_niveles(pregunta.id)
 

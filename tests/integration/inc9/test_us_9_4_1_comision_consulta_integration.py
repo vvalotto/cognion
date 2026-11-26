@@ -25,6 +25,7 @@ from src.shared.entities.tipo_perfil import TipoPerfil
 async def _admin(session, email: str) -> Usuario:
     admin = Usuario.crear("Vic", email, "hash", TipoPerfil.ADMINISTRADOR)
     await SQLAlchemyUsuarioRepository(session).guardar(admin)
+    await session.commit()
     return admin
 
 
@@ -40,6 +41,7 @@ class TestTieneComisiones:
         await SQLAlchemyComisionRepository(session).guardar(
             Comision.crear(materia_id, "lu 10-12", admin.id)
         )
+        await session.commit()
 
         assert await ComisionConsultaPortInProcess(session).tiene_comisiones(materia_id) is True
 
@@ -49,8 +51,10 @@ class TestTieneComisiones:
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         repo = SQLAlchemyComisionRepository(session)
         await repo.guardar(comision)
+        await session.commit()
         comision.deshabilitar()
         await repo.actualizar(comision)
+        await session.commit()
 
         assert await ComisionConsultaPortInProcess(session).tiene_comisiones(materia_id) is True
 
@@ -59,6 +63,7 @@ class TestTieneComisiones:
         await SQLAlchemyComisionRepository(session).guardar(
             Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         )
+        await session.commit()
 
         assert await ComisionConsultaPortInProcess(session).tiene_comisiones(uuid.uuid4()) is False
 
@@ -68,12 +73,15 @@ class TestEstaAsignadoAMateria:
         admin = await _admin(session, "adm.941d@fiuner.edu.ar")
         docente = Usuario.crear("Doc", "doc.941d@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await SQLAlchemyUsuarioRepository(session).guardar(docente)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         repo = SQLAlchemyComisionRepository(session)
         await repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await repo.actualizar(comision)
+        await session.commit()
         adaptador = ComisionConsultaPortInProcess(session)
 
         assert await adaptador.esta_asignado_a_materia(docente.id, materia_id) is True

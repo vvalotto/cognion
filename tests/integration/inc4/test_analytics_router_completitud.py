@@ -46,8 +46,10 @@ async def _comision_con_estudiantes(session, materia_id, cantidad: int) -> tuple
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiantes = []
     for _ in range(cantidad):
@@ -55,6 +57,7 @@ async def _comision_con_estudiantes(session, materia_id, cantidad: int) -> tuple
             "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
         estudiantes.append(estudiante)
     return comision.id, estudiantes
 

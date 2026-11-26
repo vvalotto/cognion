@@ -35,8 +35,10 @@ async def _banco_persistido(session, docente_headers: dict[str, str] | None = No
     banco_repo = SQLAlchemyBancoRepository(session)
     materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
     await materia_repo.guardar(materia)
+    await session.commit()
     banco = Banco.crear(materia.id)
     await banco_repo.guardar(banco)
+    await session.commit()
     if docente_headers is not None:
         await asignar_docente_a_materia(str(materia.id), docente_headers)
     return banco
@@ -66,6 +68,7 @@ async def _pregunta_om_persistida(
         ],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta
 
 
@@ -90,6 +93,7 @@ async def _pregunta_vf_persistida(
         respuesta_correcta=True,
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta
 
 
@@ -120,6 +124,7 @@ class TestSQLAlchemyPreguntaRepositoryFiltrar:
         inactiva.eliminar()
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         await pregunta_repo.actualizar(inactiva)
+        await session.commit()
 
         resultado = await pregunta_repo.filtrar(banco_id=banco.id)
 
@@ -217,6 +222,7 @@ class TestFiltrarPreguntasAPIIntegration:
         inactiva.eliminar()
         pregunta_repo = SQLAlchemyPreguntaRepository(session)
         await pregunta_repo.actualizar(inactiva)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

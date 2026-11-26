@@ -144,17 +144,21 @@ async def _crear_comision_con_estudiantes(
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
     if docente_id is not None:
         comision.asignar_docente(docente_id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
     emails = []
     for i in range(cantidad):
         email = f"estudiante{i}.{uuid.uuid4()}@fiuner.edu.ar"
         estudiante = Usuario.crear_estudiante(f"Estudiante {i}", email, "hash", comision.id)
         await usuario_repo.guardar(estudiante)
+        await session.commit()
         emails.append(email)
 
     return comision.id, emails

@@ -30,6 +30,7 @@ class TestCambiarPasswordAPIIntegration:
             TipoPerfil.DOCENTE,
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -49,6 +50,7 @@ class TestCambiarPasswordAPIIntegration:
             "Docente Login", email, hasher.hash("claveActual1"), TipoPerfil.DOCENTE
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -74,6 +76,7 @@ class TestCambiarPasswordAPIIntegration:
             TipoPerfil.DOCENTE,
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -95,6 +98,7 @@ class TestCambiarPasswordAPIIntegration:
             TipoPerfil.DOCENTE,
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
         headers = _headers_para(usuario)
 
         transport = ASGITransport(app=app)
@@ -121,8 +125,10 @@ class TestCambiarPasswordAPIIntegration:
             TipoPerfil.DOCENTE,
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
         usuario.bloqueada = True
         await usuario_repo.actualizar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -144,6 +150,7 @@ class TestCambiarPasswordAPIIntegration:
             TipoPerfil.DOCENTE,
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

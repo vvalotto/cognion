@@ -55,16 +55,20 @@ async def _crear_materia_con_preguntas_y_comision(
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await SQLAlchemyUsuarioRepository(session).guardar(admin)
+    await session.commit()
     docente_usuario = Usuario.crear(
         "Docente", f"docente.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.DOCENTE
     )
     await SQLAlchemyUsuarioRepository(session).guardar(docente_usuario)
+    await session.commit()
 
     comision_repo = SQLAlchemyComisionRepository(session)
     comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
     comision.asignar_docente(docente_usuario.id)
     await comision_repo.actualizar(comision)
+    await session.commit()
 
     docente_headers_reales = _headers(docente_usuario.id, TipoPerfil.DOCENTE)
     for i in range(cantidad):

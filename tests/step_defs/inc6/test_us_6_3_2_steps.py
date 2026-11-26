@@ -21,7 +21,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from tests.integration.inc6._helpers import (
     crear_estudiante,
     headers_de,
@@ -40,7 +40,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -104,7 +104,7 @@ async def _crear_comision_sin_sesion() -> str:
             "/materias", json={"nombre": f"Materia {uuid.uuid4()}"}, headers=admin
         )
     materia_id = creada.json()["id"]
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin_usuario = Usuario.crear(
             "Admin",
             f"admin.{uuid.uuid4()}@fiuner.edu.ar",

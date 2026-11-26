@@ -21,7 +21,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 from tests.step_defs.inc3._auth_headers import admin_headers, docente_headers
 
@@ -34,7 +34,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM events"))
         await session.execute(text("DELETE FROM pregunta_plantilla"))
         await session.execute(text("DELETE FROM banco"))
@@ -74,7 +74,7 @@ async def _crear_materia_con_preguntas_y_comision(cantidad: int) -> tuple[str, s
         banco_id = creada.json()["banco_id"]
         materia_id = creada.json()["id"]
 
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             admin = Usuario.crear(
                 "Admin",
                 f"admin.{uuid.uuid4()}@fiuner.edu.ar",
@@ -130,7 +130,7 @@ async def _post_crear_sesion(comision_id: str, cantidad: int, tiempo: int, heade
 
 
 async def _contar_sesiones() -> int:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         resultado = await session.execute(
             text("SELECT count(DISTINCT aggregate_id) FROM events WHERE aggregate_type = :t"),
             {"t": "ActividadEvaluativaEnVivo"},
@@ -139,7 +139,7 @@ async def _contar_sesiones() -> int:
 
 
 async def _payload_primer_evento(sesion_id: str) -> dict:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         resultado = await session.execute(
             text(
                 "SELECT payload FROM events WHERE aggregate_type = :t AND aggregate_id = :id "

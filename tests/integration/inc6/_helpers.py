@@ -24,7 +24,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 
@@ -40,7 +40,7 @@ async def headers_docente_de_comision(comision_id: str) -> dict[str, str]:
     sobre una Comisión ya existente — `POST /sesiones-en-vivo` y el resto de los endpoints de
     conducción exigen que el Docente que llama esté asignado a ella.
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         resultado = await session.execute(
             comision_docentes.select().where(
                 comision_docentes.c.comision_id == uuid.UUID(comision_id)
@@ -60,7 +60,7 @@ async def headers_docente_de_sesion(sesion_id: str) -> dict[str, str]:
     stream (caso "sesión inexistente" de varios tests), devuelve un Docente anónimo — el
     endpoint responde `SesionNoExiste` (404) antes de llegar al chequeo de pertenencia.
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         eventos = await SQLAlchemyEventStore(session).load(
             "ActividadEvaluativaEnVivo", uuid.UUID(sesion_id)
         )
@@ -72,7 +72,7 @@ async def headers_docente_de_sesion(sesion_id: str) -> dict[str, str]:
 
 async def crear_estudiante(comision_id: str) -> tuple[str, dict[str, str]]:
     """Crea un `Usuario` Estudiante real en la Comisión indicada; devuelve su id y sus headers."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         estudiante = Usuario.crear_estudiante(
             "Estudiante",
             f"estudiante.{uuid.uuid4()}@fiuner.edu.ar",
@@ -100,7 +100,7 @@ async def crear_estudiantes(comision_id: str, cantidad: int) -> list[tuple[str, 
         )
         for i in range(cantidad)
     ]
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repositorio = SQLAlchemyUsuarioRepository(session)
         for estudiante in estudiantes:
             await repositorio.guardar(estudiante)
@@ -125,7 +125,7 @@ async def preparar_sesion(
         banco_id = creada.json()["banco_id"]
         materia_id = creada.json()["id"]
 
-        async with SessionLocal() as session:
+        async with unidad_de_trabajo() as session:
             admin_usuario = Usuario.crear(
                 "Admin",
                 f"admin.{uuid.uuid4()}@fiuner.edu.ar",
@@ -275,7 +275,7 @@ async def sembrar_opciones_mostradas_hace(sesion_id: str, segundos: float) -> No
     """
     from datetime import timedelta
 
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         store = SQLAlchemyEventStore(session)
         eventos = await store.load("ActividadEvaluativaEnVivo", uuid.UUID(sesion_id))
         pregunta = eventos[0].payload["preguntas"][0]["pregunta_id"]
@@ -302,7 +302,7 @@ async def sembrar_opciones_mostradas_hace(sesion_id: str, segundos: float) -> No
 
 async def pregunta_actual_de(sesion_id: str) -> str:
     """Devuelve el `pregunta_id` de la primera pregunta de la sesión (la actual tras iniciar)."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         eventos = await SQLAlchemyEventStore(session).load(
             "ActividadEvaluativaEnVivo", uuid.UUID(sesion_id)
         )

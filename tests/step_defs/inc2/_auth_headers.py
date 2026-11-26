@@ -14,7 +14,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 
@@ -35,7 +35,7 @@ async def docente_asignado_a_materia(materia_id: str) -> tuple[str, dict[str, st
     real para persistir la asignación (relación ORM, no INSERT directo) — no alcanza con un
     id de JWT anónimo. Un Administrador dummy es el dueño de la Comisión (`Comision.crear`).
     """
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         hasher = BcryptPasswordHasher()

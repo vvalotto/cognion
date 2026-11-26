@@ -33,15 +33,20 @@ async def _crear_invitacion_vigente(session) -> tuple[Invitacion, str]:
     sufijo = uuid.uuid4()
     materia = Materia.crear(f"{_NOMBRE_MATERIA} {sufijo}")
     await materia_repo.guardar(materia)
+    await session.commit()
     admin = Usuario.crear("Vic", f"vic.{sufijo}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR)
     await usuario_repo.guardar(admin)
+    await session.commit()
     docente = Usuario.crear("Ana", f"ana.{sufijo}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
     await usuario_repo.guardar(docente)
+    await session.commit()
     comision = Comision.crear(materia.id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     invitacion = Invitacion.crear(comision.id, docente.id)
     await invitacion_repo.guardar(invitacion)
+    await session.commit()
     return invitacion, materia.nombre
 
 

@@ -45,6 +45,7 @@ class TestListarComisionesPorMateria:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
@@ -53,10 +54,12 @@ class TestListarComisionesPorMateria:
             comision_2 = Comision.crear(uuid.UUID(materia_id), "ma 14-16", admin.id)
             await comision_repo.guardar(comision_1)
             await comision_repo.guardar(comision_2)
+            await session.commit()
             comision_1.asignar_docente(docente.id)
             comision_2.asignar_docente(docente.id)
             await comision_repo.actualizar(comision_1)
             await comision_repo.actualizar(comision_2)
+            await session.commit()
 
             response = await client.get(
                 f"/materias/{materia_id}/comisiones", headers=_headers_docente(docente.id)
@@ -76,11 +79,13 @@ class TestListarComisionesPorMateria:
         )
         await SQLAlchemyUsuarioRepository(session).guardar(admin)
         await SQLAlchemyUsuarioRepository(session).guardar(docente)
+        await session.commit()
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
             comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
             await SQLAlchemyComisionRepository(session).guardar(comision)
+            await session.commit()
 
             response = await client.get(
                 f"/materias/{materia_id}/comisiones", headers=_headers_docente(docente.id)
@@ -99,6 +104,7 @@ class TestListarComisionesPorMateria:
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
@@ -107,8 +113,10 @@ class TestListarComisionesPorMateria:
             ajena = Comision.crear(uuid.UUID(materia_id), "ma 14-16", admin.id)
             await comision_repo.guardar(propia)
             await comision_repo.guardar(ajena)
+            await session.commit()
             propia.asignar_docente(docente.id)
             await comision_repo.actualizar(propia)
+            await session.commit()
 
             response = await client.get(
                 f"/materias/{materia_id}/comisiones", headers=_headers_docente(docente.id)
@@ -161,14 +169,17 @@ class TestListarComisionesPorMateria:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             materia_id = await _crear_materia(client, admin_headers, f"IS {uuid.uuid4()}")
             comision = Comision.crear(uuid.UUID(materia_id), "lu 10-12", admin.id)
             await comision_repo.guardar(comision)
+            await session.commit()
             comision.asignar_docente(docente.id)
             await comision_repo.actualizar(comision)
+            await session.commit()
 
             response = await client.get(f"/materias/{materia_id}/comisiones", headers=admin_headers)
 
@@ -188,14 +199,18 @@ class TestListarEstudiantes:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
         estudiante = Usuario.crear_estudiante(
             "Ana Pérez", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -218,8 +233,10 @@ class TestListarEstudiantes:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -240,10 +257,13 @@ class TestListarEstudiantes:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -271,8 +291,10 @@ class TestListarEstudiantes:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -289,8 +311,10 @@ class TestListarEstudiantes:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -311,8 +335,10 @@ class TestObtenerComision:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -332,10 +358,13 @@ class TestObtenerComision:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -362,10 +391,13 @@ class TestObtenerComision:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         comision.asignar_docente(docente.id)
         await comision_repo.actualizar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -387,8 +419,10 @@ class TestObtenerComision:
         )
         await usuario_repo.guardar(admin)
         await usuario_repo.guardar(docente)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -405,8 +439,10 @@ class TestObtenerComision:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

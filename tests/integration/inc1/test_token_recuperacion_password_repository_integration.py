@@ -15,6 +15,7 @@ async def _crear_usuario(session) -> Usuario:
     usuario_repo = SQLAlchemyUsuarioRepository(session)
     usuario = Usuario.crear("Ana", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
     await usuario_repo.guardar(usuario)
+    await session.commit()
     return usuario
 
 
@@ -25,6 +26,7 @@ class TestSQLAlchemyTokenRecuperacionPasswordRepositoryIntegration:
         token = TokenRecuperacionPassword.crear(usuario.id)
 
         await token_repo.guardar(token)
+        await session.commit()
 
         modelo = await session.get(TokenRecuperacionPasswordModel, token.id)
         assert modelo is not None
@@ -37,6 +39,7 @@ class TestSQLAlchemyTokenRecuperacionPasswordRepositoryIntegration:
         token_repo = SQLAlchemyTokenRecuperacionPasswordRepository(session)
         token = TokenRecuperacionPassword.crear(usuario.id)
         await token_repo.guardar(token)
+        await session.commit()
 
         encontrado = await token_repo.obtener_por_token(token.token)
 
@@ -53,10 +56,12 @@ class TestSQLAlchemyTokenRecuperacionPasswordRepositoryIntegration:
         token_repo = SQLAlchemyTokenRecuperacionPasswordRepository(session)
         token = TokenRecuperacionPassword.crear(usuario.id)
         await token_repo.guardar(token)
+        await session.commit()
         ahora = datetime.now(UTC)
         token.invalidar(ahora)
 
         await token_repo.actualizar(token)
+        await session.commit()
 
         modelo = await session.get(TokenRecuperacionPasswordModel, token.id)
         assert modelo.usado_en == ahora
@@ -68,11 +73,14 @@ class TestSQLAlchemyTokenRecuperacionPasswordRepositoryIntegration:
 
         activo = TokenRecuperacionPassword.crear(usuario.id)
         await token_repo.guardar(activo)
+        await session.commit()
         de_otro_usuario = TokenRecuperacionPassword.crear(otro_usuario.id)
         await token_repo.guardar(de_otro_usuario)
+        await session.commit()
 
         ahora = datetime.now(UTC)
         await token_repo.invalidar_activos_de(usuario.id, ahora)
+        await session.commit()
 
         modelo_activo = await session.get(TokenRecuperacionPasswordModel, activo.id)
         modelo_otro = await session.get(TokenRecuperacionPasswordModel, de_otro_usuario.id)
@@ -86,9 +94,11 @@ class TestSQLAlchemyTokenRecuperacionPasswordRepositoryIntegration:
         primer_instante = datetime.now(UTC)
         ya_usado.invalidar(primer_instante)
         await token_repo.guardar(ya_usado)
+        await session.commit()
 
         segundo_instante = datetime.now(UTC)
         await token_repo.invalidar_activos_de(usuario.id, segundo_instante)
+        await session.commit()
 
         modelo = await session.get(TokenRecuperacionPasswordModel, ya_usado.id)
         assert modelo.usado_en == primer_instante

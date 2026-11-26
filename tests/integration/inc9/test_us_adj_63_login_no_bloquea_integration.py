@@ -40,6 +40,7 @@ async def _crear_docente(session) -> str:
     await SQLAlchemyUsuarioRepository(session).guardar(
         Usuario.crear("Docente", email, BcryptPasswordHasher().hash(PASSWORD), TipoPerfil.DOCENTE)
     )
+    await session.commit()
     return email
 
 

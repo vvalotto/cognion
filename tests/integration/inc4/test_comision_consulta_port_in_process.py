@@ -30,9 +30,11 @@ class TestComisionConsultaPortInProcess:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         materia_id = uuid.uuid4()
         comision = Comision.crear(materia_id, "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         identidad_query = SQLAlchemyComisionQueryRepository(session)
         esperado = await identidad_query.listar_comisiones_por_materia(materia_id)
@@ -49,12 +51,15 @@ class TestComisionConsultaPortInProcess:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         estudiante = Usuario.crear_estudiante(
             "Ana Pérez", f"ana.{uuid.uuid4()}@fiuner.edu.ar", "hash", comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         identidad_query = SQLAlchemyComisionQueryRepository(session)
         esperado = await identidad_query.listar_estudiantes(comision.id)

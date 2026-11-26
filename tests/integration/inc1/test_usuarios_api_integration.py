@@ -226,8 +226,10 @@ class TestObtenerCuentaAPIIntegration:
             TipoPerfil.ADMINISTRADOR,
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         estudiante = Usuario.crear_estudiante(
             "Estudiante Detalle",
             f"estudiante.detalle.{uuid.uuid4()}@fiuner.edu.ar",
@@ -235,6 +237,7 @@ class TestObtenerCuentaAPIIntegration:
             comision.id,
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -275,6 +278,7 @@ class TestResetearPasswordAPIIntegration:
         usuario.bloqueada = True
         usuario.intentos_fallidos_login = 3
         await usuario_repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -296,6 +300,7 @@ class TestResetearPasswordAPIIntegration:
             "Login Reseteo", email, hasher.hash("claveVieja1"), TipoPerfil.DOCENTE
         )
         await usuario_repo.guardar(usuario)
+        await session.commit()
 
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:

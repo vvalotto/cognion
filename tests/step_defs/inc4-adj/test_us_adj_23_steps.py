@@ -22,7 +22,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.shared.entities.tipo_perfil import TipoPerfil
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 from src.shared.frameworks.security.jwt_pyjwt import PyJWTIssuer
 
 scenarios("../../features/inc4-adj/US-ADJ-23-listado-comisiones.feature")
@@ -34,7 +34,7 @@ def run_async(coro):
 
 
 async def _limpiar_tablas() -> None:
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         await session.execute(text("DELETE FROM estudiante"))
         await session.execute(text("DELETE FROM comision_docentes"))
         await session.execute(text("DELETE FROM comision"))
@@ -96,12 +96,13 @@ async def _crear_admin(session) -> Usuario:
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     return admin
 
 
 async def _crear_materia_con_comision_y_docente(cantidad_estudiantes: int):
     materia_id = await _crear_materia_real()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         usuario_repo = SQLAlchemyUsuarioRepository(session)
         comision_repo = SQLAlchemyComisionRepository(session)
@@ -127,7 +128,7 @@ async def _crear_materia_con_comision_y_docente(cantidad_estudiantes: int):
 
 async def _crear_materia_con_comision_sin_docente():
     materia_id = await _crear_materia_real()
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         admin = await _crear_admin(session)
         comision_repo = SQLAlchemyComisionRepository(session)
         comision = Comision.crear(materia_id, "ma 14-16", admin.id)

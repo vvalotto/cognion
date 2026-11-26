@@ -27,11 +27,14 @@ class TestListarEstudiantesConEmail:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         email_estudiante = f"ana.{uuid.uuid4()}@fiuner.edu.ar"
         estudiante = Usuario.crear_estudiante("Ana Pérez", email_estudiante, "hash", comision.id)
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         resultado = await query_repo.listar_estudiantes_con_email(comision.id)
 
@@ -48,8 +51,10 @@ class TestListarEstudiantesConEmail:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
 
         resultado = await query_repo.listar_estudiantes_con_email(comision.id)
 
@@ -64,12 +69,15 @@ class TestListarEstudiantesConEmail:
             "Vic", f"vic.{uuid.uuid4()}@fiuner.edu.ar", "hash", TipoPerfil.ADMINISTRADOR
         )
         await usuario_repo.guardar(admin)
+        await session.commit()
         comision = Comision.crear(uuid.uuid4(), "lu 10-12", admin.id)
         await comision_repo.guardar(comision)
+        await session.commit()
         estudiante = Usuario.crear_estudiante(
             "Bruno", f"bruno.{uuid.uuid4()}@fiuner.edu.ar", "hash", comision.id
         )
         await usuario_repo.guardar(estudiante)
+        await session.commit()
 
         resultado = await query_repo.listar_estudiantes(comision.id)
 

@@ -86,6 +86,7 @@ async def _pregunta_persistida(session, banco_id, unidad_tematica: str, tema: st
         opciones=[Opcion(texto="A", es_correcta=True), Opcion(texto="B", es_correcta=False)],
     )
     await pregunta_repo.guardar(pregunta)
+    await session.commit()
     return pregunta.id
 
 
@@ -98,13 +99,16 @@ async def _comision_con_estudiante(session, materia_id) -> tuple[uuid.UUID, Usua
         "Admin", f"admin.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), TipoPerfil.ADMINISTRADOR
     )
     await usuario_repo.guardar(admin)
+    await session.commit()
     comision = Comision.crear(materia_id, "lu 10-12", admin.id)
     await comision_repo.guardar(comision)
+    await session.commit()
 
     estudiante = Usuario.crear_estudiante(
         "Estudiante", f"estudiante.{uuid.uuid4()}@fiuner.edu.ar", hasher.hash("x"), comision.id
     )
     await usuario_repo.guardar(estudiante)
+    await session.commit()
     return comision.id, estudiante
 
 
@@ -166,8 +170,10 @@ class TestAnalyticsRouterTasaErrorPorTema:
         banco_repo = SQLAlchemyBancoRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
         await materia_repo.guardar(materia)
+        await session.commit()
         banco = Banco.crear(materia.id)
         await banco_repo.guardar(banco)
+        await session.commit()
 
         pregunta_id = await _pregunta_persistida(session, banco.id, "Unidad 1", "Herencia")
         _, estudiante = await _comision_con_estudiante(session, materia.id)
@@ -211,8 +217,10 @@ class TestAnalyticsRouterTasaErrorPorTema:
         banco_repo = SQLAlchemyBancoRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
         await materia_repo.guardar(materia)
+        await session.commit()
         banco = Banco.crear(materia.id)
         await banco_repo.guardar(banco)
+        await session.commit()
         pregunta_id = await _pregunta_persistida(session, banco.id, "Unidad 1", "Herencia")
 
         comision_1_id, estudiante_1 = await _comision_con_estudiante(session, materia.id)
@@ -272,6 +280,7 @@ class TestAnalyticsRouterTasaErrorPorTema:
         materia_repo = SQLAlchemyMateriaRepository(session)
         materia = Materia.crear(f"Ingeniería de Software {uuid.uuid4()}")
         await materia_repo.guardar(materia)
+        await session.commit()
         otra_materia_id = uuid4()
         comision_de_otra_materia, _ = await _comision_con_estudiante(session, otra_materia_id)
 
