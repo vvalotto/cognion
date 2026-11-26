@@ -69,3 +69,17 @@ Dos hechos verificados condicionan la solución:
   2. Un `rollback()` en un repositorio descarta todo lo pendiente del request, no solo su escritura. Hoy `email_unico` lo hace; con la unidad de trabajo debe ser un punto de guardado (`begin_nested`) o aceptarse solo cuando es la primera escritura del caso de uso.
 - ⚠️ **Los casos de uso que envían un email después de guardar** (`solicitar_recuperacion_password`, `generar_invitacion`) lo enviarían antes del commit: si el commit fallara, el enlace llegaría con un token que no existe y habría que pedirlo de nuevo. Se acepta a esta escala; no se hace diferido.
 - ⚠️ El costo de `NullPool` (`ADR-018`) no cambia: cada operación sigue abriendo una conexión; la unidad de trabajo no suma conexiones, porque la sesión del request es una sola.
+
+## Enmienda 2026-11-26 (al implementar `US-12.2.1`)
+
+La decisión decía que la unidad de trabajo "confirma al terminar bien y **revierte ante una excepción**". Al armar el plan apareció que eso desactivaría un control de seguridad: tres lugares de Identidad **guardan un cambio y después levantan un error a propósito**: `iniciar_sesion` (suma el intento fallido, bloquea la cuenta al llegar al máximo y levanta `CredencialesInvalidas`), `cambiar_password` (el mismo contador, con `PasswordActualIncorrecta`) y `rechazar_si_bloqueada` (levanta un bloqueo temporal vencido y puede rechazar igual). Con un rollback ante cualquier excepción el intento fallido no se guardaría y el bloqueo de cuenta (`INV-ID-10`, `INV-ID-21`) dejaría de funcionar.
+
+**Corrección, decidida por Víctor (2026-11-26): se revierte solo ante errores no controlados.**
+
+- **Error controlado:** el resultado de una regla de negocio o de un control de seguridad. Un control de seguridad se respeta siempre: lo escrito hasta ese punto se **confirma**, igual que hoy. Son los `HTTPException` con código menor a 500 (lo que hoy levantan los routers) y toda clase definida en un `entities/errors.py`; desde `US-12.2.2`, toda subclase de `ErrorDeDominio`.
+- **Error no controlado:** una falla técnica, como un error de acceso a la base, la pérdida de la conexión, un tiempo de espera, un error del código, o un `HTTPException` de 500 o más. **Revierte todo.**
+- Una función `es_error_controlado(exc)` en `shared/frameworks/db.py` decide; reconoce las clases de dominio por el módulo donde están definidas (`*.entities.errors`), sin importar ningún contexto.
+
+**Qué cambia respecto del texto original:** un error controlado ya no revierte. **Qué no cambia:** los cinco defectos reproducidos (una materia sin banco, un token reutilizable, etc.) los causa una falla técnica en la segunda escritura, y esa sí revierte.
+
+**El trade-off que se acepta:** un error controlado levantado *entre* dos escrituras dejaría media operación. Hoy no existe ninguno: solo `iniciar_sesion`, `cambiar_password` y `rechazar_si_bloqueada` escriben antes de levantar un error, y es intencional. Una guarda (`test_guardas_con_excepciones.py`) fija esa lista, para que un caso nuevo sea una decisión consciente. **Responsabilidad:** un caso de uso que levanta un error controlado debe dejar un estado consistente.
