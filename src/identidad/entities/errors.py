@@ -3,13 +3,21 @@
 from __future__ import annotations
 
 import math
-from datetime import datetime
+from datetime import UTC, datetime
+from typing import Any, ClassVar
 from uuid import UUID
 
 from src.identidad.entities.eventos import CuentaBloqueada
+from src.shared.entities.errors import (
+    Conflicto,
+    NoAutenticado,
+    NoAutorizado,
+    NoEncontrado,
+    ReglaViolada,
+)
 
 
-class EmailYaRegistrado(Exception):
+class EmailYaRegistrado(Conflicto):
     """Se intentó registrar un usuario con un email ya existente."""
 
     def __init__(self, email: str) -> None:
@@ -18,7 +26,7 @@ class EmailYaRegistrado(Exception):
         super().__init__(f"El email '{email}' ya está registrado.")
 
 
-class UsuarioNoEsDocente(Exception):
+class UsuarioNoEsDocente(ReglaViolada):
     """Se intentó asignar como docente a un usuario que no tiene ese perfil."""
 
     def __init__(self, usuario_id: UUID) -> None:
@@ -27,7 +35,7 @@ class UsuarioNoEsDocente(Exception):
         super().__init__(f"El usuario '{usuario_id}' no tiene perfil Docente.")
 
 
-class ComisionNoExiste(Exception):
+class ComisionNoExiste(NoEncontrado):
     """Se referenció una comisión que no está registrada."""
 
     def __init__(self, comision_id: UUID) -> None:
@@ -36,7 +44,7 @@ class ComisionNoExiste(Exception):
         super().__init__(f"La comisión '{comision_id}' no existe.")
 
 
-class DocenteNoAsignadoAComision(Exception):
+class DocenteNoAsignadoAComision(ReglaViolada):
     """Se intentó generar una invitación con un docente que no está asignado a la comisión."""
 
     def __init__(self, docente_id: UUID, comision_id: UUID) -> None:
@@ -48,7 +56,7 @@ class DocenteNoAsignadoAComision(Exception):
         )
 
 
-class InvitacionInvalida(Exception):
+class InvitacionInvalida(NoEncontrado):
     """Se intentó aceptar una invitación cuyo token no corresponde a ninguna existente."""
 
     def __init__(self, token: str) -> None:
@@ -57,7 +65,7 @@ class InvitacionInvalida(Exception):
         super().__init__(f"La invitación con token '{token}' no existe.")
 
 
-class InvitacionVencida(Exception):
+class InvitacionVencida(ReglaViolada):
     """Se intentó aceptar una invitación cuyo `expira_en` ya pasó (INV-ID-03)."""
 
     def __init__(self, token: str) -> None:
@@ -66,7 +74,7 @@ class InvitacionVencida(Exception):
         super().__init__(f"La invitación con token '{token}' ya venció.")
 
 
-class InvitacionYaUsada(Exception):
+class InvitacionYaUsada(ReglaViolada):
     """Se intentó aceptar una invitación con `usada_en` no null (INV-ID-01)."""
 
     def __init__(self, token: str) -> None:
@@ -75,7 +83,7 @@ class InvitacionYaUsada(Exception):
         super().__init__(f"La invitación con token '{token}' ya fue utilizada.")
 
 
-class InvitacionRevocada(Exception):
+class InvitacionRevocada(ReglaViolada):
     """Se intentó aceptar un link grupal que el Docente desactivó o reemplazó (`US-ADJ-67`)."""
 
     def __init__(self, token: str) -> None:
@@ -84,7 +92,7 @@ class InvitacionRevocada(Exception):
         super().__init__(f"La invitación con token '{token}' fue desactivada.")
 
 
-class DuracionInvitacionInvalida(Exception):
+class DuracionInvitacionInvalida(ReglaViolada):
     """La duración pedida para un link grupal no es una de las elegibles (`US-ADJ-67`)."""
 
     def __init__(self, minutos: int, permitidas: tuple[int, ...]) -> None:
@@ -96,7 +104,7 @@ class DuracionInvitacionInvalida(Exception):
         )
 
 
-class MateriaNoExiste(Exception):
+class MateriaNoExiste(NoEncontrado):
     """Se referenció una materia que no existe en BC Banco de Preguntas."""
 
     def __init__(self, materia_id: UUID) -> None:
@@ -105,7 +113,7 @@ class MateriaNoExiste(Exception):
         super().__init__(f"La materia '{materia_id}' no existe.")
 
 
-class CredencialesInvalidas(Exception):
+class CredencialesInvalidas(NoAutenticado):
     """El email no existe o la contraseña no verifica contra el hash guardado.
 
     El mensaje no distingue entre ambos casos para no filtrar si una cuenta existe
@@ -125,8 +133,14 @@ class CredencialesInvalidas(Exception):
         self.intentos_restantes: int | None = None
         super().__init__("Email o contraseña inválidos.")
 
+    def detalle(self) -> str | dict[str, Any]:
+        """Texto, o `{mensaje, intentos_restantes}` si el próximo intento bloquea la cuenta."""
+        if self.intentos_restantes is None:
+            return str(self)
+        return {"mensaje": str(self), "intentos_restantes": self.intentos_restantes}
 
-class CuentaBloqueadaError(Exception):
+
+class CuentaBloqueadaError(NoAutorizado):
     """La cuenta llegó a 3 intentos fallidos consecutivos y está bloqueada (INV-ID-10).
 
     Solo se desbloquea mediante reseteo de contraseña por un Administrador (`US-2.2.4`).
@@ -138,12 +152,14 @@ class CuentaBloqueadaError(Exception):
         super().__init__("La cuenta está bloqueada. Contactá a un administrador.")
 
 
-class CuentaDeshabilitadaError(Exception):
+class CuentaDeshabilitadaError(NoAutorizado):
     """La cuenta fue dada de baja (`deshabilitada = true`) y no puede iniciar sesión (INV-ID-18).
 
     Distinta de `CuentaBloqueadaError`: la baja es una decisión manual del Administrador, no un
     efecto de intentos fallidos, y solo la revierte `Usuario.activar()` (`US-ADJ-59`).
     """
+
+    codigo: ClassVar[str | None] = "cuenta_deshabilitada"
 
     def __init__(self, usuario_id: UUID) -> None:
         """Guarda el id de la cuenta deshabilitada y arma el mensaje de la excepción."""
@@ -151,7 +167,7 @@ class CuentaDeshabilitadaError(Exception):
         super().__init__("La cuenta está deshabilitada. Contactá a un administrador.")
 
 
-class CuentaBloqueadaTemporalmenteError(Exception):
+class CuentaBloqueadaTemporalmenteError(NoAutorizado):
     """El último Administrador operativo está bloqueado hasta `bloqueada_hasta` (INV-ID-21)."""
 
     def __init__(self, usuario_id: UUID, bloqueada_hasta: datetime) -> None:
@@ -164,9 +180,19 @@ class CuentaBloqueadaTemporalmenteError(Exception):
         """Segundos que faltan para que venza el bloqueo (mínimo 1)."""
         return max(1, math.ceil((self.bloqueada_hasta - ahora).total_seconds()))
 
+    def detalle(self) -> dict[str, Any]:
+        """`detail` con el código y los segundos que faltan para reintentar."""
+        return {
+            "codigo": "cuenta_bloqueada_temporal",
+            "mensaje": str(self),
+            "reintentar_en_segundos": self.segundos_restantes(datetime.now(UTC)),
+        }
 
-class UltimoAdministradorOperativoError(Exception):
+
+class UltimoAdministradorOperativoError(Conflicto):
     """Se intentó dar de baja al único Administrador operativo (INV-ID-20)."""
+
+    codigo: ClassVar[str | None] = "ultimo_administrador_operativo"
 
     def __init__(self, usuario_id: UUID) -> None:
         """Guarda el id de la cuenta y arma el mensaje de la excepción."""
@@ -177,7 +203,7 @@ class UltimoAdministradorOperativoError(Exception):
         )
 
 
-class UsuarioNoExiste(Exception):
+class UsuarioNoExiste(NoEncontrado):
     """Se referenció un usuario que no está registrado (`US-2.2.3`)."""
 
     def __init__(self, usuario_id: UUID) -> None:
@@ -186,7 +212,7 @@ class UsuarioNoExiste(Exception):
         super().__init__(f"El usuario '{usuario_id}' no existe.")
 
 
-class PasswordDemasiadoCorta(Exception):
+class PasswordDemasiadoCorta(ReglaViolada):
     """La contraseña nueva no cumple el mínimo de 12 caracteres (INV-ID-11 ampliada)."""
 
     def __init__(self) -> None:
@@ -194,7 +220,7 @@ class PasswordDemasiadoCorta(Exception):
         super().__init__("La contraseña debe tener al menos 12 caracteres.")
 
 
-class PasswordSinComplejidadSuficiente(Exception):
+class PasswordSinComplejidadSuficiente(ReglaViolada):
     """La contraseña nueva no mezcla mayúscula, número y símbolo (INV-ID-11 ampliada).
 
     Se lanza solo cuando la contraseña ya cumple el mínimo de longitud — si es demasiado
@@ -208,7 +234,7 @@ class PasswordSinComplejidadSuficiente(Exception):
         )
 
 
-class PasswordActualIncorrecta(Exception):
+class PasswordActualIncorrecta(NoAutenticado):
     """La contraseña actual provista no verifica contra el hash guardado (`US-2.2.5`).
 
     Cuando el fallo es el 3er intento consecutivo de este flujo, `evento_cuenta_bloqueada`
@@ -223,8 +249,17 @@ class PasswordActualIncorrecta(Exception):
         self.intentos_restantes: int | None = None
         super().__init__("La contraseña actual es incorrecta.")
 
+    def detalle(self) -> dict[str, Any]:
+        """`detail` con `bloqueada` si este fallo bloqueó la cuenta, o los `intentos_restantes`."""
+        detalle: dict[str, Any] = {"mensaje": str(self)}
+        if self.evento_cuenta_bloqueada is not None:
+            detalle["bloqueada"] = True
+        else:
+            detalle["intentos_restantes"] = self.intentos_restantes
+        return detalle
 
-class TokenRecuperacionInvalido(Exception):
+
+class TokenRecuperacionInvalido(ReglaViolada):
     """Se intentó canjear un token de recuperación cuyo valor no corresponde a ninguno existente."""
 
     def __init__(self, token: str) -> None:
@@ -233,7 +268,7 @@ class TokenRecuperacionInvalido(Exception):
         super().__init__(f"El token de recuperación '{token}' no existe.")
 
 
-class TokenRecuperacionVencido(Exception):
+class TokenRecuperacionVencido(ReglaViolada):
     """Se intentó canjear un `TokenRecuperacionPassword` cuyo `expira_en` ya pasó (INV-ID-13)."""
 
     def __init__(self, token: str) -> None:
@@ -242,7 +277,7 @@ class TokenRecuperacionVencido(Exception):
         super().__init__(f"El token de recuperación '{token}' ya venció.")
 
 
-class TokenRecuperacionYaUsado(Exception):
+class TokenRecuperacionYaUsado(ReglaViolada):
     """Se intentó canjear un `TokenRecuperacionPassword` con `usado_en` no null."""
 
     def __init__(self, token: str) -> None:
@@ -251,7 +286,7 @@ class TokenRecuperacionYaUsado(Exception):
         super().__init__(f"El token de recuperación '{token}' ya fue utilizado.")
 
 
-class ComisionNoAutorizada(Exception):
+class ComisionNoAutorizada(NoAutorizado):
     """El Docente autenticado no está asignado a esta comisión puntual (`US-ADJ-57`).
 
     Autorización (403), distinto de `DocenteNoAsignadoAComision` (422, valida el docente
@@ -264,7 +299,7 @@ class ComisionNoAutorizada(Exception):
         super().__init__(f"No estás asignado a la comisión '{comision_id}'.")
 
 
-class MateriaNoAutorizada(Exception):
+class MateriaNoAutorizada(NoAutorizado):
     """El Docente autenticado no tiene ninguna comisión asignada en esta materia (`US-ADJ-57`)."""
 
     def __init__(self, materia_id: UUID) -> None:
@@ -273,7 +308,7 @@ class MateriaNoAutorizada(Exception):
         super().__init__(f"No tenés ninguna comisión asignada en la materia '{materia_id}'.")
 
 
-class AdministradorYaExiste(Exception):
+class AdministradorYaExiste(Conflicto):
     """Ya hay un Administrador operativo: el bootstrap del primero no corresponde (`US-8.1.5`)."""
 
     def __init__(self) -> None:

@@ -8,9 +8,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.identidad.entities.errors import (
     ComisionNoExiste,
-    EmailYaRegistrado,
-    PasswordDemasiadoCorta,
-    PasswordSinComplejidadSuficiente,
 )
 from src.identidad.frameworks.api.schemas import (
     AutoregistrarDocenteRequest,
@@ -37,16 +34,9 @@ async def autoregistrar_docente(
     Responde 409 si el email ya está registrado, o 422 si `password` no cumple INV-ID-11
     (ampliada, `US-ADJ-36`).
     """
-    try:
-        usuario, _evento = await controller.autoregistrar_docente(
-            body.nombre, body.email, body.password
-        )
-    except EmailYaRegistrado as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
-    except (PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    usuario, _evento = await controller.autoregistrar_docente(
+        body.nombre, body.email, body.password
+    )
 
     return AutoregistroResponse(
         id=usuario.id,
@@ -106,13 +96,7 @@ async def autoregistrar_estudiante(
         usuario, _evento = await controller.autoregistrar_estudiante(
             body.nombre, body.email, body.password, body.comision_id
         )
-    except EmailYaRegistrado as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
     except ComisionNoExiste as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except (PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc

@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from src.identidad.entities.errors import (
-    EmailYaRegistrado,
     InvitacionInvalida,
     InvitacionRevocada,
     InvitacionVencida,
@@ -70,8 +69,6 @@ async def registrar_estudiante(
                 body.token, body.nombre, body.email, body.password
             )
         )
-    except EmailYaRegistrado as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
     except (
         InvitacionInvalida,
         InvitacionVencida,

@@ -1,0 +1,635 @@
+{
+ "actividad_evaluativa.ActividadNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "actividades_router.py:404:str(exc)",
+   "evaluaciones_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.ActividadYaCerrada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "actividades_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.CantidadIntentosInvalida": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "actividades_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.ComisionNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "actividades_router.py:403:str(exc)",
+   "sesiones_en_vivo_router.py:403:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.ComisionNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.ComisionRequerida": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.ConcurrenciaOptimistaError": {
+  "categoria": "Conflicto",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 409,
+  "traducciones_actuales": []
+ },
+ "actividad_evaluativa.EstudianteNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:404:str(exc)",
+   "sesiones_en_vivo_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.EvaluacionNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:404:str(exc)",
+   "revision_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.EvaluacionNoFinalizada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "revision_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.EvaluacionNoSuspendida": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.EvaluacionSuspendida": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.EvaluacionYaFinalizada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.EvaluacionYaSuspendida": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.FueraDePeriodo": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.IntentosAgotados": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.MateriaNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "actividades_router.py:403:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.MateriaNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "actividades_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.NoQuedanPreguntas": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.NoSePuedeAcortarConEvaluacionesActivas": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "actividades_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.OpcionesNoMostradasTodavia": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.OpcionesYaMostradas": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.ParticipacionNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.PeriodoInvalido": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "actividades_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.PreguntaActualNoCerrada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.PreguntaNoActual": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.PreguntaNoAsignada": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "evaluaciones_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.PreguntaYaCerrada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.PreguntasInsuficientes": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "actividades_router.py:422:str(exc)",
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.RankingNoDisponible": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:403:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.RespuestaYaRegistrada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.SesionNoEnCurso": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.SesionNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:404:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.SesionYaCancelada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.SesionYaFinalizada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.SesionYaIniciada": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.SinParticipantes": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.TiempoAgotado": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "actividad_evaluativa.TiempoLimiteInvalido": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "sesiones_en_vivo_router.py:422:str(exc)"
+  ]
+ },
+ "analytics.ActividadNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "analytics_router.py:404:str(exc)"
+  ]
+ },
+ "analytics.ComisionNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "analytics_router.py:403:str(exc)"
+  ]
+ },
+ "analytics.ComisionNoPerteneceAMateria": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "analytics_router.py:422:str(exc)"
+  ]
+ },
+ "analytics.MateriaNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "analytics_router.py:403:str(exc)"
+  ]
+ },
+ "banco_preguntas.BancoNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "bancos_router.py:404:str(exc)",
+   "preguntas_router.py:404:str(exc)"
+  ]
+ },
+ "banco_preguntas.MateriaNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "bancos_router.py:403:str(exc)",
+   "preguntas_router.py:403:str(exc)"
+  ]
+ },
+ "banco_preguntas.MateriaNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "materias_router.py:404:str(exc)"
+  ]
+ },
+ "banco_preguntas.MateriaYaExiste": {
+  "categoria": "Conflicto",
+  "origen": "derivado del router",
+  "status": 409,
+  "traducciones_actuales": [
+   "materias_router.py:409:str(exc)"
+  ]
+ },
+ "banco_preguntas.OpcionesInvalidas": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "preguntas_router.py:422:str(exc)"
+  ]
+ },
+ "banco_preguntas.PreguntaInactiva": {
+  "categoria": "Conflicto",
+  "origen": "derivado del router",
+  "status": 409,
+  "traducciones_actuales": [
+   "preguntas_router.py:409:str(exc)"
+  ]
+ },
+ "banco_preguntas.PreguntaNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "preguntas_router.py:404:str(exc)"
+  ]
+ },
+ "banco_preguntas.PreguntaYaEliminada": {
+  "categoria": "Conflicto",
+  "origen": "derivado del router",
+  "status": 409,
+  "traducciones_actuales": [
+   "preguntas_router.py:409:str(exc)"
+  ]
+ },
+ "identidad.AdministradorYaExiste": {
+  "categoria": "Conflicto",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 409,
+  "traducciones_actuales": []
+ },
+ "identidad.ComisionNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "comisiones_router.py:403:str(exc)",
+   "invitaciones_grupales_router.py:403:str(exc)",
+   "invitaciones_router.py:403:str(exc)"
+  ]
+ },
+ "identidad.ComisionNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "autoregistro_router.py:422:str(exc)",
+   "comisiones_router.py:404:str(exc)",
+   "invitaciones_grupales_router.py:404:str(exc)",
+   "invitaciones_router.py:404:str(exc)"
+  ]
+ },
+ "identidad.CredencialesInvalidas": {
+  "categoria": "NoAutenticado",
+  "origen": "derivado del router",
+  "status": 401,
+  "traducciones_actuales": [
+   "auth_router.py:401:expr:detalle"
+  ]
+ },
+ "identidad.CuentaBloqueadaError": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "auth_router.py:403:str(exc)",
+   "perfil_router.py:403:dict:'mensaje','bloqueada'"
+  ]
+ },
+ "identidad.CuentaBloqueadaTemporalmenteError": {
+  "categoria": "NoAutorizado",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 403,
+  "traducciones_actuales": []
+ },
+ "identidad.CuentaDeshabilitadaError": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "auth_router.py:403:dict:'codigo','mensaje'"
+  ]
+ },
+ "identidad.DocenteNoAsignadoAComision": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "invitaciones_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.DuracionInvitacionInvalida": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "invitaciones_grupales_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.EmailYaRegistrado": {
+  "categoria": "Conflicto",
+  "origen": "derivado del router",
+  "status": 409,
+  "traducciones_actuales": [
+   "autoregistro_router.py:409:str(exc)",
+   "cuentas_router.py:409:str(exc)",
+   "registro_router.py:409:str(exc)",
+   "usuarios_router.py:409:str(exc)"
+  ]
+ },
+ "identidad.InvitacionInvalida": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "invitaciones_grupales_router.py:404:str(exc)"
+  ]
+ },
+ "identidad.InvitacionRevocada": {
+  "categoria": "ReglaViolada",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 422,
+  "traducciones_actuales": []
+ },
+ "identidad.InvitacionVencida": {
+  "categoria": "ReglaViolada",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 422,
+  "traducciones_actuales": []
+ },
+ "identidad.InvitacionYaUsada": {
+  "categoria": "ReglaViolada",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 422,
+  "traducciones_actuales": []
+ },
+ "identidad.MateriaNoAutorizada": {
+  "categoria": "NoAutorizado",
+  "origen": "derivado del router",
+  "status": 403,
+  "traducciones_actuales": [
+   "materias_comisiones_router.py:403:str(exc)"
+  ]
+ },
+ "identidad.MateriaNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "comisiones_router.py:422:str(exc)",
+   "materias_comisiones_router.py:404:str(exc)"
+  ]
+ },
+ "identidad.PasswordActualIncorrecta": {
+  "categoria": "NoAutenticado",
+  "origen": "derivado del router",
+  "status": 401,
+  "traducciones_actuales": [
+   "perfil_router.py:401:expr:detail"
+  ]
+ },
+ "identidad.PasswordDemasiadoCorta": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "autoregistro_router.py:422:str(exc)",
+   "cuentas_router.py:422:str(exc)",
+   "perfil_router.py:422:dict:'mensaje'",
+   "recuperacion_password_router.py:422:str(exc)",
+   "usuarios_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.PasswordSinComplejidadSuficiente": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "autoregistro_router.py:422:str(exc)",
+   "cuentas_router.py:422:str(exc)",
+   "perfil_router.py:422:dict:'mensaje'",
+   "recuperacion_password_router.py:422:str(exc)",
+   "usuarios_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.TokenRecuperacionInvalido": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "recuperacion_password_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.TokenRecuperacionVencido": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "recuperacion_password_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.TokenRecuperacionYaUsado": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "recuperacion_password_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.UltimoAdministradorOperativoError": {
+  "categoria": "Conflicto",
+  "origen": "derivado del router",
+  "status": 409,
+  "traducciones_actuales": [
+   "cuentas_router.py:409:dict:'codigo','mensaje'"
+  ]
+ },
+ "identidad.UsuarioNoEsDocente": {
+  "categoria": "ReglaViolada",
+  "origen": "derivado del router",
+  "status": 422,
+  "traducciones_actuales": [
+   "comisiones_router.py:422:str(exc)"
+  ]
+ },
+ "identidad.UsuarioNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "derivado del router",
+  "status": 404,
+  "traducciones_actuales": [
+   "cuentas_router.py:404:str(exc)"
+  ]
+ },
+ "shared.JWTExpirado": {
+  "categoria": "NoAutenticado",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 401,
+  "traducciones_actuales": []
+ },
+ "shared.JWTInvalido": {
+  "categoria": "NoAutenticado",
+  "origen": "decidido en la Fase 0 (sin traducción en un router)",
+  "status": 401,
+  "traducciones_actuales": []
+ }
+}

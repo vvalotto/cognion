@@ -2,15 +2,8 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
-from src.identidad.entities.errors import (
-    PasswordDemasiadoCorta,
-    PasswordSinComplejidadSuficiente,
-    TokenRecuperacionInvalido,
-    TokenRecuperacionVencido,
-    TokenRecuperacionYaUsado,
-)
 from src.identidad.frameworks.api.schemas import (
     ConfirmarRecuperacionPasswordRequest,
     ConfirmarRecuperacionPasswordResponse,
@@ -60,16 +53,5 @@ async def confirmar_recuperacion_password(
     cuenta y resetea sus contadores de intentos fallidos (`US-ADJ-62`); no reactiva una cuenta
     deshabilitada.
     """
-    try:
-        await controller.confirmar(body.token, body.password_nueva)
-    except (
-        TokenRecuperacionInvalido,
-        TokenRecuperacionVencido,
-        TokenRecuperacionYaUsado,
-        PasswordDemasiadoCorta,
-        PasswordSinComplejidadSuficiente,
-    ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    await controller.confirmar(body.token, body.password_nueva)
     return ConfirmarRecuperacionPasswordResponse()

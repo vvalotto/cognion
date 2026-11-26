@@ -4,15 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 
-from src.identidad.entities.errors import (
-    EmailYaRegistrado,
-    PasswordDemasiadoCorta,
-    PasswordSinComplejidadSuficiente,
-    UltimoAdministradorOperativoError,
-    UsuarioNoExiste,
-)
 from src.identidad.entities.usuario import Estudiante, Usuario
 from src.identidad.frameworks.api.schemas import (
     CuentaDetalleResponse,
@@ -79,10 +72,7 @@ async def obtener_cuenta(
     controller: CuentasController = Depends(get_cuentas_controller),
 ) -> CuentaDetalleResponse:
     """Detalle de una cuenta puntual; responde 404 si no existe."""
-    try:
-        usuario = await controller.obtener_cuenta(usuario_id)
-    except UsuarioNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    usuario = await controller.obtener_cuenta(usuario_id)
 
     return _a_detalle_response(usuario)
 
@@ -101,16 +91,9 @@ async def resetear_password(
 
     Responde 404 si la cuenta no existe, 422 si la contraseña no cumple INV-ID-11.
     """
-    try:
-        usuario = await controller.resetear_password(
-            usuario_id, body.password_nueva, administrador.usuario_id
-        )
-    except UsuarioNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    usuario = await controller.resetear_password(
+        usuario_id, body.password_nueva, administrador.usuario_id
+    )
 
     return _a_detalle_response(usuario)
 
@@ -129,12 +112,7 @@ async def editar_cuenta(
 
     Responde 404 si la cuenta no existe, 409 si el email nuevo ya pertenece a otra cuenta.
     """
-    try:
-        usuario = await controller.editar_cuenta(usuario_id, body.nombre, body.email)
-    except UsuarioNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except EmailYaRegistrado as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    usuario = await controller.editar_cuenta(usuario_id, body.nombre, body.email)
 
     return _a_detalle_response(usuario)
 
@@ -154,15 +132,7 @@ async def eliminar_cuenta(
     Un Administrador siempre se deshabilita (nunca se borra). 404 si la cuenta no existe; 409 con
     `detail.codigo = "ultimo_administrador_operativo"` si es el único Administrador operativo.
     """
-    try:
-        usuario = await controller.eliminar_cuenta(usuario_id)
-    except UsuarioNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except UltimoAdministradorOperativoError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={"codigo": "ultimo_administrador_operativo", "mensaje": str(exc)},
-        ) from exc
+    usuario = await controller.eliminar_cuenta(usuario_id)
 
     if usuario is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -180,10 +150,7 @@ async def activar_cuenta(
     controller: CuentasController = Depends(get_cuentas_controller),
 ) -> CuentaDetalleResponse:
     """Reactiva una cuenta deshabilitada; 404 si no existe."""
-    try:
-        usuario = await controller.activar_cuenta(usuario_id)
-    except UsuarioNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    usuario = await controller.activar_cuenta(usuario_id)
 
     return _a_detalle_response(usuario)
 

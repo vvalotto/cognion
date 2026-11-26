@@ -4,13 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
-from src.identidad.entities.errors import (
-    ComisionNoAutorizada,
-    ComisionNoExiste,
-    DocenteNoAsignadoAComision,
-)
 from src.identidad.frameworks.api.schemas import GenerarInvitacionRequest, InvitacionResponse
 from src.identidad.frameworks.dependencies import (
     get_current_user,
@@ -41,18 +36,9 @@ async def generar_invitacion(
 
     403 si el Docente que llama no está asignado a `comision_id` (`US-ADJ-57`).
     """
-    try:
-        invitacion, _evento = await controller.generar_invitacion(
-            comision_id, body.docente_id, body.email_destinatario, usuario.usuario_id
-        )
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except DocenteNoAsignadoAComision as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    invitacion, _evento = await controller.generar_invitacion(
+        comision_id, body.docente_id, body.email_destinatario, usuario.usuario_id
+    )
 
     return InvitacionResponse(
         id=invitacion.id,
