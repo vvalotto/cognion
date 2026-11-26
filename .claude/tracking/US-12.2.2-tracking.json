@@ -8,9 +8,9 @@
   },
   "timeline": {
     "started_at": "2026-11-26T18:03:49.244498+00:00",
-    "completed_at": null,
-    "total_elapsed_seconds": 143,
-    "effective_seconds": 143,
+    "completed_at": "2026-11-26T20:23:19.402877+00:00",
+    "total_elapsed_seconds": 8370,
+    "effective_seconds": 8370,
     "paused_seconds": 0
   },
   "phases": [
@@ -40,9 +40,9 @@
       "phase_number": 3,
       "phase_name": "Implementación",
       "started_at": "2026-11-26T18:06:12.281781+00:00",
-      "completed_at": null,
-      "elapsed_seconds": 0,
-      "status": "in_progress",
+      "completed_at": "2026-11-26T20:23:18.041229+00:00",
+      "elapsed_seconds": 8225,
+      "status": "completed",
       "tasks": [],
       "auto_approved": true,
       "user_approval_time_seconds": 0
