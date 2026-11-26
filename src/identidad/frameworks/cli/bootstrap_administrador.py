@@ -33,7 +33,7 @@ from src.identidad.interface_adapters.gateways.usuario_repository import (
     SQLAlchemyUsuarioRepository,
 )
 from src.identidad.use_cases.bootstrap_administrador import BootstrapAdministradorUseCase
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 SALIDA_OK = 0
 SALIDA_ENTRADA_INVALIDA = 1
@@ -128,7 +128,7 @@ async def _crear(
 
 
 async def _main() -> int:  # pragma: no cover - cableado de infraestructura real
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         repositorio = SQLAlchemyUsuarioRepository(session)
         return await ejecutar(
             os.environ, pedir_password_por_terminal, repositorio, BcryptPasswordHasher()

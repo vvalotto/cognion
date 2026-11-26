@@ -51,7 +51,7 @@ from src.banco_preguntas.use_cases.cargar_pregunta_verdadero_falso import (
     CargarPreguntaVerdaderoFalsoUseCase,
 )
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
-from src.shared.frameworks.db import SessionLocal
+from src.shared.frameworks.db import unidad_de_trabajo
 
 SALIDA_OK = 0
 SALIDA_ERROR = 1
@@ -154,7 +154,7 @@ async def ejecutar(
 
 async def _main(argumentos: Sequence[str]) -> int:  # pragma: no cover - cableado real
     """Arma las dependencias reales y ejecuta el comando."""
-    async with SessionLocal() as session:
+    async with unidad_de_trabajo() as session:
         materias = SQLAlchemyMateriaRepository(session)
         bancos = SQLAlchemyBancoRepository(session)
         preguntas = SQLAlchemyPreguntaRepository(session)
