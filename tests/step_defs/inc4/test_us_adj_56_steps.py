@@ -16,11 +16,11 @@ from pytest_bdd import given, scenarios, then, when
 from sqlalchemy import text
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
-from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
-    SQLAlchemyProyeccionesEnVivo,
-)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.repositories.proyecciones_en_vivo_repository import (
+    SQLAlchemyProyeccionesEnVivo,
 )
 from src.app import app
 from src.identidad.entities.comision import Comision

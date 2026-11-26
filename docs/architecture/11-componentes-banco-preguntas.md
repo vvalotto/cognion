@@ -9,7 +9,7 @@ Mostrar cómo está armado por dentro el BC Banco de Preguntas: capas, casos de 
 **Mantenedor** (dónde tocar para cambiar una regla del banco) y **materia** (ejemplo de un BC de apoyo con Clean Architecture).
 
 ## Para leer esta vista
-El BC guarda `Materia`, `Banco` (uno por materia) y `PreguntaPlantilla` (de dos tipos). Los casos de uso hablan con puertos; las implementaciones están en `interface_adapters/gateways/` (SQL) y `frameworks/adapters/` (otro BC). Para el modelo de dominio y sus invariantes ver `docs/design/domain/BC-banco-preguntas-modelo.md`.
+El BC guarda `Materia`, `Banco` (uno por materia) y `PreguntaPlantilla` (de dos tipos). Los casos de uso hablan con puertos; las implementaciones están en `frameworks/repositories/` (SQL) y `frameworks/adapters/` (otro BC). Para el modelo de dominio y sus invariantes ver `docs/design/domain/BC-banco-preguntas-modelo.md`.
 
 ## Alcance
 Estructura interna, API pública y dependencias. No repite el modelo de dominio ni el esquema de tablas (`24b-modelo-datos-banco-preguntas.md`).
@@ -32,8 +32,6 @@ flowchart TB
     subgraph ia["interface_adapters"]
         ctl["controllers/
         Materias · Bancos · Preguntas"]
-        gw["gateways/
-        repositorios SQLAlchemy"]
         imp["importadores/
         JSON · Markdown"]
     end
@@ -70,7 +68,7 @@ flowchart TB
 | use_cases | `verificar_autorizacion_materia` | El docente debe estar asignado a la materia | `use_cases/` |
 | use_cases | `cargar_datos_iniciales` | Alta masiva idempotente desde JSON o Markdown | `use_cases/` |
 | interface_adapters | `MateriasController`, `BancosController`, `PreguntasController` | Traducen HTTP a casos de uso | `controllers/` |
-| interface_adapters | `materia_repository`, `banco_repository`, `pregunta_repository` | Repositorios SQLAlchemy | `gateways/` |
+| frameworks | `materia_repository`, `banco_repository`, `pregunta_repository` | Repositorios SQLAlchemy | `frameworks/repositories/` |
 | interface_adapters | `json_importador`, `markdown_importador` | Lectura de los archivos de carga | `importadores/` |
 | frameworks | Routers, esquemas Pydantic, `dependencies.py` (composition root) | Frontera HTTP y cableado | `frameworks/api/` |
 | frameworks | `comision_consulta_port_in_process` | Pregunta a Identidad si la materia tiene comisiones y si un docente está asignado | `frameworks/adapters/` |
@@ -98,7 +96,7 @@ Todas bajo `/api`.
 
 ## Restricciones y calidad
 - Los contratos de `import-linter` fallan el CI si una capa interna importa una externa, o si este BC importa a otro fuera de `frameworks/adapters/`.
-- Excepción declarada: los repositorios de `gateways/` importan `frameworks/db/models.py`.
+- Sin excepciones: los repositorios viven en `frameworks/repositories/` y el contrato de capas ya no declara ninguna.
 - Ningún BC distinto de Analytics lee los modelos ORM de este (`ADR-026`).
 
 ## Cómo verificar esta vista contra el código

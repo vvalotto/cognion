@@ -61,7 +61,7 @@ En Clean Architecture BC-first, los componentes tienen dependencias directas ent
 4. **Ports** (`entities/ports/`) — interfaces ABC que la Entity necesita
 5. **UseCases** — usan Entities + Ports
 6. **Controllers / Presenters** (`interface_adapters/`) — usan UseCases
-7. **Repositories / Gateways** (`frameworks/`) — implementan Ports
+7. **Repositories** (`frameworks/repositories/`, ADR-030: todo repositorio SQL vive ahí) — implementan Ports
 8. **Router** (`frameworks/`) — importa solo interface_adapters/
 
 No implementar un componente si su dependencia no está lista y testeada.

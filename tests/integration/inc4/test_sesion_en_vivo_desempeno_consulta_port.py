@@ -11,11 +11,11 @@ from __future__ import annotations
 from uuid import uuid4
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
-from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
-    SQLAlchemyProyeccionesEnVivo,
-)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.repositories.proyecciones_en_vivo_repository import (
+    SQLAlchemyProyeccionesEnVivo,
 )
 from src.analytics.frameworks.adapters.sesion_en_vivo_desempeno_consulta_port_in_process import (
     SesionEnVivoDesempenoConsultaPortInProcess,

@@ -9,11 +9,11 @@ from httpx import ASGITransport, AsyncClient
 from pytest_bdd import given, scenarios, then, when
 from sqlalchemy import text
 
-from src.actividad_evaluativa.frameworks.adapters.evaluacion_activa_query_repository import (
-    SQLAlchemyEvaluacionActivaQueryRepository,
-)
 from src.actividad_evaluativa.frameworks.dependencies import (
     build_verificar_vencimientos_use_case,
+)
+from src.actividad_evaluativa.frameworks.repositories.evaluacion_activa_query_repository import (
+    SQLAlchemyEvaluacionActivaQueryRepository,
 )
 from src.app import app
 from src.shared.frameworks.db import SessionLocal

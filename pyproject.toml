@@ -250,6 +250,39 @@ ignore_imports = [
 ]
 
 [[tool.importlinter.contracts]]
+name = "ADR-030: los repositorios de Identidad no importan de otro contexto"
+type = "forbidden"
+source_modules = ["src.identidad.frameworks.repositories"]
+forbidden_modules = [
+    "src.actividad_evaluativa",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
+]
+
+[[tool.importlinter.contracts]]
+name = "ADR-030: los repositorios de Banco de Preguntas no importan de otro contexto"
+type = "forbidden"
+source_modules = ["src.banco_preguntas.frameworks.repositories"]
+forbidden_modules = [
+    "src.identidad",
+    "src.actividad_evaluativa",
+    "src.notificaciones",
+    "src.analytics",
+]
+
+[[tool.importlinter.contracts]]
+name = "ADR-030: los repositorios de Actividad Evaluativa no importan de otro contexto"
+type = "forbidden"
+source_modules = ["src.actividad_evaluativa.frameworks.repositories"]
+forbidden_modules = [
+    "src.identidad",
+    "src.banco_preguntas",
+    "src.notificaciones",
+    "src.analytics",
+]
+
+[[tool.importlinter.contracts]]
 name = "shared no importa de ningún BC"
 type = "forbidden"
 source_modules = ["src.shared"]

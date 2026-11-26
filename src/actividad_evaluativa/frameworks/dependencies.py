@@ -18,20 +18,11 @@ from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import Canal
 from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
-from src.actividad_evaluativa.frameworks.adapters.actividad_query_repository import (
-    SQLAlchemyActividadQueryRepository,
-)
 from src.actividad_evaluativa.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
 from src.actividad_evaluativa.frameworks.adapters.estudiante_consulta_port_in_process import (
     EstudianteConsultaPortInProcess,
-)
-from src.actividad_evaluativa.frameworks.adapters.evaluacion_activa_query_repository import (
-    SQLAlchemyEvaluacionActivaQueryRepository,
-)
-from src.actividad_evaluativa.frameworks.adapters.evaluacion_estudiante_query_repository import (
-    SQLAlchemyEvaluacionEstudianteQueryRepository,
 )
 from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_process import (
     MateriaConsultaPortInProcess,
@@ -39,21 +30,30 @@ from src.actividad_evaluativa.frameworks.adapters.materia_consulta_port_in_proce
 from src.actividad_evaluativa.frameworks.adapters.notificacion_port_in_process import (
     NotificacionPortInProcess,
 )
-from src.actividad_evaluativa.frameworks.adapters.participantes_sesion_query_repository import (
-    SQLAlchemyParticipantesSesionQueryRepository,
-)
 from src.actividad_evaluativa.frameworks.adapters.pregunta_consulta_port_in_process import (
     PreguntaConsultaPortInProcess,
 )
-from src.actividad_evaluativa.frameworks.adapters.proyecciones_en_vivo_repository import (
+from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
+    SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.repositories.actividad_query_repository import (
+    SQLAlchemyActividadQueryRepository,
+)
+from src.actividad_evaluativa.frameworks.repositories.evaluacion_activa_query_repository import (
+    SQLAlchemyEvaluacionActivaQueryRepository,
+)
+from src.actividad_evaluativa.frameworks.repositories.evaluacion_estudiante_query_repository import (
+    SQLAlchemyEvaluacionEstudianteQueryRepository,
+)
+from src.actividad_evaluativa.frameworks.repositories.participantes_sesion_query_repository import (
+    SQLAlchemyParticipantesSesionQueryRepository,
+)
+from src.actividad_evaluativa.frameworks.repositories.proyecciones_en_vivo_repository import (
     SQLAlchemyProyeccionesEnVivo,
     SQLAlchemyProyeccionesEnVivoQuery,
 )
-from src.actividad_evaluativa.frameworks.adapters.sesiones_en_vivo_query_repository import (
+from src.actividad_evaluativa.frameworks.repositories.sesiones_en_vivo_query_repository import (
     SQLAlchemySesionesEnVivoQueryRepository,
-)
-from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
-    SQLAlchemyEventStore,
 )
 from src.actividad_evaluativa.frameworks.websockets.connection_manager import ConnectionManager
 from src.actividad_evaluativa.frameworks.websockets.websocket_canal_tiempo_real import (

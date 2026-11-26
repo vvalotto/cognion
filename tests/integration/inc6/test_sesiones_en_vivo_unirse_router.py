@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 
-from src.actividad_evaluativa.frameworks.adapters.participantes_sesion_query_repository import (
+from src.actividad_evaluativa.frameworks.repositories.participantes_sesion_query_repository import (
     SQLAlchemyParticipantesSesionQueryRepository,
 )
 from src.app import app

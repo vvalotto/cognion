@@ -12,7 +12,7 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.actividad_evaluativa.frameworks.adapters.estudiante_evaluaciones_query_repository import (
+from src.actividad_evaluativa.frameworks.repositories.estudiante_evaluaciones_query_repository import (
     SQLAlchemyEstudianteEvaluacionesQueryRepository,
 )
 from src.identidad.entities.ports.evaluacion_consulta_port import EvaluacionConsultaPort

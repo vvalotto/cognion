@@ -5,11 +5,11 @@ from __future__ import annotations
 import uuid
 
 from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaAlmacenar
-from src.actividad_evaluativa.frameworks.adapters.estudiante_evaluaciones_query_repository import (
-    SQLAlchemyEstudianteEvaluacionesQueryRepository,
-)
 from src.actividad_evaluativa.frameworks.event_store.sqlalchemy_event_store import (
     SQLAlchemyEventStore,
+)
+from src.actividad_evaluativa.frameworks.repositories.estudiante_evaluaciones_query_repository import (
+    SQLAlchemyEstudianteEvaluacionesQueryRepository,
 )
 
 

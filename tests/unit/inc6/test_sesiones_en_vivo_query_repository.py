@@ -4,10 +4,10 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
-from src.actividad_evaluativa.frameworks.adapters.sesiones_en_vivo_query_repository import (
+from src.actividad_evaluativa.frameworks.db.models import EventoModel
+from src.actividad_evaluativa.frameworks.repositories.sesiones_en_vivo_query_repository import (
     _resumen_de_stream,
 )
-from src.actividad_evaluativa.frameworks.db.models import EventoModel
 
 
 def _evento(

@@ -64,6 +64,9 @@ IGNORE_IMPORTS_POR_CONTRATO: dict[str, list[str]] = {
     "Aislamiento entre BC: solo frameworks/adapters puede importar de otro BC (ADR-006)": [
         "src.*.frameworks.adapters.** -> src.**"
     ],
+    "ADR-030: los repositorios de Identidad no importan de otro contexto": [],
+    "ADR-030: los repositorios de Banco de Preguntas no importan de otro contexto": [],
+    "ADR-030: los repositorios de Actividad Evaluativa no importan de otro contexto": [],
     "shared no importa de ningún BC": [],
     "ADR-026: ningún BC salvo Analytics lee los modelos ORM de otro BC": [
         "src.identidad.** -> src.identidad.frameworks.db.models",
