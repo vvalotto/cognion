@@ -266,7 +266,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 
 | Hallazgo | Severidad | Confianza | Iteración | Estado | Historia / PR / decisión |
 |---|---|---|---|---|---|
-| `CA-01` | Media | | 2 | Pendiente | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#670](https://github.com/vvalotto/cognion/issues/670). Guarda en lugar (Issue #666): 10 gateways que importan los modelos ORM y los `ignore_imports` fijados; los vacía `US-12.2.3`. Decidido en [`ADR-030`](../../adr/ADR-030-ubicacion-de-los-repositorios-sql.md) (2026-11-25): todos los repositorios SQL a `frameworks/repositories/` (18 archivos: 11 de Identidad y Banco y 7 de Actividad Evaluativa) |
+| `CA-01` | Media | | 2 | Cerrado | Issues [#666](https://github.com/vvalotto/cognion/issues/666), [#667](https://github.com/vvalotto/cognion/issues/667), [#670](https://github.com/vvalotto/cognion/issues/670). Guarda en lugar (Issue #666): 10 gateways que importan los modelos ORM y los `ignore_imports` fijados; los vacía `US-12.2.3`. Decidido en [`ADR-030`](../../adr/ADR-030-ubicacion-de-los-repositorios-sql.md) (2026-11-25): todos los repositorios SQL a `frameworks/repositories/` (18 archivos: 11 de Identidad y Banco y 7 de Actividad Evaluativa) | **Cerrado por `US-12.2.3` (Issue #670).**
 | `CA-02` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `CA-03` | Media | | 2 | Pendiente | Issues [#667](https://github.com/vvalotto/cognion/issues/667), [#671](https://github.com/vvalotto/cognion/issues/671). `ADR-031`: los routers dejan de importar los 13 tipos del dominio; contrato de import-linter y guarda con lista |
 | `AC-01` | Alta | | 4 | Pendiente | |
