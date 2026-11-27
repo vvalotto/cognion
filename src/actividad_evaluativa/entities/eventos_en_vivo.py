@@ -39,8 +39,8 @@ class SesionEnVivoCreada:
     def desde_sesion(cls, sesion: ActividadEvaluativaEnVivo) -> SesionEnVivoCreada:
         """Construye el evento a partir de una sesión recién creada.
 
-        Mueve la construcción fuera de `CrearSesionEnVivoUseCase` — mismo criterio que
-        `ActividadEvaluativaCreada.desde_actividad` para no acumular CBO en el Use Case.
+        El evento es quien conoce sus campos: el caso de uso (`CrearSesionEnVivoUseCase`) solo delega,
+        igual que `ActividadEvaluativaCreada.desde_actividad`.
         """
         return cls(
             sesion_id=sesion.id,

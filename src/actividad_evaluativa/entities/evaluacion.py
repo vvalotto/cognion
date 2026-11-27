@@ -218,7 +218,7 @@ def _aplicar_evento(evaluacion: Evaluacion, evento: EventoAlmacenado) -> None:
     """Aplica un evento del stream posterior a `EvaluacionIniciada`, según su `event_type`.
 
     Extraído a función de módulo para que `reconstruir` no acumule un `if/elif` por tipo de
-    evento dentro del propio método (mismo criterio de bajar CBO/CC ya aplicado en el BC).
+    evento dentro del propio método (baja la complejidad ciclomática de `reconstruir`).
     """
     if evento.event_type == "RespuestaRegistrada":
         payload = evento.payload
@@ -245,9 +245,9 @@ def _validar_para_registrar_respuesta(
 ) -> int:
     """Implementa INV-AE-07/08/12 para `validar_para_registrar_respuesta`.
 
-    Función de módulo, no método, para no acoplar `Evaluacion` a los 4 errores de dominio que
-    puede levantar (mismo criterio de extracción de responsabilidad ya aplicado en `US-3.1.3`
-    para bajar CBO sin cambiar comportamiento).
+    Las reglas del agregado viven como funciones del módulo (`_validar_para_*`) y los métodos
+    públicos de `Evaluacion` delegan en ellas: es el estilo de este BC y se mantiene a propósito
+    (`US-12.2.6`).
     """
     if evaluacion.estado is EstadoEvaluacion.SUSPENDIDA:
         raise EvaluacionSuspendida(evaluacion.id)

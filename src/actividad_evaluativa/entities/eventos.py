@@ -48,7 +48,7 @@ class ActividadEvaluativaCreada:
 
         Mueve la construcción fuera de `CrearActividadPeriodoAbiertoUseCase` — ese Use Case no
         necesita conocer los campos del evento, solo delegar (mismo criterio ya aplicado en
-        `Evaluacion.armar_preguntas_asignadas`, `US-3.1.3`, para evitar CBO excesivo).
+        `Evaluacion.armar_preguntas_asignadas`, `US-3.1.3`).
         """
         return cls(
             actividad_id=actividad.id,

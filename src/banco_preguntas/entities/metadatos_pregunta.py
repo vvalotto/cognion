@@ -45,10 +45,9 @@ class MetadatosPregunta:
     ) -> MetadatosPregunta:
         """Construye desde los valores `str` crudos de la fila de BD.
 
-        Centraliza la conversión a `Dificultad`/`Importancia` acá para que la gateway
-        (`SQLAlchemyPreguntaRepository`) no necesite importar esos dos tipos directamente —
-        evita sumarlos a su CBO (`US-ADJ-17`, ya en el umbral por la propia introducción de
-        este Value Object).
+        Centraliza la conversión a `Dificultad`/`Importancia` acá, que es quien conoce esos
+        tipos, para que el repositorio (`SQLAlchemyPreguntaRepository`) no necesite importarlos
+        (`US-ADJ-17`).
         """
         return cls(
             texto=texto,

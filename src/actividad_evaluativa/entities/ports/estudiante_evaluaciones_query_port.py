@@ -2,8 +2,8 @@
 
 Lo consume Identidad, vía su `EvaluacionConsultaPort`, para impedir eliminar la cuenta de un
 estudiante con evaluaciones sin leer el event store de este BC (`ADR-026`). Separado de
-`EvaluacionEstudianteQueryPort` (qué evaluaciones ya están Finalizadas) a propósito: ensanchar
-ese puerto repetiría el patrón de CBO ya visto en `US-2.1.2`/`US-2.1.5`/`US-2.1.6`.
+`EvaluacionEstudianteQueryPort` (qué evaluaciones ya están Finalizadas) a propósito: cada puerto
+de consulta tiene una sola razón de cambio.
 """
 
 from __future__ import annotations

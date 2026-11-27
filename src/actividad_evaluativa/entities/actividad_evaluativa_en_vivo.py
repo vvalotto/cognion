@@ -208,8 +208,9 @@ class ActividadEvaluativaEnVivo:
 def _validar_para_mostrar_opciones(sesion: ActividadEvaluativaEnVivo) -> None:
     """Rechaza si la sesión no está `EnCurso` o si las opciones ya se mostraron (INV-AEV-09).
 
-    Vive fuera de la clase para no sumar `SesionNoEnCurso`/`OpcionesYaMostradas` a su acoplamiento
-    (CBO, `feedback_cbo_pre_push_no_fase7`).
+    Las reglas del agregado viven como funciones del módulo (`_validar_para_*`) y los métodos
+    públicos de `ActividadEvaluativaEnVivo` delegan en ellas: es el estilo de este BC y se
+    mantiene a propósito (`US-12.2.6`).
     """
     if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
         raise SesionNoEnCurso(sesion.id)
@@ -269,7 +270,7 @@ def _pasar_a_pregunta(sesion: ActividadEvaluativaEnVivo, indice: int) -> None:
 def _validar_para_responder(
     sesion: ActividadEvaluativaEnVivo, pregunta_id: UUID, ahora: datetime
 ) -> float:
-    """Aplica las reglas de `validar_para_responder` — fuera de la clase por CBO."""
+    """Aplica las reglas de `validar_para_responder` (ver `_validar_para_mostrar_opciones`)."""
     if sesion.estado != EstadoSesionEnVivo.EN_CURSO:
         raise SesionNoEnCurso(sesion.id)
     if sesion.pregunta_actual().pregunta_id != pregunta_id:
