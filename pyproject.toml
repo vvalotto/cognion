@@ -190,7 +190,11 @@ check_complexity = true
 max_cyclomatic_complexity = 10
 
 [tool.designreviewer]
-max_cbo = 10
+# `US-12.2.6` (`IQ-01`): 12 = el CBO máximo medido (`CrearActividadPeriodoAbiertoUseCase`) tras revertir los atajos que
+# escondían acoplamiento (funciones sueltas «para no sumar CBO» y tipos `object`). Con 10 el diseño se deformaba para
+# esquivar la métrica. CBOAnalyzer cuenta también las excepciones propias y los tipos del mismo contexto. Subirlo exige
+# actualizar `MAX_CBO_DECLARADO` en `tests/unit/inc12/test_umbral_de_cbo.py`.
+max_cbo = 12
 max_wmc = 25
 max_god_object_lines = 300
 max_god_object_methods = 15
