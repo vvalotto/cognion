@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "us_id": "US-12.2.6",
+    "us_title": "El umbral de CBO se recalibra con la medición real y se revierten los atajos",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-27T19:02:55.157434+00:00",
+    "completed_at": "2026-11-27T20:28:36.706894+00:00",
+    "total_elapsed_seconds": 5141,
+    "effective_seconds": 5141,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de contexto",
+      "started_at": "2026-11-27T19:02:55.538168+00:00",
+      "completed_at": "2026-11-27T19:03:39.138239+00:00",
+      "elapsed_seconds": 43,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-27T19:03:39.274642+00:00",
+      "completed_at": "2026-11-27T19:03:56.671042+00:00",
+      "elapsed_seconds": 17,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-27T19:03:56.805464+00:00",
+      "completed_at": "2026-11-27T20:28:35.708386+00:00",
+      "elapsed_seconds": 5078,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 3,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}
