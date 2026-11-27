@@ -49,7 +49,10 @@ IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
     "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py": [
         "actividad_evaluativa_en_vivo:EstadoSesionEnVivo"
     ],
-    "src/banco_preguntas/frameworks/api/schemas.py": ["dificultad:Dificultad", "importancia:Importancia"],
+    "src/banco_preguntas/frameworks/api/schemas.py": [
+        "dificultad:Dificultad",
+        "importancia:Importancia",
+    ],
 }
 
 # Importaciones que la guarda no cuenta: la plomería de autenticación, que es el tipo de la dependencia de seguridad.

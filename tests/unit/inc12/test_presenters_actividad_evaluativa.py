@@ -221,4 +221,7 @@ def test_presenta_participacion_participantes_ranking_y_listado() -> None:
         presentar_ranking([ParticipanteEnRanking(2, estudiante_id, 1500, "Ana")])[0].posicion == 2
     )
     listado = presentar_sesiones_resumen([resumen])
-    assert (listado[0].estado, listado[0].materia_nombre) == (EstadoSesionEnVivo.EN_CURSO.value, "ISW")
+    assert (listado[0].estado, listado[0].materia_nombre) == (
+        EstadoSesionEnVivo.EN_CURSO.value,
+        "ISW",
+    )
