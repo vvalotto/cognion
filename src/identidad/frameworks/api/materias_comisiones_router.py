@@ -10,9 +10,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 
-from src.identidad.entities.errors import MateriaNoAutorizada, MateriaNoExiste
 from src.identidad.frameworks.api.schemas import ComisionResumenResponse
 from src.identidad.frameworks.dependencies import (
     get_comisiones_query_controller,
@@ -48,14 +47,9 @@ async def listar_comisiones_por_materia(
     materia (`US-ADJ-57`) — el Administrador ve todas, sin filtrar.
     """
     docente_id = usuario.usuario_id if usuario.rol is TipoPerfil.DOCENTE else None
-    try:
-        comisiones = await controller.listar_comisiones_por_materia(
-            materia_id, incluir_inactivas, docente_id
-        )
-    except MateriaNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except MateriaNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    comisiones = await controller.listar_comisiones_por_materia(
+        materia_id, incluir_inactivas, docente_id
+    )
 
     return [
         ComisionResumenResponse(

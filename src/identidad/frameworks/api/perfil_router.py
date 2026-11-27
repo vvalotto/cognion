@@ -6,12 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.identidad.entities.errors import (
     CuentaBloqueadaError,
-    CuentaBloqueadaTemporalmenteError,
-    PasswordActualIncorrecta,
     PasswordDemasiadoCorta,
     PasswordSinComplejidadSuficiente,
 )
-from src.identidad.frameworks.api.bloqueo_temporal import respuesta_bloqueo_temporal
 from src.identidad.frameworks.api.schemas import CambiarPasswordRequest
 from src.identidad.frameworks.dependencies import get_current_user, get_perfil_controller
 from src.identidad.interface_adapters.controllers.perfil_controller import PerfilController
@@ -39,20 +36,11 @@ async def cambiar_password(
         await controller.cambiar_password(
             usuario.usuario_id, body.password_actual, body.password_nueva
         )
-    except CuentaBloqueadaTemporalmenteError as exc:
-        raise respuesta_bloqueo_temporal(exc) from exc
     except CuentaBloqueadaError as exc:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail={"mensaje": str(exc), "bloqueada": True},
         ) from exc
-    except PasswordActualIncorrecta as exc:
-        detail: dict[str, object] = {"mensaje": str(exc)}
-        if exc.evento_cuenta_bloqueada is not None:
-            detail["bloqueada"] = True
-        else:
-            detail["intentos_restantes"] = exc.intentos_restantes
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail) from exc
     except (PasswordDemasiadoCorta, PasswordSinComplejidadSuficiente) as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,

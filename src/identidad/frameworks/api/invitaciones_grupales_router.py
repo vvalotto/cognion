@@ -4,14 +4,8 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response, status
 
-from src.identidad.entities.errors import (
-    ComisionNoAutorizada,
-    ComisionNoExiste,
-    DuracionInvitacionInvalida,
-    InvitacionInvalida,
-)
 from src.identidad.frameworks.api.schemas import (
     GenerarInvitacionGrupalRequest,
     InvitacionGrupalEstadoResponse,
@@ -48,18 +42,9 @@ async def generar_invitacion_grupal(
     Responde 403 si el Docente no está asignado, 404 si la comisión no existe y 422 si
     `duracion_minutos` no es 15, 60 ni 1440.
     """
-    try:
-        invitacion, _evento = await controller.generar(
-            comision_id, usuario.usuario_id, body.duracion_minutos
-        )
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except DuracionInvitacionInvalida as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    invitacion, _evento = await controller.generar(
+        comision_id, usuario.usuario_id, body.duracion_minutos
+    )
     return InvitacionGrupalResponse(
         id=invitacion.id,
         comision_id=invitacion.comision_id,
@@ -78,12 +63,7 @@ async def obtener_ultima_invitacion_grupal(
     controller: InvitacionesGrupalesController = Depends(get_invitaciones_grupales_controller),
 ) -> InvitacionGrupalEstadoResponse | None:
     """Devuelve el estado del último link grupal, o `null` si la comisión nunca generó uno."""
-    try:
-        estado = await controller.obtener_ultima(comision_id, usuario.usuario_id)
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    estado = await controller.obtener_ultima(comision_id, usuario.usuario_id)
     if estado is None:
         return None
     return InvitacionGrupalEstadoResponse(
@@ -107,10 +87,5 @@ async def revocar_invitacion_grupal(
     controller: InvitacionesGrupalesController = Depends(get_invitaciones_grupales_controller),
 ) -> Response:
     """Desactiva el link grupal; idempotente. 403 si el Docente no está asignado, 404 si no hay."""
-    try:
-        await controller.revocar(comision_id, invitacion_id, usuario.usuario_id)
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (ComisionNoExiste, InvitacionInvalida) as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    await controller.revocar(comision_id, invitacion_id, usuario.usuario_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

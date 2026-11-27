@@ -7,10 +7,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.identidad.entities.errors import (
-    ComisionNoAutorizada,
-    ComisionNoExiste,
     MateriaNoExiste,
-    UsuarioNoEsDocente,
 )
 from src.identidad.frameworks.api.schemas import (
     AsignarDocenteRequest,
@@ -86,12 +83,7 @@ async def obtener_comision(
 
     403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
     """
-    try:
-        comision = await controller.obtener_comision(comision_id, _docente_id_o_none(usuario))
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    comision = await controller.obtener_comision(comision_id, _docente_id_o_none(usuario))
 
     return ComisionResponse(
         id=comision.id,
@@ -117,12 +109,7 @@ async def listar_estudiantes(
 
     403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
     """
-    try:
-        estudiantes = await controller.listar_estudiantes(comision_id, _docente_id_o_none(usuario))
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    estudiantes = await controller.listar_estudiantes(comision_id, _docente_id_o_none(usuario))
 
     return [EstudianteResumenResponse(id=e.id, nombre=e.nombre) for e in estudiantes]
 
@@ -138,10 +125,7 @@ async def editar_comision(
     controller: ComisionesController = Depends(get_comisiones_controller),
 ) -> ComisionResponse:
     """Corrige el horario de una comisión existente; 404 si no existe."""
-    try:
-        comision = await controller.editar_comision(comision_id, body.horario)
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    comision = await controller.editar_comision(comision_id, body.horario)
 
     return ComisionResponse(
         id=comision.id,
@@ -167,10 +151,7 @@ async def eliminar_comision(
     204 si se borró físicamente; 200 con la comisión (`activa=false`) si se deshabilitó.
     404 si la comisión no existe.
     """
-    try:
-        comision = await controller.eliminar_comision(comision_id)
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    comision = await controller.eliminar_comision(comision_id)
 
     if comision is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -195,10 +176,7 @@ async def activar_comision(
     controller: ComisionesController = Depends(get_comisiones_controller),
 ) -> ComisionResponse:
     """Reactiva una comisión deshabilitada; 404 si no existe."""
-    try:
-        comision = await controller.activar_comision(comision_id)
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    comision = await controller.activar_comision(comision_id)
 
     return ComisionResponse(
         id=comision.id,
@@ -222,14 +200,7 @@ async def asignar_docente(
     controller: ComisionesController = Depends(get_comisiones_controller),
 ) -> ComisionResponse:
     """Asigna un docente a la comisión; responde 422/404 según el error de dominio."""
-    try:
-        comision, _evento = await controller.asignar_docente(comision_id, body.docente_id)
-    except UsuarioNoEsDocente as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    comision, _evento = await controller.asignar_docente(comision_id, body.docente_id)
 
     return ComisionResponse(
         id=comision.id,

@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "us_id": "US-12.2.2",
+    "us_title": "Los errores de dominio tienen categoría y se traducen a HTTP en un solo lugar",
+    "us_points": 8,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-26T18:03:49.244498+00:00",
+    "completed_at": "2026-11-26T20:23:19.402877+00:00",
+    "total_elapsed_seconds": 8370,
+    "effective_seconds": 8370,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de contexto",
+      "started_at": "2026-11-26T18:03:49.691223+00:00",
+      "completed_at": "2026-11-26T18:06:00.493990+00:00",
+      "elapsed_seconds": 130,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-26T18:06:00.637578+00:00",
+      "completed_at": "2026-11-26T18:06:12.130611+00:00",
+      "elapsed_seconds": 11,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-26T18:06:12.281781+00:00",
+      "completed_at": "2026-11-26T20:23:18.041229+00:00",
+      "elapsed_seconds": 8225,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 3,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

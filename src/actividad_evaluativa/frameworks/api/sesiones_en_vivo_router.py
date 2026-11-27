@@ -9,35 +9,11 @@ from __future__ import annotations
 import logging
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect, status
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, status
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
     ActividadEvaluativaEnVivo,
     EstadoSesionEnVivo,
-)
-from src.actividad_evaluativa.entities.errors import (
-    ComisionNoAutorizada,
-    ComisionNoExiste,
-    ComisionRequerida,
-    EstudianteNoExiste,
-    NoQuedanPreguntas,
-    OpcionesNoMostradasTodavia,
-    OpcionesYaMostradas,
-    ParticipacionNoExiste,
-    PreguntaActualNoCerrada,
-    PreguntaNoActual,
-    PreguntasInsuficientes,
-    PreguntaYaCerrada,
-    RankingNoDisponible,
-    RespuestaYaRegistrada,
-    SesionNoEnCurso,
-    SesionNoExiste,
-    SesionYaCancelada,
-    SesionYaFinalizada,
-    SesionYaIniciada,
-    SinParticipantes,
-    TiempoAgotado,
-    TiempoLimiteInvalido,
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
     CrearSesionEnVivoRequest,
@@ -181,23 +157,14 @@ async def crear_sesion_en_vivo(
 
     403 si el Docente no está asignado a `comision_id` (`US-ADJ-57`).
     """
-    try:
-        sesion = await controller.crear(
-            body.comision_id,
-            body.cantidad_preguntas,
-            body.tiempo_limite_por_pregunta_segundos,
-            body.unidad_tematica,
-            body.tema,
-            usuario.usuario_id,
-        )
-    except ComisionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (PreguntasInsuficientes, TiempoLimiteInvalido) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.crear(
+        body.comision_id,
+        body.cantidad_preguntas,
+        body.tiempo_limite_por_pregunta_segundos,
+        body.unidad_tematica,
+        body.tema,
+        usuario.usuario_id,
+    )
 
     return _a_sesion_response(sesion)
 
@@ -213,16 +180,7 @@ async def iniciar_sesion_en_vivo(
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Inicia la sesión (`EnEspera` → `EnCurso`) y presenta el enunciado; 404/422/403 si se rechaza."""
-    try:
-        sesion = await controller.iniciar(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (SesionYaIniciada, SesionYaCancelada, SinParticipantes) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.iniciar(sesion_id, usuario.usuario_id)
 
     return _a_sesion_response(sesion)
 
@@ -238,16 +196,7 @@ async def cancelar_sesion_en_vivo(
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Cancela una sesión `EnEspera` y avisa a la sala (`US-ADJ-58`); 404/422/403 si se rechaza."""
-    try:
-        sesion = await controller.cancelar(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (SesionYaIniciada, SesionYaCancelada) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.cancelar(sesion_id, usuario.usuario_id)
 
     return _a_sesion_response(sesion)
 
@@ -263,16 +212,7 @@ async def mostrar_opciones_en_vivo(
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Revela las opciones de la pregunta actual; 404/422/403 si se rechaza."""
-    try:
-        sesion = await controller.mostrar_opciones(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (SesionNoEnCurso, OpcionesYaMostradas) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.mostrar_opciones(sesion_id, usuario.usuario_id)
 
     return _a_sesion_response(sesion)
 
@@ -288,16 +228,7 @@ async def cerrar_pregunta_en_vivo(
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Cierra la pregunta actual y transmite el resultado; 404/422/403 si se rechaza."""
-    try:
-        sesion = await controller.cerrar_pregunta(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (SesionNoEnCurso, OpcionesNoMostradasTodavia, PreguntaYaCerrada) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.cerrar_pregunta(sesion_id, usuario.usuario_id)
 
     return _a_sesion_response(sesion)
 
@@ -313,16 +244,7 @@ async def avanzar_siguiente_pregunta_en_vivo(
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Avanza a la siguiente pregunta y transmite su enunciado; 404/422/403 si se rechaza."""
-    try:
-        sesion = await controller.avanzar_siguiente_pregunta(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (SesionNoEnCurso, PreguntaActualNoCerrada, NoQuedanPreguntas) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.avanzar_siguiente_pregunta(sesion_id, usuario.usuario_id)
 
     return _a_sesion_response(sesion)
 
@@ -338,16 +260,7 @@ async def finalizar_sesion_en_vivo(
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
 ) -> SesionEnVivoResponse:
     """Finaliza la sesión y transmite el ranking final; 404/422/403 si se rechaza."""
-    try:
-        sesion = await controller.finalizar_sesion(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except (SesionYaFinalizada, SesionNoEnCurso) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    sesion = await controller.finalizar_sesion(sesion_id, usuario.usuario_id)
 
     return _a_sesion_response(sesion)
 
@@ -363,14 +276,7 @@ async def unirse_a_sesion_en_vivo(
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
 ) -> ParticipacionEnVivoResponse:
     """Une al Estudiante de la comisión a la sesión (idempotente, 200); 403/404/422 si se rechaza."""
-    try:
-        participacion = await controller.unirse(sesion_id, usuario.usuario_id)
-    except (SesionNoExiste, EstudianteNoExiste) as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (SesionYaFinalizada, SesionYaCancelada) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    participacion = await controller.unirse(sesion_id, usuario.usuario_id)
 
     return ParticipacionEnVivoResponse(
         sesion_id=participacion.sesion_id,
@@ -391,23 +297,9 @@ async def responder_pregunta_en_vivo(
     controller: ParticipacionesEnVivoController = Depends(get_participaciones_en_vivo_controller),
 ) -> RespuestaEnVivoResponse:
     """Registra la respuesta del Estudiante y devuelve su feedback; 404/422 si se rechaza."""
-    try:
-        resultado = await controller.responder(
-            sesion_id, usuario.usuario_id, body.pregunta_id, body.contenido
-        )
-    except (SesionNoExiste, ParticipacionNoExiste) as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except (
-        SesionNoEnCurso,
-        PreguntaNoActual,
-        OpcionesNoMostradasTodavia,
-        PreguntaYaCerrada,
-        TiempoAgotado,
-        RespuestaYaRegistrada,
-    ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
+    resultado = await controller.responder(
+        sesion_id, usuario.usuario_id, body.pregunta_id, body.contenido
+    )
 
     return RespuestaEnVivoResponse(
         es_correcta=resultado.es_correcta,
@@ -464,16 +356,9 @@ async def listar_sesiones_en_vivo(
 
     422 si el Docente no indica `comision_id`; 403 si el Estudiante pide la de otro.
     """
-    try:
-        sesiones = await controller.listar_sesiones(
-            usuario.usuario_id, usuario.rol, comision_id, estado
-        )
-    except ComisionRequerida as exc:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
-        ) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    sesiones = await controller.listar_sesiones(
+        usuario.usuario_id, usuario.rol, comision_id, estado
+    )
     return [
         SesionEnVivoResumenResponse(
             id=s.id,
@@ -503,10 +388,7 @@ async def obtener_estado_sesion_en_vivo(
 ) -> EstadoSesionEnVivoResponse:
     """Devuelve el estado de la sesión para reconectarse; al Estudiante suma su avance propio."""
     estudiante_id = usuario.usuario_id if usuario.rol == TipoPerfil.ESTUDIANTE else None
-    try:
-        estado = await controller.obtener_estado(sesion_id, estudiante_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    estado = await controller.obtener_estado(sesion_id, estudiante_id)
     return _a_estado_response(estado)
 
 
@@ -521,12 +403,7 @@ async def listar_participantes_de_sesion(
     controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
 ) -> list[ParticipanteResponse]:
     """Lista los Estudiantes unidos, en orden de unión, para la sala de espera del Docente."""
-    try:
-        participantes = await controller.listar_participantes(sesion_id, usuario.usuario_id)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except ComisionNoAutorizada as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    participantes = await controller.listar_participantes(sesion_id, usuario.usuario_id)
     return [
         ParticipanteResponse(estudiante_id=p.estudiante_id, unido_en=p.unido_en, nombre=p.nombre)
         for p in participantes
@@ -544,12 +421,7 @@ async def obtener_ranking_de_sesion(
     controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
 ) -> list[RankingItemResponse]:
     """Devuelve el ranking; el Estudiante solo lo ve con la sesión finalizada (403 antes)."""
-    try:
-        ranking = await controller.obtener_ranking(sesion_id, usuario.rol == TipoPerfil.ESTUDIANTE)
-    except SesionNoExiste as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    except RankingNoDisponible as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    ranking = await controller.obtener_ranking(sesion_id, usuario.rol == TipoPerfil.ESTUDIANTE)
     return [
         RankingItemResponse(
             posicion=r.posicion,

@@ -9,8 +9,10 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from src.shared.entities.errors import Conflicto, NoAutorizado, NoEncontrado, ReglaViolada
 
-class ConcurrenciaOptimistaError(Exception):
+
+class ConcurrenciaOptimistaError(Conflicto):
     """El `sequence_number` esperado no coincide con el último persistido del stream.
 
     Protege contra un doble `append` sobre el mismo stream (ej. un reintento de red del
@@ -37,7 +39,7 @@ class ConcurrenciaOptimistaError(Exception):
         )
 
 
-class MateriaNoExiste(Exception):
+class MateriaNoExiste(NoEncontrado):
     """Se referenció un `materia_id` que no corresponde a ninguna `Materia` existente."""
 
     def __init__(self, materia_id: object) -> None:
@@ -46,7 +48,7 @@ class MateriaNoExiste(Exception):
         super().__init__(f"La materia '{materia_id}' no existe.")
 
 
-class MateriaNoAutorizada(Exception):
+class MateriaNoAutorizada(NoAutorizado):
     """El Docente solicitante no tiene ninguna Comisión asignada en esta materia (`US-ADJ-57`).
 
     Nivel de autorización de las actividades de período abierto (toda la materia) — mismo
@@ -60,7 +62,7 @@ class MateriaNoAutorizada(Exception):
         super().__init__(f"No tenés ninguna Comisión asignada en la materia '{materia_id}'.")
 
 
-class PreguntasInsuficientes(Exception):
+class PreguntasInsuficientes(ReglaViolada):
     """`cantidad_preguntas` excede las `PreguntaPlantilla` activas de la materia (INV-AE-01)."""
 
     def __init__(self, cantidad_solicitada: int, cantidad_disponible: int) -> None:
@@ -73,7 +75,7 @@ class PreguntasInsuficientes(Exception):
         )
 
 
-class PeriodoInvalido(Exception):
+class PeriodoInvalido(ReglaViolada):
     """`fecha_apertura` no es anterior a `fecha_cierre` (INV-AE-02)."""
 
     def __init__(self, fecha_apertura: datetime, fecha_cierre: datetime) -> None:
@@ -86,7 +88,7 @@ class PeriodoInvalido(Exception):
         )
 
 
-class CantidadIntentosInvalida(Exception):
+class CantidadIntentosInvalida(ReglaViolada):
     """`cantidad_intentos_permitidos` es menor a 1 (INV-AE-03)."""
 
     def __init__(self, cantidad_intentos_permitidos: int) -> None:
@@ -98,7 +100,7 @@ class CantidadIntentosInvalida(Exception):
         )
 
 
-class ActividadNoExiste(Exception):
+class ActividadNoExiste(NoEncontrado):
     """Se referenció un `actividad_id` sin `ActividadEvaluativaPeriodoAbierto` en su stream."""
 
     def __init__(self, actividad_id: object) -> None:
@@ -107,7 +109,7 @@ class ActividadNoExiste(Exception):
         super().__init__(f"La actividad '{actividad_id}' no existe.")
 
 
-class NoSePuedeAcortarConEvaluacionesActivas(Exception):
+class NoSePuedeAcortarConEvaluacionesActivas(ReglaViolada):
     """`ModificarPeriodoDisponibilidad` acorta el plazo con `Evaluacion` activas (INV-AE-04)."""
 
     def __init__(self, actividad_id: object) -> None:
@@ -119,7 +121,7 @@ class NoSePuedeAcortarConEvaluacionesActivas(Exception):
         )
 
 
-class ActividadYaCerrada(Exception):
+class ActividadYaCerrada(ReglaViolada):
     """La actividad ya fue cerrada manualmente — terminal (INV-AE-04b)."""
 
     def __init__(self, actividad_id: object) -> None:
@@ -128,7 +130,7 @@ class ActividadYaCerrada(Exception):
         super().__init__(f"La actividad '{actividad_id}' ya fue cerrada manualmente.")
 
 
-class EstudianteNoExiste(Exception):
+class EstudianteNoExiste(NoEncontrado):
     """`estudiante_id` no corresponde a ningún `Usuario` con rol Estudiante en BC Identidad."""
 
     def __init__(self, estudiante_id: object) -> None:
@@ -137,7 +139,7 @@ class EstudianteNoExiste(Exception):
         super().__init__(f"El estudiante '{estudiante_id}' no existe.")
 
 
-class FueraDePeriodo(Exception):
+class FueraDePeriodo(ReglaViolada):
     """`ahora` no está dentro de la ventana vigente de la actividad, o está cerrada manualmente."""
 
     def __init__(self, actividad_id: object, ahora: datetime) -> None:
@@ -150,7 +152,7 @@ class FueraDePeriodo(Exception):
         )
 
 
-class EvaluacionNoExiste(Exception):
+class EvaluacionNoExiste(NoEncontrado):
     """`evaluacion_id` no corresponde a ninguna `Evaluacion` existente del estudiante."""
 
     def __init__(self, evaluacion_id: object) -> None:
@@ -159,7 +161,7 @@ class EvaluacionNoExiste(Exception):
         super().__init__(f"La evaluación '{evaluacion_id}' no existe.")
 
 
-class PreguntaNoAsignada(Exception):
+class PreguntaNoAsignada(NoEncontrado):
     """`pregunta_id` no pertenece al set `preguntas_asignadas` de la `Evaluacion` (INV-AE-07)."""
 
     def __init__(self, evaluacion_id: object, pregunta_id: object) -> None:
@@ -172,7 +174,7 @@ class PreguntaNoAsignada(Exception):
         )
 
 
-class IntentosAgotados(Exception):
+class IntentosAgotados(ReglaViolada):
     """Se superó `cantidad_intentos_permitidos` para `pregunta_id` (INV-AE-08)."""
 
     def __init__(self, pregunta_id: object, cantidad_intentos_permitidos: int) -> None:
@@ -185,7 +187,7 @@ class IntentosAgotados(Exception):
         )
 
 
-class EvaluacionSuspendida(Exception):
+class EvaluacionSuspendida(ReglaViolada):
     """`RegistrarRespuesta` requiere `Evaluacion` `EnCurso` — está `Suspendida` (INV-AE-12)."""
 
     def __init__(self, evaluacion_id: object) -> None:
@@ -196,7 +198,7 @@ class EvaluacionSuspendida(Exception):
         )
 
 
-class EvaluacionYaFinalizada(Exception):
+class EvaluacionYaFinalizada(ReglaViolada):
     """`RegistrarRespuesta` requiere `Evaluacion` `EnCurso` — está `Finalizada` (INV-AE-12)."""
 
     def __init__(self, evaluacion_id: object) -> None:
@@ -205,7 +207,7 @@ class EvaluacionYaFinalizada(Exception):
         super().__init__(f"La evaluación '{evaluacion_id}' ya está finalizada.")
 
 
-class EvaluacionYaSuspendida(Exception):
+class EvaluacionYaSuspendida(ReglaViolada):
     """`SuspenderEvaluacion` requiere `Evaluacion` `EnCurso` — ya está `Suspendida` (INV-AE-12)."""
 
     def __init__(self, evaluacion_id: object) -> None:
@@ -214,7 +216,7 @@ class EvaluacionYaSuspendida(Exception):
         super().__init__(f"La evaluación '{evaluacion_id}' ya está suspendida.")
 
 
-class EvaluacionNoSuspendida(Exception):
+class EvaluacionNoSuspendida(ReglaViolada):
     """`ReanudarEvaluacion` requiere `Evaluacion` `Suspendida` — está `EnCurso` (INV-AE-11)."""
 
     def __init__(self, evaluacion_id: object) -> None:
@@ -225,7 +227,7 @@ class EvaluacionNoSuspendida(Exception):
         )
 
 
-class EvaluacionNoFinalizada(Exception):
+class EvaluacionNoFinalizada(ReglaViolada):
     """`ObtenerRevisionEvaluacion` requiere `Evaluacion` `Finalizada` (RF-13)."""
 
     def __init__(self, evaluacion_id: object) -> None:
@@ -237,7 +239,7 @@ class EvaluacionNoFinalizada(Exception):
         )
 
 
-class ComisionNoExiste(Exception):
+class ComisionNoExiste(NoEncontrado):
     """`comision_id` no corresponde a ninguna `Comision` existente en BC Identidad (`US-6.1.2`)."""
 
     def __init__(self, comision_id: object) -> None:
@@ -246,7 +248,7 @@ class ComisionNoExiste(Exception):
         super().__init__(f"La comisión '{comision_id}' no existe.")
 
 
-class TiempoLimiteInvalido(Exception):
+class TiempoLimiteInvalido(ReglaViolada):
     """`tiempo_limite_por_pregunta_segundos` no es mayor a 0 (INV-AEV-02)."""
 
     def __init__(self, tiempo_limite_segundos: int) -> None:
@@ -258,7 +260,7 @@ class TiempoLimiteInvalido(Exception):
         )
 
 
-class SesionNoExiste(Exception):
+class SesionNoExiste(NoEncontrado):
     """`sesion_id` no corresponde a ninguna `ActividadEvaluativaEnVivo` (`US-6.1.3`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -267,7 +269,7 @@ class SesionNoExiste(Exception):
         super().__init__(f"La sesión en vivo '{sesion_id}' no existe.")
 
 
-class SesionYaFinalizada(Exception):
+class SesionYaFinalizada(ReglaViolada):
     """La sesión en vivo ya está `Finalizada` — no admite nuevas uniones (`US-6.1.3`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -276,7 +278,7 @@ class SesionYaFinalizada(Exception):
         super().__init__(f"La sesión en vivo '{sesion_id}' ya está finalizada.")
 
 
-class SesionYaIniciada(Exception):
+class SesionYaIniciada(ReglaViolada):
     """La sesión en vivo ya no está `EnEspera` — está `EnCurso` o `Finalizada` (`US-6.1.4`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -285,7 +287,7 @@ class SesionYaIniciada(Exception):
         super().__init__(f"La sesión en vivo '{sesion_id}' ya fue iniciada.")
 
 
-class SesionNoEnCurso(Exception):
+class SesionNoEnCurso(ReglaViolada):
     """La sesión en vivo no está `EnCurso` — está `EnEspera` o `Finalizada` (`US-6.2.2`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -294,7 +296,7 @@ class SesionNoEnCurso(Exception):
         super().__init__(f"La sesión en vivo '{sesion_id}' no está en curso.")
 
 
-class OpcionesYaMostradas(Exception):
+class OpcionesYaMostradas(ReglaViolada):
     """Las opciones de la pregunta actual ya se mostraron (`US-6.2.2`, INV-AEV-09)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -305,7 +307,7 @@ class OpcionesYaMostradas(Exception):
         )
 
 
-class ParticipacionNoExiste(Exception):
+class ParticipacionNoExiste(NoEncontrado):
     """El Estudiante no se unió a la sesión en vivo — no tiene `ParticipacionEnVivo` (`US-6.2.4`)."""
 
     def __init__(self, sesion_id: object, estudiante_id: object) -> None:
@@ -317,7 +319,7 @@ class ParticipacionNoExiste(Exception):
         )
 
 
-class PreguntaNoActual(Exception):
+class PreguntaNoActual(ReglaViolada):
     """`pregunta_id` no es la pregunta actual de la sesión en vivo (`US-6.2.4`)."""
 
     def __init__(self, sesion_id: object, pregunta_id: object) -> None:
@@ -329,7 +331,7 @@ class PreguntaNoActual(Exception):
         )
 
 
-class OpcionesNoMostradasTodavia(Exception):
+class OpcionesNoMostradasTodavia(ReglaViolada):
     """El Docente todavía no mostró las opciones de la pregunta actual (`US-6.2.4`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -341,7 +343,7 @@ class OpcionesNoMostradasTodavia(Exception):
         )
 
 
-class PreguntaYaCerrada(Exception):
+class PreguntaYaCerrada(ReglaViolada):
     """El Docente ya cerró la pregunta actual de la sesión en vivo (`US-6.2.4`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -350,7 +352,7 @@ class PreguntaYaCerrada(Exception):
         super().__init__(f"La pregunta actual de la sesión '{sesion_id}' ya fue cerrada.")
 
 
-class TiempoAgotado(Exception):
+class TiempoAgotado(ReglaViolada):
     """La respuesta llegó después del tiempo límite de la pregunta (`US-6.2.4`, INV-AEV-08)."""
 
     def __init__(self, sesion_id: object, tiempo_respuesta_segundos: float) -> None:
@@ -363,7 +365,7 @@ class TiempoAgotado(Exception):
         )
 
 
-class RespuestaYaRegistrada(Exception):
+class RespuestaYaRegistrada(ReglaViolada):
     """El Estudiante ya respondió esta pregunta — un solo intento (`US-6.2.4`, INV-AEV-07)."""
 
     def __init__(self, sesion_id: object, pregunta_id: object) -> None:
@@ -375,7 +377,7 @@ class RespuestaYaRegistrada(Exception):
         )
 
 
-class PreguntaActualNoCerrada(Exception):
+class PreguntaActualNoCerrada(ReglaViolada):
     """La pregunta actual no fue cerrada, no se puede avanzar (INV-AEV-03, `US-6.2.6`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -384,7 +386,7 @@ class PreguntaActualNoCerrada(Exception):
         super().__init__(f"La pregunta actual de la sesión '{sesion_id}' todavía no fue cerrada.")
 
 
-class NoQuedanPreguntas(Exception):
+class NoQuedanPreguntas(ReglaViolada):
     """La pregunta actual es la última del set — el Docente debe finalizar (`US-6.2.6`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -393,7 +395,7 @@ class NoQuedanPreguntas(Exception):
         super().__init__(f"La sesión '{sesion_id}' no tiene más preguntas: debe finalizarse.")
 
 
-class RankingNoDisponible(Exception):
+class RankingNoDisponible(NoAutorizado):
     """Un Estudiante pidió el ranking con la sesión en vivo todavía no `Finalizada` (`US-6.2.8`)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -404,7 +406,7 @@ class RankingNoDisponible(Exception):
         )
 
 
-class ComisionRequerida(Exception):
+class ComisionRequerida(ReglaViolada):
     """El Docente listó sesiones en vivo sin indicar `comision_id` (`US-6.3.2`)."""
 
     def __init__(self) -> None:
@@ -412,7 +414,7 @@ class ComisionRequerida(Exception):
         super().__init__("El Docente debe indicar comision_id para listar sesiones en vivo.")
 
 
-class ComisionNoAutorizada(Exception):
+class ComisionNoAutorizada(NoAutorizado):
     """El Estudiante pidió sesiones en vivo de una Comisión que no es la propia (`US-6.3.2`)."""
 
     def __init__(self, comision_id: object) -> None:
@@ -421,7 +423,7 @@ class ComisionNoAutorizada(Exception):
         super().__init__(f"No podés ver las sesiones en vivo de la comisión '{comision_id}'.")
 
 
-class SesionYaCancelada(Exception):
+class SesionYaCancelada(ReglaViolada):
     """La sesión en vivo ya está `Cancelada` — estado terminal (`US-ADJ-58`, INV-AEV-10)."""
 
     def __init__(self, sesion_id: object) -> None:
@@ -430,7 +432,7 @@ class SesionYaCancelada(Exception):
         super().__init__(f"La sesión en vivo '{sesion_id}' fue cancelada.")
 
 
-class SinParticipantes(Exception):
+class SinParticipantes(ReglaViolada):
     """`IniciarSesionEnVivo` sin ningún Estudiante unido (`US-ADJ-58`, INV-AEV-11)."""
 
     def __init__(self, sesion_id: object) -> None:

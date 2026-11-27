@@ -2,15 +2,8 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
-from src.identidad.entities.errors import (
-    CredencialesInvalidas,
-    CuentaBloqueadaError,
-    CuentaBloqueadaTemporalmenteError,
-    CuentaDeshabilitadaError,
-)
-from src.identidad.frameworks.api.bloqueo_temporal import respuesta_bloqueo_temporal
 from src.identidad.frameworks.api.schemas import LoginRequest, LoginResponse
 from src.identidad.frameworks.dependencies import get_auth_controller
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
@@ -36,22 +29,7 @@ async def login(
     `cuenta_bloqueada_temporal` (con `reintentar_en_segundos`) si es el último Administrador
     operativo bloqueado (`US-ADJ-60`).
     """
-    try:
-        jwt_vo, _evento = await controller.iniciar_sesion(body.email, body.password)
-    except CuentaDeshabilitadaError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail={"codigo": "cuenta_deshabilitada", "mensaje": str(exc)},
-        ) from exc
-    except CuentaBloqueadaTemporalmenteError as exc:
-        raise respuesta_bloqueo_temporal(exc) from exc
-    except CuentaBloqueadaError as exc:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
-    except CredencialesInvalidas as exc:
-        detalle: str | dict[str, object] = str(exc)
-        if exc.intentos_restantes is not None:
-            detalle = {"mensaje": str(exc), "intentos_restantes": exc.intentos_restantes}
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=detalle) from exc
+    jwt_vo, _evento = await controller.iniciar_sesion(body.email, body.password)
 
     return LoginResponse(
         access_token=jwt_vo.token,

@@ -282,6 +282,35 @@ forbidden_modules = [
     "src.analytics",
 ]
 
+# `ADR-029`: un router no traduce a mano los errores de dominio; los deja subir al manejador único de
+# `shared/frameworks/api/errores.py`. Solo conservan el import los routers cuya respuesta depende del
+# endpoint (6 casos de Identidad) y el canal WebSocket, que traduce los errores de JWT por su cuenta.
+[[tool.importlinter.contracts]]
+name = "ADR-029: los routers no importan los errores de dominio para traducirlos"
+type = "forbidden"
+source_modules = [
+    "src.identidad.frameworks.api",
+    "src.actividad_evaluativa.frameworks.api",
+    "src.banco_preguntas.frameworks.api",
+    "src.analytics.frameworks.api",
+]
+forbidden_modules = [
+    "src.identidad.entities.errors",
+    "src.actividad_evaluativa.entities.errors",
+    "src.banco_preguntas.entities.errors",
+    "src.analytics.entities.errors",
+    "src.shared.entities.errors",
+]
+allow_indirect_imports = true
+ignore_imports = [
+    "src.identidad.frameworks.api.autoregistro_router -> src.identidad.entities.errors",
+    "src.identidad.frameworks.api.comisiones_router -> src.identidad.entities.errors",
+    "src.identidad.frameworks.api.perfil_router -> src.identidad.entities.errors",
+    "src.identidad.frameworks.api.registro_router -> src.identidad.entities.errors",
+    "src.identidad.frameworks.api.errores_invitacion -> src.identidad.entities.errors",
+    "src.actividad_evaluativa.frameworks.api.sesiones_en_vivo_router -> src.shared.entities.errors",
+]
+
 [[tool.importlinter.contracts]]
 name = "shared no importa de ningún BC"
 type = "forbidden"

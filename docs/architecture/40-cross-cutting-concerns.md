@@ -84,7 +84,7 @@ La imagen Docker usa `/api/health` como `healthcheck`. Con `ADR-010` como decisi
 
 - `401` credenciales ausentes o inválidas; `403` rol insuficiente o no asignado a la comisión o materia; `404` no existe; `409` conflicto (por ejemplo, email repetido); `422` datos inválidos.
 - Los errores con motivo de negocio llevan `detail.codigo` (por ejemplo `invitacion_revocada`, `password_invalida`, `cuenta_bloqueada_temporal`) para que el frontend muestre un mensaje preciso.
-- Los errores de dominio son excepciones de `entities/errors.py` de cada BC; el router las traduce a HTTP.
+- Los errores de dominio son excepciones de `entities/errors.py` de cada BC y heredan de una de cinco categorías de `shared/entities/errors.py` (`NoEncontrado` 404, `NoAutorizado` 403, `NoAutenticado` 401, `ReglaViolada` 422, `Conflicto` 409; `ADR-029`, `US-12.2.2`). Un único manejador (`shared/frameworks/api/errores.py`, registrado en `app.py`) los traduce a HTTP; los routers no traducen. Cuando el cuerpo es estructurado, la clase lo declara en `detalle()`. Quedan 6 traducciones locales (`raise HTTPException` en routers) donde la respuesta depende del endpoint; las fija una guarda y el contrato de `import-linter` «ADR-029» impide importar errores en los routers fuera de esas excepciones.
 
 ## 6. Persistencia
 

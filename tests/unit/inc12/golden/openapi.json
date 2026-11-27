@@ -1,0 +1,7085 @@
+{
+ "components": {
+  "schemas": {
+   "ActividadResponse": {
+    "description": "Representación de una `ActividadEvaluativaPeriodoAbierto` devuelta por la API.",
+    "properties": {
+     "cantidad_intentos_permitidos": {
+      "title": "Cantidad Intentos Permitidos",
+      "type": "integer"
+     },
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "cerrada_manualmente": {
+      "title": "Cerrada Manualmente",
+      "type": "boolean"
+     },
+     "comisiones_ids": {
+      "items": {
+       "format": "uuid",
+       "type": "string"
+      },
+      "title": "Comisiones Ids",
+      "type": "array"
+     },
+     "fecha_apertura": {
+      "format": "date-time",
+      "title": "Fecha Apertura",
+      "type": "string"
+     },
+     "fecha_cierre": {
+      "format": "date-time",
+      "title": "Fecha Cierre",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     },
+     "tema": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tema"
+     },
+     "titulo": {
+      "title": "Titulo",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unidad Tematica"
+     }
+    },
+    "required": [
+     "id",
+     "materia_id",
+     "fecha_apertura",
+     "fecha_cierre",
+     "cantidad_preguntas",
+     "cantidad_intentos_permitidos",
+     "cerrada_manualmente",
+     "titulo",
+     "comisiones_ids",
+     "unidad_tematica",
+     "tema"
+    ],
+    "title": "ActividadResponse",
+    "type": "object"
+   },
+   "ActividadResumenResponse": {
+    "description": "Resumen de una actividad para el listado por materia (`US-3.4.2`, RF-11).\n\n`estado` es puramente derivado (fecha actual + `cerrada_manualmente`) — no persiste un\ncampo propio en el dominio.",
+    "properties": {
+     "cantidad_evaluaciones_activas": {
+      "title": "Cantidad Evaluaciones Activas",
+      "type": "integer"
+     },
+     "cantidad_evaluaciones_finalizadas": {
+      "title": "Cantidad Evaluaciones Finalizadas",
+      "type": "integer"
+     },
+     "cantidad_intentos_permitidos": {
+      "title": "Cantidad Intentos Permitidos",
+      "type": "integer"
+     },
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "cerrada_manualmente": {
+      "title": "Cerrada Manualmente",
+      "type": "boolean"
+     },
+     "comisiones_ids": {
+      "items": {
+       "format": "uuid",
+       "type": "string"
+      },
+      "title": "Comisiones Ids",
+      "type": "array"
+     },
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "fecha_apertura": {
+      "format": "date-time",
+      "title": "Fecha Apertura",
+      "type": "string"
+     },
+     "fecha_cierre": {
+      "format": "date-time",
+      "title": "Fecha Cierre",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     },
+     "tema": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tema"
+     },
+     "titulo": {
+      "title": "Titulo",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unidad Tematica"
+     }
+    },
+    "required": [
+     "id",
+     "materia_id",
+     "titulo",
+     "fecha_apertura",
+     "fecha_cierre",
+     "cantidad_preguntas",
+     "cantidad_intentos_permitidos",
+     "estado",
+     "cerrada_manualmente",
+     "cantidad_evaluaciones_activas",
+     "cantidad_evaluaciones_finalizadas",
+     "comisiones_ids",
+     "unidad_tematica",
+     "tema"
+    ],
+    "title": "ActividadResumenResponse",
+    "type": "object"
+   },
+   "ActividadVisibleResponse": {
+    "description": "Actividad con el `Badge` de estado desde la perspectiva del Estudiante (`US-3.4.5`).",
+    "properties": {
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "evaluacion_id": {
+      "anyOf": [
+       {
+        "format": "uuid",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Evaluacion Id"
+     },
+     "fecha_apertura": {
+      "format": "date-time",
+      "title": "Fecha Apertura",
+      "type": "string"
+     },
+     "fecha_cierre": {
+      "format": "date-time",
+      "title": "Fecha Cierre",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     },
+     "titulo": {
+      "title": "Titulo",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "materia_id",
+     "titulo",
+     "fecha_apertura",
+     "fecha_cierre",
+     "estado",
+     "evaluacion_id"
+    ],
+    "title": "ActividadVisibleResponse",
+    "type": "object"
+   },
+   "AsignarDocenteRequest": {
+    "description": "Body de la request de asignación de un docente a una comisión.",
+    "properties": {
+     "docente_id": {
+      "format": "uuid",
+      "title": "Docente Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "docente_id"
+    ],
+    "title": "AsignarDocenteRequest",
+    "type": "object"
+   },
+   "AutoregistrarDocenteRequest": {
+    "description": "Body de la request de autoregistro de un Docente (`US-ADJ-41`).",
+    "properties": {
+     "email": {
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     },
+     "nombre": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     },
+     "password": {
+      "minLength": 8,
+      "title": "Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nombre",
+     "email",
+     "password"
+    ],
+    "title": "AutoregistrarDocenteRequest",
+    "type": "object"
+   },
+   "AutoregistrarEstudianteRequest": {
+    "description": "Body de la request de autoregistro de un Estudiante (`US-ADJ-42`).",
+    "properties": {
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "email": {
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     },
+     "nombre": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     },
+     "password": {
+      "minLength": 8,
+      "title": "Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nombre",
+     "email",
+     "password",
+     "comision_id"
+    ],
+    "title": "AutoregistrarEstudianteRequest",
+    "type": "object"
+   },
+   "AutoregistroResponse": {
+    "description": "Representación del Usuario autoregistrado devuelta por la API.",
+    "properties": {
+     "email": {
+      "title": "Email",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "tipo_perfil": {
+      "title": "Tipo Perfil",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "email",
+     "tipo_perfil"
+    ],
+    "title": "AutoregistroResponse",
+    "type": "object"
+   },
+   "CambiarPasswordRequest": {
+    "description": "Body de la request de cambio de la propia contraseña (`US-2.2.5`).",
+    "properties": {
+     "password_actual": {
+      "title": "Password Actual",
+      "type": "string"
+     },
+     "password_nueva": {
+      "minLength": 8,
+      "title": "Password Nueva",
+      "type": "string"
+     }
+    },
+    "required": [
+     "password_actual",
+     "password_nueva"
+    ],
+    "title": "CambiarPasswordRequest",
+    "type": "object"
+   },
+   "CargarPreguntaOpcionMultipleRequest": {
+    "description": "Body de la request de carga de pregunta de opción múltiple.",
+    "properties": {
+     "banco_id": {
+      "format": "uuid",
+      "title": "Banco Id",
+      "type": "string"
+     },
+     "dificultad": {
+      "$ref": "#/components/schemas/Dificultad"
+     },
+     "importancia": {
+      "$ref": "#/components/schemas/Importancia"
+     },
+     "opciones": {
+      "items": {
+       "$ref": "#/components/schemas/OpcionSchema"
+      },
+      "title": "Opciones",
+      "type": "array"
+     },
+     "tema": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Tema",
+      "type": "string"
+     },
+     "texto": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Texto",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "banco_id",
+     "texto",
+     "opciones",
+     "unidad_tematica",
+     "tema",
+     "dificultad",
+     "importancia"
+    ],
+    "title": "CargarPreguntaOpcionMultipleRequest",
+    "type": "object"
+   },
+   "CargarPreguntaVerdaderoFalsoRequest": {
+    "description": "Body de la request de carga de pregunta Verdadero/Falso.",
+    "properties": {
+     "banco_id": {
+      "format": "uuid",
+      "title": "Banco Id",
+      "type": "string"
+     },
+     "dificultad": {
+      "$ref": "#/components/schemas/Dificultad"
+     },
+     "importancia": {
+      "$ref": "#/components/schemas/Importancia"
+     },
+     "respuesta_correcta": {
+      "title": "Respuesta Correcta",
+      "type": "boolean"
+     },
+     "tema": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Tema",
+      "type": "string"
+     },
+     "texto": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Texto",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "banco_id",
+     "texto",
+     "respuesta_correcta",
+     "unidad_tematica",
+     "tema",
+     "dificultad",
+     "importancia"
+    ],
+    "title": "CargarPreguntaVerdaderoFalsoRequest",
+    "type": "object"
+   },
+   "ComisionAutoregistroResponse": {
+    "description": "Comisión mínima para el selector de la pantalla de autoregistro (`US-ADJ-43`).\n\nEndpoint público, sin JWT — expone solo `id`/`horario`, sin `docentes_asignados` ni\n`activa` como sí hace `GET /materias/{id}/comisiones` (`US-4.2.2`, protegido por rol).",
+    "properties": {
+     "horario": {
+      "title": "Horario",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "horario"
+    ],
+    "title": "ComisionAutoregistroResponse",
+    "type": "object"
+   },
+   "ComisionResponse": {
+    "description": "Representación de una comisión devuelta por la API.",
+    "properties": {
+     "activa": {
+      "title": "Activa",
+      "type": "boolean"
+     },
+     "administrador_id": {
+      "format": "uuid",
+      "title": "Administrador Id",
+      "type": "string"
+     },
+     "docentes_asignados": {
+      "items": {
+       "format": "uuid",
+       "type": "string"
+      },
+      "title": "Docentes Asignados",
+      "type": "array"
+     },
+     "horario": {
+      "title": "Horario",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "materia_id",
+     "horario",
+     "administrador_id",
+     "docentes_asignados",
+     "activa"
+    ],
+    "title": "ComisionResponse",
+    "type": "object"
+   },
+   "ComisionResumenResponse": {
+    "description": "Representación de una comisión para selectores.\n\nTambién usada por el listado de gestión del Administrador (`docentes_asignados`,\n`US-ADJ-23`) — antes solo (`US-4.2.2`).",
+    "properties": {
+     "activa": {
+      "title": "Activa",
+      "type": "boolean"
+     },
+     "docentes_asignados": {
+      "items": {
+       "format": "uuid",
+       "type": "string"
+      },
+      "title": "Docentes Asignados",
+      "type": "array"
+     },
+     "horario": {
+      "title": "Horario",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "horario",
+     "docentes_asignados",
+     "activa"
+    ],
+    "title": "ComisionResumenResponse",
+    "type": "object"
+   },
+   "CompletitudFilaResponse": {
+    "description": "Fila de detalle de `GET .../completitud`, un estudiante del roster (`US-ADJ-47`, RF-23).",
+    "properties": {
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "estudiante_id": {
+      "format": "uuid",
+      "title": "Estudiante Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "estudiante_id",
+     "nombre",
+     "estado"
+    ],
+    "title": "CompletitudFilaResponse",
+    "type": "object"
+   },
+   "CompletitudPorActividadResponse": {
+    "description": "Respuesta completa de `GET /analytics/actividades/{id}/completitud` (`US-ADJ-47`, RF-23).",
+    "properties": {
+     "detalle": {
+      "items": {
+       "$ref": "#/components/schemas/CompletitudFilaResponse"
+      },
+      "title": "Detalle",
+      "type": "array"
+     },
+     "resumen": {
+      "$ref": "#/components/schemas/CompletitudResumenResponse"
+     }
+    },
+    "required": [
+     "detalle",
+     "resumen"
+    ],
+    "title": "CompletitudPorActividadResponse",
+    "type": "object"
+   },
+   "CompletitudResumenResponse": {
+    "description": "Conteo agregado por estado de `GET .../completitud` (`US-ADJ-47`, RF-23).",
+    "properties": {
+     "en_curso": {
+      "title": "En Curso",
+      "type": "integer"
+     },
+     "finalizadas": {
+      "title": "Finalizadas",
+      "type": "integer"
+     },
+     "sin_iniciar": {
+      "title": "Sin Iniciar",
+      "type": "integer"
+     },
+     "suspendidas": {
+      "title": "Suspendidas",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "finalizadas",
+     "en_curso",
+     "suspendidas",
+     "sin_iniciar"
+    ],
+    "title": "CompletitudResumenResponse",
+    "type": "object"
+   },
+   "ConfirmarRecuperacionPasswordRequest": {
+    "description": "Body de la request de confirmación de una contraseña nueva (`US-ADJ-39`).",
+    "properties": {
+     "password_nueva": {
+      "minLength": 12,
+      "title": "Password Nueva",
+      "type": "string"
+     },
+     "token": {
+      "minLength": 1,
+      "title": "Token",
+      "type": "string"
+     }
+    },
+    "required": [
+     "token",
+     "password_nueva"
+    ],
+    "title": "ConfirmarRecuperacionPasswordRequest",
+    "type": "object"
+   },
+   "ConfirmarRecuperacionPasswordResponse": {
+    "description": "Respuesta de éxito del canje de token por una contraseña nueva.",
+    "properties": {
+     "mensaje": {
+      "default": "Tu contraseña fue actualizada correctamente.",
+      "title": "Mensaje",
+      "type": "string"
+     }
+    },
+    "title": "ConfirmarRecuperacionPasswordResponse",
+    "type": "object"
+   },
+   "CrearActividadRequest": {
+    "description": "Body de la request de alta de actividad de período abierto.",
+    "properties": {
+     "cantidad_intentos_permitidos": {
+      "minimum": 1.0,
+      "title": "Cantidad Intentos Permitidos",
+      "type": "integer"
+     },
+     "cantidad_preguntas": {
+      "minimum": 1.0,
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "comisiones_ids": {
+      "default": [],
+      "items": {
+       "format": "uuid",
+       "type": "string"
+      },
+      "title": "Comisiones Ids",
+      "type": "array"
+     },
+     "fecha_apertura": {
+      "format": "date-time",
+      "title": "Fecha Apertura",
+      "type": "string"
+     },
+     "fecha_cierre": {
+      "format": "date-time",
+      "title": "Fecha Cierre",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     },
+     "tema": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tema"
+     },
+     "titulo": {
+      "default": "",
+      "title": "Titulo",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unidad Tematica"
+     }
+    },
+    "required": [
+     "materia_id",
+     "fecha_apertura",
+     "fecha_cierre",
+     "cantidad_preguntas",
+     "cantidad_intentos_permitidos"
+    ],
+    "title": "CrearActividadRequest",
+    "type": "object"
+   },
+   "CrearComisionRequest": {
+    "description": "Body de la request de alta de comisión.",
+    "properties": {
+     "administrador_id": {
+      "format": "uuid",
+      "title": "Administrador Id",
+      "type": "string"
+     },
+     "horario": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Horario",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "materia_id",
+     "horario",
+     "administrador_id"
+    ],
+    "title": "CrearComisionRequest",
+    "type": "object"
+   },
+   "CrearMateriaRequest": {
+    "description": "Body de la request de alta de materia.",
+    "properties": {
+     "nombre": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nombre"
+    ],
+    "title": "CrearMateriaRequest",
+    "type": "object"
+   },
+   "CrearSesionEnVivoRequest": {
+    "description": "Body de la request de alta de una sesión en vivo (`US-6.1.2`, RF-08).\n\n`tiempo_limite_por_pregunta_segundos` no lleva `gt=0` a propósito: INV-AEV-02 se valida en\nel aggregate (`TiempoLimiteInvalido`, 422), no con el 422 genérico de Pydantic.",
+    "properties": {
+     "cantidad_preguntas": {
+      "minimum": 1.0,
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "tema": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tema"
+     },
+     "tiempo_limite_por_pregunta_segundos": {
+      "title": "Tiempo Limite Por Pregunta Segundos",
+      "type": "integer"
+     },
+     "unidad_tematica": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unidad Tematica"
+     }
+    },
+    "required": [
+     "comision_id",
+     "cantidad_preguntas",
+     "tiempo_limite_por_pregunta_segundos"
+    ],
+    "title": "CrearSesionEnVivoRequest",
+    "type": "object"
+   },
+   "CrearUsuarioRequest": {
+    "description": "Body de la request de alta de usuario.",
+    "properties": {
+     "email": {
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     },
+     "nombre": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     },
+     "password": {
+      "minLength": 8,
+      "title": "Password",
+      "type": "string"
+     },
+     "perfil": {
+      "$ref": "#/components/schemas/TipoPerfil"
+     }
+    },
+    "required": [
+     "nombre",
+     "email",
+     "password",
+     "perfil"
+    ],
+    "title": "CrearUsuarioRequest",
+    "type": "object"
+   },
+   "CuentaDetalleResponse": {
+    "description": "Detalle completo de una cuenta puntual (`US-2.2.3`).",
+    "properties": {
+     "bloqueada": {
+      "title": "Bloqueada",
+      "type": "boolean"
+     },
+     "comision_id": {
+      "anyOf": [
+       {
+        "format": "uuid",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Comision Id"
+     },
+     "creado_en": {
+      "format": "date-time",
+      "title": "Creado En",
+      "type": "string"
+     },
+     "deshabilitada": {
+      "title": "Deshabilitada",
+      "type": "boolean"
+     },
+     "email": {
+      "title": "Email",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "perfil": {
+      "$ref": "#/components/schemas/TipoPerfil"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "email",
+     "perfil",
+     "bloqueada",
+     "creado_en",
+     "comision_id",
+     "deshabilitada"
+    ],
+    "title": "CuentaDetalleResponse",
+    "type": "object"
+   },
+   "CuentaResponse": {
+    "description": "Representación de una cuenta en el listado administrativo (`US-2.2.2`).",
+    "properties": {
+     "bloqueada": {
+      "title": "Bloqueada",
+      "type": "boolean"
+     },
+     "deshabilitada": {
+      "title": "Deshabilitada",
+      "type": "boolean"
+     },
+     "email": {
+      "title": "Email",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "perfil": {
+      "$ref": "#/components/schemas/TipoPerfil"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "email",
+     "perfil",
+     "bloqueada",
+     "deshabilitada"
+    ],
+    "title": "CuentaResponse",
+    "type": "object"
+   },
+   "CuentasPaginadasResponse": {
+    "description": "Página de cuentas junto con el total que matchea los filtros (`US-ADJ-05`).",
+    "properties": {
+     "cuentas": {
+      "items": {
+       "$ref": "#/components/schemas/CuentaResponse"
+      },
+      "title": "Cuentas",
+      "type": "array"
+     },
+     "total": {
+      "title": "Total",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "cuentas",
+     "total"
+    ],
+    "title": "CuentasPaginadasResponse",
+    "type": "object"
+   },
+   "DesempenoComisionFilaResponse": {
+    "description": "Fila de `GET /analytics/materias/{id}/comisiones/{id}/desempeno` (`US-ADJ-44`, RF-20).",
+    "properties": {
+     "actividades_pendientes": {
+      "title": "Actividades Pendientes",
+      "type": "integer"
+     },
+     "estudiante_id": {
+      "format": "uuid",
+      "title": "Estudiante Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "porcentaje_aciertos_acumulado": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Porcentaje Aciertos Acumulado"
+     }
+    },
+    "required": [
+     "estudiante_id",
+     "nombre",
+     "porcentaje_aciertos_acumulado",
+     "actividades_pendientes"
+    ],
+    "title": "DesempenoComisionFilaResponse",
+    "type": "object"
+   },
+   "DesempenoEstudianteResponse": {
+    "description": "Respuesta completa de `GET /analytics/materias/{materia_id}/mi-desempeno` (RF-15).\n\n`sesiones_en_vivo` (`US-ADJ-56`) va separado de `resumen`, que solo cuenta período abierto.",
+    "properties": {
+     "evaluaciones": {
+      "items": {
+       "$ref": "#/components/schemas/EvaluacionDetalleResponse"
+      },
+      "title": "Evaluaciones",
+      "type": "array"
+     },
+     "resumen": {
+      "$ref": "#/components/schemas/ResumenDesempenoResponse"
+     },
+     "sesiones_en_vivo": {
+      "items": {
+       "$ref": "#/components/schemas/SesionEnVivoDetalleResponse"
+      },
+      "title": "Sesiones En Vivo",
+      "type": "array"
+     }
+    },
+    "required": [
+     "evaluaciones",
+     "resumen",
+     "sesiones_en_vivo"
+    ],
+    "title": "DesempenoEstudianteResponse",
+    "type": "object"
+   },
+   "DetallePreguntaRevisionResponse": {
+    "description": "Representación de un `DetallePreguntaRevision` devuelto por la API (RF-13).\n\n`contenido_correcto` es `None` cuando el estudiante acertó — la API no expone la respuesta\ncorrecta salvo que haya fallado o no respondido.",
+    "properties": {
+     "contenido_correcto": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Contenido Correcto"
+     },
+     "contenido_propio": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Contenido Propio"
+     },
+     "es_correcta": {
+      "title": "Es Correcta",
+      "type": "boolean"
+     },
+     "opciones": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opciones"
+     },
+     "orden": {
+      "title": "Orden",
+      "type": "integer"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     },
+     "respondida": {
+      "title": "Respondida",
+      "type": "boolean"
+     },
+     "texto": {
+      "title": "Texto",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "orden",
+     "texto",
+     "respondida",
+     "contenido_propio",
+     "es_correcta",
+     "contenido_correcto",
+     "opciones"
+    ],
+    "title": "DetallePreguntaRevisionResponse",
+    "type": "object"
+   },
+   "Dificultad": {
+    "description": "Dificultad de una pregunta.",
+    "enum": [
+     "alto",
+     "medio",
+     "bajo"
+    ],
+    "title": "Dificultad",
+    "type": "string"
+   },
+   "EditarComisionRequest": {
+    "description": "Body de la request de corrección del horario de una comisión existente.",
+    "properties": {
+     "horario": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Horario",
+      "type": "string"
+     }
+    },
+    "required": [
+     "horario"
+    ],
+    "title": "EditarComisionRequest",
+    "type": "object"
+   },
+   "EditarCuentaRequest": {
+    "description": "Body de la request de corrección de nombre/email de una cuenta existente.",
+    "properties": {
+     "email": {
+      "minLength": 1,
+      "title": "Email",
+      "type": "string"
+     },
+     "nombre": {
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nombre",
+     "email"
+    ],
+    "title": "EditarCuentaRequest",
+    "type": "object"
+   },
+   "EditarMateriaRequest": {
+    "description": "Body de la request de corrección del nombre de una materia existente.",
+    "properties": {
+     "nombre": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nombre"
+    ],
+    "title": "EditarMateriaRequest",
+    "type": "object"
+   },
+   "EditarPreguntaRequest": {
+    "description": "Body de la request de edición de pregunta.\n\n`opciones` aplica solo si la pregunta es de opción múltiple; `respuesta_correcta` solo si\nes Verdadero/Falso — el tipo no es editable, se infiere de la pregunta ya persistida.",
+    "properties": {
+     "dificultad": {
+      "$ref": "#/components/schemas/Dificultad"
+     },
+     "importancia": {
+      "$ref": "#/components/schemas/Importancia"
+     },
+     "opciones": {
+      "anyOf": [
+       {
+        "items": {
+         "$ref": "#/components/schemas/OpcionSchema"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opciones"
+     },
+     "respuesta_correcta": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Respuesta Correcta"
+     },
+     "tema": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Tema",
+      "type": "string"
+     },
+     "texto": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Texto",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "texto",
+     "unidad_tematica",
+     "tema",
+     "dificultad",
+     "importancia"
+    ],
+    "title": "EditarPreguntaRequest",
+    "type": "object"
+   },
+   "EstadoSesionEnVivo": {
+    "description": "Estados posibles de una sesión en vivo.",
+    "enum": [
+     "EnEspera",
+     "EnCurso",
+     "Finalizada",
+     "Cancelada"
+    ],
+    "title": "EstadoSesionEnVivo",
+    "type": "string"
+   },
+   "EstadoSesionEnVivoResponse": {
+    "description": "Estado consultable de una sesión en vivo, para reconexión y sala de espera (`US-6.2.8`).",
+    "properties": {
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "cantidad_respuestas": {
+      "default": 0,
+      "title": "Cantidad Respuestas",
+      "type": "integer"
+     },
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "opciones_mostradas": {
+      "title": "Opciones Mostradas",
+      "type": "boolean"
+     },
+     "opciones_mostradas_en": {
+      "anyOf": [
+       {
+        "format": "date-time",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opciones Mostradas En"
+     },
+     "pregunta_actual": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/PreguntaActualResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "pregunta_actual_cerrada": {
+      "title": "Pregunta Actual Cerrada",
+      "type": "boolean"
+     },
+     "pregunta_actual_indice": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pregunta Actual Indice"
+     },
+     "puntaje_acumulado": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Puntaje Acumulado"
+     },
+     "resultado_pregunta": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ResultadoPreguntaResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "tiempo_limite_por_pregunta_segundos": {
+      "title": "Tiempo Limite Por Pregunta Segundos",
+      "type": "integer"
+     },
+     "total_participantes": {
+      "default": 0,
+      "title": "Total Participantes",
+      "type": "integer"
+     },
+     "ya_respondio": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ya Respondio"
+     }
+    },
+    "required": [
+     "estado",
+     "comision_id",
+     "cantidad_preguntas",
+     "tiempo_limite_por_pregunta_segundos",
+     "pregunta_actual_indice",
+     "opciones_mostradas",
+     "opciones_mostradas_en",
+     "pregunta_actual_cerrada",
+     "pregunta_actual"
+    ],
+    "title": "EstadoSesionEnVivoResponse",
+    "type": "object"
+   },
+   "EstudianteResumenResponse": {
+    "description": "Representación mínima de un Estudiante para selectores (`US-4.2.2`).",
+    "properties": {
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre"
+    ],
+    "title": "EstudianteResumenResponse",
+    "type": "object"
+   },
+   "EvaluacionDetalleResponse": {
+    "description": "Fila de detalle de una `Evaluacion` finalizada del Estudiante.",
+    "properties": {
+     "actividad_id": {
+      "format": "uuid",
+      "title": "Actividad Id",
+      "type": "string"
+     },
+     "cantidad_correctas": {
+      "title": "Cantidad Correctas",
+      "type": "integer"
+     },
+     "cantidad_incorrectas": {
+      "title": "Cantidad Incorrectas",
+      "type": "integer"
+     },
+     "evaluacion_id": {
+      "format": "uuid",
+      "title": "Evaluacion Id",
+      "type": "string"
+     },
+     "finalizada_en": {
+      "format": "date-time",
+      "title": "Finalizada En",
+      "type": "string"
+     }
+    },
+    "required": [
+     "evaluacion_id",
+     "actividad_id",
+     "finalizada_en",
+     "cantidad_correctas",
+     "cantidad_incorrectas"
+    ],
+    "title": "EvaluacionDetalleResponse",
+    "type": "object"
+   },
+   "EvaluacionResponse": {
+    "description": "Representación de una `Evaluacion` devuelta por la API.\n\n`preguntas_respondidas` (`US-3.4.6`) trae los ids de `PreguntaAsignada` con al menos una\n`Respuesta` confirmada — insumo de los puntos de navegación (verde/azul/gris) de\n`#est-rendir`. `respuestas_confirmadas` (`US-ADJ-12`) trae el contenido de la respuesta\nvigente de cada una — insumo para prellenar la pantalla al revisitarla.",
+    "properties": {
+     "actividad_id": {
+      "format": "uuid",
+      "title": "Actividad Id",
+      "type": "string"
+     },
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "estudiante_id": {
+      "format": "uuid",
+      "title": "Estudiante Id",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "iniciada_en": {
+      "format": "date-time",
+      "title": "Iniciada En",
+      "type": "string"
+     },
+     "preguntas_asignadas": {
+      "items": {
+       "$ref": "#/components/schemas/PreguntaAsignadaResponse"
+      },
+      "title": "Preguntas Asignadas",
+      "type": "array"
+     },
+     "preguntas_respondidas": {
+      "items": {
+       "format": "uuid",
+       "type": "string"
+      },
+      "title": "Preguntas Respondidas",
+      "type": "array"
+     },
+     "respuestas_confirmadas": {
+      "items": {
+       "$ref": "#/components/schemas/RespuestaConfirmadaResponse"
+      },
+      "title": "Respuestas Confirmadas",
+      "type": "array"
+     }
+    },
+    "required": [
+     "id",
+     "actividad_id",
+     "estudiante_id",
+     "preguntas_asignadas",
+     "preguntas_respondidas",
+     "respuestas_confirmadas",
+     "estado",
+     "iniciada_en"
+    ],
+    "title": "EvaluacionResponse",
+    "type": "object"
+   },
+   "EvolucionTemporalComisionPuntoResponse": {
+    "description": "Punto de la serie de comisión de `GET .../evolucion-temporal` (`US-ADJ-45`, RF-21).",
+    "properties": {
+     "actividad_id": {
+      "format": "uuid",
+      "title": "Actividad Id",
+      "type": "string"
+     },
+     "porcentaje_aciertos_promedio": {
+      "title": "Porcentaje Aciertos Promedio",
+      "type": "number"
+     },
+     "titulo_actividad": {
+      "title": "Titulo Actividad",
+      "type": "string"
+     }
+    },
+    "required": [
+     "actividad_id",
+     "titulo_actividad",
+     "porcentaje_aciertos_promedio"
+    ],
+    "title": "EvolucionTemporalComisionPuntoResponse",
+    "type": "object"
+   },
+   "EvolucionTemporalPuntoResponse": {
+    "description": "Punto de la serie individual de `GET .../evolucion-temporal` (`US-ADJ-45`, RF-21).",
+    "properties": {
+     "actividad_id": {
+      "format": "uuid",
+      "title": "Actividad Id",
+      "type": "string"
+     },
+     "finalizada_en": {
+      "format": "date-time",
+      "title": "Finalizada En",
+      "type": "string"
+     },
+     "porcentaje_acierto": {
+      "title": "Porcentaje Acierto",
+      "type": "integer"
+     },
+     "titulo_actividad": {
+      "title": "Titulo Actividad",
+      "type": "string"
+     }
+    },
+    "required": [
+     "actividad_id",
+     "titulo_actividad",
+     "finalizada_en",
+     "porcentaje_acierto"
+    ],
+    "title": "EvolucionTemporalPuntoResponse",
+    "type": "object"
+   },
+   "GenerarInvitacionGrupalRequest": {
+    "description": "Body de la generación de un link grupal; el dominio valida la duración (`US-ADJ-67`).",
+    "properties": {
+     "duracion_minutos": {
+      "default": 60,
+      "title": "Duracion Minutos",
+      "type": "integer"
+     }
+    },
+    "title": "GenerarInvitacionGrupalRequest",
+    "type": "object"
+   },
+   "GenerarInvitacionRequest": {
+    "description": "Body de la request de generación de una invitación.\n\n`email_destinatario` es opcional desde `US-ADJ-26`: si no se envía, el use case omite el\nenvío de email y la invitación solo sirve para compartir el link manualmente.",
+    "properties": {
+     "docente_id": {
+      "format": "uuid",
+      "title": "Docente Id",
+      "type": "string"
+     },
+     "email_destinatario": {
+      "anyOf": [
+       {
+        "maxLength": 255,
+        "minLength": 3,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Email Destinatario"
+     }
+    },
+    "required": [
+     "docente_id"
+    ],
+    "title": "GenerarInvitacionRequest",
+    "type": "object"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "title": "Detail",
+      "type": "array"
+     }
+    },
+    "title": "HTTPValidationError",
+    "type": "object"
+   },
+   "Importancia": {
+    "description": "Importancia de una pregunta.",
+    "enum": [
+     "alto",
+     "medio",
+     "bajo"
+    ],
+    "title": "Importancia",
+    "type": "string"
+   },
+   "IniciarEvaluacionRequest": {
+    "description": "Body de la request de inicio de evaluación — `estudiante_id` sale del JWT, no del body.",
+    "properties": {
+     "actividad_id": {
+      "format": "uuid",
+      "title": "Actividad Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "actividad_id"
+    ],
+    "title": "IniciarEvaluacionRequest",
+    "type": "object"
+   },
+   "InvitacionGrupalEstadoResponse": {
+    "description": "Estado del último link grupal; el `token` solo viaja si está vigente (`US-ADJ-67`).",
+    "properties": {
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "expira_en": {
+      "format": "date-time",
+      "title": "Expira En",
+      "type": "string"
+     },
+     "generada_en": {
+      "format": "date-time",
+      "title": "Generada En",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "token": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Token"
+     },
+     "usos": {
+      "title": "Usos",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "id",
+     "estado",
+     "token",
+     "generada_en",
+     "expira_en",
+     "usos"
+    ],
+    "title": "InvitacionGrupalEstadoResponse",
+    "type": "object"
+   },
+   "InvitacionGrupalResponse": {
+    "description": "Link grupal recién generado (`US-ADJ-67`).",
+    "properties": {
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "expira_en": {
+      "format": "date-time",
+      "title": "Expira En",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "token": {
+      "title": "Token",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "comision_id",
+     "expira_en",
+     "token"
+    ],
+    "title": "InvitacionGrupalResponse",
+    "type": "object"
+   },
+   "InvitacionPreviewResponse": {
+    "description": "Vista previa de una invitación vigente, sin datos sensibles (`US-ADJ-08`).",
+    "properties": {
+     "horario": {
+      "title": "Horario",
+      "type": "string"
+     },
+     "materia": {
+      "title": "Materia",
+      "type": "string"
+     }
+    },
+    "required": [
+     "materia",
+     "horario"
+    ],
+    "title": "InvitacionPreviewResponse",
+    "type": "object"
+   },
+   "InvitacionResponse": {
+    "description": "Representación de una invitación devuelta por la API.",
+    "properties": {
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "docente_id": {
+      "format": "uuid",
+      "title": "Docente Id",
+      "type": "string"
+     },
+     "expira_en": {
+      "format": "date-time",
+      "title": "Expira En",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "token": {
+      "title": "Token",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "comision_id",
+     "docente_id",
+     "expira_en",
+     "token"
+    ],
+    "title": "InvitacionResponse",
+    "type": "object"
+   },
+   "LoginRequest": {
+    "description": "Body de la request de autenticación.",
+    "properties": {
+     "email": {
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     },
+     "password": {
+      "minLength": 1,
+      "title": "Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "LoginRequest",
+    "type": "object"
+   },
+   "LoginResponse": {
+    "description": "JWT emitido tras una autenticación exitosa (RF-02).",
+    "properties": {
+     "access_token": {
+      "title": "Access Token",
+      "type": "string"
+     },
+     "expira_en": {
+      "format": "date-time",
+      "title": "Expira En",
+      "type": "string"
+     },
+     "rol": {
+      "$ref": "#/components/schemas/TipoPerfil"
+     },
+     "token_type": {
+      "default": "bearer",
+      "title": "Token Type",
+      "type": "string"
+     }
+    },
+    "required": [
+     "access_token",
+     "rol",
+     "expira_en"
+    ],
+    "title": "LoginResponse",
+    "type": "object"
+   },
+   "MateriaAutoregistroResponse": {
+    "description": "Materia mínima para el selector de la pantalla de autoregistro (`US-ADJ-43`).\n\nEndpoint público, sin JWT — expone solo `id`/`nombre`, sin los campos adicionales de\n`GET /materias` (`US-2.1.9`, protegido por rol).",
+    "properties": {
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre"
+    ],
+    "title": "MateriaAutoregistroResponse",
+    "type": "object"
+   },
+   "MateriaBasicaResponse": {
+    "description": "Representación de una materia sin su banco (alcanza para edición y baja).",
+    "properties": {
+     "activa": {
+      "title": "Activa",
+      "type": "boolean"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "activa"
+    ],
+    "title": "MateriaBasicaResponse",
+    "type": "object"
+   },
+   "MateriaEstudianteResponse": {
+    "description": "Materia de la comisión del Estudiante autenticado, devuelta por la API (RF-11).",
+    "properties": {
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre"
+    ],
+    "title": "MateriaEstudianteResponse",
+    "type": "object"
+   },
+   "MateriaListItemResponse": {
+    "description": "Representación de una materia en el listado, con la cantidad de preguntas activas.",
+    "properties": {
+     "activa": {
+      "title": "Activa",
+      "type": "boolean"
+     },
+     "banco_id": {
+      "format": "uuid",
+      "title": "Banco Id",
+      "type": "string"
+     },
+     "cantidad_preguntas_activas": {
+      "title": "Cantidad Preguntas Activas",
+      "type": "integer"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "banco_id",
+     "cantidad_preguntas_activas",
+     "activa"
+    ],
+    "title": "MateriaListItemResponse",
+    "type": "object"
+   },
+   "MateriaResponse": {
+    "description": "Representación de una materia (y su banco) devuelta por la API.",
+    "properties": {
+     "banco_id": {
+      "format": "uuid",
+      "title": "Banco Id",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "banco_id"
+    ],
+    "title": "MateriaResponse",
+    "type": "object"
+   },
+   "ModificarPeriodoDisponibilidadRequest": {
+    "description": "Body de la request de modificación del período de disponibilidad (US-3.3.1, RF-11b).",
+    "properties": {
+     "nueva_fecha_cierre": {
+      "format": "date-time",
+      "title": "Nueva Fecha Cierre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nueva_fecha_cierre"
+    ],
+    "title": "ModificarPeriodoDisponibilidadRequest",
+    "type": "object"
+   },
+   "ModificarTituloRequest": {
+    "description": "Body de la request de edición de título de una actividad (`US-ADJ-10`).",
+    "properties": {
+     "nuevo_titulo": {
+      "title": "Nuevo Titulo",
+      "type": "string"
+     }
+    },
+    "required": [
+     "nuevo_titulo"
+    ],
+    "title": "ModificarTituloRequest",
+    "type": "object"
+   },
+   "OpcionDistribuidaResponse": {
+    "description": "Cantidad de respuestas de una opción de la pregunta cerrada (`US-6.3.3`).",
+    "properties": {
+     "cantidad": {
+      "title": "Cantidad",
+      "type": "integer"
+     },
+     "opcion": {
+      "title": "Opcion",
+      "type": "string"
+     }
+    },
+    "required": [
+     "opcion",
+     "cantidad"
+    ],
+    "title": "OpcionDistribuidaResponse",
+    "type": "object"
+   },
+   "OpcionSchema": {
+    "description": "Una opción de respuesta en el body de la request.",
+    "properties": {
+     "es_correcta": {
+      "title": "Es Correcta",
+      "type": "boolean"
+     },
+     "texto": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Texto",
+      "type": "string"
+     }
+    },
+    "required": [
+     "texto",
+     "es_correcta"
+    ],
+    "title": "OpcionSchema",
+    "type": "object"
+   },
+   "ParticipacionEnVivoResponse": {
+    "description": "Confirmación de unión de un Estudiante a una sesión en vivo (`US-6.1.3`).",
+    "properties": {
+     "estudiante_id": {
+      "format": "uuid",
+      "title": "Estudiante Id",
+      "type": "string"
+     },
+     "sesion_id": {
+      "format": "uuid",
+      "title": "Sesion Id",
+      "type": "string"
+     },
+     "unido_en": {
+      "format": "date-time",
+      "title": "Unido En",
+      "type": "string"
+     }
+    },
+    "required": [
+     "sesion_id",
+     "estudiante_id",
+     "unido_en"
+    ],
+    "title": "ParticipacionEnVivoResponse",
+    "type": "object"
+   },
+   "ParticipanteResponse": {
+    "description": "Un Estudiante unido a la sesión, para la sala de espera del Docente (`US-6.2.8`).",
+    "properties": {
+     "estudiante_id": {
+      "format": "uuid",
+      "title": "Estudiante Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "unido_en": {
+      "format": "date-time",
+      "title": "Unido En",
+      "type": "string"
+     }
+    },
+    "required": [
+     "estudiante_id",
+     "unido_en",
+     "nombre"
+    ],
+    "title": "ParticipanteResponse",
+    "type": "object"
+   },
+   "PreguntaActualResponse": {
+    "description": "Pregunta actual de la sesión en vivo según lo que ya se reveló (`US-6.2.8`).",
+    "properties": {
+     "enunciado": {
+      "title": "Enunciado",
+      "type": "string"
+     },
+     "opciones": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opciones"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     },
+     "respuesta_correcta": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/RespuestaCorrectaResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "tipo": {
+      "title": "Tipo",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "enunciado",
+     "tipo"
+    ],
+    "title": "PreguntaActualResponse",
+    "type": "object"
+   },
+   "PreguntaAsignadaResponse": {
+    "description": "Representación de una `PreguntaAsignada` devuelta por la API.\n\n`enunciado`/`opciones` (`US-3.4.6`) traen el contenido para renderizar la Card de\n`#est-rendir` sin exponer la respuesta correcta — `opciones` es `None` para preguntas de\nVerdadero/Falso.",
+    "properties": {
+     "enunciado": {
+      "title": "Enunciado",
+      "type": "string"
+     },
+     "opciones": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opciones"
+     },
+     "orden": {
+      "title": "Orden",
+      "type": "integer"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "orden",
+     "enunciado",
+     "opciones"
+    ],
+    "title": "PreguntaAsignadaResponse",
+    "type": "object"
+   },
+   "PreguntaOpcionMultipleResponse": {
+    "description": "Representación de una pregunta de opción múltiple devuelta por la API.",
+    "properties": {
+     "activa": {
+      "title": "Activa",
+      "type": "boolean"
+     },
+     "banco_id": {
+      "format": "uuid",
+      "title": "Banco Id",
+      "type": "string"
+     },
+     "dificultad": {
+      "$ref": "#/components/schemas/Dificultad"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "importancia": {
+      "$ref": "#/components/schemas/Importancia"
+     },
+     "opciones": {
+      "items": {
+       "$ref": "#/components/schemas/OpcionSchema"
+      },
+      "title": "Opciones",
+      "type": "array"
+     },
+     "tema": {
+      "title": "Tema",
+      "type": "string"
+     },
+     "texto": {
+      "title": "Texto",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "banco_id",
+     "texto",
+     "opciones",
+     "unidad_tematica",
+     "tema",
+     "dificultad",
+     "importancia",
+     "activa"
+    ],
+    "title": "PreguntaOpcionMultipleResponse",
+    "type": "object"
+   },
+   "PreguntaVerdaderoFalsoResponse": {
+    "description": "Representación de una pregunta Verdadero/Falso devuelta por la API.",
+    "properties": {
+     "activa": {
+      "title": "Activa",
+      "type": "boolean"
+     },
+     "banco_id": {
+      "format": "uuid",
+      "title": "Banco Id",
+      "type": "string"
+     },
+     "dificultad": {
+      "$ref": "#/components/schemas/Dificultad"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "importancia": {
+      "$ref": "#/components/schemas/Importancia"
+     },
+     "respuesta_correcta": {
+      "title": "Respuesta Correcta",
+      "type": "boolean"
+     },
+     "tema": {
+      "title": "Tema",
+      "type": "string"
+     },
+     "texto": {
+      "title": "Texto",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "banco_id",
+     "texto",
+     "respuesta_correcta",
+     "unidad_tematica",
+     "tema",
+     "dificultad",
+     "importancia",
+     "activa"
+    ],
+    "title": "PreguntaVerdaderoFalsoResponse",
+    "type": "object"
+   },
+   "PreguntasPaginadasResponse": {
+    "description": "Página de preguntas junto con el total que matchea los filtros (US-ADJ-03).",
+    "properties": {
+     "preguntas": {
+      "items": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/PreguntaOpcionMultipleResponse"
+        },
+        {
+         "$ref": "#/components/schemas/PreguntaVerdaderoFalsoResponse"
+        }
+       ]
+      },
+      "title": "Preguntas",
+      "type": "array"
+     },
+     "total": {
+      "title": "Total",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "preguntas",
+     "total"
+    ],
+    "title": "PreguntasPaginadasResponse",
+    "type": "object"
+   },
+   "RankingItemResponse": {
+    "description": "Una fila del ranking de la sesión en vivo (`US-6.2.8`).",
+    "properties": {
+     "estudiante_id": {
+      "format": "uuid",
+      "title": "Estudiante Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "posicion": {
+      "title": "Posicion",
+      "type": "integer"
+     },
+     "puntaje_acumulado": {
+      "title": "Puntaje Acumulado",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "posicion",
+     "estudiante_id",
+     "puntaje_acumulado",
+     "nombre"
+    ],
+    "title": "RankingItemResponse",
+    "type": "object"
+   },
+   "RankingPreguntaFalladaResponse": {
+    "description": "Fila de `GET .../ranking-preguntas-falladas` (`US-ADJ-46`, RF-22).",
+    "properties": {
+     "cantidad_fallos": {
+      "title": "Cantidad Fallos",
+      "type": "integer"
+     },
+     "cantidad_presentaciones": {
+      "title": "Cantidad Presentaciones",
+      "type": "integer"
+     },
+     "enunciado": {
+      "title": "Enunciado",
+      "type": "string"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     },
+     "tasa_error": {
+      "title": "Tasa Error",
+      "type": "number"
+     },
+     "tema": {
+      "title": "Tema",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "enunciado",
+     "unidad_tematica",
+     "tema",
+     "cantidad_presentaciones",
+     "cantidad_fallos",
+     "tasa_error"
+    ],
+    "title": "RankingPreguntaFalladaResponse",
+    "type": "object"
+   },
+   "RegistrarEstudianteRequest": {
+    "description": "Body de la request de registro de un Estudiante vía invitación.",
+    "properties": {
+     "email": {
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     },
+     "nombre": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Nombre",
+      "type": "string"
+     },
+     "password": {
+      "minLength": 8,
+      "title": "Password",
+      "type": "string"
+     },
+     "token": {
+      "minLength": 1,
+      "title": "Token",
+      "type": "string"
+     }
+    },
+    "required": [
+     "token",
+     "nombre",
+     "email",
+     "password"
+    ],
+    "title": "RegistrarEstudianteRequest",
+    "type": "object"
+   },
+   "RegistrarRespuestaRequest": {
+    "description": "Body de la request de confirmación de una respuesta.",
+    "properties": {
+     "contenido": {
+      "additionalProperties": true,
+      "title": "Contenido",
+      "type": "object"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "contenido"
+    ],
+    "title": "RegistrarRespuestaRequest",
+    "type": "object"
+   },
+   "RegistroResponse": {
+    "description": "Representación del Estudiante registrado devuelta por la API.",
+    "properties": {
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "email": {
+      "title": "Email",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia": {
+      "title": "Materia",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "email",
+     "comision_id",
+     "materia"
+    ],
+    "title": "RegistroResponse",
+    "type": "object"
+   },
+   "ResetearPasswordRequest": {
+    "description": "Body de la request de reseteo de contraseña de una cuenta (`US-2.2.4`).",
+    "properties": {
+     "password_nueva": {
+      "minLength": 8,
+      "title": "Password Nueva",
+      "type": "string"
+     }
+    },
+    "required": [
+     "password_nueva"
+    ],
+    "title": "ResetearPasswordRequest",
+    "type": "object"
+   },
+   "ResponderEnVivoRequest": {
+    "description": "Body de la respuesta a una pregunta en vivo — `estudiante_id` sale del JWT (`US-6.2.4`).\n\n`contenido` debe ser exactamente `{\"opcion_indice\": int}` (opción múltiple) o\n`{\"valor\": bool}` (Verdadero/Falso), el mismo shape que `Respuesta.contenido`.",
+    "properties": {
+     "contenido": {
+      "additionalProperties": true,
+      "title": "Contenido",
+      "type": "object"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "contenido"
+    ],
+    "title": "ResponderEnVivoRequest",
+    "type": "object"
+   },
+   "RespuestaConfirmadaResponse": {
+    "description": "Contenido de la `Respuesta` vigente de una pregunta ya respondida (`US-ADJ-12`).\n\nExpone la propia elección del Estudiante (para prellenar `#est-rendir` al revisitar una\npregunta ya respondida) — nunca `es_correcta`, mismo criterio de \"sin feedback inmediato\"\nque `RespuestaResponse`.",
+    "properties": {
+     "contenido": {
+      "additionalProperties": true,
+      "title": "Contenido",
+      "type": "object"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "pregunta_id",
+     "contenido"
+    ],
+    "title": "RespuestaConfirmadaResponse",
+    "type": "object"
+   },
+   "RespuestaCorrectaResponse": {
+    "description": "Respuesta correcta de la pregunta actual — solo con la pregunta cerrada (`US-6.2.8`).",
+    "properties": {
+     "contenido": {
+      "additionalProperties": true,
+      "title": "Contenido",
+      "type": "object"
+     },
+     "opciones": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Opciones"
+     },
+     "texto": {
+      "title": "Texto",
+      "type": "string"
+     }
+    },
+    "required": [
+     "contenido",
+     "texto",
+     "opciones"
+    ],
+    "title": "RespuestaCorrectaResponse",
+    "type": "object"
+   },
+   "RespuestaEnVivoResponse": {
+    "description": "Feedback personal de una respuesta en vivo — sin ranking (`US-6.2.4`).",
+    "properties": {
+     "es_correcta": {
+      "title": "Es Correcta",
+      "type": "boolean"
+     },
+     "puntaje": {
+      "title": "Puntaje",
+      "type": "integer"
+     },
+     "puntaje_acumulado": {
+      "title": "Puntaje Acumulado",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "es_correcta",
+     "puntaje",
+     "puntaje_acumulado"
+    ],
+    "title": "RespuestaEnVivoResponse",
+    "type": "object"
+   },
+   "RespuestaResponse": {
+    "description": "Representación de una `Respuesta` devuelta por la API.\n\nSin `es_correcta` ni `contenido` — el estudiante no debe poder inferir si acertó desde la\nrespuesta HTTP (hot spot \"sin feedback inmediato\", `BC-actividad-evaluativa-modelo.md` §5).",
+    "properties": {
+     "confirmada_en": {
+      "format": "date-time",
+      "title": "Confirmada En",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "numero_intento": {
+      "title": "Numero Intento",
+      "type": "integer"
+     },
+     "pregunta_id": {
+      "format": "uuid",
+      "title": "Pregunta Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "pregunta_id",
+     "numero_intento",
+     "confirmada_en"
+    ],
+    "title": "RespuestaResponse",
+    "type": "object"
+   },
+   "ResultadoPreguntaResponse": {
+    "description": "Histograma + ranking de la pregunta actual ya cerrada (`US-6.3.3`).",
+    "properties": {
+     "distribucion": {
+      "items": {
+       "$ref": "#/components/schemas/OpcionDistribuidaResponse"
+      },
+      "title": "Distribucion",
+      "type": "array"
+     },
+     "ranking": {
+      "items": {
+       "$ref": "#/components/schemas/RankingItemResponse"
+      },
+      "title": "Ranking",
+      "type": "array"
+     }
+    },
+    "required": [
+     "distribucion",
+     "ranking"
+    ],
+    "title": "ResultadoPreguntaResponse",
+    "type": "object"
+   },
+   "ResumenDesempenoResponse": {
+    "description": "Acumulado sobre todas las evaluaciones finalizadas devueltas en el detalle.",
+    "properties": {
+     "cantidad_evaluaciones": {
+      "title": "Cantidad Evaluaciones",
+      "type": "integer"
+     },
+     "porcentaje_acierto": {
+      "title": "Porcentaje Acierto",
+      "type": "integer"
+     },
+     "total_correctas": {
+      "title": "Total Correctas",
+      "type": "integer"
+     },
+     "total_incorrectas": {
+      "title": "Total Incorrectas",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "total_correctas",
+     "total_incorrectas",
+     "porcentaje_acierto",
+     "cantidad_evaluaciones"
+    ],
+    "title": "ResumenDesempenoResponse",
+    "type": "object"
+   },
+   "RevisionEvaluacionResponse": {
+    "description": "Representación de una `RevisionEvaluacion` devuelta por la API (RF-13).",
+    "properties": {
+     "cantidad_correctas": {
+      "title": "Cantidad Correctas",
+      "type": "integer"
+     },
+     "cantidad_incorrectas": {
+      "title": "Cantidad Incorrectas",
+      "type": "integer"
+     },
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "detalle": {
+      "items": {
+       "$ref": "#/components/schemas/DetallePreguntaRevisionResponse"
+      },
+      "title": "Detalle",
+      "type": "array"
+     },
+     "evaluacion_id": {
+      "format": "uuid",
+      "title": "Evaluacion Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "evaluacion_id",
+     "cantidad_preguntas",
+     "cantidad_correctas",
+     "cantidad_incorrectas",
+     "detalle"
+    ],
+    "title": "RevisionEvaluacionResponse",
+    "type": "object"
+   },
+   "SesionEnVivoDetalleResponse": {
+    "description": "Fila de detalle de una sesión en vivo `Finalizada` en la que participó el Estudiante.",
+    "properties": {
+     "cantidad_correctas": {
+      "title": "Cantidad Correctas",
+      "type": "integer"
+     },
+     "cantidad_incorrectas": {
+      "title": "Cantidad Incorrectas",
+      "type": "integer"
+     },
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "comision_horario": {
+      "title": "Comision Horario",
+      "type": "string"
+     },
+     "finalizada_en": {
+      "format": "date-time",
+      "title": "Finalizada En",
+      "type": "string"
+     },
+     "posicion": {
+      "title": "Posicion",
+      "type": "integer"
+     },
+     "puntaje_final": {
+      "title": "Puntaje Final",
+      "type": "integer"
+     },
+     "sesion_id": {
+      "format": "uuid",
+      "title": "Sesion Id",
+      "type": "string"
+     },
+     "total_participantes": {
+      "title": "Total Participantes",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "sesion_id",
+     "comision_horario",
+     "finalizada_en",
+     "cantidad_preguntas",
+     "cantidad_correctas",
+     "cantidad_incorrectas",
+     "puntaje_final",
+     "posicion",
+     "total_participantes"
+    ],
+    "title": "SesionEnVivoDetalleResponse",
+    "type": "object"
+   },
+   "SesionEnVivoResponse": {
+    "description": "Resumen de una `ActividadEvaluativaEnVivo`, sin las preguntas (`US-6.1.2`/`US-6.1.4`).",
+    "properties": {
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     },
+     "pregunta_actual_indice": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pregunta Actual Indice"
+     },
+     "tema": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tema"
+     },
+     "tiempo_limite_por_pregunta_segundos": {
+      "title": "Tiempo Limite Por Pregunta Segundos",
+      "type": "integer"
+     },
+     "unidad_tematica": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unidad Tematica"
+     }
+    },
+    "required": [
+     "id",
+     "comision_id",
+     "materia_id",
+     "unidad_tematica",
+     "tema",
+     "cantidad_preguntas",
+     "tiempo_limite_por_pregunta_segundos",
+     "estado"
+    ],
+    "title": "SesionEnVivoResponse",
+    "type": "object"
+   },
+   "SesionEnVivoResumenResponse": {
+    "description": "Una sesión en vivo, para el listado por Comisión (`US-6.3.2`).",
+    "properties": {
+     "cantidad_preguntas": {
+      "title": "Cantidad Preguntas",
+      "type": "integer"
+     },
+     "comision_id": {
+      "format": "uuid",
+      "title": "Comision Id",
+      "type": "string"
+     },
+     "creada_en": {
+      "format": "date-time",
+      "title": "Creada En",
+      "type": "string"
+     },
+     "estado": {
+      "title": "Estado",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "materia_id": {
+      "format": "uuid",
+      "title": "Materia Id",
+      "type": "string"
+     },
+     "materia_nombre": {
+      "title": "Materia Nombre",
+      "type": "string"
+     },
+     "tema": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tema"
+     },
+     "tiempo_limite_por_pregunta_segundos": {
+      "title": "Tiempo Limite Por Pregunta Segundos",
+      "type": "integer"
+     },
+     "unidad_tematica": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unidad Tematica"
+     }
+    },
+    "required": [
+     "id",
+     "comision_id",
+     "materia_id",
+     "materia_nombre",
+     "cantidad_preguntas",
+     "tiempo_limite_por_pregunta_segundos",
+     "estado",
+     "unidad_tematica",
+     "tema",
+     "creada_en"
+    ],
+    "title": "SesionEnVivoResumenResponse",
+    "type": "object"
+   },
+   "SolicitarRecuperacionPasswordRequest": {
+    "description": "Body de la request de solicitud de recuperación de contraseña (`US-ADJ-38`).",
+    "properties": {
+     "email": {
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     }
+    },
+    "required": [
+     "email"
+    ],
+    "title": "SolicitarRecuperacionPasswordRequest",
+    "type": "object"
+   },
+   "SolicitarRecuperacionPasswordResponse": {
+    "description": "Respuesta genérica de la solicitud — igual exista o no la cuenta (INV-ID-17).",
+    "properties": {
+     "mensaje": {
+      "default": "Si el email ingresado corresponde a una cuenta, te enviamos un link de recuperación.",
+      "title": "Mensaje",
+      "type": "string"
+     }
+    },
+    "title": "SolicitarRecuperacionPasswordResponse",
+    "type": "object"
+   },
+   "TasaErrorTemaResponse": {
+    "description": "Fila de `GET /analytics/materias/{materia_id}/tasa-error-por-tema` (RF-17).",
+    "properties": {
+     "cantidad_incorrectas": {
+      "title": "Cantidad Incorrectas",
+      "type": "integer"
+     },
+     "cantidad_respuestas": {
+      "title": "Cantidad Respuestas",
+      "type": "integer"
+     },
+     "tasa_error": {
+      "title": "Tasa Error",
+      "type": "number"
+     },
+     "tema": {
+      "title": "Tema",
+      "type": "string"
+     },
+     "unidad_tematica": {
+      "title": "Unidad Tematica",
+      "type": "string"
+     }
+    },
+    "required": [
+     "unidad_tematica",
+     "tema",
+     "cantidad_respuestas",
+     "cantidad_incorrectas",
+     "tasa_error"
+    ],
+    "title": "TasaErrorTemaResponse",
+    "type": "object"
+   },
+   "TipoPerfil": {
+    "description": "Rol de un usuario dentro de la plataforma.",
+    "enum": [
+     "administrador",
+     "docente",
+     "estudiante"
+    ],
+    "title": "TipoPerfil",
+    "type": "string"
+   },
+   "UsuarioResponse": {
+    "description": "Representación de un usuario devuelta por la API.",
+    "properties": {
+     "email": {
+      "title": "Email",
+      "type": "string"
+     },
+     "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+     },
+     "nombre": {
+      "title": "Nombre",
+      "type": "string"
+     },
+     "perfil": {
+      "$ref": "#/components/schemas/TipoPerfil"
+     }
+    },
+    "required": [
+     "id",
+     "nombre",
+     "email",
+     "perfil"
+    ],
+    "title": "UsuarioResponse",
+    "type": "object"
+   },
+   "ValidationError": {
+    "properties": {
+     "ctx": {
+      "title": "Context",
+      "type": "object"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "title": "Location",
+      "type": "array"
+     },
+     "msg": {
+      "title": "Message",
+      "type": "string"
+     },
+     "type": {
+      "title": "Error Type",
+      "type": "string"
+     }
+    },
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError",
+    "type": "object"
+   }
+  },
+  "securitySchemes": {
+   "HTTPBearer": {
+    "scheme": "bearer",
+    "type": "http"
+   }
+  }
+ },
+ "info": {
+  "title": "Cognion",
+  "version": "1.0.0"
+ },
+ "openapi": "3.1.0",
+ "paths": {
+  "/actividades": {
+   "get": {
+    "description": "Lista las actividades de una materia con estado derivado y conteos (`US-3.4.2`, RF-11).\n\nEl Docente solo ve las actividades de una materia donde tiene al menos una Comisión\nasignada (`US-ADJ-57`); 403 si no.",
+    "operationId": "listar_actividades_actividades_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ActividadResumenResponse"
+         },
+         "title": "Response Listar Actividades Actividades Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Actividades",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   },
+   "post": {
+    "description": "Crea una actividad de período abierto; responde 404/422/403 ante los rechazos de dominio.\n\n403 si el Docente no tiene ninguna Comisión asignada en `materia_id`, o si alguna de\n`comisiones_ids` no es una Comisión propia (`US-ADJ-57`).",
+    "operationId": "crear_actividad_actividades_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CrearActividadRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ActividadResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Crear Actividad",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/actividades/mis-actividades": {
+   "get": {
+    "description": "Actividades de una materia con el `Badge` de estado del Estudiante autenticado (`US-3.4.5`).\n\nRegistrada antes de `/{actividad_id}` — es una ruta literal, no debe resolverse como un\n`actividad_id`.",
+    "operationId": "listar_mis_actividades_actividades_mis_actividades_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ActividadVisibleResponse"
+         },
+         "title": "Response Listar Mis Actividades Actividades Mis Actividades Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Mis Actividades",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/actividades/{actividad_id}": {
+   "get": {
+    "description": "Detalle de una actividad puntual, con estado derivado y conteos (`US-3.4.4`, RF-11b).\n\n403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad\n(`US-ADJ-57`).",
+    "operationId": "obtener_actividad_actividades__actividad_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "actividad_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Actividad Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ActividadResumenResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Actividad",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/actividades/{actividad_id}/cerrar": {
+   "post": {
+    "description": "Cierra manualmente la actividad, finalizando en cascada sus evaluaciones activas (RF-11b).\n\n403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad\n(`US-ADJ-57`).",
+    "operationId": "cerrar_actividad_actividades__actividad_id__cerrar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "actividad_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Actividad Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ActividadResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Cerrar Actividad",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/actividades/{actividad_id}/periodo": {
+   "patch": {
+    "description": "Extiende o acorta `fecha_cierre` de una actividad vigente (RF-11b).\n\n403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad\n(`US-ADJ-57`).",
+    "operationId": "modificar_periodo_disponibilidad_actividades__actividad_id__periodo_patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "actividad_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Actividad Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ModificarPeriodoDisponibilidadRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ActividadResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Modificar Periodo Disponibilidad",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/actividades/{actividad_id}/titulo": {
+   "patch": {
+    "description": "Edita el título de una actividad, sin importar su estado (`US-ADJ-10`).\n\n403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad\n(`US-ADJ-57`).",
+    "operationId": "modificar_titulo_actividades__actividad_id__titulo_patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "actividad_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Actividad Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ModificarTituloRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ActividadResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Modificar Titulo",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/analytics/actividades/{actividad_id}/completitud": {
+   "get": {
+    "description": "Completitud del roster aplicable de una actividad puntual (`US-ADJ-47`, RF-23).\n\n`actividad_id` inexistente → 404 (`ActividadNoExiste`). Docente sin Comisión asignada en\nla materia de la actividad → 403 (`US-ADJ-57`).",
+    "operationId": "obtener_completitud_por_actividad_analytics_actividades__actividad_id__completitud_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "actividad_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Actividad Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CompletitudPorActividadResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Completitud Por Actividad",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/comisiones/{comision_id}/desempeno": {
+   "get": {
+    "description": "Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20).\n\n`comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`, mismo\ncriterio que `obtener_tasa_error_por_tema`). Docente sin autorización → 403 (`US-ADJ-57`).",
+    "operationId": "obtener_desempeno_por_comision_analytics_materias__materia_id__comisiones__comision_id__desempeno_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/DesempenoComisionFilaResponse"
+         },
+         "title": "Response Obtener Desempeno Por Comision Analytics Materias  Materia Id  Comisiones  Comision Id  Desempeno Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Desempeno Por Comision",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/comisiones/{comision_id}/evolucion-temporal": {
+   "get": {
+    "description": "Evolución temporal promedio de una comisión (`US-ADJ-45`, RF-21).\n\n`comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`).\nDocente sin autorización → 403 (`US-ADJ-57`).",
+    "operationId": "obtener_evolucion_temporal_comision_analytics_materias__materia_id__comisiones__comision_id__evolucion_temporal_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/EvolucionTemporalComisionPuntoResponse"
+         },
+         "title": "Response Obtener Evolucion Temporal Comision Analytics Materias  Materia Id  Comisiones  Comision Id  Evolucion Temporal Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Evolucion Temporal Comision",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/estudiantes/{estudiante_id}/desempeno": {
+   "get": {
+    "description": "Desempeño de un Estudiante elegido por el Docente en `materia_id`: detalle y resumen (RF-16).\n\nEl Docente debe tener al menos una Comisión asignada en `materia_id` (`US-ADJ-57`) —\nreemplaza el hot spot de autorización documentado en\n`docs/design/domain/BC-analytics-modelo.md` §4. A diferencia de `obtener_mi_desempeno`,\nacá `estudiante_id` sí puede ser inválido (viene del path, no del token) — se valida su\nexistencia antes de invocar el Use Case.",
+    "operationId": "obtener_desempeno_de_estudiante_analytics_materias__materia_id__estudiantes__estudiante_id__desempeno_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "estudiante_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Estudiante Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DesempenoEstudianteResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Desempeno De Estudiante",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/estudiantes/{estudiante_id}/evolucion-temporal": {
+   "get": {
+    "description": "Evolución temporal individual de un estudiante (`US-ADJ-45`, RF-21).\n\n`estudiante_id` inexistente → 404, mismo criterio que `obtener_desempeno_de_estudiante`.\nDocente sin Comisión asignada en `materia_id` → 403 (`US-ADJ-57`).",
+    "operationId": "obtener_evolucion_temporal_estudiante_analytics_materias__materia_id__estudiantes__estudiante_id__evolucion_temporal_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "estudiante_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Estudiante Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/EvolucionTemporalPuntoResponse"
+         },
+         "title": "Response Obtener Evolucion Temporal Estudiante Analytics Materias  Materia Id  Estudiantes  Estudiante Id  Evolucion Temporal Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Evolucion Temporal Estudiante",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/mi-desempeno": {
+   "get": {
+    "description": "Desempeño del Estudiante autenticado en `materia_id`: detalle y resumen (RF-15).\n\n`estudiante_id` sale siempre del token — nunca de un parámetro de la request, evita que\nun estudiante consulte el desempeño de otro (esa consulta es exclusiva del Docente,\n`US-4.2.1`, con su propio endpoint y su propia verificación de rol).",
+    "operationId": "obtener_mi_desempeno_analytics_materias__materia_id__mi_desempeno_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DesempenoEstudianteResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Mi Desempeno",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/ranking-preguntas-falladas": {
+   "get": {
+    "description": "Ranking de preguntas más falladas de una materia, agregado o acotado a comisión (RF-22).\n\nSin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`\n→ 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización → 403 (`US-ADJ-57`).",
+    "operationId": "obtener_ranking_preguntas_falladas_analytics_materias__materia_id__ranking_preguntas_falladas_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "comision_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "format": "uuid",
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Comision Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RankingPreguntaFalladaResponse"
+         },
+         "title": "Response Obtener Ranking Preguntas Falladas Analytics Materias  Materia Id  Ranking Preguntas Falladas Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Ranking Preguntas Falladas",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/analytics/materias/{materia_id}/tasa-error-por-tema": {
+   "get": {
+    "description": "Tasa de error por unidad/tema de una materia, agregada o acotada a una comisión (RF-17).\n\nSin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`\n→ 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización sobre la materia, o sobre\nla comisión puntual → 403 (`US-ADJ-57`).",
+    "operationId": "obtener_tasa_error_por_tema_analytics_materias__materia_id__tasa_error_por_tema_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "comision_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "format": "uuid",
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Comision Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/TasaErrorTemaResponse"
+         },
+         "title": "Response Obtener Tasa Error Por Tema Analytics Materias  Materia Id  Tasa Error Por Tema Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Tasa Error Por Tema",
+    "tags": [
+     "analytics"
+    ]
+   }
+  },
+  "/bancos/{banco_id}/preguntas": {
+   "get": {
+    "description": "Filtra las preguntas activas del banco por cualquier combinación de metadatos.\n\nLos filtros son opcionales y combinables (AND). `pagina`/`tamanio_pagina` son opt-in\n(US-ADJ-03): si se omite alguno, la respuesta trae todas las preguntas que matchean, sin\npaginar — mismo comportamiento que antes de esta US. Responde 404 si el banco no existe,\n403 si el Docente no tiene ninguna Comisión asignada en la materia del banco (`US-ADJ-57`).",
+    "operationId": "filtrar_preguntas_bancos__banco_id__preguntas_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "banco_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Banco Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "unidad",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Unidad"
+      }
+     },
+     {
+      "in": "query",
+      "name": "tema",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tema"
+      }
+     },
+     {
+      "in": "query",
+      "name": "dificultad",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Dificultad"
+      }
+     },
+     {
+      "in": "query",
+      "name": "importancia",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Importancia"
+      }
+     },
+     {
+      "in": "query",
+      "name": "pagina",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "minimum": 1,
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Pagina"
+      }
+     },
+     {
+      "in": "query",
+      "name": "tamanio_pagina",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "minimum": 1,
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tamanio Pagina"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PreguntasPaginadasResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Filtrar Preguntas",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/comisiones": {
+   "post": {
+    "description": "Crea una comisión nueva a nombre del administrador indicado; 422 si la materia no existe.",
+    "operationId": "crear_comision_comisiones_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CrearComisionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComisionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Crear Comision",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}": {
+   "delete": {
+    "description": "Borra la comisión, o la deshabilita si tiene estudiantes inscriptos.\n\n204 si se borró físicamente; 200 con la comisión (`activa=false`) si se deshabilitó.\n404 si la comisión no existe.",
+    "operationId": "eliminar_comision_comisiones__comision_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Eliminar Comision",
+    "tags": [
+     "identidad"
+    ]
+   },
+   "get": {
+    "description": "Detalle de una comisión puntual; 404 si `comision_id` no existe (`US-ADJ-25`).\n\n403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).",
+    "operationId": "obtener_comision_comisiones__comision_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComisionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Comision",
+    "tags": [
+     "identidad"
+    ]
+   },
+   "patch": {
+    "description": "Corrige el horario de una comisión existente; 404 si no existe.",
+    "operationId": "editar_comision_comisiones__comision_id__patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EditarComisionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComisionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Editar Comision",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/activar": {
+   "post": {
+    "description": "Reactiva una comisión deshabilitada; 404 si no existe.",
+    "operationId": "activar_comision_comisiones__comision_id__activar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComisionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Activar Comision",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/docentes": {
+   "post": {
+    "description": "Asigna un docente a la comisión; responde 422/404 según el error de dominio.",
+    "operationId": "asignar_docente_comisiones__comision_id__docentes_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AsignarDocenteRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ComisionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Asignar Docente",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/estudiantes": {
+   "get": {
+    "description": "Estudiantes inscriptos en la comisión; 404 si `comision_id` no existe (`US-4.2.2`).\n\n403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).",
+    "operationId": "listar_estudiantes_comisiones__comision_id__estudiantes_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/EstudianteResumenResponse"
+         },
+         "title": "Response Listar Estudiantes Comisiones  Comision Id  Estudiantes Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Estudiantes",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/invitaciones": {
+   "post": {
+    "description": "Genera una invitación para la comisión; responde 422/404/403 según el error de dominio.\n\n403 si el Docente que llama no está asignado a `comision_id` (`US-ADJ-57`).",
+    "operationId": "generar_invitacion_comisiones__comision_id__invitaciones_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GenerarInvitacionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvitacionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Generar Invitacion",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/invitaciones-grupales": {
+   "post": {
+    "description": "Genera el link grupal de la comisión y desactiva el grupal vigente anterior.\n\nResponde 403 si el Docente no está asignado, 404 si la comisión no existe y 422 si\n`duracion_minutos` no es 15, 60 ni 1440.",
+    "operationId": "generar_invitacion_grupal_comisiones__comision_id__invitaciones_grupales_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GenerarInvitacionGrupalRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvitacionGrupalResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Generar Invitacion Grupal",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/invitaciones-grupales/ultima": {
+   "get": {
+    "description": "Devuelve el estado del último link grupal, o `null` si la comisión nunca generó uno.",
+    "operationId": "obtener_ultima_invitacion_grupal_comisiones__comision_id__invitaciones_grupales_ultima_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "anyOf": [
+          {
+           "$ref": "#/components/schemas/InvitacionGrupalEstadoResponse"
+          },
+          {
+           "type": "null"
+          }
+         ],
+         "title": "Response Obtener Ultima Invitacion Grupal Comisiones  Comision Id  Invitaciones Grupales Ultima Get"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Ultima Invitacion Grupal",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/comisiones/{comision_id}/invitaciones-grupales/{invitacion_id}/revocar": {
+   "post": {
+    "description": "Desactiva el link grupal; idempotente. 403 si el Docente no está asignado, 404 si no hay.",
+    "operationId": "revocar_invitacion_grupal_comisiones__comision_id__invitaciones_grupales__invitacion_id__revocar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "comision_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Comision Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "path",
+      "name": "invitacion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Invitacion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Revocar Invitacion Grupal",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/evaluaciones": {
+   "post": {
+    "description": "Inicia la evaluación del Estudiante autenticado, o retoma la existente (INV-AE-05/06).\n\nResponde 404/422 ante los rechazos de dominio.",
+    "operationId": "iniciar_evaluacion_evaluaciones_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/IniciarEvaluacionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluacionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Iniciar Evaluacion",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/evaluaciones/{evaluacion_id}/finalizar": {
+   "post": {
+    "description": "Finaliza explícitamente la evaluación del Estudiante autenticado (RF-13).\n\nResponde 404/422 ante los rechazos de dominio. No valida período vigente.",
+    "operationId": "finalizar_evaluacion_evaluaciones__evaluacion_id__finalizar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "evaluacion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Evaluacion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluacionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Finalizar Evaluacion",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/evaluaciones/{evaluacion_id}/reanudar": {
+   "post": {
+    "description": "Reanuda explícitamente la evaluación suspendida del Estudiante autenticado (INV-AE-11).\n\nResponde 404/422 ante los rechazos de dominio.",
+    "operationId": "reanudar_evaluacion_evaluaciones__evaluacion_id__reanudar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "evaluacion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Evaluacion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluacionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Reanudar Evaluacion",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/evaluaciones/{evaluacion_id}/respuestas": {
+   "post": {
+    "description": "Confirma una respuesta del Estudiante autenticado — persistencia atómica (INV-AE-09).\n\nResponde 404/422 ante los rechazos de dominio. No informa `es_correcta` en la respuesta.",
+    "operationId": "registrar_respuesta_evaluaciones__evaluacion_id__respuestas_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "evaluacion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Evaluacion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RegistrarRespuestaRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RespuestaResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Registrar Respuesta",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/evaluaciones/{evaluacion_id}/revision": {
+   "get": {
+    "description": "Devuelve la revisión completa de una evaluación (RF-13).\n\nEl propio Estudiante dueño siempre puede pedir la suya. Un Docente puede pedir la de\ncualquier Estudiante — drill-down de \"Desempeño por comisión\" (`US-ADJ-44`, RF-20), sin\nverificación de pertenencia Docente↔Materia (RBAC por rol, mismo precedente que `US-4.2.1`).\nResponde 404/422 ante los rechazos de dominio — 422 si todavía no fue finalizada.",
+    "operationId": "obtener_revision_evaluaciones__evaluacion_id__revision_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "evaluacion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Evaluacion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RevisionEvaluacionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Revision",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/evaluaciones/{evaluacion_id}/suspender": {
+   "post": {
+    "description": "Pausa explícitamente la evaluación del Estudiante autenticado (INV-AE-12).\n\nResponde 404/422 ante los rechazos de dominio. No valida período vigente.",
+    "operationId": "suspender_evaluacion_evaluaciones__evaluacion_id__suspender_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "evaluacion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Evaluacion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluacionResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Suspender Evaluacion",
+    "tags": [
+     "actividad_evaluativa"
+    ]
+   }
+  },
+  "/health": {
+   "get": {
+    "description": "Reporta que el servicio está arriba y qué versión corre (`US-10.2.1`).",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "title": "Response Health Health Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Health",
+    "tags": [
+     "infra"
+    ]
+   }
+  },
+  "/health/ready": {
+   "get": {
+    "description": "Reporta si la aplicación puede atender pedidos: comprueba que la base de datos responde.\n\nA diferencia de `/health` (el proceso está vivo), responde 503 si la base no está disponible.\nEl cuerpo no incluye el motivo; el error real queda en el log, sin credenciales (`US-8.3.3`).",
+    "operationId": "health_ready_health_ready_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Health Ready",
+    "tags": [
+     "infra"
+    ]
+   }
+  },
+  "/identidad/autoregistro/docente": {
+   "post": {
+    "description": "Crea una cuenta de Docente activa de inmediato; endpoint público, sin JWT.\n\nResponde 409 si el email ya está registrado, o 422 si `password` no cumple INV-ID-11\n(ampliada, `US-ADJ-36`).",
+    "operationId": "autoregistrar_docente_identidad_autoregistro_docente_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AutoregistrarDocenteRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AutoregistroResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Autoregistrar Docente",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/autoregistro/estudiante": {
+   "post": {
+    "description": "Crea una cuenta de Estudiante activa de inmediato; endpoint público, sin JWT.\n\nResponde 409 si el email ya está registrado, 422 si `comision_id` no existe\n(`ComisionNoExiste`, INV-ID-14) o si `password` no cumple INV-ID-11 (ampliada, `US-ADJ-36`).",
+    "operationId": "autoregistrar_estudiante_identidad_autoregistro_estudiante_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AutoregistrarEstudianteRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AutoregistroResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Autoregistrar Estudiante",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/autoregistro/materias": {
+   "get": {
+    "description": "Lista las materias para el selector de la pantalla de autoregistro de Estudiante.\n\nEndpoint público, sin JWT (`US-ADJ-43`) — quien se autoregistra todavía no tiene cuenta,\nno puede llamar `GET /materias` (`US-2.1.9`, exige rol `docente`/`administrador`). Expone\nsolo `id`/`nombre`, sin los campos adicionales de ese endpoint protegido.",
+    "operationId": "listar_materias_autoregistro_identidad_autoregistro_materias_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/MateriaAutoregistroResponse"
+         },
+         "title": "Response Listar Materias Autoregistro Identidad Autoregistro Materias Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "summary": "Listar Materias Autoregistro",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/autoregistro/materias/{materia_id}/comisiones": {
+   "get": {
+    "description": "Lista las comisiones activas de una materia para el mismo selector.\n\nEndpoint público, sin JWT (`US-ADJ-43`) — mismo motivo que `listar_materias_autoregistro`.\nMateria inexistente o sin comisiones → lista vacía (no distingue, mismo criterio que\n`ComisionQueryPort.listar_comisiones_por_materia`).",
+    "operationId": "listar_comisiones_autoregistro_identidad_autoregistro_materias__materia_id__comisiones_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ComisionAutoregistroResponse"
+         },
+         "title": "Response Listar Comisiones Autoregistro Identidad Autoregistro Materias  Materia Id  Comisiones Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Listar Comisiones Autoregistro",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/estudiante/materias": {
+   "get": {
+    "description": "Devuelve la materia de la comisión del Estudiante autenticado.",
+    "operationId": "listar_mis_materias_identidad_estudiante_materias_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/MateriaEstudianteResponse"
+         },
+         "title": "Response Listar Mis Materias Identidad Estudiante Materias Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Mis Materias",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/invitaciones/{token}": {
+   "get": {
+    "description": "Vista previa de una invitación por token, sin consumirla; endpoint público, sin JWT.\n\nResponde 404 si el token no corresponde a ninguna invitación, o 422 si ya venció, la\ndesactivaron o ya fue usada; `detail.codigo` informa el motivo (`invitacion_invalida`,\n`invitacion_vencida`, `invitacion_revocada` o `invitacion_usada`, `US-ADJ-67`) porque es una\nconsulta anónima por token, sin riesgo de enumerar invitaciones ajenas (`US-ADJ-08`).",
+    "operationId": "obtener_invitacion_identidad_invitaciones__token__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "token",
+      "required": true,
+      "schema": {
+       "title": "Token",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvitacionPreviewResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Obtener Invitacion",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/login": {
+   "post": {
+    "description": "Autentica un Usuario y emite su JWT; responde 401 genérico ante credenciales inválidas.\n\nEl mensaje de error no distingue si el email existe o no (`US-1.1.4`), salvo en el 2.º fallo\nconsecutivo de una cuenta existente: ahí el `detail` es un objeto con `mensaje` e\n`intentos_restantes = 1`, para avisar que el próximo intento la bloquea (`US-ADJ-69`).\nResponde 403 si la\ncuenta está bloqueada por 3 intentos fallidos consecutivos (`US-2.2.1`), con el `detail` en\ntexto plano. Responde 403 también si la cuenta está deshabilitada (`US-ADJ-59`), pero con un\n`detail` estructurado `{\"codigo\": \"cuenta_deshabilitada\", \"mensaje\": ...}` para que el\nfrontend distinga los dos casos sin interpretar el texto. Responde 403\n`cuenta_bloqueada_temporal` (con `reintentar_en_segundos`) si es el último Administrador\noperativo bloqueado (`US-ADJ-60`).",
+    "operationId": "login_identidad_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LoginResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Login",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/recuperar-password/confirmar": {
+   "post": {
+    "description": "Canjea un token de recuperación por una contraseña nueva; endpoint público, sin JWT.\n\nResponde 422 si el token no es válido (inexistente, vencido o ya usado — mismo status y\ncriterio que `InvitacionInvalida`/`InvitacionVencida`/`InvitacionYaUsada` en\n`registro_router.py`) o si `password_nueva` no cumple INV-ID-11 ampliada. Desbloquea la\ncuenta y resetea sus contadores de intentos fallidos (`US-ADJ-62`); no reactiva una cuenta\ndeshabilitada.",
+    "operationId": "confirmar_recuperacion_password_identidad_recuperar_password_confirmar_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ConfirmarRecuperacionPasswordRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ConfirmarRecuperacionPasswordResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Confirmar Recuperacion Password",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/recuperar-password/solicitar": {
+   "post": {
+    "description": "Solicita la recuperación de contraseña; endpoint público, sin JWT.\n\nResponde siempre 202 con el mismo mensaje genérico, exista o no una cuenta con ese email\n(INV-ID-17) — no hay ninguna excepción de dominio que mapear a un status distinto.",
+    "operationId": "solicitar_recuperacion_password_identidad_recuperar_password_solicitar_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SolicitarRecuperacionPasswordRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SolicitarRecuperacionPasswordResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Solicitar Recuperacion Password",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/identidad/registro": {
+   "post": {
+    "description": "Registra un Estudiante vía invitación; endpoint público, sin JWT (aún no autenticado).\n\nResponde 409 si el email ya está registrado, 422 si la invitación no es válida (inexistente,\nvencida, desactivada o ya usada) o si `password` no cumple INV-ID-11 (`US-ADJ-36`). El\n`detail.codigo` distingue el motivo, y `password_invalida` no se confunde con un link inválido\n(`US-ADJ-67`).",
+    "operationId": "registrar_estudiante_identidad_registro_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RegistrarEstudianteRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RegistroResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "summary": "Registrar Estudiante",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/materias": {
+   "get": {
+    "description": "Lista las materias con la cantidad de preguntas activas de cada una.\n\nRol `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3).\n`incluir_inactivas=True` también trae las deshabilitadas — lo usa la pantalla de gestión\nde Materias para poder reactivarlas; el resto de los consumidores (selectores) sigue\nviendo solo las activas. Un Docente solo ve las materias donde tiene al menos una\nComisión asignada (`US-ADJ-57`); el Administrador ve todas, sin filtrar.",
+    "operationId": "listar_materias_materias_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "incluir_inactivas",
+      "required": false,
+      "schema": {
+       "default": false,
+       "title": "Incluir Inactivas",
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/MateriaListItemResponse"
+         },
+         "title": "Response Listar Materias Materias Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Materias",
+    "tags": [
+     "banco_preguntas"
+    ]
+   },
+   "post": {
+    "description": "Crea una materia nueva y su banco asociado; responde 409 si el nombre ya existe.\n\nRol `administrador` exclusivamente — unificación con Comisión (hallazgo de UAT\n2026-09-15): el Administrador arma la estructura Materia→Comisión→Docente, el Docente\nconsume (carga/edita preguntas en el banco), no crea Materias.",
+    "operationId": "crear_materia_materias_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CrearMateriaRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MateriaResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Crear Materia",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/materias/{materia_id}": {
+   "delete": {
+    "description": "Borra la materia, o la deshabilita si tiene preguntas cargadas o comisiones asociadas.\n\n204 si se borró físicamente (borra también su banco vacío); 200 con la materia\n(`activa=false`) si se deshabilitó. 404 si la materia no existe.",
+    "operationId": "eliminar_materia_materias__materia_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Eliminar Materia",
+    "tags": [
+     "banco_preguntas"
+    ]
+   },
+   "patch": {
+    "description": "Corrige el nombre de una materia existente.\n\nRol `administrador` exclusivamente (unificación con Comisión, hallazgo de UAT\n2026-09-15). Responde 404 si la materia no existe, 409 si el nombre nuevo ya pertenece\na otra.",
+    "operationId": "editar_materia_materias__materia_id__patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EditarMateriaRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MateriaBasicaResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Editar Materia",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/materias/{materia_id}/activar": {
+   "post": {
+    "description": "Reactiva una materia deshabilitada; 404 si no existe.",
+    "operationId": "activar_materia_materias__materia_id__activar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MateriaBasicaResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Activar Materia",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/materias/{materia_id}/comisiones": {
+   "get": {
+    "description": "Comisiones de la materia, con sus docentes asignados.\n\n404 si `materia_id` no existe (`US-4.2.2`, `docentes_asignados` agregado en `US-ADJ-23`).\n`incluir_inactivas=True` también trae las deshabilitadas — lo usa la pantalla de gestión\nde Comisiones del Administrador; el resto de los consumidores sigue viendo solo las\nactivas. El Docente ve solo sus propias comisiones; 403 si no tiene ninguna en esta\nmateria (`US-ADJ-57`) — el Administrador ve todas, sin filtrar.",
+    "operationId": "listar_comisiones_por_materia_materias__materia_id__comisiones_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "materia_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Materia Id",
+       "type": "string"
+      }
+     },
+     {
+      "in": "query",
+      "name": "incluir_inactivas",
+      "required": false,
+      "schema": {
+       "default": false,
+       "title": "Incluir Inactivas",
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ComisionResumenResponse"
+         },
+         "title": "Response Listar Comisiones Por Materia Materias  Materia Id  Comisiones Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Comisiones Por Materia",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/preguntas/opcion-multiple": {
+   "post": {
+    "description": "Carga una pregunta de opción múltiple.\n\nResponde 404 si el banco no existe, 422 si las opciones son inválidas, 403 si el Docente\nno tiene ninguna Comisión asignada en la materia del banco (`US-ADJ-57`).",
+    "operationId": "cargar_pregunta_opcion_multiple_preguntas_opcion_multiple_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CargarPreguntaOpcionMultipleRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PreguntaOpcionMultipleResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Cargar Pregunta Opcion Multiple",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/preguntas/verdadero-falso": {
+   "post": {
+    "description": "Carga una pregunta Verdadero/Falso.\n\nResponde 404 si el banco no existe, 403 si el Docente no tiene ninguna Comisión\nasignada en la materia del banco (`US-ADJ-57`).",
+    "operationId": "cargar_pregunta_verdadero_falso_preguntas_verdadero_falso_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CargarPreguntaVerdaderoFalsoRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PreguntaVerdaderoFalsoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Cargar Pregunta Verdadero Falso",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/preguntas/{pregunta_id}": {
+   "delete": {
+    "description": "Elimina (baja lógica) una pregunta existente.\n\nLa fila persiste con `activa = false` — no se borra físicamente (INV-BP-04).\nResponde 404 si la pregunta no existe, 409 si ya estaba eliminada, 403 si el Docente no\ntiene ninguna Comisión asignada en la materia del banco de la pregunta (`US-ADJ-57`).",
+    "operationId": "eliminar_pregunta_preguntas__pregunta_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "pregunta_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Pregunta Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Eliminar Pregunta",
+    "tags": [
+     "banco_preguntas"
+    ]
+   },
+   "put": {
+    "description": "Edita una pregunta existente (texto, opciones/respuesta, metadatos).\n\nEl tipo de la pregunta (Opción Múltiple / Verdadero-Falso) no es editable.\nResponde 404 si la pregunta no existe, 409 si está inactiva, 422 si las opciones editadas\nson inválidas, 403 si el Docente no tiene ninguna Comisión asignada en la materia del\nbanco de la pregunta (`US-ADJ-57`).",
+    "operationId": "editar_pregunta_preguntas__pregunta_id__put",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "pregunta_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Pregunta Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EditarPreguntaRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "anyOf": [
+          {
+           "$ref": "#/components/schemas/PreguntaOpcionMultipleResponse"
+          },
+          {
+           "$ref": "#/components/schemas/PreguntaVerdaderoFalsoResponse"
+          }
+         ],
+         "title": "Response Editar Pregunta Preguntas  Pregunta Id  Put"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Editar Pregunta",
+    "tags": [
+     "banco_preguntas"
+    ]
+   }
+  },
+  "/sesiones-en-vivo": {
+   "get": {
+    "description": "Lista las sesiones en vivo de una Comisión (la del Estudiante, o la que indique el Docente).\n\n422 si el Docente no indica `comision_id`; 403 si el Estudiante pide la de otro.",
+    "operationId": "listar_sesiones_en_vivo_sesiones_en_vivo_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "comision_id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "format": "uuid",
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Comision Id"
+      }
+     },
+     {
+      "in": "query",
+      "name": "estado",
+      "required": false,
+      "schema": {
+       "default": [
+        "EnEspera",
+        "EnCurso"
+       ],
+       "items": {
+        "$ref": "#/components/schemas/EstadoSesionEnVivo"
+       },
+       "title": "Estado",
+       "type": "array"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/SesionEnVivoResumenResponse"
+         },
+         "title": "Response Listar Sesiones En Vivo Sesiones En Vivo Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Sesiones En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   },
+   "post": {
+    "description": "Crea una sesión en vivo para una Comisión; responde 404/422/403 ante los rechazos.\n\n403 si el Docente no está asignado a `comision_id` (`US-ADJ-57`).",
+    "operationId": "crear_sesion_en_vivo_sesiones_en_vivo_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CrearSesionEnVivoRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Crear Sesion En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}": {
+   "get": {
+    "description": "Devuelve el estado de la sesión para reconectarse; al Estudiante suma su avance propio.",
+    "operationId": "obtener_estado_sesion_en_vivo_sesiones_en_vivo__sesion_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EstadoSesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Estado Sesion En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/avanzar": {
+   "post": {
+    "description": "Avanza a la siguiente pregunta y transmite su enunciado; 404/422/403 si se rechaza.",
+    "operationId": "avanzar_siguiente_pregunta_en_vivo_sesiones_en_vivo__sesion_id__avanzar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Avanzar Siguiente Pregunta En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/cancelar": {
+   "post": {
+    "description": "Cancela una sesión `EnEspera` y avisa a la sala (`US-ADJ-58`); 404/422/403 si se rechaza.",
+    "operationId": "cancelar_sesion_en_vivo_sesiones_en_vivo__sesion_id__cancelar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Cancelar Sesion En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/cerrar-pregunta": {
+   "post": {
+    "description": "Cierra la pregunta actual y transmite el resultado; 404/422/403 si se rechaza.",
+    "operationId": "cerrar_pregunta_en_vivo_sesiones_en_vivo__sesion_id__cerrar_pregunta_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Cerrar Pregunta En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/finalizar": {
+   "post": {
+    "description": "Finaliza la sesión y transmite el ranking final; 404/422/403 si se rechaza.",
+    "operationId": "finalizar_sesion_en_vivo_sesiones_en_vivo__sesion_id__finalizar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Finalizar Sesion En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/iniciar": {
+   "post": {
+    "description": "Inicia la sesión (`EnEspera` → `EnCurso`) y presenta el enunciado; 404/422/403 si se rechaza.",
+    "operationId": "iniciar_sesion_en_vivo_sesiones_en_vivo__sesion_id__iniciar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Iniciar Sesion En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/mostrar-opciones": {
+   "post": {
+    "description": "Revela las opciones de la pregunta actual; 404/422/403 si se rechaza.",
+    "operationId": "mostrar_opciones_en_vivo_sesiones_en_vivo__sesion_id__mostrar_opciones_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SesionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Mostrar Opciones En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/participantes": {
+   "get": {
+    "description": "Lista los Estudiantes unidos, en orden de unión, para la sala de espera del Docente.",
+    "operationId": "listar_participantes_de_sesion_sesiones_en_vivo__sesion_id__participantes_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ParticipanteResponse"
+         },
+         "title": "Response Listar Participantes De Sesion Sesiones En Vivo  Sesion Id  Participantes Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Participantes De Sesion",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/ranking": {
+   "get": {
+    "description": "Devuelve el ranking; el Estudiante solo lo ve con la sesión finalizada (403 antes).",
+    "operationId": "obtener_ranking_de_sesion_sesiones_en_vivo__sesion_id__ranking_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RankingItemResponse"
+         },
+         "title": "Response Obtener Ranking De Sesion Sesiones En Vivo  Sesion Id  Ranking Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Ranking De Sesion",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/responder": {
+   "post": {
+    "description": "Registra la respuesta del Estudiante y devuelve su feedback; 404/422 si se rechaza.",
+    "operationId": "responder_pregunta_en_vivo_sesiones_en_vivo__sesion_id__responder_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ResponderEnVivoRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RespuestaEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Responder Pregunta En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/sesiones-en-vivo/{sesion_id}/unirse": {
+   "post": {
+    "description": "Une al Estudiante de la comisión a la sesión (idempotente, 200); 403/404/422 si se rechaza.",
+    "operationId": "unirse_a_sesion_en_vivo_sesiones_en_vivo__sesion_id__unirse_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "sesion_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Sesion Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ParticipacionEnVivoResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Unirse A Sesion En Vivo",
+    "tags": [
+     "actividad_evaluativa_en_vivo"
+    ]
+   }
+  },
+  "/usuarios": {
+   "get": {
+    "description": "Lista cuentas filtradas (AND) por rol, estado (`activa`/`bloqueada`/`inactiva`) y búsqueda.\n\nPágina fija de `tamanio_pagina` (default 20), orden estable por `creado_en`.\n`incluir_inactivas=True` también trae las cuentas deshabilitadas — lo usa la pantalla de\ngestión de Cuentas; el resto de los consumidores (selectores de Docentes) sigue viendo\nsolo las habilitadas.",
+    "operationId": "listar_cuentas_usuarios_get",
+    "parameters": [
+     {
+      "in": "query",
+      "name": "rol",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/TipoPerfil"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Rol"
+      }
+     },
+     {
+      "in": "query",
+      "name": "estado",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Estado"
+      }
+     },
+     {
+      "in": "query",
+      "name": "busqueda",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Busqueda"
+      }
+     },
+     {
+      "in": "query",
+      "name": "pagina",
+      "required": false,
+      "schema": {
+       "default": 1,
+       "minimum": 1,
+       "title": "Pagina",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "tamanio_pagina",
+      "required": false,
+      "schema": {
+       "default": 20,
+       "minimum": 1,
+       "title": "Tamanio Pagina",
+       "type": "integer"
+      }
+     },
+     {
+      "in": "query",
+      "name": "incluir_inactivas",
+      "required": false,
+      "schema": {
+       "default": false,
+       "title": "Incluir Inactivas",
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CuentasPaginadasResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Listar Cuentas",
+    "tags": [
+     "identidad"
+    ]
+   },
+   "post": {
+    "description": "Crea un usuario nuevo.\n\nResponde 409 si el email ya está registrado, 422 si `password` no cumple INV-ID-11\n(`US-ADJ-36`).",
+    "operationId": "crear_usuario_usuarios_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CrearUsuarioRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UsuarioResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Crear Usuario",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/usuarios/me/password": {
+   "put": {
+    "description": "Cambia la contraseña del Usuario autenticado; cualquier rol puede usarlo.\n\nResponde 401 si `password_actual` no verifica: `detail.intentos_restantes` cuenta los\nfallos que quedan antes del bloqueo (INV-ID-10), o `detail.bloqueada = true` si este\nintento fue el 3er fallo consecutivo y acaba de bloquear la cuenta. Responde 403 con\n`detail.bloqueada = true` si la cuenta ya estaba bloqueada antes de este intento\n(`CuentaBloqueadaError`, sin llegar a verificar `password_actual`). Responde 422 si\n`password_nueva` no cumple INV-ID-11 (`US-2.2.8`).",
+    "operationId": "cambiar_password_usuarios_me_password_put",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CambiarPasswordRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Cambiar Password",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/usuarios/{usuario_id}": {
+   "delete": {
+    "description": "Borra la cuenta, o la deshabilita si tiene datos asociados (Comisiones, evaluaciones).\n\n204 si se borró físicamente; 200 con la cuenta (`deshabilitada=true`) si se deshabilitó.\nUn Administrador siempre se deshabilita (nunca se borra). 404 si la cuenta no existe; 409 con\n`detail.codigo = \"ultimo_administrador_operativo\"` si es el único Administrador operativo.",
+    "operationId": "eliminar_cuenta_usuarios__usuario_id__delete",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "usuario_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Usuario Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Eliminar Cuenta",
+    "tags": [
+     "identidad"
+    ]
+   },
+   "get": {
+    "description": "Detalle de una cuenta puntual; responde 404 si no existe.",
+    "operationId": "obtener_cuenta_usuarios__usuario_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "usuario_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Usuario Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CuentaDetalleResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Obtener Cuenta",
+    "tags": [
+     "identidad"
+    ]
+   },
+   "patch": {
+    "description": "Corrige nombre/email de una cuenta existente — no toca password, bloqueo ni perfil.\n\nResponde 404 si la cuenta no existe, 409 si el email nuevo ya pertenece a otra cuenta.",
+    "operationId": "editar_cuenta_usuarios__usuario_id__patch",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "usuario_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Usuario Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EditarCuentaRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CuentaDetalleResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Editar Cuenta",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/usuarios/{usuario_id}/activar": {
+   "post": {
+    "description": "Reactiva una cuenta deshabilitada; 404 si no existe.",
+    "operationId": "activar_cuenta_usuarios__usuario_id__activar_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "usuario_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Usuario Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CuentaDetalleResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Activar Cuenta",
+    "tags": [
+     "identidad"
+    ]
+   }
+  },
+  "/usuarios/{usuario_id}/resetear-password": {
+   "post": {
+    "description": "Resetea la contraseña de una cuenta y la desbloquea si estaba bloqueada.\n\nResponde 404 si la cuenta no existe, 422 si la contraseña no cumple INV-ID-11.",
+    "operationId": "resetear_password_usuarios__usuario_id__resetear_password_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "usuario_id",
+      "required": true,
+      "schema": {
+       "format": "uuid",
+       "title": "Usuario Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ResetearPasswordRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CuentaDetalleResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      },
+      "description": "Validation Error"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "summary": "Resetear Password",
+    "tags": [
+     "identidad"
+    ]
+   }
+  }
+ }
+}
