@@ -4,11 +4,17 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from src.banco_preguntas.entities.dificultad import Dificultad
+from src.banco_preguntas.entities.importancia import Importancia
 from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
 from src.banco_preguntas.entities.opcion import Opcion
-from src.banco_preguntas.entities.pregunta_plantilla import (
-    PreguntaPlantillaOpcionMultiple,
-    PreguntaPlantillaVerdaderoFalso,
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
+    PreguntaOpcionMultipleSalida,
+    PreguntaSalida,
+    PreguntaVerdaderoFalsoSalida,
+    presentar_pregunta,
+    presentar_pregunta_opcion_multiple,
+    presentar_pregunta_verdadero_falso,
 )
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
@@ -39,75 +45,73 @@ class PreguntasController:
     async def cargar_pregunta_opcion_multiple(
         self,
         banco_id: UUID,
-        metadatos: MetadatosPregunta,
-        opciones: list[Opcion],
+        texto: str,
+        unidad_tematica: str,
+        tema: str,
+        dificultad: Dificultad,
+        importancia: Importancia,
+        opciones: list[tuple[str, bool]],
         docente_id: UUID | None = None,
-    ) -> tuple[PreguntaPlantillaOpcionMultiple, object]:
-        """Delega la carga de la pregunta en el caso de uso correspondiente.
+    ) -> PreguntaOpcionMultipleSalida:
+        """Carga la pregunta de opción múltiple y la presenta; el evento se descarta acá.
 
-        El evento se tipa como `object` en esta capa — mismo criterio de reducción de CBO
-        aplicado a `editar_pregunta`/`eliminar_pregunta`, extendido acá para bajar el CBO del
-        controller de 11/10 a 10/10 tras sumar `EliminarPreguntaUseCase` (`US-2.1.6`). Ningún
-        caller (router) usa la forma concreta del evento hoy. `docente_id` acota la carga a
-        materias del Docente que llama (`US-ADJ-57`).
+        `opciones` son pares `(texto, es_correcta)`: el router no arma entidades. `docente_id`
+        acota la carga a materias del Docente que llama (`US-ADJ-57`).
         """
-        return await self._cargar_pregunta_opcion_multiple.execute(
+        pregunta, _evento = await self._cargar_pregunta_opcion_multiple.execute(
             banco_id=banco_id,
-            metadatos=metadatos,
-            opciones=opciones,
+            metadatos=MetadatosPregunta(texto, unidad_tematica, tema, dificultad, importancia),
+            opciones=[Opcion(texto=t, es_correcta=c) for t, c in opciones],
             docente_id=docente_id,
         )
+        return presentar_pregunta_opcion_multiple(pregunta)
 
     async def cargar_pregunta_verdadero_falso(
         self,
         banco_id: UUID,
-        metadatos: MetadatosPregunta,
+        texto: str,
+        unidad_tematica: str,
+        tema: str,
+        dificultad: Dificultad,
+        importancia: Importancia,
         respuesta_correcta: bool,
         docente_id: UUID | None = None,
-    ) -> tuple[PreguntaPlantillaVerdaderoFalso, object]:
-        """Delega la carga de la pregunta Verdadero/Falso en el caso de uso correspondiente.
-
-        El evento se tipa como `object` en esta capa — ver nota en
-        `cargar_pregunta_opcion_multiple`.
-        """
-        return await self._cargar_pregunta_verdadero_falso.execute(
+    ) -> PreguntaVerdaderoFalsoSalida:
+        """Carga la pregunta Verdadero/Falso y la presenta; el evento se descarta acá."""
+        pregunta, _evento = await self._cargar_pregunta_verdadero_falso.execute(
             banco_id=banco_id,
-            metadatos=metadatos,
+            metadatos=MetadatosPregunta(texto, unidad_tematica, tema, dificultad, importancia),
             respuesta_correcta=respuesta_correcta,
             docente_id=docente_id,
         )
+        return presentar_pregunta_verdadero_falso(pregunta)
 
     async def editar_pregunta(
         self,
         pregunta_id: UUID,
-        metadatos: MetadatosPregunta,
-        opciones: list[Opcion] | None = None,
+        texto: str,
+        unidad_tematica: str,
+        tema: str,
+        dificultad: Dificultad,
+        importancia: Importancia,
+        opciones: list[tuple[str, bool]] | None = None,
         respuesta_correcta: bool | None = None,
         docente_id: UUID | None = None,
-    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
-        """Delega la edición de la pregunta en el caso de uso correspondiente.
-
-        El evento de dominio se tipa como `object` en esta capa: ningún caller (router) usa su
-        forma concreta hoy, y así se evita sumar `PreguntaEditada` al CBO del controller
-        (ya en 11/10 antes de esta US) — el tipo preciso `PreguntaEditada` sigue disponible en
-        `EditarPreguntaUseCase.execute`, que es donde importa para publicarlo a futuro.
-        """
-        return await self._editar_pregunta.execute(
+    ) -> PreguntaSalida:
+        """Edita la pregunta y la presenta según su tipo; el evento se descarta acá."""
+        pregunta, _evento = await self._editar_pregunta.execute(
             pregunta_id=pregunta_id,
-            metadatos=metadatos,
-            opciones=opciones,
+            metadatos=MetadatosPregunta(texto, unidad_tematica, tema, dificultad, importancia),
+            opciones=(
+                [Opcion(texto=t, es_correcta=c) for t, c in opciones]
+                if opciones is not None
+                else None
+            ),
             respuesta_correcta=respuesta_correcta,
             docente_id=docente_id,
         )
+        return presentar_pregunta(pregunta)
 
-    async def eliminar_pregunta(
-        self, pregunta_id: UUID, docente_id: UUID | None = None
-    ) -> tuple[PreguntaPlantillaOpcionMultiple | PreguntaPlantillaVerdaderoFalso, object]:
-        """Delega la baja lógica de la pregunta en el caso de uso correspondiente.
-
-        El evento de dominio se tipa como `object` en esta capa, mismo criterio ya aplicado a
-        `editar_pregunta` (`US-2.1.5`): evita sumar `PreguntaEliminada` al CBO del controller,
-        que ya está en el límite del umbral por el número de use cases inyectados. El tipo
-        preciso sigue disponible en `EliminarPreguntaUseCase.execute`.
-        """
-        return await self._eliminar_pregunta.execute(pregunta_id, docente_id=docente_id)
+    async def eliminar_pregunta(self, pregunta_id: UUID, docente_id: UUID | None = None) -> None:
+        """Da de baja lógica la pregunta (INV-BP-04); el resultado no se presenta."""
+        await self._eliminar_pregunta.execute(pregunta_id, docente_id=docente_id)

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.banco_preguntas.entities.resultado_paginado_preguntas import (
-    ResultadoPaginadoPreguntas,
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
+    PreguntasPaginadasSalida,
+    presentar_preguntas_paginadas,
 )
 from src.banco_preguntas.use_cases.filtrar_banco import FiltrarBancoUseCase
 
@@ -27,12 +28,12 @@ class BancosController:
         pagina: int | None = None,
         tamanio_pagina: int | None = None,
         docente_id: UUID | None = None,
-    ) -> ResultadoPaginadoPreguntas:
+    ) -> PreguntasPaginadasSalida:
         """Delega el filtrado del banco en el caso de uso correspondiente.
 
         `docente_id` acota la consulta a materias del Docente que llama (`US-ADJ-57`).
         """
-        return await self._filtrar_banco.execute(
+        resultado = await self._filtrar_banco.execute(
             banco_id=banco_id,
             unidad=unidad,
             tema=tema,
@@ -42,3 +43,4 @@ class BancosController:
             tamanio_pagina=tamanio_pagina,
             docente_id=docente_id,
         )
+        return presentar_preguntas_paginadas(resultado)

@@ -6,9 +6,6 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
 
-from src.banco_preguntas.entities.metadatos_pregunta import MetadatosPregunta
-from src.banco_preguntas.entities.opcion import Opcion
-from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
 from src.banco_preguntas.frameworks.api.schemas import (
     CargarPreguntaOpcionMultipleRequest,
     CargarPreguntaVerdaderoFalsoRequest,
@@ -23,6 +20,11 @@ from src.banco_preguntas.frameworks.dependencies import (
 )
 from src.banco_preguntas.interface_adapters.controllers.preguntas_controller import (
     PreguntasController,
+)
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
+    PreguntaOpcionMultipleSalida,
+    PreguntaSalida,
+    PreguntaVerdaderoFalsoSalida,
 )
 from src.shared.entities.jwt import JWTPayload
 
@@ -39,35 +41,21 @@ async def cargar_pregunta_opcion_multiple(
     body: CargarPreguntaOpcionMultipleRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
-) -> PreguntaOpcionMultipleResponse:
+) -> PreguntaOpcionMultipleSalida:
     """Carga una pregunta de opción múltiple.
 
     Responde 404 si el banco no existe, 422 si las opciones son inválidas, 403 si el Docente
     no tiene ninguna Comisión asignada en la materia del banco (`US-ADJ-57`).
     """
-    pregunta, _evento = await controller.cargar_pregunta_opcion_multiple(
+    return await controller.cargar_pregunta_opcion_multiple(
         banco_id=body.banco_id,
-        metadatos=MetadatosPregunta(
-            texto=body.texto,
-            unidad_tematica=body.unidad_tematica,
-            tema=body.tema,
-            dificultad=body.dificultad,
-            importancia=body.importancia,
-        ),
-        opciones=[Opcion(texto=o.texto, es_correcta=o.es_correcta) for o in body.opciones],
+        texto=body.texto,
+        unidad_tematica=body.unidad_tematica,
+        tema=body.tema,
+        dificultad=body.dificultad,
+        importancia=body.importancia,
+        opciones=[(o.texto, o.es_correcta) for o in body.opciones],
         docente_id=usuario.usuario_id,
-    )
-
-    return PreguntaOpcionMultipleResponse(
-        id=pregunta.id,
-        banco_id=pregunta.banco_id,
-        texto=pregunta.texto,
-        opciones=[{"texto": o.texto, "es_correcta": o.es_correcta} for o in pregunta.opciones],
-        unidad_tematica=pregunta.unidad_tematica,
-        tema=pregunta.tema,
-        dificultad=pregunta.dificultad,
-        importancia=pregunta.importancia,
-        activa=pregunta.activa,
     )
 
 
@@ -81,35 +69,21 @@ async def cargar_pregunta_verdadero_falso(
     body: CargarPreguntaVerdaderoFalsoRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
-) -> PreguntaVerdaderoFalsoResponse:
+) -> PreguntaVerdaderoFalsoSalida:
     """Carga una pregunta Verdadero/Falso.
 
     Responde 404 si el banco no existe, 403 si el Docente no tiene ninguna Comisión
     asignada en la materia del banco (`US-ADJ-57`).
     """
-    pregunta, _evento = await controller.cargar_pregunta_verdadero_falso(
+    return await controller.cargar_pregunta_verdadero_falso(
         banco_id=body.banco_id,
-        metadatos=MetadatosPregunta(
-            texto=body.texto,
-            unidad_tematica=body.unidad_tematica,
-            tema=body.tema,
-            dificultad=body.dificultad,
-            importancia=body.importancia,
-        ),
+        texto=body.texto,
+        unidad_tematica=body.unidad_tematica,
+        tema=body.tema,
+        dificultad=body.dificultad,
+        importancia=body.importancia,
         respuesta_correcta=body.respuesta_correcta,
         docente_id=usuario.usuario_id,
-    )
-
-    return PreguntaVerdaderoFalsoResponse(
-        id=pregunta.id,
-        banco_id=pregunta.banco_id,
-        texto=pregunta.texto,
-        respuesta_correcta=pregunta.respuesta_correcta,
-        unidad_tematica=pregunta.unidad_tematica,
-        tema=pregunta.tema,
-        dificultad=pregunta.dificultad,
-        importancia=pregunta.importancia,
-        activa=pregunta.activa,
     )
 
 
@@ -124,7 +98,7 @@ async def editar_pregunta(
     body: EditarPreguntaRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: PreguntasController = Depends(get_preguntas_controller),
-) -> PreguntaOpcionMultipleResponse | PreguntaVerdaderoFalsoResponse:
+) -> PreguntaSalida:
     """Edita una pregunta existente (texto, opciones/respuesta, metadatos).
 
     El tipo de la pregunta (Opción Múltiple / Verdadero-Falso) no es editable.
@@ -132,47 +106,18 @@ async def editar_pregunta(
     son inválidas, 403 si el Docente no tiene ninguna Comisión asignada en la materia del
     banco de la pregunta (`US-ADJ-57`).
     """
-    pregunta, _evento = await controller.editar_pregunta(
+    return await controller.editar_pregunta(
         pregunta_id=pregunta_id,
-        metadatos=MetadatosPregunta(
-            texto=body.texto,
-            unidad_tematica=body.unidad_tematica,
-            tema=body.tema,
-            dificultad=body.dificultad,
-            importancia=body.importancia,
-        ),
+        texto=body.texto,
+        unidad_tematica=body.unidad_tematica,
+        tema=body.tema,
+        dificultad=body.dificultad,
+        importancia=body.importancia,
         opciones=(
-            [Opcion(texto=o.texto, es_correcta=o.es_correcta) for o in body.opciones]
-            if body.opciones is not None
-            else None
+            [(o.texto, o.es_correcta) for o in body.opciones] if body.opciones is not None else None
         ),
         respuesta_correcta=body.respuesta_correcta,
         docente_id=usuario.usuario_id,
-    )
-
-    if isinstance(pregunta, PreguntaPlantillaOpcionMultiple):
-        return PreguntaOpcionMultipleResponse(
-            id=pregunta.id,
-            banco_id=pregunta.banco_id,
-            texto=pregunta.texto,
-            opciones=[{"texto": o.texto, "es_correcta": o.es_correcta} for o in pregunta.opciones],
-            unidad_tematica=pregunta.unidad_tematica,
-            tema=pregunta.tema,
-            dificultad=pregunta.dificultad,
-            importancia=pregunta.importancia,
-            activa=pregunta.activa,
-        )
-
-    return PreguntaVerdaderoFalsoResponse(
-        id=pregunta.id,
-        banco_id=pregunta.banco_id,
-        texto=pregunta.texto,
-        respuesta_correcta=pregunta.respuesta_correcta,
-        unidad_tematica=pregunta.unidad_tematica,
-        tema=pregunta.tema,
-        dificultad=pregunta.dificultad,
-        importancia=pregunta.importancia,
-        activa=pregunta.activa,
     )
 
 

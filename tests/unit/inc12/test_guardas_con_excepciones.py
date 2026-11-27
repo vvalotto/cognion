@@ -59,14 +59,6 @@ IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
         "actividad_evaluativa_en_vivo:ActividadEvaluativaEnVivo",
         "actividad_evaluativa_en_vivo:EstadoSesionEnVivo",
     ],
-    "src/banco_preguntas/frameworks/api/bancos_router.py": [
-        "pregunta_plantilla:PreguntaPlantillaOpcionMultiple"
-    ],
-    "src/banco_preguntas/frameworks/api/preguntas_router.py": [
-        "metadatos_pregunta:MetadatosPregunta",
-        "opcion:Opcion",
-        "pregunta_plantilla:PreguntaPlantillaOpcionMultiple",
-    ],
     "src/banco_preguntas/frameworks/api/schemas.py": [
         "dificultad:Dificultad",
         "importancia:Importancia",

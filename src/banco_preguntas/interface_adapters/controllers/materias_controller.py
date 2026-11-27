@@ -4,9 +4,14 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.banco_preguntas.entities.banco import Banco
-from src.banco_preguntas.entities.eventos import BancoCreado, MateriaCreada
-from src.banco_preguntas.entities.materia import Materia
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
+    MateriaBasicaSalida,
+    MateriaListItemSalida,
+    MateriaSalida,
+    presentar_materia_basica,
+    presentar_materia_creada,
+    presentar_materias,
+)
 from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
 from src.banco_preguntas.use_cases.editar_materia import EditarMateriaUseCase
@@ -32,27 +37,30 @@ class MateriasController:
         self._eliminar_materia = eliminar_materia
         self._activar_materia = activar_materia
 
-    async def crear_materia(self, nombre: str) -> tuple[Materia, Banco, MateriaCreada, BancoCreado]:
-        """Delega la creación de la materia y su banco en el caso de uso correspondiente."""
-        return await self._crear_materia.execute(nombre)
+    async def crear_materia(self, nombre: str) -> MateriaSalida:
+        """Crea la materia con su banco y presenta ambos; los eventos se descartan acá."""
+        materia, banco, _evento_materia, _evento_banco = await self._crear_materia.execute(nombre)
+        return presentar_materia_creada(materia, banco)
 
     async def listar_materias(
         self, incluir_inactivas: bool = False, docente_id: UUID | None = None
-    ) -> list[tuple[Materia, Banco, int]]:
-        """Delega el listado de materias (con conteo de preguntas activas) en el caso de uso.
+    ) -> list[MateriaListItemSalida]:
+        """Lista las materias (con conteo de preguntas activas) y las presenta.
 
         `docente_id` acota el listado a las materias del Docente que llama (`US-ADJ-57`).
         """
-        return await self._listar_materias.execute(incluir_inactivas, docente_id)
+        items = await self._listar_materias.execute(incluir_inactivas, docente_id)
+        return presentar_materias(items)
 
-    async def editar_materia(self, materia_id: UUID, nombre: str) -> Materia:
-        """Delega la corrección del nombre de una materia en el caso de uso correspondiente."""
-        return await self._editar_materia.execute(materia_id, nombre)
+    async def editar_materia(self, materia_id: UUID, nombre: str) -> MateriaBasicaSalida:
+        """Corrige el nombre de una materia y la presenta."""
+        return presentar_materia_basica(await self._editar_materia.execute(materia_id, nombre))
 
-    async def eliminar_materia(self, materia_id: UUID) -> Materia | None:
-        """Delega la baja (física o lógica) de una materia en el caso de uso correspondiente."""
-        return await self._eliminar_materia.execute(materia_id)
+    async def eliminar_materia(self, materia_id: UUID) -> MateriaBasicaSalida | None:
+        """Da de baja una materia: `None` si se borró físicamente, la materia presentada si no."""
+        materia = await self._eliminar_materia.execute(materia_id)
+        return None if materia is None else presentar_materia_basica(materia)
 
-    async def activar_materia(self, materia_id: UUID) -> Materia:
-        """Delega la reactivación de una materia deshabilitada en el caso de uso correspondiente."""
-        return await self._activar_materia.execute(materia_id)
+    async def activar_materia(self, materia_id: UUID) -> MateriaBasicaSalida:
+        """Reactiva una materia deshabilitada y la presenta."""
+        return presentar_materia_basica(await self._activar_materia.execute(materia_id))
