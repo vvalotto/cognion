@@ -8,7 +8,7 @@ Estudiantes que ya respondieron, PostgreSQL real y 60 conexiones simuladas en el
 Criterio (lo que dice la spec): tiempo del use case, desde que empieza hasta que terminó de
 publicar, sobre >= 30 repeticiones, con p95 <= 100 ms. Como medición complementaria (NO decide el
 veredicto) se mide el mismo cierre por `POST /cerrar-pregunta` vía ASGI: suma JWT, wiring y la
-conexión nueva a la DB por operación (`NullPool`, `ADR-017`).
+conexión de la DB (con `NullPool`, `ADR-018`, una nueva por operación; la medición corre con los tests, `DB_POOL=nula`).
 
 Uso (desde la raíz del repo, con Postgres corriendo):
 

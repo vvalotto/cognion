@@ -25,7 +25,9 @@ class _CasoDeUsoFalso:
 def corridas(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     registro: list[str] = []
     monkeypatch.setattr(
-        app_modulo, "build_verificar_vencimientos_use_case", lambda _session: _CasoDeUsoFalso(registro)
+        app_modulo,
+        "build_verificar_vencimientos_use_case",
+        lambda _session: _CasoDeUsoFalso(registro),
     )
     return registro
 

@@ -19,8 +19,8 @@ services:
       POSTGRES_USER: cognion
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: cognion
-    # Ajuste para 1 GB. Con NullPool (ADR-018) cada operación abre una conexión: con 60 alumnos a la vez puede
-    # haber ~60 simultáneas, por eso max_connections=100. Valor inicial a medir en US-8.6.7, no probado.
+    # Ajuste para 1 GB. La aplicación usa un pool de hasta 30 conexiones (ADR-018, enmendado en US-12.2.5); max_connections=100
+    # queda como margen. Valor inicial a medir en US-8.6.7, no probado.
     command:
       - postgres
       - -c

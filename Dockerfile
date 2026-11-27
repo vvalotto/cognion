@@ -34,4 +34,7 @@ EXPOSE 8000
 # `--proxy-headers`: detrás de un proxy (Caddy) las redirecciones deben conservar https (US-8.1.6). Solo se confían las
 # cabeceras `X-Forwarded-*` de los proxies listados en la variable `FORWARDED_ALLOW_IPS` (el compose pone la red interna);
 # sin esa variable uvicorn solo confía en 127.0.0.1 (DO-01).
+# UN SOLO PROCESO (`US-12.2.5`, `IM-05`): no agregar `--workers` ni `WEB_CONCURRENCY`. El canal de la sesión en vivo guarda las
+# conexiones en la memoria del proceso (con dos procesos, parte de los alumnos no recibe los mensajes) y el pool de conexiones
+# de la base y el event loop son de un único proceso. El verificador de vencimientos sí se protege solo con un bloqueo de PostgreSQL.
 CMD ["uvicorn", "src.servidor:servidor", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]

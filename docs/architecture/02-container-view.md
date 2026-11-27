@@ -34,7 +34,7 @@ Cognión es un **monolito modular** (`ADR-001`): un único proceso Python (Uvico
 
 La SPA y la API comparten origen, por eso el frontend llama a `/api` sin configuración de red. Los dos viajan en la misma imagen Docker (`Dockerfile`, dos etapas: compila la SPA con Node 22 y la copia al runtime de Python 3.12).
 
-La persistencia es una **única instancia de PostgreSQL** (`ADR-004`) compartida por todos los Bounded Contexts. Con `NullPool` (`ADR-018`) cada operación abre su propia conexión, por eso se configura `max_connections=100`.
+La persistencia es una **única instancia de PostgreSQL** (`ADR-004`) compartida por todos los Bounded Contexts. La aplicación usa un pool de hasta 30 conexiones (`ADR-018`, enmendado en `US-12.2.5`; `NullPool` solo en los tests) y la base queda con `max_connections=100` como margen.
 
 Un proceso dentro de la API, el `VerificadorDeVencimientos`, corre en el ciclo de vida de la aplicación (`lifespan`) y cierra las actividades de período abierto vencidas. No hay cola ni worker aparte.
 
@@ -98,7 +98,7 @@ flowchart LR
 |---|---|---|
 | Navegador → Aplicación (REST) | HTTP(S) con JSON; JWT en `Authorization` | `src/app.py`, `ADR-007` |
 | Navegador → Aplicación (tiempo real) | WebSocket en `/api/sesiones-en-vivo/{sesion_id}/canal?token=…` | `sesiones_en_vivo_router.py`, `ADR-005` |
-| Aplicación → PostgreSQL | SQLAlchemy async con asyncpg, sin pool (`NullPool`) | `src/shared/frameworks/db.py`, `ADR-017`, `ADR-018` |
+| Aplicación → PostgreSQL | SQLAlchemy async con asyncpg, con pool de conexiones (`NullPool` solo en los tests) | `src/shared/frameworks/db.py`, `ADR-017`, `ADR-018` |
 | Aplicación → SMTP | `smtplib` en hilo aparte; STARTTLS validado con `certifi` | `src/shared/frameworks/smtp.py` |
 | Caddy → Aplicación | `reverse_proxy app:8000`; la app corre con `--proxy-headers` | `deploy/servidor/Caddyfile`, `Dockerfile` |
 
