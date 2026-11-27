@@ -38,7 +38,8 @@ flowchart TB
         7 tablas + comision_docentes"]
     end
     subgraph ia["interface_adapters"]
-        ctl["controllers (12)"]
+        ctl["controllers (12)
+        presenters"]
     end
     subgraph uc["use_cases (28)"]
         u["sesión y bloqueo · cuentas
@@ -79,12 +80,13 @@ flowchart TB
 | entities | `TokenRecuperacionPassword` | Recuperación por autoservicio |
 | use_cases | `iniciar_sesion`, `politica_bloqueo` | Login, aviso "te queda 1 intento" y bloqueo |
 | use_cases | `crear_usuario`, `listar_cuentas`, `obtener_cuenta`, `editar_cuenta`, `eliminar_cuenta`, `activar_cuenta`, `resetear_password`, `cambiar_password`, `bootstrap_administrador` | Cuentas y primer administrador |
+| use_cases | `listar_comisiones_de_materia`, `listar_estudiantes_de_comision`, `obtener_comision` | Consultas de comisiones con la autorización del docente (`US-12.2.4`, antes lógica de un controller) |
 | use_cases | `crear_comision`, `editar_comision`, `eliminar_comision`, `activar_comision`, `asignar_docente_a_comision`, `autorizacion_comision` | Comisiones y quién está asignado |
-| use_cases | `generar_invitacion`, `generar_invitacion_grupal`, `obtener_invitacion`, `obtener_ultima_invitacion_grupal`, `revocar_invitacion_grupal`, `registrar_estudiante` | Invitaciones y registro |
+| use_cases | `generar_invitacion`, `generar_invitacion_grupal`, `obtener_invitacion`, `obtener_ultima_invitacion_grupal`, `revocar_invitacion_grupal`, `registrar_estudiante`, `registrar_estudiante_con_materia` | Invitaciones y registro |
 | use_cases | `autoregistrar_docente`, `autoregistrar_estudiante`, `listar_materias_del_estudiante` | Autoservicio y portal de entrada |
 | use_cases | `solicitar_recuperacion_password`, `confirmar_nueva_password` | Recuperación de contraseña |
 | entities/ports | 12 puertos: repositorios (usuario, comisión, invitación, token), consultas (`ComisionQueryPort`, `CuentaQueryPort`, `NombreUsuarioQueryPort`), `PasswordHasherPort`, `NotificadorPort`, `CanalRecuperacionPort`, `MateriaPort`, `EvaluacionConsultaPort` | Contratos hacia persistencia, seguridad y otros BC |
-| interface_adapters | 12 controllers | HTTP a casos de uso |
+| interface_adapters | 12 controllers y `presenters/identidad_presenter` | Delegan en casos de uso y devuelven tipos de salida (`ADR-031`) |
 | frameworks | `PasswordHasher` | bcrypt en un ejecutor propio, para no bloquear el event loop (`ADR-014`, `US-ADJ-63`) |
 | frameworks | `NotificadorSmtp` | Correo de invitación, adaptador propio (`ADR-012`) |
 | frameworks | CLI `bootstrap_administrador` | Primer administrador al instalar (`ADR-016`) |

@@ -1,10 +1,15 @@
-"""Tests unitarios de `_a_response` — enriquecimiento de `EvaluacionResponse` (`US-3.4.6`)."""
+"""Tests unitarios de `presentar_evaluacion` — enriquecimiento con el contenido de las preguntas (`US-3.4.6`, `US-12.2.4`)."""
 
 from uuid import uuid4
 
 from src.actividad_evaluativa.entities.evaluacion import Evaluacion, PreguntaAsignada, Respuesta
 from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import ContenidoPregunta
-from src.actividad_evaluativa.frameworks.api.evaluaciones_router import _a_response
+from src.actividad_evaluativa.interface_adapters.controllers._contenido_de_evaluacion import (
+    contenidos_de,
+)
+from src.actividad_evaluativa.interface_adapters.presenters.evaluacion_presenter import (
+    presentar_evaluacion,
+)
 from tests.unit.inc3._fakes import FakePreguntaConsultaPort
 
 
@@ -13,7 +18,11 @@ def _evaluacion(preguntas_asignadas: list[PreguntaAsignada]) -> Evaluacion:
     return Evaluacion.crear(actividad_id, estudiante_id, preguntas_asignadas)
 
 
-class TestAResponse:
+async def _a_response(evaluacion: Evaluacion, pregunta_consulta: FakePreguntaConsultaPort):
+    return presentar_evaluacion(evaluacion, await contenidos_de(evaluacion, pregunta_consulta))
+
+
+class TestPresentarEvaluacion:
     async def test_enriquece_enunciado_y_opciones_de_opcion_multiple(self):
         pregunta_id = uuid4()
         evaluacion = _evaluacion([PreguntaAsignada(pregunta_id=pregunta_id, orden=0)])

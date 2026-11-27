@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
-    ActividadEvaluativaEnVivo,
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    ParticipacionEnVivoSalida,
+    SesionEnVivoSalida,
+    presentar_participacion,
+    presentar_sesion,
 )
-from src.actividad_evaluativa.entities.participacion_en_vivo import ParticipacionEnVivo
 from src.actividad_evaluativa.use_cases.cancelar_sesion_en_vivo import (
     CancelarSesionEnVivoUseCase,
 )
@@ -44,29 +46,27 @@ class SesionesEnVivoController:
         unidad_tematica: str | None = None,
         tema: str | None = None,
         docente_id: UUID | None = None,
-    ) -> ActividadEvaluativaEnVivo:
+    ) -> SesionEnVivoSalida:
         """Delega la creación de la sesión en el caso de uso correspondiente."""
-        return await self._crear_sesion.execute(
-            comision_id,
-            cantidad_preguntas,
-            tiempo_limite_por_pregunta_segundos,
-            unidad_tematica,
-            tema,
-            docente_id,
+        return presentar_sesion(
+            await self._crear_sesion.execute(
+                comision_id,
+                cantidad_preguntas,
+                tiempo_limite_por_pregunta_segundos,
+                unidad_tematica,
+                tema,
+                docente_id,
+            )
         )
 
-    async def unirse(self, sesion_id: UUID, estudiante_id: UUID) -> ParticipacionEnVivo:
+    async def unirse(self, sesion_id: UUID, estudiante_id: UUID) -> ParticipacionEnVivoSalida:
         """Delega la unión del Estudiante a la sesión en el caso de uso correspondiente."""
-        return await self._unirse.execute(sesion_id, estudiante_id)
+        return presentar_participacion(await self._unirse.execute(sesion_id, estudiante_id))
 
-    async def iniciar(
-        self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaEnVivo:
+    async def iniciar(self, sesion_id: UUID, docente_id: UUID | None = None) -> SesionEnVivoSalida:
         """Delega el inicio de la sesión en el caso de uso correspondiente."""
-        return await self._iniciar.execute(sesion_id, docente_id)
+        return presentar_sesion(await self._iniciar.execute(sesion_id, docente_id))
 
-    async def cancelar(
-        self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaEnVivo:
+    async def cancelar(self, sesion_id: UUID, docente_id: UUID | None = None) -> SesionEnVivoSalida:
         """Delega la cancelación de la sesión en el caso de uso correspondiente (`US-ADJ-58`)."""
-        return await self._cancelar.execute(sesion_id, docente_id)
+        return presentar_sesion(await self._cancelar.execute(sesion_id, docente_id))

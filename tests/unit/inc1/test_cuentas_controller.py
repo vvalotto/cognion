@@ -75,4 +75,4 @@ class TestCuentasController:
 
         assert resultado.id == usuario.id
         assert resultado.bloqueada is False
-        assert resultado.password_hash != "hash-viejo"
+        assert usuario_repo.usuarios[usuario.id].password_hash != "hash-viejo"

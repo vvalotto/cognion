@@ -4,10 +4,14 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.identidad.entities.eventos import InvitacionGenerada
-from src.identidad.entities.invitacion import Invitacion
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    InvitacionPreviewSalida,
+    InvitacionSalida,
+    presentar_invitacion,
+    presentar_invitacion_preview,
+)
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
-from src.identidad.use_cases.obtener_invitacion import InvitacionPreview, ObtenerInvitacionUseCase
+from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
 
 
 class InvitacionesController:
@@ -28,12 +32,13 @@ class InvitacionesController:
         docente_id: UUID,
         email_destinatario: str | None,
         solicitante_id: UUID,
-    ) -> tuple[Invitacion, InvitacionGenerada]:
+    ) -> InvitacionSalida:
         """Delega la generación de la invitación en el caso de uso correspondiente."""
-        return await self._generar_invitacion.execute(
+        invitacion, _evento = await self._generar_invitacion.execute(
             comision_id, docente_id, email_destinatario, solicitante_id
         )
+        return presentar_invitacion(invitacion)
 
-    async def obtener_invitacion(self, token: str) -> InvitacionPreview:
+    async def obtener_invitacion(self, token: str) -> InvitacionPreviewSalida:
         """Delega la consulta de solo lectura de una invitación en el caso de uso."""
-        return await self._obtener_invitacion.execute(token)
+        return presentar_invitacion_preview(await self._obtener_invitacion.execute(token))

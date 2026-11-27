@@ -5,8 +5,9 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
-    ActividadEvaluativaPeriodoAbierto,
+from src.actividad_evaluativa.interface_adapters.presenters.actividad_presenter import (
+    ActividadSalida,
+    presentar_actividad,
 )
 from src.actividad_evaluativa.use_cases.cerrar_actividad import CerrarActividadUseCase
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import (
@@ -48,7 +49,7 @@ class ActividadesController:
         unidad_tematica: str | None = None,
         tema: str | None = None,
         docente_id: UUID | None = None,
-    ) -> tuple[ActividadEvaluativaPeriodoAbierto, object]:
+    ) -> ActividadSalida:
         """Delega la creación de la actividad en el caso de uso correspondiente.
 
         El segundo elemento se tipa como `object` — mismo criterio de
@@ -56,7 +57,7 @@ class ActividadesController:
         valor. `docente_id` acota la creación a la propia materia/Comisiones del Docente
         (`US-ADJ-57`; `None` = Administrador).
         """
-        return await self._crear_actividad.execute(
+        actividad, _evento = await self._crear_actividad.execute(
             materia_id,
             fecha_apertura,
             fecha_cierre,
@@ -68,21 +69,26 @@ class ActividadesController:
             tema,
             docente_id,
         )
+        return presentar_actividad(actividad)
 
     async def modificar_periodo_disponibilidad(
         self, actividad_id: UUID, nueva_fecha_cierre: datetime, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaPeriodoAbierto:
+    ) -> ActividadSalida:
         """Delega la modificación del período en el caso de uso correspondiente (RF-11b)."""
-        return await self._modificar_periodo.execute(actividad_id, nueva_fecha_cierre, docente_id)
+        return presentar_actividad(
+            await self._modificar_periodo.execute(actividad_id, nueva_fecha_cierre, docente_id)
+        )
 
     async def cerrar_actividad(
         self, actividad_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaPeriodoAbierto:
+    ) -> ActividadSalida:
         """Delega el cierre manual de la actividad en el caso de uso correspondiente (RF-11b)."""
-        return await self._cerrar_actividad.execute(actividad_id, docente_id)
+        return presentar_actividad(await self._cerrar_actividad.execute(actividad_id, docente_id))
 
     async def modificar_titulo(
         self, actividad_id: UUID, nuevo_titulo: str, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaPeriodoAbierto:
+    ) -> ActividadSalida:
         """Delega la edición del título en el caso de uso correspondiente (`US-ADJ-10`)."""
-        return await self._modificar_titulo.execute(actividad_id, nuevo_titulo, docente_id)
+        return presentar_actividad(
+            await self._modificar_titulo.execute(actividad_id, nuevo_titulo, docente_id)
+        )

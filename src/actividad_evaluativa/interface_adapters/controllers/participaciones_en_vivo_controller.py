@@ -5,9 +5,12 @@ from __future__ import annotations
 from typing import Any
 from uuid import UUID
 
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    RespuestaEnVivoSalida,
+    presentar_respuesta_en_vivo,
+)
 from src.actividad_evaluativa.use_cases.responder_pregunta_en_vivo import (
     ResponderPreguntaEnVivoUseCase,
-    ResultadoRespuestaEnVivo,
 )
 
 
@@ -24,6 +27,8 @@ class ParticipacionesEnVivoController:
         estudiante_id: UUID,
         pregunta_id: UUID,
         contenido: dict[str, Any],
-    ) -> ResultadoRespuestaEnVivo:
+    ) -> RespuestaEnVivoSalida:
         """Delega el registro de la respuesta en el caso de uso correspondiente."""
-        return await self._responder.execute(sesion_id, estudiante_id, pregunta_id, contenido)
+        return presentar_respuesta_en_vivo(
+            await self._responder.execute(sesion_id, estudiante_id, pregunta_id, contenido)
+        )

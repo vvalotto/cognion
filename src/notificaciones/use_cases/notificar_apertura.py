@@ -68,8 +68,7 @@ class NotificarAperturaUseCase:
                 await self._canal_envio.enviar(destinatario.email, asunto, cuerpo, materia_id)
             except Exception:  # pylint: disable=broad-except
                 logger.warning(
-                    "Fallo al enviar notificación de apertura de actividad %s a "
-                    "estudiante %s (%s)",
+                    "Fallo al enviar notificación de apertura de actividad %s a estudiante %s (%s)",
                     actividad_id,
                     destinatario.estudiante_id,
                     destinatario.email,

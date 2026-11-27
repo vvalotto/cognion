@@ -9,8 +9,11 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from src.actividad_evaluativa.interface_adapters.presenters.actividad_presenter import (
+    ActividadVisibleSalida,
+    presentar_actividades_visibles,
+)
 from src.actividad_evaluativa.use_cases.listar_actividades_visibles import (
-    ActividadVisible,
     ListarActividadesVisiblesUseCase,
 )
 
@@ -24,6 +27,8 @@ class ActividadesEstudianteController:
 
     async def listar_actividades_visibles(
         self, materia_id: UUID, estudiante_id: UUID
-    ) -> list[ActividadVisible]:
+    ) -> list[ActividadVisibleSalida]:
         """Delega el listado de actividades visibles en el Use Case correspondiente."""
-        return await self._listar_actividades_visibles.execute(materia_id, estudiante_id)
+        return presentar_actividades_visibles(
+            await self._listar_actividades_visibles.execute(materia_id, estudiante_id)
+        )

@@ -101,7 +101,7 @@ class TestCerrarPregunta:
 
         resultado = await use_case.execute(sesion.id)
 
-        assert resultado.pregunta_actual_cerrada is True
+        assert resultado.id == sesion.id
         eventos = await event_store.load(AGGREGATE_TYPE_SESION, sesion.id)
         assert eventos[-1].event_type == "PreguntaEnVivoCerrada"
         assert set(eventos[-1].payload) == {
@@ -274,4 +274,4 @@ class TestConduccionEnVivoControllerCerrar:
 
         resultado = await controller.cerrar_pregunta(sesion.id)
 
-        assert resultado.pregunta_actual_cerrada is True
+        assert resultado.id == sesion.id

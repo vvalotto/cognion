@@ -19,6 +19,10 @@ from src.identidad.frameworks.dependencies import (
 from src.identidad.interface_adapters.controllers.invitaciones_grupales_controller import (
     InvitacionesGrupalesController,
 )
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    InvitacionGrupalEstadoSalida,
+    InvitacionGrupalSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 
 router = APIRouter(
@@ -36,21 +40,13 @@ async def generar_invitacion_grupal(
     body: GenerarInvitacionGrupalRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: InvitacionesGrupalesController = Depends(get_invitaciones_grupales_controller),
-) -> InvitacionGrupalResponse:
+) -> InvitacionGrupalSalida:
     """Genera el link grupal de la comisión y desactiva el grupal vigente anterior.
 
     Responde 403 si el Docente no está asignado, 404 si la comisión no existe y 422 si
     `duracion_minutos` no es 15, 60 ni 1440.
     """
-    invitacion, _evento = await controller.generar(
-        comision_id, usuario.usuario_id, body.duracion_minutos
-    )
-    return InvitacionGrupalResponse(
-        id=invitacion.id,
-        comision_id=invitacion.comision_id,
-        expira_en=invitacion.expira_en,
-        token=invitacion.token,
-    )
+    return await controller.generar(comision_id, usuario.usuario_id, body.duracion_minutos)
 
 
 @router.get(
@@ -61,19 +57,9 @@ async def obtener_ultima_invitacion_grupal(
     comision_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: InvitacionesGrupalesController = Depends(get_invitaciones_grupales_controller),
-) -> InvitacionGrupalEstadoResponse | None:
+) -> InvitacionGrupalEstadoSalida | None:
     """Devuelve el estado del último link grupal, o `null` si la comisión nunca generó uno."""
-    estado = await controller.obtener_ultima(comision_id, usuario.usuario_id)
-    if estado is None:
-        return None
-    return InvitacionGrupalEstadoResponse(
-        id=estado.id,
-        estado=estado.estado.value,
-        token=estado.token,
-        generada_en=estado.generada_en,
-        expira_en=estado.expira_en,
-        usos=estado.usos,
-    )
+    return await controller.obtener_ultima(comision_id, usuario.usuario_id)
 
 
 @router.post(

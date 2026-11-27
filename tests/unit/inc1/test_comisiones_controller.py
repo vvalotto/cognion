@@ -1,6 +1,5 @@
 import uuid
 
-from src.identidad.entities.eventos import ComisionCreada, DocenteAsignado
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.controllers.comisiones_controller import (
     ComisionesController,
@@ -43,11 +42,10 @@ class TestComisionesController:
         materia_port.agregar(materia_id, "Ingeniería de Software")
         controller = _controller(comision_repo, usuario_repo, materia_port)
 
-        comision, evento = await controller.crear_comision(materia_id, "lu 10-12", uuid.uuid4())
+        comision = await controller.crear_comision(materia_id, "lu 10-12", uuid.uuid4())
 
         assert comision.materia_id == materia_id
         assert comision.docentes_asignados == []
-        assert isinstance(evento, ComisionCreada)
 
     async def test_asignar_docente_delega_al_use_case(self):
         comision_repo = FakeComisionRepository()
@@ -58,9 +56,8 @@ class TestComisionesController:
         controller = _controller(comision_repo, usuario_repo, materia_port)
         docente = Usuario.crear("Ana", "ana@fiuner.edu.ar", "hash", TipoPerfil.DOCENTE)
         await usuario_repo.guardar(docente)
-        comision, _ = await controller.crear_comision(materia_id, "lu 10-12", uuid.uuid4())
+        comision = await controller.crear_comision(materia_id, "lu 10-12", uuid.uuid4())
 
-        resultado, evento = await controller.asignar_docente(comision.id, docente.id)
+        resultado = await controller.asignar_docente(comision.id, docente.id)
 
         assert docente.id in resultado.docentes_asignados
-        assert isinstance(evento, DocenteAsignado)

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
-from src.identidad.entities.eventos import SesionIniciada
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    LoginSalida,
+    presentar_login,
+)
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
-from src.shared.entities.jwt import JWT
 
 
 class AuthController:
@@ -14,6 +16,7 @@ class AuthController:
         """Recibe el caso de uso de inicio de sesión a usar."""
         self._iniciar_sesion = iniciar_sesion
 
-    async def iniciar_sesion(self, email: str, password: str) -> tuple[JWT, SesionIniciada]:
+    async def iniciar_sesion(self, email: str, password: str) -> LoginSalida:
         """Delega la autenticación en el caso de uso correspondiente."""
-        return await self._iniciar_sesion.execute(email, password)
+        jwt, _evento = await self._iniciar_sesion.execute(email, password)
+        return presentar_login(jwt)

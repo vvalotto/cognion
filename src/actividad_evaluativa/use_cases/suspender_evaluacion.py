@@ -7,6 +7,7 @@ ver `BC-actividad-evaluativa-modelo.md` §6b.
 
 from __future__ import annotations
 
+from typing import Literal, overload
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.errors import (
@@ -30,6 +31,20 @@ class SuspenderEvaluacionUseCase:
     def __init__(self, event_store: EventStorePort) -> None:
         """Recibe el event store del BC."""
         self._event_store = event_store
+
+    @overload
+    async def execute(
+        self,
+        evaluacion_id: UUID,
+        estudiante_id: UUID | None = None,
+        *,
+        actor: Literal["estudiante"] = "estudiante",
+    ) -> Evaluacion: ...
+
+    @overload
+    async def execute(
+        self, evaluacion_id: UUID, estudiante_id: UUID | None = None, *, actor: str
+    ) -> Evaluacion | None: ...
 
     async def execute(
         self,

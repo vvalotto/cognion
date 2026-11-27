@@ -27,6 +27,14 @@ class ActividadNoExiste(NoEncontrado):
         super().__init__(f"No existe una actividad con id {actividad_id}.")
 
 
+class EstudianteNoExiste(NoEncontrado):
+    """No existe un Estudiante con el id consultado por el Docente (`US-4.2.1`, `US-ADJ-45`)."""
+
+    def __init__(self, estudiante_id: UUID) -> None:
+        """Registra el id del estudiante para el mensaje de error."""
+        super().__init__(f"No existe un Estudiante con id {estudiante_id}.")
+
+
 class MateriaNoAutorizada(NoAutorizado):
     """El Docente solicitante no tiene ninguna Comisión asignada en esta materia (`US-ADJ-57`).
 

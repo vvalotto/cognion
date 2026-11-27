@@ -6,12 +6,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.banco_preguntas.entities.pregunta_plantilla import PreguntaPlantillaOpcionMultiple
-from src.banco_preguntas.frameworks.api.schemas import (
-    PreguntaOpcionMultipleResponse,
-    PreguntasPaginadasResponse,
-    PreguntaVerdaderoFalsoResponse,
-)
+from src.banco_preguntas.frameworks.api.schemas import PreguntasPaginadasResponse
 from src.banco_preguntas.frameworks.dependencies import (
     get_bancos_controller,
     get_current_user,
@@ -19,6 +14,9 @@ from src.banco_preguntas.frameworks.dependencies import (
 )
 from src.banco_preguntas.interface_adapters.controllers.bancos_controller import (
     BancosController,
+)
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
+    PreguntasPaginadasSalida,
 )
 from src.shared.entities.jwt import JWTPayload
 
@@ -41,7 +39,7 @@ async def filtrar_preguntas(
     tamanio_pagina: int | None = Query(None, ge=1),
     usuario: JWTPayload = Depends(get_current_user),
     controller: BancosController = Depends(get_bancos_controller),
-) -> PreguntasPaginadasResponse:
+) -> PreguntasPaginadasSalida:
     """Filtra las preguntas activas del banco por cualquier combinación de metadatos.
 
     Los filtros son opcionales y combinables (AND). `pagina`/`tamanio_pagina` son opt-in
@@ -49,7 +47,7 @@ async def filtrar_preguntas(
     paginar — mismo comportamiento que antes de esta US. Responde 404 si el banco no existe,
     403 si el Docente no tiene ninguna Comisión asignada en la materia del banco (`US-ADJ-57`).
     """
-    resultado = await controller.filtrar_preguntas(
+    return await controller.filtrar_preguntas(
         banco_id=banco_id,
         unidad=unidad,
         tema=tema,
@@ -58,38 +56,4 @@ async def filtrar_preguntas(
         pagina=pagina,
         tamanio_pagina=tamanio_pagina,
         docente_id=usuario.usuario_id,
-    )
-
-    return PreguntasPaginadasResponse(
-        preguntas=[
-            (
-                PreguntaOpcionMultipleResponse(
-                    id=pregunta.id,
-                    banco_id=pregunta.banco_id,
-                    texto=pregunta.texto,
-                    opciones=[
-                        {"texto": o.texto, "es_correcta": o.es_correcta} for o in pregunta.opciones
-                    ],
-                    unidad_tematica=pregunta.unidad_tematica,
-                    tema=pregunta.tema,
-                    dificultad=pregunta.dificultad,
-                    importancia=pregunta.importancia,
-                    activa=pregunta.activa,
-                )
-                if isinstance(pregunta, PreguntaPlantillaOpcionMultiple)
-                else PreguntaVerdaderoFalsoResponse(
-                    id=pregunta.id,
-                    banco_id=pregunta.banco_id,
-                    texto=pregunta.texto,
-                    respuesta_correcta=pregunta.respuesta_correcta,
-                    unidad_tematica=pregunta.unidad_tematica,
-                    tema=pregunta.tema,
-                    dificultad=pregunta.dificultad,
-                    importancia=pregunta.importancia,
-                    activa=pregunta.activa,
-                )
-            )
-            for pregunta in resultado.preguntas
-        ],
-        total=resultado.total,
     )

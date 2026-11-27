@@ -31,7 +31,8 @@ flowchart TB
     end
     subgraph ia["interface_adapters"]
         ctl["controllers/
-        Materias · Bancos · Preguntas"]
+        Materias · Bancos · Preguntas · Edición"]
+        pre["presenters/"]
         imp["importadores/
         JSON · Markdown"]
     end
@@ -67,7 +68,8 @@ flowchart TB
 | use_cases | `cargar_pregunta_opcion_multiple`, `cargar_pregunta_verdadero_falso`, `editar_pregunta`, `eliminar_pregunta`, `filtrar_banco` | Preguntas y consulta con filtros | `use_cases/` |
 | use_cases | `verificar_autorizacion_materia` | El docente debe estar asignado a la materia | `use_cases/` |
 | use_cases | `cargar_datos_iniciales` | Alta masiva idempotente desde JSON o Markdown | `use_cases/` |
-| interface_adapters | `MateriasController`, `BancosController`, `PreguntasController` | Traducen HTTP a casos de uso | `controllers/` |
+| interface_adapters | `MateriasController`, `BancosController`, `PreguntasController`, `PreguntasEdicionController` | Delegan en casos de uso y devuelven tipos de salida (`ADR-031`) | `controllers/` |
+| interface_adapters | `banco_presenter` | Arma las salidas de materias y preguntas | `presenters/` |
 | frameworks | `materia_repository`, `banco_repository`, `pregunta_repository` | Repositorios SQLAlchemy | `frameworks/repositories/` |
 | interface_adapters | `json_importador`, `markdown_importador` | Lectura de los archivos de carga | `importadores/` |
 | frameworks | Routers, esquemas Pydantic, `dependencies.py` (composition root) | Frontera HTTP y cableado | `frameworks/api/` |

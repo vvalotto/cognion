@@ -1,7 +1,6 @@
 from uuid import uuid4
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.eventos import UsuarioAutoregistrado
 from src.identidad.interface_adapters.controllers.autoregistro_controller import (
     AutoregistroController,
 )
@@ -40,12 +39,12 @@ class TestAutoregistroController:
     async def test_autoregistrar_docente_delega_al_use_case(self):
         controller = _controller()
 
-        usuario, evento = await controller.autoregistrar_docente(
+        salida = await controller.autoregistrar_docente(
             "Nico", "nico@fiuner.edu.ar", "Password#123x"
         )
 
-        assert usuario.email == "nico@fiuner.edu.ar"
-        assert isinstance(evento, UsuarioAutoregistrado)
+        assert salida.email == "nico@fiuner.edu.ar"
+        assert salida.tipo_perfil == "docente"
 
     async def test_autoregistrar_estudiante_delega_al_use_case(self):
         comision_repo = FakeComisionRepository()
@@ -55,12 +54,12 @@ class TestAutoregistroController:
         await comision_repo.guardar(comision)
         controller = _controller(comision_repo=comision_repo)
 
-        usuario, evento = await controller.autoregistrar_estudiante(
+        salida = await controller.autoregistrar_estudiante(
             "Vale", "vale@fiuner.edu.ar", "Password#123x", comision.id
         )
 
-        assert usuario.email == "vale@fiuner.edu.ar"
-        assert isinstance(evento, UsuarioAutoregistrado)
+        assert salida.email == "vale@fiuner.edu.ar"
+        assert salida.tipo_perfil == "estudiante"
 
 
 class TestAutoregistroControllerListarMaterias:

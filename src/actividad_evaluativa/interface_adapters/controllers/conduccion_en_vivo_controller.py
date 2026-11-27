@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
-    ActividadEvaluativaEnVivo,
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    SesionEnVivoSalida,
+    presentar_sesion,
 )
 from src.actividad_evaluativa.use_cases.avanzar_siguiente_pregunta import (
     AvanzarSiguientePreguntaUseCase,
@@ -39,24 +40,26 @@ class ConduccionEnVivoController:
 
     async def mostrar_opciones(
         self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaEnVivo:
+    ) -> SesionEnVivoSalida:
         """Delega la revelación de opciones en el caso de uso correspondiente."""
-        return await self._mostrar_opciones.execute(sesion_id, docente_id)
+        return presentar_sesion(await self._mostrar_opciones.execute(sesion_id, docente_id))
 
     async def cerrar_pregunta(
         self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaEnVivo:
+    ) -> SesionEnVivoSalida:
         """Delega el cierre de la pregunta actual en el caso de uso correspondiente."""
-        return await self._cerrar_pregunta.execute(sesion_id, docente_id)
+        return presentar_sesion(await self._cerrar_pregunta.execute(sesion_id, docente_id))
 
     async def avanzar_siguiente_pregunta(
         self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaEnVivo:
+    ) -> SesionEnVivoSalida:
         """Avanza a la siguiente pregunta de la sesión."""
-        return await self._avanzar_siguiente_pregunta.execute(sesion_id, docente_id)
+        return presentar_sesion(
+            await self._avanzar_siguiente_pregunta.execute(sesion_id, docente_id)
+        )
 
     async def finalizar_sesion(
         self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> ActividadEvaluativaEnVivo:
+    ) -> SesionEnVivoSalida:
         """Finaliza la sesión y transmite el ranking final."""
-        return await self._finalizar_sesion.execute(sesion_id, docente_id)
+        return presentar_sesion(await self._finalizar_sesion.execute(sesion_id, docente_id))

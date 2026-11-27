@@ -21,6 +21,9 @@ from src.identidad.frameworks.dependencies import (
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
 )
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    ComisionResumenSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -37,7 +40,7 @@ async def listar_comisiones_por_materia(
     incluir_inactivas: bool = False,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
-) -> list[ComisionResumenResponse]:
+) -> list[ComisionResumenSalida]:
     """Comisiones de la materia, con sus docentes asignados.
 
     404 si `materia_id` no existe (`US-4.2.2`, `docentes_asignados` agregado en `US-ADJ-23`).
@@ -47,13 +50,4 @@ async def listar_comisiones_por_materia(
     materia (`US-ADJ-57`) — el Administrador ve todas, sin filtrar.
     """
     docente_id = usuario.usuario_id if usuario.rol is TipoPerfil.DOCENTE else None
-    comisiones = await controller.listar_comisiones_por_materia(
-        materia_id, incluir_inactivas, docente_id
-    )
-
-    return [
-        ComisionResumenResponse(
-            id=c.id, horario=c.horario, docentes_asignados=c.docentes_asignados, activa=c.activa
-        )
-        for c in comisiones
-    ]
+    return await controller.listar_comisiones_por_materia(materia_id, incluir_inactivas, docente_id)

@@ -12,7 +12,6 @@ from src.identidad.entities.errors import (
     PasswordDemasiadoCorta,
     PasswordSinComplejidadSuficiente,
 )
-from src.identidad.entities.usuario import Estudiante
 from src.identidad.frameworks.api.errores_invitacion import error_http_de_invitacion
 from src.identidad.frameworks.api.schemas import (
     InvitacionPreviewResponse,
@@ -27,6 +26,10 @@ from src.identidad.interface_adapters.controllers.invitaciones_controller import
     InvitacionesController,
 )
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    InvitacionPreviewSalida,
+    RegistroSalida,
+)
 
 router = APIRouter(prefix="/identidad", tags=["identidad"])
 
@@ -35,7 +38,7 @@ router = APIRouter(prefix="/identidad", tags=["identidad"])
 async def obtener_invitacion(
     token: str,
     controller: InvitacionesController = Depends(get_invitaciones_controller),
-) -> InvitacionPreviewResponse:
+) -> InvitacionPreviewSalida:
     """Vista previa de una invitación por token, sin consumirla; endpoint público, sin JWT.
 
     Responde 404 si el token no corresponde a ninguna invitación, o 422 si ya venció, la
@@ -44,18 +47,16 @@ async def obtener_invitacion(
     consulta anónima por token, sin riesgo de enumerar invitaciones ajenas (`US-ADJ-08`).
     """
     try:
-        preview = await controller.obtener_invitacion(token)
+        return await controller.obtener_invitacion(token)
     except (InvitacionInvalida, InvitacionVencida, InvitacionRevocada, InvitacionYaUsada) as exc:
         raise error_http_de_invitacion(exc, status_invalida=status.HTTP_404_NOT_FOUND) from exc
-
-    return InvitacionPreviewResponse(materia=preview.materia, horario=preview.horario)
 
 
 @router.post("/registro", response_model=RegistroResponse, status_code=status.HTTP_201_CREATED)
 async def registrar_estudiante(
     body: RegistrarEstudianteRequest,
     controller: RegistroController = Depends(get_registro_controller),
-) -> RegistroResponse:
+) -> RegistroSalida:
     """Registra un Estudiante vía invitación; endpoint público, sin JWT (aún no autenticado).
 
     Responde 409 si el email ya está registrado, 422 si la invitación no es válida (inexistente,
@@ -64,10 +65,8 @@ async def registrar_estudiante(
     (`US-ADJ-67`).
     """
     try:
-        usuario, materia, _evento_invitacion, _evento_usuario = (
-            await controller.registrar_estudiante(
-                body.token, body.nombre, body.email, body.password
-            )
+        return await controller.registrar_estudiante(
+            body.token, body.nombre, body.email, body.password
         )
     except (
         InvitacionInvalida,
@@ -80,15 +79,3 @@ async def registrar_estudiante(
         raise error_http_de_invitacion(
             exc, status_invalida=status.HTTP_422_UNPROCESSABLE_CONTENT
         ) from exc
-
-    # RegistrarEstudianteUseCase siempre crea un Usuario con perfil Estudiante — el isinstance
-    # es la forma en que mypy puede probarlo, no una validación de negocio (Perfil también
-    # admite Administrador/Docente, sin comision_id).
-    assert isinstance(usuario.perfil, Estudiante)
-    return RegistroResponse(
-        id=usuario.id,
-        nombre=usuario.nombre,
-        email=usuario.email,
-        comision_id=usuario.perfil.comision_id,
-        materia=materia,
-    )

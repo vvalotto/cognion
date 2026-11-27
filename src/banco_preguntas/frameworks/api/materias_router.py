@@ -22,6 +22,11 @@ from src.banco_preguntas.frameworks.dependencies import (
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
+    MateriaBasicaSalida,
+    MateriaListItemSalida,
+    MateriaSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -43,16 +48,14 @@ router = APIRouter(prefix="/materias", tags=["banco_preguntas"])
 async def crear_materia(
     body: CrearMateriaRequest,
     controller: MateriasController = Depends(get_materias_controller),
-) -> MateriaResponse:
+) -> MateriaSalida:
     """Crea una materia nueva y su banco asociado; responde 409 si el nombre ya existe.
 
     Rol `administrador` exclusivamente — unificación con Comisión (hallazgo de UAT
     2026-09-15): el Administrador arma la estructura Materia→Comisión→Docente, el Docente
     consume (carga/edita preguntas en el banco), no crea Materias.
     """
-    materia, banco, _evento_materia, _evento_banco = await controller.crear_materia(body.nombre)
-
-    return MateriaResponse(id=materia.id, nombre=materia.nombre, banco_id=banco.id)
+    return await controller.crear_materia(body.nombre)
 
 
 @router.patch(
@@ -64,16 +67,14 @@ async def editar_materia(
     materia_id: UUID,
     body: EditarMateriaRequest,
     controller: MateriasController = Depends(get_materias_controller),
-) -> MateriaBasicaResponse:
+) -> MateriaBasicaSalida:
     """Corrige el nombre de una materia existente.
 
     Rol `administrador` exclusivamente (unificación con Comisión, hallazgo de UAT
     2026-09-15). Responde 404 si la materia no existe, 409 si el nombre nuevo ya pertenece
     a otra.
     """
-    materia = await controller.editar_materia(materia_id, body.nombre)
-
-    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)
+    return await controller.editar_materia(materia_id, body.nombre)
 
 
 @router.delete(
@@ -84,7 +85,7 @@ async def editar_materia(
 async def eliminar_materia(
     materia_id: UUID,
     controller: MateriasController = Depends(get_materias_controller),
-) -> MateriaBasicaResponse | Response:
+) -> MateriaBasicaSalida | Response:
     """Borra la materia, o la deshabilita si tiene preguntas cargadas o comisiones asociadas.
 
     204 si se borró físicamente (borra también su banco vacío); 200 con la materia
@@ -95,7 +96,7 @@ async def eliminar_materia(
     if materia is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)
+    return materia
 
 
 @router.get(
@@ -108,7 +109,7 @@ async def listar_materias(
     incluir_inactivas: bool = False,
     usuario: JWTPayload = Depends(get_current_user),
     controller: MateriasController = Depends(get_materias_controller),
-) -> list[MateriaListItemResponse]:
+) -> list[MateriaListItemSalida]:
     """Lista las materias con la cantidad de preguntas activas de cada una.
 
     Rol `docente` o `administrador` (`US-ADJ-23`, gap detectado en Fase 3).
@@ -117,17 +118,7 @@ async def listar_materias(
     viendo solo las activas. Un Docente solo ve las materias donde tiene al menos una
     Comisión asignada (`US-ADJ-57`); el Administrador ve todas, sin filtrar.
     """
-    materias = await controller.listar_materias(incluir_inactivas, _docente_id_o_none(usuario))
-    return [
-        MateriaListItemResponse(
-            id=materia.id,
-            nombre=materia.nombre,
-            banco_id=banco.id,
-            cantidad_preguntas_activas=cantidad,
-            activa=materia.activa,
-        )
-        for materia, banco, cantidad in materias
-    ]
+    return await controller.listar_materias(incluir_inactivas, _docente_id_o_none(usuario))
 
 
 @router.post(
@@ -138,8 +129,6 @@ async def listar_materias(
 async def activar_materia(
     materia_id: UUID,
     controller: MateriasController = Depends(get_materias_controller),
-) -> MateriaBasicaResponse:
+) -> MateriaBasicaSalida:
     """Reactiva una materia deshabilitada; 404 si no existe."""
-    materia = await controller.activar_materia(materia_id)
-
-    return MateriaBasicaResponse(id=materia.id, nombre=materia.nombre, activa=materia.activa)
+    return await controller.activar_materia(materia_id)

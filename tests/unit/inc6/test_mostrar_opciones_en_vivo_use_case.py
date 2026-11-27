@@ -76,7 +76,7 @@ class TestMostrarOpciones:
 
         resultado = await use_case.execute(sesion.id)
 
-        assert resultado.opciones_mostradas is True
+        assert resultado.id == sesion.id
         assert resultado.opciones_mostradas_en is not None
         eventos = await event_store.load(AGGREGATE_TYPE_SESION, sesion.id)
         assert [e.event_type for e in eventos][-1] == "OpcionesEnVivoMostradas"
@@ -178,4 +178,4 @@ class TestSesionesEnVivoControllerMostrarOpciones:
 
         resultado = await controller.mostrar_opciones(sesion.id)
 
-        assert resultado.opciones_mostradas is True
+        assert resultado.id == sesion.id

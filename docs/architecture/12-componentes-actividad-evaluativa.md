@@ -36,7 +36,8 @@ flowchart TB
         distribucion_por_pregunta"]
     end
     subgraph ia["interface_adapters"]
-        ctl["controllers (10)"]
+        ctl["controllers (12)
+        presenters"]
     end
     subgraph uc["use_cases (30)"]
         u["período abierto · evaluación
@@ -85,7 +86,7 @@ flowchart TB
 | use_cases | `iniciar_evaluacion`, `registrar_respuesta`, `suspender_evaluacion`, `reanudar_evaluacion`, `finalizar_evaluacion`, `obtener_revision_evaluacion` | Intento del estudiante |
 | use_cases | `crear_sesion_en_vivo`, `iniciar_sesion_en_vivo`, `unirse_a_sesion_en_vivo`, `mostrar_opciones_en_vivo`, `responder_pregunta_en_vivo`, `cerrar_pregunta_actual`, `avanzar_siguiente_pregunta`, `finalizar_sesion_en_vivo`, `cancelar_sesion_en_vivo`, `obtener_ranking`, `obtener_estado_sesion`, `autorizar_acceso_sesion_en_vivo`, `autorizar_conexion_canal`, `listar_participantes`, `listar_sesiones_en_vivo` | Sesión en vivo |
 | use_cases | `verificar_vencimientos`, `verificar_autorizacion_comision` | Cierre automático por vencimiento; el docente debe estar asignado |
-| interface_adapters | 10 controllers | HTTP a casos de uso |
+| interface_adapters | 12 controllers y 3 presenters (`actividad`, `evaluacion`, `sesion_en_vivo`) | Delegan en casos de uso y devuelven tipos de salida; `EvaluacionesController` y `EvaluacionesEstadoController` enriquecen la evaluación con el contenido de sus preguntas (`ADR-031`) |
 | frameworks | `SQLAlchemyEventStore` | Guarda y lee eventos de la tabla `events` |
 | frameworks | `ConnectionManager`, `WebSocketCanalTiempoReal` | Difusión por sesión a los navegadores conectados |
 | frameworks | 12 adaptadores | 7 consultas y proyecciones propias (`*_repository`) y 5 cruces con otros BC (`*_port_in_process`: comisión, estudiante, materia, pregunta y notificación) |

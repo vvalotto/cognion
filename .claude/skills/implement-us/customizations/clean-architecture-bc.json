@@ -21,7 +21,7 @@
       "layers": {
         "entities": "Reglas de negocio puras — Aggregates, Entities, ValueObjects, DomainEvents, puertos (interfaces). Sin dependencias externas.",
         "use_cases": "Orquestación de la aplicación — Use Cases, Commands, Queries. Solo importa entities/.",
-        "interface_adapters": "Controllers (FastAPI routers) y Presenters. Solo importa use_cases/.",
+        "interface_adapters": "Controllers y Presenters (ADR-031): el controller delega en el caso de uso y devuelve un tipo de salida armado por funciones presentar_* de presenters/. Solo importa use_cases/.",
         "frameworks": "Implementaciones concretas — SQLAlchemy repos, WebSockets, email adapters. Implementa puertos definidos en entities/."
       },
       "golden_rule": "Las capas internas nunca importan capas externas. Entre BCs: solo por puertos en entities/ports/. shared/entities/ es la única excepción transversal."
@@ -36,6 +36,7 @@
         "Port",
         "UseCase",
         "Controller",
+        "Presenter",
         "Repository",
         "Router"
       ]
@@ -50,6 +51,7 @@
         "Port":         "src/{bc}/entities/ports/",
         "UseCase":      "src/{bc}/use_cases/",
         "Controller":   "src/{bc}/interface_adapters/controllers/",
+        "Presenter":    "src/{bc}/interface_adapters/presenters/",
         "Repository":   "src/{bc}/frameworks/repositories/",
         "Router":       "src/{bc}/frameworks/routers/"
       }
@@ -66,7 +68,8 @@
         "ValueObject": "frozen dataclass",
         "DomainEvent": "dataclass",
         "UseCase":     "class con método execute()",
-        "Controller":  "class o función FastAPI router",
+        "Controller":  "clase que delega en el caso de uso y presenta; el router de frameworks/api no importa entidades ni puertos",
+        "Presenter":   "dataclass de salida (campos del esquema de la API) y funciones presentar_* — sin Pydantic ni FastAPI",
         "Repository":  "class que implementa el Port correspondiente"
       }
     },

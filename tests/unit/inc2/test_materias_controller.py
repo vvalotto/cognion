@@ -1,9 +1,9 @@
 from src.banco_preguntas.entities.banco import Banco
-from src.banco_preguntas.entities.eventos import BancoCreado, MateriaCreada
 from src.banco_preguntas.entities.materia import Materia
 from src.banco_preguntas.interface_adapters.controllers.materias_controller import (
     MateriasController,
 )
+from src.banco_preguntas.interface_adapters.presenters.banco_presenter import MateriaListItemSalida
 from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.crear_materia import CrearMateriaUseCase
 from src.banco_preguntas.use_cases.editar_materia import EditarMateriaUseCase
@@ -35,14 +35,10 @@ class TestMateriasController:
     async def test_crear_materia_delega_al_use_case(self):
         controller = _controller()
 
-        materia, banco, evento_materia, evento_banco = await controller.crear_materia(
-            "Gestión de Proyectos"
-        )
+        salida = await controller.crear_materia("Gestión de Proyectos")
 
-        assert materia.nombre == "Gestión de Proyectos"
-        assert banco.materia_id == materia.id
-        assert isinstance(evento_materia, MateriaCreada)
-        assert isinstance(evento_banco, BancoCreado)
+        assert salida.nombre == "Gestión de Proyectos"
+        assert salida.banco_id is not None
 
     async def test_listar_materias_delega_al_use_case(self):
         materia_repo = FakeMateriaRepository()
@@ -55,4 +51,12 @@ class TestMateriasController:
 
         resultado = await controller.listar_materias()
 
-        assert resultado == [(materia, banco, 0)]
+        assert resultado == [
+            MateriaListItemSalida(
+                id=materia.id,
+                nombre="Ingeniería de Software",
+                banco_id=banco.id,
+                cantidad_preguntas_activas=0,
+                activa=True,
+            )
+        ]

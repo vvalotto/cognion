@@ -2,15 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, status
 
-from src.actividad_evaluativa.entities.actividad_evaluativa_periodo_abierto import (
-    ActividadEvaluativaPeriodoAbierto,
-)
-from src.actividad_evaluativa.entities.ports.actividad_query_port import ActividadResumen
 from src.actividad_evaluativa.frameworks.api.schemas import (
     ActividadResponse,
     ActividadResumenResponse,
@@ -36,59 +31,14 @@ from src.actividad_evaluativa.interface_adapters.controllers.actividades_estudia
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_query_controller import (
     ActividadesQueryController,
 )
+from src.actividad_evaluativa.interface_adapters.presenters.actividad_presenter import (
+    ActividadResumenSalida,
+    ActividadSalida,
+    ActividadVisibleSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 
 router = APIRouter(prefix="/actividades", tags=["actividad_evaluativa"])
-
-
-def _a_response(actividad: ActividadEvaluativaPeriodoAbierto) -> ActividadResponse:
-    """Arma el `ActividadResponse` — extraído para no repetirlo en cada endpoint."""
-    return ActividadResponse(
-        id=actividad.id,
-        materia_id=actividad.materia_id,
-        fecha_apertura=actividad.fecha_apertura,
-        fecha_cierre=actividad.fecha_cierre,
-        cantidad_preguntas=actividad.cantidad_preguntas,
-        cantidad_intentos_permitidos=actividad.cantidad_intentos_permitidos,
-        cerrada_manualmente=actividad.cerrada_manualmente,
-        titulo=actividad.titulo,
-        comisiones_ids=list(actividad.comisiones_ids),
-        unidad_tematica=actividad.unidad_tematica,
-        tema=actividad.tema,
-    )
-
-
-def _estado_actividad(resumen: ActividadResumen, ahora: datetime) -> str:
-    """Deriva el estado de una actividad — no persiste un campo propio (`US-3.4.2`).
-
-    `cerrada` si se cerró manualmente o si `fecha_cierre` ya pasó; `programada` si todavía no
-    abrió; `en_curso` en cualquier otro caso.
-    """
-    if resumen.cerrada_manualmente or resumen.fecha_cierre <= ahora:
-        return "cerrada"
-    if resumen.fecha_apertura > ahora:
-        return "programada"
-    return "en_curso"
-
-
-def _a_resumen_response(resumen: ActividadResumen, ahora: datetime) -> ActividadResumenResponse:
-    """Arma el `ActividadResumenResponse` con el estado ya derivado."""
-    return ActividadResumenResponse(
-        id=resumen.id,
-        materia_id=resumen.materia_id,
-        titulo=resumen.titulo,
-        fecha_apertura=resumen.fecha_apertura,
-        fecha_cierre=resumen.fecha_cierre,
-        cantidad_preguntas=resumen.cantidad_preguntas,
-        cantidad_intentos_permitidos=resumen.cantidad_intentos_permitidos,
-        estado=_estado_actividad(resumen, ahora),
-        cerrada_manualmente=resumen.cerrada_manualmente,
-        cantidad_evaluaciones_activas=resumen.cantidad_evaluaciones_activas,
-        cantidad_evaluaciones_finalizadas=resumen.cantidad_evaluaciones_finalizadas,
-        comisiones_ids=list(resumen.comisiones_ids),
-        unidad_tematica=resumen.unidad_tematica,
-        tema=resumen.tema,
-    )
 
 
 @router.get(
@@ -100,15 +50,13 @@ async def listar_actividades(
     materia_id: UUID = Query(...),
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesQueryController = Depends(get_actividades_query_controller),
-) -> list[ActividadResumenResponse]:
+) -> list[ActividadResumenSalida]:
     """Lista las actividades de una materia con estado derivado y conteos (`US-3.4.2`, RF-11).
 
     El Docente solo ve las actividades de una materia donde tiene al menos una Comisión
     asignada (`US-ADJ-57`); 403 si no.
     """
-    resumenes = await controller.listar_actividades(materia_id, usuario.usuario_id)
-    ahora = datetime.now(UTC)
-    return [_a_resumen_response(resumen, ahora) for resumen in resumenes]
+    return await controller.listar_actividades(materia_id, usuario.usuario_id)
 
 
 @router.get(
@@ -120,25 +68,13 @@ async def listar_mis_actividades(
     materia_id: UUID = Query(...),
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesEstudianteController = Depends(get_actividades_estudiante_controller),
-) -> list[ActividadVisibleResponse]:
+) -> list[ActividadVisibleSalida]:
     """Actividades de una materia con el `Badge` de estado del Estudiante autenticado (`US-3.4.5`).
 
     Registrada antes de `/{actividad_id}` — es una ruta literal, no debe resolverse como un
     `actividad_id`.
     """
-    visibles = await controller.listar_actividades_visibles(materia_id, usuario.usuario_id)
-    return [
-        ActividadVisibleResponse(
-            id=visible.id,
-            materia_id=visible.materia_id,
-            titulo=visible.titulo,
-            fecha_apertura=visible.fecha_apertura,
-            fecha_cierre=visible.fecha_cierre,
-            estado=visible.estado,
-            evaluacion_id=visible.evaluacion_id,
-        )
-        for visible in visibles
-    ]
+    return await controller.listar_actividades_visibles(materia_id, usuario.usuario_id)
 
 
 @router.get(
@@ -150,16 +86,13 @@ async def obtener_actividad(
     actividad_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesQueryController = Depends(get_actividades_query_controller),
-) -> ActividadResumenResponse:
+) -> ActividadResumenSalida:
     """Detalle de una actividad puntual, con estado derivado y conteos (`US-3.4.4`, RF-11b).
 
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    resumen = await controller.obtener_actividad(actividad_id, usuario.usuario_id)
-
-    ahora = datetime.now(UTC)
-    return _a_resumen_response(resumen, ahora)
+    return await controller.obtener_actividad(actividad_id, usuario.usuario_id)
 
 
 @router.post(
@@ -172,13 +105,13 @@ async def crear_actividad(
     body: CrearActividadRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
-) -> ActividadResponse:
+) -> ActividadSalida:
     """Crea una actividad de período abierto; responde 404/422/403 ante los rechazos de dominio.
 
     403 si el Docente no tiene ninguna Comisión asignada en `materia_id`, o si alguna de
     `comisiones_ids` no es una Comisión propia (`US-ADJ-57`).
     """
-    actividad, _evento = await controller.crear_actividad(
+    return await controller.crear_actividad(
         body.materia_id,
         body.fecha_apertura,
         body.fecha_cierre,
@@ -191,8 +124,6 @@ async def crear_actividad(
         usuario.usuario_id,
     )
 
-    return _a_response(actividad)
-
 
 @router.patch(
     "/{actividad_id}/periodo",
@@ -204,17 +135,15 @@ async def modificar_periodo_disponibilidad(
     body: ModificarPeriodoDisponibilidadRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
-) -> ActividadResponse:
+) -> ActividadSalida:
     """Extiende o acorta `fecha_cierre` de una actividad vigente (RF-11b).
 
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    actividad = await controller.modificar_periodo_disponibilidad(
+    return await controller.modificar_periodo_disponibilidad(
         actividad_id, body.nueva_fecha_cierre, usuario.usuario_id
     )
-
-    return _a_response(actividad)
 
 
 @router.patch(
@@ -227,17 +156,13 @@ async def modificar_titulo(
     body: ModificarTituloRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
-) -> ActividadResponse:
+) -> ActividadSalida:
     """Edita el título de una actividad, sin importar su estado (`US-ADJ-10`).
 
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    actividad = await controller.modificar_titulo(
-        actividad_id, body.nuevo_titulo, usuario.usuario_id
-    )
-
-    return _a_response(actividad)
+    return await controller.modificar_titulo(actividad_id, body.nuevo_titulo, usuario.usuario_id)
 
 
 @router.post(
@@ -249,12 +174,10 @@ async def cerrar_actividad(
     actividad_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ActividadesController = Depends(get_actividades_controller),
-) -> ActividadResponse:
+) -> ActividadSalida:
     """Cierra manualmente la actividad, finalizando en cascada sus evaluaciones activas (RF-11b).
 
     403 si el Docente no tiene ninguna Comisión asignada en la materia de la actividad
     (`US-ADJ-57`).
     """
-    actividad = await controller.cerrar_actividad(actividad_id, usuario.usuario_id)
-
-    return _a_response(actividad)
+    return await controller.cerrar_actividad(actividad_id, usuario.usuario_id)

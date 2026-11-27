@@ -35,6 +35,9 @@ from src.actividad_evaluativa.entities.puntaje_en_vivo import NivelesDePregunta,
 from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
     ParticipacionesEnVivoController,
 )
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    RespuestaEnVivoSalida,
+)
 from src.actividad_evaluativa.use_cases.crear_sesion_en_vivo import CrearSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.iniciar_sesion_en_vivo import IniciarSesionEnVivoUseCase
 from src.actividad_evaluativa.use_cases.responder_pregunta_en_vivo import (
@@ -436,4 +439,4 @@ class TestControllerResponder:
             sesion.id, est, sesion.preguntas[0].pregunta_id, {"opcion_indice": 0}
         )
 
-        assert isinstance(resultado, ResultadoRespuestaEnVivo)
+        assert isinstance(resultado, RespuestaEnVivoSalida)

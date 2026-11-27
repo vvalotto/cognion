@@ -4,21 +4,15 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 
-from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.frameworks.api.schemas import (
-    CompletitudFilaResponse,
     CompletitudPorActividadResponse,
-    CompletitudResumenResponse,
     DesempenoComisionFilaResponse,
     DesempenoEstudianteResponse,
-    EvaluacionDetalleResponse,
     EvolucionTemporalComisionPuntoResponse,
     EvolucionTemporalPuntoResponse,
     RankingPreguntaFalladaResponse,
-    ResumenDesempenoResponse,
-    SesionEnVivoDetalleResponse,
     TasaErrorTemaResponse,
 )
 from src.analytics.frameworks.dependencies import (
@@ -26,7 +20,6 @@ from src.analytics.frameworks.dependencies import (
     get_analytics_controller,
     get_analytics_informes_controller,
     get_current_user,
-    get_estudiante_consulta_port,
     require_docente,
     require_estudiante,
 )
@@ -39,46 +32,18 @@ from src.analytics.interface_adapters.controllers.analytics_controller import (
 from src.analytics.interface_adapters.controllers.analytics_informes_controller import (
     AnalyticsInformesController,
 )
-from src.analytics.use_cases.obtener_desempeno_estudiante import DesempenoEstudiante
+from src.analytics.interface_adapters.presenters.analytics_presenter import (
+    CompletitudPorActividadSalida,
+    DesempenoComisionFilaSalida,
+    DesempenoEstudianteSalida,
+    EvolucionTemporalComisionPuntoSalida,
+    EvolucionTemporalPuntoSalida,
+    RankingPreguntaFalladaSalida,
+    TasaErrorTemaSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
-
-
-def _a_response(desempeno: DesempenoEstudiante) -> DesempenoEstudianteResponse:
-    """Arma el `DesempenoEstudianteResponse` a partir del resultado del Use Case."""
-    return DesempenoEstudianteResponse(
-        evaluaciones=[
-            EvaluacionDetalleResponse(
-                evaluacion_id=e.evaluacion_id,
-                actividad_id=e.actividad_id,
-                finalizada_en=e.finalizada_en,
-                cantidad_correctas=e.cantidad_correctas,
-                cantidad_incorrectas=e.cantidad_incorrectas,
-            )
-            for e in desempeno.evaluaciones
-        ],
-        resumen=ResumenDesempenoResponse(
-            total_correctas=desempeno.resumen.total_correctas,
-            total_incorrectas=desempeno.resumen.total_incorrectas,
-            porcentaje_acierto=desempeno.resumen.porcentaje_acierto,
-            cantidad_evaluaciones=desempeno.resumen.cantidad_evaluaciones,
-        ),
-        sesiones_en_vivo=[
-            SesionEnVivoDetalleResponse(
-                sesion_id=s.sesion_id,
-                comision_horario=s.comision_horario,
-                finalizada_en=s.finalizada_en,
-                cantidad_preguntas=s.cantidad_preguntas,
-                cantidad_correctas=s.cantidad_correctas,
-                cantidad_incorrectas=s.cantidad_incorrectas,
-                puntaje_final=s.puntaje_final,
-                posicion=s.posicion,
-                total_participantes=s.total_participantes,
-            )
-            for s in desempeno.sesiones_en_vivo
-        ],
-    )
 
 
 @router.get(
@@ -90,15 +55,14 @@ async def obtener_mi_desempeno(
     materia_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsController = Depends(get_analytics_controller),
-) -> DesempenoEstudianteResponse:
+) -> DesempenoEstudianteSalida:
     """Desempeño del Estudiante autenticado en `materia_id`: detalle y resumen (RF-15).
 
     `estudiante_id` sale siempre del token — nunca de un parámetro de la request, evita que
     un estudiante consulte el desempeño de otro (esa consulta es exclusiva del Docente,
     `US-4.2.1`, con su propio endpoint y su propia verificación de rol).
     """
-    desempeno = await controller.obtener_mi_desempeno(usuario.usuario_id, materia_id)
-    return _a_response(desempeno)
+    return await controller.obtener_mi_desempeno(usuario.usuario_id, materia_id)
 
 
 @router.get(
@@ -110,9 +74,8 @@ async def obtener_desempeno_de_estudiante(
     materia_id: UUID,
     estudiante_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
-    estudiante_consulta: EstudianteConsultaPort = Depends(get_estudiante_consulta_port),
     controller: AnalyticsController = Depends(get_analytics_controller),
-) -> DesempenoEstudianteResponse:
+) -> DesempenoEstudianteSalida:
     """Desempeño de un Estudiante elegido por el Docente en `materia_id`: detalle y resumen (RF-16).
 
     El Docente debe tener al menos una Comisión asignada en `materia_id` (`US-ADJ-57`) —
@@ -121,15 +84,9 @@ async def obtener_desempeno_de_estudiante(
     acá `estudiante_id` sí puede ser inválido (viene del path, no del token) — se valida su
     existencia antes de invocar el Use Case.
     """
-    if not await estudiante_consulta.existe(estudiante_id):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No existe un Estudiante con id {estudiante_id}.",
-        )
-    desempeno = await controller.obtener_desempeno_de_estudiante(
+    return await controller.obtener_desempeno_de_estudiante(
         estudiante_id, materia_id, usuario.usuario_id
     )
-    return _a_response(desempeno)
 
 
 @router.get(
@@ -142,26 +99,14 @@ async def obtener_tasa_error_por_tema(
     comision_id: UUID | None = None,
     usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
-) -> list[TasaErrorTemaResponse]:
+) -> list[TasaErrorTemaSalida]:
     """Tasa de error por unidad/tema de una materia, agregada o acotada a una comisión (RF-17).
 
     Sin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`
     → 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización sobre la materia, o sobre
     la comisión puntual → 403 (`US-ADJ-57`).
     """
-    tasas = await controller.obtener_tasa_error_por_tema(
-        materia_id, comision_id, usuario.usuario_id
-    )
-    return [
-        TasaErrorTemaResponse(
-            unidad_tematica=tasa.unidad_tematica,
-            tema=tasa.tema,
-            cantidad_respuestas=tasa.cantidad_respuestas,
-            cantidad_incorrectas=tasa.cantidad_incorrectas,
-            tasa_error=tasa.tasa_error,
-        )
-        for tasa in tasas
-    ]
+    return await controller.obtener_tasa_error_por_tema(materia_id, comision_id, usuario.usuario_id)
 
 
 @router.get(
@@ -174,24 +119,15 @@ async def obtener_desempeno_por_comision(
     comision_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
-) -> list[DesempenoComisionFilaResponse]:
+) -> list[DesempenoComisionFilaSalida]:
     """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20).
 
     `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`, mismo
     criterio que `obtener_tasa_error_por_tema`). Docente sin autorización → 403 (`US-ADJ-57`).
     """
-    filas = await controller.obtener_desempeno_por_comision(
+    return await controller.obtener_desempeno_por_comision(
         materia_id, comision_id, usuario.usuario_id
     )
-    return [
-        DesempenoComisionFilaResponse(
-            estudiante_id=fila.estudiante_id,
-            nombre=fila.nombre,
-            porcentaje_aciertos_acumulado=fila.porcentaje_aciertos_acumulado,
-            actividades_pendientes=fila.actividades_pendientes,
-        )
-        for fila in filas
-    ]
 
 
 @router.get(
@@ -203,31 +139,16 @@ async def obtener_evolucion_temporal_estudiante(
     materia_id: UUID,
     estudiante_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
-    estudiante_consulta: EstudianteConsultaPort = Depends(get_estudiante_consulta_port),
     controller: AnalyticsController = Depends(get_analytics_controller),
-) -> list[EvolucionTemporalPuntoResponse]:
+) -> list[EvolucionTemporalPuntoSalida]:
     """Evolución temporal individual de un estudiante (`US-ADJ-45`, RF-21).
 
     `estudiante_id` inexistente → 404, mismo criterio que `obtener_desempeno_de_estudiante`.
     Docente sin Comisión asignada en `materia_id` → 403 (`US-ADJ-57`).
     """
-    if not await estudiante_consulta.existe(estudiante_id):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No existe un Estudiante con id {estudiante_id}.",
-        )
-    puntos = await controller.obtener_evolucion_temporal_estudiante(
+    return await controller.obtener_evolucion_temporal_estudiante(
         estudiante_id, materia_id, usuario.usuario_id
     )
-    return [
-        EvolucionTemporalPuntoResponse(
-            actividad_id=punto.actividad_id,
-            titulo_actividad=punto.titulo_actividad,
-            finalizada_en=punto.finalizada_en,
-            porcentaje_acierto=punto.porcentaje_acierto,
-        )
-        for punto in puntos
-    ]
 
 
 @router.get(
@@ -240,23 +161,15 @@ async def obtener_evolucion_temporal_comision(
     comision_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
-) -> list[EvolucionTemporalComisionPuntoResponse]:
+) -> list[EvolucionTemporalComisionPuntoSalida]:
     """Evolución temporal promedio de una comisión (`US-ADJ-45`, RF-21).
 
     `comision_id` que no pertenece a `materia_id` → 422 (`ComisionNoPerteneceAMateria`).
     Docente sin autorización → 403 (`US-ADJ-57`).
     """
-    puntos = await controller.obtener_evolucion_temporal_comision(
+    return await controller.obtener_evolucion_temporal_comision(
         materia_id, comision_id, usuario.usuario_id
     )
-    return [
-        EvolucionTemporalComisionPuntoResponse(
-            actividad_id=punto.actividad_id,
-            titulo_actividad=punto.titulo_actividad,
-            porcentaje_aciertos_promedio=punto.porcentaje_aciertos_promedio,
-        )
-        for punto in puntos
-    ]
 
 
 @router.get(
@@ -269,27 +182,15 @@ async def obtener_ranking_preguntas_falladas(
     comision_id: UUID | None = None,
     usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsInformesController = Depends(get_analytics_informes_controller),
-) -> list[RankingPreguntaFalladaResponse]:
+) -> list[RankingPreguntaFalladaSalida]:
     """Ranking de preguntas más falladas de una materia, agregado o acotado a comisión (RF-22).
 
     Sin `comision_id`, agrega toda la materia. `comision_id` que no pertenece a `materia_id`
     → 422 (`ComisionNoPerteneceAMateria`). Docente sin autorización → 403 (`US-ADJ-57`).
     """
-    ranking = await controller.obtener_ranking_preguntas_falladas(
+    return await controller.obtener_ranking_preguntas_falladas(
         materia_id, comision_id, usuario.usuario_id
     )
-    return [
-        RankingPreguntaFalladaResponse(
-            pregunta_id=fila.pregunta_id,
-            enunciado=fila.enunciado,
-            unidad_tematica=fila.unidad_tematica,
-            tema=fila.tema,
-            cantidad_presentaciones=fila.cantidad_presentaciones,
-            cantidad_fallos=fila.cantidad_fallos,
-            tasa_error=fila.tasa_error,
-        )
-        for fila in ranking
-    ]
 
 
 @router.get(
@@ -301,26 +202,10 @@ async def obtener_completitud_por_actividad(
     actividad_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: AnalyticsCompletitudController = Depends(get_analytics_completitud_controller),
-) -> CompletitudPorActividadResponse:
+) -> CompletitudPorActividadSalida:
     """Completitud del roster aplicable de una actividad puntual (`US-ADJ-47`, RF-23).
 
     `actividad_id` inexistente → 404 (`ActividadNoExiste`). Docente sin Comisión asignada en
     la materia de la actividad → 403 (`US-ADJ-57`).
     """
-    completitud = await controller.obtener_completitud_por_actividad(
-        actividad_id, usuario.usuario_id
-    )
-    return CompletitudPorActividadResponse(
-        detalle=[
-            CompletitudFilaResponse(
-                estudiante_id=fila.estudiante_id, nombre=fila.nombre, estado=fila.estado
-            )
-            for fila in completitud.detalle
-        ],
-        resumen=CompletitudResumenResponse(
-            finalizadas=completitud.resumen.finalizadas,
-            en_curso=completitud.resumen.en_curso,
-            suspendidas=completitud.resumen.suspendidas,
-            sin_iniciar=completitud.resumen.sin_iniciar,
-        ),
-    )
+    return await controller.obtener_completitud_por_actividad(actividad_id, usuario.usuario_id)

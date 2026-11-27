@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.identidad.entities.eventos import InvitacionGrupalGenerada, InvitacionGrupalRevocada
-from src.identidad.entities.invitacion import Invitacion
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    InvitacionGrupalEstadoSalida,
+    InvitacionGrupalSalida,
+    presentar_invitacion_grupal,
+    presentar_invitacion_grupal_estado,
+)
 from src.identidad.use_cases.generar_invitacion_grupal import GenerarInvitacionGrupalUseCase
 from src.identidad.use_cases.obtener_ultima_invitacion_grupal import (
-    InvitacionGrupalEstado,
     ObtenerUltimaInvitacionGrupalUseCase,
 )
 from src.identidad.use_cases.revocar_invitacion_grupal import RevocarInvitacionGrupalUseCase
@@ -30,18 +33,20 @@ class InvitacionesGrupalesController:
 
     async def generar(
         self, comision_id: UUID, solicitante_id: UUID, duracion_minutos: int
-    ) -> tuple[Invitacion, InvitacionGrupalGenerada]:
+    ) -> InvitacionGrupalSalida:
         """Delega la generación del link grupal en el caso de uso."""
-        return await self._generar.execute(comision_id, solicitante_id, duracion_minutos)
+        invitacion, _evento = await self._generar.execute(
+            comision_id, solicitante_id, duracion_minutos
+        )
+        return presentar_invitacion_grupal(invitacion)
 
-    async def revocar(
-        self, comision_id: UUID, invitacion_id: UUID, solicitante_id: UUID
-    ) -> InvitacionGrupalRevocada | None:
+    async def revocar(self, comision_id: UUID, invitacion_id: UUID, solicitante_id: UUID) -> None:
         """Delega la desactivación del link grupal en el caso de uso."""
-        return await self._revocar.execute(comision_id, invitacion_id, solicitante_id)
+        await self._revocar.execute(comision_id, invitacion_id, solicitante_id)
 
     async def obtener_ultima(
         self, comision_id: UUID, solicitante_id: UUID
-    ) -> InvitacionGrupalEstado | None:
+    ) -> InvitacionGrupalEstadoSalida | None:
         """Delega la consulta del último link grupal en el caso de uso."""
-        return await self._obtener_ultima.execute(comision_id, solicitante_id)
+        resultado = await self._obtener_ultima.execute(comision_id, solicitante_id)
+        return None if resultado is None else presentar_invitacion_grupal_estado(resultado)

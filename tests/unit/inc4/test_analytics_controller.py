@@ -5,7 +5,9 @@ from uuid import uuid4
 
 import pytest
 
+from src.analytics.entities.errors import EstudianteNoExiste
 from src.analytics.entities.ports.comision_consulta_port import ComisionConsultaPort
+from src.analytics.entities.ports.estudiante_consulta_port import EstudianteConsultaPort
 from src.analytics.entities.ports.evaluacion_desempeno_consulta_port import (
     EvaluacionDesempenoConsultaPort,
     EvaluacionDesempenoResumen,
@@ -80,8 +82,19 @@ class _ComisionConsultaPortFake(ComisionConsultaPort):
         return True
 
 
+class _EstudianteConsultaPortFake(EstudianteConsultaPort):
+    """Fake de Estudiantes: `existentes=None` significa que todos existen."""
+
+    def __init__(self, existentes: set | None = None) -> None:
+        self._existentes = existentes
+
+    async def existe(self, estudiante_id) -> bool:
+        return self._existentes is None or estudiante_id in self._existentes
+
+
 def _controller(
     evaluacion_desempeno_consulta: EvaluacionDesempenoConsultaPort | None = None,
+    estudiante_consulta: EstudianteConsultaPort | None = None,
 ) -> AnalyticsController:
     evaluacion_desempeno_consulta = (
         evaluacion_desempeno_consulta or _EvaluacionDesempenoConsultaPortFake()
@@ -94,6 +107,7 @@ def _controller(
             comision_consulta,
         ),
         ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta, comision_consulta),
+        estudiante_consulta or _EstudianteConsultaPortFake(),
     )
 
 
@@ -166,3 +180,27 @@ class TestAnalyticsController:
 
         assert len(resultado) == 1
         assert resultado[0].porcentaje_acierto == 100
+
+    @pytest.mark.asyncio
+    async def test_desempeno_de_un_estudiante_inexistente_levanta_error(self):
+        """El `estudiante_id` del path se valida antes de calcular (antes lo hacía el router)."""
+        controller = _controller(estudiante_consulta=_EstudianteConsultaPortFake(existentes=set()))
+
+        with pytest.raises(EstudianteNoExiste):
+            await controller.obtener_desempeno_de_estudiante(uuid4(), uuid4(), uuid4())
+
+    @pytest.mark.asyncio
+    async def test_evolucion_de_un_estudiante_inexistente_levanta_error(self):
+        controller = _controller(estudiante_consulta=_EstudianteConsultaPortFake(existentes=set()))
+
+        with pytest.raises(EstudianteNoExiste):
+            await controller.obtener_evolucion_temporal_estudiante(uuid4(), uuid4(), uuid4())
+
+    @pytest.mark.asyncio
+    async def test_mi_desempeno_no_consulta_la_existencia_del_estudiante(self):
+        """Con `estudiante_id` del token no hay nada que validar."""
+        controller = _controller(estudiante_consulta=_EstudianteConsultaPortFake(existentes=set()))
+
+        resultado = await controller.obtener_mi_desempeno(uuid4(), uuid4())
+
+        assert resultado.evaluaciones == []

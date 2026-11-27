@@ -1,76 +1,54 @@
-"""Controller de la API para operaciones sobre evaluaciones de un Estudiante."""
+"""Controller de la API para iniciar una evaluación y registrar respuestas.
+
+Las transiciones de estado (suspender, reanudar, finalizar) están en `EvaluacionesEstadoController`:
+al presentar la evaluación, ambos controllers necesitan `PreguntaConsultaPort` y juntos pasaban el
+umbral de CBO (`IQ-01`).
+"""
 
 from __future__ import annotations
 
 from typing import Any
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.evaluacion import Evaluacion, Respuesta
-from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
+from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
+from src.actividad_evaluativa.interface_adapters.controllers._contenido_de_evaluacion import (
+    contenidos_de,
+)
+from src.actividad_evaluativa.interface_adapters.presenters.evaluacion_presenter import (
+    EvaluacionSalida,
+    RespuestaSalida,
+    presentar_evaluacion,
+    presentar_respuesta,
+)
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
-from src.actividad_evaluativa.use_cases.reanudar_evaluacion import ReanudarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.registrar_respuesta import RegistrarRespuestaUseCase
-from src.actividad_evaluativa.use_cases.suspender_evaluacion import SuspenderEvaluacionUseCase
 
 
 class EvaluacionesController:
-    """Adapta requests HTTP a los casos de uso sobre evaluaciones de un Estudiante."""
+    """Adapta requests HTTP a los casos de uso de inicio y respuesta de una evaluación."""
 
     def __init__(
         self,
         iniciar_evaluacion: IniciarEvaluacionUseCase,
         registrar_respuesta: RegistrarRespuestaUseCase,
-        suspender_evaluacion: SuspenderEvaluacionUseCase,
-        reanudar_evaluacion: ReanudarEvaluacionUseCase,
-        finalizar_evaluacion: FinalizarEvaluacionUseCase,
+        pregunta_consulta: PreguntaConsultaPort,
     ) -> None:
-        """Recibe los casos de uso sobre evaluaciones de un Estudiante."""
+        """Recibe los casos de uso y el puerto que enriquece la evaluación con sus preguntas."""
         self._iniciar_evaluacion = iniciar_evaluacion
         self._registrar_respuesta = registrar_respuesta
-        self._suspender_evaluacion = suspender_evaluacion
-        self._reanudar_evaluacion = reanudar_evaluacion
-        self._finalizar_evaluacion = finalizar_evaluacion
+        self._pregunta_consulta = pregunta_consulta
 
-    async def iniciar_evaluacion(
-        self, actividad_id: UUID, estudiante_id: UUID
-    ) -> tuple[Evaluacion, bool]:
-        """Delega el inicio (o la reconexión idempotente) en el caso de uso correspondiente."""
-        return await self._iniciar_evaluacion.execute(actividad_id, estudiante_id)
+    async def iniciar_evaluacion(self, actividad_id: UUID, estudiante_id: UUID) -> EvaluacionSalida:
+        """Inicia (o retoma, idempotente) la evaluación y la presenta con el contenido de sus preguntas."""
+        evaluacion, _creada = await self._iniciar_evaluacion.execute(actividad_id, estudiante_id)
+        contenidos = await contenidos_de(evaluacion, self._pregunta_consulta)
+        return presentar_evaluacion(evaluacion, contenidos)
 
     async def registrar_respuesta(
-        self,
-        evaluacion_id: UUID,
-        estudiante_id: UUID,
-        pregunta_id: UUID,
-        contenido: dict[str, Any],
-    ) -> Respuesta:
-        """Delega la confirmación de una respuesta en el caso de uso correspondiente."""
-        return await self._registrar_respuesta.execute(
+        self, evaluacion_id: UUID, estudiante_id: UUID, pregunta_id: UUID, contenido: dict[str, Any]
+    ) -> RespuestaSalida:
+        """Registra la respuesta del Estudiante y la presenta (sin `es_correcta`)."""
+        respuesta = await self._registrar_respuesta.execute(
             evaluacion_id, estudiante_id, pregunta_id, contenido
         )
-
-    async def suspender_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
-        """Delega la pausa explícita en el caso de uso correspondiente.
-
-        `actor="estudiante"` (default de `SuspenderEvaluacionUseCase.execute`) nunca devuelve
-        `None` — ese valor es exclusivo del modo `actor="sistema"` que usa
-        `VerificarVencimientosUseCase` (`US-3.2.4`), no este controller HTTP.
-        """
-        resultado = await self._suspender_evaluacion.execute(evaluacion_id, estudiante_id)
-        assert resultado is not None
-        return resultado
-
-    async def reanudar_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
-        """Delega la reanudación explícita en el caso de uso correspondiente."""
-        return await self._reanudar_evaluacion.execute(evaluacion_id, estudiante_id)
-
-    async def finalizar_evaluacion(self, evaluacion_id: UUID, estudiante_id: UUID) -> Evaluacion:
-        """Delega el cierre explícito en el caso de uso correspondiente.
-
-        `actor="estudiante"` (default de `FinalizarEvaluacionUseCase.execute`) nunca devuelve
-        `None` — ese valor es exclusivo del modo `actor="sistema"` que usa
-        `VerificarVencimientosUseCase` (`US-3.2.4`), no este controller HTTP.
-        """
-        resultado = await self._finalizar_evaluacion.execute(evaluacion_id, estudiante_id)
-        assert resultado is not None
-        return resultado
+        return presentar_respuesta(respuesta)

@@ -49,7 +49,8 @@ class TestBancosController:
 
         resultado = await controller.filtrar_preguntas(banco_id=banco.id)
 
-        assert resultado.preguntas == [pregunta]
+        assert [p.id for p in resultado.preguntas] == [pregunta.id]
+        assert resultado.total == 1
 
     async def test_filtrar_preguntas_propaga_filtros(self):
         banco_repo = FakeBancoRepository()

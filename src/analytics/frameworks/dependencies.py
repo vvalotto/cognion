@@ -104,6 +104,7 @@ def get_analytics_controller(session: SessionDep) -> AnalyticsController:
             evaluacion_desempeno_consulta, sesion_en_vivo_desempeno_consulta, comision_consulta
         ),
         ObtenerEvolucionTemporalEstudianteUseCase(evaluacion_desempeno_consulta, comision_consulta),
+        EstudianteConsultaPortInProcess(session),
     )
 
 

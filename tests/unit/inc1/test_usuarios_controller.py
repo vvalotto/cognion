@@ -1,4 +1,3 @@
-from src.identidad.entities.eventos import UsuarioCreado
 from src.identidad.interface_adapters.controllers.usuarios_controller import UsuariosController
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -10,10 +9,9 @@ class TestUsuariosController:
         repo = FakeUsuarioRepository()
         controller = UsuariosController(CrearUsuarioUseCase(repo, FakePasswordHasher()))
 
-        usuario, evento = await controller.crear_usuario(
+        salida = await controller.crear_usuario(
             "Ana", "ana@fiuner.edu.ar", "claveSegura1#", TipoPerfil.DOCENTE
         )
 
-        assert usuario.email == "ana@fiuner.edu.ar"
-        assert isinstance(evento, UsuarioCreado)
-        assert repo.usuarios[usuario.id] is usuario
+        assert salida.email == "ana@fiuner.edu.ar"
+        assert repo.usuarios[salida.id].email == "ana@fiuner.edu.ar"

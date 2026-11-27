@@ -10,8 +10,9 @@ from __future__ import annotations
 from uuid import UUID
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import EstadoSesionEnVivo
-from src.actividad_evaluativa.entities.ports.sesiones_en_vivo_query_port import (
-    SesionEnVivoResumen,
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    SesionEnVivoResumenSalida,
+    presentar_sesiones_resumen,
 )
 from src.actividad_evaluativa.use_cases.listar_sesiones_en_vivo import ListarSesionesEnVivoUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -30,6 +31,8 @@ class SesionesEnVivoListadoController:
         rol: TipoPerfil,
         comision_id: UUID | None,
         estados: list[EstadoSesionEnVivo],
-    ) -> list[SesionEnVivoResumen]:
+    ) -> list[SesionEnVivoResumenSalida]:
         """Devuelve las sesiones en vivo visibles para `usuario_id` según su rol."""
-        return await self._listar_sesiones.execute(usuario_id, rol, comision_id, estados)
+        return presentar_sesiones_resumen(
+            await self._listar_sesiones.execute(usuario_id, rol, comision_id, estados)
+        )
