@@ -4,8 +4,12 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.identidad.entities.resultado_paginado_cuentas import ResultadoPaginadoCuentas
-from src.identidad.entities.usuario import Usuario
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    CuentaDetalleSalida,
+    CuentasPaginadasSalida,
+    presentar_cuenta_detalle,
+    presentar_cuentas_paginadas,
+)
 from src.identidad.use_cases.activar_cuenta import ActivarCuentaUseCase
 from src.identidad.use_cases.editar_cuenta import EditarCuentaUseCase
 from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
@@ -43,36 +47,38 @@ class CuentasController:
         pagina: int = 1,
         tamanio_pagina: int = 20,
         incluir_inactivas: bool = False,
-    ) -> ResultadoPaginadoCuentas:
+    ) -> CuentasPaginadasSalida:
         """Delega el listado filtrado y paginado en el caso de uso correspondiente."""
-        return await self._listar_cuentas.execute(
-            rol, estado, busqueda, pagina, tamanio_pagina, incluir_inactivas
+        return presentar_cuentas_paginadas(
+            await self._listar_cuentas.execute(
+                rol, estado, busqueda, pagina, tamanio_pagina, incluir_inactivas
+            )
         )
 
-    async def obtener_cuenta(self, usuario_id: UUID) -> Usuario:
+    async def obtener_cuenta(self, usuario_id: UUID) -> CuentaDetalleSalida:
         """Delega el detalle de una cuenta puntual en el caso de uso correspondiente."""
-        return await self._obtener_cuenta.execute(usuario_id)
+        return presentar_cuenta_detalle(await self._obtener_cuenta.execute(usuario_id))
 
     async def resetear_password(
         self, usuario_id: UUID, password_nueva: str, administrador_id: UUID
-    ) -> Usuario:
-        """Delega el reseteo de contraseña en el caso de uso correspondiente.
-
-        Devuelve solo la cuenta actualizada — el router decide qué exponer al cliente.
-        """
+    ) -> CuentaDetalleSalida:
+        """Resetea la contraseña y presenta la cuenta actualizada; los eventos se descartan acá."""
         usuario, _evento_password, _evento_desbloqueo = await self._resetear_password.execute(
             usuario_id, password_nueva, administrador_id
         )
-        return usuario
+        return presentar_cuenta_detalle(usuario)
 
-    async def editar_cuenta(self, usuario_id: UUID, nombre: str, email: str) -> Usuario:
+    async def editar_cuenta(self, usuario_id: UUID, nombre: str, email: str) -> CuentaDetalleSalida:
         """Delega la corrección de nombre/email de una cuenta en el caso de uso correspondiente."""
-        return await self._editar_cuenta.execute(usuario_id, nombre, email)
+        return presentar_cuenta_detalle(
+            await self._editar_cuenta.execute(usuario_id, nombre, email)
+        )
 
-    async def eliminar_cuenta(self, usuario_id: UUID) -> Usuario | None:
+    async def eliminar_cuenta(self, usuario_id: UUID) -> CuentaDetalleSalida | None:
         """Delega la baja (física o lógica) de una cuenta en el caso de uso correspondiente."""
-        return await self._eliminar_cuenta.execute(usuario_id)
+        resultado = await self._eliminar_cuenta.execute(usuario_id)
+        return None if resultado is None else presentar_cuenta_detalle(resultado)
 
-    async def activar_cuenta(self, usuario_id: UUID) -> Usuario:
+    async def activar_cuenta(self, usuario_id: UUID) -> CuentaDetalleSalida:
         """Delega la reactivación de una cuenta deshabilitada en el caso de uso correspondiente."""
-        return await self._activar_cuenta.execute(usuario_id)
+        return presentar_cuenta_detalle(await self._activar_cuenta.execute(usuario_id))

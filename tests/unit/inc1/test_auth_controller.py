@@ -1,4 +1,3 @@
-from src.identidad.entities.eventos import SesionIniciada
 from src.identidad.entities.usuario import Usuario
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
@@ -18,8 +17,8 @@ class TestAuthController:
 
         controller = AuthController(IniciarSesionUseCase(usuario_repo, hasher, jwt_issuer))
 
-        jwt_vo, evento = await controller.iniciar_sesion("docente@fiuner.edu.ar", "Docente#2026")
+        salida = await controller.iniciar_sesion("docente@fiuner.edu.ar", "Docente#2026")
 
-        assert jwt_vo.rol == TipoPerfil.DOCENTE
-        assert isinstance(evento, SesionIniciada)
-        assert evento.usuario_id == usuario.id
+        assert salida.rol == TipoPerfil.DOCENTE
+        assert salida.token_type == "bearer"
+        assert salida.access_token

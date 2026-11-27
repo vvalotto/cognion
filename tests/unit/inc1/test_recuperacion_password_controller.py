@@ -82,7 +82,8 @@ class TestRecuperacionPasswordControllerConfirmar:
 
         controller = _controller(usuario_repo, token_repo, canal)
 
-        usuario_actualizado = await controller.confirmar(token.token, "Segura#2026x")
+        resultado = await controller.confirmar(token.token, "Segura#2026x")
 
-        assert usuario_actualizado.password_hash == "hashed:Segura#2026x"
+        assert resultado is None
+        assert usuario_repo.usuarios[usuario.id].password_hash == "hashed:Segura#2026x"
         assert token.usado_en is not None

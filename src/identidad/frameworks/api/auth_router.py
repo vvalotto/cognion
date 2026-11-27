@@ -7,6 +7,9 @@ from fastapi import APIRouter, Depends, status
 from src.identidad.frameworks.api.schemas import LoginRequest, LoginResponse
 from src.identidad.frameworks.dependencies import get_auth_controller
 from src.identidad.interface_adapters.controllers.auth_controller import AuthController
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    LoginSalida,
+)
 
 router = APIRouter(prefix="/identidad", tags=["identidad"])
 
@@ -15,7 +18,7 @@ router = APIRouter(prefix="/identidad", tags=["identidad"])
 async def login(
     body: LoginRequest,
     controller: AuthController = Depends(get_auth_controller),
-) -> LoginResponse:
+) -> LoginSalida:
     """Autentica un Usuario y emite su JWT; responde 401 genérico ante credenciales inválidas.
 
     El mensaje de error no distingue si el email existe o no (`US-1.1.4`), salvo en el 2.º fallo
@@ -29,10 +32,4 @@ async def login(
     `cuenta_bloqueada_temporal` (con `reintentar_en_segundos`) si es el último Administrador
     operativo bloqueado (`US-ADJ-60`).
     """
-    jwt_vo, _evento = await controller.iniciar_sesion(body.email, body.password)
-
-    return LoginResponse(
-        access_token=jwt_vo.token,
-        rol=jwt_vo.rol,
-        expira_en=jwt_vo.expira_en,
-    )
+    return await controller.iniciar_sesion(body.email, body.password)

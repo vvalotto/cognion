@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from src.identidad.entities.eventos import UsuarioCreado
-from src.identidad.entities.usuario import Usuario
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    UsuarioSalida,
+    presentar_usuario,
+)
 from src.identidad.use_cases.crear_usuario import CrearUsuarioUseCase
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -17,6 +19,7 @@ class UsuariosController:
 
     async def crear_usuario(
         self, nombre: str, email: str, password: str, tipo_perfil: TipoPerfil
-    ) -> tuple[Usuario, UsuarioCreado]:
+    ) -> UsuarioSalida:
         """Delega la creación del usuario en el caso de uso correspondiente."""
-        return await self._crear_usuario.execute(nombre, email, password, tipo_perfil)
+        usuario, _evento = await self._crear_usuario.execute(nombre, email, password, tipo_perfil)
+        return presentar_usuario(usuario)

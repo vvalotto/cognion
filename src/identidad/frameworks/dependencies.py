@@ -72,16 +72,24 @@ from src.identidad.use_cases.eliminar_cuenta import EliminarCuentaUseCase
 from src.identidad.use_cases.generar_invitacion import GenerarInvitacionUseCase
 from src.identidad.use_cases.generar_invitacion_grupal import GenerarInvitacionGrupalUseCase
 from src.identidad.use_cases.iniciar_sesion import IniciarSesionUseCase
+from src.identidad.use_cases.listar_comisiones_de_materia import ListarComisionesDeMateriaUseCase
 from src.identidad.use_cases.listar_cuentas import ListarCuentasUseCase
+from src.identidad.use_cases.listar_estudiantes_de_comision import (
+    ListarEstudiantesDeComisionUseCase,
+)
 from src.identidad.use_cases.listar_materias_del_estudiante import (
     ListarMateriasDelEstudianteUseCase,
 )
+from src.identidad.use_cases.obtener_comision import ObtenerComisionUseCase
 from src.identidad.use_cases.obtener_cuenta import ObtenerCuentaUseCase
 from src.identidad.use_cases.obtener_invitacion import ObtenerInvitacionUseCase
 from src.identidad.use_cases.obtener_ultima_invitacion_grupal import (
     ObtenerUltimaInvitacionGrupalUseCase,
 )
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
+from src.identidad.use_cases.registrar_estudiante_con_materia import (
+    RegistrarEstudianteConMateriaUseCase,
+)
 from src.identidad.use_cases.resetear_password import ResetearPasswordUseCase
 from src.identidad.use_cases.revocar_invitacion_grupal import RevocarInvitacionGrupalUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
@@ -128,7 +136,11 @@ def get_comisiones_query_controller(session: SessionDep) -> ComisionesQueryContr
     comision_query = SQLAlchemyComisionQueryRepository(session)
     materia_port = MateriaPortInProcess(session)
     comision_repo = SQLAlchemyComisionRepository(session)
-    return ComisionesQueryController(comision_query, materia_port, comision_repo)
+    return ComisionesQueryController(
+        ListarComisionesDeMateriaUseCase(comision_query, materia_port),
+        ListarEstudiantesDeComisionUseCase(comision_repo, comision_query),
+        ObtenerComisionUseCase(comision_repo),
+    )
 
 
 def get_notificador() -> NotificadorPort:
@@ -167,9 +179,11 @@ def get_registro_controller(session: SessionDep) -> RegistroController:
     hasher = get_password_hasher()
     materia_port = MateriaPortInProcess(session)
     return RegistroController(
-        RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
-        comision_repo,
-        materia_port,
+        RegistrarEstudianteConMateriaUseCase(
+            RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
+            comision_repo,
+            materia_port,
+        )
     )
 
 

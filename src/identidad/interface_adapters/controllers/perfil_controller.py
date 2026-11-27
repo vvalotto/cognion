@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.identidad.entities.eventos import PasswordCambiada
 from src.identidad.use_cases.cambiar_password import CambiarPasswordUseCase
 
 
@@ -17,6 +16,6 @@ class PerfilController:
 
     async def cambiar_password(
         self, usuario_id: UUID, password_actual: str, password_nueva: str
-    ) -> PasswordCambiada:
+    ) -> None:
         """Delega el cambio de la propia contraseña en el caso de uso correspondiente."""
-        return await self._cambiar_password.execute(usuario_id, password_actual, password_nueva)
+        await self._cambiar_password.execute(usuario_id, password_actual, password_nueva)

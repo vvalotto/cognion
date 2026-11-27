@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from src.identidad.entities.usuario import Usuario
 from src.identidad.use_cases.confirmar_nueva_password import ConfirmarNuevaPasswordUseCase
 from src.identidad.use_cases.solicitar_recuperacion_password import (
     SolicitarRecuperacionPasswordUseCase,
@@ -25,9 +24,6 @@ class RecuperacionPasswordController:
         """Delega la solicitud de recuperación en el caso de uso correspondiente."""
         await self._solicitar_recuperacion.execute(email)
 
-    async def confirmar(self, token: str, password_nueva: str) -> Usuario:
-        """Delega el canje del token por una contraseña nueva en el caso de uso correspondiente."""
-        usuario, _evento, _desbloqueo = await self._confirmar_nueva_password.execute(
-            token, password_nueva
-        )
-        return usuario
+    async def confirmar(self, token: str, password_nueva: str) -> None:
+        """Canjea el token por una contraseña nueva; el resultado no se expone al cliente."""
+        await self._confirmar_nueva_password.execute(token, password_nueva)

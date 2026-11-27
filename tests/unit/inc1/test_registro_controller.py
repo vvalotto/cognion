@@ -1,10 +1,12 @@
 import uuid
 
 from src.identidad.entities.comision import Comision
-from src.identidad.entities.eventos import InvitacionAceptada, UsuarioRegistrado
 from src.identidad.entities.invitacion import Invitacion
 from src.identidad.interface_adapters.controllers.registro_controller import RegistroController
 from src.identidad.use_cases.registrar_estudiante import RegistrarEstudianteUseCase
+from src.identidad.use_cases.registrar_estudiante_con_materia import (
+    RegistrarEstudianteConMateriaUseCase,
+)
 from tests.unit.inc1._fakes import (
     FakeComisionRepository,
     FakeInvitacionRepository,
@@ -31,16 +33,17 @@ class TestRegistroController:
         await invitacion_repo.guardar(invitacion)
 
         controller = RegistroController(
-            RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
-            comision_repo,
-            materia_port,
+            RegistrarEstudianteConMateriaUseCase(
+                RegistrarEstudianteUseCase(invitacion_repo, usuario_repo, hasher),
+                comision_repo,
+                materia_port,
+            )
         )
 
-        usuario, materia, evento_invitacion, evento_usuario = await controller.registrar_estudiante(
+        salida = await controller.registrar_estudiante(
             invitacion.token, "Nico", "nico@fiuner.edu.ar", "Password#123x"
         )
 
-        assert usuario.email == "nico@fiuner.edu.ar"
-        assert materia == "Ingeniería de Software"
-        assert isinstance(evento_invitacion, InvitacionAceptada)
-        assert isinstance(evento_usuario, UsuarioRegistrado)
+        assert salida.email == "nico@fiuner.edu.ar"
+        assert salida.materia == "Ingeniería de Software"
+        assert salida.comision_id == comision_id

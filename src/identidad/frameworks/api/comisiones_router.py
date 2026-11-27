@@ -27,6 +27,10 @@ from src.identidad.interface_adapters.controllers.comisiones_controller import C
 from src.identidad.interface_adapters.controllers.comisiones_query_controller import (
     ComisionesQueryController,
 )
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    ComisionSalida,
+    EstudianteResumenSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -48,25 +52,14 @@ router = APIRouter(prefix="/comisiones", tags=["identidad"])
 async def crear_comision(
     body: CrearComisionRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
-) -> ComisionResponse:
+) -> ComisionSalida:
     """Crea una comisión nueva a nombre del administrador indicado; 422 si la materia no existe."""
     try:
-        comision, _evento = await controller.crear_comision(
-            body.materia_id, body.horario, body.administrador_id
-        )
+        return await controller.crear_comision(body.materia_id, body.horario, body.administrador_id)
     except MateriaNoExiste as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(exc)
         ) from exc
-
-    return ComisionResponse(
-        id=comision.id,
-        materia_id=comision.materia_id,
-        horario=comision.horario,
-        administrador_id=comision.administrador_id,
-        docentes_asignados=comision.docentes_asignados,
-        activa=comision.activa,
-    )
 
 
 @router.get(
@@ -78,21 +71,12 @@ async def obtener_comision(
     comision_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
-) -> ComisionResponse:
+) -> ComisionSalida:
     """Detalle de una comisión puntual; 404 si `comision_id` no existe (`US-ADJ-25`).
 
     403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
     """
-    comision = await controller.obtener_comision(comision_id, _docente_id_o_none(usuario))
-
-    return ComisionResponse(
-        id=comision.id,
-        materia_id=comision.materia_id,
-        horario=comision.horario,
-        administrador_id=comision.administrador_id,
-        docentes_asignados=comision.docentes_asignados,
-        activa=comision.activa,
-    )
+    return await controller.obtener_comision(comision_id, _docente_id_o_none(usuario))
 
 
 @router.get(
@@ -104,14 +88,12 @@ async def listar_estudiantes(
     comision_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ComisionesQueryController = Depends(get_comisiones_query_controller),
-) -> list[EstudianteResumenResponse]:
+) -> list[EstudianteResumenSalida]:
     """Estudiantes inscriptos en la comisión; 404 si `comision_id` no existe (`US-4.2.2`).
 
     403 si el Docente que llama no está asignado a esta comisión (`US-ADJ-57`).
     """
-    estudiantes = await controller.listar_estudiantes(comision_id, _docente_id_o_none(usuario))
-
-    return [EstudianteResumenResponse(id=e.id, nombre=e.nombre) for e in estudiantes]
+    return await controller.listar_estudiantes(comision_id, _docente_id_o_none(usuario))
 
 
 @router.patch(
@@ -123,18 +105,9 @@ async def editar_comision(
     comision_id: UUID,
     body: EditarComisionRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
-) -> ComisionResponse:
+) -> ComisionSalida:
     """Corrige el horario de una comisión existente; 404 si no existe."""
-    comision = await controller.editar_comision(comision_id, body.horario)
-
-    return ComisionResponse(
-        id=comision.id,
-        materia_id=comision.materia_id,
-        horario=comision.horario,
-        administrador_id=comision.administrador_id,
-        docentes_asignados=comision.docentes_asignados,
-        activa=comision.activa,
-    )
+    return await controller.editar_comision(comision_id, body.horario)
 
 
 @router.delete(
@@ -145,7 +118,7 @@ async def editar_comision(
 async def eliminar_comision(
     comision_id: UUID,
     controller: ComisionesController = Depends(get_comisiones_controller),
-) -> ComisionResponse | Response:
+) -> ComisionSalida | Response:
     """Borra la comisión, o la deshabilita si tiene estudiantes inscriptos.
 
     204 si se borró físicamente; 200 con la comisión (`activa=false`) si se deshabilitó.
@@ -156,14 +129,7 @@ async def eliminar_comision(
     if comision is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-    return ComisionResponse(
-        id=comision.id,
-        materia_id=comision.materia_id,
-        horario=comision.horario,
-        administrador_id=comision.administrador_id,
-        docentes_asignados=comision.docentes_asignados,
-        activa=comision.activa,
-    )
+    return comision
 
 
 @router.post(
@@ -174,18 +140,9 @@ async def eliminar_comision(
 async def activar_comision(
     comision_id: UUID,
     controller: ComisionesController = Depends(get_comisiones_controller),
-) -> ComisionResponse:
+) -> ComisionSalida:
     """Reactiva una comisión deshabilitada; 404 si no existe."""
-    comision = await controller.activar_comision(comision_id)
-
-    return ComisionResponse(
-        id=comision.id,
-        materia_id=comision.materia_id,
-        horario=comision.horario,
-        administrador_id=comision.administrador_id,
-        docentes_asignados=comision.docentes_asignados,
-        activa=comision.activa,
-    )
+    return await controller.activar_comision(comision_id)
 
 
 @router.post(
@@ -198,15 +155,6 @@ async def asignar_docente(
     comision_id: UUID,
     body: AsignarDocenteRequest,
     controller: ComisionesController = Depends(get_comisiones_controller),
-) -> ComisionResponse:
+) -> ComisionSalida:
     """Asigna un docente a la comisión; responde 422/404 según el error de dominio."""
-    comision, _evento = await controller.asignar_docente(comision_id, body.docente_id)
-
-    return ComisionResponse(
-        id=comision.id,
-        materia_id=comision.materia_id,
-        horario=comision.horario,
-        administrador_id=comision.administrador_id,
-        docentes_asignados=comision.docentes_asignados,
-        activa=comision.activa,
-    )
+    return await controller.asignar_docente(comision_id, body.docente_id)

@@ -63,8 +63,6 @@ IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
         "dificultad:Dificultad",
         "importancia:Importancia",
     ],
-    "src/identidad/frameworks/api/cuentas_router.py": ["usuario:Estudiante", "usuario:Usuario"],
-    "src/identidad/frameworks/api/registro_router.py": ["usuario:Estudiante"],
 }
 
 # Importaciones que la guarda no cuenta: la plomería de autenticación, que es el tipo de la dependencia de seguridad.

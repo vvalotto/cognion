@@ -6,16 +6,18 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Response, status
 
-from src.identidad.entities.usuario import Estudiante, Usuario
 from src.identidad.frameworks.api.schemas import (
     CuentaDetalleResponse,
-    CuentaResponse,
     CuentasPaginadasResponse,
     EditarCuentaRequest,
     ResetearPasswordRequest,
 )
 from src.identidad.frameworks.dependencies import get_cuentas_controller, require_administrador
 from src.identidad.interface_adapters.controllers.cuentas_controller import CuentasController
+from src.identidad.interface_adapters.presenters.identidad_presenter import (
+    CuentaDetalleSalida,
+    CuentasPaginadasSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
 
@@ -35,7 +37,7 @@ async def listar_cuentas(
     tamanio_pagina: int = Query(20, ge=1),
     incluir_inactivas: bool = False,
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> CuentasPaginadasResponse:
+) -> CuentasPaginadasSalida:
     """Lista cuentas filtradas (AND) por rol, estado (`activa`/`bloqueada`/`inactiva`) y búsqueda.
 
     Página fija de `tamanio_pagina` (default 20), orden estable por `creado_en`.
@@ -43,22 +45,8 @@ async def listar_cuentas(
     gestión de Cuentas; el resto de los consumidores (selectores de Docentes) sigue viendo
     solo las habilitadas.
     """
-    resultado = await controller.listar_cuentas(
+    return await controller.listar_cuentas(
         rol, estado, busqueda, pagina, tamanio_pagina, incluir_inactivas
-    )
-    return CuentasPaginadasResponse(
-        cuentas=[
-            CuentaResponse(
-                id=usuario.id,
-                nombre=usuario.nombre,
-                email=usuario.email,
-                perfil=usuario.tipo_perfil,
-                bloqueada=usuario.bloqueada,
-                deshabilitada=usuario.deshabilitada,
-            )
-            for usuario in resultado.cuentas
-        ],
-        total=resultado.total,
     )
 
 
@@ -70,11 +58,9 @@ async def listar_cuentas(
 async def obtener_cuenta(
     usuario_id: UUID,
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> CuentaDetalleResponse:
+) -> CuentaDetalleSalida:
     """Detalle de una cuenta puntual; responde 404 si no existe."""
-    usuario = await controller.obtener_cuenta(usuario_id)
-
-    return _a_detalle_response(usuario)
+    return await controller.obtener_cuenta(usuario_id)
 
 
 @router.post(
@@ -86,16 +72,14 @@ async def resetear_password(
     body: ResetearPasswordRequest,
     administrador: JWTPayload = Depends(require_administrador),
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> CuentaDetalleResponse:
+) -> CuentaDetalleSalida:
     """Resetea la contraseña de una cuenta y la desbloquea si estaba bloqueada.
 
     Responde 404 si la cuenta no existe, 422 si la contraseña no cumple INV-ID-11.
     """
-    usuario = await controller.resetear_password(
+    return await controller.resetear_password(
         usuario_id, body.password_nueva, administrador.usuario_id
     )
-
-    return _a_detalle_response(usuario)
 
 
 @router.patch(
@@ -107,14 +91,12 @@ async def editar_cuenta(
     usuario_id: UUID,
     body: EditarCuentaRequest,
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> CuentaDetalleResponse:
+) -> CuentaDetalleSalida:
     """Corrige nombre/email de una cuenta existente — no toca password, bloqueo ni perfil.
 
     Responde 404 si la cuenta no existe, 409 si el email nuevo ya pertenece a otra cuenta.
     """
-    usuario = await controller.editar_cuenta(usuario_id, body.nombre, body.email)
-
-    return _a_detalle_response(usuario)
+    return await controller.editar_cuenta(usuario_id, body.nombre, body.email)
 
 
 @router.delete(
@@ -125,7 +107,7 @@ async def editar_cuenta(
 async def eliminar_cuenta(
     usuario_id: UUID,
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> CuentaDetalleResponse | Response:
+) -> CuentaDetalleSalida | Response:
     """Borra la cuenta, o la deshabilita si tiene datos asociados (Comisiones, evaluaciones).
 
     204 si se borró físicamente; 200 con la cuenta (`deshabilitada=true`) si se deshabilitó.
@@ -137,7 +119,7 @@ async def eliminar_cuenta(
     if usuario is None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-    return _a_detalle_response(usuario)
+    return usuario
 
 
 @router.post(
@@ -148,23 +130,6 @@ async def eliminar_cuenta(
 async def activar_cuenta(
     usuario_id: UUID,
     controller: CuentasController = Depends(get_cuentas_controller),
-) -> CuentaDetalleResponse:
+) -> CuentaDetalleSalida:
     """Reactiva una cuenta deshabilitada; 404 si no existe."""
-    usuario = await controller.activar_cuenta(usuario_id)
-
-    return _a_detalle_response(usuario)
-
-
-def _a_detalle_response(usuario: Usuario) -> CuentaDetalleResponse:
-    """Arma el `CuentaDetalleResponse` a partir de un `Usuario`, resolviendo `comision_id`."""
-    comision_id = usuario.perfil.comision_id if isinstance(usuario.perfil, Estudiante) else None
-    return CuentaDetalleResponse(
-        id=usuario.id,
-        nombre=usuario.nombre,
-        email=usuario.email,
-        perfil=usuario.tipo_perfil,
-        bloqueada=usuario.bloqueada,
-        creado_en=usuario.creado_en,
-        comision_id=comision_id,
-        deshabilitada=usuario.deshabilitada,
-    )
+    return await controller.activar_cuenta(usuario_id)
