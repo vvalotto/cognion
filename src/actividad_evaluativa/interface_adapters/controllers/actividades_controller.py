@@ -52,9 +52,7 @@ class ActividadesController:
     ) -> ActividadSalida:
         """Delega la creación de la actividad en el caso de uso correspondiente.
 
-        El segundo elemento se tipa como `object` — mismo criterio de
-        `CrearActividadPeriodoAbiertoUseCase` para no acumular CBO; el router descarta ese
-        valor. `docente_id` acota la creación a la propia materia/Comisiones del Docente
+        El evento que devuelve el caso de uso se descarta acá. `docente_id` acota la creación a la propia materia/Comisiones del Docente
         (`US-ADJ-57`; `None` = Administrador).
         """
         actividad, _evento = await self._crear_actividad.execute(

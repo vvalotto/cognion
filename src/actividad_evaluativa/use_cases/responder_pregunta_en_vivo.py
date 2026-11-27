@@ -73,29 +73,6 @@ def _mensaje_conteo(pregunta_actual_indice: int | None, cantidad: int) -> dict[s
     }
 
 
-async def _cargar(
-    event_store: EventStorePort, sesion_id: UUID, estudiante_id: UUID
-) -> tuple[ActividadEvaluativaEnVivo, ParticipacionEnVivo, int]:
-    """Reconstruye la sesión y la participación; devuelve además el largo del stream de esta.
-
-    Levanta `SesionNoExiste` o `ParticipacionNoExiste`. Vive fuera de la clase para no sumar
-    esas entidades y errores a su CBO (`feedback_cbo_pre_push_no_fase7`).
-    """
-    eventos_sesion = await event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
-    if not eventos_sesion:
-        raise SesionNoExiste(sesion_id)
-    eventos = await event_store.load(
-        AGGREGATE_TYPE_PARTICIPACION, ParticipacionEnVivo.id_para(sesion_id, estudiante_id)
-    )
-    if not eventos:
-        raise ParticipacionNoExiste(sesion_id, estudiante_id)
-    return (
-        ActividadEvaluativaEnVivo.reconstruir(eventos_sesion),
-        ParticipacionEnVivo.reconstruir(eventos),
-        len(eventos),
-    )
-
-
 async def _corregir(
     pregunta_consulta: PreguntaConsultaPort,
     sesion: ActividadEvaluativaEnVivo,
@@ -180,9 +157,7 @@ class ResponderPreguntaEnVivoUseCase:
         incluido el doble envío concurrente, que resuelve el chequeo optimista del stream).
         Proyecciones y evento se confirman juntos; el broadcast va después y es best-effort.
         """
-        sesion, participacion, largo_stream = await _cargar(
-            self._event_store, sesion_id, estudiante_id
-        )
+        sesion, participacion, largo_stream = await self._cargar(sesion_id, estudiante_id)
         tiempo = sesion.validar_para_responder(pregunta_id, datetime.now(UTC))
         participacion.validar_para_responder(pregunta_id)
 
@@ -198,3 +173,24 @@ class ResponderPreguntaEnVivoUseCase:
             sesion_id, _mensaje_conteo(sesion.pregunta_actual_indice, cantidad)
         )
         return ResultadoRespuestaEnVivo(es_correcta, puntaje, participacion.puntaje_acumulado)
+
+    async def _cargar(
+        self, sesion_id: UUID, estudiante_id: UUID
+    ) -> tuple[ActividadEvaluativaEnVivo, ParticipacionEnVivo, int]:
+        """Reconstruye la sesión y la participación; devuelve además el largo del stream de esta.
+
+        Levanta `SesionNoExiste` o `ParticipacionNoExiste`.
+        """
+        eventos_sesion = await self._event_store.load(AGGREGATE_TYPE_SESION, sesion_id)
+        if not eventos_sesion:
+            raise SesionNoExiste(sesion_id)
+        eventos = await self._event_store.load(
+            AGGREGATE_TYPE_PARTICIPACION, ParticipacionEnVivo.id_para(sesion_id, estudiante_id)
+        )
+        if not eventos:
+            raise ParticipacionNoExiste(sesion_id, estudiante_id)
+        return (
+            ActividadEvaluativaEnVivo.reconstruir(eventos_sesion),
+            ParticipacionEnVivo.reconstruir(eventos),
+            len(eventos),
+        )

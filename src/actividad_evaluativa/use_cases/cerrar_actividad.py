@@ -27,22 +27,6 @@ from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
 AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
 
 
-async def _persistir_cierre(
-    event_store: EventStorePort, actividad_id: UUID, version: int, payload: dict[str, Any]
-) -> None:
-    """Envuelve `ActividadEvaluativaCerrada` y la persiste.
-
-    Función libre para no sumar CBO a `CerrarActividadUseCase` (`US-ADJ-57`, mismo
-    criterio que `_payload` en los Use Case de sesión en vivo).
-    """
-    await event_store.append(
-        AGGREGATE_TYPE,
-        actividad_id,
-        version,
-        [EventoParaAlmacenar(event_type="ActividadEvaluativaCerrada", payload=payload)],
-    )
-
-
 class CerrarActividadUseCase:
     """Orquesta el cierre manual (INV-AE-04b) y la cascada síncrona de finalización (Regla 3)."""
 
@@ -98,7 +82,7 @@ class CerrarActividadUseCase:
             "actividad_id": str(evento.actividad_id),
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
-        await _persistir_cierre(self._event_store, actividad_id, len(eventos), payload)
+        await self._persistir_cierre(actividad_id, len(eventos), payload)
         actividad.cerrada_manualmente = True
 
         resumen = await self._evaluacion_activa_query.listar_no_finalizadas()
@@ -117,3 +101,14 @@ class CerrarActividadUseCase:
         )
 
         return actividad
+
+    async def _persistir_cierre(
+        self, actividad_id: UUID, version: int, payload: dict[str, Any]
+    ) -> None:
+        """Envuelve `ActividadEvaluativaCerrada` y la persiste."""
+        await self._event_store.append(
+            AGGREGATE_TYPE,
+            actividad_id,
+            version,
+            [EventoParaAlmacenar(event_type="ActividadEvaluativaCerrada", payload=payload)],
+        )

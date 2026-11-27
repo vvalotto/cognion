@@ -11,11 +11,9 @@ from src.actividad_evaluativa.entities.ports.comision_consulta_port import Comis
 class VerificarAutorizacionComisionService:
     """Encapsula `ComisionConsultaPort` tras un único dependiente.
 
-    Introducido para bajar el CBO de varios Use Case de este BC (`CerrarActividadUseCase`,
-    `CrearActividadPeriodoAbiertoUseCase`, `CerrarPreguntaActualUseCase`,
-    `FinalizarSesionEnVivoUseCase`, `IniciarSesionEnVivoUseCase` — todos 11-13/10 en el
-    pre-push gate) — mismo criterio ya aplicado en Banco de Preguntas
-    (`VerificarAutorizacionMateriaService`, `US-ADJ-57`).
+    La autorización del Docente por comisión es una responsabilidad propia, compartida por varios
+    casos de uso de este BC (`US-ADJ-57`), igual que `VerificarAutorizacionMateriaService` en
+    Banco de Preguntas: se resuelve en un solo lugar.
     """
 
     def __init__(self, comision_consulta: ComisionConsultaPort) -> None:

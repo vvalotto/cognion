@@ -25,21 +25,6 @@ from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
 AGGREGATE_TYPE = "ActividadEvaluativaPeriodoAbierto"
 
 
-async def _persistir_creacion(
-    event_store: EventStorePort, actividad_id: UUID, payload: dict[str, Any]
-) -> None:
-    """Envuelve `ActividadEvaluativaCreada` y la persiste como primer evento del stream.
-
-    Función libre para no sumar CBO a `CrearActividadPeriodoAbiertoUseCase` (`US-ADJ-57`).
-    """
-    await event_store.append(
-        AGGREGATE_TYPE,
-        actividad_id,
-        0,
-        [EventoParaAlmacenar(event_type="ActividadEvaluativaCreada", payload=payload)],
-    )
-
-
 class CrearActividadPeriodoAbiertoUseCase:
     """Orquesta la creación de la actividad y su persistencia en el event store del BC."""
 
@@ -73,7 +58,7 @@ class CrearActividadPeriodoAbiertoUseCase:
         unidad_tematica: str | None = None,
         tema: str | None = None,
         docente_id: UUID | None = None,
-    ) -> tuple[ActividadEvaluativaPeriodoAbierto, object]:
+    ) -> tuple[ActividadEvaluativaPeriodoAbierto, ActividadEvaluativaCreada]:
         """Crea la actividad validando INV-AE-01/02/03 y la persiste como primer evento del stream.
 
         Levanta `MateriaNoExiste` si `materia_id` no corresponde a ninguna `Materia`,
@@ -87,9 +72,7 @@ class CrearActividadPeriodoAbiertoUseCase:
         `NotificacionPort.notificar_apertura(...)` (`US-5.1.2`, RF-14) — un fallo de envío no
         revierte ni afecta la respuesta de esta operación.
 
-        El segundo elemento de la tupla se tipa como `object` (no `ActividadEvaluativaCreada`)
-        para no acumular CBO en este Use Case — mismo criterio ya aplicado en los controllers
-        de `US-2.1.5`/`US-2.1.6`; ningún caller usa su tipo (el router lo descarta).
+        Devuelve la actividad y el evento `ActividadEvaluativaCreada`; el controller descarta el evento.
         """
         materia = await self._materia_consulta.obtener(materia_id)
         if materia is None:
@@ -132,7 +115,7 @@ class CrearActividadPeriodoAbiertoUseCase:
             "tema": evento.tema,
             "ocurrido_en": evento.ocurrido_en.isoformat(),
         }
-        await _persistir_creacion(self._event_store, actividad.id, payload)
+        await self._persistir_creacion(actividad.id, payload)
 
         await self._notificacion.notificar_apertura(
             actividad.id,
@@ -145,3 +128,12 @@ class CrearActividadPeriodoAbiertoUseCase:
         )
 
         return actividad, evento
+
+    async def _persistir_creacion(self, actividad_id: UUID, payload: dict[str, Any]) -> None:
+        """Envuelve `ActividadEvaluativaCreada` y la persiste como primer evento del stream."""
+        await self._event_store.append(
+            AGGREGATE_TYPE,
+            actividad_id,
+            0,
+            [EventoParaAlmacenar(event_type="ActividadEvaluativaCreada", payload=payload)],
+        )

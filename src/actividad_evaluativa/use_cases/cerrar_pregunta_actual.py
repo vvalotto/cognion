@@ -79,24 +79,6 @@ def _mensaje_cierre(
     }
 
 
-async def _persistir_cierre(
-    event_store: EventStorePort, sesion_id: UUID, version: int, payload: dict[str, Any]
-) -> None:
-    """Guarda el evento `PreguntaEnVivoCerrada`, traduciendo la carrera optimista.
-
-    Función libre para no sumar CBO a `CerrarPreguntaActualUseCase` (`US-ADJ-57`).
-    """
-    try:
-        await event_store.append(
-            AGGREGATE_TYPE_SESION,
-            sesion_id,
-            version,
-            [EventoParaAlmacenar(event_type="PreguntaEnVivoCerrada", payload=payload)],
-        )
-    except ConcurrenciaOptimistaError as exc:
-        raise PreguntaYaCerrada(sesion_id) from exc
-
-
 class CerrarPreguntaActualUseCase:
     """Orquesta el cierre: validación, persistencia y broadcast leyendo los read models."""
 
@@ -142,7 +124,7 @@ class CerrarPreguntaActualUseCase:
         sesion.cerrar_pregunta()
         evento = PreguntaEnVivoCerrada.desde_sesion(sesion, datetime.now(UTC))
 
-        await _persistir_cierre(self._event_store, sesion_id, len(eventos), _payload(evento))
+        await self._persistir_cierre(sesion_id, len(eventos), _payload(evento))
 
         detalle = await self._pregunta_consulta.obtener_detalle_correccion(evento.pregunta_id)
         distribucion = await self._proyecciones.distribucion(sesion_id, evento.pregunta_id)
@@ -155,3 +137,17 @@ class CerrarPreguntaActualUseCase:
             sesion_id, _mensaje_cierre(evento, detalle, distribucion, ranking_con_nombre)
         )
         return sesion
+
+    async def _persistir_cierre(
+        self, sesion_id: UUID, version: int, payload: dict[str, Any]
+    ) -> None:
+        """Guarda el evento `PreguntaEnVivoCerrada`, traduciendo la carrera optimista."""
+        try:
+            await self._event_store.append(
+                AGGREGATE_TYPE_SESION,
+                sesion_id,
+                version,
+                [EventoParaAlmacenar(event_type="PreguntaEnVivoCerrada", payload=payload)],
+            )
+        except ConcurrenciaOptimistaError as exc:
+            raise PreguntaYaCerrada(sesion_id) from exc
