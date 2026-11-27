@@ -6,6 +6,7 @@ deuda declarada nunca queda por encima de la real.
 
 - `IM-03`: ningún `commit()` fuera de la unidad de trabajo (`shared/frameworks/db.py`) y del event store, la única excepción de `ADR-028`. Lo cumplió `US-12.2.1`.
 - `IM-02`: los `raise HTTPException` de los routers. Los baja `US-12.2.2` (errores de dominio traducidos en un solo lugar).
+- `IM-01`/`CA-03`: los tipos del dominio y los puertos que importan los routers (`frameworks/api/`). Los vacía `US-12.2.4`.
 - `CA-01`: los gateways que importan los modelos ORM de `frameworks/`, y las excepciones de `import-linter`.
   Las vacía `US-12.2.3` (repositorios SQL en `frameworks/`).
 """
@@ -39,6 +40,60 @@ HTTPEXCEPTION_EN_ROUTERS: dict[str, int] = {
     "src/identidad/frameworks/api/comisiones_router.py": 1,
     "src/identidad/frameworks/api/perfil_router.py": 2,
 }
+
+# --- IM-01 / CA-03: imports del dominio en `frameworks/api/` (routers y schemas). 17 hoy; los vacía `US-12.2.4` ---------
+# Formato `modulo_de_entities:Nombre`. No cuenta los errores de dominio (lo guarda el contrato de `ADR-029`) ni la plomería
+# de autenticación de `shared` (`jwt`, `tipo_perfil`).
+IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
+    "src/actividad_evaluativa/frameworks/api/actividades_router.py": [
+        "actividad_evaluativa_periodo_abierto:ActividadEvaluativaPeriodoAbierto",
+        "ports.actividad_query_port:ActividadResumen",
+    ],
+    "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py": [
+        "evaluacion:Evaluacion",
+        "ports.pregunta_consulta_port:PreguntaConsultaPort",
+    ],
+    "src/actividad_evaluativa/frameworks/api/revision_router.py": [
+        "revision_evaluacion:RevisionEvaluacion"
+    ],
+    "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py": [
+        "actividad_evaluativa_en_vivo:ActividadEvaluativaEnVivo",
+        "actividad_evaluativa_en_vivo:EstadoSesionEnVivo",
+    ],
+    "src/analytics/frameworks/api/analytics_router.py": [
+        "ports.estudiante_consulta_port:EstudianteConsultaPort"
+    ],
+    "src/banco_preguntas/frameworks/api/bancos_router.py": [
+        "pregunta_plantilla:PreguntaPlantillaOpcionMultiple"
+    ],
+    "src/banco_preguntas/frameworks/api/preguntas_router.py": [
+        "metadatos_pregunta:MetadatosPregunta",
+        "opcion:Opcion",
+        "pregunta_plantilla:PreguntaPlantillaOpcionMultiple",
+    ],
+    "src/banco_preguntas/frameworks/api/schemas.py": ["dificultad:Dificultad", "importancia:Importancia"],
+    "src/identidad/frameworks/api/cuentas_router.py": ["usuario:Estudiante", "usuario:Usuario"],
+    "src/identidad/frameworks/api/registro_router.py": ["usuario:Estudiante"],
+}
+
+# Importaciones que la guarda no cuenta: la plomería de autenticación, que es el tipo de la dependencia de seguridad.
+MODULOS_PERMITIDOS_EN_API = ("src.shared.entities.jwt", "src.shared.entities.tipo_perfil")
+
+
+def imports_de_dominio(codigo: str) -> list[str]:
+    """Nombres importados de `*.entities.*` que no son errores ni plomería de autenticación."""
+    encontrados: list[str] = []
+    for nodo in ast.walk(ast.parse(codigo)):
+        if not isinstance(nodo, ast.ImportFrom) or not nodo.module:
+            continue
+        if ".entities." not in nodo.module or nodo.module.endswith(".errors"):
+            continue
+        if nodo.module in MODULOS_PERMITIDOS_EN_API:
+            continue
+        modulo = nodo.module.split(".entities.", 1)[1]
+        encontrados.extend(f"{modulo}:{a.name}" for a in nodo.names)
+    return sorted(encontrados)
+
 
 # --- CA-01: gateways SQL de `interface_adapters/` que importan los modelos ORM de `frameworks/` (10 hoy) ---------------
 GATEWAYS_QUE_IMPORTAN_MODELOS: list[str] = []
@@ -301,3 +356,26 @@ class TestGuardaDeCapasYRepositorios:
     def test_detecta_un_import_de_modelos(self) -> None:
         assert importa_modelos_orm("from src.identidad.frameworks.db.models import UsuarioModel\n")
         assert not importa_modelos_orm("from src.identidad.entities.usuario import Usuario\n")
+
+
+class TestGuardaDeImportsDelDominioEnLaApi:
+    """`IM-01`/`CA-03`: la capa de frameworks recibe tipos de salida, no entidades ni puertos."""
+
+    def test_los_imports_del_dominio_son_exactamente_los_declarados(self) -> None:
+        real = {
+            _relativo(p): imports_de_dominio(p.read_text(encoding="utf-8"))
+            for p in sorted(SRC.glob("*/frameworks/api/*.py"))
+        }
+        real = {k: v for k, v in real.items() if v}
+        assert real == IMPORTS_DE_DOMINIO_EN_API, (
+            "Los imports del dominio en frameworks/api no coinciden con la lista (US-12.2.4).\n"
+            f"  Real: {real}"
+        )
+
+    def test_detecta_un_import_de_entidad_y_no_cuenta_errores_ni_autenticacion(self) -> None:
+        assert imports_de_dominio("from src.identidad.entities.usuario import Usuario\n") == [
+            "usuario:Usuario"
+        ]
+        assert imports_de_dominio("from src.identidad.entities.errors import UsuarioNoExiste\n") == []
+        assert imports_de_dominio("from src.shared.entities.jwt import JWTPayload\n") == []
+        assert imports_de_dominio("from src.shared.entities.tipo_perfil import TipoPerfil\n") == []

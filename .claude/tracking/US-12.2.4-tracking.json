@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "us_id": "US-12.2.4",
+    "us_title": "Los controllers presentan y los routers no importan el dominio",
+    "us_points": 5,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-27T12:55:22.617397+00:00",
+    "completed_at": null,
+    "total_elapsed_seconds": 306,
+    "effective_seconds": 306,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de contexto",
+      "started_at": "2026-11-27T12:55:23.264416+00:00",
+      "completed_at": "2026-11-27T12:56:42.166067+00:00",
+      "elapsed_seconds": 78,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan de implementación",
+      "started_at": "2026-11-27T12:56:42.585298+00:00",
+      "completed_at": "2026-11-27T12:58:38.437721+00:00",
+      "elapsed_seconds": 115,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-27T12:58:38.932542+00:00",
+      "completed_at": null,
+      "elapsed_seconds": 0,
+      "status": "in_progress",
+      "tasks": [
+        {
+          "task_id": "t1",
+          "task_name": "T1 guarda de imports del dominio",
+          "task_type": "test",
+          "estimated_minutes": 20.0,
+          "started_at": "2026-11-27T12:59:21.363826+00:00",
+          "completed_at": "2026-11-27T12:59:21.808444+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -20.0,
+          "file_created": null,
+          "status": "completed"
+        },
+        {
+          "task_id": "t2",
+          "task_name": "T2 casos de uso de Identidad",
+          "task_type": "dominio",
+          "estimated_minutes": 30.0,
+          "started_at": "2026-11-27T13:00:28.431996+00:00",
+          "completed_at": "2026-11-27T13:00:28.681916+00:00",
+          "elapsed_seconds": 0,
+          "actual_minutes": 0.0,
+          "variance_minutes": -30.0,
+          "file_created": null,
+          "status": "completed"
+        }
+      ],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "total_phases": 3,
+    "estimated_total_minutes": 50.0,
+    "actual_total_minutes": 0.0,
+    "variance_minutes": -50.0,
+    "variance_percent": -100.0
+  }
+}
