@@ -340,6 +340,27 @@ describe("SesionEnVivoEstudiante", () => {
       expect(cuerpoDeRespuesta()).toEqual({ pregunta_id: "p2", contenido: { opcion_indice: 1 } })
     })
 
+    it("un mensaje del canal que llega entre la respuesta y el render no pisa el resultado", async () => {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(jsonResponse(200, participacion))
+        .mockResolvedValueOnce(jsonResponse(200, estadoEnCurso()))
+        .mockResolvedValueOnce(jsonResponse(200, { es_correcta: true, puntaje: 1850, puntaje_acumulado: 3050 }))
+
+      renderSesion()
+      const tarjeta = await screen.findByRole("button", { name: "Inversión de dependencias" })
+
+      // Dentro de `act` React no renderiza hasta el final: reproduce el orden real del navegador, en que
+      // el total de respuestas que difunde el servidor llega justo después de la respuesta del POST.
+      await act(async () => {
+        fireEvent.click(tarjeta)
+        await new Promise((resolver) => setTimeout(resolver, 0))
+        hookState.onMensaje({ tipo: "conteo_respuestas_actualizado", preguntaActualIndice: 0, cantidadRespuestas: 3 })
+      })
+
+      expect(await screen.findByRole("heading", { name: "¡Correcto!" })).toBeInTheDocument()
+      expect(screen.getByText("3050 pts")).toBeInTheDocument()
+    })
+
     it("respuesta incorrecta: 'Incorrecto' y +0", async () => {
       vi.mocked(fetch)
         .mockResolvedValueOnce(jsonResponse(200, participacion))

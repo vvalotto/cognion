@@ -44,6 +44,17 @@ export function SesionEnVivoEstudiante() {
   const vistaRef = useRef<VistaEstudiante | null>(null)
   vistaRef.current = vista
 
+  /**
+   * Cambia la vista y actualiza la referencia en el mismo momento. `vistaRef` solo se refresca al
+   * renderizar: un mensaje del canal que llegara entre la respuesta del POST y ese render partiría de la
+   * vista vieja y pisaría el resultado ("Ya respondiste" en vez de "¡Correcto!").
+   */
+  const cambiarVista = useCallback((cambio: (actual: VistaEstudiante | null) => VistaEstudiante | null) => {
+    const nueva = cambio(vistaRef.current)
+    vistaRef.current = nueva
+    setVista(nueva)
+  }, [])
+
   const recalcular = useCallback(
     async (opciones: { trasRechazo?: boolean } = {}) => {
       if (!sesionId) return
@@ -54,12 +65,12 @@ export function SesionEnVivoEstudiante() {
         if (nueva.etapa === "finalizada") {
           nueva = { ...nueva, ranking: await obtenerRankingSesion(sesionId, signal) }
         }
-        setVista((actual) => sincronizarVistaEstudiante(actual, nueva))
+        cambiarVista((actual) => sincronizarVistaEstudiante(actual, nueva))
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) setNoDisponible(true)
       }
     },
-    [sesionId],
+    [sesionId, cambiarVista],
   )
 
   useEffect(() => {
@@ -92,9 +103,9 @@ export function SesionEnVivoEstudiante() {
         void recalcular()
         return
       }
-      setVista(siguiente)
+      cambiarVista(() => siguiente)
     },
-    [recalcular],
+    [recalcular, cambiarVista],
   )
 
   const estadoCanal = useCanalSesionEnVivo(sesionId ?? "", onMensaje, () => void recalcular())
@@ -108,7 +119,7 @@ export function SesionEnVivoEstudiante() {
     const signal = controladorRef.current?.signal
     try {
       const respuesta = await responderPregunta(sesionId, actual.preguntaId, contenido, signal)
-      setVista((v) => (v ? registrarRespuesta(v, respuesta) : v))
+      cambiarVista((v) => (v ? registrarRespuesta(v, respuesta) : v))
     } catch (err) {
       if (signal?.aborted) return
       if (err instanceof ApiError && err.status === 422) {
