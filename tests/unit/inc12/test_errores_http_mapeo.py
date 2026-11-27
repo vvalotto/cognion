@@ -42,8 +42,8 @@ def _clase(clave: str) -> type[Exception]:
     return getattr(importlib.import_module(f"src.{contexto}.entities.errors"), nombre)
 
 
-def test_la_tabla_dorada_tiene_las_78_clases() -> None:
-    assert len(TABLA) == 78
+def test_la_tabla_dorada_tiene_las_79_clases() -> None:
+    assert len(TABLA) == 79
 
 
 @pytest.mark.parametrize("clave", sorted(TABLA))

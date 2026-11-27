@@ -338,6 +338,14 @@
    "analytics_router.py:422:str(exc)"
   ]
  },
+ "analytics.EstudianteNoExiste": {
+  "categoria": "NoEncontrado",
+  "origen": "el router levantaba HTTPException 404 inline (US-12.2.4 la pasa al controller)",
+  "status": 404,
+  "traducciones_actuales": [
+   "analytics_router.py:HTTPException:404:No existe un Estudiante con id"
+  ]
+ },
  "analytics.MateriaNoAutorizada": {
   "categoria": "NoAutorizado",
   "origen": "derivado del router",

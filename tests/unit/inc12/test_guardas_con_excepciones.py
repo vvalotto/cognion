@@ -31,11 +31,10 @@ COMMITS_PERMITIDOS: dict[str, int] = {
     "src/shared/frameworks/db.py": 2,
 }
 
-# --- IM-02: `raise HTTPException` en los routers (6 desde `US-12.2.2`; eran 136) -------------------------------------------------
+# --- IM-02: `raise HTTPException` en los routers (4 desde `US-12.2.4`; 6 desde `US-12.2.2`, eran 136) -------------------------------------------------
 # No cuenta las dependencias de autenticación (`dependencies.py`, `shared/.../require_rol.py`, `get_current_user.py`): ahí
 # el 401/403 es legítimo y no es una traducción de un error de dominio.
 HTTPEXCEPTION_EN_ROUTERS: dict[str, int] = {
-    "src/analytics/frameworks/api/analytics_router.py": 2,
     "src/identidad/frameworks/api/autoregistro_router.py": 1,
     "src/identidad/frameworks/api/comisiones_router.py": 1,
     "src/identidad/frameworks/api/perfil_router.py": 2,
@@ -60,9 +59,6 @@ IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
         "actividad_evaluativa_en_vivo:ActividadEvaluativaEnVivo",
         "actividad_evaluativa_en_vivo:EstadoSesionEnVivo",
     ],
-    "src/analytics/frameworks/api/analytics_router.py": [
-        "ports.estudiante_consulta_port:EstudianteConsultaPort"
-    ],
     "src/banco_preguntas/frameworks/api/bancos_router.py": [
         "pregunta_plantilla:PreguntaPlantillaOpcionMultiple"
     ],
@@ -71,7 +67,10 @@ IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
         "opcion:Opcion",
         "pregunta_plantilla:PreguntaPlantillaOpcionMultiple",
     ],
-    "src/banco_preguntas/frameworks/api/schemas.py": ["dificultad:Dificultad", "importancia:Importancia"],
+    "src/banco_preguntas/frameworks/api/schemas.py": [
+        "dificultad:Dificultad",
+        "importancia:Importancia",
+    ],
     "src/identidad/frameworks/api/cuentas_router.py": ["usuario:Estudiante", "usuario:Usuario"],
     "src/identidad/frameworks/api/registro_router.py": ["usuario:Estudiante"],
 }
@@ -298,7 +297,7 @@ class TestGuardaDeHttpException:
         )
 
     def test_el_total_declarado_es_el_medido(self) -> None:
-        assert sum(HTTPEXCEPTION_EN_ROUTERS.values()) == 6
+        assert sum(HTTPEXCEPTION_EN_ROUTERS.values()) == 4
 
     def test_detecta_un_raise_con_from_y_sin_from(self) -> None:
         codigo = (
@@ -376,6 +375,8 @@ class TestGuardaDeImportsDelDominioEnLaApi:
         assert imports_de_dominio("from src.identidad.entities.usuario import Usuario\n") == [
             "usuario:Usuario"
         ]
-        assert imports_de_dominio("from src.identidad.entities.errors import UsuarioNoExiste\n") == []
+        assert (
+            imports_de_dominio("from src.identidad.entities.errors import UsuarioNoExiste\n") == []
+        )
         assert imports_de_dominio("from src.shared.entities.jwt import JWTPayload\n") == []
         assert imports_de_dominio("from src.shared.entities.tipo_perfil import TipoPerfil\n") == []

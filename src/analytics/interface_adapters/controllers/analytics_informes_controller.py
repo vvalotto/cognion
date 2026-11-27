@@ -13,22 +13,26 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from src.analytics.interface_adapters.presenters.analytics_presenter import (
+    DesempenoComisionFilaSalida,
+    EvolucionTemporalComisionPuntoSalida,
+    RankingPreguntaFalladaSalida,
+    TasaErrorTemaSalida,
+    presentar_desempeno_comision,
+    presentar_evolucion_comision,
+    presentar_ranking_preguntas,
+    presentar_tasas_error,
+)
 from src.analytics.use_cases.obtener_desempeno_por_comision import (
-    DesempenoComisionFila,
     ObtenerDesempenoPorComisionUseCase,
 )
 from src.analytics.use_cases.obtener_evolucion_temporal_comision import (
-    EvolucionTemporalComisionPunto,
     ObtenerEvolucionTemporalComisionUseCase,
 )
 from src.analytics.use_cases.obtener_ranking_preguntas_falladas import (
     ObtenerRankingPreguntasFalladasUseCase,
-    RankingPreguntaFallada,
 )
-from src.analytics.use_cases.obtener_tasa_error_por_tema import (
-    ObtenerTasaErrorPorTemaUseCase,
-    TasaErrorTema,
-)
+from src.analytics.use_cases.obtener_tasa_error_por_tema import ObtenerTasaErrorPorTemaUseCase
 
 
 class AnalyticsInformesController:
@@ -49,30 +53,34 @@ class AnalyticsInformesController:
 
     async def obtener_tasa_error_por_tema(
         self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
-    ) -> list[TasaErrorTema]:
-        """Tasa de error por tema de una materia, acotada a una comisión si se indica (RF-17)."""
-        return await self._obtener_tasa_error_por_tema.execute(materia_id, comision_id, docente_id)
+    ) -> list[TasaErrorTemaSalida]:
+        """Tasa de error por unidad y tema, de la materia o acotada a una comisión (RF-17)."""
+        tasas = await self._obtener_tasa_error_por_tema.execute(materia_id, comision_id, docente_id)
+        return presentar_tasas_error(tasas)
 
     async def obtener_desempeno_por_comision(
         self, materia_id: UUID, comision_id: UUID, docente_id: UUID
-    ) -> list[DesempenoComisionFila]:
-        """Desempeño de todos los estudiantes de una comisión (`US-ADJ-44`, RF-20)."""
-        return await self._obtener_desempeno_por_comision.execute(
+    ) -> list[DesempenoComisionFilaSalida]:
+        """Desempeño de los estudiantes de una comisión (`US-ADJ-44`, RF-20)."""
+        filas = await self._obtener_desempeno_por_comision.execute(
             materia_id, comision_id, docente_id
         )
+        return presentar_desempeno_comision(filas)
 
     async def obtener_evolucion_temporal_comision(
         self, materia_id: UUID, comision_id: UUID, docente_id: UUID
-    ) -> list[EvolucionTemporalComisionPunto]:
+    ) -> list[EvolucionTemporalComisionPuntoSalida]:
         """Evolución temporal promedio de una comisión (`US-ADJ-45`, RF-21)."""
-        return await self._obtener_evolucion_temporal_comision.execute(
+        puntos = await self._obtener_evolucion_temporal_comision.execute(
             materia_id, comision_id, docente_id
         )
+        return presentar_evolucion_comision(puntos)
 
     async def obtener_ranking_preguntas_falladas(
         self, materia_id: UUID, comision_id: UUID | None, docente_id: UUID
-    ) -> list[RankingPreguntaFallada]:
-        """Ranking de preguntas más falladas de una materia (`US-ADJ-46`, RF-22)."""
-        return await self._obtener_ranking_preguntas_falladas.execute(
+    ) -> list[RankingPreguntaFalladaSalida]:
+        """Ranking de preguntas más falladas, de la materia o acotado a una comisión (RF-22)."""
+        ranking = await self._obtener_ranking_preguntas_falladas.execute(
             materia_id, comision_id, docente_id
         )
+        return presentar_ranking_preguntas(ranking)
