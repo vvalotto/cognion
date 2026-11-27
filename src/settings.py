@@ -39,6 +39,12 @@ class Settings(BaseSettings):
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     log_format: Literal["texto", "json"] = "texto"
     database_url: str
+    # `ADR-018` (enmendado, `US-12.2.5`): pool de conexiones en ejecución; `nula` solo para los tests, que corren
+    # cada paso en su propio event loop (`tests/conftest.py` fija `DB_POOL=nula`).
+    db_pool: Literal["cola", "nula"] = "cola"
+    db_pool_size: int = 10
+    db_max_overflow: int = 20
+    db_pool_timeout: int = 30
     secret_key: str
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 480  # una jornada (US-12.1.3, ADR-013)

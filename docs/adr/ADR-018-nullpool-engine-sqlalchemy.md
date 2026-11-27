@@ -1,6 +1,6 @@
 # ADR-018 — `NullPool` en el engine async de SQLAlchemy (vs. pool con conexiones persistentes)
 
-**Estado:** Aceptado
+**Estado:** Aceptado, enmendado el 2026-11-27 (`US-12.2.5`): `NullPool` queda solo para los tests
 **Fecha:** 2026-07-21
 
 ---
@@ -51,3 +51,19 @@ distintos dentro del mismo proceso.
 - ⚠️ Sin reutilización de conexiones: cada operación paga el costo de handshake TCP/auth de
   PostgreSQL. Aceptable a esta escala; **revisar si el proyecto crece a un volumen de tráfico
   donde el overhead de conexión se vuelva medible.**
+
+---
+
+## Enmienda 2026-11-27 (`US-12.2.5`, hallazgo `IM-06`)
+
+`NullPool` se adoptó por una necesidad de los **tests**: cada paso del BDD corre con `asyncio.run()` y `pytest-asyncio` abre un loop por test, así que una conexión de `asyncpg` queda atada al loop que la creó. En ejecución hay un solo proceso y un solo loop, y ese problema no existe. Dejar `NullPool` ahí costaba una conexión nueva por operación: con 60 alumnos respondiendo a la vez, 60 conexiones simultáneas y 60 negociaciones.
+
+**Decisión:** el motor se arma desde la configuración (`crear_motor` de `src/shared/frameworks/db.py`).
+
+- **En ejecución, pool de conexiones** (`DB_POOL=cola`, el valor por defecto): `db_pool_size=10`, `db_max_overflow=20`, `db_pool_timeout=30` y `pool_pre_ping`. Como mucho 30 conexiones por proceso.
+- **En los tests, `NullPool`** (`DB_POOL=nula`, que fija `tests/conftest.py` antes de importar `src.settings`).
+- `max_connections=100` de PostgreSQL se mantiene como margen; solo cambian los comentarios que lo justificaban por `NullPool`.
+
+**Medición (local, 2026-11-27, 60 operaciones a la vez, PostgreSQL de la Mac):** mediana de una operación 14 ms con `NullPool` y 1,5 ms con pool; las 60 a la vez terminan en ~250 ms contra ~114 ms, y la peor operación pasa de ~190–220 ms a ~83–87 ms. El costo en el servidor sigue sin medirse (Issue #624).
+
+**Restricción:** el pool vale con **un solo proceso** (`docs/INSTALACION.md`). Con más de un proceso cada uno tendría su pool y la suma podría pasar `max_connections`; además el canal de la sesión en vivo ya exige un solo proceso (`IM-05`).

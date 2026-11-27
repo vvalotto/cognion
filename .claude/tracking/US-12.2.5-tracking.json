@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "us_id": "US-12.2.5",
+    "us_title": "El pool de conexiones sale de la configuración y el verificador corre una sola vez",
+    "us_points": 3,
+    "producto": "cognion",
+    "tracking_version": "1.0"
+  },
+  "timeline": {
+    "started_at": "2026-11-27T18:11:47.727716+00:00",
+    "completed_at": "2026-11-27T18:39:34.326315+00:00",
+    "total_elapsed_seconds": 1666,
+    "effective_seconds": 1666,
+    "paused_seconds": 0
+  },
+  "phases": [
+    {
+      "phase_number": 0,
+      "phase_name": "Validación de contexto",
+      "started_at": "2026-11-27T18:11:48.076799+00:00",
+      "completed_at": "2026-11-27T18:12:18.667987+00:00",
+      "elapsed_seconds": 30,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 2,
+      "phase_name": "Plan",
+      "started_at": "2026-11-27T18:12:18.811721+00:00",
+      "completed_at": "2026-11-27T18:12:32.610738+00:00",
+      "elapsed_seconds": 13,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    },
+    {
+      "phase_number": 3,
+      "phase_name": "Implementación",
+      "started_at": "2026-11-27T18:12:32.752068+00:00",
+      "completed_at": "2026-11-27T18:39:33.352965+00:00",
+      "elapsed_seconds": 1620,
+      "status": "completed",
+      "tasks": [],
+      "auto_approved": true,
+      "user_approval_time_seconds": 0
+    }
+  ],
+  "pauses": [],
+  "summary": {
+    "total_tasks": 0,
+    "completed_tasks": 0,
+    "total_phases": 3,
+    "estimated_total_minutes": 0,
+    "actual_total_minutes": 0,
+    "variance_minutes": 0,
+    "variance_percent": 0.0
+  }
+}

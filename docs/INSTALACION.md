@@ -121,6 +121,7 @@ nombre `.local` en el camino B) antes de generar el link.
 - **Los registros ocupan hasta 30 MB por servicio** (3 archivos de 10 MB, rotados). Con el uso previsto (una comisión de 60 alumnos) los de la aplicación alcanzan para unas 4 a 5 semanas; antes de ese plazo se pisan los más viejos. Si necesitás conservar más, copiá los de `docker compose logs` antes.
 - **No hay despliegue automático:** el CD publica la imagen, pero el despliegue en el servidor lo ejecutás vos (`./cognion.sh desplegar`).
 - **Solo x86_64** y una sola instancia de la aplicación (sin alta disponibilidad).
+- **La aplicación corre con un solo proceso y no hay que cambiarlo.** No agregues `--workers` ni `WEB_CONCURRENCY` ni levantes una segunda réplica «para que ande más rápido»: el canal de la sesión en vivo guarda las conexiones en la memoria del proceso, así que con dos procesos parte de los alumnos deja de recibir los mensajes y no aparece ningún error. Un test del proyecto falla si el `Dockerfile` o un `docker-compose` piden más de un proceso. El verificador de vencimientos sí está protegido por un bloqueo de PostgreSQL: si dos procesos arrancan, solo uno corre cada vuelta.
 - **UAT de la 1.0:** se verificó en una instalación local (camino B), con un navegador de escritorio y un viewport de celular emulado. No se probó en un
   celular real ni el canal en vivo con un JWT vencido.
 

@@ -18,7 +18,7 @@ Cognión es un monolito modular. Todos los BC comparten:
 - **una sola base PostgreSQL**, sin schemas separados (todo vive en `public`);
 - **una sola clase `Base`** declarativa de SQLAlchemy (`src/shared/frameworks/db.py`), de la
   que heredan los modelos ORM de todos los BC;
-- **un solo motor/engine** async, con `NullPool` (`ADR-018`) — sin pool de conexiones
+- **un solo motor/engine** async, con pool de conexiones en ejecución y `NullPool` en los tests (`ADR-018`, enmendado en `US-12.2.5`)
   persistente entre requests.
 
 Esto significa que **el Bounded Context no es una frontera de base de datos** — es una

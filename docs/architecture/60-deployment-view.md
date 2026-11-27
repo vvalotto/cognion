@@ -55,7 +55,8 @@ flowchart TB
 
 - **Solo Caddy publica puertos.** La aplicación (`8000`) y la base quedan en la red interna.
 - Memoria: `COGNION_MEM_DB` y `COGNION_MEM_APP` (1 GB cada una por defecto; 64 MB para Caddy). En GCP la composición fija 300 MB para la base y 300 MB para la aplicación, por la VM de 1 GB.
-- La base se configura con `max_connections=100`, porque cada operación abre su conexión (`NullPool`, `ADR-018`).
+- La base se configura con `max_connections=100` como margen: la aplicación usa un pool de hasta 30 conexiones (`ADR-018`, enmendado en `US-12.2.5`).
+- **La aplicación es un solo proceso, y debe seguir siéndolo** (`IM-05`): el canal de la sesión en vivo guarda las conexiones en la memoria del proceso y el pool es de un proceso. El `Dockerfile` no fija `--workers`, una guarda de test lo custodia y `docs/INSTALACION.md` lo advierte. El verificador de vencimientos toma un bloqueo consultivo de PostgreSQL por corrida, así que no se duplica si arrancan dos procesos.
 - La aplicación tiene `healthcheck` en `/api/health`; Caddy espera a que esté sana.
 - Los registros salen por el driver `json-file` de Docker, con rotación (`10m` × 3).
 
