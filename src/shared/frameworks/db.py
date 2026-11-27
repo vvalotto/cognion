@@ -7,23 +7,45 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
 from starlette.exceptions import HTTPException
 
-from src.settings import settings
+from src.settings import Settings, settings
 
 
 class Base(DeclarativeBase):
     """Clase base declarativa de la que heredan todos los modelos ORM."""
 
 
-# NullPool: sin conexiones asyncpg persistentes entre requests (ADR-018). Evita que una
-# conexión quede atada a un event loop que ya cerró — relevante tanto para tests que corren
-# en loops distintos (BDD síncrono vía asyncio.run(), pytest-asyncio por test) como para
-# despliegues con múltiples workers. Costo aceptado: cada operación abre una conexión nueva.
-engine = create_async_engine(settings.database_url, echo=False, poolclass=NullPool)
+def crear_motor(config: Settings) -> AsyncEngine:
+    """Arma el motor según la configuración (`ADR-018`, enmendado en `US-12.2.5`).
+
+    En ejecución usa un pool de conexiones con `pool_pre_ping`: una sesión en vivo con 60 alumnos
+    reutiliza conexiones en vez de abrir una por operación. Con `db_pool="nula"` usa `NullPool`, sin
+    conexiones persistentes: lo piden los tests, porque cada paso del BDD (`asyncio.run()`) y cada test de
+    `pytest-asyncio` corre en un event loop distinto y una conexión de `asyncpg` queda atada al loop que la creó.
+    El pool vale mientras haya un solo proceso y un solo loop (`docs/INSTALACION.md`).
+    """
+    if config.db_pool == "nula":
+        return create_async_engine(config.database_url, echo=False, poolclass=NullPool)
+    return create_async_engine(
+        config.database_url,
+        echo=False,
+        pool_size=config.db_pool_size,
+        max_overflow=config.db_max_overflow,
+        pool_timeout=config.db_pool_timeout,
+        pool_pre_ping=True,
+    )
+
+
+engine = crear_motor(settings)
 
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
