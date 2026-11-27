@@ -78,4 +78,6 @@ class TestInvitacionesController:
 
         preview = await controller.obtener_invitacion(invitacion.token)
 
-        assert preview == InvitacionPreviewSalida(materia="Ingeniería de Software", horario="lu 10-12")
+        assert preview == InvitacionPreviewSalida(
+            materia="Ingeniería de Software", horario="lu 10-12"
+        )

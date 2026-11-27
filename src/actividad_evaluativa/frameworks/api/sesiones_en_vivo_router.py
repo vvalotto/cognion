@@ -12,21 +12,16 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, status
 
 from src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo import (
-    ActividadEvaluativaEnVivo,
     EstadoSesionEnVivo,
 )
 from src.actividad_evaluativa.frameworks.api.schemas import (
     CrearSesionEnVivoRequest,
     EstadoSesionEnVivoResponse,
-    OpcionDistribuidaResponse,
     ParticipacionEnVivoResponse,
     ParticipanteResponse,
-    PreguntaActualResponse,
     RankingItemResponse,
     ResponderEnVivoRequest,
-    RespuestaCorrectaResponse,
     RespuestaEnVivoResponse,
-    ResultadoPreguntaResponse,
     SesionEnVivoResponse,
     SesionEnVivoResumenResponse,
 )
@@ -60,7 +55,15 @@ from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_li
 from src.actividad_evaluativa.interface_adapters.controllers.sesiones_en_vivo_query_controller import (
     SesionesEnVivoQueryController,
 )
-from src.actividad_evaluativa.use_cases.obtener_estado_sesion import EstadoSesion, ResultadoPregunta
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    EstadoSesionEnVivoSalida,
+    ParticipacionEnVivoSalida,
+    ParticipanteSalida,
+    RankingItemSalida,
+    RespuestaEnVivoSalida,
+    SesionEnVivoResumenSalida,
+    SesionEnVivoSalida,
+)
 from src.shared.entities.errors import JWTExpirado, JWTInvalido
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
@@ -68,78 +71,6 @@ from src.shared.entities.tipo_perfil import TipoPerfil
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/sesiones-en-vivo", tags=["actividad_evaluativa_en_vivo"])
-
-
-def _a_sesion_response(sesion: ActividadEvaluativaEnVivo) -> SesionEnVivoResponse:
-    """Arma el `SesionEnVivoResponse` — compartido por crear e iniciar."""
-    return SesionEnVivoResponse(
-        id=sesion.id,
-        comision_id=sesion.comision_id,
-        materia_id=sesion.materia_id,
-        unidad_tematica=sesion.unidad_tematica,
-        tema=sesion.tema,
-        cantidad_preguntas=len(sesion.preguntas),
-        tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
-        estado=sesion.estado.value,
-        pregunta_actual_indice=sesion.pregunta_actual_indice,
-    )
-
-
-def _a_resultado_response(resultado: ResultadoPregunta | None) -> ResultadoPreguntaResponse | None:
-    """Arma el `ResultadoPreguntaResponse` — `None` sin resultado todavía (`US-6.3.3`)."""
-    if resultado is None:
-        return None
-    return ResultadoPreguntaResponse(
-        distribucion=[
-            OpcionDistribuidaResponse(opcion=d.opcion, cantidad=d.cantidad)
-            for d in resultado.distribucion
-        ],
-        ranking=[
-            RankingItemResponse(
-                posicion=r.posicion,
-                estudiante_id=r.estudiante_id,
-                puntaje_acumulado=r.puntaje_acumulado,
-                nombre=r.nombre,
-            )
-            for r in resultado.ranking
-        ],
-    )
-
-
-def _a_estado_response(estado: EstadoSesion) -> EstadoSesionEnVivoResponse:
-    """Arma el `EstadoSesionEnVivoResponse` a partir del estado consultado (`US-6.2.8`)."""
-    sesion = estado.sesion
-    pregunta = estado.pregunta_actual
-    return EstadoSesionEnVivoResponse(
-        estado=sesion.estado.value,
-        comision_id=sesion.comision_id,
-        cantidad_preguntas=len(sesion.preguntas),
-        tiempo_limite_por_pregunta_segundos=sesion.tiempo_limite_por_pregunta_segundos,
-        pregunta_actual_indice=sesion.pregunta_actual_indice,
-        opciones_mostradas=sesion.opciones_mostradas,
-        opciones_mostradas_en=sesion.opciones_mostradas_en,
-        pregunta_actual_cerrada=sesion.pregunta_actual_cerrada,
-        pregunta_actual=(
-            None
-            if pregunta is None
-            else PreguntaActualResponse(
-                pregunta_id=pregunta.pregunta_id,
-                enunciado=pregunta.enunciado,
-                tipo=pregunta.tipo,
-                opciones=pregunta.opciones,
-                respuesta_correcta=(
-                    None
-                    if pregunta.respuesta_correcta is None
-                    else RespuestaCorrectaResponse(**pregunta.respuesta_correcta)
-                ),
-            )
-        ),
-        ya_respondio=estado.ya_respondio,
-        puntaje_acumulado=estado.puntaje_acumulado,
-        total_participantes=estado.total_participantes,
-        cantidad_respuestas=estado.cantidad_respuestas,
-        resultado_pregunta=_a_resultado_response(estado.resultado_pregunta),
-    )
 
 
 @router.post(
@@ -152,12 +83,12 @@ async def crear_sesion_en_vivo(
     body: CrearSesionEnVivoRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Crea una sesión en vivo para una Comisión; responde 404/422/403 ante los rechazos.
 
     403 si el Docente no está asignado a `comision_id` (`US-ADJ-57`).
     """
-    sesion = await controller.crear(
+    return await controller.crear(
         body.comision_id,
         body.cantidad_preguntas,
         body.tiempo_limite_por_pregunta_segundos,
@@ -165,8 +96,6 @@ async def crear_sesion_en_vivo(
         body.tema,
         usuario.usuario_id,
     )
-
-    return _a_sesion_response(sesion)
 
 
 @router.post(
@@ -178,11 +107,9 @@ async def iniciar_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Inicia la sesión (`EnEspera` → `EnCurso`) y presenta el enunciado; 404/422/403 si se rechaza."""
-    sesion = await controller.iniciar(sesion_id, usuario.usuario_id)
-
-    return _a_sesion_response(sesion)
+    return await controller.iniciar(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -194,11 +121,9 @@ async def cancelar_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Cancela una sesión `EnEspera` y avisa a la sala (`US-ADJ-58`); 404/422/403 si se rechaza."""
-    sesion = await controller.cancelar(sesion_id, usuario.usuario_id)
-
-    return _a_sesion_response(sesion)
+    return await controller.cancelar(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -210,11 +135,9 @@ async def mostrar_opciones_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Revela las opciones de la pregunta actual; 404/422/403 si se rechaza."""
-    sesion = await controller.mostrar_opciones(sesion_id, usuario.usuario_id)
-
-    return _a_sesion_response(sesion)
+    return await controller.mostrar_opciones(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -226,11 +149,9 @@ async def cerrar_pregunta_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Cierra la pregunta actual y transmite el resultado; 404/422/403 si se rechaza."""
-    sesion = await controller.cerrar_pregunta(sesion_id, usuario.usuario_id)
-
-    return _a_sesion_response(sesion)
+    return await controller.cerrar_pregunta(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -242,11 +163,9 @@ async def avanzar_siguiente_pregunta_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Avanza a la siguiente pregunta y transmite su enunciado; 404/422/403 si se rechaza."""
-    sesion = await controller.avanzar_siguiente_pregunta(sesion_id, usuario.usuario_id)
-
-    return _a_sesion_response(sesion)
+    return await controller.avanzar_siguiente_pregunta(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -258,11 +177,9 @@ async def finalizar_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ConduccionEnVivoController = Depends(get_conduccion_en_vivo_controller),
-) -> SesionEnVivoResponse:
+) -> SesionEnVivoSalida:
     """Finaliza la sesión y transmite el ranking final; 404/422/403 si se rechaza."""
-    sesion = await controller.finalizar_sesion(sesion_id, usuario.usuario_id)
-
-    return _a_sesion_response(sesion)
+    return await controller.finalizar_sesion(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -274,15 +191,9 @@ async def unirse_a_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: SesionesEnVivoController = Depends(get_sesiones_en_vivo_controller),
-) -> ParticipacionEnVivoResponse:
+) -> ParticipacionEnVivoSalida:
     """Une al Estudiante de la comisión a la sesión (idempotente, 200); 403/404/422 si se rechaza."""
-    participacion = await controller.unirse(sesion_id, usuario.usuario_id)
-
-    return ParticipacionEnVivoResponse(
-        sesion_id=participacion.sesion_id,
-        estudiante_id=participacion.estudiante_id,
-        unido_en=participacion.unido_en,
-    )
+    return await controller.unirse(sesion_id, usuario.usuario_id)
 
 
 @router.post(
@@ -295,16 +206,10 @@ async def responder_pregunta_en_vivo(
     body: ResponderEnVivoRequest,
     usuario: JWTPayload = Depends(get_current_user),
     controller: ParticipacionesEnVivoController = Depends(get_participaciones_en_vivo_controller),
-) -> RespuestaEnVivoResponse:
+) -> RespuestaEnVivoSalida:
     """Registra la respuesta del Estudiante y devuelve su feedback; 404/422 si se rechaza."""
-    resultado = await controller.responder(
+    return await controller.responder(
         sesion_id, usuario.usuario_id, body.pregunta_id, body.contenido
-    )
-
-    return RespuestaEnVivoResponse(
-        es_correcta=resultado.es_correcta,
-        puntaje=resultado.puntaje,
-        puntaje_acumulado=resultado.puntaje_acumulado,
     )
 
 
@@ -351,29 +256,12 @@ async def listar_sesiones_en_vivo(
     ),
     usuario: JWTPayload = Depends(require_estudiante_o_docente),
     controller: SesionesEnVivoListadoController = Depends(get_sesiones_en_vivo_listado_controller),
-) -> list[SesionEnVivoResumenResponse]:
+) -> list[SesionEnVivoResumenSalida]:
     """Lista las sesiones en vivo de una Comisión (la del Estudiante, o la que indique el Docente).
 
     422 si el Docente no indica `comision_id`; 403 si el Estudiante pide la de otro.
     """
-    sesiones = await controller.listar_sesiones(
-        usuario.usuario_id, usuario.rol, comision_id, estado
-    )
-    return [
-        SesionEnVivoResumenResponse(
-            id=s.id,
-            comision_id=s.comision_id,
-            materia_id=s.materia_id,
-            materia_nombre=s.materia_nombre,
-            cantidad_preguntas=s.cantidad_preguntas,
-            tiempo_limite_por_pregunta_segundos=s.tiempo_limite_por_pregunta_segundos,
-            estado=s.estado.value,
-            unidad_tematica=s.unidad_tematica,
-            tema=s.tema,
-            creada_en=s.creada_en,
-        )
-        for s in sesiones
-    ]
+    return await controller.listar_sesiones(usuario.usuario_id, usuario.rol, comision_id, estado)
 
 
 @router.get(
@@ -385,11 +273,10 @@ async def obtener_estado_sesion_en_vivo(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(require_estudiante_o_docente),
     controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
-) -> EstadoSesionEnVivoResponse:
+) -> EstadoSesionEnVivoSalida:
     """Devuelve el estado de la sesión para reconectarse; al Estudiante suma su avance propio."""
     estudiante_id = usuario.usuario_id if usuario.rol == TipoPerfil.ESTUDIANTE else None
-    estado = await controller.obtener_estado(sesion_id, estudiante_id)
-    return _a_estado_response(estado)
+    return await controller.obtener_estado(sesion_id, estudiante_id)
 
 
 @router.get(
@@ -401,13 +288,9 @@ async def listar_participantes_de_sesion(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
-) -> list[ParticipanteResponse]:
+) -> list[ParticipanteSalida]:
     """Lista los Estudiantes unidos, en orden de unión, para la sala de espera del Docente."""
-    participantes = await controller.listar_participantes(sesion_id, usuario.usuario_id)
-    return [
-        ParticipanteResponse(estudiante_id=p.estudiante_id, unido_en=p.unido_en, nombre=p.nombre)
-        for p in participantes
-    ]
+    return await controller.listar_participantes(sesion_id, usuario.usuario_id)
 
 
 @router.get(
@@ -419,15 +302,6 @@ async def obtener_ranking_de_sesion(
     sesion_id: UUID,
     usuario: JWTPayload = Depends(require_estudiante_o_docente),
     controller: SesionesEnVivoQueryController = Depends(get_sesiones_en_vivo_query_controller),
-) -> list[RankingItemResponse]:
+) -> list[RankingItemSalida]:
     """Devuelve el ranking; el Estudiante solo lo ve con la sesión finalizada (403 antes)."""
-    ranking = await controller.obtener_ranking(sesion_id, usuario.rol == TipoPerfil.ESTUDIANTE)
-    return [
-        RankingItemResponse(
-            posicion=r.posicion,
-            estudiante_id=r.estudiante_id,
-            puntaje_acumulado=r.puntaje_acumulado,
-            nombre=r.nombre,
-        )
-        for r in ranking
-    ]
+    return await controller.obtener_ranking(sesion_id, usuario.rol == TipoPerfil.ESTUDIANTE)

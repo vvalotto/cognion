@@ -311,6 +311,35 @@ ignore_imports = [
     "src.actividad_evaluativa.frameworks.api.sesiones_en_vivo_router -> src.shared.entities.errors",
 ]
 
+# `ADR-031`: la capa de frameworks recibe tipos de salida de los controllers, no entidades ni puertos del dominio.
+# Los errores de dominio los guarda el contrato de `ADR-029` (por eso se ignoran acá); quedan permitidos la plomería de
+# autenticación de `shared` (`jwt`, `tipo_perfil`) y tres enums que son el vocabulario de entrada de la API.
+[[tool.importlinter.contracts]]
+name = "ADR-031: los routers no importan entidades ni puertos del dominio"
+type = "forbidden"
+source_modules = [
+    "src.identidad.frameworks.api",
+    "src.actividad_evaluativa.frameworks.api",
+    "src.banco_preguntas.frameworks.api",
+    "src.analytics.frameworks.api",
+]
+forbidden_modules = [
+    "src.identidad.entities",
+    "src.actividad_evaluativa.entities",
+    "src.banco_preguntas.entities",
+    "src.analytics.entities",
+    "src.shared.entities",
+]
+allow_indirect_imports = true
+ignore_imports = [
+    "src.*.frameworks.api.** -> src.*.entities.errors",
+    "src.*.frameworks.api.** -> src.shared.entities.jwt",
+    "src.*.frameworks.api.** -> src.shared.entities.tipo_perfil",
+    "src.banco_preguntas.frameworks.api.schemas -> src.banco_preguntas.entities.dificultad",
+    "src.banco_preguntas.frameworks.api.schemas -> src.banco_preguntas.entities.importancia",
+    "src.actividad_evaluativa.frameworks.api.sesiones_en_vivo_router -> src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo",
+]
+
 [[tool.importlinter.contracts]]
 name = "shared no importa de ningún BC"
 type = "forbidden"

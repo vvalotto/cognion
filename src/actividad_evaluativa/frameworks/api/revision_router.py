@@ -9,9 +9,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
 
-from src.actividad_evaluativa.entities.revision_evaluacion import RevisionEvaluacion
 from src.actividad_evaluativa.frameworks.api.schemas import (
-    DetallePreguntaRevisionResponse,
     RevisionEvaluacionResponse,
 )
 from src.actividad_evaluativa.frameworks.dependencies import (
@@ -22,33 +20,13 @@ from src.actividad_evaluativa.frameworks.dependencies import (
 from src.actividad_evaluativa.interface_adapters.controllers.revision_controller import (
     RevisionController,
 )
+from src.actividad_evaluativa.interface_adapters.presenters.evaluacion_presenter import (
+    RevisionEvaluacionSalida,
+)
 from src.shared.entities.jwt import JWTPayload
 from src.shared.entities.tipo_perfil import TipoPerfil
 
 router = APIRouter(prefix="/evaluaciones", tags=["actividad_evaluativa"])
-
-
-def _a_response(revision: RevisionEvaluacion) -> RevisionEvaluacionResponse:
-    """Adapta una `RevisionEvaluacion` del dominio a `RevisionEvaluacionResponse`."""
-    return RevisionEvaluacionResponse(
-        evaluacion_id=revision.evaluacion_id,
-        cantidad_preguntas=revision.cantidad_preguntas,
-        cantidad_correctas=revision.cantidad_correctas,
-        cantidad_incorrectas=revision.cantidad_incorrectas,
-        detalle=[
-            DetallePreguntaRevisionResponse(
-                pregunta_id=fila.pregunta_id,
-                orden=fila.orden,
-                texto=fila.texto,
-                respondida=fila.respondida,
-                contenido_propio=fila.contenido_propio,
-                es_correcta=fila.es_correcta,
-                contenido_correcto=fila.contenido_correcto,
-                opciones=fila.opciones,
-            )
-            for fila in revision.detalle
-        ],
-    )
 
 
 @router.get(
@@ -61,7 +39,7 @@ async def obtener_revision(
     evaluacion_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
     controller: RevisionController = Depends(get_revision_controller),
-) -> RevisionEvaluacionResponse:
+) -> RevisionEvaluacionSalida:
     """Devuelve la revisión completa de una evaluación (RF-13).
 
     El propio Estudiante dueño siempre puede pedir la suya. Un Docente puede pedir la de
@@ -70,8 +48,6 @@ async def obtener_revision(
     Responde 404/422 ante los rechazos de dominio — 422 si todavía no fue finalizada.
     """
     verificar_propietario = usuario.rol is TipoPerfil.ESTUDIANTE
-    revision = await controller.obtener_revision(
+    return await controller.obtener_revision(
         evaluacion_id, usuario.usuario_id, verificar_propietario
     )
-
-    return _a_response(revision)

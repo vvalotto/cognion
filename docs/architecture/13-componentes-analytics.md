@@ -34,6 +34,7 @@ flowchart TB
     subgraph ia["interface_adapters"]
         c["3 controllers
         desempeño · completitud · informes"]
+        p["presenters"]
     end
     subgraph uc["use_cases (7)"]
         u["desempeño · evolución temporal
@@ -72,7 +73,7 @@ flowchart TB
 | use_cases | `obtener_tasa_error_por_tema`, `obtener_ranking_preguntas_falladas` | Informes de la materia |
 | use_cases | `obtener_completitud_por_actividad` | Quién completó una actividad |
 | entities/ports | `ComisionConsultaPort`, `EstudianteConsultaPort`, `EvaluacionDesempenoConsultaPort`, `SesionEnVivoDesempenoConsultaPort`, `PreguntaMetadatoConsultaPort` | Contratos de lectura (resúmenes como `dataclass`) |
-| interface_adapters | `analytics_controller`, `analytics_informes_controller`, `analytics_completitud_controller` | HTTP a casos de uso |
+| interface_adapters | `analytics_controller`, `analytics_informes_controller`, `analytics_completitud_controller`, `analytics_presenter` | Delegan en casos de uso y devuelven tipos de salida (`ADR-031`); `AnalyticsController` valida que el estudiante exista |
 | frameworks | Router, esquemas, `dependencies.py` | Frontera HTTP y cableado |
 
 ## De dónde sale cada dato

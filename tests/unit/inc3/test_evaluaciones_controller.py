@@ -6,6 +6,9 @@ from src.actividad_evaluativa.entities.ports.event_store_port import EventoParaA
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
 )
+from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_estado_controller import (
+    EvaluacionesEstadoController,
+)
 from src.actividad_evaluativa.use_cases.crear_actividad_periodo_abierto import AGGREGATE_TYPE
 from src.actividad_evaluativa.use_cases.finalizar_evaluacion import FinalizarEvaluacionUseCase
 from src.actividad_evaluativa.use_cases.iniciar_evaluacion import IniciarEvaluacionUseCase
@@ -23,9 +26,16 @@ def _controller(estudiante_consulta, pregunta_consulta, event_store):
     return EvaluacionesController(
         IniciarEvaluacionUseCase(estudiante_consulta, pregunta_consulta, event_store),
         RegistrarRespuestaUseCase(pregunta_consulta, event_store),
+        pregunta_consulta,
+    )
+
+
+def _estado_controller(pregunta_consulta, event_store):
+    return EvaluacionesEstadoController(
         SuspenderEvaluacionUseCase(event_store),
         ReanudarEvaluacionUseCase(event_store),
         FinalizarEvaluacionUseCase(event_store),
+        pregunta_consulta,
     )
 
 
@@ -61,9 +71,8 @@ class TestEvaluacionesController:
         estudiante_consulta.estudiantes.add(estudiante_id)
         controller = _controller(estudiante_consulta, pregunta_consulta, event_store)
 
-        evaluacion, creada = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
+        evaluacion = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
 
-        assert creada is True
         assert evaluacion.actividad_id == actividad_id
         assert evaluacion.estudiante_id == estudiante_id
         assert len(evaluacion.preguntas_asignadas) == 2
@@ -102,7 +111,7 @@ class TestEvaluacionesControllerRegistrarRespuesta:
         estudiante_consulta = FakeEstudianteConsultaPort()
         estudiante_consulta.estudiantes.add(estudiante_id)
         controller = _controller(estudiante_consulta, pregunta_consulta, event_store)
-        evaluacion, _creada = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
+        evaluacion = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
 
         respuesta = await controller.registrar_respuesta(
             evaluacion.id, estudiante_id, pregunta_id, {"opcion_indice": 0}
@@ -143,8 +152,8 @@ class TestEvaluacionesControllerSuspenderReanudar:
         estudiante_consulta = FakeEstudianteConsultaPort()
         estudiante_consulta.estudiantes.add(estudiante_id)
         controller = _controller(estudiante_consulta, pregunta_consulta, event_store)
-        evaluacion, _creada = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
-        return controller, evaluacion, estudiante_id
+        evaluacion = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
+        return _estado_controller(pregunta_consulta, event_store), evaluacion, estudiante_id
 
     async def test_suspender_delega_al_use_case(self):
         controller, evaluacion, estudiante_id = await self._iniciar()
@@ -193,8 +202,8 @@ class TestEvaluacionesControllerFinalizar:
         estudiante_consulta = FakeEstudianteConsultaPort()
         estudiante_consulta.estudiantes.add(estudiante_id)
         controller = _controller(estudiante_consulta, pregunta_consulta, event_store)
-        evaluacion, _creada = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
-        return controller, evaluacion, estudiante_id
+        evaluacion = await controller.iniciar_evaluacion(actividad_id, estudiante_id)
+        return _estado_controller(pregunta_consulta, event_store), evaluacion, estudiante_id
 
     async def test_finalizar_delega_al_use_case(self):
         controller, evaluacion, estudiante_id = await self._iniciar()

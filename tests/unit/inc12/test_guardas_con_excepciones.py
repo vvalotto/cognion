@@ -40,29 +40,16 @@ HTTPEXCEPTION_EN_ROUTERS: dict[str, int] = {
     "src/identidad/frameworks/api/perfil_router.py": 2,
 }
 
-# --- IM-01 / CA-03: imports del dominio en `frameworks/api/` (routers y schemas). 17 hoy; los vacía `US-12.2.4` ---------
+# --- IM-01 / CA-03: imports del dominio en `frameworks/api/` (routers y schemas). Solo quedan tres enums de entrada (`US-12.2.4`) ---------
 # Formato `modulo_de_entities:Nombre`. No cuenta los errores de dominio (lo guarda el contrato de `ADR-029`) ni la plomería
 # de autenticación de `shared` (`jwt`, `tipo_perfil`).
 IMPORTS_DE_DOMINIO_EN_API: dict[str, list[str]] = {
-    "src/actividad_evaluativa/frameworks/api/actividades_router.py": [
-        "actividad_evaluativa_periodo_abierto:ActividadEvaluativaPeriodoAbierto",
-        "ports.actividad_query_port:ActividadResumen",
-    ],
-    "src/actividad_evaluativa/frameworks/api/evaluaciones_router.py": [
-        "evaluacion:Evaluacion",
-        "ports.pregunta_consulta_port:PreguntaConsultaPort",
-    ],
-    "src/actividad_evaluativa/frameworks/api/revision_router.py": [
-        "revision_evaluacion:RevisionEvaluacion"
-    ],
+    # Enums que validan entradas (campos del cuerpo y parámetro de consulta `estado`): son el vocabulario de la API y
+    # definen los valores admitidos del esquema OpenAPI; no son datos de salida.
     "src/actividad_evaluativa/frameworks/api/sesiones_en_vivo_router.py": [
-        "actividad_evaluativa_en_vivo:ActividadEvaluativaEnVivo",
-        "actividad_evaluativa_en_vivo:EstadoSesionEnVivo",
+        "actividad_evaluativa_en_vivo:EstadoSesionEnVivo"
     ],
-    "src/banco_preguntas/frameworks/api/schemas.py": [
-        "dificultad:Dificultad",
-        "importancia:Importancia",
-    ],
+    "src/banco_preguntas/frameworks/api/schemas.py": ["dificultad:Dificultad", "importancia:Importancia"],
 }
 
 # Importaciones que la guarda no cuenta: la plomería de autenticación, que es el tipo de la dependencia de seguridad.
@@ -103,6 +90,14 @@ IGNORE_IMPORTS_POR_CONTRATO: dict[str, list[str]] = {
         "src.identidad.frameworks.api.registro_router -> src.identidad.entities.errors",
         "src.identidad.frameworks.api.errores_invitacion -> src.identidad.entities.errors",
         "src.actividad_evaluativa.frameworks.api.sesiones_en_vivo_router -> src.shared.entities.errors",
+    ],
+    "ADR-031: los routers no importan entidades ni puertos del dominio": [
+        "src.*.frameworks.api.** -> src.*.entities.errors",
+        "src.*.frameworks.api.** -> src.shared.entities.jwt",
+        "src.*.frameworks.api.** -> src.shared.entities.tipo_perfil",
+        "src.banco_preguntas.frameworks.api.schemas -> src.banco_preguntas.entities.dificultad",
+        "src.banco_preguntas.frameworks.api.schemas -> src.banco_preguntas.entities.importancia",
+        "src.actividad_evaluativa.frameworks.api.sesiones_en_vivo_router -> src.actividad_evaluativa.entities.actividad_evaluativa_en_vivo",
     ],
     "shared no importa de ningún BC": [],
     "ADR-026: ningún BC salvo Analytics lee los modelos ORM de otro BC": [

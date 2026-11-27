@@ -4,15 +4,16 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.ports.participantes_sesion_query_port import (
-    ParticipanteResumen,
-)
-from src.actividad_evaluativa.entities.ports.proyecciones_en_vivo_port import (
-    ParticipanteEnRanking,
+from src.actividad_evaluativa.interface_adapters.presenters.sesion_en_vivo_presenter import (
+    EstadoSesionEnVivoSalida,
+    ParticipanteSalida,
+    RankingItemSalida,
+    presentar_estado_sesion,
+    presentar_participantes,
+    presentar_ranking,
 )
 from src.actividad_evaluativa.use_cases.listar_participantes import ListarParticipantesUseCase
 from src.actividad_evaluativa.use_cases.obtener_estado_sesion import (
-    EstadoSesion,
     ObtenerEstadoSesionUseCase,
 )
 from src.actividad_evaluativa.use_cases.obtener_ranking import ObtenerRankingUseCase
@@ -34,18 +35,20 @@ class SesionesEnVivoQueryController:
 
     async def obtener_estado(
         self, sesion_id: UUID, estudiante_id: UUID | None = None
-    ) -> EstadoSesion:
+    ) -> EstadoSesionEnVivoSalida:
         """Devuelve el estado de la sesión; con `estudiante_id`, incluye su avance propio."""
-        return await self._obtener_estado.execute(sesion_id, estudiante_id)
+        return presentar_estado_sesion(await self._obtener_estado.execute(sesion_id, estudiante_id))
 
     async def listar_participantes(
         self, sesion_id: UUID, docente_id: UUID | None = None
-    ) -> list[ParticipanteResumen]:
+    ) -> list[ParticipanteSalida]:
         """Devuelve los participantes de la sala de espera."""
-        return await self._listar_participantes.execute(sesion_id, docente_id)
+        return presentar_participantes(
+            await self._listar_participantes.execute(sesion_id, docente_id)
+        )
 
     async def obtener_ranking(
         self, sesion_id: UUID, es_estudiante: bool
-    ) -> list[ParticipanteEnRanking]:
+    ) -> list[RankingItemSalida]:
         """Devuelve el ranking de la sesión (el Estudiante, solo al finalizar)."""
-        return await self._obtener_ranking.execute(sesion_id, es_estudiante)
+        return presentar_ranking(await self._obtener_ranking.execute(sesion_id, es_estudiante))

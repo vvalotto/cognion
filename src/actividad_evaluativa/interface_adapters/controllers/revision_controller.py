@@ -7,7 +7,10 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from src.actividad_evaluativa.entities.revision_evaluacion import RevisionEvaluacion
+from src.actividad_evaluativa.interface_adapters.presenters.evaluacion_presenter import (
+    RevisionEvaluacionSalida,
+    presentar_revision,
+)
 from src.actividad_evaluativa.use_cases.obtener_revision_evaluacion import (
     ObtenerRevisionEvaluacionUseCase,
 )
@@ -27,12 +30,14 @@ class RevisionController:
 
     async def obtener_revision(
         self, evaluacion_id: UUID, usuario_id: UUID, verificar_propietario: bool = True
-    ) -> RevisionEvaluacion:
+    ) -> RevisionEvaluacionSalida:
         """Delega la composición de la revisión en el caso de uso correspondiente.
 
         `verificar_propietario=False` habilita el drill-down del Docente (`US-ADJ-44`) sobre la
         evaluación de un Estudiante que no es quien hace la request.
         """
-        return await self._obtener_revision_evaluacion.execute(
-            evaluacion_id, usuario_id, verificar_propietario
+        return presentar_revision(
+            await self._obtener_revision_evaluacion.execute(
+                evaluacion_id, usuario_id, verificar_propietario
+            )
         )

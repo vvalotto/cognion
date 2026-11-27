@@ -1,7 +1,6 @@
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
-from src.actividad_evaluativa.entities.eventos import ActividadEvaluativaCreada
 from src.actividad_evaluativa.entities.ports.materia_consulta_port import MateriaDTO
 from src.actividad_evaluativa.interface_adapters.controllers.actividades_controller import (
     ActividadesController,
@@ -92,12 +91,10 @@ class TestActividadesController:
         apertura = datetime.now(UTC)
         cierre = apertura + timedelta(days=7)
 
-        actividad, evento = await controller.crear_actividad(materia_id, apertura, cierre, 10, 1)
+        actividad = await controller.crear_actividad(materia_id, apertura, cierre, 10, 1)
 
         assert actividad.materia_id == materia_id
         assert actividad.cantidad_preguntas == 10
-        assert isinstance(evento, ActividadEvaluativaCreada)
-        assert evento.actividad_id == actividad.id
 
     async def test_modificar_periodo_disponibilidad_delega_al_use_case(self):
         event_store = FakeEventStore()

@@ -160,4 +160,4 @@ class TestSesionesEnVivoController:
 
         assert sesion.comision_id == comision_id
         assert sesion.materia_id == materia_id
-        assert len(sesion.preguntas) == 10
+        assert sesion.cantidad_preguntas == 10

@@ -17,7 +17,6 @@ from src.actividad_evaluativa.entities.errors import ComisionNoAutorizada, Sesio
 from src.actividad_evaluativa.entities.ports.canal_tiempo_real_port import CanalTiempoRealPort
 from src.actividad_evaluativa.entities.ports.comision_consulta_port import ComisionConsultaPort
 from src.actividad_evaluativa.entities.ports.event_store_port import EventStorePort
-from src.actividad_evaluativa.entities.ports.pregunta_consulta_port import PreguntaConsultaPort
 from src.actividad_evaluativa.frameworks.adapters.comision_consulta_port_in_process import (
     ComisionConsultaPortInProcess,
 )
@@ -76,6 +75,9 @@ from src.actividad_evaluativa.interface_adapters.controllers.conduccion_en_vivo_
 )
 from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_controller import (
     EvaluacionesController,
+)
+from src.actividad_evaluativa.interface_adapters.controllers.evaluaciones_estado_controller import (
+    EvaluacionesEstadoController,
 )
 from src.actividad_evaluativa.interface_adapters.controllers.participaciones_en_vivo_controller import (
     ParticipacionesEnVivoController,
@@ -250,20 +252,20 @@ def get_evaluaciones_controller(session: SessionDep) -> EvaluacionesController:
     return EvaluacionesController(
         IniciarEvaluacionUseCase(estudiante_consulta, pregunta_consulta, event_store),
         RegistrarRespuestaUseCase(pregunta_consulta, event_store),
-        SuspenderEvaluacionUseCase(event_store),
-        ReanudarEvaluacionUseCase(event_store),
-        FinalizarEvaluacionUseCase(event_store),
+        pregunta_consulta,
     )
 
 
-def get_pregunta_consulta_port(session: SessionDep) -> PreguntaConsultaPort:
-    """Provee `PreguntaConsultaPort` como dependencia FastAPI propia del router (`US-3.4.6`).
-
-    No se agrega como 6° dependencia de `EvaluacionesController` (que ya inyecta 5 Use Cases)
-    para no repetir el patrón de CRITICAL de CBO ya visto en incrementos anteriores — el
-    router la usa directamente para enriquecer `EvaluacionResponse`.
-    """
-    return PreguntaConsultaPortInProcess(session)
+def get_evaluaciones_estado_controller(session: SessionDep) -> EvaluacionesEstadoController:
+    """Arma el `EvaluacionesEstadoController` (suspender, reanudar, finalizar) con sus dependencias."""
+    pregunta_consulta = PreguntaConsultaPortInProcess(session)
+    event_store = SQLAlchemyEventStore(session)
+    return EvaluacionesEstadoController(
+        SuspenderEvaluacionUseCase(event_store),
+        ReanudarEvaluacionUseCase(event_store),
+        FinalizarEvaluacionUseCase(event_store),
+        pregunta_consulta,
+    )
 
 
 def get_revision_controller(session: SessionDep) -> RevisionController:

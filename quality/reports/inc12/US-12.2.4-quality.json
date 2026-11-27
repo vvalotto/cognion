@@ -1,0 +1,10 @@
+{
+  "us": "US-12.2.4",
+  "fecha": "2026-11-27",
+  "ruff_src": "limpio",
+  "mypy": "351 archivos sin errores",
+  "import_linter": "9 contratos en verde (el nuevo ADR-031 se rompe con una violación sembrada)",
+  "designreviewer": {"critical": 0, "warnings": 346, "linea_base_previa": 357},
+  "pylint": "9.68/10 sobre presenters, casos de uso nuevos y controllers nuevos",
+  "tests_locales": {"integracion_y_bdd_AE_y_step_defs": "807 pasan", "identidad_integracion": "432 pasan", "banco_integracion": "pasan", "analytics_integracion": "pasan"}
+}
