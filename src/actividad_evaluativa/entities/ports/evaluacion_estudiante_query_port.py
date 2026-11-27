@@ -1,8 +1,8 @@
 """Puerto de consulta (CQRS) para saber qué evaluaciones de un Estudiante están Finalizadas.
 
 Separado de `EvaluacionActivaQueryPort` (`US-3.2.4`, propósito: evaluaciones NO finalizadas
-para el `VerificadorDeVencimientos`) a propósito — ensancharlo repetiría el patrón de CBO ya
-visto en `US-2.1.2`/`US-2.1.5`/`US-2.1.6`. Mismo criterio de separación command/query que ese
+para el `VerificadorDeVencimientos`) a propósito: cada puerto de consulta tiene una sola
+razón de cambio. Mismo criterio de separación command/query que ese
 puerto y que `ActividadQueryPort` (`US-3.4.2`).
 """
 

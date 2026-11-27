@@ -12,9 +12,8 @@ from src.banco_preguntas.entities.ports.comision_consulta_port import ComisionCo
 class VerificarAutorizacionMateriaService:
     """Encapsula `BancoRepositoryPort` + `ComisionConsultaPort` tras un único dependiente.
 
-    Introducido para bajar el CBO de `EditarPreguntaUseCase` (11/10 en el pre-push gate) —
-    mismo criterio de "separar por responsabilidad" ya aplicado en los Incrementos 2 y 6
-    (`CLAUDE.md`, "CBO solo se mide en pre-push, no en Fase 7").
+    La autorización del Docente por materia es una responsabilidad propia, compartida por varios
+    casos de uso de preguntas (`US-ADJ-57`): se resuelve en un solo lugar.
     """
 
     def __init__(

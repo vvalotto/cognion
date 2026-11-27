@@ -36,26 +36,6 @@ from src.actividad_evaluativa.use_cases.verificar_autorizacion_comision import (
 AGGREGATE_TYPE_SESION = "ActividadEvaluativaEnVivo"
 
 
-async def _persistir_inicio(
-    event_store: EventStorePort, sesion_id: UUID, version: int, payload: dict[str, Any]
-) -> None:
-    """Guarda el evento `SesionEnVivoIniciada`, traduciendo la carrera optimista.
-
-    Función libre para no sumar CBO a `IniciarSesionEnVivoUseCase` (`US-ADJ-57`).
-    """
-    try:
-        await event_store.append(
-            AGGREGATE_TYPE_SESION,
-            sesion_id,
-            version,
-            [EventoParaAlmacenar(event_type="SesionEnVivoIniciada", payload=payload)],
-        )
-    except ConcurrenciaOptimistaError as exc:
-        # Otro inicio concurrente ganó la carrera de insertar el evento — es exactamente el
-        # caso "ya iniciada", no un error de infraestructura.
-        raise SesionYaIniciada(sesion_id) from exc
-
-
 class IniciarSesionEnVivoUseCase:
     """Orquesta el inicio de la sesión: transición a `EnCurso`, persistencia y broadcast."""
 
@@ -113,9 +93,23 @@ class IniciarSesionEnVivoUseCase:
             sesion, contenido.texto, tipo_de_pregunta(contenido)
         )
 
-        await _persistir_inicio(
-            self._event_store, sesion_id, len(eventos), payload_pregunta_presentada(evento)
-        )
+        await self._persistir_inicio(sesion_id, len(eventos), payload_pregunta_presentada(evento))
 
         await self._canal.publicar(sesion_id, mensaje_pregunta_presentada(evento))
         return sesion
+
+    async def _persistir_inicio(
+        self, sesion_id: UUID, version: int, payload: dict[str, Any]
+    ) -> None:
+        """Guarda el evento `SesionEnVivoIniciada`, traduciendo la carrera optimista."""
+        try:
+            await self._event_store.append(
+                AGGREGATE_TYPE_SESION,
+                sesion_id,
+                version,
+                [EventoParaAlmacenar(event_type="SesionEnVivoIniciada", payload=payload)],
+            )
+        except ConcurrenciaOptimistaError as exc:
+            # Otro inicio concurrente ganó la carrera de insertar el evento — es exactamente el
+            # caso "ya iniciada", no un error de infraestructura.
+            raise SesionYaIniciada(sesion_id) from exc

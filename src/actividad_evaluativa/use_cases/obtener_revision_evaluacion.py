@@ -25,8 +25,7 @@ class ObtenerRevisionEvaluacionUseCase:
 
     Query pura — no muta `Evaluacion` ni emite eventos (`BC-actividad-evaluativa-modelo.md`
     §4). Vive separado de los comandos sobre `Evaluacion` (`EvaluacionesController`) en su
-    propio `RevisionController` para no repetir el CRITICAL de CBO ya visto en Incremento 2 al
-    mezclar comandos y queries en un mismo controller.
+    propio `RevisionController`: separación command/query por responsabilidad.
     """
 
     def __init__(

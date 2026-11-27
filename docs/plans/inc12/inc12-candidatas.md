@@ -296,7 +296,7 @@ Estados: *Pendiente*, *Confirmado*, *En curso*, *Cerrado*, *Descartado*, *No se 
 | `VT-03` | Media | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
 | `VT-04` | Media | | T | Pendiente | |
 | `VT-05` | Baja | | — | Pendiente | |
-| `IQ-01` | Alta | | 2 | Pendiente | Issues [#673](https://github.com/vvalotto/cognion/issues/673) |
+| `IQ-01` | Alta | | 2 | Cerrado | Issues [#673](https://github.com/vvalotto/cognion/issues/673) | Implementado en `US-12.2.6` (2026-11-28): `max_cbo` 10 → 12 con la medición; 5 casos de uso recuperan lo que se había sacado para esquivar la métrica; los validadores de las entidades se conservan por decisión
 | `IQ-02` | Media | | T | Pendiente | |
 | `IQ-03` | Media | | T | Pendiente | |
 | `IQ-04` | Baja | | 1 | Cerrado | #647, PR [#650](https://github.com/vvalotto/cognion/pull/650) |
