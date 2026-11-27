@@ -16,10 +16,14 @@ from src.banco_preguntas.frameworks.api.schemas import (
 from src.banco_preguntas.frameworks.dependencies import (
     get_current_user,
     get_preguntas_controller,
+    get_preguntas_edicion_controller,
     require_docente,
 )
 from src.banco_preguntas.interface_adapters.controllers.preguntas_controller import (
     PreguntasController,
+)
+from src.banco_preguntas.interface_adapters.controllers.preguntas_edicion_controller import (
+    PreguntasEdicionController,
 )
 from src.banco_preguntas.interface_adapters.presenters.banco_presenter import (
     PreguntaOpcionMultipleSalida,
@@ -97,7 +101,7 @@ async def editar_pregunta(
     pregunta_id: UUID,
     body: EditarPreguntaRequest,
     usuario: JWTPayload = Depends(get_current_user),
-    controller: PreguntasController = Depends(get_preguntas_controller),
+    controller: PreguntasEdicionController = Depends(get_preguntas_edicion_controller),
 ) -> PreguntaSalida:
     """Edita una pregunta existente (texto, opciones/respuesta, metadatos).
 
@@ -129,7 +133,7 @@ async def editar_pregunta(
 async def eliminar_pregunta(
     pregunta_id: UUID,
     usuario: JWTPayload = Depends(get_current_user),
-    controller: PreguntasController = Depends(get_preguntas_controller),
+    controller: PreguntasEdicionController = Depends(get_preguntas_edicion_controller),
 ) -> None:
     """Elimina (baja lógica) una pregunta existente.
 

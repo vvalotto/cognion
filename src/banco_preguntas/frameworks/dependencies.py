@@ -23,6 +23,9 @@ from src.banco_preguntas.interface_adapters.controllers.materias_controller impo
 from src.banco_preguntas.interface_adapters.controllers.preguntas_controller import (
     PreguntasController,
 )
+from src.banco_preguntas.interface_adapters.controllers.preguntas_edicion_controller import (
+    PreguntasEdicionController,
+)
 from src.banco_preguntas.use_cases.activar_materia import ActivarMateriaUseCase
 from src.banco_preguntas.use_cases.cargar_pregunta_opcion_multiple import (
     CargarPreguntaOpcionMultipleUseCase,
@@ -68,10 +71,19 @@ def get_preguntas_controller(session: SessionDep) -> PreguntasController:
     banco_repo = SQLAlchemyBancoRepository(session)
     pregunta_repo = SQLAlchemyPreguntaRepository(session)
     comision_consulta = ComisionConsultaPortInProcess(session)
-    verificador_autorizacion = VerificarAutorizacionMateriaService(banco_repo, comision_consulta)
     return PreguntasController(
         CargarPreguntaOpcionMultipleUseCase(banco_repo, pregunta_repo, comision_consulta),
         CargarPreguntaVerdaderoFalsoUseCase(banco_repo, pregunta_repo, comision_consulta),
+    )
+
+
+def get_preguntas_edicion_controller(session: SessionDep) -> PreguntasEdicionController:
+    """Arma el `PreguntasEdicionController` (edición y baja) con sus dependencias concretas."""
+    banco_repo = SQLAlchemyBancoRepository(session)
+    pregunta_repo = SQLAlchemyPreguntaRepository(session)
+    comision_consulta = ComisionConsultaPortInProcess(session)
+    verificador_autorizacion = VerificarAutorizacionMateriaService(banco_repo, comision_consulta)
+    return PreguntasEdicionController(
         EditarPreguntaUseCase(pregunta_repo, verificador_autorizacion),
         EliminarPreguntaUseCase(pregunta_repo, banco_repo, comision_consulta),
     )
