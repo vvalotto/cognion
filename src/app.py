@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy import text
 
 from src.actividad_evaluativa.frameworks.api.actividades_router import router as actividades_router
 from src.actividad_evaluativa.frameworks.api.evaluaciones_router import (
@@ -55,6 +56,34 @@ configurar_logging(settings.log_level, settings.log_format)
 logger = logging.getLogger(__name__)
 
 
+CLAVE_BLOQUEO_VERIFICADOR = 0x434F474E5645
+"""Clave del bloqueo consultivo de PostgreSQL del verificador (`US-12.2.5`, `IM-05`): "COGNVE" en ASCII."""
+
+
+async def ejecutar_corrida_del_verificador() -> bool:
+    """Corre una vez `VerificarVencimientosUseCase` si ningún otro proceso lo está corriendo.
+
+    Toma un bloqueo consultivo de PostgreSQL en una sesión aparte (`pg_try_advisory_xact_lock`) y lo
+    sostiene durante toda la corrida: con más de un proceso, el segundo salta la corrida en vez de
+    duplicarla (`IM-05`). El bloqueo es de transacción y está en una sesión propia, no en la del caso
+    de uso, por dos razones: el event store confirma por su cuenta y soltaría un bloqueo atado a esa
+    transacción a mitad de la corrida, y un bloqueo de sesión podría quedar retenido por una conexión
+    devuelta al pool. Devuelve `True` si corrió y `False` si la saltó.
+    """
+    async with SessionLocal() as sesion_del_bloqueo:
+        resultado = await sesion_del_bloqueo.execute(
+            text("SELECT pg_try_advisory_xact_lock(:clave)"), {"clave": CLAVE_BLOQUEO_VERIFICADOR}
+        )
+        if not resultado.scalar_one():
+            logger.debug(
+                "El verificador de vencimientos ya corre en otro proceso: se salta la corrida"
+            )
+            return False
+        async with SessionLocal() as session:
+            await build_verificar_vencimientos_use_case(session).execute()
+        return True
+
+
 async def _verificar_vencimientos_periodicamente() -> None:
     """Corre `VerificarVencimientosUseCase` cada `verificador_vencimientos_cadencia_segundos`.
 
@@ -65,8 +94,7 @@ async def _verificar_vencimientos_periodicamente() -> None:
     while True:
         await asyncio.sleep(settings.verificador_vencimientos_cadencia_segundos)
         try:
-            async with SessionLocal() as session:
-                await build_verificar_vencimientos_use_case(session).execute()
+            await ejecutar_corrida_del_verificador()
         except Exception:
             logger.exception("VerificarVencimientosUseCase falló en una corrida periódica")
 
