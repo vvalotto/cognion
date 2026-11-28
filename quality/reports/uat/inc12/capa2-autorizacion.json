@@ -1,0 +1,112 @@
+[
+ {
+  "verificacion": "login del administrador",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "el token de sesión dura 480 minutos (lo configurado en el servidor)",
+  "ok": true,
+  "detalle": "480.0 min"
+ },
+ {
+  "verificacion": "el docente de A crea la sesión en vivo",
+  "ok": true,
+  "detalle": "201 {\"id\":\"42ac67ce-b58c-429d-8074-b50f2c7c74d5\",\"comision_id\":\"9f3ada0c-dde4-4c43-a74b-4d5f66f2c577\",\"materia_id\":\"0f1e4e86"
+ },
+ {
+  "verificacion": "un estudiante de OTRA comisión no puede unirse → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "un estudiante de otra comisión no consulta el estado → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "un estudiante de otra comisión no ve el ranking → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "un docente de otra comisión no consulta el estado → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "un docente de otra comisión no ve el ranking → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "un docente de otra comisión no ve los participantes → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "un docente de otra comisión no conduce la sesión → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "una sesión inexistente sigue dando 404",
+  "ok": true,
+  "detalle": "404"
+ },
+ {
+  "verificacion": "un estudiante de la comisión SÍ se une → 200",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "el estudiante de la comisión consulta el estado → 200",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "el docente de la comisión consulta el estado → 200",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "el docente de la comisión ve a 1 participante y ningún ajeno",
+  "ok": true,
+  "detalle": "200 1"
+ },
+ {
+  "verificacion": "canal sin token → rechazada",
+  "ok": true,
+  "detalle": "rechazado HTTP 403"
+ },
+ {
+  "verificacion": "canal con token inválido → rechazada",
+  "ok": true,
+  "detalle": "rechazado HTTP 403"
+ },
+ {
+  "verificacion": "canal con un estudiante de OTRA comisión → rechazada",
+  "ok": true,
+  "detalle": "rechazado HTTP 403"
+ },
+ {
+  "verificacion": "canal con un docente de OTRA comisión → rechazada",
+  "ok": true,
+  "detalle": "rechazado HTTP 403"
+ },
+ {
+  "verificacion": "canal de una sesión inexistente → rechazada",
+  "ok": true,
+  "detalle": "rechazado HTTP 403"
+ },
+ {
+  "verificacion": "canal con un estudiante de la comisión → abierto",
+  "ok": true,
+  "detalle": "abierto"
+ },
+ {
+  "verificacion": "canal con el docente de la comisión → abierto",
+  "ok": true,
+  "detalle": "abierto"
+ }
+]

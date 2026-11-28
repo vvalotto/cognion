@@ -24,7 +24,7 @@ URL = os.environ.get("UAT_URL", "http://localhost:8010").rstrip("/") + "/api"
 ADMIN_EMAIL = os.environ["UAT_ADMIN_EMAIL"]
 ADMIN_PASSWORD = os.environ["UAT_ADMIN_PASSWORD"]
 LOG = os.environ.get("UAT_LOG", "")
-SALIDA = "quality/reports/uat/inc10/capa2-http.json"
+SALIDA = os.environ.get("UAT_SALIDA", "quality/reports/uat/inc10/capa2-http.json")
 
 resultados: list[dict] = []
 sufijo = secrets.token_hex(3)

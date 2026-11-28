@@ -1,6 +1,6 @@
 # Incremento 12 — Calidad de diseño
 
-**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 cerrada el 2026-11-18; Iteración 2 abierta con 9 Issues (#665 a #673)** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados los 7 Issues (#645 a #649, #654 y #658); `IQ-05` e `IQ-06` se hicieron en el PR #662 sin Issue propio. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
+**Estado: aprobado por Víctor el 2026-11-15. Iteración 1 cerrada el 2026-11-18; Iteración 2 cerrada el 2026-11-28 (9 Issues, #665 a #673). Ambas cerraron en `BL-018` / `v1.0.1`** (Milestone [21](https://github.com/vvalotto/cognion/milestone/21)): cerrados los 7 Issues (#645 a #649, #654 y #658); `IQ-05` e `IQ-06` se hicieron en el PR #662 sin Issue propio. Los Issues de las demás iteraciones se crean al abrirlas, después de su paso de confirmar.
 **Origen:** [`docs/revision-diseno-2026-11/`](../../revision-diseno-2026-11/README.md), 60 hallazgos sobre la `1.0.0` (11 de severidad Alta, 35 Media, 14 Baja).
 **Proceso:** [`inc12-proceso.md`](inc12-proceso.md).
 **Cierre previsto:** `BL-018` con `v1.0.1` (Iteraciones 1 y 2) y `BL-019` con `v1.1.0` (Iteraciones 3 y 4).

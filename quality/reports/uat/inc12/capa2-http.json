@@ -1,0 +1,142 @@
+{
+  "url": "http://localhost:8010/api",
+  "total": 27,
+  "fallos": 0,
+  "resultados": [
+    {
+      "verificacion": "GET /health",
+      "ok": true,
+      "detalle": "200"
+    },
+    {
+      "verificacion": "GET /health/ready (base disponible)",
+      "ok": true,
+      "detalle": "200"
+    },
+    {
+      "verificacion": "login del administrador",
+      "ok": true,
+      "detalle": "200"
+    },
+    {
+      "verificacion": "el administrador crea un docente",
+      "ok": true,
+      "detalle": "201"
+    },
+    {
+      "verificacion": "asignar el docente a la comisión",
+      "ok": true,
+      "detalle": "200"
+    },
+    {
+      "verificacion": "el docente genera el link grupal (60 min)",
+      "ok": true,
+      "detalle": "201"
+    },
+    {
+      "verificacion": "duración fuera de 15/60/1440 se rechaza",
+      "ok": true,
+      "detalle": "422"
+    },
+    {
+      "verificacion": "el administrador NO genera links grupales",
+      "ok": true,
+      "detalle": "403"
+    },
+    {
+      "verificacion": "preview del link (materia y horario)",
+      "ok": true,
+      "detalle": "200"
+    },
+    {
+      "verificacion": "registro #1 con el MISMO link grupal",
+      "ok": true,
+      "detalle": "201"
+    },
+    {
+      "verificacion": "registro #2 con el MISMO link grupal",
+      "ok": true,
+      "detalle": "201"
+    },
+    {
+      "verificacion": "registro #3 con el MISMO link grupal",
+      "ok": true,
+      "detalle": "201"
+    },
+    {
+      "verificacion": "contador de registrados = 3",
+      "ok": true,
+      "detalle": "usos=3"
+    },
+    {
+      "verificacion": "la comisión lista a los 3 estudiantes",
+      "ok": true,
+      "detalle": "200"
+    },
+    {
+      "verificacion": "email repetido se rechaza",
+      "ok": true,
+      "detalle": "409"
+    },
+    {
+      "verificacion": "contraseña de menos de 8 caracteres → 422 de validación (no 5xx)",
+      "ok": true,
+      "detalle": "422"
+    },
+    {
+      "verificacion": "contraseña de 8+ sin complejidad → codigo password_invalida",
+      "ok": true,
+      "detalle": "422 password_invalida"
+    },
+    {
+      "verificacion": "un registro rechazado NO suma uso",
+      "ok": true,
+      "detalle": "usos=3"
+    },
+    {
+      "verificacion": "el docente desactiva el link",
+      "ok": true,
+      "detalle": "204"
+    },
+    {
+      "verificacion": "registro con link desactivado → invitacion_revocada",
+      "ok": true,
+      "detalle": "422 invitacion_revocada"
+    },
+    {
+      "verificacion": "generar otro link revoca al anterior y emite uno nuevo",
+      "ok": true,
+      "detalle": "201"
+    },
+    {
+      "verificacion": "1.er fallo sin aviso",
+      "ok": true,
+      "detalle": "(401, None)"
+    },
+    {
+      "verificacion": "2.º fallo avisa intentos_restantes = 1",
+      "ok": true,
+      "detalle": "(401, 1)"
+    },
+    {
+      "verificacion": "3.er fallo sin aviso (bloquea)",
+      "ok": true,
+      "detalle": "(401, None)"
+    },
+    {
+      "verificacion": "4.º intento: cuenta bloqueada (403)",
+      "ok": true,
+      "detalle": "403"
+    },
+    {
+      "verificacion": "el log de acceso NO contiene el token de la invitación",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "verificacion": "el log muestra la ruta enmascarada /invitaciones/***",
+      "ok": true,
+      "detalle": ""
+    }
+  ]
+}
