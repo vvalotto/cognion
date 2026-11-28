@@ -9,6 +9,44 @@ Versionado: [Semantic Versioning](https://semver.org/lang/es/)
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-28
+
+Versión de calidad de diseño (Incremento 12, Iteraciones 1 y 2, `BL-018`). **No agrega funcionalidad**: corrige tres comportamientos de seguridad y
+operación y reorganiza el código por dentro sin cambiar lo que ve el usuario. La revisión de diseño que la origina está en `docs/revision-diseno-2026-11/`.
+
+### Security
+- **El canal en vivo solo lo abre quien pertenece a la comisión** (`US-12.1.1`, hallazgo `IM-04`): antes cualquier usuario autenticado que conociera el
+  identificador de una sesión recibía sus mensajes. Ahora solo el docente asignado, un estudiante de la comisión o un administrador; el resto es rechazado.
+- **Unirse, consultar el estado y ver el ranking de una sesión en vivo exigen pertenecer a la comisión** (`US-12.1.2`): un estudiante o docente ajeno recibe 403
+  (antes un estudiante ajeno podía unirse y aparecer en el ranking). Un usuario de la comisión no nota ninguna diferencia.
+
+### Changed
+- **El token de sesión dura 8 horas** en lugar de 1 (`US-12.1.3`, hallazgo `AQ-04`): la sesión del docente ya no se cierra sola en mitad de una clase. Sigue sin
+  haber renovación. **Atención al actualizar:** si el `.env` fija `ACCESS_TOKEN_EXPIRE_MINUTES` (por ejemplo, copiado de un `.env.example` anterior, que decía 60), ese
+  valor se conserva y pisa el nuevo por defecto; quitá la línea o cambiala a `480` para obtener las 8 horas.
+- **Operación** (`DO-01`, `DO-02`, `DO-04`): el respaldo se programa al desplegar y `cognion.sh salud` avisa si el último está vencido; la imagen corre con un usuario sin
+  privilegios y una versión fija de `uv`; el healthcheck consulta `/api/health/ready`. Se eliminó `fly.toml` (Fly.io ya no se usa).
+- **Pool de conexiones a la base** (`US-12.2.5`): el motor se arma desde la configuración, con pool en ejecución (los 30 logins simultáneos pasan de 2,9 s a 1,5 s en la
+  Mac). La aplicación sigue siendo **un solo proceso**: no se agregan `--workers` ni réplicas, y una guarda lo verifica. El verificador de actividades toma un bloqueo
+  para no correr dos veces a la vez.
+
+### Fixed
+- **Pantalla del estudiante en la sesión en vivo**: una carrera entre el estado de React y su referencia podía dejar la vista desfasada y hacer fallar de forma
+  intermitente una prueba de navegador. Ahora la vista y su referencia se actualizan juntas.
+
+### Internal (sin efecto para el usuario)
+- **Una unidad de trabajo por pedido** (`US-12.2.1`, `ADR-028`) y **repositorios SQL en `frameworks/repositories/`** (`US-12.2.3`, `ADR-030`).
+- **Errores de dominio con categoría y un único manejador HTTP** (`US-12.2.2`, `ADR-029`): mismos códigos y cuerpos de respuesta que antes.
+- **Los controllers devuelven un tipo de salida armado en presentadores** (`US-12.2.4`, `ADR-031`): el esquema OpenAPI no cambió (66 rutas, 91 esquemas).
+- **Calidad**: `import-linter` pasa de 4 a 9 contratos; el umbral de acoplamiento (`max_cbo`) queda en 12, medido sin atajos y fijado por una guarda (`US-12.2.6`); el
+  CI suma auditoría de dependencias, `tsc -b`, Playwright y un smoke del servidor; `tests/conftest.py` aborta si la base no es descartable (`*_test`).
+- **Documentación de arquitectura** (`docs/architecture/`, `BL-017`) y `ADR-028` a `ADR-031`.
+
+### Limitaciones conocidas
+- El camino del servidor con Docker se ejercita en el CI con Docker real en `localhost`, pero sigue sin probarse en un servidor con dominio, certificado y firewall
+  (Issue #624).
+- La prueba en un celular real no se hizo; el recorrido de estudiante se verificó con un viewport emulado de 375 px.
+
 ## [1.0.0] - 2026-11-11
 
 Primera versión estable de Cognión (Incremento 10, `BL-016`): el trabajo de los Incrementos 0 a 9 con una versión única, un

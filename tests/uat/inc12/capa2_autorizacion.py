@@ -82,35 +82,71 @@ def rechazado(estado: str) -> bool:
 async def main() -> int:
     sufijo = uuid.uuid4().hex[:6]
     async with httpx.AsyncClient(base_url=API, timeout=30) as c:
-        r = await c.post("/identidad/login", json={"email": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
+        r = await c.post(
+            "/identidad/login", json={"email": ADMIN_EMAIL, "password": ADMIN_PASSWORD}
+        )
         verificar("login del administrador", r.status_code == 200, str(r.status_code))
         admin = r.json()["access_token"]
-        lista = (await c.get("/usuarios", headers=auth(admin), params={"rol": "administrador"})).json()
+        lista = (
+            await c.get("/usuarios", headers=auth(admin), params={"rol": "administrador"})
+        ).json()
         admin_id = (lista["cuentas"] if isinstance(lista, dict) else lista)[0]["id"]
 
         async def comision_con_docente(etiqueta: str) -> dict[str, str]:
-            materia = (await c.post("/materias", json={"nombre": f"Materia {etiqueta} {sufijo}"}, headers=auth(admin))).json()
+            materia = (
+                await c.post(
+                    "/materias",
+                    json={"nombre": f"Materia {etiqueta} {sufijo}"},
+                    headers=auth(admin),
+                )
+            ).json()
             com = (
                 await c.post(
                     "/comisiones",
-                    json={"materia_id": materia["id"], "horario": "Lu 8-10", "administrador_id": admin_id},
+                    json={
+                        "materia_id": materia["id"],
+                        "horario": "Lu 8-10",
+                        "administrador_id": admin_id,
+                    },
                     headers=auth(admin),
                 )
             ).json()["id"]
             pwd, mail = clave(), f"doc.{etiqueta.lower()}.{sufijo}@fiuner.edu.ar"
             doc = (
-                await c.post("/usuarios", json={"nombre": f"Docente {etiqueta}", "email": mail, "password": pwd, "perfil": "docente"}, headers=auth(admin))
+                await c.post(
+                    "/usuarios",
+                    json={
+                        "nombre": f"Docente {etiqueta}",
+                        "email": mail,
+                        "password": pwd,
+                        "perfil": "docente",
+                    },
+                    headers=auth(admin),
+                )
             ).json()
-            await c.post(f"/comisiones/{com}/docentes", json={"docente_id": doc["id"]}, headers=auth(admin))
-            tok = (await c.post("/identidad/login", json={"email": mail, "password": pwd})).json()["access_token"]
-            inv = (await c.post(f"/comisiones/{com}/invitaciones-grupales", json={"duracion_minutos": 60}, headers=auth(tok))).json()
+            await c.post(
+                f"/comisiones/{com}/docentes", json={"docente_id": doc["id"]}, headers=auth(admin)
+            )
+            tok = (await c.post("/identidad/login", json={"email": mail, "password": pwd})).json()[
+                "access_token"
+            ]
+            inv = (
+                await c.post(
+                    f"/comisiones/{com}/invitaciones-grupales",
+                    json={"duracion_minutos": 60},
+                    headers=auth(tok),
+                )
+            ).json()
             for i in range(3):
                 await c.post(
                     "/preguntas/opcion-multiple",
                     json={
                         "banco_id": materia["banco_id"],
                         "texto": f"Pregunta {etiqueta}{i} {sufijo}",
-                        "opciones": [{"texto": "A", "es_correcta": True}, {"texto": "B", "es_correcta": False}],
+                        "opciones": [
+                            {"texto": "A", "es_correcta": True},
+                            {"texto": "B", "es_correcta": False},
+                        ],
                         "unidad_tematica": "U1",
                         "tema": "T1",
                         "dificultad": "medio",
@@ -119,9 +155,19 @@ async def main() -> int:
                     headers=auth(tok),
                 )
             pe, me = clave(), f"est.{etiqueta.lower()}.{sufijo}@fiuner.edu.ar"
-            reg = await c.post("/identidad/registro", json={"token": inv["token"], "nombre": f"Estudiante {etiqueta}", "email": me, "password": pe})
+            reg = await c.post(
+                "/identidad/registro",
+                json={
+                    "token": inv["token"],
+                    "nombre": f"Estudiante {etiqueta}",
+                    "email": me,
+                    "password": pe,
+                },
+            )
             assert reg.status_code == 201, reg.text
-            est = (await c.post("/identidad/login", json={"email": me, "password": pe})).json()["access_token"]
+            est = (await c.post("/identidad/login", json={"email": me, "password": pe})).json()[
+                "access_token"
+            ]
             return {"comision": com, "docente": tok, "estudiante": est, "materia": materia["id"]}
 
         a = await comision_con_docente("A")
@@ -139,37 +185,89 @@ async def main() -> int:
         # --- La sesión en vivo de la comisión A ---------------------------------------------------------
         sesion = await c.post(
             "/sesiones-en-vivo",
-            json={"comision_id": a["comision"], "cantidad_preguntas": 1, "tiempo_limite_por_pregunta_segundos": 60},
+            json={
+                "comision_id": a["comision"],
+                "cantidad_preguntas": 1,
+                "tiempo_limite_por_pregunta_segundos": 60,
+            },
             headers=auth(a["docente"]),
         )
-        verificar("el docente de A crea la sesión en vivo", sesion.status_code == 201, f"{sesion.status_code} {sesion.text[:120]}")
+        verificar(
+            "el docente de A crea la sesión en vivo",
+            sesion.status_code == 201,
+            f"{sesion.status_code} {sesion.text[:120]}",
+        )
         sid = sesion.json()["id"]
 
         # --- US-12.1.2: unirse, consultar el estado y ver el ranking -----------------------------------
         r = await c.post(f"/sesiones-en-vivo/{sid}/unirse", headers=auth(b["estudiante"]))
-        verificar("un estudiante de OTRA comisión no puede unirse → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un estudiante de OTRA comisión no puede unirse → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}", headers=auth(b["estudiante"]))
-        verificar("un estudiante de otra comisión no consulta el estado → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un estudiante de otra comisión no consulta el estado → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}/ranking", headers=auth(b["estudiante"]))
-        verificar("un estudiante de otra comisión no ve el ranking → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un estudiante de otra comisión no ve el ranking → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}", headers=auth(b["docente"]))
-        verificar("un docente de otra comisión no consulta el estado → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un docente de otra comisión no consulta el estado → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}/ranking", headers=auth(b["docente"]))
-        verificar("un docente de otra comisión no ve el ranking → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un docente de otra comisión no ve el ranking → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}/participantes", headers=auth(b["docente"]))
-        verificar("un docente de otra comisión no ve los participantes → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un docente de otra comisión no ve los participantes → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.post(f"/sesiones-en-vivo/{sid}/iniciar", headers=auth(b["docente"]))
-        verificar("un docente de otra comisión no conduce la sesión → 403", r.status_code == 403, str(r.status_code))
+        verificar(
+            "un docente de otra comisión no conduce la sesión → 403",
+            r.status_code == 403,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{uuid.uuid4()}", headers=auth(a["estudiante"]))
-        verificar("una sesión inexistente sigue dando 404", r.status_code == 404, str(r.status_code))
+        verificar(
+            "una sesión inexistente sigue dando 404", r.status_code == 404, str(r.status_code)
+        )
         r = await c.post(f"/sesiones-en-vivo/{sid}/unirse", headers=auth(a["estudiante"]))
-        verificar("un estudiante de la comisión SÍ se une → 200", r.status_code == 200, str(r.status_code))
+        verificar(
+            "un estudiante de la comisión SÍ se une → 200", r.status_code == 200, str(r.status_code)
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}", headers=auth(a["estudiante"]))
-        verificar("el estudiante de la comisión consulta el estado → 200", r.status_code == 200, str(r.status_code))
+        verificar(
+            "el estudiante de la comisión consulta el estado → 200",
+            r.status_code == 200,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}", headers=auth(a["docente"]))
-        verificar("el docente de la comisión consulta el estado → 200", r.status_code == 200, str(r.status_code))
+        verificar(
+            "el docente de la comisión consulta el estado → 200",
+            r.status_code == 200,
+            str(r.status_code),
+        )
         r = await c.get(f"/sesiones-en-vivo/{sid}/participantes", headers=auth(a["docente"]))
-        verificar("el docente de la comisión ve a 1 participante y ningún ajeno", r.status_code == 200 and len(r.json()) == 1, f"{r.status_code} {len(r.json()) if r.status_code == 200 else ''}")
+        verificar(
+            "el docente de la comisión ve a 1 participante y ningún ajeno",
+            r.status_code == 200 and len(r.json()) == 1,
+            f"{r.status_code} {len(r.json()) if r.status_code == 200 else ''}",
+        )
 
     # --- US-12.1.1: el canal WebSocket --------------------------------------------------------------------
     estado = await conexion_canal(sid, None)

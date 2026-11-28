@@ -1,6 +1,6 @@
 [project]
 name = "cognion"
-version = "1.0.0"
+version = "1.0.1"
 description = "Plataforma de cuestionarios para facultades de ingeniería"
 requires-python = ">=3.12"
 dependencies = [
