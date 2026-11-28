@@ -1,0 +1,107 @@
+[
+ {
+  "verificacion": "login del administrador",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "sin token → 401",
+  "ok": true,
+  "detalle": "401"
+ },
+ {
+  "verificacion": "comisión inexistente → 404 con detail de texto",
+  "ok": true,
+  "detalle": "404"
+ },
+ {
+  "verificacion": "un docente no crea materias → 403",
+  "ok": true,
+  "detalle": "403"
+ },
+ {
+  "verificacion": "cuerpo inválido → 422 de validación",
+  "ok": true,
+  "detalle": "422"
+ },
+ {
+  "verificacion": "email repetido → 409",
+  "ok": true,
+  "detalle": "409"
+ },
+ {
+  "verificacion": "1.er fallo → 401 con detail de texto y sin aviso",
+  "ok": true,
+  "detalle": "401 Email o contraseña inválidos."
+ },
+ {
+  "verificacion": "2.º fallo → 401 con intentos_restantes = 1 (US-ADJ-69)",
+  "ok": true,
+  "detalle": "401 {'mensaje': 'Email o contraseña inválidos.', 'intentos_restantes': 1}"
+ },
+ {
+  "verificacion": "3.er fallo → 401 y la cuenta queda bloqueada",
+  "ok": true,
+  "detalle": "401"
+ },
+ {
+  "verificacion": "con la cuenta bloqueada, la clave correcta → 403 con detail de texto",
+  "ok": true,
+  "detalle": "403 La cuenta está bloqueada. Contactá a un administrador."
+ },
+ {
+  "verificacion": "el administrador resetea la contraseña",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "tras el reseteo el docente entra",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "60 registros simultáneos con el mismo link",
+  "ok": true,
+  "detalle": "[201]"
+ },
+ {
+  "verificacion": "el docente crea la sesión en vivo",
+  "ok": true,
+  "detalle": "201"
+ },
+ {
+  "verificacion": "60 estudiantes se unen a la vez",
+  "ok": true,
+  "detalle": "[200]"
+ },
+ {
+  "verificacion": "el docente inicia la sesión",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "el docente muestra las opciones",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "60 respuestas casi simultáneas → todas 200",
+  "ok": true,
+  "detalle": "códigos=[200] total=1312 ms mediana=198 ms máx=1026 ms"
+ },
+ {
+  "verificacion": "el docente cierra la pregunta",
+  "ok": true,
+  "detalle": "200"
+ },
+ {
+  "verificacion": "el ranking tiene 60 participantes",
+  "ok": true,
+  "detalle": "200 60"
+ },
+ {
+  "verificacion": "la base sigue disponible al terminar",
+  "ok": true,
+  "detalle": "200"
+ }
+]

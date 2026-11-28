@@ -1,0 +1,3 @@
+30 logins simultáneos OK en 1.51 s (login: mediana 898 ms, máx 1500 ms)
+/health en reposo: mediana 2 ms
+/health DURANTE la ráfaga: 39 consultas, mediana 8 ms, máx 107 ms
